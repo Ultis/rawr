@@ -286,22 +286,30 @@ namespace Rawr.Cat
 			
 			float glanceMultiplier = 0.7f;
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-			float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80];
-            float chanceCrit = StatConversion.GetCritFromRating(stats.CritRating, CharacterClass.Druid)
+			float chanceNonAvoided = 1f - chanceAvoided;
+			
+			//Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
+			float chanceCritYellow = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating, CharacterClass.Druid)
                 + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
                 + stats.PhysicalCrit
-                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80];
-			float chanceCritWhite = Math.Min(chanceCrit, 1f - chanceGlance - chanceAvoided);
-			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
-			float chanceHit = 1f - chanceCrit - chanceAvoided;
-			float chanceHitNonGlance = 1f - chanceCrit - chanceAvoided - chanceGlance;
-			float chanceNonAvoided = 1f - chanceAvoided;
-			float chanceCritBite = Math.Min(1f - chanceAvoided, chanceCrit + stats.BonusFerociousBiteCrit);
-			float chanceHitBite = 1f - chanceCritBite - chanceAvoided;
-			float chanceCritRip = chanceCritBleed > 0 ? chanceCritBleed + stats.BonusRipCrit : 0;
+                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80]);
+			float chanceHitYellow = 1f - chanceCritYellow;
+
+			//Bite - Identical to Yellow, with higher crit chance
+			float chanceCritBite = Math.Min(1f, chanceCritYellow + stats.BonusFerociousBiteCrit);
+			float chanceHitBite = 1f - chanceCritBite;
+			
+			//Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
+			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCritYellow : 0f;
+			float chanceCritRip = Math.Min(1f, chanceCritBleed > 0f ? chanceCritBleed + stats.BonusRipCrit : 0f);
             float chanceCritRake = stats.BonusRakeCrit > 0 ? chanceCritBleed : 0;
 
-			float cpPerCPG = (chanceHit + chanceCrit * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
+			//White
+			float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
+			float chanceCritWhite = Math.Min(chanceCritYellow, 1f - chanceGlance - chanceAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+			float chanceHitWhite = 1f - chanceCritWhite - chanceAvoided - chanceGlance;
+			
+			float cpPerCPG = (chanceHitYellow + chanceCritYellow * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
@@ -331,13 +339,22 @@ namespace Rawr.Cat
 
 			float meleeDamageAverage =	chanceGlance * meleeDamageRaw * glanceMultiplier +
 										chanceCritWhite * meleeDamageRaw * critMultiplier +
-										chanceHitNonGlance * meleeDamageRaw;
-			float mangleDamageAverage = (1f - chanceCrit) * mangleDamageRaw + chanceCrit * mangleDamageRaw * critMultiplier;
-			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;
-            float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + (chanceCritRake * rakeDamageDot * critMultiplierBleed);
+										chanceHitWhite * meleeDamageRaw;
+			float mangleDamageAverage = (1f - chanceCritYellow) * mangleDamageRaw + chanceCritYellow * mangleDamageRaw * critMultiplier;
+			float shredDamageAverage = (1f - chanceCritYellow) * shredDamageRaw + chanceCritYellow * shredDamageRaw * critMultiplier;
+			float rakeDamageAverage = ((1f - chanceCritYellow) * rakeDamageRaw + chanceCritYellow * rakeDamageRaw * critMultiplier) + ((1f - chanceCritRake) * rakeDamageDot + chanceCritRake * rakeDamageDot * critMultiplierBleed);
 			float ripDamageAverage = ((1f - chanceCritRip) * ripDamageRaw + chanceCritRip * ripDamageRaw * critMultiplierBleed);
 			float biteBaseDamageAverage = (1f - chanceCritBite) * biteBaseDamageRaw + chanceCritBite * biteBaseDamageRaw * critMultiplier;
 			float biteCPDamageAverage = (1f - chanceCritBite) * biteCPDamageRaw + chanceCritBite * biteCPDamageRaw * critMultiplier;
+
+			//if (needsDisplayCalculations)
+			//{
+			//    Console.WriteLine("White:    {0:P} Avoided, {1:P} Glance,      {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceGlance, chanceHitWhite, chanceCritWhite, meleeDamageAverage);
+			//    Console.WriteLine("Yellow:   {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritYellow, chanceCritYellow, mangleDamageAverage);
+			//    Console.WriteLine("Bite:     {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritBite, chanceCritBite, biteBaseDamageAverage);
+			//    Console.WriteLine("RipBleed:                                      {0:P} Hit, {1:P} Crit - Swing: {2}", 1f - chanceCritRip, chanceCritRip, ripDamageAverage);
+			//    Console.WriteLine();
+			//}
 			#endregion
 
 			#region Energy Costs
@@ -415,7 +432,7 @@ namespace Rawr.Cat
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
 				maintainMangle, berserkDuration, attackSpeed, character.DruidTalents.OmenOfClarity > 0, 
-				character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCrit * stats.BonusCPOnCrit,
+				character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCritYellow * stats.BonusCPOnCrit,
 				cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeStats, mangleStats, shredStats,
 				rakeStats, ripStats, biteStats, roarStats);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
@@ -450,7 +467,7 @@ namespace Rawr.Cat
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
-			calculatedStats.CritChance = chanceCrit * 100f;
+			calculatedStats.CritChance = chanceCritYellow * 100f;
 			calculatedStats.AttackSpeed = attackSpeed;
 			calculatedStats.ArmorMitigation = (1f - modArmor) * 100f;
 			calculatedStats.Duration = calcOpts.Duration;
@@ -463,7 +480,7 @@ namespace Rawr.Cat
 			calculatedStats.RoarStats = roarStats;
 			calculatedStats.BiteStats = biteStats;
 
-			float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCrit);
+			float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
 			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS;
 			calculatedStats.SurvivabilityPoints = stats.Health / 100f;
 			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
@@ -669,63 +686,19 @@ namespace Rawr.Cat
 		{
 			switch (chartName)
 			{
-				case "Hit Test":
-					float dpsBaseHit = GetCharacterCalculations(character).OverallPoints;
-					float dpsBaseAgi = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = -50 } }).OverallPoints);
-					ComparisonCalculationCat[] calcs = new ComparisonCalculationCat[101];
-					for (int i = -50; i <= 50; i++)
+				case "White Combat Table":
+					CharacterCalculationsCat calcs = (CharacterCalculationsCat)GetCharacterCalculations(character);
+					float[] ct = null;//calcs.MeleeStats.CombatTable;
+					return new ComparisonCalculationBase[]
 					{
-						float dps = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = i } }).OverallPoints - dpsBaseAgi);
-						calcs[i + 50] = new ComparisonCalculationCat() { Name = "dps" + i.ToString(), OverallPoints = dps, DPSPoints = dps };
-					}
-					return calcs;
-                    // Jothay's Note: Unreachable Code Detected
-					float dps1 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }).OverallPoints - dpsBaseHit);
-					float dps2 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 2 } }).OverallPoints - dpsBaseHit);
-					float dps3 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 3 } }).OverallPoints - dpsBaseHit);
-					float dps4 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 4 } }).OverallPoints - dpsBaseHit);
-					float dps5 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 5 } }).OverallPoints - dpsBaseHit);
-					float dps6 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 6 } }).OverallPoints - dpsBaseHit);
-					float dps7 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 7 } }).OverallPoints - dpsBaseHit);
-					float dps8 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 8 } }).OverallPoints - dpsBaseHit);
-					float dps9 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 9 } }).OverallPoints - dpsBaseHit);
-					float dps10 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }).OverallPoints - dpsBaseHit);
-					float dps15 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 15 } }).OverallPoints - dpsBaseHit);
-					float dps20 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 20 } }).OverallPoints - dpsBaseHit);
-					float dps25 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 25 } }).OverallPoints - dpsBaseHit);
-					float dps50 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 50 } }).OverallPoints - dpsBaseHit);
-					float dps75 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 75 } }).OverallPoints - dpsBaseHit);
-					float dps83 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 83 } }).OverallPoints - dpsBaseHit);
-					float dps100 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 100 } }).OverallPoints - dpsBaseHit);
-					float dps200 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 200 } }).OverallPoints - dpsBaseHit);
-					float dps300 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 300 } }).OverallPoints - dpsBaseHit);
-					float dps400 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 400 } }).OverallPoints - dpsBaseHit);
-					float dps500 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 500 } }).OverallPoints - dpsBaseHit);
-
-					return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationCat() { Name = "dps1", OverallPoints = dps1, DPSPoints = dps1 },
-						new ComparisonCalculationCat() { Name = "dps2", OverallPoints = dps2, DPSPoints = dps2 },
-						new ComparisonCalculationCat() { Name = "dps3", OverallPoints = dps3, DPSPoints = dps3 },
-						new ComparisonCalculationCat() { Name = "dps4", OverallPoints = dps4, DPSPoints = dps4 },
-						new ComparisonCalculationCat() { Name = "dps5", OverallPoints = dps5, DPSPoints = dps5 },
-						new ComparisonCalculationCat() { Name = "dps6", OverallPoints = dps6, DPSPoints = dps6 },
-						new ComparisonCalculationCat() { Name = "dps7", OverallPoints = dps7, DPSPoints = dps7 },
-						new ComparisonCalculationCat() { Name = "dps8", OverallPoints = dps8, DPSPoints = dps8 },
-						new ComparisonCalculationCat() { Name = "dps9", OverallPoints = dps9, DPSPoints = dps9 },
-						new ComparisonCalculationCat() { Name = "dps10", OverallPoints = dps10, DPSPoints = dps10 },
-						new ComparisonCalculationCat() { Name = "dps15", OverallPoints = dps15, DPSPoints = dps15 },
-						new ComparisonCalculationCat() { Name = "dps20", OverallPoints = dps20, DPSPoints = dps20 },
-						new ComparisonCalculationCat() { Name = "dps25", OverallPoints = dps25, DPSPoints = dps25 },
-						new ComparisonCalculationCat() { Name = "dps50", OverallPoints = dps50, DPSPoints = dps50 },
-						new ComparisonCalculationCat() { Name = "dps75", OverallPoints = dps75, DPSPoints = dps75 },
-						new ComparisonCalculationCat() { Name = "dps83", OverallPoints = dps83, DPSPoints = dps83 },
-						new ComparisonCalculationCat() { Name = "dps100", OverallPoints = dps100, DPSPoints = dps100 },
-						new ComparisonCalculationCat() { Name = "dps200", OverallPoints = dps200, DPSPoints = dps200 },
-						new ComparisonCalculationCat() { Name = "dps300", OverallPoints = dps300, DPSPoints = dps300 },
-						new ComparisonCalculationCat() { Name = "dps400", OverallPoints = dps400, DPSPoints = dps400 },
-						new ComparisonCalculationCat() { Name = "dps500", OverallPoints = dps500, DPSPoints = dps500 },
+						new ComparisonCalculationCat() { Name = "Miss", OverallPoints = ct[0], DPSPoints = ct[0]},
+						new ComparisonCalculationCat() { Name = "Dodge", OverallPoints = ct[1], DPSPoints = ct[1]},
+						new ComparisonCalculationCat() { Name = "Parry", OverallPoints = ct[2], DPSPoints = ct[2]},
+						new ComparisonCalculationCat() { Name = "Glance", OverallPoints = ct[3], DPSPoints = ct[3]},
+						new ComparisonCalculationCat() { Name = "Hit", OverallPoints = ct[4], DPSPoints = ct[4]},
+						new ComparisonCalculationCat() { Name = "Crit", OverallPoints = ct[5], DPSPoints = ct[5]},
 					};
-					
+
 				default:
 					return new ComparisonCalculationBase[0];
 			}
@@ -820,7 +793,7 @@ namespace Rawr.Cat
 		{
 			bool relevant = (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc + stats.PhysicalCrit +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration +
+				stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration + stats.BonusRakeCrit + stats.RipCostReduction +
 				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
