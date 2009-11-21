@@ -573,8 +573,25 @@ namespace Rawr //O O . .
         public bool HandsBlacksmithingSocketEnabled { get; set; }
         public bool WristBlacksmithingSocketEnabled { get; set; }
 
-        public Profession PrimaryProfession = Profession.None;
-        public Profession SecondaryProfession = Profession.None;
+        private Profession _primaryProfession = Profession.None;
+        public Profession PrimaryProfession { 
+            get { return _primaryProfession; }
+            set
+            {
+                _primaryProfession = value;
+                Calculations.UpdateProfessions(this);
+            }
+        }
+        private Profession _secondaryProfession = Profession.None;
+        public Profession SecondaryProfession
+        {
+            get { return _secondaryProfession; }
+            set
+            {
+                _secondaryProfession = value;
+                Calculations.UpdateProfessions(this);
+            }
+        }
 
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();

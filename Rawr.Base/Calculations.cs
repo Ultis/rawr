@@ -301,6 +301,10 @@ namespace Rawr
             Instance.RenderChart(character, chartName, g, width, height);
         }
 #endif
+        public static void UpdateProfessions(Character character)
+        {
+            Instance.UpdateProfessions(character);
+        }
         public static Stats GetRelevantStats(Stats stats)
 		{
 			return Instance.GetRelevantStats(stats);
@@ -595,6 +599,15 @@ namespace Rawr
         /// <param name="character">The character who the defaults are for.</param>
         /// </summary>
         public virtual void SetDefaults(Character character)
+        {
+            ;
+        }
+
+        /// <summary>
+        /// Allow the model to update any model specific things about changing professions
+        /// <param name="character">The character who the defaults are for.</param>
+        /// </summary>
+        public virtual void UpdateProfessions(Character character)
         {
             ;
         }
