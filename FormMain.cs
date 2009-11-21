@@ -272,6 +272,8 @@ namespace Rawr
 					textBoxRealm.Text = Character.Realm;
 					comboBoxRegion.Text = Character.Region.ToString();
 					comboBoxRace.Text = Character.Race.ToString();
+                    comboBoxProfession1.Text = Character.PrimaryProfession.ToString();
+                    comboBoxProfession2.Text = Character.SecondaryProfession.ToString();
 					checkBoxEnforceGemRequirements.Checked = Character.EnforceGemRequirements;
                     checkBoxWaistBlacksmithingSocket.Checked = Character.WaistBlacksmithingSocketEnabled;
                     checkBoxWristBlacksmithingSocket.Checked = Character.WristBlacksmithingSocketEnabled;
@@ -1179,7 +1181,27 @@ namespace Rawr
 			}
 		}
 
-		private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void comboBoxProfession1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter)
+            {
+                Character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), comboBoxProfession1.Text);
+                Character.OnCalculationsInvalidated();
+                _unsavedChanges = true;
+            }
+        }
+
+        private void comboBoxProfession2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter)
+            {
+                Character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), comboBoxProfession2.Text);
+                Character.OnCalculationsInvalidated();
+                _unsavedChanges = true;
+            }
+        }
+        
+        private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			StringBuilder sb = new StringBuilder();
             foreach (int slotNum in Enum.GetValues(typeof(CharacterSlot)))
@@ -2460,6 +2482,11 @@ namespace Rawr
                     MessageBox.Show("Failed to generate 3d Java html file.");
                 }
             }
+        }
+
+        private void disableAllBuffsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buffSelector1.DisableAllBuffs();
         }
     }
 }

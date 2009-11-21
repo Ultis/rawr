@@ -337,5 +337,15 @@ namespace Rawr
 					return parentBuff;
 			return null;
 		}
+
+        public void DisableAllBuffs()
+        {
+            _loadingBuffsFromCharacter = true;
+            foreach (CheckBox checkBox in CheckBoxes.Values)
+                checkBox.Checked = false;
+            _loadingBuffsFromCharacter = false;
+            UpdateCharacterBuffs();
+            Character.OnCalculationsInvalidated();
+        }
     }
 }

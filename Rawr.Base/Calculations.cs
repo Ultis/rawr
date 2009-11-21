@@ -303,7 +303,8 @@ namespace Rawr
 #endif
         public static void UpdateProfessions(Character character)
         {
-            Instance.UpdateProfessions(character);
+            if (Instance != null)
+                Instance.UpdateProfessions(character);
         }
         public static Stats GetRelevantStats(Stats stats)
 		{
