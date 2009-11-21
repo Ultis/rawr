@@ -259,21 +259,8 @@ namespace Rawr
                             if (!seenEquippedItem && _button != null && item.Equals(_button.SelectedItem)) seenEquippedItem = true;
                             if (item.FitsInSlot(slot, Character))
                             {
-                                if(slot == CharacterSlot.Gems) 
-                                {
-                                    if (item.IsJewelersGem)
-                                    {
-                                        if (Character.JewelersGemCount < 3)
-                                            itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
-                                    }
-                                    else if (item.IsLimitedGem)
-                                    {
-                                        if(!Character.IsUniqueGemEquipped(item))
-                                            itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
-                                    }
-                                    else
-                                        itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
-                                }
+                                if(slot == CharacterSlot.Gems)
+                                    AddGemToItemCalculations(itemCalculations, item);
                                 else
                                     itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
                             }
@@ -318,6 +305,34 @@ namespace Rawr
                 ItemCalculations = filteredItemCalculations.ToArray();
 			}
 		}
+
+        private void AddGemToItemCalculations(List<ComparisonCalculationBase> itemCalculations, Item item)
+        {
+            if (item.IsJewelersGem)
+            {
+                if (Character.JewelersGemCount < 3)
+                    itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, CharacterSlot.Gems));
+                else
+                {
+                    Item nullItem = item.Clone();
+                    nullItem.Stats = new Stats();
+                    itemCalculations.Add(Calculations.GetItemCalculations(nullItem, this.Character, CharacterSlot.Gems));
+                }
+            }
+            else if (item.IsLimitedGem)
+            {
+                if (!Character.IsUniqueGemEquipped(item))
+                    itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, CharacterSlot.Gems));
+                else
+                {
+                    Item nullItem = item.Clone();
+                    nullItem.Stats = new Stats();
+                    itemCalculations.Add(Calculations.GetItemCalculations(nullItem, this.Character, CharacterSlot.Gems));
+                }
+            }
+            else
+                itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, CharacterSlot.Gems));
+        }
 
 		private void LoadEnchantsBySlot(CharacterSlot slot)
 		{
