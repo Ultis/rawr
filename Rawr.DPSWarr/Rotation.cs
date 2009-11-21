@@ -22,10 +22,13 @@ namespace Rawr.DPSWarr {
         
         public bool _needDisplayCalcs = true;
         
+        protected float FightDuration;
+        protected float TimeLostGDCs;
+        protected float RageGainedWhileMoving;
+        public float TimesFeared = 0f;
+
         public float _Thunder_GCDs = 0f, _TH_DPS = 0f, _TH_HPS = 0f;
-        protected float _Blood_GCDs = 0f, _Blood_HPS = 0f;
         protected float _ZRage_GCDs = 0f, _ZRage_HPS = 0f;
-        protected float _Second_Acts = 0f, _Second_HPS = 0f;
         protected float _Battle_GCDs = 0f, _Battle_HPS = 0f;
         protected float _Comm_GCDs = 0f, _Comm_HPS = 0f;
         protected float _Demo_GCDs = 0f, _Demo_HPS = 0f;
@@ -89,6 +92,24 @@ namespace Rawr.DPSWarr {
         protected CombatFactors CombatFactors { get; set; }
         public Skills.WhiteAttacks WhiteAtks { get; protected set; }
         protected CalculationOptionsDPSWarr CalcOpts { get; set; }
+        
+        protected float LatentGCD { get { return 1.5f + CalcOpts.Latency; } }
+        
+        /// <summary>
+        /// How many GCDs are in the rotation, based on fight duration and latency
+        /// </summary>
+        protected float NumGCDs { get { return CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD; } }
+        
+        /// <summary>
+        /// How many GCDs have been used by the rotation
+        /// </summary>
+        protected float GCDsUsed;
+
+        /// <summary>
+        /// How many GCDs are still available in the rotation
+        /// </summary>
+        protected float GCDsAvailable { get { return Math.Max(0f, NumGCDs - GCDsUsed); } }
+        
         #endregion
         #region Functions
         public virtual void Initialize(CharacterCalculationsDPSWarr calcs) {
@@ -436,7 +457,6 @@ namespace Rawr.DPSWarr {
                 // Invalidate bad things
                 if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
                 float RageMod = 2.5f / 453.3f;
-                float FightDuration = CalcOpts.Duration;
                 float damagePerSec = 0f;
                 float freq = CalcOpts.AoETargetsFreq;
                 float dmg = CalcOpts.AoETargetsDMG * (1f + StatS.DamageTakenMultiplier) + StatS.BossAttackPower / 14f;
@@ -513,7 +533,7 @@ namespace Rawr.DPSWarr {
 
         #region AddAnItem(s)
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, Add DPS, Pull Rage, Don't Use GCD Multiplier</summary>
-        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil) {
+        public void AddAnItem(ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil) {
             if (!abil.Validated) { return; }
             float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -529,25 +549,8 @@ namespace Rawr.DPSWarr {
             availRage -= rageadd;
             RageNeeded += rageadd;
         }
-        /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, Add DPS, Pull Rage, Use GCD Multiplier</summary>
-        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil, float GCDMulti) {
-            if (!abil.Validated) { return; }
-            float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
-            float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-            _Abil_GCDs = Abil_GCDs;
-            GCDsused += Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
-            if (_needDisplayCalcs) GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
-            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
-            _Abil_DPS = abil.GetDPS(Abil_GCDs);
-            _Abil_HPS = abil.GetHPS(Abil_GCDs);
-            DPS_TTL += _Abil_DPS;
-            HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
-            availRage -= rageadd;
-            RageNeeded += rageadd;
-        }
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, No DPS, Pull Rage, Don't Use GCD Multiplier</summary>
-        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
+        public void AddAnItem(ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
             if (!abil.Validated) { return; }
             float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -562,7 +565,7 @@ namespace Rawr.DPSWarr {
             RageNeeded += rageadd;
         }
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, No DPS, Add Rage, Don't Use GCD Multiplier</summary>
-        public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil, bool flag) {
+        public void AddAnItem(ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil, bool flag) {
             if (!abil.Validated) { return; }
             float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -576,28 +579,294 @@ namespace Rawr.DPSWarr {
             RageGenOther += rageadd;
             availRage += rageadd;
         }
-        /// <summary>Adds an Ability alteration schtuff. Flags: No GCDs, No DPS, Add Rage, Don't Use GCD Multiplier</summary>
-        public void AddAnItem(ref float availRage, float TotalPercTimeLost, ref float _Abil_Acts, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
-            if (!abil.Validated) { return; }
-            float acts = abil.Activates * (1f - TotalPercTimeLost);
-            float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-            _Abil_Acts = Abil_Acts;
-            if (_needDisplayCalcs) GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + " (Doesn't use GCDs)\n" : "");
-            _Abil_HPS = abil.GetHPS(Abil_Acts);
-            HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUseOverDur(Abil_Acts);
-            RageGenOther += rageadd;
-            availRage += rageadd;
+        #endregion
+
+        #region Lost Time due to Combat Factors
+        private float _emActs, _emRecovery, _emRecoveryTotal;
+
+        /// <summary>
+        /// Calculates percentage of time lost due to moving, being rooted, etc
+        /// </summary>
+        /// <param name="MS">Placeholder right now for juggernaut handling.  Fury should pass null</param>
+        /// <returns>Percentage of time lost as a float</returns>
+        protected float CalculateTimeLost(Skills.MortalStrike MS)
+        {
+            _emActs = 0f; _emRecovery = 0f; _emRecoveryTotal = 0f;
+            TimeLostGDCs = 0;
+            RageGainedWhileMoving = 0; 
+
+            float percTimeInMovement = CalculateMovement(MS);
+            float percTimeInFear = CalculateFear();
+            float percTimeInStun = CalculateStun();
+            float percTimeInRoot = CalculateRoot();
+            return Math.Min(1f, percTimeInStun + percTimeInMovement + percTimeInFear + percTimeInRoot);
         }
-        /// <summary>Adds an Ability alteration schtuff. Flags: No GCDs, No DPS, No Rage, Don't Use GCD Multiplier</summary>
-        public void AddAnItem(float TotalPercTimeLost, ref float _Abil_Acts, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
-            if (!abil.Validated) { return; }
-            float acts = abil.Activates * (1f - TotalPercTimeLost);
-            float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-            _Abil_Acts = Abil_Acts;
-            if (_needDisplayCalcs) GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + " (Doesn't use GCDs)\n" : "");
-            _Abil_HPS = abil.GetHPS(Abil_Acts);
-            HPS_TTL += _Abil_HPS;
+
+        private float CalculateRoot()
+        {
+            float percTimeInRoot = 0f;
+
+            if (CalcOpts.RootingTargets && CalcOpts.RootingTargetsFreq > 0)
+            {
+                float timelostwhilerooted = 0f;
+                float BaseRootDur = Math.Max(0f, (CalcOpts.RootingTargetsDur / 1000f * (1f - StatS.SnareRootDurReduc)));
+                //float rootedActs = Math.Max(0f, FightDuration / CalcOpts.RootingTargetsFreq);
+                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / CalcOpts.RootingTargetsFreq) : FightDuration / CalcOpts.RootingTargetsFreq;
+                float rootedActs = Abil_Acts;
+                float rootedPer = Math.Max(0f, BaseRootDur);
+                float rootedEaten = Math.Min(NumGCDs, (rootedPer * rootedActs) / LatentGCD);
+
+                #region Recovery Efforts
+                /*if (_Rooted_Acts > 0f) {
+                    float bzacts = BZ.Activates;
+                    _ZRage_GCDs = Math.Min(_Rooted_Acts, bzacts);
+                    _BZ_RecovPer = Math.Max(0f, (BaseRootDur - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _BZ_RecovTTL = Math.Min(_Rooted_Eaten, (_BZ_RecovPer * _ZRage_GCDs) / LatentGCD);
+                }*/
+                if (Char.Race == CharacterRace.Human && rootedActs > 0)
+                {
+                    // Every Man for Himself can break it
+                    float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates - _emActs;
+                    _emActs = Math.Min(rootedActs, emacts);
+                    _emRecovery = Math.Max(0f, (rootedPer - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _emRecoveryTotal = Math.Min(rootedEaten, (_emRecovery * _emActs) / LatentGCD);
+                }
+                #endregion
+
+                // We'll use % of time lost to stuns to affect each ability equally
+                // othwerwise we are only seriously affecting things at
+                // the bottom of priorities, which isn't fair (poor Slam)
+                timelostwhilerooted = rootedActs * BaseRootDur;
+                //- _ZRage_GCDs * _BZ_RecovPer;
+                timelostwhilerooted = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilerooted) : timelostwhilerooted;
+                percTimeInRoot = timelostwhilerooted / FightDuration;
+                //
+                if (_needDisplayCalcs)
+                {
+                    GCDUsage += (rootedActs > 0 ? rootedActs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + rootedPer.ToString("0.00") + "secs : Lost to Roots\n" : "");
+                    GCDUsage += (_emActs > 0 ? _emActs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _emRecovery.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
+                }
+                SndW.NumStunsOverDur += rootedActs;
+            }
+            return percTimeInRoot;
+        }
+
+        private float CalculateStun()
+        {
+            float percTimeInStun = 0f;
+            #region Being Stunned
+            if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0)
+            {
+                float BaseStunDur = Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - StatS.StunDurReduc)));
+                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / CalcOpts.StunningTargetsFreq) : FightDuration / CalcOpts.StunningTargetsFreq;
+                float hfActs = 0, hfRecovPer = 0, hfRecovTotal = 0;
+                float stunnedActs = Abil_Acts;
+                float stunnedPer = Math.Max(0f, BaseStunDur);
+                float stunnedEaten = Math.Min(NumGCDs, (stunnedPer * stunnedActs) / LatentGCD);
+
+                float timelostwhilestunned = stunnedActs * stunnedPer;
+                #region Recovery efforts
+                if (Talents.HeroicFury > 0 && stunnedActs > 0f)
+                {
+                    float hfacts = CalcOpts.AllowFlooring ? (float)Math.Floor(HF.Activates) : HF.Activates;
+                    hfActs = Math.Min(stunnedActs, hfacts);
+                    hfRecovPer = Math.Max(0f, (stunnedPer - Math.Max(0f, CalcOpts.React / 1000f)));
+                    hfRecovTotal = Math.Min(stunnedEaten, (hfRecovPer * hfActs) / LatentGCD);
+                    timelostwhilestunned -= hfActs * hfRecovPer;
+                }
+                if (Char.Race == CharacterRace.Human && (stunnedActs - hfActs > 0))
+                {
+                    float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates - _emActs;
+                    _emActs = Math.Min(stunnedActs - hfActs, emacts);
+                    _emRecovery = Math.Max(0f, (stunnedPer - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _emRecoveryTotal = Math.Min(stunnedEaten, (_emRecovery * _emActs) / LatentGCD);
+                    timelostwhilestunned -= _emActs * _emRecovery;
+                }
+                #endregion
+
+                // We'll use % of time lost to stuns to affect each ability equally
+                // othwerwise we are only seriously affecting things at
+                // the bottom of priorities, which isn't fair (poor Slam)
+
+                timelostwhilestunned = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilestunned) : timelostwhilestunned;
+                percTimeInStun = timelostwhilestunned / FightDuration;
+                //
+                if (_needDisplayCalcs)
+                {
+                    GCDUsage += (stunnedActs > 0 ? stunnedActs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + stunnedPer.ToString("0.00") + "secs : Lost to Stuns\n" : "");
+                    GCDUsage += (hfActs > 0 ? hfActs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + hfRecovPer.ToString("0.00") + "secs : - " + HF.Name + "\n" : "");
+                    GCDUsage += (_emActs > 0 ? _emActs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _emRecovery.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
+                }
+                SndW.NumStunsOverDur = stunnedActs;
+            }
+            #endregion
+            return percTimeInStun;
+        }
+
+        private float CalculateFear()
+        {
+            float percTimeInFear = 0f;
+            if (CalcOpts.FearingTargets && CalcOpts.Fears.Count > 0)
+            {
+                float timelostwhilefeared = 0f;
+                float BaseFearDur = 0f, fearActs = 0f, reducedDur = 0f,
+                      MaxTimeRegain = 0f,
+                      ChanceYouAreFeared = 1f;
+                float BZMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.ActivatesOverride) : BZ.ActivatesOverride;
+                float BZActualActs = 0f;
+                float EMMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
+                float EMActualActs = 0f;
+                TimesFeared = 0f;
+                foreach (Fear f in CalcOpts.Fears)
+                {
+                    BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
+                    TimesFeared += fearActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / f.Frequency) : FightDuration / f.Frequency;
+
+                    if ((BZMaxActs - BZActualActs > 0f) && (fearActs > 0f))
+                    {
+                        MaxTimeRegain = Math.Max(0f, (BaseFearDur - LatentGCD - CalcOpts.React / 1000f));
+                        float BZNewActs = Math.Min(BZMaxActs - BZActualActs, fearActs);
+                        BZActualActs += BZNewActs;
+                        // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
+                        reducedDur = Math.Max(0f, BaseFearDur - MaxTimeRegain);
+                        float percBZdVsUnBZd = BZNewActs / fearActs;
+                        timelostwhilefeared += (reducedDur * fearActs * percBZdVsUnBZd * ChanceYouAreFeared)
+                                             + (BaseFearDur * fearActs * (1f - percBZdVsUnBZd) * ChanceYouAreFeared);
+                    }
+                    else if (Char.Race == CharacterRace.Human && (EMMaxActs - EMActualActs > 0f) && (fearActs > 0f))
+                    {
+                        MaxTimeRegain = Math.Max(0f, (BaseFearDur - LatentGCD - CalcOpts.React / 1000f));
+                        float EMNewActs = Math.Min(EMMaxActs - EMActualActs, fearActs);
+                        EMActualActs += EMNewActs;
+                        // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
+                        reducedDur = Math.Max(0f, BaseFearDur - MaxTimeRegain);
+                        float percEMdVsUnEMd = EMNewActs / fearActs;
+                        timelostwhilefeared += (reducedDur * fearActs * percEMdVsUnEMd * ChanceYouAreFeared)
+                                             + (BaseFearDur * fearActs * (1f - percEMdVsUnEMd) * ChanceYouAreFeared);
+                    }
+                    else if (fearActs > 0f)
+                    {
+                        timelostwhilefeared += BaseFearDur * fearActs * ChanceYouAreFeared;
+                    }
+                }
+                _ZRage_GCDs = BZActualActs;
+                _emActs = EMActualActs;
+                if (_needDisplayCalcs)
+                {
+                    GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseFearDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
+                    GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + BZ.Name + "\n" : "");
+                    GCDUsage += (_emActs > 0 ? _emActs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
+                }
+                TimeLostGDCs += Math.Min(NumGCDs, (BaseFearDur * TimesFeared) / LatentGCD);
+                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * _ZRage_GCDs) / LatentGCD);
+                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * _emActs) / LatentGCD);
+                TimeLostGDCs = Math.Max(0f, NumGCDs - TimeLostGDCs);
+
+                timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
+                percTimeInFear = timelostwhilefeared / FightDuration;
+            }
+            
+            return percTimeInFear;
+        }
+
+        private float CalculateMovement(Skills.MortalStrike MS)
+        {
+            float percTimeInMovement = 0f;
+            if (CalcOpts.MovingTargets && CalcOpts.Moves.Count > 0)
+            {
+                /* = Movement Speed =
+                 * According to a post I found on WoWWiki, Standard (Run) Movement
+                 * Speed is 7 yards per 1 sec.
+                 * Cat's Swiftness (and similar) bring this to 7.56 (7x1.08)
+                 * If you are moving for 5 seconds, this is 35 yards (37.8 w/ bonus)
+                 * All the movement effects have a min 8 yards, so you have to be
+                 * moving for 1.142857 seconds (1.08 seconds w/ bonus) before Charge
+                 * would be viable. If you had to be moving more than Charge's Max
+                 * Range (25 yards, editable by certain bonuses) then we'd benefit
+                 * again from move speed bonuses, etc.
+                 * 
+                 * Charge Max = 25
+                 * that's 25/7.00 = 3.571428571428571 seconds at 7.00 yards per sec
+                 * that's 25/7.56 = 3.306878306873070 seconds at 7.56 yards per sec
+                 * Charge (Glyph of Charge) Max = 25+5=30
+                 * that's 30/7.00 = 4.285714285714286 seconds at 7.00 yards per sec
+                 * that's 30/7.56 = 3.968253968253968 seconds at 7.56 yards per sec
+                 * 
+                 * = Now let's try and get some of those GCDs back =
+                 * Let's assume that if the movement duration is longer
+                 * than the before mentioned (1.142857|1.08) seconds,
+                 * you are far enough away that you can use a Movement
+                 * Ability (Charge, Intercept or  Intervene)
+                 * Since some of these abilities are usable in combat
+                 * only by talents, we have to make those checks first
+                 * Since some stuff is kind of weird, we're going to
+                 * enforce an ~3 sec est minimum move time before activating
+                 * Charge
+                 */
+                float MovementSpeed = 7f * (1f + StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
+                float BaseMoveDur = 0f, movedActs = 0f, reducedDur = 0f,
+                      MinMovementTimeRegain = 0f, MaxMovementTimeRegain = 0f,
+                      ChanceYouHaveToMove = 1f;
+                float ChargeMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.Activates) : CH.Activates;
+                float ChargeActualActs = 0f;
+                float timelostwhilemoving = 0f;
+                float moveGCDs = 0f;
+                foreach (Move m in CalcOpts.Moves)
+                {
+                    BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));
+                    moveGCDs += movedActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / m.Frequency) : FightDuration / m.Frequency;
+
+                    if ((ChargeMaxActs - ChargeActualActs > 0f) && (movedActs > 0f))
+                    {
+                        MaxMovementTimeRegain = Math.Max(0f,
+                            Math.Min((BaseMoveDur - CalcOpts.React / 1000f),
+                                     (CH.MaxRange / MovementSpeed - CalcOpts.React / 1000f)));
+                        MinMovementTimeRegain = Math.Max(0f,
+                            Math.Min((BaseMoveDur - CalcOpts.React / 1000f),
+                                     (CH.MinRange / MovementSpeed - CalcOpts.React / 1000f)));
+                        if (BaseMoveDur >= MinMovementTimeRegain)
+                        {
+                            float ChargeNewActs = Math.Min(ChargeMaxActs - ChargeActualActs, movedActs);
+                            ChargeActualActs += ChargeNewActs;
+                            // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
+                            reducedDur = Math.Max(0f, BaseMoveDur - MaxMovementTimeRegain);
+                            float percChargedVsUncharged = ChargeNewActs / movedActs;
+                            timelostwhilemoving += (reducedDur * movedActs * percChargedVsUncharged * ChanceYouHaveToMove)
+                                                 + (BaseMoveDur * movedActs * (1f - percChargedVsUncharged) * ChanceYouHaveToMove);
+                        }
+                    }
+                    else if (movedActs > 0f)
+                    {
+                        timelostwhilemoving += BaseMoveDur * movedActs * ChanceYouHaveToMove;
+                    }
+                }
+                float actsCharge = ChargeActualActs;
+                if (_needDisplayCalcs)
+                {
+                    GCDUsage += (moveGCDs > 0 ? moveGCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseMoveDur.ToString("0.00") + "secs : Lost to Movement\n" : "");
+                    GCDUsage += (actsCharge > 0 ? actsCharge.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseMoveDur - reducedDur).ToString("0.00") + "secs : - " + CH.Name + "\n" : "");
+                }
+                TimeLostGDCs += Math.Min(NumGCDs, (BaseMoveDur * moveGCDs) / LatentGCD);
+                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * actsCharge) / LatentGCD);
+                RageGainedWhileMoving += CH.GetRageUseOverDur(actsCharge);
+                // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
+                if (Talents.Juggernaut > 0 && MS != null)
+                {
+                    Stats stats = new Stats
+                    {
+                        BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f *
+                            (new SpecialEffect(Trigger.Use, null, 10, CH.Cd)
+                             ).GetAverageUptime(FightDuration / actsCharge, 1f, CombatFactors._c_mhItemSpeed, FightDuration)
+                    };
+                    stats.Accumulate(StatS);
+                    // I'm not sure if this is gonna work, but hell, who knows
+                    MS.BonusCritChance = stats.BonusWarrior_T8_4P_MSBTCritIncrease;
+                    //MS = new Skills.MortalStrike(Char, stats, CombatFactors, WhiteAtks, CalcOpts);
+                }
+                timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilemoving) : timelostwhilemoving);
+                percTimeInMovement = timelostwhilemoving / FightDuration;
+            }
+            return percTimeInMovement;
         }
         #endregion
 

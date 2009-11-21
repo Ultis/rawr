@@ -16,6 +16,8 @@ namespace Rawr.DPSWarr
             CombatFactors = cf;
             CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
             WhiteAtks = wa;
+
+            FightDuration = CalcOpts.Duration;
             // Initialize();
         }
 
@@ -275,9 +277,7 @@ namespace Rawr.DPSWarr
             //new_MakeRotationandDoDPS(setCalcs);
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
-            float FightDuration = CalcOpts.Duration;
             float LatentGCD = 1.5f + CalcOpts.Latency;
-            float NumGCDs = FightDuration / LatentGCD;
             if (_needDisplayCalcs) GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
             float GCDsused = 0f;
             float availGCDs = Math.Max(0f, NumGCDs - GCDsused);
@@ -295,29 +295,29 @@ namespace Rawr.DPSWarr
             /*Bloodrage         */
             //AddAnItem(ref availRage, percTimeInStun, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
             /*Berserker Rage    */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ZRage_GCDs, ref HPS_TTL, ref _ZRage_HPS, BZ, false);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ZRage_GCDs, ref HPS_TTL, ref _ZRage_HPS, BZ, false);
 
             // ==== Maintenance Priorities ============
             /*Battle Shout      */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Battle_GCDs, ref HPS_TTL, ref _Battle_HPS, BTS);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Battle_GCDs, ref HPS_TTL, ref _Battle_HPS, BTS);
             /*Commanding Shout  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Comm_GCDs, ref HPS_TTL, ref _Comm_HPS, CS);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Comm_GCDs, ref HPS_TTL, ref _Comm_HPS, CS);
             /*Demoralizing Shout*/
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Demo_GCDs, ref HPS_TTL, ref _Demo_HPS, DS);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Demo_GCDs, ref HPS_TTL, ref _Demo_HPS, DS);
             /*Sunder Armor      */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Sunder_GCDs, ref HPS_TTL, ref _Sunder_HPS, SN);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Sunder_GCDs, ref HPS_TTL, ref _Sunder_HPS, SN);
             /*Thunder Clap      */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Thunder_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TH_DPS, ref _TH_HPS, TH);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Thunder_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TH_DPS, ref _TH_HPS, TH);
             /*Hamstring         */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Ham_GCDs, ref HPS_TTL, ref _Ham_HPS, HMS);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Ham_GCDs, ref HPS_TTL, ref _Ham_HPS, HMS);
             /*Shattering Throw  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Shatt_GCDs, ref DPS_TTL, ref HPS_TTL, ref _Shatt_DPS, ref _Shatt_HPS, ST);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Shatt_GCDs, ref DPS_TTL, ref HPS_TTL, ref _Shatt_DPS, ref _Shatt_HPS, ST);
             /*Enraged Regeneratn*/
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ER_GCDs, ref HPS_TTL, ref _ER_HPS, ER);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ER_GCDs, ref HPS_TTL, ref _ER_HPS, ER);
             /*Sweeping Strikes  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _SW_GCDs, ref HPS_TTL, ref _SW_HPS, SW);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _SW_GCDs, ref HPS_TTL, ref _SW_HPS, SW);
             /*Death Wish        */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
+            AddAnItem(ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
 
             /*float Reck_GCDs = Math.Min(availGCDs, RK.Activates);
             _Reck_GCDs = Reck_GCDs;

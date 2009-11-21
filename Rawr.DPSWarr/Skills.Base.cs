@@ -447,7 +447,7 @@ namespace Rawr.DPSWarr.Skills
         protected float DamageBonus { get; set; }
         protected float HealingBase { get; set; }
         protected float HealingBonus { get; set; }
-        public float BonusCritChance { get; protected set; }
+        public float BonusCritChance { get; set; }
         protected bool StanceOkFury { get; set; }
         protected bool StanceOkArms { get; set; }
         protected bool StanceOkDef { get; set; }

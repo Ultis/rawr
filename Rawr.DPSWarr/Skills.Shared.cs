@@ -329,7 +329,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Second Wind";
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
+            //AbilIterater = -1f;
             ReqTalent = true;
             Talent2ChksValue = Talents.SecondWind;
             NumStunsOverDur = 1f;
