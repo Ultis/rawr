@@ -26,6 +26,7 @@ namespace Rawr.Mage
         ManaOverflow,
         Spell,
         SummonWaterElemental,
+        SummonMirrorImage,
         ConjureManaGem,
         Ward
     }
@@ -124,6 +125,8 @@ namespace Rawr.Mage
 
         public double PowerInfusionDuration;
         public double PowerInfusionCooldown;
+        public double MirrorImageDuration;
+        public double MirrorImageCooldown;
         public double IcyVeinsCooldown;
         public double ColdsnapCooldown;
         public double ArcanePowerCooldown;
@@ -310,6 +313,19 @@ namespace Rawr.Mage
                     _WaterboltTemplate = new WaterboltTemplate(this);
                 }
                 return _WaterboltTemplate;
+            }
+        }
+
+        private MirrorImageTemplate _MirrorImageTemplate;
+        public MirrorImageTemplate MirrorImageTemplate
+        {
+            get
+            {
+                if (_MirrorImageTemplate == null)
+                {
+                    _MirrorImageTemplate = new MirrorImageTemplate(this);
+                }
+                return _MirrorImageTemplate;
             }
         }
 
@@ -861,6 +877,7 @@ namespace Rawr.Mage
             }
             sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
             sequence.GroupWaterElemental();
+            sequence.GroupMirrorImage();
             sequence.GroupBerserking();
             list = sequence.GroupFlameCap();
             // very very special case for now
@@ -1032,6 +1049,7 @@ namespace Rawr.Mage
             double manaGem = 0;
             double drums = 0;
             double we = 0;
+            double mi = 0;
             double cmg = 0;
             double ward = 0;
             bool segmentedOutput = DebugCooldownSegmentation;
@@ -1053,6 +1071,7 @@ namespace Rawr.Mage
             ManaSources["Other"] = 0.0f;
             ManaUsage["Overflow"] = 0.0f;
             ManaUsage["Summon Water Elemental"] = 0.0f;
+            ManaUsage["Summon Mirror Image"] = 0.0f;
             float spiritFactor = 0.003345f;
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
@@ -1208,23 +1227,46 @@ namespace Rawr.Mage
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
                             break;
                         case VariableType.SummonWaterElemental:
-                            we += Solution[i];
-                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration);
-                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
-                            ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
-                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
-                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
-                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
-                            Spell waterbolt = WaterboltTemplate.GetSpell(SolutionVariable[i].State);
-                            SpellContribution contrib;
-                            if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
                             {
-                                contrib = new SpellContribution() { Name = waterbolt.Name };
-                                DamageSources[waterbolt.Name] = contrib;
+                                we += Solution[i];
+                                ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration);
+                                ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                                ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                                ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                                ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                                ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
+                                if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                                Spell waterbolt = WaterboltTemplate.GetSpell(SolutionVariable[i].State);
+                                SpellContribution contrib;
+                                if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
+                                {
+                                    contrib = new SpellContribution() { Name = waterbolt.Name };
+                                    DamageSources[waterbolt.Name] = contrib;
+                                }
+                                contrib.Hits += (float)Solution[i] / waterbolt.CastTime;
+                                contrib.Damage += waterbolt.DamagePerSecond * (float)Solution[i];
                             }
-                            contrib.Hits += (float)Solution[i] / waterbolt.CastTime;
-                            contrib.Damage += waterbolt.DamagePerSecond * (float)Solution[i];
+                            break;
+                        case VariableType.SummonMirrorImage:
+                            {
+                                mi += Solution[i];
+                                ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration);
+                                ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                                ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                                ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                                ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                                ManaUsage["Summon Mirror Image"] += (float)Solution[i] * (int)(0.10 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
+                                if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Mirror Image", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                                Spell mirrorImage = MirrorImageTemplate.GetSpell(SolutionVariable[i].State);
+                                SpellContribution contrib;
+                                if (!DamageSources.TryGetValue("Mirror Image", out contrib))
+                                {
+                                    contrib = new SpellContribution() { Name = "Mirror Image" };
+                                    DamageSources["Mirror Image"] = contrib;
+                                }
+                                contrib.Hits += 3 * (MageTalents.GlyphOfMirrorImage ? 4 : 3) * (float)Solution[i] / mirrorImage.CastTime;
+                                contrib.Damage += mirrorImage.DamagePerSecond * (float)Solution[i];
+                            }
                             break;
                         case VariableType.ConjureManaGem:
                             cmg += Solution[i];
@@ -1293,6 +1335,10 @@ namespace Rawr.Mage
                 if (we > 0)
                 {
                     sb.AppendLine(String.Format("{0}: {1:F}x", "Summon Water Elemental", we / BaseGlobalCooldown));
+                }
+                if (mi > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Summon Mirror Image", mi / BaseGlobalCooldown));
                 }
                 if (cmg > 0)
                 {

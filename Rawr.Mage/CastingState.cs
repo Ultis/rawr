@@ -20,8 +20,9 @@ namespace Rawr.Mage
         IcyVeins = 0x200,
         MoltenFury = 0x400,
         Evocation = 0x800,
-        ManaGemEffect = 0x1000, // make sure to update shifting of item based effects if this changes
-        NonItemBasedMask = PowerInfusion | PotionOfSpeed | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental
+        ManaGemEffect = 0x1000,
+        MirrorImage = 0x2000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
+        NonItemBasedMask = PowerInfusion | PotionOfSpeed | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | MirrorImage
     }
 
     public sealed class CastingState
@@ -119,6 +120,7 @@ namespace Rawr.Mage
         public bool Berserking { get; private set; }
         public bool Combustion { get; private set; }
         public bool WaterElemental { get; private set; }
+        public bool MirrorImage { get; private set; }
         public bool PowerInfusion { get; private set; }
         public bool Frozen { get; set; }
 
@@ -144,6 +146,7 @@ namespace Rawr.Mage
                 Berserking = (value & (int)StandardEffect.Berserking) != 0;
                 Combustion = (value & (int)StandardEffect.Combustion) != 0;
                 WaterElemental = (value & (int)StandardEffect.WaterElemental) != 0;
+                MirrorImage = (value & (int)StandardEffect.MirrorImage) != 0;
                 PowerInfusion = (value & (int)StandardEffect.PowerInfusion) != 0;
             }
         }
@@ -375,6 +378,10 @@ namespace Rawr.Mage
             if (MoltenFury)
             {
                 StateSpellModifier *= (1 + 0.06f * MageTalents.MoltenFury);
+            }
+            if (MirrorImage && BaseStats.Mage4T10 > 0)
+            {
+                StateSpellModifier *= 1.18f;
             }
 
             SpellsCount = 0;

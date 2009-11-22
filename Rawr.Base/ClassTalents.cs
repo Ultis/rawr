@@ -66,7 +66,7 @@ namespace Rawr
             {
                 string glyphs = tmp[1];
                 bool[] _glyphData = GlyphData;
-                if (_glyphData != null && glyphs.Length == _glyphData.Length)
+                if (_glyphData != null)
                 {
                     List<bool> data = new List<bool>();
                     foreach (Char digit in glyphs)

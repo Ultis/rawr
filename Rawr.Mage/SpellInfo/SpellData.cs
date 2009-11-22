@@ -114,7 +114,8 @@ namespace Rawr.Mage
     public class WaterboltTemplate : SpellTemplate
     {
         Stats waterElementalBuffs;
-        string[] validBuffs = new string[] { "Ferocious Inspiration", "Sanctified Retribution", "Improved Moonkin Form", "Swift Retribution", "Elemental Oath", "Moonkin Form", "Wrath of Air Totem", "Demonic Pact", "Flametongue Totem", "Enhancing Totems (Spell Power)", "Totem of Wrath (Spell Power)", "Heart of the Crusader", "Master Poisoner", "Totem of Wrath", "Winter's Chill", "Improved Scorch", "Improved Shadow Bolt", "Curse of the Elements", "Earth and Moon", "Ebon Plaguebringer", "Improved Faerie Fire", "Misery" };
+        private static readonly string[] validBuffs = new string[] { "Ferocious Inspiration", "Sanctified Retribution", "Improved Moonkin Form", "Swift Retribution", "Elemental Oath", "Moonkin Form", "Wrath of Air Totem", "Demonic Pact", "Flametongue Totem", "Enhancing Totems (Spell Power)", "Totem of Wrath (Spell Power)", "Heart of the Crusader", "Master Poisoner", "Totem of Wrath", "Winter's Chill", "Improved Scorch", "Improved Shadow Bolt", "Curse of the Elements", "Earth and Moon", "Ebon Plaguebringer", "Improved Faerie Fire", "Misery" };
+        float baseDamage;
 
         public WaterboltTemplate(CharacterCalculationsMage calculations)
         {
@@ -127,6 +128,7 @@ namespace Rawr.Mage
                     waterElementalBuffs.Accumulate(buff.Stats);
                 }
             }
+            baseDamage = 292.0f + (calculations.CalculationOptions.PlayerLevel - 50) * 11.5f;
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -142,8 +144,6 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
             int playerLevel = calculationOptions.PlayerLevel;
             int targetLevel = calculationOptions.TargetLevel;
-            // 45 sec, 3 min cooldown + cold snap
-            // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
             // TODO recheck all buffs that apply
             float spellCrit = 0.05f + waterElementalBuffs.SpellCrit;
             float hitRate = castingState.FrostHitRate;
@@ -157,7 +157,58 @@ namespace Rawr.Mage
 
             spell.CastTime = 2.5f / haste;
             spell.CostPerSecond = 0.0f;
-            spell.DamagePerSecond = (521.5f + (0.4f * spellPower + waterElementalBuffs.SpellPower + waterElementalBuffs.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f * haste;
+            spell.DamagePerSecond = (baseDamage + (spellPower / 3f + waterElementalBuffs.SpellPower + waterElementalBuffs.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower) * 5f / 6f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f * haste;
+            spell.ThreatPerSecond = 0.0f;
+
+            return spell;
+        }
+    }
+
+    public class MirrorImageTemplate : SpellTemplate
+    {
+        Stats mirrorImageBuffs;
+        private static readonly string[] validBuffs = new string[] { "Heart of the Crusader", "Master Poisoner", "Totem of Wrath", "Winter's Chill", "Improved Scorch", "Improved Shadow Bolt", "Curse of the Elements", "Earth and Moon", "Ebon Plaguebringer", "Improved Faerie Fire", "Misery" };
+        float baseDamageBlast, baseDamageBolt;
+
+        public MirrorImageTemplate(CharacterCalculationsMage calculations)
+        {
+            Name = "Waterbolt";
+            mirrorImageBuffs = new Stats();
+            foreach (Buff buff in calculations.ActiveBuffs)
+            {
+                if (Array.IndexOf(validBuffs, buff.Name) >= 0)
+                {
+                    mirrorImageBuffs.Accumulate(buff.Stats);
+                }
+            }
+            baseDamageBlast = 97.5f;
+            baseDamageBolt = 166.0f;
+        }
+
+        public override Spell GetSpell(CastingState castingState)
+        {
+            return GetSpell(castingState, castingState.FrostSpellPower, castingState.FireSpellPower);
+        }
+
+        public Spell GetSpell(CastingState castingState, float frostSpellPower, float fireSpellPower)
+        {
+            Spell spell = new Spell(this);
+
+            Character character = castingState.CalculationOptions.Character;
+            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+            int playerLevel = calculationOptions.PlayerLevel;
+            int targetLevel = calculationOptions.TargetLevel;
+            // TODO recheck all buffs that apply
+            float spellCrit = 0.05f + mirrorImageBuffs.SpellCrit;
+            float blastHitRate = castingState.FireHitRate;
+            float boltHitRate = castingState.FrostHitRate;
+            float haste = (1f + mirrorImageBuffs.SpellHaste);
+            float boltMultiplier = boltHitRate * (1 + mirrorImageBuffs.BonusDamageMultiplier) * (1 + mirrorImageBuffs.BonusFrostDamageMultiplier) * ((calculationOptions.FrostResist == 1) ? 0 : (1 - calculationOptions.FrostResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
+            float blastMultiplier = blastHitRate * (1 + mirrorImageBuffs.BonusDamageMultiplier) * (1 + mirrorImageBuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == 1) ? 0 : (1 - calculationOptions.FireResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
+
+            spell.CastTime = (2 * 3.0f + 1.5f) / haste;
+            spell.CostPerSecond = 0.0f;
+            spell.DamagePerSecond = (castingState.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (2 * (baseDamageBolt + frostSpellPower / 3f * 0.3f) * boltMultiplier + (baseDamageBlast + fireSpellPower / 3f * 0.15f)) * (1 + 0.5f * spellCrit) / (2 * 3.0f + 1.5f) * haste;
             spell.ThreatPerSecond = 0.0f;
 
             return spell;

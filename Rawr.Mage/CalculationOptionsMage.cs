@@ -678,6 +678,13 @@ namespace Rawr.Mage
             set { _ManaGemEnabled = value; OnPropertyChanged("ManaGemEnabled"); }
         }
 
+        private bool _MirrorImageEnabled;
+        public bool MirrorImageEnabled
+        {
+            get { return _MirrorImageEnabled; }
+            set { _MirrorImageEnabled = value; OnPropertyChanged("MirrorImageEnabled"); }
+        }
+
         private bool _DisableCooldowns;
         public bool DisableCooldowns
         {
@@ -1192,6 +1199,7 @@ namespace Rawr.Mage
             ChanceToLiveAttenuation = 0.1f;
             MaxUseAssumption = true;
             FrostbiteUtilization = 1.0f;
+            MirrorImageEnabled = true;
             Encounter = new Encounter();
         }
 

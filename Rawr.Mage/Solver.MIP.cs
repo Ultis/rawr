@@ -733,6 +733,9 @@ namespace Rawr.Mage
                 // water elemental
                 if (waterElementalAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseGlobalCooldown)) return false;
                 if (waterElementalAvailable && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                // mirror image
+                if (mirrorImageAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonMirrorImage, calculationResult.BaseGlobalCooldown)) return false;
+                if (mirrorImageAvailable && !ValidateCooldown((int)StandardEffect.MirrorImage, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, true, calculationResult.MirrorImageDuration, rowSegmentMirrorImage, VariableType.None)) return false;
                 // combustion
                 if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
@@ -780,6 +783,13 @@ namespace Rawr.Mage
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
                 if (waterElementalAvailable && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                // mirror image
+                if (mirrorImageAvailable)
+                {
+                    if (!ValidateCooldown((int)StandardEffect.MirrorImage, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, true, calculationResult.MirrorImageDuration, rowSegmentMirrorImage, VariableType.None)) return false;
+                    if (!ValidateActivation((int)StandardEffect.MirrorImage, VariableType.None, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, VariableType.SummonMirrorImage, 0)) return false;
+                }
+
                 // coldsnap
                 if (icyVeinsAvailable && coldsnapAvailable && !ValidateColdsnap()) return false;
                 // combustion
@@ -834,7 +844,10 @@ namespace Rawr.Mage
                     if (heroismAvailable && !ValidateActivationAdvanced((int)StandardEffect.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism)) return false;
                     if (icyVeinsAvailable && heroismAvailable && !ValidateActivationAdvanced((int)StandardEffect.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism)) return false;
                 }
-
+                if (mirrorImageAvailable)
+                {
+                    if (!ValidateActivationAdvanced((int)StandardEffect.MirrorImage, VariableType.None, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, VariableType.SummonMirrorImage, 0)) return false;
+                }
             }
 
             if (segmentCooldowns && advancedConstraintsLevel >= 4)
@@ -849,6 +862,7 @@ namespace Rawr.Mage
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
                 if (berserkingAvailable && !ValidateCooldownAdvanced((int)StandardEffect.Berserking, 10.0, 180.0, VariableType.None)) return false;
+                if (mirrorImageAvailable && !ValidateCooldownAdvanced((int)StandardEffect.MirrorImage, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, VariableType.None)) return false;
             }
 
             if (segmentCooldowns && advancedConstraintsLevel >= 5)
@@ -875,6 +889,7 @@ namespace Rawr.Mage
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
                 if (berserkingAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.Berserking, 10.0, 180.0, VariableType.None)) return false;
+                if (mirrorImageAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.MirrorImage, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, VariableType.None)) return false;
             }
 
             return true;
@@ -941,6 +956,9 @@ namespace Rawr.Mage
                 case (int)StandardEffect.PotionOfWildMagic:
                     ind = 8;
                     break;
+                case (int)StandardEffect.MirrorImage:
+                    ind = 9;
+                    break;
                 case (int)StandardEffect.WaterElemental:
                     ind = 11;
                     break;
@@ -1000,6 +1018,9 @@ namespace Rawr.Mage
                             break;
                         case VariableType.SummonWaterElemental:
                             ind = 14;
+                            break;
+                        case VariableType.SummonMirrorImage:
+                            ind = 10;
                             break;
                     }
                     break;
@@ -2165,6 +2186,9 @@ namespace Rawr.Mage
                     break;
                 case VariableType.SummonWaterElemental:
                     row = rowSummonWaterElementalCount;
+                    break;
+                case VariableType.SummonMirrorImage:
+                    row = rowSummonMirrorImageCount;
                     break;
                 case VariableType.ConjureManaGem:
                     row = rowConjureManaGem;

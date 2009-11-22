@@ -33,6 +33,7 @@
             this.tabControlFight2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label89 = new System.Windows.Forms.Label();
             this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -47,6 +48,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label126 = new System.Windows.Forms.Label();
+            this.checkBoxMirrorImage = new System.Windows.Forms.CheckBox();
             this.textBoxFrostbiteUtilization = new System.Windows.Forms.TextBox();
             this.label110 = new System.Windows.Forms.Label();
             this.textBoxWarlockSpellPower = new System.Windows.Forms.TextBox();
@@ -137,6 +140,74 @@
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.label125 = new System.Windows.Forms.Label();
+            this.bindingNavigator3 = new System.Windows.Forms.BindingNavigator(this.components);
+            this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
+            this.multipliersBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.targetGroupsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.encounterBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.label121 = new System.Windows.Forms.Label();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.label122 = new System.Windows.Forms.Label();
+            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.label123 = new System.Windows.Forms.Label();
+            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.label124 = new System.Windows.Forms.Label();
+            this.label118 = new System.Windows.Forms.Label();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label119 = new System.Windows.Forms.Label();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.label120 = new System.Windows.Forms.Label();
+            this.bindingNavigator2 = new System.Windows.Forms.BindingNavigator(this.components);
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.label117 = new System.Windows.Forms.Label();
+            this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
+            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
+            this.globalMultipliersBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
+            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.bindingNavigatorPositionItem = new System.Windows.Forms.ToolStripTextBox();
+            this.bindingNavigatorSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.label116 = new System.Windows.Forms.Label();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label115 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.label114 = new System.Windows.Forms.Label();
+            this.textBoxGlobalMultiplierStartTime = new System.Windows.Forms.TextBox();
+            this.label113 = new System.Windows.Forms.Label();
+            this.label112 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label111 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.textBoxBonusCritDamage = new System.Windows.Forms.TextBox();
             this.label86 = new System.Windows.Forms.Label();
@@ -282,79 +353,22 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage8 = new System.Windows.Forms.TabPage();
-            this.label111 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label112 = new System.Windows.Forms.Label();
-            this.encounterBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.globalMultipliersBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.textBoxGlobalMultiplierStartTime = new System.Windows.Forms.TextBox();
-            this.label113 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.label114 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label115 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.label116 = new System.Windows.Forms.Label();
-            this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
-            this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
-            this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.bindingNavigatorPositionItem = new System.Windows.Forms.ToolStripTextBox();
-            this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
-            this.bindingNavigatorSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
-            this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
-            this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
-            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
-            this.label117 = new System.Windows.Forms.Label();
-            this.bindingNavigator2 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.targetGroupsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label118 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label119 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.label120 = new System.Windows.Forms.Label();
-            this.multipliersBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.bindingNavigator3 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton9 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.label121 = new System.Windows.Forms.Label();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.label122 = new System.Windows.Forms.Label();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.label123 = new System.Windows.Forms.Label();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.label124 = new System.Windows.Forms.Label();
-            this.label125 = new System.Windows.Forms.Label();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator3)).BeginInit();
+            this.bindingNavigator3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.multipliersBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.targetGroupsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.encounterBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator2)).BeginInit();
+            this.bindingNavigator2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
+            this.bindingNavigator1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.globalMultipliersBindingSource)).BeginInit();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -362,18 +376,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
             this.tabPage7.SuspendLayout();
-            this.tabPage8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.encounterBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.globalMultipliersBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
-            this.bindingNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator2)).BeginInit();
-            this.bindingNavigator2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.targetGroupsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.multipliersBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator3)).BeginInit();
-            this.bindingNavigator3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlFight2
@@ -428,6 +430,11 @@
             this.textBoxChannelLatency.Name = "textBoxChannelLatency";
             this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxChannelLatency.TabIndex = 159;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label89
             // 
@@ -572,6 +579,8 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.label126);
+            this.tabPage2.Controls.Add(this.checkBoxMirrorImage);
             this.tabPage2.Controls.Add(this.textBoxFrostbiteUtilization);
             this.tabPage2.Controls.Add(this.label110);
             this.tabPage2.Controls.Add(this.textBoxWarlockSpellPower);
@@ -625,10 +634,30 @@
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label126
+            // 
+            this.label126.AutoSize = true;
+            this.label126.Location = new System.Drawing.Point(-1, 129);
+            this.label126.Name = "label126";
+            this.label126.Size = new System.Drawing.Size(75, 13);
+            this.label126.TabIndex = 204;
+            this.label126.Text = "Mirror Image: *";
+            this.toolTipMage.SetToolTip(this.label126, "Enable use of Mirror Image.");
+            // 
+            // checkBoxMirrorImage
+            // 
+            this.checkBoxMirrorImage.AutoSize = true;
+            this.checkBoxMirrorImage.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MirrorImageEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMirrorImage.Location = new System.Drawing.Point(141, 129);
+            this.checkBoxMirrorImage.Name = "checkBoxMirrorImage";
+            this.checkBoxMirrorImage.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMirrorImage.TabIndex = 203;
+            this.checkBoxMirrorImage.UseVisualStyleBackColor = true;
+            // 
             // textBoxFrostbiteUtilization
             // 
             this.textBoxFrostbiteUtilization.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostbiteUtilization", true));
-            this.textBoxFrostbiteUtilization.Location = new System.Drawing.Point(141, 414);
+            this.textBoxFrostbiteUtilization.Location = new System.Drawing.Point(141, 434);
             this.textBoxFrostbiteUtilization.Name = "textBoxFrostbiteUtilization";
             this.textBoxFrostbiteUtilization.Size = new System.Drawing.Size(75, 20);
             this.textBoxFrostbiteUtilization.TabIndex = 202;
@@ -636,7 +665,7 @@
             // label110
             // 
             this.label110.AutoSize = true;
-            this.label110.Location = new System.Drawing.Point(-1, 417);
+            this.label110.Location = new System.Drawing.Point(-1, 437);
             this.label110.Name = "label110";
             this.label110.Size = new System.Drawing.Size(129, 13);
             this.label110.TabIndex = 201;
@@ -647,7 +676,7 @@
             // textBoxWarlockSpellPower
             // 
             this.textBoxWarlockSpellPower.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "WarlockSpellPower", true));
-            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(141, 466);
+            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(141, 486);
             this.textBoxWarlockSpellPower.Name = "textBoxWarlockSpellPower";
             this.textBoxWarlockSpellPower.Size = new System.Drawing.Size(75, 20);
             this.textBoxWarlockSpellPower.TabIndex = 200;
@@ -655,7 +684,7 @@
             // label109
             // 
             this.label109.AutoSize = true;
-            this.label109.Location = new System.Drawing.Point(-1, 469);
+            this.label109.Location = new System.Drawing.Point(-1, 489);
             this.label109.Name = "label109";
             this.label109.Size = new System.Drawing.Size(116, 13);
             this.label109.TabIndex = 199;
@@ -705,7 +734,7 @@
             // textBoxFocusMagicRate
             // 
             this.textBoxFocusMagicRate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FocusMagicTargetCritRate", true));
-            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(141, 440);
+            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(141, 460);
             this.textBoxFocusMagicRate.Name = "textBoxFocusMagicRate";
             this.textBoxFocusMagicRate.Size = new System.Drawing.Size(75, 20);
             this.textBoxFocusMagicRate.TabIndex = 194;
@@ -713,7 +742,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(-1, 443);
+            this.label36.Location = new System.Drawing.Point(-1, 463);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(104, 13);
             this.label36.TabIndex = 193;
@@ -724,7 +753,7 @@
             // textBoxSlowedTime
             // 
             this.textBoxSlowedTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SnaredTime", true));
-            this.textBoxSlowedTime.Location = new System.Drawing.Point(141, 388);
+            this.textBoxSlowedTime.Location = new System.Drawing.Point(141, 408);
             this.textBoxSlowedTime.Name = "textBoxSlowedTime";
             this.textBoxSlowedTime.Size = new System.Drawing.Size(75, 20);
             this.textBoxSlowedTime.TabIndex = 192;
@@ -732,7 +761,7 @@
             // label79
             // 
             this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(-1, 391);
+            this.label79.Location = new System.Drawing.Point(-1, 411);
             this.label79.Name = "label79";
             this.label79.Size = new System.Drawing.Size(101, 13);
             this.label79.TabIndex = 191;
@@ -742,7 +771,7 @@
             // 
             // buttonCustomSpellMix
             // 
-            this.buttonCustomSpellMix.Location = new System.Drawing.Point(162, 344);
+            this.buttonCustomSpellMix.Location = new System.Drawing.Point(162, 364);
             this.buttonCustomSpellMix.Name = "buttonCustomSpellMix";
             this.buttonCustomSpellMix.Size = new System.Drawing.Size(54, 20);
             this.buttonCustomSpellMix.TabIndex = 190;
@@ -753,7 +782,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(-1, 368);
+            this.label48.Location = new System.Drawing.Point(-1, 388);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(95, 13);
             this.label48.TabIndex = 189;
@@ -764,7 +793,7 @@
             // 
             this.checkBoxCustomSpellMixOnly.AutoSize = true;
             this.checkBoxCustomSpellMixOnly.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "CustomSpellMixOnly", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxCustomSpellMixOnly.Location = new System.Drawing.Point(141, 368);
+            this.checkBoxCustomSpellMixOnly.Location = new System.Drawing.Point(141, 388);
             this.checkBoxCustomSpellMixOnly.Name = "checkBoxCustomSpellMixOnly";
             this.checkBoxCustomSpellMixOnly.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCustomSpellMixOnly.TabIndex = 188;
@@ -773,7 +802,7 @@
             // label47
             // 
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(-1, 348);
+            this.label47.Location = new System.Drawing.Point(-1, 368);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(97, 13);
             this.label47.TabIndex = 187;
@@ -784,7 +813,7 @@
             // 
             this.checkBoxCustomSpellMixEnabled.AutoSize = true;
             this.checkBoxCustomSpellMixEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "CustomSpellMixEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxCustomSpellMixEnabled.Location = new System.Drawing.Point(141, 348);
+            this.checkBoxCustomSpellMixEnabled.Location = new System.Drawing.Point(141, 368);
             this.checkBoxCustomSpellMixEnabled.Name = "checkBoxCustomSpellMixEnabled";
             this.checkBoxCustomSpellMixEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCustomSpellMixEnabled.TabIndex = 186;
@@ -793,7 +822,7 @@
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(-1, 268);
+            this.label43.Location = new System.Drawing.Point(-1, 288);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(107, 13);
             this.label43.TabIndex = 185;
@@ -804,7 +833,7 @@
             // 
             this.checkBoxDisableCooldowns.AutoSize = true;
             this.checkBoxDisableCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisableCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisableCooldowns.Location = new System.Drawing.Point(141, 268);
+            this.checkBoxDisableCooldowns.Location = new System.Drawing.Point(141, 288);
             this.checkBoxDisableCooldowns.Name = "checkBoxDisableCooldowns";
             this.checkBoxDisableCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisableCooldowns.TabIndex = 184;
@@ -813,7 +842,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(-1, 328);
+            this.label42.Location = new System.Drawing.Point(-1, 348);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(69, 13);
             this.label42.TabIndex = 183;
@@ -824,7 +853,7 @@
             // 
             this.checkBoxManaGemEnabled.AutoSize = true;
             this.checkBoxManaGemEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ManaGemEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(141, 328);
+            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(141, 348);
             this.checkBoxManaGemEnabled.Name = "checkBoxManaGemEnabled";
             this.checkBoxManaGemEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxManaGemEnabled.TabIndex = 182;
@@ -833,7 +862,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(-1, 308);
+            this.label41.Location = new System.Drawing.Point(-1, 328);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(77, 13);
             this.label41.TabIndex = 181;
@@ -844,7 +873,7 @@
             // 
             this.checkBoxManaPotionEnabled.AutoSize = true;
             this.checkBoxManaPotionEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ManaPotionEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(141, 308);
+            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(141, 328);
             this.checkBoxManaPotionEnabled.Name = "checkBoxManaPotionEnabled";
             this.checkBoxManaPotionEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxManaPotionEnabled.TabIndex = 180;
@@ -853,7 +882,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(-1, 288);
+            this.label40.Location = new System.Drawing.Point(-1, 308);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(65, 13);
             this.label40.TabIndex = 179;
@@ -864,7 +893,7 @@
             // 
             this.checkBoxEvocationEnabled.AutoSize = true;
             this.checkBoxEvocationEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "EvocationEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxEvocationEnabled.Location = new System.Drawing.Point(141, 288);
+            this.checkBoxEvocationEnabled.Location = new System.Drawing.Point(141, 308);
             this.checkBoxEvocationEnabled.Name = "checkBoxEvocationEnabled";
             this.checkBoxEvocationEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxEvocationEnabled.TabIndex = 178;
@@ -873,7 +902,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(-1, 248);
+            this.label39.Location = new System.Drawing.Point(-1, 268);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(112, 13);
             this.label39.TabIndex = 177;
@@ -885,7 +914,7 @@
             // 
             this.checkBoxAverageCooldowns.AutoSize = true;
             this.checkBoxAverageCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "AverageCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxAverageCooldowns.Location = new System.Drawing.Point(141, 248);
+            this.checkBoxAverageCooldowns.Location = new System.Drawing.Point(141, 268);
             this.checkBoxAverageCooldowns.Name = "checkBoxAverageCooldowns";
             this.checkBoxAverageCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAverageCooldowns.TabIndex = 176;
@@ -894,7 +923,7 @@
             // textBoxManaTide
             // 
             this.textBoxManaTide.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ManaTide", true));
-            this.textBoxManaTide.Location = new System.Drawing.Point(141, 222);
+            this.textBoxManaTide.Location = new System.Drawing.Point(141, 242);
             this.textBoxManaTide.Name = "textBoxManaTide";
             this.textBoxManaTide.Size = new System.Drawing.Size(75, 20);
             this.textBoxManaTide.TabIndex = 175;
@@ -902,7 +931,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(-1, 225);
+            this.label29.Location = new System.Drawing.Point(-1, 245);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(101, 13);
             this.label29.TabIndex = 174;
@@ -913,7 +942,7 @@
             // textBoxInnervate
             // 
             this.textBoxInnervate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "Innervate", true));
-            this.textBoxInnervate.Location = new System.Drawing.Point(141, 196);
+            this.textBoxInnervate.Location = new System.Drawing.Point(141, 216);
             this.textBoxInnervate.Name = "textBoxInnervate";
             this.textBoxInnervate.Size = new System.Drawing.Size(75, 20);
             this.textBoxInnervate.TabIndex = 173;
@@ -921,7 +950,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(-1, 199);
+            this.label28.Location = new System.Drawing.Point(-1, 219);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(62, 13);
             this.label28.TabIndex = 172;
@@ -938,7 +967,7 @@
             "Before 35%",
             "No Cooldowns",
             "After 35%"});
-            this.comboBoxHeroismControl.Location = new System.Drawing.Point(141, 169);
+            this.comboBoxHeroismControl.Location = new System.Drawing.Point(141, 189);
             this.comboBoxHeroismControl.Name = "comboBoxHeroismControl";
             this.comboBoxHeroismControl.Size = new System.Drawing.Size(75, 21);
             this.comboBoxHeroismControl.TabIndex = 171;
@@ -946,7 +975,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(-1, 172);
+            this.label37.Location = new System.Drawing.Point(-1, 192);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(84, 13);
             this.label37.TabIndex = 170;
@@ -975,7 +1004,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(-1, 149);
+            this.label18.Location = new System.Drawing.Point(-1, 169);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(94, 13);
             this.label18.TabIndex = 165;
@@ -986,7 +1015,7 @@
             // 
             this.checkBoxMaintainScorch.AutoSize = true;
             this.checkBoxMaintainScorch.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MaintainScorch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMaintainScorch.Location = new System.Drawing.Point(141, 149);
+            this.checkBoxMaintainScorch.Location = new System.Drawing.Point(141, 169);
             this.checkBoxMaintainScorch.Name = "checkBoxMaintainScorch";
             this.checkBoxMaintainScorch.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMaintainScorch.TabIndex = 164;
@@ -995,7 +1024,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(-1, 129);
+            this.label16.Location = new System.Drawing.Point(-1, 149);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(88, 13);
             this.label16.TabIndex = 163;
@@ -1006,7 +1035,7 @@
             // 
             this.checkBoxMaintainSnare.AutoSize = true;
             this.checkBoxMaintainSnare.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MaintainSnare", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMaintainSnare.Location = new System.Drawing.Point(141, 129);
+            this.checkBoxMaintainSnare.Location = new System.Drawing.Point(141, 149);
             this.checkBoxMaintainSnare.Name = "checkBoxMaintainSnare";
             this.checkBoxMaintainSnare.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMaintainSnare.TabIndex = 162;
@@ -1571,6 +1600,682 @@
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 142;
             this.label1.Text = "Target Level: ";
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.label125);
+            this.tabPage8.Controls.Add(this.bindingNavigator3);
+            this.tabPage8.Controls.Add(this.label121);
+            this.tabPage8.Controls.Add(this.checkBox4);
+            this.tabPage8.Controls.Add(this.textBox9);
+            this.tabPage8.Controls.Add(this.label122);
+            this.tabPage8.Controls.Add(this.textBox10);
+            this.tabPage8.Controls.Add(this.label123);
+            this.tabPage8.Controls.Add(this.textBox11);
+            this.tabPage8.Controls.Add(this.label124);
+            this.tabPage8.Controls.Add(this.label118);
+            this.tabPage8.Controls.Add(this.checkBox3);
+            this.tabPage8.Controls.Add(this.textBox7);
+            this.tabPage8.Controls.Add(this.label119);
+            this.tabPage8.Controls.Add(this.textBox8);
+            this.tabPage8.Controls.Add(this.label120);
+            this.tabPage8.Controls.Add(this.bindingNavigator2);
+            this.tabPage8.Controls.Add(this.label117);
+            this.tabPage8.Controls.Add(this.bindingNavigator1);
+            this.tabPage8.Controls.Add(this.label116);
+            this.tabPage8.Controls.Add(this.checkBox2);
+            this.tabPage8.Controls.Add(this.textBox6);
+            this.tabPage8.Controls.Add(this.label115);
+            this.tabPage8.Controls.Add(this.textBox5);
+            this.tabPage8.Controls.Add(this.label114);
+            this.tabPage8.Controls.Add(this.textBoxGlobalMultiplierStartTime);
+            this.tabPage8.Controls.Add(this.label113);
+            this.tabPage8.Controls.Add(this.label112);
+            this.tabPage8.Controls.Add(this.checkBox1);
+            this.tabPage8.Controls.Add(this.label111);
+            this.tabPage8.Location = new System.Drawing.Point(4, 40);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(252, 507);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "Fight2";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // label125
+            // 
+            this.label125.AutoSize = true;
+            this.label125.Location = new System.Drawing.Point(7, 363);
+            this.label125.Name = "label125";
+            this.label125.Size = new System.Drawing.Size(56, 13);
+            this.label125.TabIndex = 172;
+            this.label125.Text = "Multipliers:";
+            // 
+            // bindingNavigator3
+            // 
+            this.bindingNavigator3.AddNewItem = this.toolStripButton7;
+            this.bindingNavigator3.AutoSize = false;
+            this.bindingNavigator3.BindingSource = this.multipliersBindingSource;
+            this.bindingNavigator3.CanOverflow = false;
+            this.bindingNavigator3.CountItem = this.toolStripLabel2;
+            this.bindingNavigator3.DeleteItem = this.toolStripButton8;
+            this.bindingNavigator3.Dock = System.Windows.Forms.DockStyle.None;
+            this.bindingNavigator3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.bindingNavigator3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton9,
+            this.toolStripButton10,
+            this.toolStripSeparator4,
+            this.toolStripTextBox2,
+            this.toolStripLabel2,
+            this.toolStripSeparator5,
+            this.toolStripButton11,
+            this.toolStripButton12,
+            this.toolStripSeparator6,
+            this.toolStripButton7,
+            this.toolStripButton8});
+            this.bindingNavigator3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.bindingNavigator3.Location = new System.Drawing.Point(0, 376);
+            this.bindingNavigator3.MoveFirstItem = this.toolStripButton9;
+            this.bindingNavigator3.MoveLastItem = this.toolStripButton12;
+            this.bindingNavigator3.MoveNextItem = this.toolStripButton11;
+            this.bindingNavigator3.MovePreviousItem = this.toolStripButton10;
+            this.bindingNavigator3.Name = "bindingNavigator3";
+            this.bindingNavigator3.PositionItem = this.toolStripTextBox2;
+            this.bindingNavigator3.Size = new System.Drawing.Size(249, 25);
+            this.bindingNavigator3.TabIndex = 171;
+            this.bindingNavigator3.Text = "bindingNavigator3";
+            // 
+            // toolStripButton7
+            // 
+            this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton7.Image")));
+            this.toolStripButton7.Name = "toolStripButton7";
+            this.toolStripButton7.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton7.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton7.Text = "Add new";
+            // 
+            // multipliersBindingSource
+            // 
+            this.multipliersBindingSource.DataMember = "Multipliers";
+            this.multipliersBindingSource.DataSource = this.targetGroupsBindingSource;
+            // 
+            // targetGroupsBindingSource
+            // 
+            this.targetGroupsBindingSource.DataMember = "TargetGroups";
+            this.targetGroupsBindingSource.DataSource = this.encounterBindingSource;
+            // 
+            // encounterBindingSource
+            // 
+            this.encounterBindingSource.DataMember = "Encounter";
+            this.encounterBindingSource.DataSource = this.calculationOptionsMageBindingSource;
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel2.Text = "of {0}";
+            this.toolStripLabel2.ToolTipText = "Total number of items";
+            // 
+            // toolStripButton8
+            // 
+            this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton8.Image")));
+            this.toolStripButton8.Name = "toolStripButton8";
+            this.toolStripButton8.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton8.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton8.Text = "Delete";
+            // 
+            // toolStripButton9
+            // 
+            this.toolStripButton9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton9.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton9.Image")));
+            this.toolStripButton9.Name = "toolStripButton9";
+            this.toolStripButton9.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton9.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton9.Text = "Move first";
+            // 
+            // toolStripButton10
+            // 
+            this.toolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton10.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton10.Image")));
+            this.toolStripButton10.Name = "toolStripButton10";
+            this.toolStripButton10.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton10.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton10.Text = "Move previous";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripTextBox2
+            // 
+            this.toolStripTextBox2.AccessibleName = "Position";
+            this.toolStripTextBox2.AutoSize = false;
+            this.toolStripTextBox2.Name = "toolStripTextBox2";
+            this.toolStripTextBox2.Size = new System.Drawing.Size(50, 21);
+            this.toolStripTextBox2.Text = "0";
+            this.toolStripTextBox2.ToolTipText = "Current position";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton11
+            // 
+            this.toolStripButton11.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton11.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton11.Image")));
+            this.toolStripButton11.Name = "toolStripButton11";
+            this.toolStripButton11.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton11.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton11.Text = "Move next";
+            // 
+            // toolStripButton12
+            // 
+            this.toolStripButton12.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton12.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton12.Image")));
+            this.toolStripButton12.Name = "toolStripButton12";
+            this.toolStripButton12.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton12.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton12.Text = "Move last";
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
+            // label121
+            // 
+            this.label121.AutoSize = true;
+            this.label121.Location = new System.Drawing.Point(4, 489);
+            this.label121.Name = "label121";
+            this.label121.Size = new System.Drawing.Size(82, 13);
+            this.label121.TabIndex = 170;
+            this.label121.Text = "Relative Time: *";
+            this.toolTipMage.SetToolTip(this.label121, "Check to express as ratio of target group duration or uncheck to express in secon" +
+                    "ds till target group start time.");
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.multipliersBindingSource, "RelativeTime", true));
+            this.checkBox4.Location = new System.Drawing.Point(132, 488);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(15, 14);
+            this.checkBox4.TabIndex = 169;
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // textBox9
+            // 
+            this.textBox9.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.multipliersBindingSource, "Multiplier", true));
+            this.textBox9.Location = new System.Drawing.Point(132, 462);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(75, 20);
+            this.textBox9.TabIndex = 168;
+            // 
+            // label122
+            // 
+            this.label122.AutoSize = true;
+            this.label122.Location = new System.Drawing.Point(4, 465);
+            this.label122.Name = "label122";
+            this.label122.Size = new System.Drawing.Size(58, 13);
+            this.label122.TabIndex = 167;
+            this.label122.Text = "Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label122, "Value of the multiplier.");
+            // 
+            // textBox10
+            // 
+            this.textBox10.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.multipliersBindingSource, "EndTime", true));
+            this.textBox10.Location = new System.Drawing.Point(132, 436);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(75, 20);
+            this.textBox10.TabIndex = 166;
+            // 
+            // label123
+            // 
+            this.label123.AutoSize = true;
+            this.label123.Location = new System.Drawing.Point(4, 439);
+            this.label123.Name = "label123";
+            this.label123.Size = new System.Drawing.Size(62, 13);
+            this.label123.TabIndex = 165;
+            this.label123.Text = "End Time: *";
+            this.toolTipMage.SetToolTip(this.label123, "Time when the multiplier ends relative to target group.");
+            // 
+            // textBox11
+            // 
+            this.textBox11.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.multipliersBindingSource, "StartTime", true));
+            this.textBox11.Location = new System.Drawing.Point(132, 410);
+            this.textBox11.Name = "textBox11";
+            this.textBox11.Size = new System.Drawing.Size(75, 20);
+            this.textBox11.TabIndex = 164;
+            // 
+            // label124
+            // 
+            this.label124.AutoSize = true;
+            this.label124.Location = new System.Drawing.Point(4, 413);
+            this.label124.Name = "label124";
+            this.label124.Size = new System.Drawing.Size(65, 13);
+            this.label124.TabIndex = 163;
+            this.label124.Text = "Start Time: *";
+            this.toolTipMage.SetToolTip(this.label124, "Time when the multiplier starts relative to target group.");
+            // 
+            // label118
+            // 
+            this.label118.AutoSize = true;
+            this.label118.Location = new System.Drawing.Point(4, 340);
+            this.label118.Name = "label118";
+            this.label118.Size = new System.Drawing.Size(82, 13);
+            this.label118.TabIndex = 162;
+            this.label118.Text = "Relative Time: *";
+            this.toolTipMage.SetToolTip(this.label118, "Check to express as ratio of whole fight or uncheck to express in seconds till fi" +
+                    "ght start.");
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.targetGroupsBindingSource, "RelativeTime", true));
+            this.checkBox3.Location = new System.Drawing.Point(132, 339);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(15, 14);
+            this.checkBox3.TabIndex = 161;
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // textBox7
+            // 
+            this.textBox7.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.targetGroupsBindingSource, "ExitTime", true));
+            this.textBox7.Location = new System.Drawing.Point(132, 313);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(75, 20);
+            this.textBox7.TabIndex = 160;
+            // 
+            // label119
+            // 
+            this.label119.AutoSize = true;
+            this.label119.Location = new System.Drawing.Point(4, 316);
+            this.label119.Name = "label119";
+            this.label119.Size = new System.Drawing.Size(62, 13);
+            this.label119.TabIndex = 159;
+            this.label119.Text = "End Time: *";
+            this.toolTipMage.SetToolTip(this.label119, "Time when the multiplier ends.");
+            // 
+            // textBox8
+            // 
+            this.textBox8.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.targetGroupsBindingSource, "EntranceTime", true));
+            this.textBox8.Location = new System.Drawing.Point(132, 287);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(75, 20);
+            this.textBox8.TabIndex = 158;
+            // 
+            // label120
+            // 
+            this.label120.AutoSize = true;
+            this.label120.Location = new System.Drawing.Point(4, 290);
+            this.label120.Name = "label120";
+            this.label120.Size = new System.Drawing.Size(65, 13);
+            this.label120.TabIndex = 157;
+            this.label120.Text = "Start Time: *";
+            this.toolTipMage.SetToolTip(this.label120, "Time when the multiplier starts.");
+            // 
+            // bindingNavigator2
+            // 
+            this.bindingNavigator2.AddNewItem = this.toolStripButton1;
+            this.bindingNavigator2.AutoSize = false;
+            this.bindingNavigator2.BindingSource = this.targetGroupsBindingSource;
+            this.bindingNavigator2.CanOverflow = false;
+            this.bindingNavigator2.CountItem = this.toolStripLabel1;
+            this.bindingNavigator2.DeleteItem = this.toolStripButton2;
+            this.bindingNavigator2.Dock = System.Windows.Forms.DockStyle.None;
+            this.bindingNavigator2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.bindingNavigator2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton3,
+            this.toolStripButton4,
+            this.toolStripSeparator1,
+            this.toolStripTextBox1,
+            this.toolStripLabel1,
+            this.toolStripSeparator2,
+            this.toolStripButton5,
+            this.toolStripButton6,
+            this.toolStripSeparator3,
+            this.toolStripButton1,
+            this.toolStripButton2});
+            this.bindingNavigator2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.bindingNavigator2.Location = new System.Drawing.Point(0, 259);
+            this.bindingNavigator2.MoveFirstItem = this.toolStripButton3;
+            this.bindingNavigator2.MoveLastItem = this.toolStripButton6;
+            this.bindingNavigator2.MoveNextItem = this.toolStripButton5;
+            this.bindingNavigator2.MovePreviousItem = this.toolStripButton4;
+            this.bindingNavigator2.Name = "bindingNavigator2";
+            this.bindingNavigator2.PositionItem = this.toolStripTextBox1;
+            this.bindingNavigator2.Size = new System.Drawing.Size(249, 25);
+            this.bindingNavigator2.TabIndex = 156;
+            this.bindingNavigator2.Text = "bindingNavigator2";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "Add new";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel1.Text = "of {0}";
+            this.toolStripLabel1.ToolTipText = "Total number of items";
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton2.Text = "Delete";
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton3.Text = "Move first";
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton4.Text = "Move previous";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.AccessibleName = "Position";
+            this.toolStripTextBox1.AutoSize = false;
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(50, 21);
+            this.toolStripTextBox1.Text = "0";
+            this.toolStripTextBox1.ToolTipText = "Current position";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton5.Text = "Move next";
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.RightToLeftAutoMirrorImage = true;
+            this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton6.Text = "Move last";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // label117
+            // 
+            this.label117.AutoSize = true;
+            this.label117.Location = new System.Drawing.Point(7, 237);
+            this.label117.Name = "label117";
+            this.label117.Size = new System.Drawing.Size(78, 13);
+            this.label117.TabIndex = 155;
+            this.label117.Text = "Target Groups:";
+            // 
+            // bindingNavigator1
+            // 
+            this.bindingNavigator1.AddNewItem = this.bindingNavigatorAddNewItem;
+            this.bindingNavigator1.AutoSize = false;
+            this.bindingNavigator1.BindingSource = this.globalMultipliersBindingSource;
+            this.bindingNavigator1.CanOverflow = false;
+            this.bindingNavigator1.CountItem = this.bindingNavigatorCountItem;
+            this.bindingNavigator1.DeleteItem = this.bindingNavigatorDeleteItem;
+            this.bindingNavigator1.Dock = System.Windows.Forms.DockStyle.None;
+            this.bindingNavigator1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.bindingNavigator1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bindingNavigatorMoveFirstItem,
+            this.bindingNavigatorMovePreviousItem,
+            this.bindingNavigatorSeparator,
+            this.bindingNavigatorPositionItem,
+            this.bindingNavigatorCountItem,
+            this.bindingNavigatorSeparator1,
+            this.bindingNavigatorMoveNextItem,
+            this.bindingNavigatorMoveLastItem,
+            this.bindingNavigatorSeparator2,
+            this.bindingNavigatorAddNewItem,
+            this.bindingNavigatorDeleteItem});
+            this.bindingNavigator1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.bindingNavigator1.Location = new System.Drawing.Point(0, 106);
+            this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
+            this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
+            this.bindingNavigator1.MoveNextItem = this.bindingNavigatorMoveNextItem;
+            this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
+            this.bindingNavigator1.Name = "bindingNavigator1";
+            this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
+            this.bindingNavigator1.Size = new System.Drawing.Size(249, 25);
+            this.bindingNavigator1.TabIndex = 154;
+            this.bindingNavigator1.Text = "bindingNavigator1";
+            // 
+            // bindingNavigatorAddNewItem
+            // 
+            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
+            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
+            this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorAddNewItem.Text = "Add new";
+            // 
+            // globalMultipliersBindingSource
+            // 
+            this.globalMultipliersBindingSource.DataMember = "GlobalMultipliers";
+            this.globalMultipliersBindingSource.DataSource = this.encounterBindingSource;
+            // 
+            // bindingNavigatorCountItem
+            // 
+            this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 22);
+            this.bindingNavigatorCountItem.Text = "of {0}";
+            this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
+            // 
+            // bindingNavigatorDeleteItem
+            // 
+            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
+            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
+            this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorDeleteItem.Text = "Delete";
+            // 
+            // bindingNavigatorMoveFirstItem
+            // 
+            this.bindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
+            this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
+            this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMoveFirstItem.Text = "Move first";
+            // 
+            // bindingNavigatorMovePreviousItem
+            // 
+            this.bindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
+            this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
+            this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMovePreviousItem.Text = "Move previous";
+            // 
+            // bindingNavigatorSeparator
+            // 
+            this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
+            // bindingNavigatorPositionItem
+            // 
+            this.bindingNavigatorPositionItem.AccessibleName = "Position";
+            this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
+            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 21);
+            this.bindingNavigatorPositionItem.Text = "0";
+            this.bindingNavigatorPositionItem.ToolTipText = "Current position";
+            // 
+            // bindingNavigatorSeparator1
+            // 
+            this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // bindingNavigatorMoveNextItem
+            // 
+            this.bindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
+            this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
+            this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMoveNextItem.Text = "Move next";
+            // 
+            // bindingNavigatorMoveLastItem
+            // 
+            this.bindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
+            this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
+            this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMoveLastItem.Text = "Move last";
+            // 
+            // bindingNavigatorSeparator2
+            // 
+            this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // label116
+            // 
+            this.label116.AutoSize = true;
+            this.label116.Location = new System.Drawing.Point(4, 219);
+            this.label116.Name = "label116";
+            this.label116.Size = new System.Drawing.Size(82, 13);
+            this.label116.TabIndex = 153;
+            this.label116.Text = "Relative Time: *";
+            this.toolTipMage.SetToolTip(this.label116, "Check to express as ratio of whole fight or uncheck to express in seconds till fi" +
+                    "ght start.");
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.globalMultipliersBindingSource, "RelativeTime", true));
+            this.checkBox2.Location = new System.Drawing.Point(132, 218);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(15, 14);
+            this.checkBox2.TabIndex = 152;
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // textBox6
+            // 
+            this.textBox6.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.globalMultipliersBindingSource, "Multiplier", true));
+            this.textBox6.Location = new System.Drawing.Point(132, 192);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(75, 20);
+            this.textBox6.TabIndex = 151;
+            // 
+            // label115
+            // 
+            this.label115.AutoSize = true;
+            this.label115.Location = new System.Drawing.Point(4, 195);
+            this.label115.Name = "label115";
+            this.label115.Size = new System.Drawing.Size(58, 13);
+            this.label115.TabIndex = 150;
+            this.label115.Text = "Multiplier: *";
+            this.toolTipMage.SetToolTip(this.label115, "Value of the multiplier.");
+            // 
+            // textBox5
+            // 
+            this.textBox5.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.globalMultipliersBindingSource, "EndTime", true));
+            this.textBox5.Location = new System.Drawing.Point(132, 166);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(75, 20);
+            this.textBox5.TabIndex = 149;
+            // 
+            // label114
+            // 
+            this.label114.AutoSize = true;
+            this.label114.Location = new System.Drawing.Point(4, 169);
+            this.label114.Name = "label114";
+            this.label114.Size = new System.Drawing.Size(62, 13);
+            this.label114.TabIndex = 148;
+            this.label114.Text = "End Time: *";
+            this.toolTipMage.SetToolTip(this.label114, "Time when the multiplier ends.");
+            // 
+            // textBoxGlobalMultiplierStartTime
+            // 
+            this.textBoxGlobalMultiplierStartTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.globalMultipliersBindingSource, "StartTime", true));
+            this.textBoxGlobalMultiplierStartTime.Location = new System.Drawing.Point(132, 140);
+            this.textBoxGlobalMultiplierStartTime.Name = "textBoxGlobalMultiplierStartTime";
+            this.textBoxGlobalMultiplierStartTime.Size = new System.Drawing.Size(75, 20);
+            this.textBoxGlobalMultiplierStartTime.TabIndex = 147;
+            // 
+            // label113
+            // 
+            this.label113.AutoSize = true;
+            this.label113.Location = new System.Drawing.Point(4, 143);
+            this.label113.Name = "label113";
+            this.label113.Size = new System.Drawing.Size(65, 13);
+            this.label113.TabIndex = 146;
+            this.label113.Text = "Start Time: *";
+            this.toolTipMage.SetToolTip(this.label113, "Time when the multiplier starts.");
+            // 
+            // label112
+            // 
+            this.label112.AutoSize = true;
+            this.label112.Location = new System.Drawing.Point(7, 84);
+            this.label112.Name = "label112";
+            this.label112.Size = new System.Drawing.Size(89, 13);
+            this.label112.TabIndex = 3;
+            this.label112.Text = "Global Multipliers:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "EncounterEnabled", true));
+            this.checkBox1.Location = new System.Drawing.Point(7, 64);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(185, 17);
+            this.checkBox1.TabIndex = 1;
+            this.checkBox1.Text = "Enable Advanced Fight Settings *";
+            this.toolTipMage.SetToolTip(this.checkBox1, "The advanced settings only take effect when cooldown segmentation is enabled and " +
+                    "this is checked.");
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // label111
+            // 
+            this.label111.AutoSize = true;
+            this.label111.Location = new System.Drawing.Point(4, 7);
+            this.label111.MaximumSize = new System.Drawing.Size(250, 500);
+            this.label111.Name = "label111";
+            this.label111.Size = new System.Drawing.Size(247, 52);
+            this.label111.TabIndex = 0;
+            this.label111.Text = "The following advanced fight control settings only take effect when using Cooldow" +
+                "n Segmentation in advanced settings! At least level 2 advanced constraints sugge" +
+                "sted!";
             // 
             // tabPage6
             // 
@@ -3071,687 +3776,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // tabPage8
-            // 
-            this.tabPage8.Controls.Add(this.label125);
-            this.tabPage8.Controls.Add(this.bindingNavigator3);
-            this.tabPage8.Controls.Add(this.label121);
-            this.tabPage8.Controls.Add(this.checkBox4);
-            this.tabPage8.Controls.Add(this.textBox9);
-            this.tabPage8.Controls.Add(this.label122);
-            this.tabPage8.Controls.Add(this.textBox10);
-            this.tabPage8.Controls.Add(this.label123);
-            this.tabPage8.Controls.Add(this.textBox11);
-            this.tabPage8.Controls.Add(this.label124);
-            this.tabPage8.Controls.Add(this.label118);
-            this.tabPage8.Controls.Add(this.checkBox3);
-            this.tabPage8.Controls.Add(this.textBox7);
-            this.tabPage8.Controls.Add(this.label119);
-            this.tabPage8.Controls.Add(this.textBox8);
-            this.tabPage8.Controls.Add(this.label120);
-            this.tabPage8.Controls.Add(this.bindingNavigator2);
-            this.tabPage8.Controls.Add(this.label117);
-            this.tabPage8.Controls.Add(this.bindingNavigator1);
-            this.tabPage8.Controls.Add(this.label116);
-            this.tabPage8.Controls.Add(this.checkBox2);
-            this.tabPage8.Controls.Add(this.textBox6);
-            this.tabPage8.Controls.Add(this.label115);
-            this.tabPage8.Controls.Add(this.textBox5);
-            this.tabPage8.Controls.Add(this.label114);
-            this.tabPage8.Controls.Add(this.textBoxGlobalMultiplierStartTime);
-            this.tabPage8.Controls.Add(this.label113);
-            this.tabPage8.Controls.Add(this.label112);
-            this.tabPage8.Controls.Add(this.checkBox1);
-            this.tabPage8.Controls.Add(this.label111);
-            this.tabPage8.Location = new System.Drawing.Point(4, 40);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(252, 507);
-            this.tabPage8.TabIndex = 7;
-            this.tabPage8.Text = "Fight2";
-            this.tabPage8.UseVisualStyleBackColor = true;
-            // 
-            // label111
-            // 
-            this.label111.AutoSize = true;
-            this.label111.Location = new System.Drawing.Point(4, 7);
-            this.label111.MaximumSize = new System.Drawing.Size(250, 500);
-            this.label111.Name = "label111";
-            this.label111.Size = new System.Drawing.Size(247, 52);
-            this.label111.TabIndex = 0;
-            this.label111.Text = "The following advanced fight control settings only take effect when using Cooldow" +
-                "n Segmentation in advanced settings! At least level 2 advanced constraints sugge" +
-                "sted!";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "EncounterEnabled", true));
-            this.checkBox1.Location = new System.Drawing.Point(7, 64);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(185, 17);
-            this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Enable Advanced Fight Settings *";
-            this.toolTipMage.SetToolTip(this.checkBox1, "The advanced settings only take effect when cooldown segmentation is enabled and " +
-                    "this is checked.");
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // label112
-            // 
-            this.label112.AutoSize = true;
-            this.label112.Location = new System.Drawing.Point(7, 84);
-            this.label112.Name = "label112";
-            this.label112.Size = new System.Drawing.Size(89, 13);
-            this.label112.TabIndex = 3;
-            this.label112.Text = "Global Multipliers:";
-            // 
-            // encounterBindingSource
-            // 
-            this.encounterBindingSource.DataMember = "Encounter";
-            this.encounterBindingSource.DataSource = this.calculationOptionsMageBindingSource;
-            // 
-            // globalMultipliersBindingSource
-            // 
-            this.globalMultipliersBindingSource.DataMember = "GlobalMultipliers";
-            this.globalMultipliersBindingSource.DataSource = this.encounterBindingSource;
-            // 
-            // textBoxGlobalMultiplierStartTime
-            // 
-            this.textBoxGlobalMultiplierStartTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.globalMultipliersBindingSource, "StartTime", true));
-            this.textBoxGlobalMultiplierStartTime.Location = new System.Drawing.Point(132, 140);
-            this.textBoxGlobalMultiplierStartTime.Name = "textBoxGlobalMultiplierStartTime";
-            this.textBoxGlobalMultiplierStartTime.Size = new System.Drawing.Size(75, 20);
-            this.textBoxGlobalMultiplierStartTime.TabIndex = 147;
-            // 
-            // label113
-            // 
-            this.label113.AutoSize = true;
-            this.label113.Location = new System.Drawing.Point(4, 143);
-            this.label113.Name = "label113";
-            this.label113.Size = new System.Drawing.Size(65, 13);
-            this.label113.TabIndex = 146;
-            this.label113.Text = "Start Time: *";
-            this.toolTipMage.SetToolTip(this.label113, "Time when the multiplier starts.");
-            // 
-            // textBox5
-            // 
-            this.textBox5.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.globalMultipliersBindingSource, "EndTime", true));
-            this.textBox5.Location = new System.Drawing.Point(132, 166);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(75, 20);
-            this.textBox5.TabIndex = 149;
-            // 
-            // label114
-            // 
-            this.label114.AutoSize = true;
-            this.label114.Location = new System.Drawing.Point(4, 169);
-            this.label114.Name = "label114";
-            this.label114.Size = new System.Drawing.Size(62, 13);
-            this.label114.TabIndex = 148;
-            this.label114.Text = "End Time: *";
-            this.toolTipMage.SetToolTip(this.label114, "Time when the multiplier ends.");
-            // 
-            // textBox6
-            // 
-            this.textBox6.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.globalMultipliersBindingSource, "Multiplier", true));
-            this.textBox6.Location = new System.Drawing.Point(132, 192);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(75, 20);
-            this.textBox6.TabIndex = 151;
-            // 
-            // label115
-            // 
-            this.label115.AutoSize = true;
-            this.label115.Location = new System.Drawing.Point(4, 195);
-            this.label115.Name = "label115";
-            this.label115.Size = new System.Drawing.Size(58, 13);
-            this.label115.TabIndex = 150;
-            this.label115.Text = "Multiplier: *";
-            this.toolTipMage.SetToolTip(this.label115, "Value of the multiplier.");
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.globalMultipliersBindingSource, "RelativeTime", true));
-            this.checkBox2.Location = new System.Drawing.Point(132, 218);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(15, 14);
-            this.checkBox2.TabIndex = 152;
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // label116
-            // 
-            this.label116.AutoSize = true;
-            this.label116.Location = new System.Drawing.Point(4, 219);
-            this.label116.Name = "label116";
-            this.label116.Size = new System.Drawing.Size(82, 13);
-            this.label116.TabIndex = 153;
-            this.label116.Text = "Relative Time: *";
-            this.toolTipMage.SetToolTip(this.label116, "Check to express as ratio of whole fight or uncheck to express in seconds till fi" +
-                    "ght start.");
-            // 
-            // bindingNavigator1
-            // 
-            this.bindingNavigator1.AddNewItem = this.bindingNavigatorAddNewItem;
-            this.bindingNavigator1.AutoSize = false;
-            this.bindingNavigator1.BindingSource = this.globalMultipliersBindingSource;
-            this.bindingNavigator1.CanOverflow = false;
-            this.bindingNavigator1.CountItem = this.bindingNavigatorCountItem;
-            this.bindingNavigator1.DeleteItem = this.bindingNavigatorDeleteItem;
-            this.bindingNavigator1.Dock = System.Windows.Forms.DockStyle.None;
-            this.bindingNavigator1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.bindingNavigator1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bindingNavigatorMoveFirstItem,
-            this.bindingNavigatorMovePreviousItem,
-            this.bindingNavigatorSeparator,
-            this.bindingNavigatorPositionItem,
-            this.bindingNavigatorCountItem,
-            this.bindingNavigatorSeparator1,
-            this.bindingNavigatorMoveNextItem,
-            this.bindingNavigatorMoveLastItem,
-            this.bindingNavigatorSeparator2,
-            this.bindingNavigatorAddNewItem,
-            this.bindingNavigatorDeleteItem});
-            this.bindingNavigator1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.bindingNavigator1.Location = new System.Drawing.Point(0, 106);
-            this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
-            this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
-            this.bindingNavigator1.MoveNextItem = this.bindingNavigatorMoveNextItem;
-            this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
-            this.bindingNavigator1.Name = "bindingNavigator1";
-            this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(249, 25);
-            this.bindingNavigator1.TabIndex = 154;
-            this.bindingNavigator1.Text = "bindingNavigator1";
-            // 
-            // bindingNavigatorMoveFirstItem
-            // 
-            this.bindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
-            this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
-            this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorMoveFirstItem.Text = "Move first";
-            // 
-            // bindingNavigatorMovePreviousItem
-            // 
-            this.bindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
-            this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
-            this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorMovePreviousItem.Text = "Move previous";
-            // 
-            // bindingNavigatorSeparator
-            // 
-            this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 25);
-            // 
-            // bindingNavigatorPositionItem
-            // 
-            this.bindingNavigatorPositionItem.AccessibleName = "Position";
-            this.bindingNavigatorPositionItem.AutoSize = false;
-            this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
-            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 21);
-            this.bindingNavigatorPositionItem.Text = "0";
-            this.bindingNavigatorPositionItem.ToolTipText = "Current position";
-            // 
-            // bindingNavigatorCountItem
-            // 
-            this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(36, 22);
-            this.bindingNavigatorCountItem.Text = "of {0}";
-            this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
-            // 
-            // bindingNavigatorSeparator1
-            // 
-            this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // bindingNavigatorMoveNextItem
-            // 
-            this.bindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
-            this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
-            this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorMoveNextItem.Text = "Move next";
-            // 
-            // bindingNavigatorMoveLastItem
-            // 
-            this.bindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
-            this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
-            this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorMoveLastItem.Text = "Move last";
-            // 
-            // bindingNavigatorSeparator2
-            // 
-            this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // bindingNavigatorAddNewItem
-            // 
-            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
-            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
-            this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorAddNewItem.Text = "Add new";
-            // 
-            // bindingNavigatorDeleteItem
-            // 
-            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
-            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
-            this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorDeleteItem.Text = "Delete";
-            // 
-            // label117
-            // 
-            this.label117.AutoSize = true;
-            this.label117.Location = new System.Drawing.Point(7, 237);
-            this.label117.Name = "label117";
-            this.label117.Size = new System.Drawing.Size(78, 13);
-            this.label117.TabIndex = 155;
-            this.label117.Text = "Target Groups:";
-            // 
-            // bindingNavigator2
-            // 
-            this.bindingNavigator2.AddNewItem = this.toolStripButton1;
-            this.bindingNavigator2.AutoSize = false;
-            this.bindingNavigator2.BindingSource = this.targetGroupsBindingSource;
-            this.bindingNavigator2.CanOverflow = false;
-            this.bindingNavigator2.CountItem = this.toolStripLabel1;
-            this.bindingNavigator2.DeleteItem = this.toolStripButton2;
-            this.bindingNavigator2.Dock = System.Windows.Forms.DockStyle.None;
-            this.bindingNavigator2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.bindingNavigator2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton3,
-            this.toolStripButton4,
-            this.toolStripSeparator1,
-            this.toolStripTextBox1,
-            this.toolStripLabel1,
-            this.toolStripSeparator2,
-            this.toolStripButton5,
-            this.toolStripButton6,
-            this.toolStripSeparator3,
-            this.toolStripButton1,
-            this.toolStripButton2});
-            this.bindingNavigator2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.bindingNavigator2.Location = new System.Drawing.Point(0, 259);
-            this.bindingNavigator2.MoveFirstItem = this.toolStripButton3;
-            this.bindingNavigator2.MoveLastItem = this.toolStripButton6;
-            this.bindingNavigator2.MoveNextItem = this.toolStripButton5;
-            this.bindingNavigator2.MovePreviousItem = this.toolStripButton4;
-            this.bindingNavigator2.Name = "bindingNavigator2";
-            this.bindingNavigator2.PositionItem = this.toolStripTextBox1;
-            this.bindingNavigator2.Size = new System.Drawing.Size(249, 25);
-            this.bindingNavigator2.TabIndex = 156;
-            this.bindingNavigator2.Text = "bindingNavigator2";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "Add new";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
-            this.toolStripLabel1.Text = "of {0}";
-            this.toolStripLabel1.ToolTipText = "Total number of items";
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "Delete";
-            // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton3.Text = "Move first";
-            // 
-            // toolStripButton4
-            // 
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton4.Text = "Move previous";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripTextBox1
-            // 
-            this.toolStripTextBox1.AccessibleName = "Position";
-            this.toolStripTextBox1.AutoSize = false;
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(50, 21);
-            this.toolStripTextBox1.Text = "0";
-            this.toolStripTextBox1.ToolTipText = "Current position";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButton5
-            // 
-            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton5.Text = "Move next";
-            // 
-            // toolStripButton6
-            // 
-            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
-            this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton6.Text = "Move last";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // targetGroupsBindingSource
-            // 
-            this.targetGroupsBindingSource.DataMember = "TargetGroups";
-            this.targetGroupsBindingSource.DataSource = this.encounterBindingSource;
-            // 
-            // label118
-            // 
-            this.label118.AutoSize = true;
-            this.label118.Location = new System.Drawing.Point(4, 340);
-            this.label118.Name = "label118";
-            this.label118.Size = new System.Drawing.Size(82, 13);
-            this.label118.TabIndex = 162;
-            this.label118.Text = "Relative Time: *";
-            this.toolTipMage.SetToolTip(this.label118, "Check to express as ratio of whole fight or uncheck to express in seconds till fi" +
-                    "ght start.");
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.targetGroupsBindingSource, "RelativeTime", true));
-            this.checkBox3.Location = new System.Drawing.Point(132, 339);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(15, 14);
-            this.checkBox3.TabIndex = 161;
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // textBox7
-            // 
-            this.textBox7.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.targetGroupsBindingSource, "ExitTime", true));
-            this.textBox7.Location = new System.Drawing.Point(132, 313);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(75, 20);
-            this.textBox7.TabIndex = 160;
-            // 
-            // label119
-            // 
-            this.label119.AutoSize = true;
-            this.label119.Location = new System.Drawing.Point(4, 316);
-            this.label119.Name = "label119";
-            this.label119.Size = new System.Drawing.Size(62, 13);
-            this.label119.TabIndex = 159;
-            this.label119.Text = "End Time: *";
-            this.toolTipMage.SetToolTip(this.label119, "Time when the multiplier ends.");
-            // 
-            // textBox8
-            // 
-            this.textBox8.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.targetGroupsBindingSource, "EntranceTime", true));
-            this.textBox8.Location = new System.Drawing.Point(132, 287);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(75, 20);
-            this.textBox8.TabIndex = 158;
-            // 
-            // label120
-            // 
-            this.label120.AutoSize = true;
-            this.label120.Location = new System.Drawing.Point(4, 290);
-            this.label120.Name = "label120";
-            this.label120.Size = new System.Drawing.Size(65, 13);
-            this.label120.TabIndex = 157;
-            this.label120.Text = "Start Time: *";
-            this.toolTipMage.SetToolTip(this.label120, "Time when the multiplier starts.");
-            // 
-            // multipliersBindingSource
-            // 
-            this.multipliersBindingSource.DataMember = "Multipliers";
-            this.multipliersBindingSource.DataSource = this.targetGroupsBindingSource;
-            // 
-            // bindingNavigator3
-            // 
-            this.bindingNavigator3.AddNewItem = this.toolStripButton7;
-            this.bindingNavigator3.AutoSize = false;
-            this.bindingNavigator3.BindingSource = this.multipliersBindingSource;
-            this.bindingNavigator3.CanOverflow = false;
-            this.bindingNavigator3.CountItem = this.toolStripLabel2;
-            this.bindingNavigator3.DeleteItem = this.toolStripButton8;
-            this.bindingNavigator3.Dock = System.Windows.Forms.DockStyle.None;
-            this.bindingNavigator3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.bindingNavigator3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton9,
-            this.toolStripButton10,
-            this.toolStripSeparator4,
-            this.toolStripTextBox2,
-            this.toolStripLabel2,
-            this.toolStripSeparator5,
-            this.toolStripButton11,
-            this.toolStripButton12,
-            this.toolStripSeparator6,
-            this.toolStripButton7,
-            this.toolStripButton8});
-            this.bindingNavigator3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.bindingNavigator3.Location = new System.Drawing.Point(0, 376);
-            this.bindingNavigator3.MoveFirstItem = this.toolStripButton9;
-            this.bindingNavigator3.MoveLastItem = this.toolStripButton12;
-            this.bindingNavigator3.MoveNextItem = this.toolStripButton11;
-            this.bindingNavigator3.MovePreviousItem = this.toolStripButton10;
-            this.bindingNavigator3.Name = "bindingNavigator3";
-            this.bindingNavigator3.PositionItem = this.toolStripTextBox2;
-            this.bindingNavigator3.Size = new System.Drawing.Size(249, 25);
-            this.bindingNavigator3.TabIndex = 171;
-            this.bindingNavigator3.Text = "bindingNavigator3";
-            // 
-            // toolStripButton7
-            // 
-            this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton7.Image")));
-            this.toolStripButton7.Name = "toolStripButton7";
-            this.toolStripButton7.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton7.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton7.Text = "Add new";
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
-            this.toolStripLabel2.Text = "of {0}";
-            this.toolStripLabel2.ToolTipText = "Total number of items";
-            // 
-            // toolStripButton8
-            // 
-            this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton8.Image")));
-            this.toolStripButton8.Name = "toolStripButton8";
-            this.toolStripButton8.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton8.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton8.Text = "Delete";
-            // 
-            // toolStripButton9
-            // 
-            this.toolStripButton9.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton9.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton9.Image")));
-            this.toolStripButton9.Name = "toolStripButton9";
-            this.toolStripButton9.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton9.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton9.Text = "Move first";
-            // 
-            // toolStripButton10
-            // 
-            this.toolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton10.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton10.Image")));
-            this.toolStripButton10.Name = "toolStripButton10";
-            this.toolStripButton10.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton10.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton10.Text = "Move previous";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripTextBox2
-            // 
-            this.toolStripTextBox2.AccessibleName = "Position";
-            this.toolStripTextBox2.AutoSize = false;
-            this.toolStripTextBox2.Name = "toolStripTextBox2";
-            this.toolStripTextBox2.Size = new System.Drawing.Size(50, 21);
-            this.toolStripTextBox2.Text = "0";
-            this.toolStripTextBox2.ToolTipText = "Current position";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButton11
-            // 
-            this.toolStripButton11.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton11.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton11.Image")));
-            this.toolStripButton11.Name = "toolStripButton11";
-            this.toolStripButton11.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton11.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton11.Text = "Move next";
-            // 
-            // toolStripButton12
-            // 
-            this.toolStripButton12.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton12.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton12.Image")));
-            this.toolStripButton12.Name = "toolStripButton12";
-            this.toolStripButton12.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton12.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton12.Text = "Move last";
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
-            // 
-            // label121
-            // 
-            this.label121.AutoSize = true;
-            this.label121.Location = new System.Drawing.Point(4, 489);
-            this.label121.Name = "label121";
-            this.label121.Size = new System.Drawing.Size(82, 13);
-            this.label121.TabIndex = 170;
-            this.label121.Text = "Relative Time: *";
-            this.toolTipMage.SetToolTip(this.label121, "Check to express as ratio of target group duration or uncheck to express in secon" +
-                    "ds till target group start time.");
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.multipliersBindingSource, "RelativeTime", true));
-            this.checkBox4.Location = new System.Drawing.Point(132, 488);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(15, 14);
-            this.checkBox4.TabIndex = 169;
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // textBox9
-            // 
-            this.textBox9.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.multipliersBindingSource, "Multiplier", true));
-            this.textBox9.Location = new System.Drawing.Point(132, 462);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(75, 20);
-            this.textBox9.TabIndex = 168;
-            // 
-            // label122
-            // 
-            this.label122.AutoSize = true;
-            this.label122.Location = new System.Drawing.Point(4, 465);
-            this.label122.Name = "label122";
-            this.label122.Size = new System.Drawing.Size(58, 13);
-            this.label122.TabIndex = 167;
-            this.label122.Text = "Multiplier: *";
-            this.toolTipMage.SetToolTip(this.label122, "Value of the multiplier.");
-            // 
-            // textBox10
-            // 
-            this.textBox10.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.multipliersBindingSource, "EndTime", true));
-            this.textBox10.Location = new System.Drawing.Point(132, 436);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(75, 20);
-            this.textBox10.TabIndex = 166;
-            // 
-            // label123
-            // 
-            this.label123.AutoSize = true;
-            this.label123.Location = new System.Drawing.Point(4, 439);
-            this.label123.Name = "label123";
-            this.label123.Size = new System.Drawing.Size(62, 13);
-            this.label123.TabIndex = 165;
-            this.label123.Text = "End Time: *";
-            this.toolTipMage.SetToolTip(this.label123, "Time when the multiplier ends relative to target group.");
-            // 
-            // textBox11
-            // 
-            this.textBox11.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.multipliersBindingSource, "StartTime", true));
-            this.textBox11.Location = new System.Drawing.Point(132, 410);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(75, 20);
-            this.textBox11.TabIndex = 164;
-            // 
-            // label124
-            // 
-            this.label124.AutoSize = true;
-            this.label124.Location = new System.Drawing.Point(4, 413);
-            this.label124.Name = "label124";
-            this.label124.Size = new System.Drawing.Size(65, 13);
-            this.label124.TabIndex = 163;
-            this.label124.Text = "Start Time: *";
-            this.toolTipMage.SetToolTip(this.label124, "Time when the multiplier starts relative to target group.");
-            // 
-            // label125
-            // 
-            this.label125.AutoSize = true;
-            this.label125.Location = new System.Drawing.Point(7, 363);
-            this.label125.Name = "label125";
-            this.label125.Size = new System.Drawing.Size(56, 13);
-            this.label125.TabIndex = 172;
-            this.label125.Text = "Multipliers:";
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3763,10 +3787,26 @@
             this.tabControlFight2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.tabPage8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator3)).EndInit();
+            this.bindingNavigator3.ResumeLayout(false);
+            this.bindingNavigator3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.multipliersBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.targetGroupsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.encounterBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator2)).EndInit();
+            this.bindingNavigator2.ResumeLayout(false);
+            this.bindingNavigator2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
+            this.bindingNavigator1.ResumeLayout(false);
+            this.bindingNavigator1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.globalMultipliersBindingSource)).EndInit();
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             this.tabPage5.ResumeLayout(false);
@@ -3778,22 +3818,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
-            this.tabPage8.ResumeLayout(false);
-            this.tabPage8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.encounterBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.globalMultipliersBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
-            this.bindingNavigator1.ResumeLayout(false);
-            this.bindingNavigator1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator2)).EndInit();
-            this.bindingNavigator2.ResumeLayout(false);
-            this.bindingNavigator2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.targetGroupsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.multipliersBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator3)).EndInit();
-            this.bindingNavigator3.ResumeLayout(false);
-            this.bindingNavigator3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -4121,6 +4145,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButton5;
         private System.Windows.Forms.ToolStripButton toolStripButton6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.Label label126;
+        private System.Windows.Forms.CheckBox checkBoxMirrorImage;
 
     }
 }

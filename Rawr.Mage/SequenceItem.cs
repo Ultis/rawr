@@ -165,6 +165,12 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
+        public void SetTimeConstraint(double minTime, double maxTime)
+        {
+            this.minTime = minTime;
+            this.maxTime = maxTime;
+        }
+
         public List<SequenceGroup> Group;
         public SequenceGroup SuperGroup;
 

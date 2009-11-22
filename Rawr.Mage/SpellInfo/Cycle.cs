@@ -263,6 +263,7 @@ namespace Rawr.Mage
         }
 
         private Spell waterbolt;
+        private Spell mirrorImage;
 
         private void CalculateIgniteDamageProcs()
         {
@@ -326,6 +327,11 @@ namespace Rawr.Mage
             {
                 waterbolt = CastingState.Calculations.WaterboltTemplate.GetSpell(CastingState, CastingState.FrostSpellPower + spellPower);
                 effectDamagePerSecond += waterbolt.DamagePerSecond;
+            }
+            if (CastingState.MirrorImage)
+            {
+                mirrorImage = CastingState.Calculations.MirrorImageTemplate.GetSpell(CastingState, CastingState.FrostSpellPower + spellPower, CastingState.FireSpellPower + spellPower);
+                effectDamagePerSecond += mirrorImage.DamagePerSecond;
             }
             if (Ticks > 0)
             {
@@ -649,6 +655,16 @@ namespace Rawr.Mage
                 }
                 contrib.Hits += duration / waterbolt.CastTime;
                 contrib.Damage += waterbolt.DamagePerSecond * duration;
+            }
+            if (mirrorImage != null)
+            {
+                if (!dict.TryGetValue("Mirror Image", out contrib))
+                {
+                    contrib = new SpellContribution() { Name = "Mirror Image" };
+                    dict["Mirror Image"] = contrib;
+                }
+                contrib.Hits += 3 * (CastingState.MageTalents.GlyphOfMirrorImage ? 4 : 3) * duration / mirrorImage.CastTime;
+                contrib.Damage += mirrorImage.DamagePerSecond * duration;
             }
             if (Ticks > 0)
             {

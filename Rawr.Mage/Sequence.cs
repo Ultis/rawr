@@ -249,7 +249,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         if (sequence[k].SuperGroup != lastSuper) // intra super ordering not allowed
                         {
-                            if (MinTime(k, j - 1) <= t)
+                            if (MinTime(k, j - 1) <= t + eps)
                             {
                                 if (sequence[k].Group.Count == 0 && (minbuffer > eps || (overflowBuffer > eps && sequence[k].Mps > 0 && !sequence[k].CastingState.ManaGemEffect) || (threatBuffer > eps && sequence[k].Tps < maxTps)))
                                 {
@@ -822,6 +822,11 @@ namespace Rawr.Mage.SequenceReconstruction
                         sequence[index].SuperGroup.Item.Insert(sequence[index].SuperGroup.Item.IndexOf(sequence[index + 1]), sequence[index]);
                     }
                 }
+                else
+                {
+                    sequence[index].SetTimeConstraint(sequence[index].MinTime, sequence[index].MaxTime + sequence[index + 1].Duration);
+                    sequence[index + 1].SetTimeConstraint(sequence[index + 1].MinTime, sequence[index + 1].MaxTime + sequence[index].Duration);
+                }
             }
         }
 
@@ -1067,6 +1072,16 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.CastingState.WaterElemental) list.Add(item);
             }
             if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.WaterElemental], VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseGlobalCooldown);
+        }
+
+        public void GroupMirrorImage()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.CastingState.MirrorImage) list.Add(item);
+            }
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.MirrorImageDuration, SequenceItem.Calculations.MirrorImageCooldown, false, false, Calculations.EffectCooldown[(int)StandardEffect.MirrorImage], VariableType.SummonMirrorImage, SequenceItem.Calculations.BaseGlobalCooldown);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1482,7 +1497,14 @@ namespace Rawr.Mage.SequenceReconstruction
             //compactLastDestro = double.NegativeInfinity;
             //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
             groupedItems.Sort((x, y) => x.Segment.CompareTo(y.Segment));
-            SortGroups_Compute(groupedItems, solver);
+            if (Calculations.CalculationOptions.DisplaySegmentCooldowns)
+            {
+                SortGroups_ComputeSegmented(groupedItems, solver);
+            }
+            else
+            {
+                SortGroups_Compute(groupedItems, solver);
+            }
             if (compactItems == null)
             {
                 //return false;
@@ -1532,11 +1554,11 @@ namespace Rawr.Mage.SequenceReconstruction
 
             sequence.Sort((x, y) =>
             {
-                int compare = x.Segment.CompareTo(y.Segment);
-                if (compare != 0) return compare;
+                /*int compare = x.Segment.CompareTo(y.Segment);
+                if (compare != 0) return compare;*/
                 bool xgrouped = x.Group.Count > 0;
                 bool ygrouped = y.Group.Count > 0;
-                compare = xgrouped.CompareTo(ygrouped);
+                int compare = xgrouped.CompareTo(ygrouped);
                 if (compare != 0) return compare;
                 compare = x.MinTime.CompareTo(y.MinTime);
                 if (compare != 0) return compare;
@@ -1781,6 +1803,11 @@ namespace Rawr.Mage.SequenceReconstruction
                                             {
                                                 // make sure activations are placed before use
                                                 if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
+                                                {
+                                                    tail = 0;
+                                                    break;
+                                                }
+                                                if (item.CastingState.MirrorImage && item.VariableType != VariableType.SummonMirrorImage && itemList[j].VariableType == VariableType.SummonMirrorImage)
                                                 {
                                                     tail = 0;
                                                     break;
@@ -2037,6 +2064,486 @@ namespace Rawr.Mage.SequenceReconstruction
             } while (i >= 0 && (solver == null || !solver.CancellationPending));
         }
 
+        private void SortGroups_ComputeSegmented(List<SequenceItem> itemList, Solver solver)
+        {
+            const double eps = 0.000001;
+            int N = itemList.Count;
+            if (N == 0) return;
+            List<double> constructionTime = new List<double>();
+            List<double>[] constructionTimeHistory = new List<double>[N];
+            bool[] used = new bool[N];
+            int[] index = new int[N];
+            int[] coldsnap = new int[N];
+            double[] coldsnapTime = new double[N];
+            int[] maxIntersect = new int[N];
+            for (int j = 0; j < N; j++) itemList[j].SuperIndex = -1;
+            int super = -1;
+            for (int j = 0; j < N; j++)
+            {
+                if (itemList[j].SuperIndex == -1)
+                {
+                    super++;
+                    itemList[j].SuperIndex = super;
+                    List<SequenceItem> superList = new List<SequenceItem>();
+                    superList.Add(itemList[j]);
+                    bool more = false;
+                    do
+                    {
+                        more = false;
+                        for (int k = j + 1; k < N; k++)
+                        {
+                            if (itemList[k].SuperIndex == -1)
+                            {
+                                foreach (SequenceItem item in superList)
+                                {
+                                    if (Rawr.Mage.ListUtils.Intersect<SequenceGroup>(item.Group, itemList[k].Group).Count > 0)
+                                    {
+                                        itemList[k].SuperIndex = super;
+                                        superList.Add(itemList[k]);
+                                        more = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    } while (more);
+                    List<SequenceGroup> superGroups = new List<SequenceGroup>();
+                    foreach (SequenceItem item in superList)
+                    {
+                        int hex = 0;
+                        foreach (SequenceGroup group in item.Group)
+                        {
+                            if (!superGroups.Contains(group)) superGroups.Add(group);
+                            hex |= (1 << superGroups.IndexOf(group));
+                        }
+                        item.CooldownHex = hex;
+                    }
+                }
+            }
+            List<SequenceGroup> groupList = GetAllGroups(itemList);
+            super++;
+            int[] superLeft = new int[super];
+            for (int j = 0; j < N; j++)
+            {
+                superLeft[itemList[j].SuperIndex]++;
+                foreach (SequenceGroup group in itemList[j].Group)
+                {
+                    group.OrderIndex = -1;
+                }
+            }
+            int maxSegment = 0;
+            for (int j = 0; j < N; j++)
+            {
+                if (itemList[j].Segment > maxSegment)
+                {
+                    maxSegment = itemList[j].Segment;
+                }
+            }
+            int[] earlierCount = new int[maxSegment + 1];
+            for (int j = 0; j < N; j++)
+            {
+                for (int k = itemList[j].Segment + 1; k <= maxSegment; k++)
+                {
+                    earlierCount[k]++;
+                }
+            }
+
+            int i = 0;
+            index[0] = 0;
+            constructionTimeHistory[0] = constructionTime;
+            int maxColdsnap = Calculations.MageTalents.ColdSnap + 1;
+            coldsnap[0] = maxColdsnap;
+            do
+            {
+                if (i == N)
+                {
+                    //double time = 0;
+                    //if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[N - 1]].Duration;
+                    // compute group splits
+                    int groupSplits = 0;
+                    //double lastDestro = double.NegativeInfinity;
+                    foreach (SequenceGroup group in groupList)
+                    {
+                        /*if (group.Item.Count > 0 && group.Item[0].CastingState.PotionOfWildMagic)
+                        {
+                            double min = double.PositiveInfinity;
+                            foreach (SequenceItem item in group.Item)
+                            {
+                                min = Math.Min(min, constructionTime[item.OrderIndex]);
+                            }
+                            if (min > lastDestro) lastDestro = min;
+                        }*/
+                        int minIndex = N - 1;
+                        int maxIndex = 0;
+                        foreach (SequenceItem item in group.Item)
+                        {
+                            if (item.OrderIndex < minIndex) minIndex = item.OrderIndex;
+                            if (item.OrderIndex > maxIndex) maxIndex = item.OrderIndex;
+                        }
+                        groupSplits += (maxIndex - minIndex + 1) - group.Item.Count;
+                    }
+                    //if (lastDestro < FightDuration - 120.0) lastDestro = double.NegativeInfinity;
+                    if (groupSplits < compactGroupSplits /*|| (groupSplits == compactGroupSplits && time < compactTotalTime) || (groupSplits == compactGroupSplits && time == compactTotalTime && lastDestro > compactLastDestro)*/)
+                    {
+                        compactGroupSplits = groupSplits;
+                        //compactTotalTime = time;
+                        //compactLastDestro = lastDestro;
+                        compactTime = new List<double>(constructionTime);
+                        compactItems = new List<SequenceItem>();
+                        for (int j = 0; j < N; j++)
+                        {
+                            compactItems.Add(itemList[index[j]]);
+                        }
+                    }
+                    i--;
+                    if (i >= 0)
+                    {
+                        constructionTime = constructionTimeHistory[i];
+                        used[index[i]] = false;
+                        superLeft[itemList[index[i]].SuperIndex]++;
+                        foreach (SequenceGroup group in itemList[index[i]].Group)
+                        {
+                            if (group.OrderIndex == i)
+                            {
+                                group.OrderIndex = -1;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    coldsnap[i]--;
+                    if (coldsnap[i] < 0 || used[index[i]])
+                    {
+                        coldsnap[i] = maxColdsnap - 1;
+                        do
+                        {
+                            index[i]++;
+                        } while (index[i] < N && used[index[i]]);
+                    }
+                    if (index[i] == N)
+                    {
+                        i--;
+                        if (i >= 0)
+                        {
+                            constructionTime = constructionTimeHistory[i];
+                            used[index[i]] = false;
+                            superLeft[itemList[index[i]].SuperIndex]++;
+                            foreach (SequenceGroup group in itemList[index[i]].Group)
+                            {
+                                if (group.OrderIndex == i)
+                                {
+                                    group.OrderIndex = -1;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // check if valid
+                        SequenceItem item = itemList[index[i]];
+                        // if we have segmentation data take a more directed search, respect segmentation ordering (jumps should be eliminated, but check back in case something looks strange)
+                        if (i == 0 || ((item.SuperIndex == itemList[index[i - 1]].SuperIndex || superLeft[itemList[index[i - 1]].SuperIndex] == 0) && item.Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[item.Segment]))
+                        {
+                            int tail = item.CooldownHex;
+                            int activeTail = 0;
+                            int intersectHex = 0;
+                            if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                            {
+                                activeTail = itemList[index[i - 1]].CooldownHex;
+                                intersectHex = HexCount(tail & activeTail);
+                                if (intersectHex > maxIntersect[i]) maxIntersect[i] = intersectHex;
+                            }
+                            if (intersectHex >= maxIntersect[i])
+                            {
+                                used[index[i]] = true;
+                                itemList[index[i]].OrderIndex = i;
+                                superLeft[itemList[index[i]].SuperIndex]--;
+                                foreach (SequenceGroup group in itemList[index[i]].Group)
+                                {
+                                    if (group.OrderIndex == -1)
+                                    {
+                                        // first item in this group
+                                        group.OrderIndex = i;
+                                    }
+                                }
+                                // skip tests for coldsnap == 0
+                                //if (coldsnap[i] == 1) // just compute it, if you want to optimize take a bit more time to think about it
+                                if (superLeft[itemList[index[i]].SuperIndex] > 0)
+                                {
+                                    for (int j = 0; j < used.Length; j++)
+                                    {
+                                        if (!used[j])
+                                        {
+                                            if (itemList[j].SuperIndex == item.SuperIndex)
+                                            {
+                                                // make sure activations are placed before use
+                                                if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
+                                                {
+                                                    tail = 0;
+                                                    break;
+                                                }
+                                                if (item.CastingState.MirrorImage && item.VariableType != VariableType.SummonMirrorImage && itemList[j].VariableType == VariableType.SummonMirrorImage)
+                                                {
+                                                    tail = 0;
+                                                    break;
+                                                }
+                                                if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                                                {
+                                                    int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
+                                                    if (intersectHexJ > intersectHex)
+                                                    {
+                                                        if (j > index[i] && (i == 0 || (itemList[j].Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[itemList[j].Segment])))
+                                                        {
+                                                            // anything up to j is not valid, so skip ahead
+                                                            used[index[i]] = false;
+                                                            foreach (SequenceGroup group in itemList[index[i]].Group)
+                                                            {
+                                                                if (group.OrderIndex == i)
+                                                                {
+                                                                    group.OrderIndex = -1;
+                                                                }
+                                                            }
+                                                            superLeft[itemList[index[i]].SuperIndex]++;
+                                                            index[i] = j;
+                                                            used[j] = true;
+                                                            itemList[j].OrderIndex = i;
+                                                            superLeft[itemList[index[i]].SuperIndex]--;
+                                                            foreach (SequenceGroup group in itemList[j].Group)
+                                                            {
+                                                                if (group.OrderIndex == -1)
+                                                                {
+                                                                    // first item in this group
+                                                                    group.OrderIndex = i;
+                                                                }
+                                                            }
+                                                            intersectHex = intersectHexJ;
+                                                            maxIntersect[i] = intersectHex;
+                                                            item = itemList[j];
+                                                            tail = item.CooldownHex;
+                                                            j = -1;
+                                                            continue;
+                                                        }
+                                                        else
+                                                        {
+                                                            // invalidate
+                                                            tail = 0;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                if ((itemList[j].CooldownHex & activeTail & ~item.CooldownHex) != 0) // strong requirement, if converting for reconstruction on nonsegmented data might have to remove this
+                                                {
+                                                    // we'll have to place something from active tail that is being removed
+                                                    // from active tail
+                                                    tail = 0;
+                                                    break;
+                                                }
+                                                int intersect = item.CooldownHex & itemList[j].CooldownHex;
+                                                if (intersect > 0)
+                                                {
+                                                    tail = intersect & tail;
+                                                    if (tail == 0) break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                double time = 0;
+                                if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
+                                time = Math.Max(time, item.MinTime);
+                                double minTotalTime = time + item.Duration;
+                                //for (int j = 0; j < N; j++) // too expensive
+                                //{
+                                //    if (!used[j]) minTotalTime += itemList[j].Duration;
+                                //}
+                                if (tail > 0 && minTotalTime < compactTotalTime)
+                                {
+                                    // check constraints
+                                    List<int> icyVeinsStarts = new List<int>();
+                                    List<int> waterElementalStarts = new List<int>();
+                                    SequenceGroup icyVeinsGroup = null;
+                                    SequenceGroup waterElementalGroup = null;
+                                    foreach (SequenceGroup group in item.Group)
+                                    {
+                                        foreach (CooldownConstraint constraint in group.Constraint)
+                                        {
+                                            if (!constraint.ColdSnap)
+                                            {
+                                                //for (int j = 0; j < i; j++)
+                                                //{
+                                                //    if (itemList[index[j]].Group.Contains(constraint.Group))
+                                                //    {
+                                                //        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                                //        break;
+                                                //    }
+                                                //}
+                                                int j = constraint.Group.OrderIndex;
+                                                if (j >= 0)
+                                                {
+                                                    time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // if we're in group with already placed item then no need to redo all this
+                                                if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
+                                                if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsGroup = group;
+                                                if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
+                                                int minIndex = i;
+                                                foreach (SequenceItem coldsnapItem in constraint.Group.Item)
+                                                {
+                                                    if (coldsnapItem.OrderIndex >= 0 && coldsnapItem.OrderIndex < N && index[coldsnapItem.OrderIndex] < N && itemList[index[coldsnapItem.OrderIndex]] == coldsnapItem && used[index[coldsnapItem.OrderIndex]] && coldsnapItem.OrderIndex < minIndex)
+                                                    {
+                                                        minIndex = coldsnapItem.OrderIndex;
+                                                    }
+                                                }
+                                                if (minIndex < i)
+                                                {
+                                                    if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsStarts.Add(minIndex);
+                                                    if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    bool valid = true;
+                                    // we absolutely can't come faster than time
+                                    // now check coldsnap constraints
+                                    // the constraints should link to all the other icy veins/water elemental groups
+                                    // look at the ones that were placed already and sort them by order index
+                                    // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
+                                    // if we don't need to use coldsnap anyway then adjust coldsnap to 0
+                                    if (icyVeinsGroup != null || waterElementalGroup != null)
+                                    {
+                                        // this is only called for first coldsnap item in group
+                                        icyVeinsStarts.Sort();
+                                        waterElementalStarts.Sort();
+                                        int lastColdsnap = -1;
+                                        for (int j = 0; j < i; j++)
+                                        {
+                                            if (coldsnap[j] == 1) lastColdsnap = j;
+                                        }
+                                        if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > SequenceItem.Calculations.WaterElementalDuration + eps))
+                                        {
+                                            // we need internal coldsnap
+                                            if (coldsnap[i] == 1)
+                                            {
+                                                double normalTime = time;
+                                                if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                                if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                                double coldsnapReady = 0;
+                                                if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
+                                                // we have to do first one on normal time and have coldsnap ready in the middle
+                                                time = normalTime;
+                                                if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
+                                                if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
+                                                coldsnapTime[i] = Math.Max(time, coldsnapReady);
+                                            }
+                                            else
+                                            {
+                                                // can't do without coldsnap
+                                                valid = false;
+                                            }
+                                        }
+                                        else if ((icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps) && (waterElementalGroup == null || waterElementalStarts.Count == 0 || time - constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] >= SequenceItem.Calculations.WaterElementalCooldown - eps))
+                                        {
+                                            // don't need coldsnap and can start right at time
+                                            coldsnap[i] = 0;
+                                        }
+                                        else if (coldsnap[i] == 1)
+                                        {
+                                            // use coldsnap
+                                            double normalTime = time;
+                                            if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                            double coldsnapReady = 0;
+                                            if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
+                                            if (coldsnapReady >= normalTime)
+                                            {
+                                                // coldsnap won't be ready until IV/WE will be back anyway, so we don't actually need it
+                                                coldsnap[i] = 0;
+                                                time = normalTime;
+                                            }
+                                            else
+                                            {
+                                                // go now or when coldsnap is ready
+                                                time = Math.Max(coldsnapReady, time);
+                                                coldsnapTime[i] = coldsnapReady;
+                                                if (icyVeinsStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]]);
+                                                if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // we are not allowed to use coldsnap even if we could
+                                            // make sure to adjust by coldsnap constraints
+                                            double normalTime = time;
+                                            if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                            time = normalTime;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // no coldsnap constraints active
+                                        coldsnap[i] = 0;
+                                    }
+                                    if (valid)
+                                    {
+                                        List<double> adjustedConstructionTime = new List<double>(constructionTime);
+                                        adjustedConstructionTime.Add(time);
+                                        // adjust min time of items in same super group
+                                        for (int j = adjustedConstructionTime.Count - 2; j >= 0 && itemList[index[j]].SuperIndex == item.SuperIndex; j--)
+                                        {
+                                            time -= itemList[index[j]].Duration;
+                                            adjustedConstructionTime[j] = time;
+                                        }
+                                        constructionTimeHistory[i] = constructionTime;
+                                        constructionTime = adjustedConstructionTime;
+                                        i++;
+                                        if (i < N)
+                                        {
+                                            index[i] = 0;
+                                            maxIntersect[i] = 0;
+                                            coldsnap[i] = maxColdsnap;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        used[index[i]] = false;
+                                        superLeft[itemList[index[i]].SuperIndex]++;
+                                        foreach (SequenceGroup group in itemList[index[i]].Group)
+                                        {
+                                            if (group.OrderIndex == i)
+                                            {
+                                                group.OrderIndex = -1;
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    used[index[i]] = false;
+                                    superLeft[itemList[index[i]].SuperIndex]++;
+                                    foreach (SequenceGroup group in itemList[index[i]].Group)
+                                    {
+                                        if (group.OrderIndex == i)
+                                        {
+                                            group.OrderIndex = -1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+#if !RAWR3
+            } while (i >= 0 && SolverLogForm.Instance.IsSolverEnabled(solver));
+#else
+            } while (i >= 0);
+#endif
+        }
+
         private void SortGroups_AddRemainingItems(List<SequenceItem> constructionList, List<double> constructionTime, List<SequenceItem> remainingList)
         {
             if (remainingList.Count == 0)
@@ -2156,7 +2663,7 @@ namespace Rawr.Mage.SequenceReconstruction
             int gemPotIndex = 0;*/            
             double potTime = RemoveIndex(VariableType.ManaPotion);
             double gemTime = RemoveIndex(VariableType.ManaGem);
-            double evoTime = RemoveIndex(VariableType.Evocation);
+            //double evoTime = RemoveIndex(VariableType.Evocation);
             bool gemActivated = SequenceItem.Calculations.ManaGemEffect;
             double gemValue = SequenceItem.Calculations.ManaGemValue;
             double gemMaxValue = SequenceItem.Calculations.MaxManaGemValue;
@@ -2182,7 +2689,7 @@ namespace Rawr.Mage.SequenceReconstruction
             DoStart:
                 double mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                 double maxMps = double.PositiveInfinity;
-                if (evoTime > 0)
+                /*if (evoTime > 0)
                 {
                     int numTicks = 4;
                     int ticksLeft = (int)Math.Round(evoTime / (EvocationDuration / numTicks));
@@ -2194,8 +2701,8 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         evocationFactor = 1.0;
                     }
-                }
-                if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
+                }*/
+                if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0)/* || (evoTime > 0 && nextEvo == 0)*/))
                 {
                     double m = mana + ghostMana;
                     for (double _potTime = potTime; _potTime > eps; _potTime -= 1.0)
@@ -2206,7 +2713,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         m += (1 + BaseStats.BonusManaGem) * gemValue;
                     }
-                    m += EvocationRegen * evoTime;
+                    //m += EvocationRegen * evoTime;
                     maxMps = m / (fight - time);
                 }
                 double minMps = double.NegativeInfinity;
@@ -2215,7 +2722,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     double m = mana;
                     if (potTime > 0 && nextPot < nextGem) m += (1 + BaseStats.BonusManaPotion) * potValue;
-                    if (evoTime > 0 && nextEvo < nextGem) m += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
+                    //if (evoTime > 0 && nextEvo < nextGem) m += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
                     double mps = m / (nextGem - time);
                     if (mps < maxMps)
                     {
@@ -2227,7 +2734,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     double m = mana;
                     if (gemTime > 0 && nextGem < nextPot) m += (1 + BaseStats.BonusManaGem) * gemValue;
-                    if (evoTime > 0 && nextEvo < nextPot) m += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
+                    //if (evoTime > 0 && nextEvo < nextPot) m += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
                     double mps = m / (nextPot - time);
                     if (mps < maxMps)
                     {
@@ -2235,7 +2742,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         targetTime = nextPot;
                     }
                 }
-                if (nextEvo > time && evoTime > 0)
+                /*if (nextEvo > time && evoTime > 0)
                 {
                     double m = mana;
                     if (potTime > 0 && nextPot < nextEvo) m += (1 + BaseStats.BonusManaPotion) * potValue;
@@ -2246,8 +2753,8 @@ namespace Rawr.Mage.SequenceReconstruction
                         maxMps = mps;
                         targetTime = nextEvo;
                     }
-                }
-                if (potTime > 0 && (nextPot <= nextGem || gemTime <= 0 || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0 || evoTime <= 0))
+                }*/
+                if (potTime > 0 && (nextPot <= nextGem || gemTime <= 0 || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0/* || evoTime <= 0*/))
                 {
                     if (nextPot <= time)
                     {
@@ -2259,7 +2766,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         minMps = ((1 + BaseStats.BonusManaPotion) * potMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
-                else if (gemTime > 0 && (nextGem <= nextEvo || nextGem == 0 || evoTime <= 0))
+                else if (gemTime > 0 && (nextGem <= nextEvo || nextGem == 0/* || evoTime <= 0*/))
                 {
                     if (nextGem <= time)
                     {
@@ -2271,7 +2778,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         minMps = ((1 + BaseStats.BonusManaGem) * gemMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
-                else if (evoTime > 0)
+                /*else if (evoTime > 0)
                 {
                     if (nextEvo <= time)
                     {
@@ -2282,8 +2789,8 @@ namespace Rawr.Mage.SequenceReconstruction
                         targetTime = nextEvo;
                         minMps = (EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor) - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
-                }
-                if (potTime <= 0 && gemTime <= 0 && evoTime <= 0)
+                }*/
+                if (potTime <= 0 && gemTime <= 0/* && evoTime <= 0*/)
                 {
                     maxMps = mana / (targetTime - time);
                     minMps = -(BaseStats.Mana - mana) / (targetTime - time);
@@ -2312,7 +2819,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         // resort to swapping in this case
                         // the other handler takes care only of trailing oom, we have to make sure here that we
                         // get to the point where the pot/gem can be used (targetTime is always for next consumable or end of fight)
-                        if (targetmana < -eps && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0)))
+                        if (targetmana < -eps && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0)/* || (nextEvo <= time && evoTime > 0)*/))
                         {
                             // only split if it is splittable
                             if (sequence[i].Group.Count == 0)
@@ -2327,7 +2834,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     else if (d > 0 && t + d > time)
                     {
                         targetmana -= sequence[i].Mps * sequence[i].Duration;
-                        if (i < sequence.Count - 1 && targetmana < -eps && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0))) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
+                        if (i < sequence.Count - 1 && targetmana < -eps && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0)/* || (nextEvo <= time && evoTime > 0)*/)) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
                         {
                             // we run oom during construction
                             if (oomtime < double.PositiveInfinity && Math.Abs(t + d - oomtime) < eps && Math.Abs(lastTargetMana - targetmana) < eps)
@@ -2357,10 +2864,10 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         // count mana till end of super group
                         // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
-                        if (evoTime > 0 && nextEvo == 0.0)
+                        /*if (evoTime > 0 && nextEvo == 0.0)
                         {
                             targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
-                        }
+                        }*/
                         if (sequence[sequence.Count - 1].SuperGroup == super) targetmana += ghostMana;
                         double _potTime = potTime;
                         double _nextPot = nextPot;
@@ -2540,11 +3047,11 @@ namespace Rawr.Mage.SequenceReconstruction
             Abort:
                 double gem = nextGem;
                 double pot = nextPot;
-                double evo = nextEvo;
+                //double evo = nextEvo;
                 bool evoMoved = false;
                 if (gemTime > 0) gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue, Math.Max(time, nextGem), 4);
                 if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * potMaxValue, Math.Max(time, nextPot), 3);
-                if (evoTime > 0)
+                /*if (evoTime > 0)
                 {
                     evo = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor), Math.Max(time, nextEvo), 2);
                     double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
@@ -2553,7 +3060,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         evo = breakpoint;
                         evoMoved = true;
                     }
-                }
+                }*/
                 // use pot & gem before evo, they need tighter packing
                 // start with pot because pot needs more buffer than gem usually
                 // verify timing requirements for flame cap, destro pot
@@ -2630,7 +3137,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     double maxtime = fight;
                     // don't wait for pot unless we'll still have room for gem after, just heuristic for now, do something more sophisticated
                     if (potTime > 0 && pot < maxtime && (gem < pot || gem - pot > 20)) maxtime = pot;
-                    if (evoTime > 0 && evo < maxtime) maxtime = evo;
+                    //if (evoTime > 0 && evo < maxtime) maxtime = evo;
                     if (time == 0 && gemTime > 1 + eps) maxtime = fight; // assume that at start we want to activate SCB as soon as possible, in most cases we have to insert burn before activation to prevent overflow and that can cause pot to activate earlier recausing overflow
                     t = 0;
                     for (i = 0; i < sequence.Count; i++)
@@ -2663,7 +3170,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         t += d;
                     }
                 }
-                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && ((pot <= evo && nextEvo > SequenceItem.Calculations.EvocationCooldown) || evoTime <= 0))
+                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem))/* && ((pot <= evo && nextEvo > SequenceItem.Calculations.EvocationCooldown) || evoTime <= 0)*/)
                 {
                     if (pot > targetTime + 0.00001)
                     {
@@ -2684,7 +3191,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         potTime = 0.0;
                     }
                 }
-                else if (!gemActivated && gemTime > 0 && (gem <= evo || (nextGem == 0 && gem < evo + 30) || evoTime <= 0))
+                else if (!gemActivated && gemTime > 0/* && (gem <= evo || (nextGem == 0 && gem < evo + 30) || evoTime <= 0)*/)
                 {
                     if (gem > targetTime + 0.00001)
                     {
@@ -2705,7 +3212,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         gemTime = 0.0;
                     }
                 }
-                else if (evoTime > 0)
+                /*else if (evoTime > 0)
                 {
                     if (nextEvo <= time && evoMoved) // if we ignored mana checks, but decided to wait for cooldown split, make sure not to run oom during supergroup
                     {
@@ -2733,7 +3240,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         evoTime = 0.0;
                         nextEvo = fight;
                     }
-                }
+                }*/
                 else
                 {
                     break;
@@ -2820,6 +3327,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double piCooldown = 0;
             double ivCooldown = 0;
             double weCooldown = 0;
+            double miCooldown = 0;
             double combustionCooldown = 0;
 
             double flameCapTime = double.NegativeInfinity;
@@ -2833,6 +3341,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double piTime = double.NegativeInfinity;
             double ivTime = double.NegativeInfinity;
             double weTime = double.NegativeInfinity;
+            double miTime = double.NegativeInfinity;
             double manaGemEffectTime = double.NegativeInfinity;
 
             bool flameCapActive = false;
@@ -2847,6 +3356,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool manaGemEffectActive = false;
             bool ivActive = false;
             bool weActive = false;
+            bool miActive = false;
 
             double coldsnapTimeMin = double.NegativeInfinity;
             double coldsnapTimeMax = double.NegativeInfinity;
@@ -2858,6 +3368,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool piWarning = false;
             bool ivWarning = false;
             bool weWarning = false;
+            bool miWarning = false;
             bool combustionWarning = false;
             bool berserkingWarning = false;
             bool manaWarning = false;
@@ -3684,6 +4195,40 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (timing != null) timing.AppendLine("INFO: Water Elemental is still up!");
                     }
                 }
+                // Mirror Image
+                if (!miActive && state != null && state.MirrorImage)
+                {
+                    if (miCooldown > eps)
+                    {
+                        unexplained += duration;
+                        if (timing != null && !miWarning) timing.AppendLine("WARNING: Mirror Image cooldown not ready!");
+                        miWarning = true;
+                    }
+                    else
+                    {
+                        if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Mirror Image (" + Math.Round(manabefore).ToString() + " mana)");
+                        miCooldown = SequenceItem.Calculations.MirrorImageCooldown;
+                        miTime = time;
+                        miWarning = false;
+                        miActive = true;
+                    }
+                }
+                if (miActive)
+                {
+                    if (state != null && state.MirrorImage)
+                    {
+                        if (time + duration > miTime + SequenceItem.Calculations.MirrorImageDuration + eps)
+                        {
+                            unexplained += time + duration - miTime - SequenceItem.Calculations.MirrorImageDuration;
+                            if (timing != null) timing.AppendLine("WARNING: Mirror Image duration too long!");
+                        }
+                    }
+                    else if (duration > 0 && SequenceItem.Calculations.MirrorImageDuration - (time - miTime) > eps)
+                    {
+                        //unexplained += Math.Min(duration, 45 - (time - weTime));
+                        if (timing != null) timing.AppendLine("INFO: Mirror Image is still up!");
+                    }
+                }
                 // Move time forward
                 if (mode == EvaluationMode.CooldownBreak)
                 {
@@ -3722,6 +4267,10 @@ namespace Rawr.Mage.SequenceReconstruction
                     label = "Wand";
                 }
                 else if (type == VariableType.SummonWaterElemental)
+                {
+                    label = "Summon";
+                }
+                else if (type == VariableType.SummonMirrorImage)
                 {
                     label = "Summon";
                 }
@@ -3765,6 +4314,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 piCooldown -= duration;
                 ivCooldown -= duration;
                 weCooldown -= duration;
+                miCooldown -= duration;
                 potionCooldown -= duration;
                 gemCooldown -= duration;
                 flameCapCooldown -= duration;
@@ -3779,6 +4329,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (piActive && SequenceItem.Calculations.PowerInfusionDuration - (time - piTime) <= eps) piActive = false;
                 if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
                 if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
+                if (miActive && SequenceItem.Calculations.MirrorImageDuration - (time - miTime) <= eps) miActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
                 if (potionOfWildMagicActive && 15 - (time - potionOfWildMagicTime) <= eps) potionOfWildMagicActive = false;
                 if (potionOfSpeedActive && 15 - (time - potionOfSpeedTime) <= eps) potionOfSpeedActive = false;

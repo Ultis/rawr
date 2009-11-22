@@ -28,7 +28,7 @@ namespace Rawr
 
     public partial class MageTalents
     {
-        private bool[] _glyphData = new bool[16];
+        private bool[] _glyphData = new bool[17];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         [GlyphData(0, "Glyph of Fireball", true, @"Increases the critical strike chance of Fireball by 5%, but removes the damage over time effect.")]
@@ -63,7 +63,9 @@ namespace Rawr
         public bool GlyphOfLivingBomb { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
         [GlyphData(15, "Glyph of Ice Lance", true, @"Your Ice Lance now causes 4 times damage against frozen targets higher level than you instead of triple damage.")]
         public bool GlyphOfIceLance { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-	}
+        [GlyphData(16, "Glyph of Mirror Image", true, @"Your Mirror Image spell now creates a 4th copy.")]
+        public bool GlyphOfMirrorImage { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+    }
 
 	public partial class DruidTalents
 	{

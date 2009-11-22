@@ -59,7 +59,7 @@ namespace Rawr.Mage
 
     public sealed partial class Solver
     {
-        private const int standardEffectCount = 13; // can't just compute from enum, because that counts the combined masks also
+        private const int standardEffectCount = 14; // can't just compute from enum, because that counts the combined masks also
         private int cooldownCount;
         private List<Segment> segmentList;
         private List<EffectCooldown> cooldownList;
@@ -108,6 +108,7 @@ namespace Rawr.Mage
         private bool berserkingAvailable;
         private bool flameCapAvailable;
         private bool waterElementalAvailable;
+        private bool mirrorImageAvailable;
         private bool manaGemEffectAvailable;
         private bool powerInfusionAvailable;
         private bool evocationAvailable;
@@ -140,6 +141,7 @@ namespace Rawr.Mage
         //private int rowHeroismArcanePower = -1;
         private int rowIcyVeins = -1;
         private int rowWaterElemental = -1;
+        private int rowMirrorImage = -1;
         private int rowMoltenFury = -1;
         //private int rowMoltenFuryDestructionPotion = -1;
         private int rowMoltenFuryIcyVeins = -1;
@@ -164,6 +166,8 @@ namespace Rawr.Mage
         private int rowHeroismIcyVeins = -1;
         private int rowSummonWaterElemental = -1;
         private int rowSummonWaterElementalCount = -1;
+        private int rowSummonMirrorImage = -1;
+        private int rowSummonMirrorImageCount = -1;
         //private int rowMoltenFuryBerserking = -1;
         //private int rowHeroismBerserking = -1;
         //private int rowIcyVeinsBerserking = -1;
@@ -182,6 +186,8 @@ namespace Rawr.Mage
         private List<SegmentConstraint> rowSegmentIcyVeins = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentWaterElemental = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentSummonWaterElemental = new List<SegmentConstraint>();
+        private List<SegmentConstraint> rowSegmentMirrorImage = new List<SegmentConstraint>();
+        private List<SegmentConstraint> rowSegmentSummonMirrorImage = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentCombustion = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentBerserking = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentFlameCap = new List<SegmentConstraint>();
@@ -794,6 +800,7 @@ namespace Rawr.Mage
             flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
             berserkingAvailable = !calculationOptions.DisableCooldowns && character.Race == CharacterRace.Troll;
             waterElementalAvailable = !calculationOptions.DisableCooldowns && (talents.SummonWaterElemental == 1);
+            mirrorImageAvailable = !calculationOptions.DisableCooldowns && calculationOptions.MirrorImageEnabled;
             calculationResult.ManaGemEffect = manaGemEffectAvailable = calculationOptions.ManaGemEnabled && baseStats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.ManaGem);
 
             if (!calculationOptions.EffectDisableManaSources)
@@ -956,6 +963,8 @@ namespace Rawr.Mage
             calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.EnduringWinter;
             calculationResult.PowerInfusionDuration = 15.0;
             calculationResult.PowerInfusionCooldown = 120.0;
+            calculationResult.MirrorImageDuration = 30.0;
+            calculationResult.MirrorImageCooldown = 180.0;
 
             if (evocationAvailable)
             {
@@ -1138,6 +1147,22 @@ namespace Rawr.Mage
                     StandardEffect = StandardEffect.WaterElemental,
 #if !SILVERLIGHT
                     Color = System.Drawing.Color.DarkCyan,
+#endif
+                });
+            }
+            if (mirrorImageAvailable)
+            {
+                cooldownList.Add(new EffectCooldown()
+                {
+                    Cooldown = (float)calculationResult.MirrorImageCooldown,
+                    Duration = (float)calculationResult.MirrorImageDuration,
+                    Mask = (int)StandardEffect.MirrorImage,
+                    Name = "Mirror Image",
+                    StandardEffect = StandardEffect.MirrorImage,
+                    AutomaticConstraints = true,
+                    AutomaticStackingConstraints = true,
+#if !SILVERLIGHT
+                    Color = System.Drawing.Color.LightSalmon,
 #endif
                 });
             }
@@ -2289,6 +2314,68 @@ namespace Rawr.Mage
                     }
                 }
                 #endregion
+                #region Summon Mirror Image
+                if (mirrorImageAvailable)
+                {
+                    int mirrorImageSegments = segmentList.Count; // always segment, we need it to guarantee each block has activation
+                    manaRegen = (int)(0.10 * SpellTemplate.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseGlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
+                    List<CastingState> states = new List<CastingState>();
+                    bool found = false;
+                    for (int i = 0; i < stateList.Length; i++)
+                    {
+                        if (stateList[i].Effects == (int)StandardEffect.MirrorImage)
+                        {
+                            states.Add(stateList[i]);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        states.Add(CastingState.New(calculationResult, (int)StandardEffect.MirrorImage, false));
+                    }
+                    for (int segment = 0; segment < mirrorImageSegments; segment++)
+                    {
+                        foreach (CastingState state in states)
+                        {
+                            Spell mirrorImage = calculationResult.MirrorImageTemplate.GetSpell(state);
+                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonMirrorImage, Segment = segment, State = state });
+                            column = lp.AddColumnUnsafe();
+                            if (mirrorImageSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseGlobalCooldown);
+                            //if (segment == 0 && state == states[0]) calculationResult.ColumnSummonWaterElemental = column;
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                            lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                            lp.SetElementUnsafe(rowSummonMirrorImage, column, -1 / calculationResult.BaseGlobalCooldown);
+                            lp.SetElementUnsafe(rowSummonMirrorImageCount, column, 1.0);
+                            lp.SetElementUnsafe(rowMirrorImage, column, 1.0);
+                            lp.SetCostUnsafe(column, minimizeTime ? -1 : mirrorImage.DamagePerSecond);
+                            if (needsDisplayCalculations) tpsList.Add(0.0);
+                            lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                            if (restrictManaUse)
+                            {
+                                for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                                }
+                            }
+                            if (segmentCooldowns)
+                            {
+                                foreach (SegmentConstraint constraint in rowSegmentMirrorImage)
+                                {
+                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                }
+                                foreach (SegmentConstraint constraint in rowSegmentSummonMirrorImage)
+                                {
+                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
                 #region Drinking
                 if (drinkingEnabled)
                 {
@@ -2851,6 +2938,11 @@ namespace Rawr.Mage
                 lp.SetRHSUnsafe(rowWaterElemental, duration);
                 lp.SetRHSUnsafe(rowSummonWaterElementalCount, calculationResult.BaseGlobalCooldown * Math.Ceiling(duration / calculationResult.WaterElementalDuration));
             }
+            if (mirrorImageAvailable)
+            {
+                double duration = effectCooldown[(int)StandardEffect.MirrorImage].MaximumDuration;
+                lp.SetRHSUnsafe(rowSummonMirrorImageCount, calculationResult.BaseGlobalCooldown * Math.Ceiling(duration / calculationResult.MirrorImageDuration));
+            }
             lp.SetRHSUnsafe(rowTargetDamage, -calculationOptions.TargetDamage);
 
             foreach (StackingConstraint constraint in rowStackingConstraint)
@@ -2911,6 +3003,18 @@ namespace Rawr.Mage
                     foreach (SegmentConstraint constraint in rowSegmentSummonWaterElemental)
                     {
                         lp.SetRHSUnsafe(constraint.Row, calculationResult.BaseGlobalCooldown + (coldsnapAvailable ? calculationResult.BaseGlobalCooldown : 0.0));
+                    }
+                }
+                // mirror image
+                if (mirrorImageAvailable)
+                {
+                    foreach (SegmentConstraint constraint in rowSegmentMirrorImage)
+                    {
+                        lp.SetRHSUnsafe(constraint.Row, calculationResult.MirrorImageDuration);
+                    }
+                    foreach (SegmentConstraint constraint in rowSegmentSummonMirrorImage)
+                    {
+                        lp.SetRHSUnsafe(constraint.Row, calculationResult.BaseGlobalCooldown);
                     }
                 }
                 // flamecap
@@ -3071,6 +3175,11 @@ namespace Rawr.Mage
                 rowSummonWaterElemental = rowCount++;
                 rowSummonWaterElementalCount = rowCount++;
             }
+            if (mirrorImageAvailable)
+            {
+                rowSummonMirrorImage = rowCount++;
+                rowSummonMirrorImageCount = rowCount++;
+            }
             rowDpsTime = rowCount++;
 
             List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>();
@@ -3131,6 +3240,7 @@ namespace Rawr.Mage
             if (powerInfusionAvailable) rowPowerInfusion = effectCooldown[(int)StandardEffect.PowerInfusion].Row;
             if (flameCapAvailable) rowFlameCap = effectCooldown[(int)StandardEffect.FlameCap].Row;
             if (berserkingAvailable) rowBerserking = effectCooldown[(int)StandardEffect.Berserking].Row;
+            if (mirrorImageAvailable) rowMirrorImage = effectCooldown[(int)StandardEffect.MirrorImage].Row;
 
 
             //rowManaPotionManaGem = rowCount++;
@@ -3229,6 +3339,31 @@ namespace Rawr.Mage
                     }
                     list = rowSegmentSummonWaterElemental;
                     cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
+                    for (int seg = 0; seg < segmentList.Count; seg++)
+                    {
+                        int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
+                        if (maxs == -2) maxs = segmentList.Count - 1;
+                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                        {
+                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                        }
+                    }
+                }
+                if (mirrorImageAvailable)
+                {
+                    List<SegmentConstraint> list = rowSegmentMirrorImage;
+                    double cool = calculationResult.MirrorImageCooldown;
+                    for (int seg = 0; seg < segmentList.Count; seg++)
+                    {
+                        int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
+                        if (maxs == -2) maxs = segmentList.Count - 1;
+                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                        {
+                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                        }
+                    }
+                    list = rowSegmentSummonMirrorImage;
+                    cool = calculationResult.MirrorImageCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
                         int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
@@ -3358,6 +3493,11 @@ namespace Rawr.Mage
             {
                 lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
                 lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseGlobalCooldown));
+            }
+            if (state.MirrorImage)
+            {
+                lp.SetElementUnsafe(rowMirrorImage, column, 1.0);
+                lp.SetElementUnsafe(rowSummonMirrorImage, column, 1 / (calculationResult.MirrorImageDuration - calculationResult.BaseGlobalCooldown));
             }
             if (state.Heroism) lp.SetElementUnsafe(rowHeroism, column, 1.0);
             if (state.ArcanePower) lp.SetElementUnsafe(rowArcanePower, column, 1.0);
@@ -3496,6 +3636,13 @@ namespace Rawr.Mage
             if (state.WaterElemental)
             {
                 foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.MirrorImage)
+            {
+                foreach (SegmentConstraint constraint in rowSegmentMirrorImage)
                 {
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
