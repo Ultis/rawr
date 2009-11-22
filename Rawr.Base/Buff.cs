@@ -1431,7 +1431,27 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
                 Improvements = { new Buff { Name = "Flask of the Frost Wyrm (Mixology)", Stats = { SpellPower = 47 } } }
             });
-
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Flask of the North - Attack Power (Alchemy only)",
+                Group = "Elixirs and Flasks",
+                Stats = { AttackPower = 80 },
+                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Flask of the North - Spell Power (Alchemy only)",
+                Group = "Elixirs and Flasks",
+                Stats = { SpellPower = 47 },
+                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Flask of the North - Strength (Alchemy only)",
+                Group = "Elixirs and Flasks",
+                Stats = { Strength = 40 },
+                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Major Agility",
@@ -1715,6 +1735,32 @@ namespace Rawr
                         new Buff {
                             Name = "Runic Mana Injector (Engineer Bonus)",
                             Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.25f, }
+                        }
+                    }
+            });
+             defaultBuffs.Add(buff = new Buff()
+             {
+                Name = "Endless Mana Potion",
+                Group = "Potion",
+                Source = "Alchemy",
+                Stats = new Stats() { ManaRestore = (1800f + 3000f) / 2f, },
+                Improvements = {
+                        new Buff {
+                            Name = "Endless Mana Potion (Alch Stone Bonus)",
+                            Stats = new Stats() { ManaRestore = ((1800f + 3000f) / 2f) * 0.40f, }
+                        }
+                    }
+            });
+             defaultBuffs.Add(buff = new Buff()
+             {
+                Name = "Endless Healing Potion",
+                Group = "Potion",
+                Stats = new Stats() { HealthRestore = (1500f + 2500f) / 2f, },
+                Source = "Alchemy",
+                Improvements = {
+                        new Buff {
+                            Name = "Endless Healing Potion (Alch Stone Bonus)",
+                            Stats = new Stats() { HealthRestore = ((1500f + 2500f) / 2f) * 0.40f, }
                         }
                     }
             });
