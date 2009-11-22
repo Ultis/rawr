@@ -1252,8 +1252,6 @@ namespace Rawr
                     }
                     if (!CheckHasProf(Profession.Leatherworking)) {
                         if (name.Contains("Fur Lining") ||
-                            name.Contains("Jormungar") ||
-                            name.Contains("Magister's Armor Kit") ||
                             name.Contains("Nerubian Leg Reinforcements"))
                         {
                             return false;
