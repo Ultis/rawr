@@ -18,6 +18,10 @@ namespace Rawr.Bear
 		{
 			InitializeComponent();
             this.LayoutRoot.SelectAll();
+            foreach (AccordionItem item in LayoutRoot.Items)
+            {
+                item.IsSelected = true;
+            }
 		}
 
 		#region ICalculationOptionsPanel Members

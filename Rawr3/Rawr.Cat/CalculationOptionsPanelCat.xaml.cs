@@ -12,39 +12,44 @@ using System.Windows.Shapes;
 
 namespace Rawr.Cat
 {
-	public partial class CalculationOptionsPanelCat : UserControl, ICalculationOptionsPanel
-	{
-		public CalculationOptionsPanelCat()
-		{
-			InitializeComponent();
-			DataContext = this;
-		}
+    public partial class CalculationOptionsPanelCat : UserControl, ICalculationOptionsPanel
+    {
+        public CalculationOptionsPanelCat()
+        {
+            InitializeComponent();
+            this.LayoutRoot.SelectAll();
+            foreach (AccordionItem item in LayoutRoot.Items)
+            {
+                item.IsSelected = true;
+            }
+        }
 
-		#region ICalculationOptionsPanel Members
-		public UserControl PanelControl { get { return this; } }
+        #region ICalculationOptionsPanel Members
+        public UserControl PanelControl { get { return this; } }
 
-		private Character character;
-		public Character Character
-		{
-			get
-			{
-				return character;
-			}
-			set
-			{
-				character = value;
-				LoadCalculationOptions();
-			}
-		}
+        private Character character;
+        public Character Character
+        {
+            get
+            {
+                return character;
+            }
+            set
+            {
+                character = value;
+                LoadCalculationOptions();
+            }
+        }
 
-		private bool _loadingCalculationOptions;
-		public void LoadCalculationOptions()
-		{
-			_loadingCalculationOptions = true;
-			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsCat();
-
-			_loadingCalculationOptions = false;
-		}
-		#endregion
-	}
+        private bool _loadingCalculationOptions;
+        public void LoadCalculationOptions()
+        {
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsCat();
+            this.DataContext = Character.CalculationOptions as CalculationOptionsCat;
+            this.LayoutRoot.SelectAll();
+            _loadingCalculationOptions = false;
+        }
+        #endregion
+    }
 }
