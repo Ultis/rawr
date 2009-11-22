@@ -111,7 +111,6 @@ namespace Rawr.DPSWarr {
                 CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
                 CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
-                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
                 ItemCache.OnItemsChanged(); line = 13;
 
                 // Boss Selector
@@ -1191,53 +1190,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             CalculationOptionsPanelDPSWarr.CheckSize(calcOpts);
             calcOpts_PropertyChanged(null, null);
         }
-        // Hiding Enchants based on Profession
-        private void CB_Prof1_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (!isLoading) {
-                ComboBoxItem newItem = (ComboBoxItem)(CB_Prof1.SelectedItem);
-                string text = (string)newItem.Content;
-                Character.PrimaryProfession = StringToProfession(text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void CB_Prof2_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (!isLoading) {
-                ComboBoxItem newItem = (ComboBoxItem)(CB_Prof2.SelectedItem);
-                string text = (string)newItem.Content;
-                Character.SecondaryProfession = StringToProfession(text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        public Profession StringToProfession(string s) {
-            Profession                        p = Profession.None;
-            if      (s == "Alchemy"       ) { p = Profession.Alchemy;
-            }else if(s == "Blacksmithing" ) { p = Profession.Blacksmithing;
-            }else if(s == "Enchanting"    ) { p = Profession.Enchanting;
-            }else if(s == "Engineering"   ) { p = Profession.Engineering;
-            }else if(s == "Herbalism"     ) { p = Profession.Herbalism;
-            }else if(s == "Inscription"   ) { p = Profession.Inscription;
-            }else if(s == "Jewelcrafting" ) { p = Profession.Jewelcrafting;
-            }else if(s == "Leatherworking") { p = Profession.Leatherworking;
-            }else if(s == "Mining"        ) { p = Profession.Mining;
-            }else if(s == "Skinning"      ) { p = Profession.Skinning;
-            }else if(s == "Tailoring"     ) { p = Profession.Tailoring; }
-            return p;
-        }
-        public string ProfessionToString(Profession p) {
-            string                                     s = "None";
-            if      (p == Profession.Alchemy       ) { s = "Alchemy";
-            }else if(p == Profession.Blacksmithing ) { s = "Blacksmithing";
-            }else if(p == Profession.Enchanting    ) { s = "Enchanting";
-            }else if(p == Profession.Engineering   ) { s = "Engineering";
-            }else if(p == Profession.Herbalism     ) { s = "Herbalism";
-            }else if(p == Profession.Inscription   ) { s = "Inscription";
-            }else if(p == Profession.Jewelcrafting ) { s = "Jewelcrafting";
-            }else if(p == Profession.Leatherworking) { s = "Leatherworking";
-            }else if(p == Profession.Mining        ) { s = "Mining";
-            }else if(p == Profession.Skinning      ) { s = "Skinning";
-            }else if(p == Profession.Tailoring     ) { s = "Tailoring"; }
-            return s;
-        }
         //
         public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -1287,12 +1239,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
                 CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
             }
-            // Hide Enchants based on Professions
-            CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
-            CB_Prof1.IsEnabled = calcOpts.HideProfEnchants;
-            CB_Prof2.IsEnabled = calcOpts.HideProfEnchants;
-            if (!isLoading && CB_Prof1.SelectedIndex == -1) { CB_Prof1.SelectedIndex = 0; }
-            if (!isLoading && CB_Prof2.SelectedIndex == -1) { CB_Prof2.SelectedIndex = 0; }
             //
             Character.OnCalculationsInvalidated();
         }

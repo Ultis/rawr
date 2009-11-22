@@ -343,6 +343,7 @@ threat and limited threat scaled by the threat scale.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            cacheChar = character;
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
             Stats stats = GetCharacterStats(character, additionalItem, options);
@@ -457,6 +458,7 @@ threat and limited threat scaled by the threat scale.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            cacheChar = character;
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
             return GetCharacterStats(character, additionalItem, options);
         }

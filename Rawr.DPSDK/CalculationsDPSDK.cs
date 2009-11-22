@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Serialization;
 #if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
-
+using System.Xml.Serialization;
 
 namespace Rawr.DPSDK
 {
@@ -55,23 +54,14 @@ namespace Rawr.DPSDK
 
         private Dictionary<string, Color> _subPointNameColors = null;
         /// <summary>
-
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
-
         /// and a color for each. These colors will be used in the charts.
-
         /// 
-
         /// EXAMPLE: 
-
         /// subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
-
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
-
         /// </summary>
-
         public override Dictionary<string, Color> SubPointNameColors
         {
             get
@@ -225,6 +215,7 @@ namespace Rawr.DPSDK
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+            cacheChar = character;
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             int targetLevel = calcOpts.TargetLevel;
             GetTalents(character);
@@ -1442,13 +1433,14 @@ namespace Rawr.DPSDK
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            cacheChar = character;
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             DeathKnightTalents talents = calcOpts.talents;
 
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsTalents = new Stats()
             {
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
@@ -1932,15 +1924,79 @@ namespace Rawr.DPSDK
                 stats.BonusHeartStrikeMultiplier + stats.BonusScourgeStrikeMultiplier) != 0;
         }
 
+        public Stats GetBuffsStats(Character character, CalculationOptionsDPSDK calcOpts) {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Racials to Force Enable
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffsAdd(("Heroic Presence"));
+            }
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }*/
+            #endregion
+
+            #region Special Pot Handling
+            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
 
         /// <summary>
-
         /// Saves the talents for the character
-
         /// </summary>
-
         /// <param name="character">The character for whom the talents should be saved</param>
-
         public void GetTalents(Character character)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;

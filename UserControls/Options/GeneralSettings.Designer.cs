@@ -31,24 +31,25 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralSettings));
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.checkBoxUseMultithreading = new System.Windows.Forms.CheckBox();
+            this.CK_UseMultithreading = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.rbGerman = new System.Windows.Forms.RadioButton();
             this.rbRussian = new System.Windows.Forms.RadioButton();
             this.rbSpanish = new System.Windows.Forms.RadioButton();
             this.rbFrench = new System.Windows.Forms.RadioButton();
             this.rbEnglish = new System.Windows.Forms.RadioButton();
-            this.chbBuffSource = new System.Windows.Forms.CheckBox();
-            this.chbGemNames = new System.Windows.Forms.CheckBox();
+            this.CK_BuffSource = new System.Windows.Forms.CheckBox();
+            this.CK_GemNames = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
-            this.checkBoxDisplayItemIds = new System.Windows.Forms.CheckBox();
+            this.CK_DisplayItemIds = new System.Windows.Forms.CheckBox();
             this.rbZhTW = new System.Windows.Forms.RadioButton();
             this.rbZhCn = new System.Windows.Forms.RadioButton();
             this.rbKr = new System.Windows.Forms.RadioButton();
             this.comboBoxEffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.checkBoxDisplayItemType = new System.Windows.Forms.CheckBox();
+            this.CK_DisplayItemType = new System.Windows.Forms.CheckBox();
+            this.CK_HideEnchantsBasedOnProfs = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,11 +57,11 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // checkBoxUseMultithreading
+            // CK_UseMultithreading
             // 
-            resources.ApplyResources(this.checkBoxUseMultithreading, "checkBoxUseMultithreading");
-            this.checkBoxUseMultithreading.Name = "checkBoxUseMultithreading";
-            this.checkBoxUseMultithreading.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CK_UseMultithreading, "CK_UseMultithreading");
+            this.CK_UseMultithreading.Name = "CK_UseMultithreading";
+            this.CK_UseMultithreading.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -104,17 +105,17 @@
             this.rbEnglish.UseVisualStyleBackColor = true;
             this.rbEnglish.CheckedChanged += new System.EventHandler(this.rbEnglish_CheckedChanged);
             // 
-            // chbBuffSource
+            // CK_BuffSource
             // 
-            resources.ApplyResources(this.chbBuffSource, "chbBuffSource");
-            this.chbBuffSource.Name = "chbBuffSource";
-            this.chbBuffSource.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CK_BuffSource, "CK_BuffSource");
+            this.CK_BuffSource.Name = "CK_BuffSource";
+            this.CK_BuffSource.UseVisualStyleBackColor = true;
             // 
-            // chbGemNames
+            // CK_GemNames
             // 
-            resources.ApplyResources(this.chbGemNames, "chbGemNames");
-            this.chbGemNames.Name = "chbGemNames";
-            this.chbGemNames.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CK_GemNames, "CK_GemNames");
+            this.CK_GemNames.Name = "CK_GemNames";
+            this.CK_GemNames.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -133,11 +134,11 @@
             resources.ApplyResources(this.comboBoxProcEffectCalculationMode, "comboBoxProcEffectCalculationMode");
             this.comboBoxProcEffectCalculationMode.Name = "comboBoxProcEffectCalculationMode";
             // 
-            // checkBoxDisplayItemIds
+            // CK_DisplayItemIds
             // 
-            resources.ApplyResources(this.checkBoxDisplayItemIds, "checkBoxDisplayItemIds");
-            this.checkBoxDisplayItemIds.Name = "checkBoxDisplayItemIds";
-            this.checkBoxDisplayItemIds.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CK_DisplayItemIds, "CK_DisplayItemIds");
+            this.CK_DisplayItemIds.Name = "CK_DisplayItemIds";
+            this.CK_DisplayItemIds.UseVisualStyleBackColor = true;
             // 
             // rbZhTW
             // 
@@ -176,34 +177,41 @@
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
             // 
-            // checkBoxDisplayItemType
+            // CK_DisplayItemType
             // 
-            resources.ApplyResources(this.checkBoxDisplayItemType, "checkBoxDisplayItemType");
-            this.checkBoxDisplayItemType.Name = "checkBoxDisplayItemType";
-            this.checkBoxDisplayItemType.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.CK_DisplayItemType, "CK_DisplayItemType");
+            this.CK_DisplayItemType.Name = "CK_DisplayItemType";
+            this.CK_DisplayItemType.UseVisualStyleBackColor = true;
+            // 
+            // CK_HideEnchantsBasedOnProfs
+            // 
+            resources.ApplyResources(this.CK_HideEnchantsBasedOnProfs, "CK_HideEnchantsBasedOnProfs");
+            this.CK_HideEnchantsBasedOnProfs.Name = "CK_HideEnchantsBasedOnProfs";
+            this.CK_HideEnchantsBasedOnProfs.UseVisualStyleBackColor = true;
             // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.CK_HideEnchantsBasedOnProfs);
             this.Controls.Add(this.rbKr);
             this.Controls.Add(this.rbZhCn);
             this.Controls.Add(this.rbZhTW);
-            this.Controls.Add(this.checkBoxDisplayItemType);
+            this.Controls.Add(this.CK_DisplayItemType);
             this.Controls.Add(this.comboBoxEffectCombinationsCalculationMode);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.checkBoxDisplayItemIds);
+            this.Controls.Add(this.CK_DisplayItemIds);
             this.Controls.Add(this.comboBoxProcEffectCalculationMode);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.chbGemNames);
-            this.Controls.Add(this.chbBuffSource);
+            this.Controls.Add(this.CK_GemNames);
+            this.Controls.Add(this.CK_BuffSource);
             this.Controls.Add(this.rbEnglish);
             this.Controls.Add(this.rbFrench);
             this.Controls.Add(this.rbSpanish);
             this.Controls.Add(this.rbRussian);
             this.Controls.Add(this.rbGerman);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkBoxUseMultithreading);
+            this.Controls.Add(this.CK_UseMultithreading);
             this.Name = "GeneralSettings";
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
@@ -214,24 +222,25 @@
 		#endregion
 
 		private System.Windows.Forms.ErrorProvider errorProvider1;
-		private System.Windows.Forms.CheckBox checkBoxUseMultithreading;
+		private System.Windows.Forms.CheckBox CK_UseMultithreading;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton rbEnglish;
         private System.Windows.Forms.RadioButton rbFrench;
         private System.Windows.Forms.RadioButton rbSpanish;
         private System.Windows.Forms.RadioButton rbRussian;
         private System.Windows.Forms.RadioButton rbGerman;
-        private System.Windows.Forms.CheckBox chbBuffSource;
-        private System.Windows.Forms.CheckBox chbGemNames;
+        private System.Windows.Forms.CheckBox CK_BuffSource;
+        private System.Windows.Forms.CheckBox CK_GemNames;
         private System.Windows.Forms.ComboBox comboBoxProcEffectCalculationMode;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox checkBoxDisplayItemIds;
+        private System.Windows.Forms.CheckBox CK_DisplayItemIds;
         private System.Windows.Forms.RadioButton rbZhCn;
         private System.Windows.Forms.RadioButton rbZhTW;
         private System.Windows.Forms.RadioButton rbKr;
         private System.Windows.Forms.ComboBox comboBoxEffectCombinationsCalculationMode;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox checkBoxDisplayItemType;
+        private System.Windows.Forms.CheckBox CK_DisplayItemType;
+        private System.Windows.Forms.CheckBox CK_HideEnchantsBasedOnProfs;
 
 
 	}

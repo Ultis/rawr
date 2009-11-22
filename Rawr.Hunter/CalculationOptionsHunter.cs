@@ -399,12 +399,6 @@ namespace Rawr.Hunter
             get { return _HideBadItems_PvP; }
             set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
         }
-        private bool _HideProfEnchants;
-        public bool HideProfEnchants
-        {
-            get { return _HideProfEnchants; }
-            set { _HideProfEnchants = value; OnPropertyChanged("HideProfEnchants"); }
-        }
 
         #region ICalculationOptionBase Members
 		public string GetXml()

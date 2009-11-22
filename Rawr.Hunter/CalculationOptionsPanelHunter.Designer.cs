@@ -189,9 +189,6 @@
             this.label82 = new System.Windows.Forms.Label();
             this.CB_ManaPotion = new System.Windows.Forms.ComboBox();
             this.GB_Misc = new System.Windows.Forms.GroupBox();
-            this.CB_Prof2 = new System.Windows.Forms.ComboBox();
-            this.CB_Prof1 = new System.Windows.Forms.ComboBox();
-            this.CK_HideProfEnchants = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HideSplGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HidePvPGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.Tabs = new System.Windows.Forms.TabControl();
@@ -236,10 +233,10 @@
             this.CB_PetPrio_01 = new System.Windows.Forms.ComboBox();
             this.Page_04_PetBuffs = new System.Windows.Forms.TabPage();
             this.Page_05_Details = new System.Windows.Forms.TabPage();
-            this.BT_Calculate = new System.Windows.Forms.Button();
+            this.TB_Rotation = new System.Windows.Forms.TextBox();
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
-            this.TB_Rotation = new System.Windows.Forms.TextBox();
+            this.BT_Calculate = new System.Windows.Forms.Button();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
@@ -279,7 +276,7 @@
             this.Page_03_PetTalents.Location = new System.Drawing.Point(4, 22);
             this.Page_03_PetTalents.Name = "Page_03_PetTalents";
             this.Page_03_PetTalents.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_03_PetTalents.Size = new System.Drawing.Size(292, 647);
+            this.Page_03_PetTalents.Size = new System.Drawing.Size(292, 669);
             this.Page_03_PetTalents.TabIndex = 1;
             this.Page_03_PetTalents.Text = "Pet Talents";
             this.Page_03_PetTalents.UseVisualStyleBackColor = true;
@@ -295,7 +292,7 @@
             this.FLP_PetFamilies.Controls.Add(this.GB_PetTalents_Ferocity);
             this.FLP_PetFamilies.Location = new System.Drawing.Point(0, 33);
             this.FLP_PetFamilies.Name = "FLP_PetFamilies";
-            this.FLP_PetFamilies.Size = new System.Drawing.Size(292, 614);
+            this.FLP_PetFamilies.Size = new System.Drawing.Size(292, 636);
             this.FLP_PetFamilies.TabIndex = 48;
             // 
             // GB_PetTalents_Tenacity
@@ -1787,7 +1784,7 @@
             this.Page_01_Options.Location = new System.Drawing.Point(4, 22);
             this.Page_01_Options.Name = "Page_01_Options";
             this.Page_01_Options.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_01_Options.Size = new System.Drawing.Size(292, 647);
+            this.Page_01_Options.Size = new System.Drawing.Size(292, 669);
             this.Page_01_Options.TabIndex = 0;
             this.Page_01_Options.Text = "Hunter Options";
             this.Page_01_Options.UseVisualStyleBackColor = true;
@@ -1801,7 +1798,7 @@
             this.FLP_01_Options.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FLP_01_Options.Location = new System.Drawing.Point(3, 3);
             this.FLP_01_Options.Name = "FLP_01_Options";
-            this.FLP_01_Options.Size = new System.Drawing.Size(286, 641);
+            this.FLP_01_Options.Size = new System.Drawing.Size(286, 663);
             this.FLP_01_Options.TabIndex = 21;
             // 
             // GB_FightSettings
@@ -2223,78 +2220,14 @@
             // 
             // GB_Misc
             // 
-            this.GB_Misc.Controls.Add(this.CB_Prof2);
-            this.GB_Misc.Controls.Add(this.CB_Prof1);
-            this.GB_Misc.Controls.Add(this.CK_HideProfEnchants);
             this.GB_Misc.Controls.Add(this.CK_HideSplGear);
             this.GB_Misc.Controls.Add(this.CK_HidePvPGear);
             this.GB_Misc.Location = new System.Drawing.Point(3, 485);
             this.GB_Misc.Name = "GB_Misc";
-            this.GB_Misc.Size = new System.Drawing.Size(280, 142);
+            this.GB_Misc.Size = new System.Drawing.Size(280, 65);
             this.GB_Misc.TabIndex = 20;
             this.GB_Misc.TabStop = false;
             this.GB_Misc.Text = "Misc";
-            // 
-            // CB_Prof2
-            // 
-            this.CB_Prof2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Prof2.Enabled = false;
-            this.CB_Prof2.FormattingEnabled = true;
-            this.CB_Prof2.Items.AddRange(new object[] {
-            "None",
-            "Alchemy",
-            "Blacksmithing",
-            "Enchanting",
-            "Engineering",
-            "Herbalism",
-            "Inscription",
-            "Jewelcrafting",
-            "Leatherworking",
-            "Mining",
-            "Skinning",
-            "Tailoring"});
-            this.CB_Prof2.Location = new System.Drawing.Point(58, 115);
-            this.CB_Prof2.MaxDropDownItems = 15;
-            this.CB_Prof2.Name = "CB_Prof2";
-            this.CB_Prof2.Size = new System.Drawing.Size(152, 21);
-            this.CB_Prof2.TabIndex = 18;
-            this.CB_Prof2.SelectedIndexChanged += new System.EventHandler(this.CB_Prof2_SelectedIndexChanged);
-            // 
-            // CB_Prof1
-            // 
-            this.CB_Prof1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Prof1.Enabled = false;
-            this.CB_Prof1.FormattingEnabled = true;
-            this.CB_Prof1.Items.AddRange(new object[] {
-            "None",
-            "Alchemy",
-            "Blacksmithing",
-            "Enchanting",
-            "Engineering",
-            "Herbalism",
-            "Inscription",
-            "Jewelcrafting",
-            "Leatherworking",
-            "Mining",
-            "Skinning",
-            "Tailoring"});
-            this.CB_Prof1.Location = new System.Drawing.Point(58, 88);
-            this.CB_Prof1.MaxDropDownItems = 15;
-            this.CB_Prof1.Name = "CB_Prof1";
-            this.CB_Prof1.Size = new System.Drawing.Size(152, 21);
-            this.CB_Prof1.TabIndex = 17;
-            this.CB_Prof1.SelectedIndexChanged += new System.EventHandler(this.CB_Prof1_SelectedIndexChanged);
-            // 
-            // CK_HideProfEnchants
-            // 
-            this.CK_HideProfEnchants.AutoSize = true;
-            this.CK_HideProfEnchants.Location = new System.Drawing.Point(18, 65);
-            this.CK_HideProfEnchants.Name = "CK_HideProfEnchants";
-            this.CK_HideProfEnchants.Size = new System.Drawing.Size(208, 17);
-            this.CK_HideProfEnchants.TabIndex = 16;
-            this.CK_HideProfEnchants.Text = "Hide Enchants Based on Professions *";
-            this.CK_HideProfEnchants.ToolTipText = "";
-            this.CK_HideProfEnchants.CheckedChanged += new System.EventHandler(this.CK_HideProfEnchants_CheckedChanged);
             // 
             // CK_HideSplGear
             // 
@@ -2332,7 +2265,7 @@
             this.Tabs.Location = new System.Drawing.Point(0, 5);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(300, 673);
+            this.Tabs.Size = new System.Drawing.Size(300, 695);
             this.Tabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.Tabs.TabIndex = 0;
             // 
@@ -2343,7 +2276,7 @@
             this.Page_02_Rotations.Location = new System.Drawing.Point(4, 22);
             this.Page_02_Rotations.Name = "Page_02_Rotations";
             this.Page_02_Rotations.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_02_Rotations.Size = new System.Drawing.Size(292, 647);
+            this.Page_02_Rotations.Size = new System.Drawing.Size(292, 669);
             this.Page_02_Rotations.TabIndex = 2;
             this.Page_02_Rotations.Text = "Rotations";
             this.Page_02_Rotations.UseVisualStyleBackColor = true;
@@ -2356,7 +2289,7 @@
             this.FLP_02_Rotations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FLP_02_Rotations.Location = new System.Drawing.Point(3, 3);
             this.FLP_02_Rotations.Name = "FLP_02_Rotations";
-            this.FLP_02_Rotations.Size = new System.Drawing.Size(286, 641);
+            this.FLP_02_Rotations.Size = new System.Drawing.Size(286, 663);
             this.FLP_02_Rotations.TabIndex = 2;
             // 
             // GB_ShotRotation
@@ -2794,7 +2727,7 @@
             this.Page_04_PetBuffs.Location = new System.Drawing.Point(4, 22);
             this.Page_04_PetBuffs.Name = "Page_04_PetBuffs";
             this.Page_04_PetBuffs.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_04_PetBuffs.Size = new System.Drawing.Size(292, 647);
+            this.Page_04_PetBuffs.Size = new System.Drawing.Size(292, 669);
             this.Page_04_PetBuffs.TabIndex = 3;
             this.Page_04_PetBuffs.Text = "Pet Buffs";
             this.Page_04_PetBuffs.UseVisualStyleBackColor = true;
@@ -2807,20 +2740,26 @@
             this.Page_05_Details.Location = new System.Drawing.Point(4, 22);
             this.Page_05_Details.Name = "Page_05_Details";
             this.Page_05_Details.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_05_Details.Size = new System.Drawing.Size(292, 647);
+            this.Page_05_Details.Size = new System.Drawing.Size(292, 669);
             this.Page_05_Details.TabIndex = 4;
             this.Page_05_Details.Text = "Details";
             this.Page_05_Details.UseVisualStyleBackColor = true;
             // 
-            // BT_Calculate
+            // TB_Rotation
             // 
-            this.BT_Calculate.Location = new System.Drawing.Point(6, 6);
-            this.BT_Calculate.Name = "BT_Calculate";
-            this.BT_Calculate.Size = new System.Drawing.Size(75, 23);
-            this.BT_Calculate.TabIndex = 0;
-            this.BT_Calculate.Text = "Calculate";
-            this.BT_Calculate.UseVisualStyleBackColor = true;
-            this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
+            this.TB_Rotation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_Rotation.Font = new System.Drawing.Font("Courier New", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TB_Rotation.Location = new System.Drawing.Point(6, 184);
+            this.TB_Rotation.Multiline = true;
+            this.TB_Rotation.Name = "TB_Rotation";
+            this.TB_Rotation.ReadOnly = true;
+            this.TB_Rotation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TB_Rotation.Size = new System.Drawing.Size(280, 479);
+            this.TB_Rotation.TabIndex = 1;
+            this.TB_Rotation.WordWrap = false;
+            this.TB_Rotation.TextChanged += new System.EventHandler(this.TB_Rotation_TextChanged);
             // 
             // GB_Rotation_Shots
             // 
@@ -2848,21 +2787,15 @@
             this.TB_Shots.WordWrap = false;
             this.TB_Shots.TextChanged += new System.EventHandler(this.TB_Shots_TextChanged);
             // 
-            // TB_Rotation
+            // BT_Calculate
             // 
-            this.TB_Rotation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.TB_Rotation.Font = new System.Drawing.Font("Courier New", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TB_Rotation.Location = new System.Drawing.Point(6, 184);
-            this.TB_Rotation.Multiline = true;
-            this.TB_Rotation.Name = "TB_Rotation";
-            this.TB_Rotation.ReadOnly = true;
-            this.TB_Rotation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TB_Rotation.Size = new System.Drawing.Size(280, 457);
-            this.TB_Rotation.TabIndex = 1;
-            this.TB_Rotation.WordWrap = false;
-            this.TB_Rotation.TextChanged += new System.EventHandler(this.TB_Rotation_TextChanged);
+            this.BT_Calculate.Location = new System.Drawing.Point(6, 6);
+            this.BT_Calculate.Name = "BT_Calculate";
+            this.BT_Calculate.Size = new System.Drawing.Size(75, 23);
+            this.BT_Calculate.TabIndex = 0;
+            this.BT_Calculate.Text = "Calculate";
+            this.BT_Calculate.UseVisualStyleBackColor = true;
+            this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
             // 
             // CalculationOptionsPanelHunter
             // 
@@ -3110,9 +3043,6 @@
         private System.Windows.Forms.Label label89;
         private System.Windows.Forms.CheckBox CK_RandomProcs;
         private System.Windows.Forms.GroupBox GB_Misc;
-        private System.Windows.Forms.ComboBox CB_Prof2;
-        private System.Windows.Forms.ComboBox CB_Prof1;
-        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideProfEnchants;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideSplGear;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HidePvPGear;
         private System.Windows.Forms.FlowLayoutPanel FLP_PetFamilies;

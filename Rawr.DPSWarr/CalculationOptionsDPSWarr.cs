@@ -29,7 +29,6 @@ namespace Rawr.DPSWarr {
             HideBadItems_Def = true;
             HideBadItems_Spl = true;
             HideBadItems_PvP = true;
-            HideProfEnchants = false;
             SurvScale = 1.0f;
             Under20Perc = 0.17f;
 		    // Rotational Changes
@@ -174,12 +173,6 @@ namespace Rawr.DPSWarr {
         {
             get { return _HideBadItems_PvP; }
             set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
-        }
-        private bool _HideProfEnchants;
-        public bool HideProfEnchants
-        {
-            get { return _HideProfEnchants; }
-            set { _HideProfEnchants = value; OnPropertyChanged("HideProfEnchants"); }
         }
         private float _SurvScale;
         public float SurvScale

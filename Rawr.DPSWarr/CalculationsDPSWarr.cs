@@ -581,64 +581,12 @@ These numbers to do not include racial bonuses.",
             return retVal;
         }
 
-        private static Character cacheChar = null;
-
-        public bool CheckHasProf(Profession p) {
-            if (cacheChar == null) { return false; }
-            if (cacheChar.PrimaryProfession   == p) { return true; }
-            if (cacheChar.SecondaryProfession == p) { return true; }
-            
-            return false;
-        }
-
         public override bool IsEnchantRelevant(Enchant enchant) {
             string name = enchant.Name;
             if (name.Contains("Rune of the Fallen Crusader")) {
                 return false; // Bad DK Enchant, Bad!
-            }else if(HidingBadStuff_Prof){
-                if      (!CheckHasProf(Profession.Enchanting)){
-                    if (enchant.Slot == ItemSlot.Finger &&
-                        (name.Contains("Assault" ) ||
-                         name.Contains("Stats"   ) ||
-                         name.Contains("Striking") ||
-                         name.Contains("Stamina" ))
-                        )
-                    {
-                        return false;
-                    }
-                }
-                if(!CheckHasProf(Profession.Engineering)){
-                    if (name.Contains("Mind Amplification Dish") ||
-                        name.Contains("Flexweave Underlay") ||
-                        name.Contains("Hyperspeed Accelerators") ||
-                        name.Contains("Reticulated Armor Webbing") ||
-                        name.Contains("Nitro Boosts"))
-                    {
-                        return false;
-                    }
-                }
-                if(!CheckHasProf(Profession.Inscription)){
-                    if (name.Contains("Master's") ||
-                        name.Contains("Inscription of Triumph"))
-                    {
-                        return false;
-                    }
-                }
-                if(!CheckHasProf(Profession.Leatherworking)){
-                    if (name.Contains("Fur Lining - Attack Power") ||
-                        name.Contains("Fur Lining - Stamina"))
-                    {
-                        return false;
-                    }
-                }
-                if(!CheckHasProf(Profession.Tailoring)){
-                    if (name.Contains("Swordguard Embroidery"))
-                    {
-                        return false;
-                    }
-                }
             }
-            return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats));
+            return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {
@@ -655,36 +603,6 @@ These numbers to do not include racial bonuses.",
             }
             #endregion
 
-            #region Professions to Force Enable
-            // Miners should always have this buff activated
-            if (CheckHasProf(Profession.Mining)
-                && !character.ActiveBuffsContains("Toughness"))
-            {
-                character.ActiveBuffsAdd(("Toughness"));
-            }
-            // Skinners should always have this buff activated
-            if (CheckHasProf(Profession.Skinning)
-                && !character.ActiveBuffsContains("Master of Anatomy"))
-            {
-                character.ActiveBuffsAdd(("Master of Anatomy"));
-            }
-            // Engineers should always have this buff activated IF the Primary is
-            if (CheckHasProf(Profession.Engineering)) {
-                List<String> list = new List<string>() {
-                    "Runic Mana Injector",
-                    "Runic Healing Injector",
-                };
-                foreach (String name in list) {
-                    if ( character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
-                        !character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
-                    {
-                        character.ActiveBuffsAdd((name + " (Engineer Bonus)"));
-                    }
-                }
-            }
-            // NOTE: Might do this again for Alchemy and Mixology but
-            // there could be conflicts for different specialties
-            #endregion
             List<Buff> buffGroup = new List<Buff>();
             #region Maintenance Auto-Fixing
             // Removes the Sunder Armor if you are maintaining it yourself

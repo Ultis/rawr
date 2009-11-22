@@ -163,9 +163,6 @@
             this.CTL_Maints = new System.Windows.Forms.TreeView();
             this.TB_Misc = new System.Windows.Forms.TabPage();
             this.CK_Markov = new System.Windows.Forms.CheckBox();
-            this.CB_Prof2 = new System.Windows.Forms.ComboBox();
-            this.CB_Prof1 = new System.Windows.Forms.ComboBox();
-            this.CK_HideProfEnchants = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_SE_UseDur = new System.Windows.Forms.CheckBox();
             this.CK_HideSplGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HidePvPGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -439,7 +436,7 @@
             this.Tab_Advanced.Location = new System.Drawing.Point(4, 22);
             this.Tab_Advanced.Name = "Tab_Advanced";
             this.Tab_Advanced.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Advanced.Size = new System.Drawing.Size(288, 553);
+            this.Tab_Advanced.Size = new System.Drawing.Size(288, 578);
             this.Tab_Advanced.TabIndex = 1;
             this.Tab_Advanced.Text = "Advanced";
             this.Tab_Advanced.UseVisualStyleBackColor = true;
@@ -450,7 +447,7 @@
             this.RTB_Advanced.Location = new System.Drawing.Point(3, 3);
             this.RTB_Advanced.Name = "RTB_Advanced";
             this.RTB_Advanced.ReadOnly = true;
-            this.RTB_Advanced.Size = new System.Drawing.Size(282, 547);
+            this.RTB_Advanced.Size = new System.Drawing.Size(282, 572);
             this.RTB_Advanced.TabIndex = 1;
             this.RTB_Advanced.Text = resources.GetString("RTB_Advanced.Text");
             // 
@@ -462,7 +459,7 @@
             this.Tab_FAQ.Location = new System.Drawing.Point(4, 22);
             this.Tab_FAQ.Name = "Tab_FAQ";
             this.Tab_FAQ.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_FAQ.Size = new System.Drawing.Size(288, 553);
+            this.Tab_FAQ.Size = new System.Drawing.Size(288, 578);
             this.Tab_FAQ.TabIndex = 3;
             this.Tab_FAQ.Text = "F.A.Q.";
             this.Tab_FAQ.UseVisualStyleBackColor = true;
@@ -500,7 +497,7 @@
             this.RTB_FAQ.Location = new System.Drawing.Point(6, 77);
             this.RTB_FAQ.Name = "RTB_FAQ";
             this.RTB_FAQ.ReadOnly = true;
-            this.RTB_FAQ.Size = new System.Drawing.Size(276, 473);
+            this.RTB_FAQ.Size = new System.Drawing.Size(276, 498);
             this.RTB_FAQ.TabIndex = 2;
             this.RTB_FAQ.Text = "";
             // 
@@ -512,7 +509,7 @@
             this.Tab_Version.Location = new System.Drawing.Point(4, 22);
             this.Tab_Version.Name = "Tab_Version";
             this.Tab_Version.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Version.Size = new System.Drawing.Size(288, 553);
+            this.Tab_Version.Size = new System.Drawing.Size(288, 578);
             this.Tab_Version.TabIndex = 2;
             this.Tab_Version.Text = "Version Notes";
             this.Tab_Version.UseVisualStyleBackColor = true;
@@ -548,7 +545,7 @@
             this.RTB_Version.Location = new System.Drawing.Point(3, 51);
             this.RTB_Version.Name = "RTB_Version";
             this.RTB_Version.ReadOnly = true;
-            this.RTB_Version.Size = new System.Drawing.Size(282, 499);
+            this.RTB_Version.Size = new System.Drawing.Size(282, 524);
             this.RTB_Version.TabIndex = 2;
             this.RTB_Version.Text = "";
             // 
@@ -1393,9 +1390,6 @@
             // TB_Misc
             // 
             this.TB_Misc.Controls.Add(this.CK_Markov);
-            this.TB_Misc.Controls.Add(this.CB_Prof2);
-            this.TB_Misc.Controls.Add(this.CB_Prof1);
-            this.TB_Misc.Controls.Add(this.CK_HideProfEnchants);
             this.TB_Misc.Controls.Add(this.CK_SE_UseDur);
             this.TB_Misc.Controls.Add(this.CK_HideSplGear);
             this.TB_Misc.Controls.Add(this.CK_HidePvPGear);
@@ -1418,74 +1412,13 @@
             // CK_Markov
             // 
             this.CK_Markov.AutoSize = true;
-            this.CK_Markov.Location = new System.Drawing.Point(6, 295);
+            this.CK_Markov.Location = new System.Drawing.Point(6, 198);
             this.CK_Markov.Name = "CK_Markov";
             this.CK_Markov.Size = new System.Drawing.Size(84, 17);
             this.CK_Markov.TabIndex = 14;
             this.CK_Markov.Text = "Use Markov";
             this.CK_Markov.UseVisualStyleBackColor = true;
             this.CK_Markov.CheckedChanged += new System.EventHandler(this.CK_Markov_CheckedChanged);
-            // 
-            // CB_Prof2
-            // 
-            this.CB_Prof2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Prof2.Enabled = false;
-            this.CB_Prof2.FormattingEnabled = true;
-            this.CB_Prof2.Items.AddRange(new object[] {
-            "None",
-            "Alchemy",
-            "Blacksmithing",
-            "Enchanting",
-            "Engineering",
-            "Herbalism",
-            "Inscription",
-            "Jewelcrafting",
-            "Leatherworking",
-            "Mining",
-            "Skinning",
-            "Tailoring"});
-            this.CB_Prof2.Location = new System.Drawing.Point(46, 248);
-            this.CB_Prof2.MaxDropDownItems = 15;
-            this.CB_Prof2.Name = "CB_Prof2";
-            this.CB_Prof2.Size = new System.Drawing.Size(152, 21);
-            this.CB_Prof2.TabIndex = 13;
-            this.CB_Prof2.SelectedIndexChanged += new System.EventHandler(this.CB_Prof2_SelectedIndexChanged);
-            // 
-            // CB_Prof1
-            // 
-            this.CB_Prof1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Prof1.Enabled = false;
-            this.CB_Prof1.FormattingEnabled = true;
-            this.CB_Prof1.Items.AddRange(new object[] {
-            "None",
-            "Alchemy",
-            "Blacksmithing",
-            "Enchanting",
-            "Engineering",
-            "Herbalism",
-            "Inscription",
-            "Jewelcrafting",
-            "Leatherworking",
-            "Mining",
-            "Skinning",
-            "Tailoring"});
-            this.CB_Prof1.Location = new System.Drawing.Point(46, 221);
-            this.CB_Prof1.MaxDropDownItems = 15;
-            this.CB_Prof1.Name = "CB_Prof1";
-            this.CB_Prof1.Size = new System.Drawing.Size(152, 21);
-            this.CB_Prof1.TabIndex = 12;
-            this.CB_Prof1.SelectedIndexChanged += new System.EventHandler(this.CB_Prof1_SelectedIndexChanged);
-            // 
-            // CK_HideProfEnchants
-            // 
-            this.CK_HideProfEnchants.AutoSize = true;
-            this.CK_HideProfEnchants.Location = new System.Drawing.Point(6, 198);
-            this.CK_HideProfEnchants.Name = "CK_HideProfEnchants";
-            this.CK_HideProfEnchants.Size = new System.Drawing.Size(208, 17);
-            this.CK_HideProfEnchants.TabIndex = 11;
-            this.CK_HideProfEnchants.Text = "Hide Enchants Based on Professions *";
-            this.CK_HideProfEnchants.ToolTipText = "";
-            this.CK_HideProfEnchants.CheckedChanged += new System.EventHandler(this.CK_HideProfEnchants_CheckedChanged);
             // 
             // CK_SE_UseDur
             // 
@@ -1704,9 +1637,6 @@
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideSplGear;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HidePvPGear;
         private System.Windows.Forms.CheckBox CK_SE_UseDur;
-        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideProfEnchants;
-        private System.Windows.Forms.ComboBox CB_Prof1;
-        private System.Windows.Forms.ComboBox CB_Prof2;
         private System.Windows.Forms.Label LB_Version;
         private System.Windows.Forms.ComboBox CB_Version;
         private System.Windows.Forms.Label LB_InBack;

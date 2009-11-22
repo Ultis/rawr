@@ -31,7 +31,6 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageBasics = new System.Windows.Forms.TabPage();
             this.chbFireElemental = new System.Windows.Forms.CheckBox();
-            this.chbHideProfessions = new System.Windows.Forms.CheckBox();
             this.labelReactionTime = new System.Windows.Forms.Label();
             this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
             this.label12 = new System.Windows.Forms.Label();
@@ -113,7 +112,6 @@
             // tabPageBasics
             // 
             this.tabPageBasics.Controls.Add(this.chbFireElemental);
-            this.tabPageBasics.Controls.Add(this.chbHideProfessions);
             this.tabPageBasics.Controls.Add(this.labelReactionTime);
             this.tabPageBasics.Controls.Add(this.trackBarReactionTime);
             this.tabPageBasics.Controls.Add(this.label12);
@@ -152,19 +150,6 @@
             this.chbFireElemental.Text = "Use Fire Elemental";
             this.chbFireElemental.UseVisualStyleBackColor = true;
             this.chbFireElemental.CheckedChanged += new System.EventHandler(this.chbFireElemental_CheckedChanged);
-            // 
-            // chbHideProfessions
-            // 
-            this.chbHideProfessions.AutoSize = true;
-            this.chbHideProfessions.Checked = true;
-            this.chbHideProfessions.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbHideProfessions.Location = new System.Drawing.Point(10, 241);
-            this.chbHideProfessions.Name = "chbHideProfessions";
-            this.chbHideProfessions.Size = new System.Drawing.Size(242, 17);
-            this.chbHideProfessions.TabIndex = 62;
-            this.chbHideProfessions.Text = "Hide Profession Buffs Character doesn\'t know";
-            this.chbHideProfessions.UseVisualStyleBackColor = true;
-            this.chbHideProfessions.CheckedChanged += new System.EventHandler(this.chbHideProfessions_CheckedChanged);
             // 
             // labelReactionTime
             // 
@@ -217,7 +202,7 @@
             this.groupBox1.Controls.Add(this.chkStatsAP);
             this.groupBox1.Controls.Add(this.chkStatsAgility);
             this.groupBox1.Controls.Add(this.chkStatsStrength);
-            this.groupBox1.Location = new System.Drawing.Point(11, 338);
+            this.groupBox1.Location = new System.Drawing.Point(11, 315);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(248, 199);
             this.groupBox1.TabIndex = 58;
@@ -366,7 +351,7 @@
             // 
             this.labelSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSRMana.Location = new System.Drawing.Point(123, 320);
+            this.labelSRMana.Location = new System.Drawing.Point(123, 297);
             this.labelSRMana.Name = "labelSRMana";
             this.labelSRMana.Size = new System.Drawing.Size(145, 12);
             this.labelSRMana.TabIndex = 56;
@@ -379,7 +364,7 @@
             this.trackbarSRMana.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackbarSRMana.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackbarSRMana.LargeChange = 250;
-            this.trackbarSRMana.Location = new System.Drawing.Point(123, 287);
+            this.trackbarSRMana.Location = new System.Drawing.Point(123, 264);
             this.trackbarSRMana.Maximum = 5000;
             this.trackbarSRMana.Name = "trackbarSRMana";
             this.trackbarSRMana.Size = new System.Drawing.Size(145, 45);
@@ -392,7 +377,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 296);
+            this.label9.Location = new System.Drawing.Point(8, 273);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 13);
             this.label9.TabIndex = 54;
@@ -403,7 +388,7 @@
             this.chbMana.AutoSize = true;
             this.chbMana.Checked = true;
             this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMana.Location = new System.Drawing.Point(10, 264);
+            this.chbMana.Location = new System.Drawing.Point(10, 241);
             this.chbMana.Name = "chbMana";
             this.chbMana.Size = new System.Drawing.Size(135, 17);
             this.chbMana.TabIndex = 53;
@@ -903,7 +888,6 @@
         private System.Windows.Forms.TrackBar trackBarReactionTime;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox chbHideProfessions;
         private System.Windows.Forms.CheckBox chbFireElemental;
 
     }

@@ -1185,7 +1185,7 @@ namespace Rawr
         {
             if (!_loadingCharacter)
             {
-                Character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), comboBoxProfession1.Text);
+                Character.PrimaryProfession = Profs.StringToProfession(comboBoxProfession1.Text);
                 Character.OnCalculationsInvalidated();
                 _unsavedChanges = true;
             }
@@ -1195,7 +1195,7 @@ namespace Rawr
         {
             if (!_loadingCharacter)
             {
-                Character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), comboBoxProfession2.Text);
+                Character.SecondaryProfession = Profs.StringToProfession(comboBoxProfession2.Text);
                 Character.OnCalculationsInvalidated();
                 _unsavedChanges = true;
             }

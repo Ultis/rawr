@@ -49,7 +49,6 @@ namespace Rawr.Enhance
             chbMagmaSearing.Checked = _calcOpts.Magma;
             chbFireElemental.Checked = _calcOpts.FireElemental;
             chbMana.Checked = _calcOpts.UseMana;
-            chbHideProfessions.Checked = _calcOpts.HideProfessions;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
             chkStatsStrength.Checked = _calcOpts.StatsList[0];
             chkStatsAgility.Checked = _calcOpts.StatsList[1];
@@ -96,7 +95,6 @@ namespace Rawr.Enhance
                 _calcOpts.Magma = chbMagmaSearing.Checked;
                 _calcOpts.FireElemental = chbFireElemental.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
-                _calcOpts.HideProfessions = chbHideProfessions.Checked;
                 _calcOpts.StatsList[0] = chkStatsStrength.Checked;
                 _calcOpts.StatsList[1] = chkStatsAgility.Checked;
                 _calcOpts.StatsList[2] = chkStatsAP.Checked;
@@ -168,15 +166,6 @@ namespace Rawr.Enhance
             {
                 _calcOpts.UseMana = chbMana.Checked;
                 trackbarSRMana.Enabled = _calcOpts.UseMana;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbHideProfessions_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                _calcOpts.HideProfessions = chbHideProfessions.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

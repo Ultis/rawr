@@ -47,7 +47,7 @@ namespace Rawr.Warlock
 
             #region Buffs
             //get buffs before calculations for double dipping of benifts
-            Stats buffs = (new CalculationsWarlock()).GetBuffStats(character);
+            Stats buffs = (new CalculationsWarlock()).GetBuffsStats(character, CalculationOptions);
             //remove player only buffs
             if (character.ActiveBuffsContains("Focus Magic")) buffs -= Buff.GetBuffByName("Focus Magic").Stats;
             //remove elixir and flask/food buff

@@ -17,7 +17,12 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
-            MultiThreadingCheck.IsChecked = GeneralSettings.Default.UseMultithreading;
+            CK_MultiThreading.IsChecked = GeneralSettings.Default.UseMultithreading;
+            CK_BuffSource.IsChecked = GeneralSettings.Default.DisplayBuffSource;
+            CK_GemNames.IsChecked = GeneralSettings.Default.DisplayGemNames;
+            CK_DisplayItemIds.IsChecked = GeneralSettings.Default.DisplayItemIds;
+            CK_DisplayItemType.IsChecked = GeneralSettings.Default.DisplayItemType;
+            CK_HideEnchantsBasedOnProfs.IsChecked = GeneralSettings.Default.HideProfEnchants;
             WarningsCheck.IsChecked = OptimizerSettings.Default.WarningsEnabled;
             TemplateGemsCheck.IsChecked = OptimizerSettings.Default.TemplateGemsEnabled;
             switch (OptimizerSettings.Default.OptimizationMethod)
@@ -43,13 +48,19 @@ namespace Rawr.UI
             }
 
             ProcEffectModeCombo.SelectedIndex = GeneralSettings.Default.ProcEffectMode;
+            EffectCombinationsCalculationMode.SelectedIndex = GeneralSettings.Default.CombinationEffectMode;
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             OptimizerSettings.Default.TemplateGemsEnabled = TemplateGemsCheck.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.WarningsEnabled = WarningsCheck.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.UseMultithreading = MultiThreadingCheck.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.UseMultithreading = CK_MultiThreading.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.DisplayBuffSource = CK_BuffSource.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.DisplayGemNames   = CK_GemNames.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.DisplayItemIds    = CK_DisplayItemIds.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.DisplayItemType   = CK_DisplayItemType.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.HideProfEnchants  = CK_HideEnchantsBasedOnProfs.IsChecked.GetValueOrDefault();
             switch (OptimizationMethodCombo.SelectedIndex)
             {
                 case 0:
@@ -72,6 +83,7 @@ namespace Rawr.UI
                     break;
             }
             GeneralSettings.Default.ProcEffectMode = ProcEffectModeCombo.SelectedIndex;
+            GeneralSettings.Default.CombinationEffectMode = EffectCombinationsCalculationMode.SelectedIndex;
             this.DialogResult = true;
         }
 

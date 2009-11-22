@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Serialization;
 #if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
+using System.Xml.Serialization;
 
 namespace Rawr.ProtPaladin
 {
@@ -305,6 +305,7 @@ focus on Survival Points.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            cacheChar = character;
             CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts);
@@ -484,6 +485,7 @@ focus on Survival Points.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            cacheChar = character;
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             return GetCharacterStats(character, additionalItem, calcOpts);            
         }
@@ -1340,14 +1342,18 @@ focus on Survival Points.",
         public override bool IsEnchantRelevant(Enchant enchant) {
             Stats stats = enchant.Stats;
 
-            bool relevant = HasRelevantStats(stats);
+            bool relevant = IsProfEnchantRelevant(enchant) && (HasRelevantStats(stats));
 
             return relevant;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsProtPaladin calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
 
+            //float hasRelevantBuff;
+
+            #region Racials to Force Enable
             // Draenei should always have this buff activated
             // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
             if (character.Race == CharacterRace.Draenei
@@ -1355,37 +1361,83 @@ focus on Survival Points.",
             {
                 character.ActiveBuffsAdd(("Heroic Presence"));
             }
+            #endregion
 
-            /* NOTE: THIS CODE IS FROM DPSWARR, PROTPALADIN MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE CONCENTRATION AURA
-            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
-            // Also removes their equivalent of Blessing of Might (+Improved)
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
-                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
-                Buff b = Buff.GetBuffByName("Battle Shout");
-                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
-                Buff d = Buff.GetBuffByName("Blessing of Might");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
+            #region Passive Ability Auto-Fixing
+            // NOTE: THIS CODE IS FROM DPSWARR, PROTPALADIN MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE CONCENTRATION AURA
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }
+            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            {
+                hasRelevantBuff = character.HunterTalents.ImprovedHuntersMark
+                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
+                Buff a = Buff.GetBuffByName("Hunter's Mark");
+                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
+                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
+                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
+                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
+                // If we have an enhanced Hunter's Mark, kill the Buff
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
+                }
             }*/
+            #endregion
+
+            #region Special Pot Handling
+            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }*/
+            #endregion
 
             Stats statsBuffs = base.GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);
             }
+            foreach (Buff b in addedBuffs)
+            {
+                character.ActiveBuffs.Remove(b);
+            }
 
             return statsBuffs;
         }
-        public override void SetDefaults(Character character) {
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
-        }
+        public override void SetDefaults(Character character) { }
         #endregion
     }
 }

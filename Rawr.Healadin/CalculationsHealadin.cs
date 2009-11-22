@@ -279,6 +279,7 @@ namespace Rawr.Healadin
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             if (character == null) return new CharacterCalculationsHealadin();
+            cacheChar = character;
 
             Stats stats;
             CharacterCalculationsHealadin calc = null;
@@ -307,6 +308,7 @@ namespace Rawr.Healadin
         #region Stat Calculation
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            cacheChar = character;
             return GetCharacterStats(character, additionalItem, true, null);
         }
 
@@ -321,7 +323,7 @@ namespace Rawr.Healadin
             statsRace.Mana -= 280f;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats stats = statsBaseGear + statsBuffs + statsRace;
 
             ConvertRatings(stats, talents, calcOpts);
@@ -613,9 +615,9 @@ namespace Rawr.Healadin
         {
             foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
             {
-                if (HasRelevantSpecialEffect(effect)) return true;
+                if (IsProfEnchantRelevant(enchant) && HasRelevantSpecialEffect(effect)) { return true; }
             }
-            return HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats);
+            return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats));
         }
 
         public override bool HasRelevantStats(Stats stats)
@@ -636,6 +638,75 @@ namespace Rawr.Healadin
                 }
             }
             return wantedStats || ((specialEffect || (maybeStats && (!hasSpecialEffect || specialEffect)) || (survivalStats && !ignoreStats)) && !ignoreStats);
+        }
+
+        public Stats GetBuffsStats(Character character, CalculationOptionsHealadin calcOpts) {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Racials to Force Enable
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffsAdd(("Heroic Presence"));
+            }
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }*/
+            #endregion
+
+            #region Special Pot Handling
+            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
         }
         #endregion
     }

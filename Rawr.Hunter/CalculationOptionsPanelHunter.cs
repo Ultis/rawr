@@ -95,13 +95,6 @@ namespace Rawr.Hunter
             // Hiding Gear based on Bad Stats
             CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
             CK_HidePvPGear.Checked = CalcOpts.HideBadItems_PvP; CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
-            // Hiding Enchants based on Profession
-            CK_HideProfEnchants.Checked = CalcOpts.HideProfEnchants;
-            CalculationsHunter.HidingBadStuff_Prof = CalcOpts.HideProfEnchants;
-            CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
-            CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
-            CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
-            CB_Prof2.Text = ProfessionToString(Character.SecondaryProfession);
 
             petBuffSelector.character = Character;
             petBuffSelector.LoadBuffsFromOptions();
@@ -1077,60 +1070,6 @@ namespace Rawr.Hunter
                 ItemCache.OnItemsChanged();
                 Character.OnCalculationsInvalidated();
             }
-        }
-        // Hiding Enchants based on Profession
-        private void CK_HideProfEnchants_CheckedChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-                bool Checked = CK_HideProfEnchants.Checked;
-                calcOpts.HideProfEnchants = Checked;
-                CalculationsHunter.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
-                CB_Prof1.Enabled = Checked;
-                CB_Prof2.Enabled = Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void CB_Prof1_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                Character.PrimaryProfession = StringToProfession(CB_Prof1.Text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void CB_Prof2_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                Character.SecondaryProfession = StringToProfession(CB_Prof2.Text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        public Profession StringToProfession(string s) {
-            Profession                        p = Profession.None;
-            if      (s == "Alchemy"       ) { p = Profession.Alchemy;
-            }else if(s == "Blacksmithing" ) { p = Profession.Blacksmithing;
-            }else if(s == "Enchanting"    ) { p = Profession.Enchanting;
-            }else if(s == "Engineering"   ) { p = Profession.Engineering;
-            }else if(s == "Herbalism"     ) { p = Profession.Herbalism;
-            }else if(s == "Inscription"   ) { p = Profession.Inscription;
-            }else if(s == "Jewelcrafting" ) { p = Profession.Jewelcrafting;
-            }else if(s == "Leatherworking") { p = Profession.Leatherworking;
-            }else if(s == "Mining"        ) { p = Profession.Mining;
-            }else if(s == "Skinning"      ) { p = Profession.Skinning;
-            }else if(s == "Tailoring"     ) { p = Profession.Tailoring; }
-            return p;
-        }
-        public string ProfessionToString(Profession p) {
-            string                                     s = "None";
-            if      (p == Profession.Alchemy       ) { s = "Alchemy";
-            }else if(p == Profession.Blacksmithing ) { s = "Blacksmithing";
-            }else if(p == Profession.Enchanting    ) { s = "Enchanting";
-            }else if(p == Profession.Engineering   ) { s = "Engineering";
-            }else if(p == Profession.Herbalism     ) { s = "Herbalism";
-            }else if(p == Profession.Inscription   ) { s = "Inscription";
-            }else if(p == Profession.Jewelcrafting ) { s = "Jewelcrafting";
-            }else if(p == Profession.Leatherworking) { s = "Leatherworking";
-            }else if(p == Profession.Mining        ) { s = "Mining";
-            }else if(p == Profession.Skinning      ) { s = "Skinning";
-            }else if(p == Profession.Tailoring     ) { s = "Tailoring"; }
-            return s;
         }
 
         //*********************************

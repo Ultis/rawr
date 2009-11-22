@@ -39,6 +39,8 @@ namespace Rawr.Properties
 		public bool DisplayGemNames { get; set; }
 		public int ProcEffectMode { get; set; }
 		public bool DisplayItemIds { get; set; }
+        public bool DisplayItemType { get; set; }
+        public bool HideProfEnchants { get; set; }
 		public int CombinationEffectMode { get; set; }
 	}
 }

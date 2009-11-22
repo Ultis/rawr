@@ -166,7 +166,7 @@ namespace Rawr //O O . .
 
         /*[XmlElement("Boss")]
         public BossHandler SerializableBoss { get { return BossOptions ?? (BossOptions = new BossHandler()); }
-            set { BossOptions = value.Clone() /*new BossHandler(value)*//*; } }
+            set { BossOptions = value.Clone(); } }//new BossHandler(value)
 
         [XmlIgnore]
         public BossHandler BossOptions = null;*/
@@ -332,6 +332,20 @@ namespace Rawr //O O . .
         {
             get { return (int)Race; }
             set { Race = (CharacterRace)value; }
+        }
+
+        [XmlIgnore]
+        public int PriProfIndex
+        {
+            get { return Profs.ProfessionToIndex(PrimaryProfession); }
+            set { PrimaryProfession = Profs.IndexToProfession(value); }
+        }
+
+        [XmlIgnore]
+        public int SecProfIndex
+        {
+            get { return Profs.ProfessionToIndex(SecondaryProfession); }
+            set { SecondaryProfession = Profs.IndexToProfession(value); }
         }
 
         [XmlIgnore]

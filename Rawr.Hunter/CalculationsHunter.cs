@@ -243,8 +243,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
         private static bool _HidingBadStuff_PvP = true;
         internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
-        private static bool _HidingBadStuff_Prof = false;
-        internal static bool HidingBadStuff_Prof { get { return _HidingBadStuff_Prof; } set { _HidingBadStuff_Prof = value; } }
 
         public override Stats GetRelevantStats(Stats stats)
         {
@@ -448,73 +446,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 ) > 0;
         }
 
-        private static Character cacheChar = null;
-
-        public bool CheckHasProf(Profession p)
-        {
-            if (cacheChar == null) { return false; }
-            if (cacheChar.PrimaryProfession == p) { return true; }
-            if (cacheChar.SecondaryProfession == p) { return true; }
-
-            return false;
-        }
-
         public override bool IsEnchantRelevant(Enchant enchant) {
             string name = enchant.Name;
-            if (name.Contains("Rune of the Fallen Crusader"))
-            {
+            if (name.Contains("Rune of the Fallen Crusader")) {
                 return false; // Bad DK Enchant, Bad!
             }
-            else if (HidingBadStuff_Prof)
-            {
-                if (!CheckHasProf(Profession.Enchanting))
-                {
-                    if (enchant.Slot == ItemSlot.Finger &&
-                        (name.Contains("Assault") ||
-                         name.Contains("Stats") ||
-                         name.Contains("Striking") ||
-                         name.Contains("Stamina"))
-                        )
-                    {
-                        return false;
-                    }
-                }
-                if (!CheckHasProf(Profession.Engineering))
-                {
-                    if (name.Contains("Mind Amplification Dish") ||
-                        name.Contains("Flexweave Underlay") ||
-                        name.Contains("Hyperspeed Accelerators") ||
-                        name.Contains("Reticulated Armor Webbing") ||
-                        name.Contains("Nitro Boosts"))
-                    {
-                        return false;
-                    }
-                }
-                if (!CheckHasProf(Profession.Inscription))
-                {
-                    if (name.Contains("Master's") ||
-                        name.Contains("Inscription of Triumph"))
-                    {
-                        return false;
-                    }
-                }
-                if (!CheckHasProf(Profession.Leatherworking))
-                {
-                    if (name.Contains("Fur Lining - Attack Power") ||
-                        name.Contains("Fur Lining - Stamina"))
-                    {
-                        return false;
-                    }
-                }
-                if (!CheckHasProf(Profession.Tailoring))
-                {
-                    if (name.Contains("Swordguard Embroidery"))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats));
+            return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
             //return base.IsEnchantRelevant(enchant);
         }
 
@@ -646,39 +583,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             #endregion
 
-            #region Professions to Force Enable
-            // Miners should always have this buff activated
-            if (CheckHasProf(Profession.Mining)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
-            {
-                character.ActiveBuffsAdd(("Toughness"));
-            }
-            // Skinners should always have this buff activated
-            if (CheckHasProf(Profession.Skinning)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
-            {
-                character.ActiveBuffsAdd(("Master of Anatomy"));
-            }
-            // Engineers should always have this buff activated IF the Primary is
-            if (CheckHasProf(Profession.Engineering))
-            {
-                List<String> list = new List<string>() {
-                    "Runic Mana Injector",
-                    "Runic Healing Injector",
-                };
-                foreach (String name in list)
-                {
-                    if (character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
-                        !character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
-                    {
-                        character.ActiveBuffsAdd((name + " (Engineer Bonus)"));
-                    }
-                }
-            }
-            // NOTE: Might do this again for Alchemy and Mixology but
-            // there could be conflicts for different specialties
-            #endregion
-
             #region Passive Ability Auto-Fixing
             // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
             // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
@@ -755,8 +659,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             return statsBuffs;
         }
-        public override void SetDefaults(Character character) {
-        }
+        public override void SetDefaults(Character character) { }
 
         #endregion
 
@@ -2552,6 +2455,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float attemptedAtkInterval, float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
+            cacheChar = Char;
             CalculationOptionsHunter calcOpts = Char.CalculationOptions as CalculationOptionsHunter;
             ItemInstance RangeWeap = Char.MainHand;
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);

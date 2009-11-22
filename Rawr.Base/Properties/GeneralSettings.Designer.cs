@@ -130,5 +130,21 @@ namespace Rawr.Properties {
                 this["CombinationEffectMode"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HideProfEnchants
+        {
+            get
+            {
+                return ((bool)(this["HideProfEnchants"]));
+            }
+            set
+            {
+                this["HideProfEnchants"] = value;
+            }
+        }
+
     }
 }

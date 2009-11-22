@@ -146,6 +146,9 @@
     <Compile Include="..\..\Rawr.Base\OptimizerResults.cs">
       <Link>OptimizerResults.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\Profs.cs">
+      <Link>Profs.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\SavedBuffSet.cs">
       <Link>SavedBuffSet.cs</Link>
     </Compile>

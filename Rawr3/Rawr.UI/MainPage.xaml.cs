@@ -62,6 +62,7 @@ namespace Rawr.UI
 
                     character = value;
                     character.IsLoading = true;
+
                     DataContext = character;
                     Calculations.LoadModel(Calculations.Models[character.CurrentModel]);
                     Calculations.ClearCache();
@@ -148,6 +149,9 @@ namespace Rawr.UI
 
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
+
+            //CB_Prof1.SelectedIndex = Character.PrimaryProfession == null || Character.PrimaryProfession == Profession.None ? 0 : (int)Character.PrimaryProfession;
+            //CB_Prof2.SelectedIndex = Character.SecondaryProfession == null || Character.SecondaryProfession == Profession.None ? 0 : (int)Character.SecondaryProfession;
 
             StatusMessaging.Ready = true;
         }
@@ -511,5 +515,20 @@ namespace Rawr.UI
             Character.ClassIndex = ClassCombo.SelectedIndex;
         }
 
+        private void CB_Prof1_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*ComboBoxItem newItem = (ComboBoxItem)(CB_Prof1.SelectedItem);
+            string text = (string)newItem.Content;
+            Character.PrimaryProfession = Profs.StringToProfession(text);
+            Character.OnCalculationsInvalidated();*/
+        }
+
+        private void CB_Prof2_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*ComboBoxItem newItem = (ComboBoxItem)(CB_Prof2.SelectedItem);
+            string text = (string)newItem.Content;
+            Character.PrimaryProfession = Profs.StringToProfession(text);
+            Character.OnCalculationsInvalidated();*/
+        }
     }
 }

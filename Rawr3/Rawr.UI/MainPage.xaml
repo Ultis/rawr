@@ -130,7 +130,7 @@
     			<local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" Width="70" HorizontalAlignment="Center" Margin="8,0,8,0"/>
     			<local:ItemButtonWithEnchant x:Name="RangedButton" HorizontalAlignment="Center" d:LayoutOverrides="Width, Height" Margin="8,0,8,0"/>
     		</StackPanel>
-    		<controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Stretch" Margin="0,0,0,4">
+    		<controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Top">
     			<controls:TabItem x:Name="StatsTab" Header="Stats">
     				<Grid>
     					<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Name:" TextWrapping="Wrap"/>
@@ -177,8 +177,38 @@
     					</ComboBox>
     					<TextBlock HorizontalAlignment="Right" Margin="0,44,61,0" VerticalAlignment="Top" Text="Model:" TextWrapping="Wrap" Width="43"/>
     					<ComboBox x:Name="ModelCombo" SelectionChanged="ModelCombo_SelectionChanged" HorizontalAlignment="Right" Margin="0,60,0,0" VerticalAlignment="Top" Width="104" d:LayoutOverrides="HorizontalAlignment" Height="24"/>
-    					<CheckBox x:Name="EnforceGemCheck" HorizontalAlignment="Left" Margin="0,88,0,0" VerticalAlignment="Top" Content="Enforce Gem Requirements*" IsChecked="{Binding Mode=TwoWay, Path=EnforceGemRequirements}"/>
-    					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="0,109,0,0"/>
+    					<CheckBox x:Name="EnforceGemCheck" HorizontalAlignment="Left" Margin="0,132,0,0" VerticalAlignment="Top" Content="Enforce Gem Requirements*" IsChecked="{Binding Mode=TwoWay, Path=EnforceGemRequirements}"/>
+    					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="0,153,0,0"/>
+    					<TextBlock HorizontalAlignment="Left" Text="First Profession:" TextWrapping="Wrap" Margin="0,88,0,0" VerticalAlignment="Top" Width="114" d:LayoutOverrides="HorizontalAlignment"/>
+    					<ComboBox x:Name="CB_Prof1" Margin="0,108,166,0" VerticalAlignment="Top" SelectedIndex="{Binding Mode=TwoWay, Path=PriProfIndex}">
+    						<ComboBoxItem x:Name="Prof1_None" Content="None"/>
+    						<ComboBoxItem x:Name="Prof1_AL" Content="Alchemy"/>
+    						<ComboBoxItem x:Name="Prof1_BS" Content="Blacksmithing"/>
+    						<ComboBoxItem x:Name="Prof1_EC" Content="Enchanting"/>
+    						<ComboBoxItem x:Name="Prof1_EN" Content="Engineering"/>
+    						<ComboBoxItem x:Name="Prof1_HB" Content="Herbalism"/>
+    						<ComboBoxItem x:Name="Prof1_IN" Content="Inscription"/>
+    						<ComboBoxItem x:Name="Prof1_JC" Content="Jewelcrafting"/>
+    						<ComboBoxItem x:Name="Prof1_LW" Content="Leatherworking"/>
+    						<ComboBoxItem x:Name="Prof1_MN" Content="Mining"/>
+    						<ComboBoxItem x:Name="Prof1_SK" Content="Skinning"/>
+    						<ComboBoxItem x:Name="Prof1_TL" Content="Tailoring"/>
+    					</ComboBox>
+    					<ComboBox x:Name="CB_Prof2" Margin="0,108,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="158" SelectedIndex="{Binding Mode=TwoWay, Path=SecProfIndex}">
+    						<ComboBoxItem x:Name="Prof2_None" Content="None"/>
+    						<ComboBoxItem x:Name="Prof2_AL" Content="Alchemy"/>
+    						<ComboBoxItem x:Name="Prof2_BS" Content="Blacksmithing"/>
+    						<ComboBoxItem x:Name="Prof2_EC" Content="Enchanting"/>
+    						<ComboBoxItem x:Name="Prof2_EN" Content="Engineering"/>
+    						<ComboBoxItem x:Name="Prof2_HB" Content="Herbalism"/>
+    						<ComboBoxItem x:Name="Prof2_IN" Content="Inscription"/>
+    						<ComboBoxItem x:Name="Prof2_JC" Content="Jewelcrafting"/>
+    						<ComboBoxItem x:Name="Prof2_LW" Content="Leatherworking"/>
+    						<ComboBoxItem x:Name="Prof2_MN" Content="Mining"/>
+    						<ComboBoxItem x:Name="Prof2_SK" Content="Skinning"/>
+    						<ComboBoxItem x:Name="Prof2_TL" Content="Tailoring"/>
+    					</ComboBox>
+    					<TextBlock VerticalAlignment="Top" Text="Second Profession:" TextWrapping="Wrap" Margin="0,88,8,0" HorizontalAlignment="Right" Width="146"/>
     				</Grid>
     			</controls:TabItem>
     			<controls:TabItem x:Name="TalentTreeTab" Header="Talents">

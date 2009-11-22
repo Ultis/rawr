@@ -17,13 +17,14 @@ namespace Rawr.UserControls.Options
 			InitializeComponent();
 			//cannot be in load, because its possible this tab won't show, and the values will not be initialized.
 			//if this happens, then the users settings will be cleared.
-            checkBoxUseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
-            chbBuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
-            chbGemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
+            CK_UseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
+            CK_BuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
+            CK_GemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
             comboBoxProcEffectCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ProcEffectMode;
             comboBoxEffectCombinationsCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.CombinationEffectMode;
-            checkBoxDisplayItemIds.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemIds;
-            checkBoxDisplayItemType.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemType;
+            CK_DisplayItemIds.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemIds;
+            CK_DisplayItemType.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemType;
+            CK_HideEnchantsBasedOnProfs.Checked = Rawr.Properties.GeneralSettings.Default.HideProfEnchants;
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
 
@@ -65,11 +66,12 @@ namespace Rawr.UserControls.Options
 		{
             string message = string.Empty;
             string title = string.Empty;
-			Rawr.Properties.GeneralSettings.Default.UseMultithreading = checkBoxUseMultithreading.Checked;
-            Rawr.Properties.GeneralSettings.Default.DisplayBuffSource = chbBuffSource.Checked;
-            Rawr.Properties.GeneralSettings.Default.DisplayGemNames = chbGemNames.Checked;
-            Rawr.Properties.GeneralSettings.Default.DisplayItemIds = checkBoxDisplayItemIds.Checked;
-            Rawr.Properties.GeneralSettings.Default.DisplayItemType = checkBoxDisplayItemType.Checked;
+			Rawr.Properties.GeneralSettings.Default.UseMultithreading = CK_UseMultithreading.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayBuffSource = CK_BuffSource.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayGemNames = CK_GemNames.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayItemIds = CK_DisplayItemIds.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayItemType = CK_DisplayItemType.Checked;
+            Rawr.Properties.GeneralSettings.Default.HideProfEnchants = CK_HideEnchantsBasedOnProfs.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
             Rawr.Properties.GeneralSettings.Default.ProcEffectMode = comboBoxProcEffectCalculationMode.SelectedIndex;
             Rawr.Properties.GeneralSettings.Default.CombinationEffectMode = comboBoxEffectCombinationsCalculationMode.SelectedIndex;

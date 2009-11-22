@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Globalization;
 #if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
+using System.Globalization;
 
 namespace Rawr.Mage
 {
@@ -304,6 +304,7 @@ namespace Rawr.Mage
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            cacheChar = character;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             return GetCharacterCalculations(character, additionalItem, referenceCalculation && calculationOptions.IncrementalOptimizations, significantChange, calculationOptions.SmartOptimization && !significantChange, needsDisplayCalculations);
         }
@@ -471,6 +472,7 @@ namespace Rawr.Mage
         // required by base class, but never used
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            cacheChar = character;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             List<Buff> ignore;
             return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<Buff>(), null, out ignore), calculationOptions);

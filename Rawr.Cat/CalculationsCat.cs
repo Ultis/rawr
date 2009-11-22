@@ -248,7 +248,7 @@ namespace Rawr.Cat
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
-			//_cachedCharacter = character;
+			cacheChar = character;
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
 			int targetLevel = calcOpts.TargetLevel;
@@ -489,6 +489,7 @@ namespace Rawr.Cat
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
+            cacheChar = character;
 			List<float> arPenRating, arPenRatingUptime;
 			return GetCharacterStatsWithTemporaryArPen(character, additionalItem, out arPenRating, out arPenRatingUptime);
 		}
@@ -502,7 +503,7 @@ namespace Rawr.Cat
 			statsRace.BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f; //Savage Roar
 			
 			Stats statsItems = GetItemStats(character, additionalItem);
-			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+			Stats statsBuffs = GetBuffsStats(character, calcOpts);
 			float[] thickHideMultipliers = new float[] { 1f, 1.04f, 1.07f, 1.1f };
 			statsItems.Armor *= thickHideMultipliers[character.DruidTalents.ThickHide];
 
@@ -819,6 +820,74 @@ namespace Rawr.Cat
 			return relevant;
 		}
 
+        public Stats GetBuffsStats(Character character, CalculationOptionsCat calcOpts) {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Racials to Force Enable
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffsAdd(("Heroic Presence"));
+            }
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }*/
+            #endregion
+
+            #region Special Pot Handling
+            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
 		public override void SetDefaults(Character character)
 		{
 			character.ActiveBuffsAdd(("Horn of Winter"));
