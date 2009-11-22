@@ -160,7 +160,11 @@ namespace Rawr.UI
                         buffGroups[b.Group] = gb;
                     }
                     CheckBox buffCb = new CheckBox();
-                    buffCb.Content = b.Name;
+                    if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && b.Source != null) {
+                        buffCb.Content = b.Name + " (" + b.Source + ")";
+                    } else {
+                        buffCb.Content = b.Name;
+                    }
                     ToolTipService.SetToolTip(buffCb, Calculations.GetRelevantStats(b.Stats).ToString());
                     buffCb.Checked += new RoutedEventHandler(buffCb_CheckedChange);
                     buffCb.Unchecked += new RoutedEventHandler(buffCb_CheckedChange);
@@ -171,7 +175,11 @@ namespace Rawr.UI
                     foreach (Buff i in b.Improvements)
                     {
                         buffCb = new CheckBox();
-                        buffCb.Content = i.Name;
+                        if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && i.Source != null) {
+                            buffCb.Content = i.Name + " (" + i.Source + ")";
+                        } else {
+                            buffCb.Content = i.Name;
+                        }
                         ToolTipService.SetToolTip(buffCb, Calculations.GetRelevantStats(i.Stats).ToString());
                         buffCb.Margin = new Thickness(16, 0, 0, 0);
                         buffCb.Checked += new RoutedEventHandler(buffCb_CheckedChange);
