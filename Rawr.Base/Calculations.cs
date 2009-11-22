@@ -1227,12 +1227,7 @@ namespace Rawr
                 string name = enchant.Name;
                 if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants) {
                     if (!CheckHasProf(Profession.Enchanting)) {
-                        if (enchant.Slot == ItemSlot.Finger &&
-                            (name.Contains("Assault")  ||
-                             name.Contains("Stats")    ||
-                             name.Contains("Striking") ||
-                             name.Contains("Stamina"))
-                            )
+                        if (enchant.Slot == ItemSlot.Finger)
                         {
                             return false;
                         }
@@ -1242,7 +1237,8 @@ namespace Rawr
                             name.Contains("Flexweave Underlay")        ||
                             name.Contains("Hyperspeed Accelerators")   ||
                             name.Contains("Reticulated Armor Webbing") ||
-                            name.Contains("Nitro Boosts"))
+                            name.Contains("Nitro Boosts") ||
+                            name.Contains("Springy Arachnoweave"))
                         {
                             return false;
                         }
@@ -1255,14 +1251,16 @@ namespace Rawr
                         }
                     }
                     if (!CheckHasProf(Profession.Leatherworking)) {
-                        if (name.Contains("Fur Lining - Attack Power") ||
-                            name.Contains("Fur Lining - Stamina"))
+                        if (name.Contains("Fur Lining") ||
+                            name.Contains("Jormungar") ||
+                            name.Contains("Magister's Armor Kit") ||
+                            name.Contains("Nerubian Leg Reinforcements"))
                         {
                             return false;
                         }
                     }
                     if (!CheckHasProf(Profession.Tailoring)) {
-                        if (name.Contains("Swordguard Embroidery")) {
+                        if (name.Contains("Embroidery")) {
                             return false;
                         }
                     }
