@@ -570,7 +570,7 @@ namespace Rawr.DPSWarr {
                 {
                     acts = Math.Min(GCDsAvailable, GCDsAvailable/*SL.Activates*/ * (1f - totalPercTimeLost));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                    if (SL.GetRageUseOverDur(Abil_GCDs) > availRage) Abil_GCDs = availRage / SL.RageCost;
+                    if (SL.GetRageUseOverDur(Abil_GCDs) > availRage) Abil_GCDs = Math.Max(0f, availRage) / SL.RageCost;
                     _SL_GCDs = Abil_GCDs;
                     GCDsUsed += Math.Min(origNumGCDs, _SL_GCDs);
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
