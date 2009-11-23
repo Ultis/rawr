@@ -41,8 +41,8 @@ namespace Rawr.DPSWarr {
         public float _EX_GCDs = 0f, _EX_DPS = 0f, _EX_HPS = 0f;
         protected float _SW_DPS = 0f, _SW_HPS = 0f, _SW_GCDs = 0f;
         protected float RageGenWhite = 0f; protected float RageGenOther = 0f; protected float RageNeeded = 0f;
-        protected float _HS_PerHit = 0f, _HS_DPS = 0f, _HS_Acts = 0f;
-        protected float _CL_PerHit = 0f, _CL_DPS = 0f, _CL_Acts = 0f;
+        public float _HS_PerHit = 0f, _HS_DPS = 0f, _HS_Acts = 0f;
+        public float _CL_PerHit = 0f, _CL_DPS = 0f, _CL_Acts = 0f;
         protected float _WhiteDPSMH = 0f; protected float _WhiteDPSOH = 0f;
         protected float _WhiteDPS = 0f; protected float _WhitePerHit = 0f;
         public float _DW_PerHit = 0f, _DW_DPS = 0f;
@@ -156,7 +156,7 @@ namespace Rawr.DPSWarr {
             calcs.HS = HS;
             calcs.EX = EX;
         }
-        public void Initialize() { initAbilities(); /*doIterations();*/ }
+        public virtual void Initialize() { initAbilities(); /*doIterations();*/ }
 
         public virtual void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalculations) {
             _needDisplayCalcs = needsDisplayCalculations;

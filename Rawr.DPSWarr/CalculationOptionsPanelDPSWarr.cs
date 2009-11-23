@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Rawr.Base;
 
 /* Things to add:
  * 
@@ -131,6 +132,7 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 CB_Duration.Minimum = 0;
                 CB_Duration.Maximum = 60 * 20; // 20 minutes
                 line = 50;
+                CB_CalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
                     ex.Message, "CalculationOptionsPanelDPSWarr()", "No Additional Info", ex.StackTrace, line);
@@ -247,6 +249,17 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 RB_StanceArms.Checked = !RB_StanceFury.Checked; line = 50;
                 //
                 CK_Markov.Checked = calcOpts.UseMarkov;
+                //
+                CK_StatsStrength.Checked = calcOpts.StatsList[0];
+                CK_StatsAgility.Checked  = calcOpts.StatsList[1];
+                CK_StatsAP.Checked       = calcOpts.StatsList[2];
+                CK_StatsCrit.Checked     = calcOpts.StatsList[3];
+                CK_StatsHit.Checked      = calcOpts.StatsList[4];
+                CK_StatsExp.Checked      = calcOpts.StatsList[5];
+                CK_StatsHaste.Checked    = calcOpts.StatsList[6];
+                CK_StatsArP.Checked      = calcOpts.StatsList[7];
+                NUD_StatsIncrement.Value = calcOpts.StatsIncrement;
+                CB_CalculationToGraph.Text = calcOpts.CalculationToGraph;
                 //
                 Character.OnCalculationsInvalidated();
             } catch (Exception ex) {
@@ -1888,6 +1901,45 @@ CB_Version.Items.Add("All");
                 calcOpts.UseMarkov = Checked;
                 Character.OnCalculationsInvalidated();
             }
+        }
+        //
+        private Stats[] BuildStatsList() {
+            List<Stats> statsList = new List<Stats>();
+            if (CK_StatsStrength.Checked) { statsList.Add(new Stats() { Strength = 1f }); }
+            if (CK_StatsAgility.Checked ) { statsList.Add(new Stats() { Agility = 1f }); }
+            if (CK_StatsAP.Checked      ) { statsList.Add(new Stats() { AttackPower = 2f }); }
+            if (CK_StatsCrit.Checked    ) { statsList.Add(new Stats() { CritRating = 1f }); }
+            if (CK_StatsHit.Checked     ) { statsList.Add(new Stats() { HitRating = 1f }); }
+            if (CK_StatsExp.Checked     ) { statsList.Add(new Stats() { ExpertiseRating = 1f }); }
+            if (CK_StatsHaste.Checked   ) { statsList.Add(new Stats() { HasteRating = 1f }); }
+            if (CK_StatsArP.Checked     ) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
+            return statsList.ToArray();
+        }
+        private void btnStatsGraph_Click(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            Stats[] statsList = BuildStatsList();
+            Graph graph = new Graph();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of dps added or lost";
+            graph.SetupGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            graph.Show();
+        }
+        private void chkStatsStrength_CheckedChanged(object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[0] = CK_StatsStrength.Checked; }
+        private void chkStatsAgility_CheckedChanged( object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[1] = CK_StatsAgility.Checked; }
+        private void chkStatsAP_CheckedChanged(      object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[2] = CK_StatsAP.Checked; }
+        private void chkStatsCrit_CheckedChanged(    object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[3] = CK_StatsCrit.Checked; }
+        private void chkStatsHit_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[4] = CK_StatsHit.Checked; }
+        private void chkStatsExp_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[5] = CK_StatsExp.Checked; }
+        private void chkStatsHaste_CheckedChanged(   object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[6] = CK_StatsHaste.Checked; }
+        private void chkStatsArP_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[7] = CK_StatsArP.Checked; }
+        private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+        }
+        private void NUD_StatsIncrement_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
         }
     }
 }

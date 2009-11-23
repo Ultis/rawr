@@ -28,7 +28,7 @@ namespace Rawr.DPSWarr {
             useOH = _useOH;
 
             _c_mhRacialExpertise = GetRacialExpertiseFromWeaponType(_c_mhItemType);
-            _c_mhexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_mhRacialExpertise;
+            _c_mhexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(Math.Max(0, StatS.ExpertiseRating)) + _c_mhRacialExpertise;
             _c_ymiss = YwMissChance;
             _c_wmiss = WhMissChance;
             _c_mhdodge = MhDodgeChance;
@@ -40,7 +40,7 @@ namespace Rawr.DPSWarr {
             if (useOH)
             {
                 _c_ohRacialExpertise = GetRacialExpertiseFromWeaponType(_c_ohItemType);
-                _c_ohexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_ohRacialExpertise;
+                _c_ohexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(Math.Max(0, StatS.ExpertiseRating)) + _c_ohRacialExpertise;
                 _c_ohdodge = OhDodgeChance;
                 _c_ohparry = OhParryChance;
                 _c_ohblock = OhBlockChance;
@@ -128,7 +128,7 @@ namespace Rawr.DPSWarr {
                         (!CalcOpts.FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                     //return Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,CalcOpts.TargetArmor,StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating));
-                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
                 }
                 return _DamageReduction;
             }
@@ -228,7 +228,7 @@ namespace Rawr.DPSWarr {
             }
         }
         #region Hit Rating
-        public float HitPerc { get { return StatConversion.GetHitFromRating(StatS.HitRating, CharacterClass.Warrior); } }
+        public float HitPerc { get { return StatConversion.GetHitFromRating(Math.Max(0, StatS.HitRating), CharacterClass.Warrior); } }
         #endregion
         #region Expertise Rating
         /*private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Warrior);}*/
@@ -279,12 +279,12 @@ namespace Rawr.DPSWarr {
         private float YwMissChance { get { return Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
-        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
+        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
         private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
         private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
         #endregion
         #region Parry
-        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
+        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
         private float MhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior);
@@ -299,7 +299,7 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Glance
-        private float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[CalcOpts.TargetLevel-80]; } }
+        private float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
         #endregion
         #region Block
         // DPSWarr Dev Team has decided to remove Block from the Attack Table
@@ -312,7 +312,7 @@ namespace Rawr.DPSWarr {
         private float MhWhCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating) +
+                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating)) +
                  ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
                 //return crit;
             }
@@ -320,21 +320,21 @@ namespace Rawr.DPSWarr {
         private float MhYwCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
+                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating))) +
                        ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
             }
         }
         private float OhWhCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating) +
+                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating)) +
                 ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
             }
         }
         private float OhYwCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
+                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating))) +
                 ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
             }
         }

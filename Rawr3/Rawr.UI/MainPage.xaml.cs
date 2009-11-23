@@ -24,7 +24,6 @@ namespace Rawr.UI
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
 
-
         private Status status;
         public Status Status
         {
@@ -395,7 +394,6 @@ namespace Rawr.UI
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
-
         }
 
         private void ShowItemFilters()
@@ -523,22 +521,6 @@ namespace Rawr.UI
         private void ClassCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Character.ClassIndex = ClassCombo.SelectedIndex;
-        }
-
-        private void CB_Prof1_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            /*ComboBoxItem newItem = (ComboBoxItem)(CB_Prof1.SelectedItem);
-            string text = (string)newItem.Content;
-            Character.PrimaryProfession = Profs.StringToProfession(text);
-            Character.OnCalculationsInvalidated();*/
-        }
-
-        private void CB_Prof2_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            /*ComboBoxItem newItem = (ComboBoxItem)(CB_Prof2.SelectedItem);
-            string text = (string)newItem.Content;
-            Character.PrimaryProfession = Profs.StringToProfession(text);
-            Character.OnCalculationsInvalidated();*/
         }
     }
 }

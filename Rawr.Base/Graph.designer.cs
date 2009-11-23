@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Graph));
             this.pictureBoxGraph = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGraph)).BeginInit();
             this.SuspendLayout();
@@ -50,7 +51,9 @@
             this.ClientSize = new System.Drawing.Size(806, 756);
             this.Controls.Add(this.pictureBoxGraph);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Graph";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Graph";
             this.Load += new System.EventHandler(this.Graph_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGraph)).EndInit();

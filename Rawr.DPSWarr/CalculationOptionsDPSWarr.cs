@@ -186,6 +186,24 @@ namespace Rawr.DPSWarr {
             get { return _Under20Perc; }
             set { _Under20Perc = value; OnPropertyChanged("Under20Perc"); }
         }
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
+        public bool[] StatsList
+        {
+            get { return _statsList; }
+            set { _statsList = value; OnPropertyChanged("StatsList"); }
+        }
+        private int _StatsIncrement = 100;
+        public int StatsIncrement
+        {
+            get { return _StatsIncrement; }
+            set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
+        }
+        private string _calculationToGraph = "DPS Rating";
+        public string CalculationToGraph
+        {
+            get { return _calculationToGraph; }
+            set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
+        }
         #endregion
         #region Rotational Changes
         private bool _InBack;

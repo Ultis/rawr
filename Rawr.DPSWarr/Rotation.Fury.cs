@@ -36,6 +36,22 @@ namespace Rawr.DPSWarr
         private float timeLostPerc = 0f;
         #endregion
 
+        public override void Initialize()
+        {
+            initAbilities();
+            // doIterations();
+            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool clok = CalcOpts.MultipleTargets
+                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+
+            percHS = (hsok ? 1f : 0f);
+            if (clok)
+            {
+                percHS -= CalcOpts.MultipleTargetsPerc / 100f;
+            }
+            percCL = (clok ? 1f - percHS : 0f);
+        }
+
         public override void Initialize(CharacterCalculationsDPSWarr calcs)
         {
             base.Initialize(calcs);
@@ -114,16 +130,16 @@ namespace Rawr.DPSWarr
                     WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = Math.Min(hsRageUsed / HS.FullRageCost, WhiteAtks.MhActivatesNoHS);
                     WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = Math.Min(clRageUsed / CL.FullRageCost, WhiteAtks.MhActivatesNoHS - WhiteAtks.HSOverridesOverDur);
                     BS.hsActivates = HS.OverridesOverDur;
-
-                } while (Math.Abs(1f - oldBS / BS.Activates) > 0.1f ||
-                         Math.Abs(1f - oldHS / HS.OverridesOverDur) > 0.1f ||
-                         Math.Abs(1f - oldCL / CL.OverridesOverDur) > 0.1f);
-
+                } while (Math.Abs(1f - (BS.Activates        != 0 ? oldBS / BS.Activates        : 1f)) > 0.1f ||
+                         Math.Abs(1f - (HS.OverridesOverDur != 0 ? oldHS / HS.OverridesOverDur : 1f)) > 0.1f ||
+                         Math.Abs(1f - (CL.OverridesOverDur != 0 ? oldCL / CL.OverridesOverDur : 1f)) > 0.1f);
 
                 _HS_DPS = HS.GetDPS(HS.OverridesOverDur);
                 _CL_DPS = CL.GetDPS(CL.OverridesOverDur);
                 _HS_PerHit = HS.DamageOnUse * percHS;
                 _CL_PerHit = CL.DamageOnUse * percCL;
+                _HS_Acts = HS.OverridesOverDur;
+                _CL_Acts = CL.OverridesOverDur;
             }
             catch (Exception ex)
             {

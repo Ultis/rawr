@@ -306,8 +306,8 @@ namespace Rawr.DPSWarr {
             WhiteAtks.Slam_Freq = _SL_GCDs;
             SD.FreeRage = SD.RageCost;
             EX.FreeRage = EX.RageCost;
-            float oldHSActivates = 0f, RageForHS = 0f, numHSOverDur = 0f, newHSActivates = HS.OverridesOverDur = WhiteAtks.HSOverridesOverDur = 0f;
-            float oldCLActivates = 0f, RageForCL = 0f, numCLOverDur = 0f, newCLActivates = CL.OverridesOverDur = WhiteAtks.CLOverridesOverDur = 0f;
+            float oldHSActivates = 0f, RageForHS = 0f, newHSActivates = HS.OverridesOverDur = WhiteAtks.HSOverridesOverDur = 0f;
+            float oldCLActivates = 0f, RageForCL = 0f, newCLActivates = CL.OverridesOverDur = WhiteAtks.CLOverridesOverDur = 0f;
             float origAvailRage = preloopAvailRage * (1f - percTimeUnder20);
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok = CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
@@ -701,12 +701,12 @@ namespace Rawr.DPSWarr {
                         //+ BR.GetRageUseOverDur(_Blood_GCDs)
                         + SS.GetRageUseOverDur(_SS_Acts);
             // Add HS dps
-            _HS_Acts = numHSOverDur;
+            _HS_Acts = HS.OverridesOverDur;
             _HS_DPS = HS.DPS;
             _HS_PerHit = HS.DamageOnUse;
             DPS_TTL += _HS_DPS;
             // Add CL dps
-            _CL_Acts = numCLOverDur;
+            _CL_Acts = CL.OverridesOverDur;
             _CL_DPS = CL.DPS;
             _CL_PerHit = CL.DamageOnUse;
             DPS_TTL += _CL_DPS;

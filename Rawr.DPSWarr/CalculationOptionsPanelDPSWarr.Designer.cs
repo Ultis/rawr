@@ -162,6 +162,20 @@
             this.CK_Flooring = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
             this.TB_Misc = new System.Windows.Forms.TabPage();
+            this.GB_StatsOptions = new System.Windows.Forms.GroupBox();
+            this.LB_StatsIncrement = new System.Windows.Forms.Label();
+            this.NUD_StatsIncrement = new System.Windows.Forms.NumericUpDown();
+            this.LB_StatsRatingToGraph = new System.Windows.Forms.Label();
+            this.BT_StatsGraph = new System.Windows.Forms.Button();
+            this.CB_CalculationToGraph = new System.Windows.Forms.ComboBox();
+            this.CK_StatsArP = new System.Windows.Forms.CheckBox();
+            this.CK_StatsHaste = new System.Windows.Forms.CheckBox();
+            this.CK_StatsExp = new System.Windows.Forms.CheckBox();
+            this.CK_StatsHit = new System.Windows.Forms.CheckBox();
+            this.CK_StatsCrit = new System.Windows.Forms.CheckBox();
+            this.CK_StatsAP = new System.Windows.Forms.CheckBox();
+            this.CK_StatsAgility = new System.Windows.Forms.CheckBox();
+            this.CK_StatsStrength = new System.Windows.Forms.CheckBox();
             this.CK_Markov = new System.Windows.Forms.CheckBox();
             this.CK_SE_UseDur = new System.Windows.Forms.CheckBox();
             this.CK_HideSplGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -196,6 +210,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).BeginInit();
             this.Page_02_Maintenance.SuspendLayout();
             this.TB_Misc.SuspendLayout();
+            this.GB_StatsOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_StatsIncrement)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).BeginInit();
             this.SuspendLayout();
             // 
@@ -1389,6 +1405,7 @@
             // 
             // TB_Misc
             // 
+            this.TB_Misc.Controls.Add(this.GB_StatsOptions);
             this.TB_Misc.Controls.Add(this.CK_Markov);
             this.TB_Misc.Controls.Add(this.CK_SE_UseDur);
             this.TB_Misc.Controls.Add(this.CK_HideSplGear);
@@ -1408,6 +1425,173 @@
             this.TB_Misc.TabIndex = 4;
             this.TB_Misc.Text = "Misc";
             this.TB_Misc.UseVisualStyleBackColor = true;
+            // 
+            // GB_StatsOptions
+            // 
+            this.GB_StatsOptions.Controls.Add(this.LB_StatsIncrement);
+            this.GB_StatsOptions.Controls.Add(this.NUD_StatsIncrement);
+            this.GB_StatsOptions.Controls.Add(this.LB_StatsRatingToGraph);
+            this.GB_StatsOptions.Controls.Add(this.BT_StatsGraph);
+            this.GB_StatsOptions.Controls.Add(this.CB_CalculationToGraph);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsArP);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsHaste);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsExp);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsHit);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsCrit);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsAP);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsAgility);
+            this.GB_StatsOptions.Controls.Add(this.CK_StatsStrength);
+            this.GB_StatsOptions.Location = new System.Drawing.Point(6, 221);
+            this.GB_StatsOptions.Name = "GB_StatsOptions";
+            this.GB_StatsOptions.Size = new System.Drawing.Size(246, 165);
+            this.GB_StatsOptions.TabIndex = 59;
+            this.GB_StatsOptions.TabStop = false;
+            this.GB_StatsOptions.Text = "Stats Graph Options";
+            // 
+            // LB_StatsIncrement
+            // 
+            this.LB_StatsIncrement.AutoSize = true;
+            this.LB_StatsIncrement.Location = new System.Drawing.Point(3, 142);
+            this.LB_StatsIncrement.Name = "LB_StatsIncrement";
+            this.LB_StatsIncrement.Size = new System.Drawing.Size(57, 13);
+            this.LB_StatsIncrement.TabIndex = 64;
+            this.LB_StatsIncrement.Text = "Increment:";
+            // 
+            // NUD_StatsIncrement
+            // 
+            this.NUD_StatsIncrement.Location = new System.Drawing.Point(66, 138);
+            this.NUD_StatsIncrement.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.NUD_StatsIncrement.Name = "NUD_StatsIncrement";
+            this.NUD_StatsIncrement.Size = new System.Drawing.Size(54, 20);
+            this.NUD_StatsIncrement.TabIndex = 63;
+            this.NUD_StatsIncrement.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_StatsIncrement.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.NUD_StatsIncrement.ValueChanged += new System.EventHandler(this.NUD_StatsIncrement_ValueChanged);
+            // 
+            // LB_StatsRatingToGraph
+            // 
+            this.LB_StatsRatingToGraph.AutoSize = true;
+            this.LB_StatsRatingToGraph.Location = new System.Drawing.Point(3, 114);
+            this.LB_StatsRatingToGraph.Name = "LB_StatsRatingToGraph";
+            this.LB_StatsRatingToGraph.Size = new System.Drawing.Size(82, 13);
+            this.LB_StatsRatingToGraph.TabIndex = 62;
+            this.LB_StatsRatingToGraph.Text = "Rating to Graph";
+            // 
+            // BT_StatsGraph
+            // 
+            this.BT_StatsGraph.Location = new System.Drawing.Point(124, 138);
+            this.BT_StatsGraph.Name = "BT_StatsGraph";
+            this.BT_StatsGraph.Size = new System.Drawing.Size(113, 21);
+            this.BT_StatsGraph.TabIndex = 61;
+            this.BT_StatsGraph.Text = "Display Stats Graph";
+            this.BT_StatsGraph.UseVisualStyleBackColor = true;
+            this.BT_StatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click);
+            // 
+            // CB_CalculationToGraph
+            // 
+            this.CB_CalculationToGraph.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CalculationToGraph.FormattingEnabled = true;
+            this.CB_CalculationToGraph.Location = new System.Drawing.Point(89, 111);
+            this.CB_CalculationToGraph.Name = "CB_CalculationToGraph";
+            this.CB_CalculationToGraph.Size = new System.Drawing.Size(148, 21);
+            this.CB_CalculationToGraph.TabIndex = 60;
+            this.CB_CalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.comboBoxCalculationToGraph_SelectedIndexChanged);
+            // 
+            // CK_StatsArP
+            // 
+            this.CK_StatsArP.AutoSize = true;
+            this.CK_StatsArP.Location = new System.Drawing.Point(115, 65);
+            this.CK_StatsArP.Name = "CK_StatsArP";
+            this.CK_StatsArP.Size = new System.Drawing.Size(109, 17);
+            this.CK_StatsArP.TabIndex = 7;
+            this.CK_StatsArP.Text = "Armor Pen Rating";
+            this.CK_StatsArP.UseVisualStyleBackColor = true;
+            this.CK_StatsArP.CheckedChanged += new System.EventHandler(this.chkStatsArP_CheckedChanged);
+            // 
+            // CK_StatsHaste
+            // 
+            this.CK_StatsHaste.AutoSize = true;
+            this.CK_StatsHaste.Location = new System.Drawing.Point(115, 42);
+            this.CK_StatsHaste.Name = "CK_StatsHaste";
+            this.CK_StatsHaste.Size = new System.Drawing.Size(88, 17);
+            this.CK_StatsHaste.TabIndex = 6;
+            this.CK_StatsHaste.Text = "Haste Rating";
+            this.CK_StatsHaste.UseVisualStyleBackColor = true;
+            this.CK_StatsHaste.CheckedChanged += new System.EventHandler(this.chkStatsHaste_CheckedChanged);
+            // 
+            // CK_StatsExp
+            // 
+            this.CK_StatsExp.AutoSize = true;
+            this.CK_StatsExp.Location = new System.Drawing.Point(115, 19);
+            this.CK_StatsExp.Name = "CK_StatsExp";
+            this.CK_StatsExp.Size = new System.Drawing.Size(103, 17);
+            this.CK_StatsExp.TabIndex = 5;
+            this.CK_StatsExp.Text = "Expertise Rating";
+            this.CK_StatsExp.UseVisualStyleBackColor = true;
+            this.CK_StatsExp.CheckedChanged += new System.EventHandler(this.chkStatsExp_CheckedChanged);
+            // 
+            // CK_StatsHit
+            // 
+            this.CK_StatsHit.AutoSize = true;
+            this.CK_StatsHit.Location = new System.Drawing.Point(115, 88);
+            this.CK_StatsHit.Name = "CK_StatsHit";
+            this.CK_StatsHit.Size = new System.Drawing.Size(73, 17);
+            this.CK_StatsHit.TabIndex = 4;
+            this.CK_StatsHit.Text = "Hit Rating";
+            this.CK_StatsHit.UseVisualStyleBackColor = true;
+            this.CK_StatsHit.CheckedChanged += new System.EventHandler(this.chkStatsHit_CheckedChanged);
+            // 
+            // CK_StatsCrit
+            // 
+            this.CK_StatsCrit.AutoSize = true;
+            this.CK_StatsCrit.Location = new System.Drawing.Point(6, 88);
+            this.CK_StatsCrit.Name = "CK_StatsCrit";
+            this.CK_StatsCrit.Size = new System.Drawing.Size(75, 17);
+            this.CK_StatsCrit.TabIndex = 3;
+            this.CK_StatsCrit.Text = "Crit Rating";
+            this.CK_StatsCrit.UseVisualStyleBackColor = true;
+            this.CK_StatsCrit.CheckedChanged += new System.EventHandler(this.chkStatsCrit_CheckedChanged);
+            // 
+            // CK_StatsAP
+            // 
+            this.CK_StatsAP.AutoSize = true;
+            this.CK_StatsAP.Location = new System.Drawing.Point(6, 65);
+            this.CK_StatsAP.Name = "CK_StatsAP";
+            this.CK_StatsAP.Size = new System.Drawing.Size(90, 17);
+            this.CK_StatsAP.TabIndex = 2;
+            this.CK_StatsAP.Text = "Attack Power";
+            this.CK_StatsAP.UseVisualStyleBackColor = true;
+            this.CK_StatsAP.CheckedChanged += new System.EventHandler(this.chkStatsAP_CheckedChanged);
+            // 
+            // CK_StatsAgility
+            // 
+            this.CK_StatsAgility.AutoSize = true;
+            this.CK_StatsAgility.Location = new System.Drawing.Point(6, 42);
+            this.CK_StatsAgility.Name = "CK_StatsAgility";
+            this.CK_StatsAgility.Size = new System.Drawing.Size(53, 17);
+            this.CK_StatsAgility.TabIndex = 1;
+            this.CK_StatsAgility.Text = "Agility";
+            this.CK_StatsAgility.UseVisualStyleBackColor = true;
+            this.CK_StatsAgility.CheckedChanged += new System.EventHandler(this.chkStatsAgility_CheckedChanged);
+            // 
+            // CK_StatsStrength
+            // 
+            this.CK_StatsStrength.AutoSize = true;
+            this.CK_StatsStrength.Location = new System.Drawing.Point(6, 19);
+            this.CK_StatsStrength.Name = "CK_StatsStrength";
+            this.CK_StatsStrength.Size = new System.Drawing.Size(66, 17);
+            this.CK_StatsStrength.TabIndex = 0;
+            this.CK_StatsStrength.Text = "Strength";
+            this.CK_StatsStrength.UseVisualStyleBackColor = true;
+            this.CK_StatsStrength.CheckedChanged += new System.EventHandler(this.chkStatsStrength_CheckedChanged);
             // 
             // CK_Markov
             // 
@@ -1559,6 +1743,9 @@
             this.Page_02_Maintenance.PerformLayout();
             this.TB_Misc.ResumeLayout(false);
             this.TB_Misc.PerformLayout();
+            this.GB_StatsOptions.ResumeLayout(false);
+            this.GB_StatsOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_StatsIncrement)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).EndInit();
             this.ResumeLayout(false);
 
@@ -1649,5 +1836,19 @@
         private System.Windows.Forms.Button BT_Fear;
         private System.Windows.Forms.Button BT_Move;
         private System.Windows.Forms.CheckBox CK_Markov;
+        private System.Windows.Forms.GroupBox GB_StatsOptions;
+        private System.Windows.Forms.Label LB_StatsRatingToGraph;
+        private System.Windows.Forms.Button BT_StatsGraph;
+        private System.Windows.Forms.ComboBox CB_CalculationToGraph;
+        private System.Windows.Forms.CheckBox CK_StatsArP;
+        private System.Windows.Forms.CheckBox CK_StatsHaste;
+        private System.Windows.Forms.CheckBox CK_StatsExp;
+        private System.Windows.Forms.CheckBox CK_StatsHit;
+        private System.Windows.Forms.CheckBox CK_StatsCrit;
+        private System.Windows.Forms.CheckBox CK_StatsAP;
+        private System.Windows.Forms.CheckBox CK_StatsAgility;
+        private System.Windows.Forms.CheckBox CK_StatsStrength;
+        private System.Windows.Forms.Label LB_StatsIncrement;
+        private System.Windows.Forms.NumericUpDown NUD_StatsIncrement;
     }
 }
