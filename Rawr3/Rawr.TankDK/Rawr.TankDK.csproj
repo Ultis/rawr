@@ -79,6 +79,7 @@
     <Compile Include="..\..\Rawr.TankDK\Weapon.cs">
       <Link>Weapon.cs</Link>
     </Compile>
+    <Compile Include="CalculationOptionsConvertersTankDK.cs" />
     <Compile Include="CalculationOptionsPanelTankDK.xaml.cs">
       <DependentUpon>CalculationOptionsPanelTankDK.xaml</DependentUpon>
     </Compile>

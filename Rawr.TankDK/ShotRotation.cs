@@ -37,7 +37,7 @@ namespace Rawr.TankDK {
         public float DeathStrike = 0f;
         public float BloodStrike = 0f;
         public float HeartStrike = 0f;
-        public float Horn = 0f;
+        public float HornOfWinter = 0f;
         public float Pestilence = 0f;
         public float BloodBoil = 0f;
         public float DeathNDecay = 0f;
@@ -86,7 +86,7 @@ namespace Rawr.TankDK {
                  ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * IcyTouch) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                   (15 * DeathNDecay) +
-                  (10 * (BloodStrike + HeartStrike + BloodBoil + Horn)) +
+                  (10 * (BloodStrike + HeartStrike + BloodBoil + HornOfWinter)) +
                  ((curRotationDuration / 5f) * talents.Butchery);
 
 
@@ -138,7 +138,7 @@ namespace Rawr.TankDK {
         public float getGCDTime() {
             GCDTime = GetGCDHasted() * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
                 BloodStrike + HeartStrike);
-            GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + HowlingBlast + Horn + DeathNDecay + BloodBoil + Pestilence);
+            GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + HowlingBlast + HornOfWinter + DeathNDecay + BloodBoil + Pestilence);
             return GCDTime;
         }
         /// <summary>

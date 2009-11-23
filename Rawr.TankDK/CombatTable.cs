@@ -50,7 +50,7 @@ namespace Rawr.TankDK
                 calcOpts.m_Rotation.FrostStrike + calcOpts.m_Rotation.DeathStrike;
 
             totalSpellAbilities = calcOpts.m_Rotation.DeathCoil + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast
-                + calcOpts.m_Rotation.Pestilence + calcOpts.m_Rotation.Horn + calcOpts.m_Rotation.DeathNDecay
+                + calcOpts.m_Rotation.Pestilence + calcOpts.m_Rotation.HornOfWinter + calcOpts.m_Rotation.DeathNDecay
                 + calcOpts.m_Rotation.BoneShield;
 
             totalParryableAbilities = calcOpts.m_Rotation.PlagueStrike + calcOpts.m_Rotation.ScourgeStrike +

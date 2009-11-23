@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 namespace Rawr.TankDK {
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", CharacterClass.DeathKnight)]
     public class CalculationsTankDK : CalculationsBase {
-        enum Quality {
+        enum GemQuality {
             Uncommon,
             Rare, 
             Epic,

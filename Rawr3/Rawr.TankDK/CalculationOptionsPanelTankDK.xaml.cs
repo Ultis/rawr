@@ -34,7 +34,7 @@ namespace Rawr.TankDK
                 character = value;
                 LoadCalculationOptions();
 
-                ((CalculationOptionsTankDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelTankDK_PropertyChanged);
+//                ((CalculationOptionsTankDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelTankDK_PropertyChanged);
 
             }
         }
@@ -47,7 +47,8 @@ namespace Rawr.TankDK
             {
                 Character.CalculationOptions = new CalculationOptionsTankDK();
             }
-            DataContext = Character.CalculationOptions as CharacterCalculationsTankDK;
+            this.DataContext = Character.CalculationOptions as CharacterCalculationsTankDK;
+            this.LayoutRoot.SelectAll();
             _loadingCalculationOptions = false;
         }
 
@@ -56,8 +57,8 @@ namespace Rawr.TankDK
             Character.OnCalculationsInvalidated();
         }
 
-        void CalculationOptionsPanelTankDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        }
+//        void CalculationOptionsPanelTankDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
+//        {
+//        }
     }
 }
