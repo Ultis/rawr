@@ -2276,7 +2276,7 @@ namespace Rawr.Mage
                     {
                         foreach (CastingState state in states)
                         {
-                            Spell waterbolt = calculationResult.WaterboltTemplate.GetSpell(state);
+                            Spell waterbolt = state.GetSpell(SpellId.Waterbolt);
                             if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
                             if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseGlobalCooldown);
@@ -2338,7 +2338,7 @@ namespace Rawr.Mage
                     {
                         foreach (CastingState state in states)
                         {
-                            Spell mirrorImage = calculationResult.MirrorImageTemplate.GetSpell(state);
+                            Spell mirrorImage = state.GetSpell(SpellId.MirrorImage);
                             if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonMirrorImage, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
                             if (mirrorImageSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseGlobalCooldown);

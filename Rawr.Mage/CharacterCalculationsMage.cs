@@ -1236,7 +1236,7 @@ namespace Rawr.Mage
                                 ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                                 ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
                                 if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
-                                Spell waterbolt = WaterboltTemplate.GetSpell(SolutionVariable[i].State);
+                                Spell waterbolt = SolutionVariable[i].State.GetSpell(SpellId.Waterbolt);
                                 SpellContribution contrib;
                                 if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
                                 {
@@ -1257,7 +1257,7 @@ namespace Rawr.Mage
                                 ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                                 ManaUsage["Summon Mirror Image"] += (float)Solution[i] * (int)(0.10 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
                                 if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Mirror Image", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
-                                Spell mirrorImage = MirrorImageTemplate.GetSpell(SolutionVariable[i].State);
+                                Spell mirrorImage = SolutionVariable[i].State.GetSpell(SpellId.MirrorImage);
                                 SpellContribution contrib;
                                 if (!DamageSources.TryGetValue("Mirror Image", out contrib))
                                 {

@@ -775,6 +775,12 @@ namespace Rawr.Mage
 
             switch (spellId)
             {
+                case SpellId.Waterbolt:
+                    s = Calculations.WaterboltTemplate.GetSpell(this);
+                    break;
+                case SpellId.MirrorImage:
+                    s = Calculations.MirrorImageTemplate.GetSpell(this);
+                    break;
                 case SpellId.FrostboltFOF:
                     s = Calculations.FrostboltTemplate.GetSpell(this, false, false, false, true);
                     break;

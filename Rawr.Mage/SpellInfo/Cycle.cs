@@ -262,9 +262,6 @@ namespace Rawr.Mage
             }
         }
 
-        private Spell waterbolt;
-        private Spell mirrorImage;
-
         private void CalculateIgniteDamageProcs()
         {
             if (IgniteProcs > 0)
@@ -325,13 +322,13 @@ namespace Rawr.Mage
             //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???
             if (CastingState.WaterElemental)
             {
-                waterbolt = CastingState.Calculations.WaterboltTemplate.GetSpell(CastingState, CastingState.FrostSpellPower + spellPower);
-                effectDamagePerSecond += waterbolt.DamagePerSecond;
+                Spell waterbolt = CastingState.GetSpell(SpellId.Waterbolt);
+                effectDamagePerSecond += waterbolt.DamagePerSecond + spellPower * waterbolt.DpsPerSpellPower;
             }
             if (CastingState.MirrorImage)
             {
-                mirrorImage = CastingState.Calculations.MirrorImageTemplate.GetSpell(CastingState, CastingState.FrostSpellPower + spellPower, CastingState.FireSpellPower + spellPower);
-                effectDamagePerSecond += mirrorImage.DamagePerSecond;
+                Spell mirrorImage = CastingState.GetSpell(SpellId.MirrorImage);
+                effectDamagePerSecond += mirrorImage.DamagePerSecond + spellPower * mirrorImage.DpsPerSpellPower;
             }
             if (Ticks > 0)
             {
@@ -646,25 +643,27 @@ namespace Rawr.Mage
         public void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration)
         {
             SpellContribution contrib;
-            if (waterbolt != null)
+            if (CastingState.WaterElemental)
             {
+                Spell waterbolt = CastingState.GetSpell(SpellId.Waterbolt);
                 if (!dict.TryGetValue(waterbolt.Name, out contrib))
                 {
                     contrib = new SpellContribution() { Name = waterbolt.Name };
                     dict[waterbolt.Name] = contrib;
                 }
                 contrib.Hits += duration / waterbolt.CastTime;
-                contrib.Damage += waterbolt.DamagePerSecond * duration;
+                contrib.Damage += (waterbolt.DamagePerSecond + effectSpellPower * waterbolt.DpsPerSpellPower) * duration;
             }
-            if (mirrorImage != null)
+            if (CastingState.MirrorImage)
             {
+                Spell mirrorImage = CastingState.GetSpell(SpellId.MirrorImage);
                 if (!dict.TryGetValue("Mirror Image", out contrib))
                 {
                     contrib = new SpellContribution() { Name = "Mirror Image" };
                     dict["Mirror Image"] = contrib;
                 }
                 contrib.Hits += 3 * (CastingState.MageTalents.GlyphOfMirrorImage ? 4 : 3) * duration / mirrorImage.CastTime;
-                contrib.Damage += mirrorImage.DamagePerSecond * duration;
+                contrib.Damage += (mirrorImage.DamagePerSecond + effectSpellPower * mirrorImage.DpsPerSpellPower) * duration;
             }
             if (Ticks > 0)
             {
