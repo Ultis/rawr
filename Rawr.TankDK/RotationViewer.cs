@@ -83,7 +83,7 @@ namespace Rawr.TankDK
             txtSS.Text = rotation.ScourgeStrike.ToString();
             txtPest.Text = rotation.Pestilence.ToString();
             txtUptime.Text = rotation.diseaseUptime.ToString();
-            txtHoW.Text = rotation.Horn.ToString();
+            txtHoW.Text = rotation.HornOfWinter.ToString();
             txtRS.Text = rotation.RuneStrike.ToString();
             txtBB.Text = rotation.BloodBoil.ToString();
             txtDnD.Text = rotation.DeathNDecay.ToString();
@@ -378,11 +378,11 @@ namespace Rawr.TankDK
             {
                 double d = double.Parse(t.Text);
                 float f = (float)d;
-                rotation.Horn = f;
+                rotation.HornOfWinter = f;
             }
             catch
             {
-                rotation.Horn = 0f;
+                rotation.HornOfWinter = 0f;
                 t.Text = "0";
             }
             updateLabels();
