@@ -150,9 +150,6 @@ namespace Rawr.UI
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
 
-            //CB_Prof1.SelectedIndex = Character.PrimaryProfession == null || Character.PrimaryProfession == Profession.None ? 0 : (int)Character.PrimaryProfession;
-            //CB_Prof2.SelectedIndex = Character.SecondaryProfession == null || Character.SecondaryProfession == Profession.None ? 0 : (int)Character.SecondaryProfession;
-
             StatusMessaging.Ready = true;
         }
 
@@ -286,7 +283,20 @@ namespace Rawr.UI
             ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
             if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
-				LoadFromArmory(ald.CharacterName, ald.Region, ald.Realm);
+                {
+                    // The removes force it to put those items at the end.
+                    // So we can use that for recall later on what was last used
+                    if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(ald.CharacterName)) {
+                        Rawr.Properties.RecentSettings.Default.RecentChars.Remove(ald.CharacterName);
+                    }
+                    if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(ald.Realm)) {
+                        Rawr.Properties.RecentSettings.Default.RecentServers.Remove(ald.Realm);
+                    }
+                    Rawr.Properties.RecentSettings.Default.RecentChars.Add(ald.CharacterName);
+                    Rawr.Properties.RecentSettings.Default.RecentServers.Add(ald.Realm);
+                    Rawr.Properties.RecentSettings.Default.RecentRegion = ald.Region.ToString();
+                }
+                LoadFromArmory(ald.CharacterName, ald.Region, ald.Realm);
             }
         }
 

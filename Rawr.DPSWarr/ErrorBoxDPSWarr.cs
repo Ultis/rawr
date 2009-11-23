@@ -35,6 +35,7 @@ namespace Rawr.DPSWarr
             StackTrace = stacktrace;
             Info = info;
             Line = line;
+            Show();
         }
         /// <summary>
         /// Generates a pop-up message box with error info.

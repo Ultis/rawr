@@ -194,6 +194,7 @@
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\NetworkSettings.cs" />
     <Compile Include="Settings\OptimizerSettings.cs" />
+    <Compile Include="Settings\RecentSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="XMLUtils.cs" />
   </ItemGroup>

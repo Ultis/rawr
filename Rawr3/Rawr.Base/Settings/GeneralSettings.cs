@@ -13,7 +13,6 @@ namespace Rawr.Properties
 {
 	public class GeneralSettings
 	{
-
 		static GeneralSettings()
 		{
 			_default = new GeneralSettings();

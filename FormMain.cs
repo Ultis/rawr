@@ -170,7 +170,6 @@ namespace Rawr
 			Calculations_ModelChanged(null, null);
 
 			_loadingCharacter = true;
-            //SetDraeneiHitBuff(); // this has no reason to be called here, if anywhere it should be called when loading from armory
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 			_loadingCharacter = false;
@@ -966,6 +965,7 @@ namespace Rawr
                     Rawr.Properties.Recent.Default.RecentChars.Add(form.textBoxName.Text);
                     Rawr.Properties.Recent.Default.RecentServers.Add(form.textBoxRealm.Text);
                     Rawr.Properties.Recent.Default.RecentRegion = form.comboBoxRegion.Text;
+                    //
                     StartProcessing();
 					BackgroundWorker bw = new BackgroundWorker();
 					bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
