@@ -400,6 +400,9 @@ namespace Rawr.DPSWarr.Skills
             UseSpellHit = false;
             UseHitTable = true;
             validatedSet = null;
+            SwingsOffHand = false;
+            SwingsPerActivate = 1f;
+            UsesGCD = true;
         }
         public static Ability NULL = new NullAbility();
         #region Variables
@@ -409,8 +412,8 @@ namespace Rawr.DPSWarr.Skills
         public string Name { get; protected set; }
         protected bool ReqTalent { get; set; }
         protected int Talent2ChksValue { get; set; }
-        protected bool ReqMeleeWeap { get; set; }
-        protected bool ReqMeleeRange { get; set; }
+        public bool ReqMeleeWeap { get; set; }
+        public bool ReqMeleeRange { get; set; }
         protected bool ReqMultiTargs { get; set; }
         private float _AvgTargets = -1f;
         public float AvgTargets
@@ -430,7 +433,7 @@ namespace Rawr.DPSWarr.Skills
                 return _AvgTargets;
             }
         }
-        protected float Targets { get; set; }
+        public float Targets { get; protected set; }
         public bool CanBeDodged { get; protected set; }
         public bool CanBeParried { get; protected set; }
         public bool CanBeBlocked { get; protected set; }
@@ -442,7 +445,7 @@ namespace Rawr.DPSWarr.Skills
         public float RageCost { get; protected set; }
         public float CastTime { get; protected set; } // In Seconds
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
-        protected float DamageBase { get; set; }
+        public float DamageBase { get; set; }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
         protected float DamageBonus { get; set; }
         protected float HealingBase { get; set; }
@@ -461,10 +464,13 @@ namespace Rawr.DPSWarr.Skills
         public WhiteAttacks Whiteattacks { get; protected set; }
         protected CalculationOptionsDPSWarr CalcOpts { get; set; }
         public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
+        public bool SwingsOffHand { get; protected set; }
+        public float SwingsPerActivate { get; protected set; }
         protected float FightDuration { get { return CalcOpts.Duration; } }
         protected bool UseSpellHit { get; set; }
         protected bool UseHitTable { get; set; }
         public bool isMaint { get; protected set; }
+        public bool UsesGCD { get; protected set; }
         private bool? validatedSet = null;
         public virtual bool Validated
         {
@@ -531,7 +537,7 @@ namespace Rawr.DPSWarr.Skills
         protected float Damage { get { return !Validated ? 0f : DamageOverride; } }
         public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }
         public float DamageOnUse { get { return (Validated ? DamageOnUseOverride : 0f); } }
-        protected virtual float DamageOnUseOverride
+        public virtual float DamageOnUseOverride
         {
             get
             {
@@ -686,7 +692,7 @@ namespace Rawr.DPSWarr.Skills
         }
         public override float RageUseOverDur { get { return 0; } }
         protected override float ActivatesOverride { get { return 0; } }
-        protected override float DamageOnUseOverride { get { return 0; } }
+        public override float DamageOnUseOverride { get { return 0; } }
         public override float DamageOverride { get { return 0; } }
         public override string GenTooltip(float acts, float ttldpsperc) { return String.Empty; }
         public override float GetRageUseOverDur(float acts) { return 0; }

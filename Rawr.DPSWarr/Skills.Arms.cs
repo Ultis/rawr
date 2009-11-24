@@ -50,13 +50,13 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
         /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
-        public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Execute ex)
+        public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ex)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Sudden Death";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
-            Exec = ex;
+            Exec = ex as Execute;
             RageCost = Exec.RageCost;
             ReqTalent = true;
             Talent2ChksValue = Talents.SuddenDeath;
@@ -102,7 +102,7 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
         /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
-        public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Swordspec ss)
+        public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ss)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
@@ -124,7 +124,7 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        private Swordspec SS;
+        private Ability SS;
         public float GetActivates(float YellowAttacksThatDodgeOverDur, float YellowAttacksThatParryOverDur, float ssActs)
         {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
@@ -214,7 +214,7 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
-        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, WhirlWind ww)
+        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ww)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
@@ -225,24 +225,27 @@ namespace Rawr.DPSWarr.Skills
             Talent2ChksValue = Talents.Bladestorm;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
-            MaxRange = WW.GetMaxRange(); // In Yards
-            Targets = WW.GetTargets(); // Handled in WW
+            MaxRange = WW.MaxRange; // In Yards
+            Targets = WW.Targets; // Handled in WW
+            DamageBase = WW.DamageBase;
             Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f - (Talents.FocusedRage * 1f);
             CastTime = 6f; // In Seconds // Channeled
             StanceOkFury = StanceOkArms = StanceOkDef = true;
+            SwingsOffHand = true;
+            SwingsPerActivate = 7f;
             //
             Initialize();
         }
         // Variables
-        public WhirlWind WW;
+        public Ability WW;
         // Functions
-        protected override float DamageOnUseOverride
+        public override float DamageOnUseOverride
         {
             get
             {
                 if (!Validated) { return 0f; }
-                float Damage = WW.GetDamageOnUseOverride(); // WW.DamageOnUseOverride;
+                float Damage = WW.DamageOnUseOverride; // WW.DamageOnUseOverride;
                 return Damage * 7f; // it WW's 7 times
             }
         }
@@ -266,7 +269,8 @@ namespace Rawr.DPSWarr.Skills
             Cd = 6f; // In Seconds
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
-            RageCost = Whiteattacks.MHSwingRage;
+            RageCost = -Whiteattacks.MHSwingRage;
+            UsesGCD = false;
             //
             Initialize();
             //MHAtkTable = Whiteattacks.MHAtkTable;
@@ -313,7 +317,7 @@ namespace Rawr.DPSWarr.Skills
             string tooltip = "*" + Name +
                 Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
                                     + ", CD: " + (Cd != -1 ? Cd.ToString() : "None")
-                                    + ", Rage Generated: " + (RageCost != -1 ? RageCost.ToString() : "None") +
+                                    + ", Rage Generated: " + (RageCost != -1 ? (-1f * RageCost).ToString() : "None") +
             Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
             (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +

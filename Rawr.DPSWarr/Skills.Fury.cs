@@ -63,14 +63,12 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 25f - (Talents.FocusedRage * 1f);
             StanceOkFury = true;
             DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
+            SwingsOffHand = true;
             //
             Initialize();
         }
         // Variables
         // Get/Set
-        public float GetMaxRange() { return this.MaxRange; }
-        public float GetTargets() { return this.Targets; }
-        public float GetDamageOnUseOverride() { return this.DamageOnUseOverride; }
         // Functions
         // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
@@ -92,7 +90,7 @@ namespace Rawr.DPSWarr.Skills
 
             return Damage * DamageBonus;
         }
-        protected override float DamageOnUseOverride
+        public override float DamageOnUseOverride
         {
             get
             {

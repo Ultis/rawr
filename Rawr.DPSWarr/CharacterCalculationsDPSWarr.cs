@@ -71,47 +71,6 @@ namespace Rawr.DPSWarr {
         public float TotalDamagePerSecond { get; set; }
         #endregion
         #region Abilities
-        // Anti-Debuff
-        public Skills.HeroicFury HF { get; set; }
-        public Skills.EveryManForHimself EM { get; set; }
-        public Skills.Charge CH { get; set; }
-        public Skills.Intercept IN { get; set; }
-        public Skills.Intervene IV { get; set; }
-        // Rage Generators
-        public Skills.SecondWind SndW { get; set; }
-        public Skills.BerserkerRage BZ { get; set; }
-        public Skills.Bloodrage BR { get; set; }
-        // Maintenance
-        public Skills.BattleShout BTS { get; set; }
-        public Skills.CommandingShout CS { get; set; }
-        public Skills.DemoralizingShout DS { get; set; }
-        public Skills.SunderArmor SN { get; set; }
-        public Skills.ThunderClap TH { get; set; }
-        public Skills.Hamstring HMS { get; set; }
-        public Skills.EnragedRegeneration ER { get; set; }
-        // Periodics
-        public Skills.ShatteringThrow ST { get; set; }
-        public Skills.SweepingStrikes SW { get; set; }
-        public Skills.DeathWish Death { get; set; }
-        public Skills.Recklessness RK { get; set; }
-        // Fury
-        public Skills.WhirlWind WW { get; set; }
-        public Skills.BloodThirst BT { get; set; }
-        public Skills.BloodSurge BS { get; set; }
-        // Arms
-        public Skills.Bladestorm BLS { get; set; }
-        public Skills.MortalStrike MS { get; set; }
-        public Skills.Rend RD { get; set; }
-        public Skills.OverPower OP { get; set; }
-        public Skills.TasteForBlood TB { get; set; }
-        public Skills.Suddendeath SD { get; set; }
-        public Skills.Slam SL { get; set; }
-        public Skills.Swordspec SS { get; set; }
-        // Generic
-        public Skills.Cleave CL { get; set; }
-        public Skills.DeepWounds DW { get; set; }
-        public Skills.HeroicStrike HS { get; set; }
-        public Skills.Execute EX { get; set; }
         // Markov Work
         public Skills.FakeWhite FW { get; set; }
         #endregion
@@ -245,6 +204,13 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
             // DPS Fury
             format = "{0:0000} : {1:0000} : {2:000.00}";
+
+            if (TotalDPS < 1f) TotalDPS = 1f;
+            foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList())
+            {
+                if (!aw.ability.Name.Equals("Invalid")) dictValues.Add(aw.ability.Name, string.Format(format, aw.DPS, aw.ability.DamageOnUse, aw.numActivates) + aw.ability.GenTooltip(aw.numActivates, aw.DPS / TotalDPS));
+            }
+            /*
             if (Rot.GetType() == typeof(FuryRotation)) {
                 FuryRotation fr = (FuryRotation)Rot;
                 dictValues.Add("Bloodsurge",  string.Format(format, fr._BS_DPS, BS.DamageOnUse, fr._BS_GCDs) + BS.GenTooltip(fr._BS_GCDs, fr._BS_DPS / TotalDPS));
@@ -287,7 +253,9 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Cleave",                string.Format(format, Rot._CL_DPS, Rot._CL_PerHit, Rot._CL_Acts, Rot._CL_DPS / TotalDPS)+CL.GenTooltip(Rot._CL_Acts,Rot._CL_DPS/TotalDPS));
             dictValues.Add("White DPS",             string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
             dictValues.Add("Execute",               string.Format(format,Rot._EX_DPS, EX.DamageOnUse, Rot._EX_GCDs) + EX.GenTooltip(Rot._EX_GCDs, Rot._EX_DPS / TotalDPS));
-            //
+            //*/
+            dictValues.Add("White DPS", string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
+            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS",Rot.DW.TickSize     ,Rot.DW.TickSize/TotalDPS));
             dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:0000}";

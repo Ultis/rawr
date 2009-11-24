@@ -56,6 +56,14 @@ namespace Rawr.DPSWarr.Markov
             StateArms s = state as StateArms;
             List<StateTransition<Skills.Ability>> list = new List<StateTransition<Skills.Ability>>();
 
+            Rawr.DPSWarr.Rotation.AbilWrapper MS = Rot.GetWrapper<Skills.MortalStrike>();
+            Rawr.DPSWarr.Rotation.AbilWrapper OP = Rot.GetWrapper<Skills.OverPower>();
+            Rawr.DPSWarr.Rotation.AbilWrapper TB = Rot.GetWrapper<Skills.TasteForBlood>();
+            Rawr.DPSWarr.Rotation.AbilWrapper SD = Rot.GetWrapper<Skills.Suddendeath>();
+            Rawr.DPSWarr.Rotation.AbilWrapper SL = Rot.GetWrapper<Skills.Slam>();
+            Skills.Suddendeath _SD = SD.ability as Skills.Suddendeath;
+
+
             if (s.CDRem_MS != 0 && s.CDRem_MS < LatentGCD)
             {
                 // do nothing, don't want to reset GCD and delay MS
@@ -77,49 +85,49 @@ namespace Rawr.DPSWarr.Markov
                     TransitionProbability = 1.0,
                 });
             }
-            else if (s.CDRem_MS == 0 && s.Current_Rage > Rot.MS.RageCost)
+            else if (s.CDRem_MS == 0 && s.Current_Rage > MS.ability.RageCost)
             {
                 // Time to MS!
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = Rot.MS,
+                    Ability = MS.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - Rot.MS.RageCost + WhiteRageForAGCD)),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - MS.ability.RageCost + WhiteRageForAGCD)),
                         s.TimeTilNext_RendTickProcgTfB > LatentGCD ? s.TimeTilNext_RendTickProcgTfB - LatentGCD : 6f + s.TimeTilNext_RendTickProcgTfB - LatentGCD,
                         s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - LatentGCD) == 0),
                         true,
-                        Rot.MS.Cd,
+                        MS.ability.Cd,
                         false,
                         s.ThereAreMultipleMobs
                     ),
-                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * Rot.MS.MHAtkTable.AnyLand,
+                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * MS.ability.MHAtkTable.AnyLand,
                 });
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = Rot.MS,
+                    Ability = MS.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - Rot.MS.RageCost + WhiteRageForAGCD)),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - MS.ability.RageCost + WhiteRageForAGCD)),
                         s.TimeTilNext_RendTickProcgTfB > LatentGCD ? s.TimeTilNext_RendTickProcgTfB - LatentGCD : 6f + s.TimeTilNext_RendTickProcgTfB - LatentGCD,
                         s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - LatentGCD) == 0),
                         s.HaveBuff_SD,
-                        Rot.MS.Cd,
+                        MS.ability.Cd,
                         false,
                         s.ThereAreMultipleMobs
                     ),
                     TransitionProbability = 1 - list[list.Count - 1].TransitionProbability,
                 });
             }
-            else if ((s.TimeTilNext_RendTickProcgTfB == 0 || s.HaveBuff_OPTfB) && s.Current_Rage > Rot.OP.RageCost)
+            else if ((s.TimeTilNext_RendTickProcgTfB == 0 || s.HaveBuff_OPTfB) && s.Current_Rage > OP.ability.RageCost)
             {
                 // TfB should proc now, we can use the ability after react time
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = s.TimeTilNext_RendTickProcgTfB == 0 ? (Skills.Ability)Rot.TB : (Skills.Ability)Rot.OP,
+                    Ability = s.TimeTilNext_RendTickProcgTfB == 0 ? (Skills.Ability)TB.ability : (Skills.Ability)OP.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - Rot.TB.RageCost + WhiteRageForAGCD)),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - TB.ability.RageCost + WhiteRageForAGCD)),
                         6f,
                         false,
                         true,
@@ -127,14 +135,14 @@ namespace Rawr.DPSWarr.Markov
                         s.AbilRdy_MS,
                         s.ThereAreMultipleMobs
                     ),
-                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * Rot.TB.MHAtkTable.AnyLand,
+                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * TB.ability.MHAtkTable.AnyLand,
                 });
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = s.TimeTilNext_RendTickProcgTfB == 0 ? (Skills.Ability)Rot.TB : (Skills.Ability)Rot.OP,
+                    Ability = s.TimeTilNext_RendTickProcgTfB == 0 ? (Skills.Ability)TB.ability : (Skills.Ability)OP.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - Rot.TB.RageCost + WhiteRageForAGCD)),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - TB.ability.RageCost + WhiteRageForAGCD)),
                         6f,
                         false,
                         s.HaveBuff_SD,
@@ -145,15 +153,15 @@ namespace Rawr.DPSWarr.Markov
                     TransitionProbability = 1 - list[list.Count - 1].TransitionProbability,
                 });
             }
-            else if (s.HaveBuff_SD && s.Current_Rage > Rot.SD.RageCost)
+            else if (s.HaveBuff_SD && s.Current_Rage > SD.ability.RageCost)
             {
                 // Sudden death is active, we can execute
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = Rot.SD,
+                    Ability = SD.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - (Rot.SD.RageCost + Rot.SD.UsedExtraRage) + WhiteRageForAGCD)),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - (SD.ability.RageCost + _SD.UsedExtraRage) + WhiteRageForAGCD)),
                         s.TimeTilNext_RendTickProcgTfB > LatentGCD ? s.TimeTilNext_RendTickProcgTfB - LatentGCD : 6f + s.TimeTilNext_RendTickProcgTfB - LatentGCD,
                         s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - LatentGCD) == 0),
                         true, // procs off itself
@@ -161,14 +169,14 @@ namespace Rawr.DPSWarr.Markov
                         s.AbilRdy_MS,
                         s.ThereAreMultipleMobs
                     ),
-                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * Rot.SD.MHAtkTable.AnyLand,
+                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * SD.ability.MHAtkTable.AnyLand,
                 });
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = Rot.SD,
+                    Ability = SD.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - (Rot.SD.RageCost + Rot.SD.UsedExtraRage) + WhiteRageForAGCD)),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - (SD.ability.RageCost + _SD.UsedExtraRage) + WhiteRageForAGCD)),
                         s.TimeTilNext_RendTickProcgTfB > LatentGCD ? s.TimeTilNext_RendTickProcgTfB - LatentGCD : 6f + s.TimeTilNext_RendTickProcgTfB - LatentGCD,
                         s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - LatentGCD) == 0),
                         false, // didn't proc, current proc consumed
@@ -179,15 +187,15 @@ namespace Rawr.DPSWarr.Markov
                     TransitionProbability = 1 - list[list.Count - 1].TransitionProbability,
                 });
             }
-            else if (s.Current_Rage > Rot.SL.RageCost)
+            else if (s.Current_Rage > SL.ability.RageCost)
             {
                 // do slam if nothing else
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = Rot.SL,
+                    Ability = SL.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - Rot.SL.RageCost + WhiteRageForAGCD * (Talents.ImprovedSlam / 3))),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - SL.ability.RageCost + WhiteRageForAGCD * (Talents.ImprovedSlam / 3))),
                         s.TimeTilNext_RendTickProcgTfB > LatentGCD ? s.TimeTilNext_RendTickProcgTfB - LatentGCD : 6f + s.TimeTilNext_RendTickProcgTfB - LatentGCD,
                         s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - LatentGCD) == 0),
                         true,
@@ -195,14 +203,14 @@ namespace Rawr.DPSWarr.Markov
                         s.AbilRdy_MS,
                         s.ThereAreMultipleMobs
                     ),
-                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * Rot.SL.MHAtkTable.AnyLand,
+                    TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * SL.ability.MHAtkTable.AnyLand,
                 });
                 list.Add(new StateTransition<Skills.Ability>()
                 {
-                    Ability = Rot.SL,
+                    Ability = SL.ability,
                     TransitionDuration = LatentGCD,
                     TargetState = GetState(
-                        Math.Max(0, Math.Min(100, s.Current_Rage - Rot.SL.RageCost + WhiteRageForAGCD * (Talents.ImprovedSlam / 3))),
+                        Math.Max(0, Math.Min(100, s.Current_Rage - SL.ability.RageCost + WhiteRageForAGCD * (Talents.ImprovedSlam / 3))),
                         s.TimeTilNext_RendTickProcgTfB > LatentGCD ? s.TimeTilNext_RendTickProcgTfB - LatentGCD : 6f + s.TimeTilNext_RendTickProcgTfB - LatentGCD,
                         s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - LatentGCD) == 0),
                         s.HaveBuff_SD,

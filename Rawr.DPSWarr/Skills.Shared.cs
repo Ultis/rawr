@@ -29,6 +29,7 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             mhActivates = ohActivates = 0f;
             UseHitTable = false;
+            UsesGCD = false;
             //
             Initialize();
         }
@@ -80,7 +81,7 @@ namespace Rawr.DPSWarr.Skills
             Name = "Berserker Rage";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
-            RageCost = 0f + (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
+            RageCost = 0f - (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             //
@@ -139,7 +140,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             Duration = 10f; // In Seconds
             // Rage is actually reversed in the rotation
-            RageCost = (20f // Base
+            RageCost = -(20f // Base
                         + 10f) // Over Time
                        * (1f + Talents.ImprovedBloodrage * 0.25f); // Talent Bonus
             StanceOkArms = StanceOkDef = StanceOkFury = true;
@@ -148,6 +149,7 @@ namespace Rawr.DPSWarr.Skills
             HealingBase = -1f * (float)Math.Floor(baseHealth) * 0.16f;
             HealingBonus = (Talents.GlyphOfBloodrage ? 0f : 1f);
             UseHitTable = false;
+            UsesGCD = false;
             /*Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
                 Duration, Cd);*/
@@ -335,11 +337,12 @@ namespace Rawr.DPSWarr.Skills
             NumStunsOverDur = 1f;
             Duration = 10f; // Using 4 seconds to sim consume time
             Cd = 1.5f + CalcOpts.Latency;
-            RageCost = 10f * Talents.SecondWind;
+            RageCost = -10f * Talents.SecondWind;
             StanceOkDef = StanceOkFury = StanceOkArms = true;
             //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);
             HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
             UseHitTable = false;
+            UsesGCD = false;
             //
             Initialize();
         }
@@ -651,7 +654,6 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Every Man for Himself";
-            if (c.Race != CharacterRace.Human) { return; }
             Cd = 2f * 60f;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
@@ -679,6 +681,7 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
             UseReact = true;
+            UsesGCD = false;
             //
             Initialize();
         }
@@ -709,7 +712,7 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             MaxRange = 25f + (Talents.GlyphOfCharge ? 5f : 0f); // In Yards 
             Cd = (15f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
             Duration = 1.5f;
-            RageCost = 15f + (Talents.ImprovedCharge * 5f);
+            RageCost = -(15f + (Talents.ImprovedCharge * 5f));
             if (Talents.Warbringer == 1)
             {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
