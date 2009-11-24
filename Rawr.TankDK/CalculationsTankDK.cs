@@ -366,6 +366,15 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (opts.m_Rotation == null) { return calcs; }
 
             calcs.cType = opts.cType;
+            if (opts.cType == CalculationType.Burst)
+            {
+                _subPointNameColors = _subPointNameColors_Burst;
+            }
+            else
+            {
+                _subPointNameColors = _subPointNameColors_SMT;
+            }
+
             // Level differences.
             int iTargetLevel = opts.TargetLevel;
             int iLevelDiff = iTargetLevel - character.Level;
