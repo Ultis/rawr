@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace Rawr.TankDK
 {
@@ -62,43 +63,51 @@ namespace Rawr.TankDK
         
         public Rotation m_Rotation = new Rotation();
 
+        [XmlIgnore]
         public float CurRotationDuration
         {
             get { return m_Rotation.curRotationDuration; }
             set { m_Rotation.curRotationDuration = value; OnPropertyChanged("CurRotationDuration"); }
         }
         // Single Rune, Single Target
+        [XmlIgnore]
         public float IcyTouch
         {
             get { return m_Rotation.IcyTouch; }
             set { m_Rotation.IcyTouch = value; OnPropertyChanged("IcyTouch"); }
         }
+        [XmlIgnore]
         public float PlagueStrike
         {
             get { return m_Rotation.PlagueStrike; }
             set { m_Rotation.PlagueStrike = value; OnPropertyChanged("PlagueStrike"); }
         }
+        [XmlIgnore]
         public float BloodStrike
         {
             get { return m_Rotation.BloodStrike; }
             set { m_Rotation.BloodStrike = value; OnPropertyChanged("BloodStrike"); }
         }
+        [XmlIgnore]
         public float HeartStrike
         {
             get { return m_Rotation.HeartStrike; }
             set { m_Rotation.HeartStrike = value; OnPropertyChanged("HeartStrike"); }
         }
         // Multi Rune, Single Target
+        [XmlIgnore]
         public float DeathStrike
         {
             get { return m_Rotation.DeathStrike; }
             set { m_Rotation.DeathStrike = value; OnPropertyChanged("DeathStrike"); }
         }
+        [XmlIgnore]
         public float Obliterate
         {
             get { return m_Rotation.Obliterate; }
             set { m_Rotation.Obliterate = value; OnPropertyChanged("Obliterate"); }
         }
+        [XmlIgnore]
         public float ScourgeStrike
         {
             get { return m_Rotation.ScourgeStrike; }
@@ -106,21 +115,25 @@ namespace Rawr.TankDK
         }
         
         // Multi Target
+        [XmlIgnore]
         public float Pestilence
         {
             get { return m_Rotation.Pestilence; }
             set { m_Rotation.Pestilence = value; OnPropertyChanged("Pestilence"); }
         }
+        [XmlIgnore]
         public float HowlingBlast
         {
             get { return m_Rotation.HowlingBlast; }
             set { m_Rotation.HowlingBlast = value; OnPropertyChanged("HowlingBlast"); }
         }
+        [XmlIgnore]
         public float DeathNDecay
         {
             get { return m_Rotation.DeathNDecay; }
             set { m_Rotation.DeathNDecay = value; OnPropertyChanged("DeathNDecay"); }
         }
+        [XmlIgnore]
         public float BloodBoil
         {
             get { return m_Rotation.BloodBoil; }
@@ -128,22 +141,26 @@ namespace Rawr.TankDK
         }
 
         // RP
+        [XmlIgnore]
         public float RuneStrike
         {
             get { return m_Rotation.RuneStrike; }
             set { m_Rotation.RuneStrike = value; OnPropertyChanged("RuneStrike"); }
         }
+        [XmlIgnore]
         public float DeathCoil
         {
             get { return m_Rotation.DeathCoil; }
             set { m_Rotation.DeathCoil = value; OnPropertyChanged("DeathCoil"); }
         }
+        [XmlIgnore]
         public float FrostStrike
         {
             get { return m_Rotation.FrostStrike; }
             set { m_Rotation.FrostStrike = value; OnPropertyChanged("FrostStrike"); }
         }
         // Other GCD
+        [XmlIgnore]
         public float HornOfWinter
         {
             get { return m_Rotation.HornOfWinter; }
