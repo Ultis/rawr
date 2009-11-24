@@ -389,8 +389,8 @@ namespace Rawr.DPSWarr.Skills
             Targets = 1f;
             MaxRange = 5f; // In Yards 
             Cd = -1f; // In Seconds
-            Duration = -1f; // In Seconds
-            RageCost = -1f;
+            Duration = 0; // In Seconds
+            RageCost = 0;
             CastTime = -1f; // In Seconds
             GCDTime = 1.5f; // default GCD size
             StanceOkFury = false;
