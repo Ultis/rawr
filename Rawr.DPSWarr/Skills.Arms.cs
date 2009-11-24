@@ -115,12 +115,14 @@ namespace Rawr.DPSWarr.Skills
             CanBeParried = false;
             CanBeBlocked = false;
             Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
+            GCDTime = Math.Min(1.5f, Cd);
             RageCost = 5f - (Talents.FocusedRage * 1f);
             //Targets += StatS.BonusTargets;
             StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
             DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
             BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+            UseReact = true; // can't plan for this
             //
             Initialize();
         }
@@ -130,7 +132,7 @@ namespace Rawr.DPSWarr.Skills
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
             float acts = 0f;
-            float LatentGCD = (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : 0f));
+            float LatentGCD = (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact));
 
             float dodge = Whiteattacks.MHAtkTable.Dodge;
             float parry = (Talents.GlyphOfOverpower ? Whiteattacks.MHAtkTable.Parry : 0f);
@@ -177,13 +179,14 @@ namespace Rawr.DPSWarr.Skills
             CanBeDodged = false;
             CanBeParried = false;
             CanBeBlocked = false;
+            GCDTime = Math.Min(1.5f, 5f - (2f * Talents.UnrelentingAssault));
             Cd = 6f; // In Seconds
             RageCost = 5f - (Talents.FocusedRage * 1f);
             StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
             DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
             BonusCritChance = 0.25f * Talents.ImprovedOverpower;
-            UseReact = true;
+            //UseReact = true; // you can plan for it ahead of time, unlike SD and normal OP
             //
             Initialize();
         }
@@ -231,6 +234,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f - (Talents.FocusedRage * 1f);
             CastTime = 6f; // In Seconds // Channeled
+            GCDTime = CastTime;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             SwingsOffHand = true;
             SwingsPerActivate = 7f;

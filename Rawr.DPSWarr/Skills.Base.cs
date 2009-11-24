@@ -392,6 +392,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = -1f; // In Seconds
             RageCost = -1f;
             CastTime = -1f; // In Seconds
+            GCDTime = 1.5f; // default GCD size
             StanceOkFury = false;
             StanceOkArms = false;
             StanceOkDef = false;
@@ -448,6 +449,7 @@ namespace Rawr.DPSWarr.Skills
         public float Duration { get; protected set; } // In Seconds
         public float RageCost { get; protected set; }
         public float CastTime { get; protected set; } // In Seconds
+        public float GCDTime { get; protected set; } // In Seconds
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         public float DamageBase { get; set; }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
@@ -519,8 +521,8 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-                float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
-                float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f));
+                float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact);
+                float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact));
                 //float Every = LatentGCD / GCDPerc;
                 if (RageCost > 0f)
                 {
@@ -535,6 +537,7 @@ namespace Rawr.DPSWarr.Skills
                 return Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
             }
         }
+        public float UseTime { get { return CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1.5f, CastTime), GCDTime); } }
         protected float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
         protected float HealingOnUse { get { return Healing * combatFactors.HealthBonus; } }
         //protected float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
@@ -707,7 +710,7 @@ namespace Rawr.DPSWarr.Skills
     public class OnAttack : Ability
     {
         // Constructors
-        public OnAttack() { OverridesOverDur = 0f; }
+        public OnAttack() { OverridesOverDur = 0f; UsesGCD = false; }
         // Get/Set
         public float OverridesOverDur { get; set; }
         public virtual float FullRageCost { get { return RageCost + Whiteattacks.MHSwingRage - Whiteattacks.MHUWProcValue * MHAtkTable.AnyLand; } }

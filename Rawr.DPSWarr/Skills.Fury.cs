@@ -240,6 +240,7 @@ namespace Rawr.DPSWarr.Skills
             //Targets += StatS.BonusTargets;
             RageCost = 15f - (Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
             CastTime = 0f; // In Seconds // Replaces a white hit
+            GCDTime = 0f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = Whiteattacks.MhDamage + 495f;
             BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
@@ -273,6 +274,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 20f - (Talents.FocusedRage * 1f);
             Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
             CastTime = 0f; // In Seconds // Replaces a white hit
+            GCDTime = 0f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = Whiteattacks.MhDamage + (222f * (1f + Talents.ImprovedCleave * 0.40f));
             //DamageBonus = 1f + Talents.ImprovedCleave * 0.40f; // Imp Cleave is only the "Bonus Damage", and not the whole attack

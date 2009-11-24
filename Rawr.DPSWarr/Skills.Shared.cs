@@ -84,6 +84,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 0f - (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
+            UseReact = true;
             //
             Initialize();
         }
@@ -150,6 +151,7 @@ namespace Rawr.DPSWarr.Skills
             HealingBonus = (Talents.GlyphOfBloodrage ? 0f : 1f);
             UseHitTable = false;
             UsesGCD = false;
+            UseReact = true;
             /*Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
                 Duration, Cd);*/
@@ -307,7 +309,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             ReqMultiTargs = true;
-            Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : 0f)); // In Seconds
+            Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
             Duration = 30f;
             RageCost = 30f - (Talents.FocusedRage * 1f);
             RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);

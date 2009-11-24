@@ -114,7 +114,7 @@ namespace Rawr.DPSWarr {
         public Skills.WhiteAttacks WhiteAtks { get; protected set; }
         protected CalculationOptionsDPSWarr CalcOpts { get; set; }
         
-        protected float LatentGCD { get { return 1.5f + CalcOpts.Latency; } }
+        protected float LatentGCD { get { return 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact; } }
         
         /// <summary>
         /// How many GCDs are in the rotation, based on fight duration and latency
@@ -131,7 +131,7 @@ namespace Rawr.DPSWarr {
                 float gcds = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
-                    if (aw.ability.UsesGCD) gcds += aw.numActivates;
+                    if (aw.ability.UsesGCD) gcds += aw.numActivates * aw.ability.UseTime / LatentGCD;
                 }
                 return gcds;
             }

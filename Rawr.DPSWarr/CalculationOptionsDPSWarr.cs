@@ -579,7 +579,7 @@ namespace Rawr.DPSWarr {
             set { _React = value; OnPropertyChanged("React"); }
         }
         public float Latency { get { return Lag / 1000f; } }
-        public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
+        public float AllowedReact { get { return Math.Max(0f, (React - 200f) / 1000f); } }
         public float FullLatency { get { return AllowedReact + Latency; } }
         #endregion
 		public WarriorTalents talents = null;

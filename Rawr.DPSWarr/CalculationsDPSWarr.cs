@@ -990,7 +990,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.Miss = stats.Miss;
                     calculatedStats.HitRating = stats.HitRating;
                     calculatedStats.ExpertiseRating = stats.ExpertiseRating;
-                    calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior);
+                    calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior) + stats.Expertise;
                     calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
                     calculatedStats.OhExpertise = combatFactors._c_ohexpertise;
                     calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
@@ -1001,7 +1001,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
                 } 
                 // Offensive
-                calculatedStats.TeethBonus = (int)(stats.Armor * talents.ArmoredToTheTeeth / 108f);
+                calculatedStats.TeethBonus = (stats.Armor * talents.ArmoredToTheTeeth / 108f);
                 calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
                 calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
@@ -1017,7 +1017,7 @@ These numbers to do not include racial bonuses.",
                 
                 // Neutral
                 // Defensive
-                calculatedStats.Armor = (int)stats.Armor; 
+                calculatedStats.Armor = stats.Armor; 
 
                 calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; 
 
@@ -1166,8 +1166,8 @@ These numbers to do not include racial bonuses.",
 
             // Stamina
             float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-            statsTotal.Stamina = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina) +
-                                 (float)Math.Floor((1f + totalBSTAM) * (statsItems.Stamina + statsBuffs.Stamina));
+            statsTotal.Stamina = /*(float)Math.Floor*/((1f + totalBSTAM) * statsRace.Stamina) +
+                                 /*(float)Math.Floor*/((1f + totalBSTAM) * (statsItems.Stamina + statsBuffs.Stamina));
             //statsTotal.Stamina = staBase + staBonus;
 
             // Health
@@ -1176,27 +1176,27 @@ These numbers to do not include racial bonuses.",
 
             // Strength
             float totalBSM = statsTotal.BonusStrengthMultiplier;
-            statsTotal.Strength = (float)Math.Floor((1f + totalBSM) * statsRace.Strength) +
-                                  (float)Math.Floor((1f + totalBSM) * (statsItems.Strength + statsBuffs.Strength));
+            statsTotal.Strength = /*(float)Math.Floor*/((1f + totalBSM) * statsRace.Strength) +
+                                  /*(float)Math.Floor*/((1f + totalBSM) * (statsItems.Strength + statsBuffs.Strength));
             statsTotal.Strength = Math.Max(0, statsTotal.Strength);
             //statsTotal.Strength = strBase + strBonus;
 
             // Agility
             float totalBAM = statsTotal.BonusAgilityMultiplier;
-            statsTotal.Agility = (float)Math.Floor((1f + totalBAM) * statsRace.Agility) +
-                                 (float)Math.Floor((1f + totalBAM) * (statsItems.Agility + statsBuffs.Agility));
+            statsTotal.Agility = /*(float)Math.Floor*/((1f + totalBAM) * statsRace.Agility) +
+                                 /*(float)Math.Floor*/((1f + totalBAM) * (statsItems.Agility + statsBuffs.Agility));
             statsTotal.Agility = Math.Max(0, statsTotal.Agility);
             //statsTotal.Agility = agiBase + agiBonus;
 
             // Armor
-            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
+            statsTotal.Armor = /*(float)Math.Floor*/(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
             statsTotal.BonusArmor += statsTotal.Agility * 2f;
-            statsTotal.BonusArmor = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal.BonusArmor = /*(float)Math.Floor*/(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.Armor += statsTotal.BonusArmor;
 
             // Attack Power
             float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
-            statsTotal.AttackPower = (float)Math.Floor((1f + totalBAPM) * 
+            statsTotal.AttackPower = /*(float)Math.Floor*/((1f + totalBAPM) * 
                 (statsRace.AttackPower + 
                  statsTotal.Strength * 2f + 
                 ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth) +
@@ -1215,7 +1215,7 @@ These numbers to do not include racial bonuses.",
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
 
             // Haste
-            statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
+            statsTotal.HasteRating = /*(float)Math.Floor*/(statsTotal.HasteRating);
             float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(Math.Max(0, statsTotal.HasteRating), character.Class);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
