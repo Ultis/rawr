@@ -114,7 +114,11 @@ namespace Rawr.DPSWarr.Skills
             get
             {
                 if (MhEffectiveSpeed != 0)
-                    return FightDuration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur;
+                {
+                    // floating point arithmetic fail, need to do it this way or we get negative numbers at 100% override
+                    float f = FightDuration / MhEffectiveSpeed;
+                    return f - HSOverridesOverDur - CLOverridesOverDur;
+                }
                 else return 0f;
             }
         }
@@ -203,7 +207,7 @@ namespace Rawr.DPSWarr.Skills
                 return _MHSwingRage;
             }
         }
-        private float _OHSwingRage;
+        private float _OHSwingRage = -1f;
         public float OHSwingRage
         {
             get
