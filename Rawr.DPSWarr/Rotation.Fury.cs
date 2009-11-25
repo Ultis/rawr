@@ -229,14 +229,13 @@ namespace Rawr.DPSWarr
             float availRage = 0f;
             float rageadd = 0f;
             //float timelostwhilestunned = 0f;
-            float percTimeInStun = 0f;
+            //float percTimeInStun = 0f;
 
             if (Char.MainHand == null) { return; }
             //doIterations();
 
             // ==== Rage Generation Priorities ========
             availRage += RageGenOverDur_Other;
-            
             
             /*Bloodrage         */
             //AddAnItem(ref availRage, percTimeInStun, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);

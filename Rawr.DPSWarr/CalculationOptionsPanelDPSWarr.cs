@@ -18,6 +18,7 @@ using Rawr.Base;
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private bool isLoading = false;
+        private bool isLoadingBoss = false;
         private bool firstload = true;
         /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
@@ -150,18 +151,23 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                     isLoading = true; line = 4;
                 }
                 calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
-                CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
-                CB_TargLvl.Text = info;// string.Format("{0}", calcOpts.TargetLevel);
-                        line = 7; info = calcOpts.TargetArmor.ToString();
-                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
-                CB_Duration.Value = (decimal)calcOpts.Duration; line = 9;
-                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; line = 10;
-                RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
-                CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
+                CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString(); isLoading = true;
+                CB_TargLvl.Text = info; isLoading = true;// string.Format("{0}", calcOpts.TargetLevel);
+                line = 7; info = calcOpts.TargetArmor.ToString(); isLoading = true;
+                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8; isLoading = true;
+                CB_Duration.Value = (decimal)calcOpts.Duration; line = 9; isLoading = true;
+                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; line = 10; isLoading = true;
+                RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11; isLoading = true;
+                CK_PTRMode.Checked = calcOpts.PTRMode; line = 12; isLoading = true;
                 CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
                 CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
                 CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP; line = 13;
                 NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
+                CustomBoss.Stuns = calcOpts.Stuns;
+                CustomBoss.Moves = calcOpts.Moves;
+                CustomBoss.Fears = calcOpts.Fears;
+                CustomBoss.Roots = calcOpts.Roots;
+                CustomBoss.Disarms = calcOpts.Disarms;
 
                 // Save the new names
                 CB_BL_FilterType.Text = calcOpts.FilterType;
@@ -188,7 +194,6 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 CB_MultiTargsMax.Value = (int)calcOpts.MultipleTargetsMax;
 
                 CK_StunningTargs.Checked = calcOpts.StunningTargets;
-                CustomBoss.Stuns = calcOpts.Stuns;
                 NUD_StunFreq.Enabled = calcOpts.StunningTargets;
                 NUD_StunDur.Enabled = calcOpts.StunningTargets;
                 BT_Stun.Enabled = calcOpts.StunningTargets;
@@ -196,7 +201,6 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
 
                 CK_MovingTargs.Checked = calcOpts.MovingTargets;
-                CustomBoss.Moves = calcOpts.Moves;
                 BT_Move.Enabled = calcOpts.MovingTargets;
                 BT_Move.Text = calcOpts.Moves.Count > 0 ? CustomBoss.DynamicCompiler_Move.ToString() : "None";
                 //NUD_MoveFreq.Enabled = calcOpts.MovingTargets;
@@ -205,7 +209,6 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 //NUD_MoveDur.Value = (int)calcOpts.MovingTargetsDur;
 
                 CK_FearingTargs.Checked = calcOpts.FearingTargets;
-                CustomBoss.Fears = calcOpts.Fears;
                 BT_Fear.Enabled = calcOpts.FearingTargets;
                 BT_Fear.Text = calcOpts.Fears.Count > 0 ? CustomBoss.DynamicCompiler_Fear.ToString() : "None";
                 //NUD_FearFreq.Enabled = calcOpts.FearingTargets;
@@ -214,7 +217,6 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
 
                 CK_RootingTargs.Checked = calcOpts.RootingTargets;
-                CustomBoss.Roots = calcOpts.Roots;
                 NUD_RootFreq.Enabled = calcOpts.RootingTargets;
                 NUD_RootDur.Enabled = calcOpts.RootingTargets;
                 BT_Root.Enabled = calcOpts.RootingTargets;
@@ -222,7 +224,6 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
 
                 CK_DisarmTargs.Checked = calcOpts.DisarmingTargets;
-                CustomBoss.Disarms = calcOpts.Disarms;
                 NUD_DisarmFreq.Enabled = calcOpts.DisarmingTargets;
                 NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
                 BT_Disarm.Enabled = calcOpts.DisarmingTargets;
@@ -1032,8 +1033,8 @@ CB_Version.Items.Add("All");
         }
         // Boss Handler
         private void CB_BL_FilterType_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                isLoading = true;
+            if (!isLoading && !isLoadingBoss) {
+                isLoadingBoss = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 // Use Filter Type Box to adjust Filter Box
                 if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
@@ -1056,12 +1057,12 @@ CB_Version.Items.Add("All");
                 }
                 //
                 Character.OnCalculationsInvalidated();
-                isLoading = false;
+                isLoadingBoss = false;
             }
         }
         private void CB_BL_Filter_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                isLoading = true;
+            if (!isLoading && !isLoadingBoss) {
+                isLoadingBoss = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 // Use Filter Type Box to adjust Filter Box
                 BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
@@ -1079,7 +1080,7 @@ CB_Version.Items.Add("All");
                 }
                 //
                 Character.OnCalculationsInvalidated();
-                isLoading = false;
+                isLoadingBoss = false;
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, EventArgs e) {
@@ -1095,11 +1096,11 @@ CB_Version.Items.Add("All");
             NUD_RootDur.ValueChanged -= new System.EventHandler(this.NUD_RootDur_ValueChanged);
             NUD_DisarmDur.ValueChanged -= new System.EventHandler(this.NUD_DisarmDur_ValueChanged); line = 10;
             try {
-                if (!isLoading) {
+                if (!isLoading && !isLoadingBoss) {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     CalculationsDPSWarr calcs = new CalculationsDPSWarr();
                     if (CB_BossList.Text != "Custom") {
-                        isLoading = true;
+                        isLoadingBoss = true;
                         // Get Values
                         BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.Text);
                         calcOpts.TargetLevel = boss.Level;
@@ -1154,6 +1155,7 @@ CB_Version.Items.Add("All");
                         //NUD_MoveDur.Enabled = calcOpts.MovingTargets;
                         BT_Move.Enabled = calcOpts.MovingTargets;
                         BT_Move.Text = boss.Moves.Count == 0 ? "None" : boss.DynamicCompiler_Move.ToString();
+                        calcOpts.Moves = boss.Moves;
                         //NUD_MoveFreq.Value = (int)Math.Max(NUD_MoveFreq.Minimum, Math.Min(NUD_MoveFreq.Maximum, calcOpts.MovingTargetsFreq));
                         //NUD_MoveDur.Value  = (int)Math.Max(NUD_MoveDur.Minimum , Math.Min(NUD_MoveDur.Maximum , (decimal)calcOpts.MovingTargetsDur)); line = 40;
 
@@ -1162,6 +1164,7 @@ CB_Version.Items.Add("All");
                         //NUD_FearDur.Enabled = calcOpts.FearingTargets;
                         BT_Fear.Enabled = calcOpts.FearingTargets;
                         BT_Fear.Text = boss.Fears.Count == 0 ? "None" : boss.DynamicCompiler_Fear.ToString();
+                        calcOpts.Fears = boss.Fears;
                         //NUD_FearFreq.Value = (int)Math.Max(NUD_FearFreq.Minimum, Math.Min(NUD_FearFreq.Maximum, calcOpts.FearingTargetsFreq));
                         //NUD_FearDur.Value  = (int)Math.Max(NUD_FearDur.Minimum , Math.Min(NUD_FearDur.Maximum , (decimal)calcOpts.FearingTargetsDur)); line = 45;
 
@@ -1200,10 +1203,10 @@ CB_Version.Items.Add("All");
                             calcOpts.Filter = CB_BL_Filter.Text;
                             calcOpts.BossName = CB_BossList.Text;
                         }
-                        isLoading = false;
+                        isLoadingBoss = false;
                         CustomBoss = boss.Clone();
                     } else {
-                        isLoading = true;
+                        isLoadingBoss = true;
                         BossHandler boss = CustomBoss != null ? CustomBoss : new BossHandler();
                         //
                         boss.Name               = "Custom";
@@ -1257,16 +1260,16 @@ CB_Version.Items.Add("All");
                         calcOpts.BossName = boss.Name;
                         //
                         TB_BossInfo.Text = boss.GenInfoString();
-                        isLoading = false;
+                        isLoadingBoss = false;
                         CustomBoss = boss;
                     }
                     Character.OnCalculationsInvalidated();
                 }
+                isLoadingBoss = false;
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in setting DPSWarr Character settings from Boss",
                     ex.Message,"CB_BossList_SelectedIndexChanged()", "No Additional Info", ex.StackTrace , line);
             }
-            isLoading = false;
             NUD_StunFreq.ValueChanged += new System.EventHandler(this.NUD_StunFreq_ValueChanged);
             //NUD_MoveFreq.ValueChanged += new System.EventHandler(this.NUD_MoveFreq_ValueChanged);
             //NUD_FearFreq.ValueChanged += new System.EventHandler(this.NUD_FearFreq_ValueChanged);
@@ -1313,6 +1316,18 @@ CB_Version.Items.Add("All");
                 Character.OnCalculationsInvalidated();
             }
         }
+        private void RB_StanceFury_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.FuryStance = RB_StanceFury.Checked;
+                CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
+                CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        // Boss
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CB_BossList.Text = "Custom";
@@ -1344,17 +1359,6 @@ CB_Version.Items.Add("All");
                     CB_BossList_SelectedIndexChanged(null, null);
                     Character.OnCalculationsInvalidated();
                 }
-            }
-        }
-        private void RB_StanceFury_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!isLoading) {
-                CB_BossList.Text = "Custom";
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.FuryStance = RB_StanceFury.Checked;
-                CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
-                CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
-                Character.OnCalculationsInvalidated();
             }
         }
         private void CB_Duration_ValueChanged(object sender, EventArgs e) {
