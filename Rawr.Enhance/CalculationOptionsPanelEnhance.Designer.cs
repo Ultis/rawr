@@ -373,6 +373,7 @@
             this.trackbarSRMana.TickFrequency = 250;
             this.trackbarSRMana.Value = 700;
             this.trackbarSRMana.ValueChanged += new System.EventHandler(this.trackbarSRMana_ValueChanged);
+            this.trackbarSRMana.Scroll += new System.EventHandler(this.trackbarSRMana_ValueChanged);
             // 
             // label9
             // 
@@ -422,6 +423,7 @@
             this.trackBarAverageLag.TickFrequency = 50;
             this.trackBarAverageLag.Value = 250;
             this.trackBarAverageLag.ValueChanged += new System.EventHandler(this.trackBarAverageLag_ValueChanged);
+            this.trackBarAverageLag.Scroll += new System.EventHandler(this.trackBarAverageLag_ValueChanged);
             // 
             // label5
             // 
@@ -682,6 +684,7 @@
             0,
             0,
             0});
+            this.cmbLength.ValueChanged += new System.EventHandler(this.cmbLength_ValueChanged);
             // 
             // label2
             // 
