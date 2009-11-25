@@ -35,6 +35,7 @@ namespace Rawr.Moonkin
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
             cmbUserRotation.SelectedItem = calcOpts.UserRotation;
+            chkPtrMode.Checked = calcOpts.PTRMode;
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -108,6 +109,13 @@ namespace Rawr.Moonkin
         {
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.UserRotation = cmbUserRotation.SelectedItem.ToString();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void chkPtrMode_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.PTRMode = chkPtrMode.Checked;
             Character.OnCalculationsInvalidated();
         }
     }

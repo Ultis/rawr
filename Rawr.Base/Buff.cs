@@ -2688,7 +2688,7 @@ namespace Rawr
                 Name = "Lasherweave's Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MoonkinT10CritDot = 0.05f },
+                Stats = { MoonkinT10CritDot = 0.07f },
                 SetName = "Lasherweave's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },

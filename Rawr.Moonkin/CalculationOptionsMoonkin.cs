@@ -110,6 +110,13 @@ namespace Rawr.Moonkin
 			set { userRotation = value; OnPropertyChanged("UserRotation"); }
 		}
 
+        private bool ptrMode = false;
+        public bool PTRMode
+        {
+            get { return ptrMode; }
+            set { ptrMode = value; OnPropertyChanged("PTRMode"); }
+        }
+
 
 		#region INotifyPropertyChanged Members
 

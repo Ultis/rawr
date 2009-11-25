@@ -246,7 +246,7 @@ namespace Rawr.Moonkin
                     if (proc.CalculateDPS != null)
                     {
                         if (rot.Duration == 0.0f)
-                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, calcOpts.PTRMode);
                         accumulatedDamage += proc.CalculateDPS(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) * rot.Duration;
                     }
                     else if (proc.Activate != null)
@@ -256,7 +256,7 @@ namespace Rawr.Moonkin
                     if (proc.CalculateMP5 != null)
                     {
                         if (rot.Duration == 0.0f)
-                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, calcOpts.PTRMode);
                         manaGained += proc.CalculateMP5(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / 5.0f * calcs.FightLength * 60.0f;
                     }
                 }
@@ -283,7 +283,7 @@ namespace Rawr.Moonkin
                             ++lengthCounter;
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, calcOpts.PTRMode) / rot.Duration;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -328,7 +328,7 @@ namespace Rawr.Moonkin
                 {
                     accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
                 }
-                float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, calcOpts.PTRMode);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
 
                 accumulatedDamage += accumulatedDPS * rot.Duration;

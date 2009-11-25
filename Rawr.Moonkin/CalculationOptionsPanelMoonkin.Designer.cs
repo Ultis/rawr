@@ -48,6 +48,7 @@
             this.lblLifespanValue = new System.Windows.Forms.Label();
             this.lblUserRotation = new System.Windows.Forms.Label();
             this.cmbUserRotation = new System.Windows.Forms.ComboBox();
+            this.chkPtrMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
@@ -255,10 +256,22 @@
             this.cmbUserRotation.TabIndex = 21;
             this.cmbUserRotation.SelectedIndexChanged += new System.EventHandler(this.cmbUserRotation_SelectedIndexChanged);
             // 
+            // chkPtrMode
+            // 
+            this.chkPtrMode.AutoSize = true;
+            this.chkPtrMode.Location = new System.Drawing.Point(6, 306);
+            this.chkPtrMode.Name = "chkPtrMode";
+            this.chkPtrMode.Size = new System.Drawing.Size(78, 17);
+            this.chkPtrMode.TabIndex = 45;
+            this.chkPtrMode.Text = "PTR Mode";
+            this.chkPtrMode.UseVisualStyleBackColor = true;
+            this.chkPtrMode.CheckedChanged += new System.EventHandler(this.chkPtrMode_CheckedChanged);
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkPtrMode);
             this.Controls.Add(this.cmbUserRotation);
             this.Controls.Add(this.lblUserRotation);
             this.Controls.Add(this.lblLifespanValue);
@@ -280,7 +293,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 321);
+            this.Size = new System.Drawing.Size(204, 338);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -310,6 +323,7 @@
         private System.Windows.Forms.Label lblLifespanValue;
         private System.Windows.Forms.Label lblUserRotation;
         private System.Windows.Forms.ComboBox cmbUserRotation;
+        private System.Windows.Forms.CheckBox chkPtrMode;
 
     }
 }
