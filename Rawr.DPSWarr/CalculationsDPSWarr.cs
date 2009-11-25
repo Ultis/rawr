@@ -978,7 +978,6 @@ These numbers to do not include racial bonuses.",
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
 
-                
                 calculatedStats.Duration = calcOpts.Duration; 
                 calculatedStats.AverageStats = stats; 
                 calculatedStats.combatFactors = combatFactors; 
@@ -1072,7 +1071,7 @@ These numbers to do not include racial bonuses.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             try {
-                return GetCharacterStats(character, additionalItem, StatType.Average, null);
+                return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions);
             } catch (Exception ex) {
                 ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in getting Character Stats",
                     ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace, 0);

@@ -795,15 +795,6 @@ namespace Rawr.Enhance
 			return base.IsItemRelevant(item);
 		}
 
-        private static Character cacheChar = null;
-
-        public bool CheckHasProf(Profession p)
-        {
-            if (cacheChar == null) 
-                return false;
-            return cacheChar.PrimaryProfession == p || cacheChar.SecondaryProfession == p;
-        }
-
         public override bool IsEnchantRelevant(Enchant enchant)
         {
             string name = enchant.Name;
