@@ -342,7 +342,7 @@ namespace Rawr.RestoSham
                 stats.SpellHaste = .3f / (60 * options.FightLength);
             calcStats.TotalManaPool = (((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((character.ShamanTalents.GlyphofManaTideTotem ? 0.4f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) + 
-                stats.Mana + onUse + (stats.ManaRestore * 60 * options.FightLength) + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+                stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f)) + ((stats.Mp5 / 5) * 60 * options.FightLength) - HeroismMana;
             calcStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
@@ -506,6 +506,34 @@ namespace Rawr.RestoSham
             #region Create Final calcs via spell cast (Improve Water Shield Mana Return)
             HealsPerSec = RTPerSec + LHWPerSec + HWPerSec + CHPerSec;
             CritsPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
+            float healCastInterval = 1f / HealsPerSec;
+            /*float DoTTickInterval = 1f / 3f; // Once every 3 seconds*/
+            float critChance = CritsPerSec;
+            float fightDuration = options.FightLength * 60;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                switch (effect.Trigger)
+                {
+                    case (Trigger.HealingSpellCast):
+                        stats += effect.GetAverageStats(healCastInterval);
+                        break;
+                    case (Trigger.HealingSpellCrit):
+                        stats += effect.GetAverageStats(healCastInterval, critChance, 1.0f, fightDuration);
+                        // you can put 0 instead of fightDuration for a different effect
+                        break;
+                    case (Trigger.SpellCast):
+                        stats += effect.GetAverageStats(healCastInterval);
+                        break;
+                    case (Trigger.SpellCrit):
+                        stats += effect.GetAverageStats(healCastInterval, critChance, 1.0f, fightDuration);
+                        // you can put 0 instead of fightDuration for a different effect
+                        break;
+                    case (Trigger.HealingSpellHit):
+                        stats += effect.GetAverageStats(healCastInterval);
+                        break;
+                    // handle the other cases of triggers you care about, using the proper interval
+                }
+            }
             stats.Mp5 += (RTCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5) 
                 + (LHWCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5 * .6f) 
                 + (HWCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5) 
@@ -636,15 +664,6 @@ namespace Rawr.RestoSham
             // Fight options:
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
             #endregion
-
-            // Special effects
-            Stats statsProcs = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-            {
-                statsProcs += effect.GetAverageStats();
-            }
-            statsProcs.Intellect += statsProcs.HighestStat;
-            statsTotal += statsProcs;
 
             return statsTotal;
         }
