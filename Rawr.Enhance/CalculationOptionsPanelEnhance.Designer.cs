@@ -62,6 +62,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPageBoss = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.CB_MultiTargsMax = new System.Windows.Forms.NumericUpDown();
+            this.CK_MultiTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
+            this.CB_MultiTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
             this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -91,6 +95,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
             this.tabPageBoss.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.tabPagePriorities.SuspendLayout();
@@ -106,7 +112,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(281, 567);
+            this.tabControl.Size = new System.Drawing.Size(281, 556);
             this.tabControl.TabIndex = 9;
             // 
             // tabPageBasics
@@ -510,6 +516,10 @@
             // 
             // tabPageBoss
             // 
+            this.tabPageBoss.Controls.Add(this.label11);
+            this.tabPageBoss.Controls.Add(this.CB_MultiTargsMax);
+            this.tabPageBoss.Controls.Add(this.CK_MultiTargs);
+            this.tabPageBoss.Controls.Add(this.CB_MultiTargsPerc);
             this.tabPageBoss.Controls.Add(this.CB_InBackPerc);
             this.tabPageBoss.Controls.Add(this.TB_BossInfo);
             this.tabPageBoss.Controls.Add(this.label1);
@@ -525,18 +535,77 @@
             this.tabPageBoss.Location = new System.Drawing.Point(4, 22);
             this.tabPageBoss.Name = "tabPageBoss";
             this.tabPageBoss.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBoss.Size = new System.Drawing.Size(273, 541);
+            this.tabPageBoss.Size = new System.Drawing.Size(273, 530);
             this.tabPageBoss.TabIndex = 4;
             this.tabPageBoss.Text = "Boss";
             this.tabPageBoss.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(258, 90);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(15, 13);
+            this.label11.TabIndex = 68;
+            this.label11.Text = "%";
+            // 
+            // CB_MultiTargsMax
+            // 
+            this.CB_MultiTargsMax.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_MultiTargsMax.Enabled = false;
+            this.CB_MultiTargsMax.Location = new System.Drawing.Point(170, 88);
+            this.CB_MultiTargsMax.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.CB_MultiTargsMax.Name = "CB_MultiTargsMax";
+            this.CB_MultiTargsMax.Size = new System.Drawing.Size(42, 20);
+            this.CB_MultiTargsMax.TabIndex = 66;
+            this.CB_MultiTargsMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CB_MultiTargsMax.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.CB_MultiTargsMax.ValueChanged += new System.EventHandler(this.CB_MultiTargsMax_ValueChanged);
+            // 
+            // CK_MultiTargs
+            // 
+            this.CK_MultiTargs.BackColor = System.Drawing.Color.Transparent;
+            this.CK_MultiTargs.Location = new System.Drawing.Point(9, 87);
+            this.CK_MultiTargs.Name = "CK_MultiTargs";
+            this.CK_MultiTargs.Size = new System.Drawing.Size(141, 20);
+            this.CK_MultiTargs.TabIndex = 65;
+            this.CK_MultiTargs.Text = "Multiple Targets *";
+            this.CK_MultiTargs.ToolTipText = "";
+            this.CK_MultiTargs.UseVisualStyleBackColor = false;
+            this.CK_MultiTargs.CheckedChanged += new System.EventHandler(this.CK_MultiTargs_CheckedChanged);
+            // 
+            // CB_MultiTargsPerc
+            // 
+            this.CB_MultiTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_MultiTargsPerc.Enabled = false;
+            this.CB_MultiTargsPerc.Location = new System.Drawing.Point(218, 88);
+            this.CB_MultiTargsPerc.Name = "CB_MultiTargsPerc";
+            this.CB_MultiTargsPerc.Size = new System.Drawing.Size(40, 20);
+            this.CB_MultiTargsPerc.TabIndex = 67;
+            this.CB_MultiTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_MultiTargsPerc.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.CB_MultiTargsPerc.ValueChanged += new System.EventHandler(this.CB_MultiTargsPerc_ValueChanged);
             // 
             // CB_InBackPerc
             // 
             this.CB_InBackPerc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_InBackPerc.Location = new System.Drawing.Point(172, 61);
+            this.CB_InBackPerc.Location = new System.Drawing.Point(170, 61);
             this.CB_InBackPerc.Name = "CB_InBackPerc";
-            this.CB_InBackPerc.Size = new System.Drawing.Size(75, 20);
+            this.CB_InBackPerc.Size = new System.Drawing.Size(88, 20);
             this.CB_InBackPerc.TabIndex = 62;
             this.CB_InBackPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.CB_InBackPerc.Value = new decimal(new int[] {
@@ -551,20 +620,20 @@
             this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.TB_BossInfo.Location = new System.Drawing.Point(9, 113);
+            this.TB_BossInfo.Location = new System.Drawing.Point(9, 140);
             this.TB_BossInfo.MaxLength = 65536;
             this.TB_BossInfo.Multiline = true;
             this.TB_BossInfo.Name = "TB_BossInfo";
             this.TB_BossInfo.ReadOnly = true;
             this.TB_BossInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TB_BossInfo.Size = new System.Drawing.Size(249, 135);
+            this.TB_BossInfo.Size = new System.Drawing.Size(249, 124);
             this.TB_BossInfo.TabIndex = 64;
             this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(246, 63);
+            this.label1.Location = new System.Drawing.Point(258, 63);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(15, 13);
             this.label1.TabIndex = 63;
@@ -634,9 +703,9 @@
             "10338",
             "10034",
             "9729"});
-            this.CB_TargArmor.Location = new System.Drawing.Point(172, 33);
+            this.CB_TargArmor.Location = new System.Drawing.Point(170, 33);
             this.CB_TargArmor.Name = "CB_TargArmor";
-            this.CB_TargArmor.Size = new System.Drawing.Size(86, 21);
+            this.CB_TargArmor.Size = new System.Drawing.Size(88, 21);
             this.CB_TargArmor.TabIndex = 60;
             // 
             // comboBoxBoss
@@ -651,7 +720,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 89);
+            this.label4.Location = new System.Drawing.Point(7, 116);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 13);
             this.label4.TabIndex = 55;
@@ -665,7 +734,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(82, 87);
+            this.cmbLength.Location = new System.Drawing.Point(82, 114);
             this.cmbLength.Maximum = new decimal(new int[] {
             60,
             0,
@@ -813,7 +882,7 @@
             this.AutoScroll = true;
             this.Controls.Add(this.tabControl);
             this.Name = "CalculationOptionsPanelEnhance";
-            this.Size = new System.Drawing.Size(284, 573);
+            this.Size = new System.Drawing.Size(284, 561);
             this.tabControl.ResumeLayout(false);
             this.tabPageBasics.ResumeLayout(false);
             this.tabPageBasics.PerformLayout();
@@ -824,6 +893,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
             this.tabPageBoss.ResumeLayout(false);
             this.tabPageBoss.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.tabPagePriorities.ResumeLayout(false);
@@ -892,6 +963,10 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox chbFireElemental;
+        private System.Windows.Forms.NumericUpDown CB_MultiTargsMax;
+        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_MultiTargs;
+        private System.Windows.Forms.NumericUpDown CB_MultiTargsPerc;
+        private System.Windows.Forms.Label label11;
 
     }
 }

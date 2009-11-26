@@ -30,6 +30,9 @@ namespace Rawr.Enhance
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
         private float _minManaSR = 1250;
+        private bool _multipleTargets = false;
+        private int _additionalTargets = 2;
+        private float _additionalTargetPercent = 0.25f;
         private bool _magma = true;
         private bool _fireElemental = true;
         private bool _baseStatOption = true;
@@ -57,6 +60,9 @@ namespace Rawr.Enhance
         public bool FireElemental { get { return _fireElemental; } set { _fireElemental = value; OnPropertyChanged("FireElemental"); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
         public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
+        public bool MultipleTargets { get { return _multipleTargets; } set { _multipleTargets = value; OnPropertyChanged("MultipleTargets"); } }
+        public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }
+        public float AdditionalTargetPercent { get { return _additionalTargetPercent; } set { _additionalTargetPercent = value; OnPropertyChanged("AdditionalTargetPercent"); } }
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } } 
         public SerializableDictionary<EnhanceAbility, Priority> PriorityList { get { return _priorityList; } set { _priorityList = value; OnPropertyChanged("PriorityList"); } }
         
@@ -81,6 +87,9 @@ namespace Rawr.Enhance
             _inBack = ((_inBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
             _targetFireResistance = boss.Resistance(ItemDamageType.Fire);
             _targetNatureResistance = boss.Resistance(ItemDamageType.Nature);
+            _multipleTargets = boss.MaxNumTargets > 1;
+            _additionalTargets = (int)boss.MaxNumTargets - 1;
+            _additionalTargetPercent = boss.MultiTargsPerc;
         }
 
         public bool PriorityInUse(EnhanceAbility abilityType)

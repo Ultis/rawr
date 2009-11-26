@@ -231,6 +231,11 @@ namespace Rawr.Enhance
                 cmbLength.Value = (int)_calcOpts.FightLength;
                 CK_InBack.Checked = _calcOpts.InBack;
                 CB_InBackPerc.Value = _calcOpts.InBackPerc;
+                CK_MultiTargs.Checked = _calcOpts.MultipleTargets;
+                CB_MultiTargsMax.Enabled = CK_MultiTargs.Checked;
+                CB_MultiTargsPerc.Enabled = CK_MultiTargs.Checked;
+                CB_MultiTargsMax.Value = _calcOpts.AdditionalTargets;
+                CB_MultiTargsPerc.Value = (int)(_calcOpts.AdditionalTargetPercent * 100 + .001f);
 
                 Stats stats = calcs.GetCharacterStats(Character, null);
                 TB_BossInfo.Text = boss.GenInfoString(
@@ -460,6 +465,38 @@ namespace Rawr.Enhance
         private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e)
         {
             _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
+        }
+
+        private void CK_MultiTargs_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _calcOpts.MultipleTargets = CK_MultiTargs.Checked;
+                comboBoxBoss.Text = "Custom";
+                CB_MultiTargsMax.Enabled = CK_MultiTargs.Checked;
+                CB_MultiTargsPerc.Enabled = CK_MultiTargs.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void CB_MultiTargsMax_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _calcOpts.AdditionalTargets = (int)CB_MultiTargsMax.Value;
+                comboBoxBoss.Text = "Custom";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void CB_MultiTargsPerc_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _calcOpts.AdditionalTargetPercent = ((float)CB_MultiTargsPerc.Value / 100f);
+                comboBoxBoss.Text = "Custom";
+                Character.OnCalculationsInvalidated();
+            }
         }
     }
 }

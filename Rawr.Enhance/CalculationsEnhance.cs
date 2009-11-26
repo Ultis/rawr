@@ -462,6 +462,8 @@ namespace Rawr.Enhance
                 float STMTNormal = STMTdps * cs.SpellHitModifier;
                 float STMTCrit = STMTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;
+                if (calcOpts.MultipleTargets && calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem) && calcOpts.Magma)
+                    dpsSTMT += dpsSTMT * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
             }
 
             //9: Flametongue Weapon DPS++
