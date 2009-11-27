@@ -727,6 +727,7 @@
             this.chkStatsInt.TabIndex = 63;
             this.chkStatsInt.Text = "Intellect";
             this.chkStatsInt.UseVisualStyleBackColor = true;
+            this.chkStatsInt.CheckedChanged += new System.EventHandler(this.chkStatsInt_CheckedChanged);
             // 
             // label7
             // 
@@ -745,6 +746,7 @@
             this.btnStatsGraph.TabIndex = 61;
             this.btnStatsGraph.Text = "Display Stats Graph";
             this.btnStatsGraph.UseVisualStyleBackColor = true;
+            this.btnStatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click);
             // 
             // comboBoxCalculationToGraph
             // 
@@ -753,6 +755,7 @@
             this.comboBoxCalculationToGraph.Name = "comboBoxCalculationToGraph";
             this.comboBoxCalculationToGraph.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCalculationToGraph.TabIndex = 60;
+            this.comboBoxCalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.comboBoxCalculationToGraph_SelectedIndexChanged);
             // 
             // chkStatsSP
             // 
@@ -763,6 +766,7 @@
             this.chkStatsSP.TabIndex = 8;
             this.chkStatsSP.Text = "Spell Power";
             this.chkStatsSP.UseVisualStyleBackColor = true;
+            this.chkStatsSP.CheckedChanged += new System.EventHandler(this.chkStatsSP_CheckedChanged);
             // 
             // chkStatsArP
             // 
@@ -773,6 +777,7 @@
             this.chkStatsArP.TabIndex = 7;
             this.chkStatsArP.Text = "Armour Pen Rating";
             this.chkStatsArP.UseVisualStyleBackColor = true;
+            this.chkStatsArP.CheckedChanged += new System.EventHandler(this.chkStatsArP_CheckedChanged);
             // 
             // chkStatsHaste
             // 
@@ -783,6 +788,7 @@
             this.chkStatsHaste.TabIndex = 6;
             this.chkStatsHaste.Text = "Haste Rating";
             this.chkStatsHaste.UseVisualStyleBackColor = true;
+            this.chkStatsHaste.CheckedChanged += new System.EventHandler(this.chkStatsHaste_CheckedChanged);
             // 
             // chkStatsExp
             // 
@@ -793,6 +799,7 @@
             this.chkStatsExp.TabIndex = 5;
             this.chkStatsExp.Text = "Expertise Rating";
             this.chkStatsExp.UseVisualStyleBackColor = true;
+            this.chkStatsExp.CheckedChanged += new System.EventHandler(this.chkStatsExp_CheckedChanged);
             // 
             // chkStatsHit
             // 
@@ -803,6 +810,7 @@
             this.chkStatsHit.TabIndex = 4;
             this.chkStatsHit.Text = "Hit Rating";
             this.chkStatsHit.UseVisualStyleBackColor = true;
+            this.chkStatsHit.CheckedChanged += new System.EventHandler(this.chkStatsHit_CheckedChanged);
             // 
             // chkStatsCrit
             // 
@@ -813,6 +821,7 @@
             this.chkStatsCrit.TabIndex = 3;
             this.chkStatsCrit.Text = "Crit Rating";
             this.chkStatsCrit.UseVisualStyleBackColor = true;
+            this.chkStatsCrit.CheckedChanged += new System.EventHandler(this.chkStatsCrit_CheckedChanged);
             // 
             // chkStatsAP
             // 
@@ -823,6 +832,7 @@
             this.chkStatsAP.TabIndex = 2;
             this.chkStatsAP.Text = "Attack Power";
             this.chkStatsAP.UseVisualStyleBackColor = true;
+            this.chkStatsAP.CheckedChanged += new System.EventHandler(this.chkStatsAP_CheckedChanged);
             // 
             // chkStatsAgility
             // 
@@ -833,6 +843,7 @@
             this.chkStatsAgility.TabIndex = 1;
             this.chkStatsAgility.Text = "Agility";
             this.chkStatsAgility.UseVisualStyleBackColor = true;
+            this.chkStatsAgility.CheckedChanged += new System.EventHandler(this.chkStatsAgility_CheckedChanged);
             // 
             // chkStatsStrength
             // 
@@ -843,6 +854,7 @@
             this.chkStatsStrength.TabIndex = 0;
             this.chkStatsStrength.Text = "Strength";
             this.chkStatsStrength.UseVisualStyleBackColor = true;
+            this.chkStatsStrength.CheckedChanged += new System.EventHandler(this.chkStatsStrength_CheckedChanged);
             // 
             // CalculationOptionsPanelEnhance
             // 
