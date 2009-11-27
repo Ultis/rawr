@@ -310,13 +310,16 @@ namespace Rawr
         {
             if (item.IsJewelersGem)
             {
-                if (Character.JewelersGemCount < 3)
-                    itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, CharacterSlot.Gems));
-                else
+                if (!Rawr.Properties.GeneralSettings.Default.HideProfEnchants || this.Character.HasProfession(Profession.Jewelcrafting))
                 {
-                    Item nullItem = item.Clone();
-                    nullItem.Stats = new Stats();
-                    itemCalculations.Add(Calculations.GetItemCalculations(nullItem, this.Character, CharacterSlot.Gems));
+                    if (Character.JewelersGemCount < 3)
+                        itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, CharacterSlot.Gems));
+                    else
+                    {
+                        Item nullItem = item.Clone();
+                        nullItem.Stats = new Stats();
+                        itemCalculations.Add(Calculations.GetItemCalculations(nullItem, this.Character, CharacterSlot.Gems));
+                    }
                 }
             }
             else if (item.IsLimitedGem)

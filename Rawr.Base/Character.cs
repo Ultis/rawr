@@ -607,6 +607,13 @@ namespace Rawr //O O . .
             }
         }
 
+        public bool HasProfession(Profession p)
+        {
+            if (PrimaryProfession == p) { return true; }
+            if (SecondaryProfession == p) { return true; }
+            return false;
+        }
+
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
 
