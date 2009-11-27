@@ -281,7 +281,7 @@ namespace Rawr
                     //    _itemComparison.Hide();
                     //    _itemComparison.Dispose();
                     //}
-
+                    UpdateProfessions();
 					_loadingCharacter = false;
                     _character.IsLoading = false;
 					//_character.OnCalculationsInvalidated(); nothing actually changed on the character, we just need calculations
@@ -1178,6 +1178,7 @@ namespace Rawr
             {
                 Character.PrimaryProfession = Profs.StringToProfession(comboBoxProfession1.Text);
                 Character.OnCalculationsInvalidated();
+                UpdateProfessions();
                 _unsavedChanges = true;
             }
         }
@@ -1188,7 +1189,29 @@ namespace Rawr
             {
                 Character.SecondaryProfession = Profs.StringToProfession(comboBoxProfession2.Text);
                 Character.OnCalculationsInvalidated();
+                UpdateProfessions();
                 _unsavedChanges = true;
+            }
+        }
+
+        /// <summary>
+        /// This routine updates controls on the main form based on the character's professions
+        /// eg: whether to allow or disallow Blacksmithing sockets 
+        /// only acts if global option to hide professions is enabled
+        /// </summary>
+        private void UpdateProfessions()
+        {
+            // set defaults
+            checkBoxHandsBlacksmithingSocket.Enabled = true;
+            checkBoxWristBlacksmithingSocket.Enabled = true;
+            if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants)
+            {
+                if (!Character.HasProfession(Profession.Blacksmithing))
+                {
+                    checkBoxHandsBlacksmithingSocket.Enabled = false;
+                    checkBoxWristBlacksmithingSocket.Enabled = false;
+                }
+                // any other profession checks go here
             }
         }
         
