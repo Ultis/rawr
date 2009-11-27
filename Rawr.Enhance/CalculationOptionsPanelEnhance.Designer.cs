@@ -30,24 +30,9 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageBasics = new System.Windows.Forms.TabPage();
-            this.chbFireElemental = new System.Windows.Forms.CheckBox();
             this.labelReactionTime = new System.Windows.Forms.Label();
             this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
             this.label12 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkStatsInt = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.btnStatsGraph = new System.Windows.Forms.Button();
-            this.comboBoxCalculationToGraph = new System.Windows.Forms.ComboBox();
-            this.chkStatsSP = new System.Windows.Forms.CheckBox();
-            this.chkStatsArP = new System.Windows.Forms.CheckBox();
-            this.chkStatsHaste = new System.Windows.Forms.CheckBox();
-            this.chkStatsExp = new System.Windows.Forms.CheckBox();
-            this.chkStatsHit = new System.Windows.Forms.CheckBox();
-            this.chkStatsCrit = new System.Windows.Forms.CheckBox();
-            this.chkStatsAP = new System.Windows.Forms.CheckBox();
-            this.chkStatsAgility = new System.Windows.Forms.CheckBox();
-            this.chkStatsStrength = new System.Windows.Forms.CheckBox();
             this.labelSRMana = new System.Windows.Forms.Label();
             this.trackbarSRMana = new System.Windows.Forms.TrackBar();
             this.label9 = new System.Windows.Forms.Label();
@@ -55,7 +40,6 @@
             this.labelAverageLag = new System.Windows.Forms.Label();
             this.trackBarAverageLag = new System.Windows.Forms.TrackBar();
             this.label5 = new System.Windows.Forms.Label();
-            this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
             this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
             this.comboBoxOffhandImbue = new System.Windows.Forms.ComboBox();
             this.comboBoxMainhandImbue = new System.Windows.Forms.ComboBox();
@@ -88,10 +72,24 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.tabPageGraph = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkStatsInt = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnStatsGraph = new System.Windows.Forms.Button();
+            this.comboBoxCalculationToGraph = new System.Windows.Forms.ComboBox();
+            this.chkStatsSP = new System.Windows.Forms.CheckBox();
+            this.chkStatsArP = new System.Windows.Forms.CheckBox();
+            this.chkStatsHaste = new System.Windows.Forms.CheckBox();
+            this.chkStatsExp = new System.Windows.Forms.CheckBox();
+            this.chkStatsHit = new System.Windows.Forms.CheckBox();
+            this.chkStatsCrit = new System.Windows.Forms.CheckBox();
+            this.chkStatsAP = new System.Windows.Forms.CheckBox();
+            this.chkStatsAgility = new System.Windows.Forms.CheckBox();
+            this.chkStatsStrength = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
             this.tabPageBoss.SuspendLayout();
@@ -101,6 +99,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.tabPagePriorities.SuspendLayout();
             this.tabPageEnhSim.SuspendLayout();
+            this.tabPageGraph.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -108,6 +108,7 @@
             this.tabControl.Controls.Add(this.tabPageBasics);
             this.tabControl.Controls.Add(this.tabPageBoss);
             this.tabControl.Controls.Add(this.tabPagePriorities);
+            this.tabControl.Controls.Add(this.tabPageGraph);
             this.tabControl.Controls.Add(this.tabPageEnhSim);
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
@@ -117,11 +118,9 @@
             // 
             // tabPageBasics
             // 
-            this.tabPageBasics.Controls.Add(this.chbFireElemental);
             this.tabPageBasics.Controls.Add(this.labelReactionTime);
             this.tabPageBasics.Controls.Add(this.trackBarReactionTime);
             this.tabPageBasics.Controls.Add(this.label12);
-            this.tabPageBasics.Controls.Add(this.groupBox1);
             this.tabPageBasics.Controls.Add(this.labelSRMana);
             this.tabPageBasics.Controls.Add(this.trackbarSRMana);
             this.tabPageBasics.Controls.Add(this.label9);
@@ -129,7 +128,6 @@
             this.tabPageBasics.Controls.Add(this.labelAverageLag);
             this.tabPageBasics.Controls.Add(this.trackBarAverageLag);
             this.tabPageBasics.Controls.Add(this.label5);
-            this.tabPageBasics.Controls.Add(this.chbMagmaSearing);
             this.tabPageBasics.Controls.Add(this.chbBaseStatOption);
             this.tabPageBasics.Controls.Add(this.comboBoxOffhandImbue);
             this.tabPageBasics.Controls.Add(this.comboBoxMainhandImbue);
@@ -138,24 +136,10 @@
             this.tabPageBasics.Location = new System.Drawing.Point(4, 22);
             this.tabPageBasics.Name = "tabPageBasics";
             this.tabPageBasics.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBasics.Size = new System.Drawing.Size(273, 541);
+            this.tabPageBasics.Size = new System.Drawing.Size(273, 530);
             this.tabPageBasics.TabIndex = 0;
             this.tabPageBasics.Text = "Basics";
             this.tabPageBasics.UseVisualStyleBackColor = true;
-            // 
-            // chbFireElemental
-            // 
-            this.chbFireElemental.AutoSize = true;
-            this.chbFireElemental.Checked = true;
-            this.chbFireElemental.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbFireElemental.Enabled = false;
-            this.chbFireElemental.Location = new System.Drawing.Point(10, 218);
-            this.chbFireElemental.Name = "chbFireElemental";
-            this.chbFireElemental.Size = new System.Drawing.Size(114, 17);
-            this.chbFireElemental.TabIndex = 63;
-            this.chbFireElemental.Text = "Use Fire Elemental";
-            this.chbFireElemental.UseVisualStyleBackColor = true;
-            this.chbFireElemental.CheckedChanged += new System.EventHandler(this.chbFireElemental_CheckedChanged);
             // 
             // labelReactionTime
             // 
@@ -193,171 +177,11 @@
             this.label12.TabIndex = 59;
             this.label12.Text = "Reaction Time:";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.chkStatsInt);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.btnStatsGraph);
-            this.groupBox1.Controls.Add(this.comboBoxCalculationToGraph);
-            this.groupBox1.Controls.Add(this.chkStatsSP);
-            this.groupBox1.Controls.Add(this.chkStatsArP);
-            this.groupBox1.Controls.Add(this.chkStatsHaste);
-            this.groupBox1.Controls.Add(this.chkStatsExp);
-            this.groupBox1.Controls.Add(this.chkStatsHit);
-            this.groupBox1.Controls.Add(this.chkStatsCrit);
-            this.groupBox1.Controls.Add(this.chkStatsAP);
-            this.groupBox1.Controls.Add(this.chkStatsAgility);
-            this.groupBox1.Controls.Add(this.chkStatsStrength);
-            this.groupBox1.Location = new System.Drawing.Point(11, 315);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(248, 199);
-            this.groupBox1.TabIndex = 58;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Stats Graph Options";
-            // 
-            // chkStatsInt
-            // 
-            this.chkStatsInt.AutoSize = true;
-            this.chkStatsInt.Location = new System.Drawing.Point(115, 111);
-            this.chkStatsInt.Name = "chkStatsInt";
-            this.chkStatsInt.Size = new System.Drawing.Size(63, 17);
-            this.chkStatsInt.TabIndex = 63;
-            this.chkStatsInt.Text = "Intellect";
-            this.chkStatsInt.UseVisualStyleBackColor = true;
-            this.chkStatsInt.CheckedChanged += new System.EventHandler(this.chkStatsInt_CheckedChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 137);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 13);
-            this.label7.TabIndex = 62;
-            this.label7.Text = "Rating to Graph";
-            // 
-            // btnStatsGraph
-            // 
-            this.btnStatsGraph.Location = new System.Drawing.Point(62, 163);
-            this.btnStatsGraph.Name = "btnStatsGraph";
-            this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
-            this.btnStatsGraph.TabIndex = 61;
-            this.btnStatsGraph.Text = "Display Stats Graph";
-            this.btnStatsGraph.UseVisualStyleBackColor = true;
-            this.btnStatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click);
-            // 
-            // comboBoxCalculationToGraph
-            // 
-            this.comboBoxCalculationToGraph.FormattingEnabled = true;
-            this.comboBoxCalculationToGraph.Location = new System.Drawing.Point(89, 134);
-            this.comboBoxCalculationToGraph.Name = "comboBoxCalculationToGraph";
-            this.comboBoxCalculationToGraph.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCalculationToGraph.TabIndex = 60;
-            this.comboBoxCalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.comboBoxCalculationToGraph_SelectedIndexChanged);
-            // 
-            // chkStatsSP
-            // 
-            this.chkStatsSP.AutoSize = true;
-            this.chkStatsSP.Location = new System.Drawing.Point(115, 88);
-            this.chkStatsSP.Name = "chkStatsSP";
-            this.chkStatsSP.Size = new System.Drawing.Size(82, 17);
-            this.chkStatsSP.TabIndex = 8;
-            this.chkStatsSP.Text = "Spell Power";
-            this.chkStatsSP.UseVisualStyleBackColor = true;
-            this.chkStatsSP.CheckedChanged += new System.EventHandler(this.chkStatsSP_CheckedChanged);
-            // 
-            // chkStatsArP
-            // 
-            this.chkStatsArP.AutoSize = true;
-            this.chkStatsArP.Location = new System.Drawing.Point(115, 65);
-            this.chkStatsArP.Name = "chkStatsArP";
-            this.chkStatsArP.Size = new System.Drawing.Size(115, 17);
-            this.chkStatsArP.TabIndex = 7;
-            this.chkStatsArP.Text = "Armour Pen Rating";
-            this.chkStatsArP.UseVisualStyleBackColor = true;
-            this.chkStatsArP.CheckedChanged += new System.EventHandler(this.chkStatsArP_CheckedChanged);
-            // 
-            // chkStatsHaste
-            // 
-            this.chkStatsHaste.AutoSize = true;
-            this.chkStatsHaste.Location = new System.Drawing.Point(115, 42);
-            this.chkStatsHaste.Name = "chkStatsHaste";
-            this.chkStatsHaste.Size = new System.Drawing.Size(88, 17);
-            this.chkStatsHaste.TabIndex = 6;
-            this.chkStatsHaste.Text = "Haste Rating";
-            this.chkStatsHaste.UseVisualStyleBackColor = true;
-            this.chkStatsHaste.CheckedChanged += new System.EventHandler(this.chkStatsHaste_CheckedChanged);
-            // 
-            // chkStatsExp
-            // 
-            this.chkStatsExp.AutoSize = true;
-            this.chkStatsExp.Location = new System.Drawing.Point(115, 19);
-            this.chkStatsExp.Name = "chkStatsExp";
-            this.chkStatsExp.Size = new System.Drawing.Size(103, 17);
-            this.chkStatsExp.TabIndex = 5;
-            this.chkStatsExp.Text = "Expertise Rating";
-            this.chkStatsExp.UseVisualStyleBackColor = true;
-            this.chkStatsExp.CheckedChanged += new System.EventHandler(this.chkStatsExp_CheckedChanged);
-            // 
-            // chkStatsHit
-            // 
-            this.chkStatsHit.AutoSize = true;
-            this.chkStatsHit.Location = new System.Drawing.Point(6, 111);
-            this.chkStatsHit.Name = "chkStatsHit";
-            this.chkStatsHit.Size = new System.Drawing.Size(73, 17);
-            this.chkStatsHit.TabIndex = 4;
-            this.chkStatsHit.Text = "Hit Rating";
-            this.chkStatsHit.UseVisualStyleBackColor = true;
-            this.chkStatsHit.CheckedChanged += new System.EventHandler(this.chkStatsHit_CheckedChanged);
-            // 
-            // chkStatsCrit
-            // 
-            this.chkStatsCrit.AutoSize = true;
-            this.chkStatsCrit.Location = new System.Drawing.Point(6, 88);
-            this.chkStatsCrit.Name = "chkStatsCrit";
-            this.chkStatsCrit.Size = new System.Drawing.Size(75, 17);
-            this.chkStatsCrit.TabIndex = 3;
-            this.chkStatsCrit.Text = "Crit Rating";
-            this.chkStatsCrit.UseVisualStyleBackColor = true;
-            this.chkStatsCrit.CheckedChanged += new System.EventHandler(this.chkStatsCrit_CheckedChanged);
-            // 
-            // chkStatsAP
-            // 
-            this.chkStatsAP.AutoSize = true;
-            this.chkStatsAP.Location = new System.Drawing.Point(6, 65);
-            this.chkStatsAP.Name = "chkStatsAP";
-            this.chkStatsAP.Size = new System.Drawing.Size(90, 17);
-            this.chkStatsAP.TabIndex = 2;
-            this.chkStatsAP.Text = "Attack Power";
-            this.chkStatsAP.UseVisualStyleBackColor = true;
-            this.chkStatsAP.CheckedChanged += new System.EventHandler(this.chkStatsAP_CheckedChanged);
-            // 
-            // chkStatsAgility
-            // 
-            this.chkStatsAgility.AutoSize = true;
-            this.chkStatsAgility.Location = new System.Drawing.Point(6, 42);
-            this.chkStatsAgility.Name = "chkStatsAgility";
-            this.chkStatsAgility.Size = new System.Drawing.Size(53, 17);
-            this.chkStatsAgility.TabIndex = 1;
-            this.chkStatsAgility.Text = "Agility";
-            this.chkStatsAgility.UseVisualStyleBackColor = true;
-            this.chkStatsAgility.CheckedChanged += new System.EventHandler(this.chkStatsAgility_CheckedChanged);
-            // 
-            // chkStatsStrength
-            // 
-            this.chkStatsStrength.AutoSize = true;
-            this.chkStatsStrength.Location = new System.Drawing.Point(6, 19);
-            this.chkStatsStrength.Name = "chkStatsStrength";
-            this.chkStatsStrength.Size = new System.Drawing.Size(66, 17);
-            this.chkStatsStrength.TabIndex = 0;
-            this.chkStatsStrength.Text = "Strength";
-            this.chkStatsStrength.UseVisualStyleBackColor = true;
-            this.chkStatsStrength.CheckedChanged += new System.EventHandler(this.chkStatsStrength_CheckedChanged);
-            // 
             // labelSRMana
             // 
             this.labelSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSRMana.Location = new System.Drawing.Point(123, 297);
+            this.labelSRMana.Location = new System.Drawing.Point(123, 251);
             this.labelSRMana.Name = "labelSRMana";
             this.labelSRMana.Size = new System.Drawing.Size(145, 12);
             this.labelSRMana.TabIndex = 56;
@@ -370,7 +194,7 @@
             this.trackbarSRMana.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackbarSRMana.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackbarSRMana.LargeChange = 250;
-            this.trackbarSRMana.Location = new System.Drawing.Point(123, 264);
+            this.trackbarSRMana.Location = new System.Drawing.Point(123, 218);
             this.trackbarSRMana.Maximum = 5000;
             this.trackbarSRMana.Name = "trackbarSRMana";
             this.trackbarSRMana.Size = new System.Drawing.Size(145, 45);
@@ -384,7 +208,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 273);
+            this.label9.Location = new System.Drawing.Point(8, 227);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 13);
             this.label9.TabIndex = 54;
@@ -395,7 +219,7 @@
             this.chbMana.AutoSize = true;
             this.chbMana.Checked = true;
             this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMana.Location = new System.Drawing.Point(10, 241);
+            this.chbMana.Location = new System.Drawing.Point(10, 195);
             this.chbMana.Name = "chbMana";
             this.chbMana.Size = new System.Drawing.Size(135, 17);
             this.chbMana.TabIndex = 53;
@@ -439,19 +263,6 @@
             this.label5.Size = new System.Drawing.Size(71, 13);
             this.label5.TabIndex = 37;
             this.label5.Text = "Average Lag:";
-            // 
-            // chbMagmaSearing
-            // 
-            this.chbMagmaSearing.AutoSize = true;
-            this.chbMagmaSearing.Checked = true;
-            this.chbMagmaSearing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 195);
-            this.chbMagmaSearing.Name = "chbMagmaSearing";
-            this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
-            this.chbMagmaSearing.TabIndex = 30;
-            this.chbMagmaSearing.Text = "Use Magma Totem instead of Searing Totem";
-            this.chbMagmaSearing.UseVisualStyleBackColor = true;
-            this.chbMagmaSearing.CheckedChanged += new System.EventHandler(this.chbMagmaSearing_CheckedChanged);
             // 
             // chbBaseStatOption
             // 
@@ -775,7 +586,7 @@
             this.tabPagePriorities.Location = new System.Drawing.Point(4, 22);
             this.tabPagePriorities.Name = "tabPagePriorities";
             this.tabPagePriorities.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePriorities.Size = new System.Drawing.Size(273, 541);
+            this.tabPagePriorities.Size = new System.Drawing.Size(273, 530);
             this.tabPagePriorities.TabIndex = 3;
             this.tabPagePriorities.Text = "Priorities";
             this.tabPagePriorities.UseVisualStyleBackColor = true;
@@ -848,7 +659,7 @@
             this.tabPageEnhSim.Controls.Add(this.btnEnhSim);
             this.tabPageEnhSim.Location = new System.Drawing.Point(4, 22);
             this.tabPageEnhSim.Name = "tabPageEnhSim";
-            this.tabPageEnhSim.Size = new System.Drawing.Size(273, 541);
+            this.tabPageEnhSim.Size = new System.Drawing.Size(273, 530);
             this.tabPageEnhSim.TabIndex = 2;
             this.tabPageEnhSim.Text = "EnhSim";
             this.tabPageEnhSim.UseVisualStyleBackColor = true;
@@ -875,6 +686,164 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // tabPageGraph
+            // 
+            this.tabPageGraph.Controls.Add(this.groupBox1);
+            this.tabPageGraph.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGraph.Name = "tabPageGraph";
+            this.tabPageGraph.Size = new System.Drawing.Size(273, 530);
+            this.tabPageGraph.TabIndex = 5;
+            this.tabPageGraph.Text = "Graph";
+            this.tabPageGraph.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.chkStatsInt);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.btnStatsGraph);
+            this.groupBox1.Controls.Add(this.comboBoxCalculationToGraph);
+            this.groupBox1.Controls.Add(this.chkStatsSP);
+            this.groupBox1.Controls.Add(this.chkStatsArP);
+            this.groupBox1.Controls.Add(this.chkStatsHaste);
+            this.groupBox1.Controls.Add(this.chkStatsExp);
+            this.groupBox1.Controls.Add(this.chkStatsHit);
+            this.groupBox1.Controls.Add(this.chkStatsCrit);
+            this.groupBox1.Controls.Add(this.chkStatsAP);
+            this.groupBox1.Controls.Add(this.chkStatsAgility);
+            this.groupBox1.Controls.Add(this.chkStatsStrength);
+            this.groupBox1.Location = new System.Drawing.Point(13, 13);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(248, 199);
+            this.groupBox1.TabIndex = 59;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Stats Graph Options";
+            // 
+            // chkStatsInt
+            // 
+            this.chkStatsInt.AutoSize = true;
+            this.chkStatsInt.Location = new System.Drawing.Point(115, 111);
+            this.chkStatsInt.Name = "chkStatsInt";
+            this.chkStatsInt.Size = new System.Drawing.Size(63, 17);
+            this.chkStatsInt.TabIndex = 63;
+            this.chkStatsInt.Text = "Intellect";
+            this.chkStatsInt.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 137);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.TabIndex = 62;
+            this.label7.Text = "Rating to Graph";
+            // 
+            // btnStatsGraph
+            // 
+            this.btnStatsGraph.Location = new System.Drawing.Point(62, 163);
+            this.btnStatsGraph.Name = "btnStatsGraph";
+            this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
+            this.btnStatsGraph.TabIndex = 61;
+            this.btnStatsGraph.Text = "Display Stats Graph";
+            this.btnStatsGraph.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxCalculationToGraph
+            // 
+            this.comboBoxCalculationToGraph.FormattingEnabled = true;
+            this.comboBoxCalculationToGraph.Location = new System.Drawing.Point(89, 134);
+            this.comboBoxCalculationToGraph.Name = "comboBoxCalculationToGraph";
+            this.comboBoxCalculationToGraph.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCalculationToGraph.TabIndex = 60;
+            // 
+            // chkStatsSP
+            // 
+            this.chkStatsSP.AutoSize = true;
+            this.chkStatsSP.Location = new System.Drawing.Point(115, 88);
+            this.chkStatsSP.Name = "chkStatsSP";
+            this.chkStatsSP.Size = new System.Drawing.Size(82, 17);
+            this.chkStatsSP.TabIndex = 8;
+            this.chkStatsSP.Text = "Spell Power";
+            this.chkStatsSP.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsArP
+            // 
+            this.chkStatsArP.AutoSize = true;
+            this.chkStatsArP.Location = new System.Drawing.Point(115, 65);
+            this.chkStatsArP.Name = "chkStatsArP";
+            this.chkStatsArP.Size = new System.Drawing.Size(115, 17);
+            this.chkStatsArP.TabIndex = 7;
+            this.chkStatsArP.Text = "Armour Pen Rating";
+            this.chkStatsArP.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsHaste
+            // 
+            this.chkStatsHaste.AutoSize = true;
+            this.chkStatsHaste.Location = new System.Drawing.Point(115, 42);
+            this.chkStatsHaste.Name = "chkStatsHaste";
+            this.chkStatsHaste.Size = new System.Drawing.Size(88, 17);
+            this.chkStatsHaste.TabIndex = 6;
+            this.chkStatsHaste.Text = "Haste Rating";
+            this.chkStatsHaste.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsExp
+            // 
+            this.chkStatsExp.AutoSize = true;
+            this.chkStatsExp.Location = new System.Drawing.Point(115, 19);
+            this.chkStatsExp.Name = "chkStatsExp";
+            this.chkStatsExp.Size = new System.Drawing.Size(103, 17);
+            this.chkStatsExp.TabIndex = 5;
+            this.chkStatsExp.Text = "Expertise Rating";
+            this.chkStatsExp.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsHit
+            // 
+            this.chkStatsHit.AutoSize = true;
+            this.chkStatsHit.Location = new System.Drawing.Point(6, 111);
+            this.chkStatsHit.Name = "chkStatsHit";
+            this.chkStatsHit.Size = new System.Drawing.Size(73, 17);
+            this.chkStatsHit.TabIndex = 4;
+            this.chkStatsHit.Text = "Hit Rating";
+            this.chkStatsHit.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsCrit
+            // 
+            this.chkStatsCrit.AutoSize = true;
+            this.chkStatsCrit.Location = new System.Drawing.Point(6, 88);
+            this.chkStatsCrit.Name = "chkStatsCrit";
+            this.chkStatsCrit.Size = new System.Drawing.Size(75, 17);
+            this.chkStatsCrit.TabIndex = 3;
+            this.chkStatsCrit.Text = "Crit Rating";
+            this.chkStatsCrit.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsAP
+            // 
+            this.chkStatsAP.AutoSize = true;
+            this.chkStatsAP.Location = new System.Drawing.Point(6, 65);
+            this.chkStatsAP.Name = "chkStatsAP";
+            this.chkStatsAP.Size = new System.Drawing.Size(90, 17);
+            this.chkStatsAP.TabIndex = 2;
+            this.chkStatsAP.Text = "Attack Power";
+            this.chkStatsAP.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsAgility
+            // 
+            this.chkStatsAgility.AutoSize = true;
+            this.chkStatsAgility.Location = new System.Drawing.Point(6, 42);
+            this.chkStatsAgility.Name = "chkStatsAgility";
+            this.chkStatsAgility.Size = new System.Drawing.Size(53, 17);
+            this.chkStatsAgility.TabIndex = 1;
+            this.chkStatsAgility.Text = "Agility";
+            this.chkStatsAgility.UseVisualStyleBackColor = true;
+            // 
+            // chkStatsStrength
+            // 
+            this.chkStatsStrength.AutoSize = true;
+            this.chkStatsStrength.Location = new System.Drawing.Point(6, 19);
+            this.chkStatsStrength.Name = "chkStatsStrength";
+            this.chkStatsStrength.Size = new System.Drawing.Size(66, 17);
+            this.chkStatsStrength.TabIndex = 0;
+            this.chkStatsStrength.Text = "Strength";
+            this.chkStatsStrength.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -887,8 +856,6 @@
             this.tabPageBasics.ResumeLayout(false);
             this.tabPageBasics.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
             this.tabPageBoss.ResumeLayout(false);
@@ -901,6 +868,9 @@
             this.tabPagePriorities.PerformLayout();
             this.tabPageEnhSim.ResumeLayout(false);
             this.tabPageEnhSim.PerformLayout();
+            this.tabPageGraph.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -917,7 +887,6 @@
         private System.Windows.Forms.Button btnEnhSim;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
-        private System.Windows.Forms.CheckBox chbMagmaSearing;
         private System.Windows.Forms.Label labelAverageLag;
         private System.Windows.Forms.TrackBar trackBarAverageLag;
         private System.Windows.Forms.Label label5;
@@ -944,29 +913,29 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown cmbLength;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelReactionTime;
+        private System.Windows.Forms.TrackBar trackBarReactionTime;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown CB_MultiTargsMax;
+        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_MultiTargs;
+        private System.Windows.Forms.NumericUpDown CB_MultiTargsPerc;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TabPage tabPageGraph;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox chkStatsStrength;
-        private System.Windows.Forms.CheckBox chkStatsAgility;
-        private System.Windows.Forms.CheckBox chkStatsAP;
+        private System.Windows.Forms.CheckBox chkStatsInt;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnStatsGraph;
+        private System.Windows.Forms.ComboBox comboBoxCalculationToGraph;
         private System.Windows.Forms.CheckBox chkStatsSP;
         private System.Windows.Forms.CheckBox chkStatsArP;
         private System.Windows.Forms.CheckBox chkStatsHaste;
         private System.Windows.Forms.CheckBox chkStatsExp;
         private System.Windows.Forms.CheckBox chkStatsHit;
         private System.Windows.Forms.CheckBox chkStatsCrit;
-        private System.Windows.Forms.Button btnStatsGraph;
-        private System.Windows.Forms.ComboBox comboBoxCalculationToGraph;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.CheckBox chkStatsInt;
-        private System.Windows.Forms.Label labelReactionTime;
-        private System.Windows.Forms.TrackBar trackBarReactionTime;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox chbFireElemental;
-        private System.Windows.Forms.NumericUpDown CB_MultiTargsMax;
-        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_MultiTargs;
-        private System.Windows.Forms.NumericUpDown CB_MultiTargsPerc;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox chkStatsAP;
+        private System.Windows.Forms.CheckBox chkStatsAgility;
+        private System.Windows.Forms.CheckBox chkStatsStrength;
 
     }
 }

@@ -451,19 +451,25 @@ namespace Rawr.Enhance
                     dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
             }
 
-            //8: Searing/Magma Totem DPS
-            float dpsSTMT = 0f;
-            if ((calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem) && calcOpts.Magma) || (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem) && !calcOpts.Magma))
+            //8: Fire Totem DPS
+            float dpsFireTotem = 0f;
+            if (calcOpts.Magma)
             {
-                float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
-                float damageSTMTCoef = calcOpts.Magma ? .1f : .1667f;
-                float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellPower) * callofFlameBonus;
-                float STMTdps = damageSTMT / 2f * cs.FireTotemUptime;
-                float STMTNormal = STMTdps * cs.SpellHitModifier;
-                float STMTCrit = STMTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;
-                if (calcOpts.MultipleTargets && calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem) && calcOpts.Magma)
-                    dpsSTMT += dpsSTMT * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
+                float damageFireTotem = (371f + .1f * spellPower) * callofFlameBonus;
+                float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
+                float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
+                float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
+                if (calcOpts.MultipleTargets)
+                    dpsFireTotem += dpsFireTotem * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
+            }
+            else if(calcOpts.Searing)
+            {
+                float damageFireTotem = (105f + .1667f * spellPower) * callofFlameBonus;
+                float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
+                float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
+                float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
             }
 
             //9: Flametongue Weapon DPS++
@@ -529,7 +535,7 @@ namespace Rawr.Enhance
             #endregion
 
             #region Set CalculatedStats
-            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsSTMT + dpsFT + dpsDogs;
+            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsFireTotem + dpsFT + dpsDogs;
             calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
             calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
@@ -571,7 +577,7 @@ namespace Rawr.Enhance
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
             calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
-            calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
+            calculatedStats.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
 
