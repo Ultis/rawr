@@ -75,11 +75,11 @@ namespace Rawr.UI
                 }
             }
 
-            CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(oldCharacter);
+            CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(oldCharacter, null, false, true, true);
             CurrentScoreLabel.Text = string.Format("Current: {0}", currentCalc.OverallPoints);
             CurrentCalculations.SetCalculations(currentCalc.GetCharacterDisplayCalculationValues());
 
-            CharacterCalculationsBase optimizedCalc = Calculations.GetCharacterCalculations(newCharacter);
+            CharacterCalculationsBase optimizedCalc = Calculations.GetCharacterCalculations(newCharacter, null, false, true, true);
             OptimizedScoreLabel.Text = string.Format("Optimized: {0}", optimizedCalc.OverallPoints);
             OptimizedCalculations.SetCalculations(optimizedCalc.GetCharacterDisplayCalculationValues());
         }
