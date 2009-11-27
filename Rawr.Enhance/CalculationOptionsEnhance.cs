@@ -25,7 +25,7 @@ namespace Rawr.Enhance
         private string _mainhandImbue = "Windfury";
         private string _offhandImbue = "Flametongue";
         private string _calculationToGraph = "DPS Rating";
-        private float _fightLength = 10.0f;
+        private float _fightLength = 7.0f;
         private float _fightLengthMultiplier = 5.0f;
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;

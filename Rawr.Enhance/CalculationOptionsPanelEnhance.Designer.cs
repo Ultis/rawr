@@ -560,7 +560,7 @@
             this.cmbLength.Size = new System.Drawing.Size(44, 20);
             this.cmbLength.TabIndex = 54;
             this.cmbLength.Value = new decimal(new int[] {
-            10,
+            7,
             0,
             0,
             0});
