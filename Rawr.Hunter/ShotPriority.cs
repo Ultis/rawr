@@ -153,7 +153,6 @@ namespace Rawr.Hunter {
             }
         }
 
-
         public void calculateFrequencySums()
         {
             specialShotsPerSecond = 0f;

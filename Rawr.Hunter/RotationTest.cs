@@ -97,7 +97,6 @@ namespace Rawr.Hunter
             int IAotHProcs;
             bool SerpentUsed;  // Have we used Serpent Sting yet?
 
-
             #region Initialize shotData & shotTable
 
             shotData = new Dictionary<Shots, RotationShotInfo>(); // the shot info (mana, cooldown, etc)
@@ -172,10 +171,7 @@ namespace Rawr.Hunter
 
             #endregion
             #region The Main Loop
- 
-
-            do
-            {
+            do {
                 bool haveShot = false;
                 Shots thisShot = Shots.None;
 
@@ -682,7 +678,7 @@ namespace Rawr.Hunter
                     // If we used Beast Within, set duration to 18 seconds
                     if (thisShot == Shots.BeastialWrath)
                     {
-                        BWTime = currentTime + 18;
+                        BWTime = currentTime + 10;
                         // also record the time when it comes off CD
                         BWCD = thisShotInfo.time_until_off_cd;
                     }
@@ -780,9 +776,7 @@ namespace Rawr.Hunter
 
             #endregion
 
-
             /*
-           
                 ActiveWorkbook.Names.Add name:="RotationTestResultNames", RefersToR1C1:= _
                         "='Rotation Test'!R5C7:R" & row & "C7"
                 ActiveWorkbook.Names.Add name:="RotationTestTable", RefersToR1C1:= _

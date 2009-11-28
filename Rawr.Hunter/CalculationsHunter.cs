@@ -909,7 +909,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
 		#region CalculationsBase Overrides
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
+            bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             cacheChar = character;
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
             if (character == null) { return calculatedStats; }
@@ -931,7 +932,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.BasicStats = stats;
             calculatedStats.BaseHealth = statsRace.Health;
 
-            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts,
+            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, stats,
                                         statsBuffs, GetBuffsStats(calcOpts.petActiveBuffs), statsItems);
             
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
@@ -1011,7 +1012,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.readiness.cooldown = 180;
 
             calculatedStats.beastialWrath.cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
-            calculatedStats.beastialWrath.duration = calcOpts.PetFamily == PetFamily.None ? 0 : 18;
+            calculatedStats.beastialWrath.duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
 
             calculatedStats.bloodFury.cooldown = 120;
             calculatedStats.bloodFury.duration = 15;
@@ -1439,11 +1440,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.manaRegenPotion = manaFromPotion / calcOpts.Duration * (manaHasAlchemistStone ? 1.4f : 1.0f);
 
-            float beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
+            //float beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
-            float beastWithinManaBenefit = beastialWrathUptime * 0.2f;
+            //float beastWithinManaBenefit = beastialWrathUptime * 0.2f;
 
-            calculatedStats.manaUsageKillCommand = calculatedStats.petKillCommandMPS * (1f - beastWithinManaBenefit);
+            calculatedStats.manaUsageKillCommand = calculatedStats.petKillCommandMPS * (stats.ManaCostPerc);
             calculatedStats.manaUsageRotation = calculatedStats.priorityRotation.MPS;
 
             calculatedStats.manaUsageTotal = calculatedStats.manaUsageRotation
@@ -1479,7 +1480,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 }
             }
 
-            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? beastialWrathUptime : 0;
+            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? calculatedStats.beastialWrath.cooldown / calculatedStats.beastialWrath.freq : 0;
 
             switch (calcOpts.selectedAspect)
             {
@@ -1547,17 +1548,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
 
             //Beast Within
-            float beastWithinDamageAdjust = 1f;
-            if (calculatedStats.beastialWrath.freq > 0)
-            {
+            /*float beastWithinDamageAdjust = 1f;
+            if (calculatedStats.beastialWrath.freq > 0) {
                 beastWithinDamageAdjust = 1f + (0.1f * beastialWrathUptime);
-            }            
+            }*/
 
             //Focused Fire
             float focusedFireDamageAdjust = 1f + 0.01f * talents.FocusedFire;
 
             //Sanc. Retribution Aura
-            float sancRetributionAuraDamageAdjust = 1f + statsBuffs.BonusDamageMultiplier;
+            //float sancRetributionAuraDamageAdjust = 1f + statsBuffs.BonusDamageMultiplier;
 
             //Black Arrow Damage Multiplier
             float blackArrowUptime = 0;
@@ -1613,8 +1613,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // These intermediates group the two common sets of adjustments
             float talentDamageAdjust = focusedFireDamageAdjust
-                                            * beastWithinDamageAdjust
-                                            * sancRetributionAuraDamageAdjust
+                                            //* beastWithinDamageAdjust
+                                            //* sancRetributionAuraDamageAdjust
                                             * blackArrowAuraDamageAdjust
                                             * noxiousStingsDamageAdjust
                                             * ferociousInspirationDamageAdjust
@@ -1623,27 +1623,24 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             * markedForDeathDamageAdjust;
 
             float talentDamageStingAdjust = focusedFireDamageAdjust
-                                            * beastWithinDamageAdjust
-                                            * sancRetributionAuraDamageAdjust
+                                            //* beastWithinDamageAdjust
+                                            //* sancRetributionAuraDamageAdjust
                                             * blackArrowAuraDamageAdjust
                                             * noxiousStingsDamageAdjust
                                             * ferociousInspirationDamageAdjust;
 
+            // Full Bonus Damage Adjust
+            float BonusDamageAdjust = 1f + stats.BonusDamageMultiplier;
             #endregion
             #region August 2009 Bonus Crit Damage
-
-            //MortalShots
+            // MortalShots
             float mortalShotsCritDamage = 0.06f * talents.MortalShots;
-
-            //CritDamageMetaGems
-            float metaGemCritDamage = 1 + (statsItems.BonusCritMultiplier * 2);
-
-            //Marked For Death
+            // CritDamageMetaGems
+            float metaGemCritDamage = 1f + (statsItems.BonusCritMultiplier * 2);
+            // Marked For Death
             float markedForDeathCritDamage = 0.02f * talents.MarkedForDeath;
-
-            float baseCritDamage = (1 + mortalShotsCritDamage) * metaGemCritDamage; // CriticalHitDamage
-            float specialCritDamage = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage; // SpecialCritDamage
-
+            float baseCritDamage = (1f + mortalShotsCritDamage) * metaGemCritDamage; // CriticalHitDamage
+            float specialCritDamage = (1f + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage; // SpecialCritDamage
             #endregion
 
             // pet - part 2
@@ -1675,7 +1672,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float autoShotDamageAdjust = talentDamageAdjust
                                        * targetPhysicalDebuffsDamageAdjust
-                                       * ArmorDamageReduction;
+                                       * ArmorDamageReduction
+                                       * BonusDamageAdjust;
             float autoShotCritAdjust = 1f * metaGemCritDamage;
 
             float autoShotDamageReal = CalcEffectiveDamage(autoShotDamage,
@@ -1702,7 +1700,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float wildQuiverProcChance = talents.WildQuiver * 0.04f;
                 float wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
                 float wildQuiverDamageNormal = 0.8f * (rangedWeaponDamage + statsItems.WeaponDamage + damageFromRAP);
-                float wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + targetDebuffsNature);
+                float wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + targetDebuffsNature) * BonusDamageAdjust;
 
                 float wildQuiverDamageReal = CalcEffectiveDamage(
                                                 wildQuiverDamageNormal,
@@ -1732,7 +1730,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float steadyShotDamageAdjust = talentDamageAdjust
                                             * targetPhysicalDebuffsDamageAdjust
                                             * sniperTrainingDamageAdjust
-                                            * (talents.GlyphOfSteadyShot ? 1.1f : 1f);
+                                            * (talents.GlyphOfSteadyShot ? 1.1f : 1f)
+                                            * BonusDamageAdjust;
 
             // ****************************************************************************
             // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
@@ -1790,8 +1789,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs * 100%_noxious_stings
             float serpentStingDamageAdjust = focusedFireDamageAdjust
-                                                * beastWithinDamageAdjust
-                                                * sancRetributionAuraDamageAdjust
+                                                //* beastWithinDamageAdjust
+                                                //* sancRetributionAuraDamageAdjust
                                                 * blackArrowAuraDamageAdjust
                                                 * ferociousInspirationDamageAdjust
                                                 * noxiousStingsSerpentDamageAdjust
@@ -1799,7 +1798,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 * improvedTrackingDamageAdjust
                                                 * partialResistDamageAdjust
                                                 * serpentStingT9CritAdjust
-                                                * (1f + targetDebuffsNature);
+                                                * (1f + targetDebuffsNature)
+                                                * BonusDamageAdjust;
 
             // T8 2-piece bonus
             serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
@@ -1826,7 +1826,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
             float aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust;
+                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust * BonusDamageAdjust;
 
             float aimedShotDamageReal = CalcEffectiveDamage(
                                             aimedShotDamageNormal,
@@ -1862,7 +1862,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // damage_adjust = talent_adjust * tnt * fire_debuffs * sinper_training * partial_resist
             float explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust
-                                             * partialResistDamageAdjust * (1f + targetDebuffsFire);
+                                             * partialResistDamageAdjust * (1f + targetDebuffsFire) * BonusDamageAdjust;
 
             float explosiveShotDamageReal = CalcEffectiveDamage(
                                                 explosiveShotDamageNormal,
@@ -1893,7 +1893,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
             float chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust
-                                           * partialResistDamageAdjust * (1f + targetDebuffsNature);
+                                           * partialResistDamageAdjust * (1f + targetDebuffsNature) * BonusDamageAdjust;
 
             float chimeraShotDamageReal = CalcEffectiveDamage(
                                                 chimeraShotDamageNormal,
@@ -1923,8 +1923,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                   * (1f + targetDebuffsNature)
                                                   * (1f + stats.BonusHunter_T8_2P_SerpDmg)
                                                   * focusedFireDamageAdjust
-                                                  * beastWithinDamageAdjust
-                                                  * sancRetributionAuraDamageAdjust
+                                                  //* beastWithinDamageAdjust
+                                                  //* sancRetributionAuraDamageAdjust
                                                   * blackArrowAuraDamageAdjust
                                                   * ferociousInspirationArcaneDamageAdjust;
 
@@ -1956,7 +1956,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float arcaneShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
 
             float arcaneShotDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + 0.05f * talents.ImprovedArcaneShot)
-                                            * ferociousInspirationArcaneDamageAdjust * ISSArcaneShotDamageAdjust; // missing arcane_debuffs!
+                                            * ferociousInspirationArcaneDamageAdjust * ISSArcaneShotDamageAdjust * BonusDamageAdjust; // missing arcane_debuffs!
 
             float arcaneShotDamageReal = CalcEffectiveDamage(
                                             arcaneShotDamageNormal,
@@ -1974,7 +1974,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float multiShotDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage + rangedAmmoDamage
                                         + calculatedStats.BasicStats.ScopeDamage + 408f + (RAP * 0.2f);
             float multiShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * ArmorDamageReduction; // missing: pvp gloves bonus
+                                            * ArmorDamageReduction * BonusDamageAdjust; // missing: pvp gloves bonus
 
             float multiShotDamageReal = CalcEffectiveDamage(
                                             multiShotDamageNormal,
@@ -1990,15 +1990,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
             #region August 2009 Black Arrow
 
-            float blackArrowDamageNormal = 2765 + (RAP * 0.1f);
+            float blackArrowDamageNormal = 2765f + (RAP * 0.1f);
 
             // this is a long list...
-            float blackArrowDamageAdjust = partialResistDamageAdjust * focusedFireDamageAdjust * beastWithinDamageAdjust
-                                          * sancRetributionAuraDamageAdjust * noxiousStingsDamageAdjust
+            float blackArrowDamageAdjust = partialResistDamageAdjust * focusedFireDamageAdjust //* beastWithinDamageAdjust
+                                          //* sancRetributionAuraDamageAdjust
+                                          * noxiousStingsDamageAdjust
                                           * ferociousInspirationDamageAdjust * improvedTrackingDamageAdjust
                                           * rangedWeaponSpecializationDamageAdjust * markedForDeathDamageAdjust
-                                          * (sniperTrainingDamageAdjust + trapMasteryDamageAdjust + TNTDamageAdjust - 2)
-                                          * blackArrowSelfDamageAdjust * (1 + targetDebuffsShadow);
+                                          * (sniperTrainingDamageAdjust + trapMasteryDamageAdjust + TNTDamageAdjust - 2f)
+                                          * blackArrowSelfDamageAdjust * (1f + targetDebuffsShadow) * BonusDamageAdjust;
 
             float blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
 
@@ -2015,8 +2016,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
             // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
             float killShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
-            
-            float killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction;
+
+            float killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction * BonusDamageAdjust;
 
             float killShotDamageReal = CalcEffectiveDamage(
                                             killShotDamageNormal,
@@ -2032,7 +2033,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Silencing Shot
 
             float silencingShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + damageFromRAPNormalized) * 0.5f;
-            float silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction;
+            float silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction * BonusDamageAdjust;
             float silencingShotCritAdjust = 1f * metaGemCritDamage;
 
             float silencingShotDamageReal = CalcEffectiveDamage(
@@ -2047,21 +2048,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Immolation Trap
-
             float immolationTrapDamage = 1885f + (0.1f * RAP);
-            float immolationTrapDamageAdjust = (1 - targetDebuffsFire) * partialResistDamageAdjust * trapMasteryDamageAdjust
-                                              * TNTDamageAdjust * talentDamageStingAdjust;
+            float immolationTrapDamageAdjust = (1f - targetDebuffsFire) * partialResistDamageAdjust * trapMasteryDamageAdjust
+                                              * TNTDamageAdjust * talentDamageStingAdjust * BonusDamageAdjust;
             float immolationTrapProjectedDamage = immolationTrapDamage * immolationTrapDamageAdjust;
             float immolationTrapDamagePerTick = immolationTrapProjectedDamage / (talents.GlyphOfImmolationTrap ? 2.5f : 5f);
-            float immolationTrapTicks = talents.GlyphOfImmolationTrap ? 3 : 5;
+            float immolationTrapTicks = talents.GlyphOfImmolationTrap ? 3f : 5f;
 
             calculatedStats.immolationTrap.damage = immolationTrapDamagePerTick * immolationTrapTicks;
-
             #endregion
             #region August 2009 Rapid Fire
-
             calculatedStats.rapidFire.damage = 0;
-
             #endregion
             #region October 2009 Piercing Shots
             //Drizz: Added for PiercingShots
@@ -2084,18 +2081,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 double piercingShotsChimeraShotFrequency = calculatedStats.chimeraShot.freq;
                 double piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
 
-                if (piercingShotsSteadyShotFrequency > 0)
-                {
+                if (piercingShotsSteadyShotFrequency > 0) {
                     //calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
                     calculatedStats.PiercingShotsDPS += piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
                 }
-                if (piercingShotsAimedShotFrequency > 0)
-                {
+                if (piercingShotsAimedShotFrequency > 0) {
                     //calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
                     calculatedStats.PiercingShotsDPS += piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
                 }
-                if (piercingShotsChimeraShotFrequency > 0)
-                {
+                if (piercingShotsChimeraShotFrequency > 0) {
                     //calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
                     calculatedStats.PiercingShotsDPS += piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
                 }
@@ -2233,20 +2227,20 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
                 PhysicalHaste = 0.15f, // This is from what Bags used to give that got rolled into the class
             };
+            CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
+            calculatedStats.priorityRotation = new ShotPriority(calcOpts);
+            calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
+            calculatedStats.priorityRotation.priorities[1] = getShotByIndex(calcOpts.PriorityIndex2, calculatedStats);
+            calculatedStats.priorityRotation.priorities[2] = getShotByIndex(calcOpts.PriorityIndex3, calculatedStats);
+            calculatedStats.priorityRotation.priorities[3] = getShotByIndex(calcOpts.PriorityIndex4, calculatedStats);
+            calculatedStats.priorityRotation.priorities[4] = getShotByIndex(calcOpts.PriorityIndex5, calculatedStats);
+            calculatedStats.priorityRotation.priorities[5] = getShotByIndex(calcOpts.PriorityIndex6, calculatedStats);
+            calculatedStats.priorityRotation.priorities[6] = getShotByIndex(calcOpts.PriorityIndex7, calculatedStats);
+            calculatedStats.priorityRotation.priorities[7] = getShotByIndex(calcOpts.PriorityIndex8, calculatedStats);
+            calculatedStats.priorityRotation.priorities[8] = getShotByIndex(calcOpts.PriorityIndex9, calculatedStats);
+            calculatedStats.priorityRotation.priorities[9] = getShotByIndex(calcOpts.PriorityIndex10, calculatedStats);
+            calculatedStats.priorityRotation.validateShots(talents);
             {
-                CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
-                calculatedStats.priorityRotation = new ShotPriority(calcOpts);
-                calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
-                calculatedStats.priorityRotation.priorities[1] = getShotByIndex(calcOpts.PriorityIndex2, calculatedStats);
-                calculatedStats.priorityRotation.priorities[2] = getShotByIndex(calcOpts.PriorityIndex3, calculatedStats);
-                calculatedStats.priorityRotation.priorities[3] = getShotByIndex(calcOpts.PriorityIndex4, calculatedStats);
-                calculatedStats.priorityRotation.priorities[4] = getShotByIndex(calcOpts.PriorityIndex5, calculatedStats);
-                calculatedStats.priorityRotation.priorities[5] = getShotByIndex(calcOpts.PriorityIndex6, calculatedStats);
-                calculatedStats.priorityRotation.priorities[6] = getShotByIndex(calcOpts.PriorityIndex7, calculatedStats);
-                calculatedStats.priorityRotation.priorities[7] = getShotByIndex(calcOpts.PriorityIndex8, calculatedStats);
-                calculatedStats.priorityRotation.priorities[8] = getShotByIndex(calcOpts.PriorityIndex9, calculatedStats);
-                calculatedStats.priorityRotation.priorities[9] = getShotByIndex(calcOpts.PriorityIndex10, calculatedStats);
-                calculatedStats.priorityRotation.validateShots(talents);
                 if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
                     statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                         new Stats() { PhysicalHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
@@ -2269,6 +2263,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 BaseArmorMultiplier = (talents.ThickHide / 3f) * 0.10f,
                 PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
                 BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
+                BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
             };
             if (talents.MasterTactician > 0) {
                 SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
@@ -2301,6 +2296,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     20f, 40f);
                 statsTalents.AddSpecialEffect(FuriousHowl);
             }
+            if (calcOpts.PetFamily != PetFamily.None
+                && calculatedStats.priorityRotation.containsShot(Shots.BeastialWrath)
+                && talents.BestialWrath > 0)
+            {
+                float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
+                float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
+                float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
+                SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusPetDamageMultiplier = 0.50f, BonusDamageMultiplier = val1, ManaCostPerc = val2 },
+                    10f, cooldown);
+                Stats stats = WrathBeastWithin.GetAverageStats();
+                statsTalents.AddSpecialEffect(WrathBeastWithin);
+            }
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
@@ -2308,8 +2316,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Stamina
             float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-            float staBase = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
-            float staBonus = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
+            float staBase    = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
+            float staBonus   = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
             statsTotal.Stamina = staBase + staBonus;
 
             // Health

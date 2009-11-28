@@ -154,8 +154,8 @@ namespace Rawr.DPSWarr {
             WhiteAtks.Slam_Freq = SL.numActivates;
             SD_ability.FreeRage = SD_ability.RageCost;
             EX_ability.FreeRage = EX_ability.RageCost;
-            float oldHSActivates = 0f, RageForHS = 0f, numHSOverDur = 0f, newHSActivates = HS.numActivates = WhiteAtks.HSOverridesOverDur = 0f;
-            float oldCLActivates = 0f, RageForCL = 0f, numCLOverDur = 0f, newCLActivates = CL.numActivates = WhiteAtks.CLOverridesOverDur = 0f;
+            float oldHSActivates = 0f, RageForHS = 0f, newHSActivates = HS.numActivates = WhiteAtks.HSOverridesOverDur = 0f;
+            float oldCLActivates = 0f, RageForCL = 0f, newCLActivates = CL.numActivates = WhiteAtks.CLOverridesOverDur = 0f;
             float origAvailRage = preloopAvailRage * (1f - percTimeUnder20);
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok = CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
@@ -218,7 +218,7 @@ namespace Rawr.DPSWarr {
 
                 float acts;
                 float Abil_GCDs;
-                float RDspace, BLSspace, MSspace, TFBspace, OPspace, SDspace, EXspace, SLspace;
+                float RDspace, BLSspace, MSspace, TFBspace, OPspace, SDspace, /*EXspace,*/ SLspace;
                 // ==== Primary Ability Priorities ====
                 // Rend
                 if (RD.ability.Validated) {

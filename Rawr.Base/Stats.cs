@@ -467,6 +467,7 @@ namespace Rawr {
         BonusPetDamageMultiplier,
         BonusHunter_T7_4P_ViperSpeed,
         BonusHunter_T8_2P_SerpDmg,
+        ManaCostPerc,
         #endregion
         #region Added by Rawr.Warlock
         WarlockSpellstoneDotDamageMultiplier,
@@ -1175,6 +1176,19 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier] = value; }
         }
         #endregion
+
+        /// <summary>
+        /// -50% = Abilities cost 50% less than they normally would. An Ability with a Mana Cost of "10% of base mana" would become 5%.
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% of Base Ability Mana Cost")]
+        public float ManaCostPerc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.ManaCostPerc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.ManaCostPerc] = value; }
+        }
 
         #region Combat Values
         [System.ComponentModel.DefaultValueAttribute(0f)]

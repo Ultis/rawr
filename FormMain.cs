@@ -1210,6 +1210,8 @@ namespace Rawr
                 {
                     checkBoxHandsBlacksmithingSocket.Enabled = false;
                     checkBoxWristBlacksmithingSocket.Enabled = false;
+                    checkBoxHandsBlacksmithingSocket.Checked = false;
+                    checkBoxWristBlacksmithingSocket.Checked = false;
                 }
                 // any other profession checks go here
             }
