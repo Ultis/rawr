@@ -14,6 +14,7 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
+        public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -280,6 +281,11 @@ namespace Rawr.DPSDK
             float KMProcsPerRotation = 0f;
             float CinderglacierMultiplier = 1f;
 
+    /*        if (additionalItem == null || additionalItem.Name != "bananas")
+            {
+                Rotation r = GenerateRotation(character, stats, talents, combatTable, calcOpts);
+            }*/
+
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
 
@@ -309,6 +315,61 @@ namespace Rawr.DPSDK
 
             calcOpts.rotation.AvgDiseaseMult = calcOpts.rotation.NumDisease * (calcOpts.rotation.DiseaseUptime / 100);
             float commandMult = 0f;
+
+            double FightMilliseconds = calcOpts.FightLength * 60 * 1000;
+            double currentTime = 0d;
+            
+            // talent-related buffs and debuffs: 100% proc chance or pre-calculated availability
+            // Killing Machine
+            // Desolation
+            // Rage of Rivendare
+            // Glacial Rot
+            // etc
+   /*         bool FrostFever;
+            bool BloodPlague;
+            double HP;
+
+            bool melee = true;
+            bool ranged = false;
+
+            double totalDamage = 0d;
+            double meleeGCD = 1500d;
+            double spellGCD = 1500d;
+            LinkedList<RuneAbility> Priority = new LinkedList<RuneAbility>();
+            
+            while (currentTime < FightMilliseconds)
+            {
+                if (melee)
+                {
+                    //do melee priority
+                    for (int i = 0; i < Priority.Count; i++)
+                    {
+                        if (Priority.First.Value.IsNeeded)
+                        {
+                            if (Priority.First.Value.Name.Equals("Plague Strike"))
+                            {
+                                BloodPlague = true;
+                            }
+                            else if (Priority.First.Value.Name.Equals("Icy Touch"))
+                            {
+                                FrostFever = true;
+                            }
+                            Priority.First.Value.DamageMod = getDamageMods(Priority.First.Value.Name, FrostFever, BloodPlague, HP);
+                            totalDamage += Priority.First.Value.Damage;
+                            i = Priority.Count + 10;
+                        }
+                        else
+                        {
+                            Priority.RemoveFirst();
+                        }
+                    }
+                }
+                else if (ranged)
+                {
+                     //   do ranged priority
+                }
+
+            } */
 
             {
 
@@ -1414,6 +1475,142 @@ namespace Rawr.DPSDK
             }
 
             return calcs;
+        }
+
+        public Rotation GenerateRotation(Character character, Stats stats, DeathKnightTalents talents, CombatTable combatTable, CalculationOptionsDPSDK calcOpts)
+        {
+            Rotation rotation = new Rotation();
+
+    /*        #region RuneAbility definitions
+            RuneAbility bloodStrike = new BloodStrike(character, stats, calcOpts, combatTable, talents);
+            RuneAbility bloodBoil = new BloodBoil(character, stats, calcOpts, combatTable, talents);
+            RuneAbility heartStrike = new HeartStrike(character, stats, calcOpts, combatTable, talents);
+
+            RuneAbility deathStrike = new DeathStrike(character, stats, calcOpts, combatTable, talents);
+            RuneAbility obliterate = new Obliterate(character, stats, calcOpts, combatTable, talents);
+            RuneAbility scourgeStrike = new ScourgeStrike(character, stats, calcOpts, combatTable, talents);
+            RuneAbility howlingBlast = new HowlingBlast(character, stats, calcOpts, combatTable, talents);
+
+            RuneAbility icyTouch = new IcyTouch(character, stats, calcOpts, combatTable, talents);
+            RuneAbility plagueStrike = new PlagueStrike(character, stats, calcOpts, combatTable, talents);
+
+            RuneAbility deathCoil = new DeathCoil(character, stats, calcOpts, combatTable, talents);
+            RuneAbility frostStrike = new FrostStrike(character, stats, calcOpts, combatTable, talents);
+
+            RuneAbility bloodPlague = new Disease(character, stats, calcOpts, combatTable, talents);
+            bloodPlague.Name = "Blood Plague";
+            RuneAbility frostFever = new Disease(character, stats, calcOpts, combatTable, talents);
+            frostFever.Name = "Frost Fever";
+            #endregion
+
+            #region damage mods
+            bloodStrike.DamageMod = 1d *
+                (1d + talents.BloodGorged * .02d) *
+                (1d + talents.BloodOfTheNorth * .1d / 3d) *
+                (1d + talents.BloodyStrikes * .05d) *
+                (1d + talents.BloodyVengeance * .03d) *
+                (1d + talents.BoneShield * .02d) *
+                (1d + talents.Desolation * .01d) *
+                (1d + talents.Hysteria * .2d / 6d) *
+                (1d + talents.RageOfRivendare * .02d) *
+                (1d + talents.TundraStalker * .03d) *
+                (1d + (combatTable.DW ? 0d : talents.TwoHandedWeaponSpecialization * .02d)) *
+                combatTable.physicalMitigation;
+
+            bloodBoil.DamageMod = 1d *
+                (1d + talents.BloodGorged * .02d) *
+                (1d + talents.BlackIce * .02d) *
+                (1d + talents.BloodyStrikes * .1d) *
+                (1d + talents.BoneShield * .02d) *
+                (1d + talents.Desolation * .01d) *
+                (1d + talents.RageOfRivendare * .02d) *
+                (1d + talents.TundraStalker * .03d) *
+                (1d - combatTable.spellResist) *    //some BBs will miss in an AOE situation.
+                (1d + stats.BonusSpellPowerMultiplier) *
+                .94;                                // ~6% average resist
+
+            heartStrike.DamageMod = 1d *
+                (1d + talents.BloodGorged * .02d) *
+                (1d + talents.BloodOfTheNorth * .1d / 3d) *
+                (1d + talents.BloodyStrikes * .05d) *
+                (1d + talents.BloodyVengeance * .03d) *
+                (1d + talents.BoneShield * .02d) *
+                (1d + talents.Desolation * .01d) *
+                (1d + talents.Hysteria * .2d / 6d) *
+                (1d + talents.RageOfRivendare * .02d) *
+                (1d + talents.TundraStalker * .03d) *
+                (1d + (combatTable.DW ? 0d : talents.TwoHandedWeaponSpecialization * .02d)) *
+                combatTable.physicalMitigation;
+            #endregion
+            */
+            LinkedList<RotationGene> GeneList = new LinkedList<RotationGene>();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                GeneList.AddLast(new RotationGene(2, 2, 2, talents));
+                hawut++;
+            }
+
+            RotationGene first, second, third;
+            float firstPoints, secondPoints, thirdPoints;
+            while (GeneList.Count > 1)
+            {
+                first = GeneList.First.Value;
+                GeneList.RemoveFirst();
+                second = GeneList.First.Value;
+                GeneList.RemoveFirst();
+                third = GeneList.First.Value;
+                GeneList.RemoveFirst();
+                ((CalculationOptionsDPSDK)character.CalculationOptions).rotation = first.Rotation;
+                firstPoints = GetCharacterCalculations(character, new Item() { Name = "bananas" }).OverallPoints;
+                ((CalculationOptionsDPSDK)character.CalculationOptions).rotation = second.Rotation;
+                secondPoints = GetCharacterCalculations(character, new Item() { Name = "bananas" }).OverallPoints;
+                ((CalculationOptionsDPSDK)character.CalculationOptions).rotation = third.Rotation;
+                thirdPoints = GetCharacterCalculations(character, new Item() { Name = "bananas" }).OverallPoints;
+                if (firstPoints < secondPoints && firstPoints < thirdPoints)
+                {
+                    GeneList.AddLast(new RotationGene(second, third));
+                    if (secondPoints > thirdPoints)
+                    {
+                        second.MutateGene();
+                        GeneList.AddLast(second);
+                    }
+                    else
+                    {
+                        third.MutateGene();
+                        GeneList.AddLast(third);
+                    }
+                }
+                else if (secondPoints < firstPoints && secondPoints < thirdPoints)
+                {
+                    GeneList.AddLast(new RotationGene(first, third));
+                    if (firstPoints > thirdPoints)
+                    {
+                        first.MutateGene();
+                        GeneList.AddLast(first);
+                    }
+                    else
+                    {
+                        third.MutateGene();
+                        GeneList.AddLast(third);
+                    }
+                }
+                else
+                {
+                    GeneList.AddLast(new RotationGene(first, second));
+                    if (firstPoints > secondPoints)
+                    {
+                        first.MutateGene();
+                        GeneList.AddLast(first);
+                    }
+                    else
+                    {
+                        second.MutateGene();
+                        GeneList.AddLast(second);
+                    }
+                }
+            }
+            return rotation;
         }
 
         private Stats GetRaceStats(Character character) {

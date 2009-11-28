@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.DPSDK
 {
-    class CombatTable
+    public class CombatTable
     {
         public Character character;
         public CharacterCalculationsDPSDK calcs;
@@ -22,7 +22,7 @@ namespace Rawr.DPSDK
             spellCrits, spellResist, 
             totalMHMiss, totalOHMiss,
             realDuration, totalMeleeAbilities,
-        totalSpellAbilities, normalizationFactor;
+        totalSpellAbilities, normalizationFactor, physicalMitigation;
 
         public Item additionalItem;
 
@@ -72,6 +72,14 @@ namespace Rawr.DPSDK
                 // 24.0% glancing (75% hit-dmg)
                 // xx.x% crit
                 // remaining = hit
+
+                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+
+                physicalMitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+
+                calcs.EnemyMitigation = 1f - physicalMitigation;
+                calcs.EffectiveArmor = physicalMitigation;
 
                 // Crit: Base .65%
                 physCrits = .0065f;

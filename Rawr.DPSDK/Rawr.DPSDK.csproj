@@ -87,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ability.cs" />
     <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="CalculationOptionsPanelDPSDK.cs">
       <SubType>UserControl</SubType>
@@ -138,6 +139,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Rotation.cs" />
+    <Compile Include="RotationGene.cs" />
     <Compile Include="RotationViewer.cs">
       <SubType>Form</SubType>
     </Compile>

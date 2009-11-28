@@ -22,7 +22,7 @@ namespace Rawr.DPSDK
 
 		public enum Presence
 		{
-			Blood, Unholy
+			Blood, Unholy, Frost
 		}
 		
 		private float _GhoulUptime = 1f;

@@ -10,23 +10,10 @@ namespace Rawr.DPSDK
 {
     public partial class CalculationOptionsPanelDPSDK : CalculationOptionsPanelBase
     {
-        private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
 
         public CalculationOptionsPanelDPSDK()
         {
             InitializeComponent();
-            armorBosses.Add(3800, "Shade of Aran");
-            armorBosses.Add(4700, "Roar");
-            armorBosses.Add(5500, "Netherspite");
-            armorBosses.Add(6100, "Julianne, Curator");
-            armorBosses.Add(6200, "Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
-            armorBosses.Add(6700, "Maiden, Illhoof");
-            armorBosses.Add(7300, "Strawman");
-            armorBosses.Add(7500, "Attumen");
-            armorBosses.Add(7600, "Romulo, Nightbane, Malchezaar, Doomwalker");
-            armorBosses.Add(7700, "Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
-            armorBosses.Add(8200, "Midnight");
-            armorBosses.Add(8800, "Void Reaver");
         }
         protected override void LoadCalculationOptions()
         {

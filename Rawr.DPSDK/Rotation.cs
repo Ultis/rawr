@@ -25,6 +25,7 @@ namespace Rawr.DPSDK
                 _presenceByIndex = value;
                 if (_presenceByIndex == 0) presence = CalculationOptionsDPSDK.Presence.Blood;
                 if (_presenceByIndex == 1) presence = CalculationOptionsDPSDK.Presence.Unholy;
+                if (_presenceByIndex == 2) presence = CalculationOptionsDPSDK.Presence.Frost;
             }
         }
         private float _curRotationDuration = 0f;  // rotation duration in seconds
@@ -140,6 +141,13 @@ namespace Rawr.DPSDK
         {
             get { return _bloodStrike; }
             set { _bloodStrike = value; }
+        }
+        private float _bloodBoil = 0f;
+
+        public float BloodBoil
+        {
+            get { return _bloodBoil; }
+            set { _bloodBoil = value; }
         }
         private float _heartStrike = 0f;
 

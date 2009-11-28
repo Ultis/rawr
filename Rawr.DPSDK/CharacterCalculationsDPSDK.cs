@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.DPSDK
 {
-    class CharacterCalculationsDPSDK : CharacterCalculationsBase
+    public class CharacterCalculationsDPSDK : CharacterCalculationsBase
     {
         private float _overallPoints = 0f;
         public override float OverallPoints
