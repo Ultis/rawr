@@ -342,7 +342,7 @@ namespace Rawr
 
         private static void ApplyRacialandProfessionBuffs(XmlDocument doc, Character character)
         {
-            if (character.Race == CharacterRace.Draenei)
+            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
                 character.ActiveBuffsAdd(("Heroic Presence"));
 
             foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))

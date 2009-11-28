@@ -1192,6 +1192,8 @@ namespace Rawr
 		{
 			try
 			{
+                if (cacheChar != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !CheckHasProf(buff.Professions))
+                    return false;
 				return HasRelevantStats(buff.GetTotalStats());
 			}
 			catch (Exception)
@@ -1209,6 +1211,16 @@ namespace Rawr
             if (cacheChar.PrimaryProfession   == p) { return true;  }
             if (cacheChar.SecondaryProfession == p) { return true;  }
 
+            return false;
+        }
+
+        private bool CheckHasProf(List<Profession> list)
+        {
+            foreach (Profession p in list)
+            {
+                if (CheckHasProf(p))
+                    return true;
+            }
             return false;
         }
 

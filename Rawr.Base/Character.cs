@@ -322,6 +322,7 @@ namespace Rawr //O O . .
                 {
                     _race = value;
                     SetFaction();
+                    OnRaceChanged();
                     OnCalculationsInvalidated();
                 }
             }
@@ -592,8 +593,11 @@ namespace Rawr //O O . .
             get { return _primaryProfession; }
             set
             {
-                _primaryProfession = value;
-                Calculations.UpdateProfessions(this);
+                if (_primaryProfession != value)
+                {
+                    _primaryProfession = value;
+                    Calculations.UpdateProfessions(this);
+                }
             }
         }
         private Profession _secondaryProfession = Profession.None;
@@ -602,8 +606,11 @@ namespace Rawr //O O . .
             get { return _secondaryProfession; }
             set
             {
-                _secondaryProfession = value;
-                Calculations.UpdateProfessions(this);
+                if (_secondaryProfession != value)
+                {
+                    _secondaryProfession = value;
+                    Calculations.UpdateProfessions(this);
+                }
             }
         }
 
@@ -612,6 +619,40 @@ namespace Rawr //O O . .
             if (PrimaryProfession == p) { return true; }
             if (SecondaryProfession == p) { return true; }
             return false;
+        }
+
+        public bool HasProfession(List<Profession> list)
+        {
+            foreach (Profession p in list)
+            {
+                if (HasProfession(p))
+                    return true;
+            }
+            return false;
+        }
+
+        public static event EventHandler RaceChanged;
+        protected static void OnRaceChanged()
+        {
+            if (RaceChanged != null)
+                RaceChanged(null, EventArgs.Empty);
+        }
+
+        private void SetFaction()
+        {
+            if (_race == CharacterRace.Draenei || _race == CharacterRace.Dwarf || _race == CharacterRace.Gnome || _race == CharacterRace.Human || _race == CharacterRace.NightElf)
+                _faction = CharacterFaction.Alliance;
+            else
+                _faction = CharacterFaction.Horde;
+            SetDraeneiHitBuff();
+        }
+
+        private void SetDraeneiHitBuff()
+        {
+            if (_race == CharacterRace.Draenei && !ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+                ActiveBuffsAdd(("Heroic Presence"));
+            else if (Faction == CharacterFaction.Horde)
+                ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
         }
 
         [XmlIgnore]
@@ -1665,14 +1706,6 @@ namespace Rawr //O O . .
             return cslot;
         }
 
-        private void SetFaction()
-        {
-            if (_race == CharacterRace.Draenei || _race == CharacterRace.Dwarf || _race == CharacterRace.Gnome || _race == CharacterRace.Human || _race == CharacterRace.NightElf)
-                _faction = CharacterFaction.Alliance;
-            else
-                _faction = CharacterFaction.Horde;
-        }
-
         public Character() { }
 
 		public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
@@ -1713,6 +1746,7 @@ namespace Rawr //O O . .
 
             WaistBlacksmithingSocketEnabled = true;
             SetFaction();
+            OnRaceChanged();
             IsLoading = false;
             RecalculateSetBonuses();
 
@@ -1758,6 +1792,7 @@ namespace Rawr //O O . .
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
             SetFaction();
+            OnRaceChanged();
             IsLoading = false;
             RecalculateSetBonuses();
             //BossOptions = boss;

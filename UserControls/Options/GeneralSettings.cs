@@ -110,6 +110,7 @@ namespace Rawr.UserControls.Options
             if (!_locale.Equals("en"))
                 System.Windows.Forms.MessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.OK);
             OnDisplayBuffChanged();
+            OnHideProfessionsChanged();
             SpecialEffect.UpdateCalculationMode();
             //ItemCache.OnItemsChanged();
             FormMain.Instance.Character.OnCalculationsInvalidated();
@@ -212,6 +213,13 @@ namespace Rawr.UserControls.Options
         {
             if (DisplayBuffChanged != null)
                 DisplayBuffChanged(null, EventArgs.Empty);
+        }
+       
+        public static event EventHandler HideProfessionsChanged;
+        protected static void OnHideProfessionsChanged()
+        {
+            if (HideProfessionsChanged != null)
+                HideProfessionsChanged(null, EventArgs.Empty);
         }
     }
 }

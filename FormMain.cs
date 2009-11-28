@@ -115,7 +115,7 @@ namespace Rawr
 
             asyncCalculationStart = new AsynchronousDisplayCalculationDelegate(AsyncCalculationStart);
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
-
+                
 			LoadModel(ConfigModel);
 			InitializeComponent();
             _defaultColor = itemButtonHead.BackColor;
@@ -281,8 +281,8 @@ namespace Rawr
                     //    _itemComparison.Hide();
                     //    _itemComparison.Dispose();
                     //}
-                    UpdateProfessions();
 					_loadingCharacter = false;
+                    UpdateProfessionControls();
                     _character.IsLoading = false;
 					//_character.OnCalculationsInvalidated(); nothing actually changed on the character, we just need calculations
                     _character_ItemsChanged(_character, EventArgs.Empty); // this way it won't cause extra invalidations for other listeners of the event
@@ -1128,19 +1128,11 @@ namespace Rawr
 			//}   //...Fire!
 		}
 
-        public static event EventHandler RaceChanged;
-        protected static void OnRaceChanged()
-        {
-            if (RaceChanged != null)
-                RaceChanged(null, EventArgs.Empty);
-        }
-
 		private void comboBoxRace_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter)
 			{
 				Character.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), comboBoxRace.Text);
-                SetDraeneiHitBuff();
 				Character.OnCalculationsInvalidated();
 			}
 		}
@@ -1178,7 +1170,7 @@ namespace Rawr
             {
                 Character.PrimaryProfession = Profs.StringToProfession(comboBoxProfession1.Text);
                 Character.OnCalculationsInvalidated();
-                UpdateProfessions();
+                UpdateProfessionControls();
                 _unsavedChanges = true;
             }
         }
@@ -1189,7 +1181,7 @@ namespace Rawr
             {
                 Character.SecondaryProfession = Profs.StringToProfession(comboBoxProfession2.Text);
                 Character.OnCalculationsInvalidated();
-                UpdateProfessions();
+                UpdateProfessionControls();
                 _unsavedChanges = true;
             }
         }
@@ -1199,21 +1191,25 @@ namespace Rawr
         /// eg: whether to allow or disallow Blacksmithing sockets 
         /// only acts if global option to hide professions is enabled
         /// </summary>
-        private void UpdateProfessions()
+        private void UpdateProfessionControls()
         {
             // set defaults
-            checkBoxHandsBlacksmithingSocket.Enabled = true;
-            checkBoxWristBlacksmithingSocket.Enabled = true;
-            if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants)
+            if (!_loadingCharacter)
             {
-                if (!Character.HasProfession(Profession.Blacksmithing))
+                checkBoxHandsBlacksmithingSocket.Enabled = true;
+                checkBoxWristBlacksmithingSocket.Enabled = true;
+                if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants)
                 {
-                    checkBoxHandsBlacksmithingSocket.Enabled = false;
-                    checkBoxWristBlacksmithingSocket.Enabled = false;
-                    checkBoxHandsBlacksmithingSocket.Checked = false;
-                    checkBoxWristBlacksmithingSocket.Checked = false;
+                    if (!Character.HasProfession(Profession.Blacksmithing))
+                    {
+                        checkBoxHandsBlacksmithingSocket.Enabled = false;
+                        checkBoxWristBlacksmithingSocket.Enabled = false;
+                        checkBoxHandsBlacksmithingSocket.Checked = false;
+                        checkBoxWristBlacksmithingSocket.Checked = false;
+                    }
+                    // any other profession checks go here
+                    buffSelector1.RebuildControls();
                 }
-                // any other profession checks go here
             }
         }
         
@@ -1481,18 +1477,6 @@ namespace Rawr
         public bool IsUsingPTR()
         {
             return usePTRDataToolStripMenuItem.Checked;
-        }
-
-        private void SetDraeneiHitBuff()
-        {
-            // TODO this is prone for exceptions and the way it is called is completely inappropriate
-            // should rework this completely
-            if (Character.Race == CharacterRace.Draenei
-                && !Character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-                Character.ActiveBuffsAdd(("Heroic Presence"));
-            else if (Character.Faction == CharacterFaction.Horde)
-                Character.ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
-            OnRaceChanged();
         }
 
         private void StartProcessing()

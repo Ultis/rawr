@@ -21,7 +21,8 @@ namespace Rawr
 				BuildControls();
 				Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
                 Rawr.UserControls.Options.GeneralSettings.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
-                FormMain.RaceChanged += new EventHandler(Character_RaceChanged);
+                Rawr.UserControls.Options.GeneralSettings.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
+                Character.RaceChanged += new EventHandler(Character_RaceChanged);
                 ScrollHook.hookRec(this);
 			}
 		}
@@ -62,6 +63,13 @@ namespace Rawr
             ScrollHook.hookRec(this);
         }
 
+        public void RebuildControls()
+        {
+            BuildControls();
+            LoadBuffsFromCharacter();
+            ScrollHook.hookRec(this);
+        }
+
         void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
         {
             foreach (CheckBox checkbox in CheckBoxes.Values)
@@ -72,6 +80,13 @@ namespace Rawr
                 else
                     checkbox.Text = buff.Name;
             }
+            ScrollHook.hookRec(this);
+        }
+
+        void GeneralSettings_HideProfessionsChanged(object sender, EventArgs e)
+        {
+            BuildControls();
+            LoadBuffsFromCharacter();
             ScrollHook.hookRec(this);
         }
 
@@ -146,22 +161,25 @@ namespace Rawr
                 
 				foreach (Buff improvement in buff.Improvements)
 				{
-					ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
-					checkBoxImprovement.Tag = improvement;
-                    if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && improvement.Source != null)
-                        checkBoxImprovement.Text = improvement.Name + " (" + improvement.Source + ")";
-                    else
-                        checkBoxImprovement.Text = improvement.Name;
-                    checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
-						checkBoxImprovement.Padding.Top, checkBoxImprovement.Padding.Right, checkBoxImprovement.Padding.Bottom);
-					checkBoxImprovement.AutoSize = true;
-					checkBoxImprovement.Font = this.Font;
-					checkBoxImprovement.Dock = DockStyle.Top;
-					checkBoxImprovement.ToolTipText = improvement.Stats.ToString();
-					checkBoxImprovement.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
-					GroupBoxes[buff.Group].Controls.Add(checkBoxImprovement);
-					checkBoxImprovement.BringToFront();
-					CheckBoxes.Add(improvement, checkBoxImprovement);
+                    if (Character == null || !Rawr.Properties.GeneralSettings.Default.HideProfEnchants || Character.HasProfession(improvement.Professions))
+                    {
+                        ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
+                        checkBoxImprovement.Tag = improvement;
+                        if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && improvement.Source != null)
+                            checkBoxImprovement.Text = improvement.Name + " (" + improvement.Source + ")";
+                        else
+                            checkBoxImprovement.Text = improvement.Name;
+                        checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
+                            checkBoxImprovement.Padding.Top, checkBoxImprovement.Padding.Right, checkBoxImprovement.Padding.Bottom);
+                        checkBoxImprovement.AutoSize = true;
+                        checkBoxImprovement.Font = this.Font;
+                        checkBoxImprovement.Dock = DockStyle.Top;
+                        checkBoxImprovement.ToolTipText = improvement.Stats.ToString();
+                        checkBoxImprovement.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
+                        GroupBoxes[buff.Group].Controls.Add(checkBoxImprovement);
+                        checkBoxImprovement.BringToFront();
+                        CheckBoxes.Add(improvement, checkBoxImprovement);
+                    }
 				}
 			}
 
