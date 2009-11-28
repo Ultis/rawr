@@ -54,6 +54,10 @@ namespace Rawr.Hunter
             float GCD = 1.5f;
             float BA = calculatedStats.blackArrow.duration;
             float it = calculatedStats.immolationTrap.duration;
+            float et = calculatedStats.explosiveTrap.duration;
+            float ft = calculatedStats.freezingTrap.duration;
+            float frt = calculatedStats.frostTrap.duration;
+            float vly = calculatedStats.volley.duration;
             float LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * options.LALProcChance : -1;
             bool RandomProcs = options.randomizeProcs;
             int ISSfix = 0;
@@ -539,16 +543,37 @@ namespace Rawr.Hunter
 
 
                     // Set L&L Timer after Black Arrow/Immolation Trap was used
-                    if (thisShot == Shots.BlackArrow || thisShot == Shots.ImmolationTrap)
+                    if (thisShot == Shots.BlackArrow
+                        || thisShot == Shots.ImmolationTrap
+                        || thisShot == Shots.ExplosiveTrap
+                        || thisShot == Shots.FreezingTrap
+                        || thisShot == Shots.FrostTrap
+                        || thisShot == Shots.Volley)
                     {
 
                         if (thisShot == Shots.BlackArrow)
                         {
                             LALTimer = currentTime + BA;
                         }
-                        else
+                        else if (thisShot == Shots.ImmolationTrap)
                         {
                             LALTimer = currentTime + it;
+                        }
+                        else if (thisShot == Shots.ExplosiveTrap)
+                        {
+                            LALTimer = currentTime + et;
+                        }
+                        else if (thisShot == Shots.FreezingTrap)
+                        {
+                            LALTimer = currentTime + ft;
+                        }
+                        else if (thisShot == Shots.FrostTrap)
+                        {
+                            LALTimer = currentTime + frt;
+                        }
+                        else //if (thisShot == Shots.Volley)
+                        {
+                            LALTimer = currentTime + vly;
                         }
 
                         LALType = thisShot;

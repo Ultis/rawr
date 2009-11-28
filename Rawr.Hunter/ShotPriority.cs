@@ -51,6 +51,10 @@ namespace Rawr.Hunter {
                 if (priorities[i] != null && (priorities[i].type == Shots.MultiShot && used_aimed_multi)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
                 if (priorities[i] != null && (priorities[i].type == Shots.BlackArrow && used_black_immo)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
                 if (priorities[i] != null && (priorities[i].type == Shots.ImmolationTrap && used_black_immo)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
+                if (priorities[i] != null && (priorities[i].type == Shots.ExplosiveTrap && used_black_immo)) { priorities[i].cooldownUsed = true; priorities[i] = null; }
+                if (priorities[i] != null && (priorities[i].type == Shots.FreezingTrap && used_black_immo)) { priorities[i].cooldownUsed = true; priorities[i] = null; }
+                if (priorities[i] != null && (priorities[i].type == Shots.FrostTrap && used_black_immo)) { priorities[i].cooldownUsed = true; priorities[i] = null; }
+                if (priorities[i] != null && (priorities[i].type == Shots.Volley && used_black_immo)) { priorities[i].cooldownUsed = true; priorities[i] = null; }
 
                 // shots which require talents
                 if (priorities[i] != null && priorities[i].type == Shots.BlackArrow && hunterTalents.BlackArrow == 0){ priorities[i].lackTalent = true; priorities[i] = null; }
@@ -71,6 +75,10 @@ namespace Rawr.Hunter {
                     if (priorities[i].type == Shots.MultiShot) used_aimed_multi = true;
                     if (priorities[i].type == Shots.BlackArrow) used_black_immo = true;
                     if (priorities[i].type == Shots.ImmolationTrap) used_black_immo = true;
+                    if (priorities[i].type == Shots.ExplosiveTrap) used_black_immo = true;
+                    if (priorities[i].type == Shots.FreezingTrap) used_black_immo = true;
+                    if (priorities[i].type == Shots.FrostTrap) used_black_immo = true;
+                    if (priorities[i].type == Shots.Volley) used_black_immo = true;
                 }
             }    
    
@@ -204,6 +212,10 @@ namespace Rawr.Hunter {
             ShotData proc_shot = null;
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.BlackArrow);
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.ImmolationTrap);
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.ExplosiveTrap);
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.FreezingTrap);
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.FrostTrap);
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.Volley);
 
             if (proc_shot != null)
             {
@@ -411,21 +423,14 @@ namespace Rawr.Hunter {
             // time used
             switch (type)
             {
-                case Shots.None:
-                    time_used = 0f;
-                    break;
-
-                case Shots.ImmolationTrap:
-                    time_used = Priority.options.gcdsToLayImmoTrap * GCD;
-                    break;
-
-                case Shots.SteadyShot:
-                    time_used = cooldown < GCD ? GCD : cooldown;
-                    break;
-
-                default:
-                    time_used = gcd ? GCD : 0f;
-                    break;
+                case Shots.None:           { time_used = 0f;                                        break; }
+                case Shots.ImmolationTrap: { time_used = Priority.options.gcdsToLayImmoTrap  * GCD; break; }
+                case Shots.ExplosiveTrap:  { time_used = Priority.options.gcdsToLayExploTrap * GCD; break; }
+                case Shots.FreezingTrap:   { time_used = Priority.options.gcdsToLayExploTrap * GCD; break; }
+                case Shots.FrostTrap:      { time_used = Priority.options.gcdsToLayExploTrap * GCD; break; }
+                case Shots.Volley:         { time_used = Priority.options.gcdsToVolley       * GCD; break; }
+                case Shots.SteadyShot:     { time_used = cooldown < GCD ? GCD : cooldown;           break; }
+                default:                   { time_used = gcd ? GCD : 0f;                            break; }
             }
 
             if (type != Shots.None)

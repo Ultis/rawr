@@ -156,6 +156,10 @@ namespace Rawr.Hunter
         public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot, true, true);        
         public ShotData blackArrow = new ShotData(Shots.BlackArrow, false, true);
         public ShotData immolationTrap = new ShotData(Shots.ImmolationTrap, false, true);
+        public ShotData explosiveTrap = new ShotData(Shots.ExplosiveTrap, false, true);
+        public ShotData freezingTrap = new ShotData(Shots.FreezingTrap, false, true);
+        public ShotData frostTrap = new ShotData(Shots.FrostTrap, false, true);
+        public ShotData volley = new ShotData(Shots.Volley, false, true);
         public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, false, false);
         public ShotData readiness = new ShotData(Shots.Readiness, false, true);
@@ -421,6 +425,10 @@ namespace Rawr.Hunter
             dictValues.Add("Explosive Shot", explosiveShot.formatTooltip());
             dictValues.Add("Black Arrow", blackArrow.formatTooltip());
             dictValues.Add("Immolation Trap", immolationTrap.formatTooltip());
+            dictValues.Add("Explosive Trap", explosiveTrap.formatTooltip());
+            dictValues.Add("Freezing Trap", freezingTrap.formatTooltip());
+            dictValues.Add("Frost Trap", frostTrap.formatTooltip());
+            dictValues.Add("Volley", volley.formatTooltip());
             dictValues.Add("Chimera Shot", chimeraShot.formatTooltip());
             dictValues.Add("Rapid Fire", rapidFire.formatTooltip());
             dictValues.Add("Readiness", readiness.formatTooltip());

@@ -66,6 +66,10 @@ namespace Rawr.Hunter
             cb.Items.Add("Explosive Shot");
             cb.Items.Add("Black Arrow");
             cb.Items.Add("Immolation Trap");
+            cb.Items.Add("Explosive Trap");
+            cb.Items.Add("Freezing Trap");
+            cb.Items.Add("Frost Trap");
+            cb.Items.Add("Volley");
             cb.Items.Add("Chimera Shot");
             cb.Items.Add("Rapid Fire");
             cb.Items.Add("Readiness");
@@ -149,7 +153,6 @@ namespace Rawr.Hunter
             CB_PetPrio_05.SelectedItem = CalcOpts.PetPriority5;
             CB_PetPrio_06.SelectedItem = CalcOpts.PetPriority6;
             CB_PetPrio_07.SelectedItem = CalcOpts.PetPriority7;
-
 
             // Cunning
             initTalentValues(CB_CunningCorbaReflexes, 2);
@@ -547,59 +550,52 @@ namespace Rawr.Hunter
 
             isLoading = true;
 
-            if (CB_PriorityDefaults.SelectedIndex == 1) // beast master
-            {
-                CB_ShotPriority_01.SelectedIndex = 14; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 16; // Bestial Wrath
-                CB_ShotPriority_03.SelectedIndex = 9; // Kill Shot
-                CB_ShotPriority_04.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_05.SelectedIndex = 2; // Arcane Shot
-                CB_ShotPriority_06.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_07.SelectedIndex = 8; // Steady Shot
-                CB_ShotPriority_08.SelectedIndex = 0;
-                CB_ShotPriority_09.SelectedIndex = 0;
-                CB_ShotPriority_10.SelectedIndex = 0;
-            }
-
-            if (CB_PriorityDefaults.SelectedIndex == 2) // marksman
-            {
-                CB_ShotPriority_01.SelectedIndex = 14; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 15; // Readiness
-                CB_ShotPriority_03.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_04.SelectedIndex = 13; // Chimera Shot
-                CB_ShotPriority_05.SelectedIndex = 9; // Kill Shot
-                CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_07.SelectedIndex = 7; // Silencing Shot
-                CB_ShotPriority_08.SelectedIndex = 8; // Steady Shot
-                CB_ShotPriority_09.SelectedIndex = 0;
-                CB_ShotPriority_10.SelectedIndex = 0;
-            }
-
-            if (CB_PriorityDefaults.SelectedIndex == 3) // survival
-            {
-                CB_ShotPriority_01.SelectedIndex = 14; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 9; // Kill Shot
+            if (CB_PriorityDefaults.SelectedIndex == 1) { // beast master
+                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex = 20; // Bestial Wrath
+                CB_ShotPriority_03.SelectedIndex =  9; // Kill Shot
+                CB_ShotPriority_04.SelectedIndex =  1; // Aimed Shot
+                CB_ShotPriority_05.SelectedIndex =  2; // Arcane Shot
+                CB_ShotPriority_06.SelectedIndex =  4; // Serpent Sting
+                CB_ShotPriority_07.SelectedIndex =  8; // Steady Shot
+                CB_ShotPriority_08.SelectedIndex =  0;
+                CB_ShotPriority_09.SelectedIndex =  0;
+                CB_ShotPriority_10.SelectedIndex =  0;
+            }else if (CB_PriorityDefaults.SelectedIndex == 2) { // marksman
+                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex = 19; // Readiness
+                CB_ShotPriority_03.SelectedIndex =  4; // Serpent Sting
+                CB_ShotPriority_04.SelectedIndex = 17; // Chimera Shot
+                CB_ShotPriority_05.SelectedIndex =  9; // Kill Shot
+                CB_ShotPriority_06.SelectedIndex =  1; // Aimed Shot
+                CB_ShotPriority_07.SelectedIndex =  7; // Silencing Shot
+                CB_ShotPriority_08.SelectedIndex =  8; // Steady Shot
+                CB_ShotPriority_09.SelectedIndex =  0;
+                CB_ShotPriority_10.SelectedIndex =  0;
+            }else if (CB_PriorityDefaults.SelectedIndex == 3) { // survival
+                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex =  9; // Kill Shot
                 CB_ShotPriority_03.SelectedIndex = 10; // Explosive Shot
                 CB_ShotPriority_04.SelectedIndex = 11; // Black Arrow
-                CB_ShotPriority_05.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_07.SelectedIndex = 8; // Steady Shot
-                CB_ShotPriority_08.SelectedIndex = 0;
-                CB_ShotPriority_09.SelectedIndex = 0;
-                CB_ShotPriority_10.SelectedIndex = 0;
+                CB_ShotPriority_05.SelectedIndex =  4; // Serpent Sting
+                CB_ShotPriority_06.SelectedIndex =  1; // Aimed Shot
+                CB_ShotPriority_07.SelectedIndex =  8; // Steady Shot
+                CB_ShotPriority_08.SelectedIndex =  0;
+                CB_ShotPriority_09.SelectedIndex =  0;
+                CB_ShotPriority_10.SelectedIndex =  0;
             }
 
             isLoading = false;
 
-            CalcOpts.PriorityIndex1 = CB_ShotPriority_01.SelectedIndex;
-            CalcOpts.PriorityIndex2 = CB_ShotPriority_02.SelectedIndex;
-            CalcOpts.PriorityIndex3 = CB_ShotPriority_03.SelectedIndex;
-            CalcOpts.PriorityIndex4 = CB_ShotPriority_04.SelectedIndex;
-            CalcOpts.PriorityIndex5 = CB_ShotPriority_05.SelectedIndex;
-            CalcOpts.PriorityIndex6 = CB_ShotPriority_06.SelectedIndex;
-            CalcOpts.PriorityIndex7 = CB_ShotPriority_07.SelectedIndex;
-            CalcOpts.PriorityIndex8 = CB_ShotPriority_08.SelectedIndex;
-            CalcOpts.PriorityIndex9 = CB_ShotPriority_09.SelectedIndex;
+            CalcOpts.PriorityIndex1  = CB_ShotPriority_01.SelectedIndex;
+            CalcOpts.PriorityIndex2  = CB_ShotPriority_02.SelectedIndex;
+            CalcOpts.PriorityIndex3  = CB_ShotPriority_03.SelectedIndex;
+            CalcOpts.PriorityIndex4  = CB_ShotPriority_04.SelectedIndex;
+            CalcOpts.PriorityIndex5  = CB_ShotPriority_05.SelectedIndex;
+            CalcOpts.PriorityIndex6  = CB_ShotPriority_06.SelectedIndex;
+            CalcOpts.PriorityIndex7  = CB_ShotPriority_07.SelectedIndex;
+            CalcOpts.PriorityIndex8  = CB_ShotPriority_08.SelectedIndex;
+            CalcOpts.PriorityIndex9  = CB_ShotPriority_09.SelectedIndex;
             CalcOpts.PriorityIndex10 = CB_ShotPriority_10.SelectedIndex;
 
             Character.OnCalculationsInvalidated();

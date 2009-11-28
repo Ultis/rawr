@@ -211,6 +211,8 @@ namespace Rawr.Hunter
         public int petLevel = 80; // not editable
         public PetHappiness petHappiness = PetHappiness.Happy; // not editable
         public float gcdsToLayImmoTrap = 2.0f; // not editable
+        public float gcdsToLayExploTrap = 2.0f; // not editable
+        public float gcdsToVolley = 4.0f; // not editable, 6 seconds
         public Shots LALShotToUse = Shots.ExplosiveShot; // not editable
         public int LALShotsReplaced = 2; // not editable
         public float LALProcChance = 2; // not editable

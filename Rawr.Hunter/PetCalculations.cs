@@ -53,9 +53,9 @@ namespace Rawr.Hunter
             petStats.Intellect = 65;
             petStats.Spirit = 10;
 
-            statsBuffs.Stamina += statsBuffs.PetStamina;
+            statsBuffs.Stamina  += statsBuffs.PetStamina;
             statsBuffs.Strength += statsBuffs.PetStrength;
-            statsBuffs.Spirit += statsBuffs.PetSpirit;
+            statsBuffs.Spirit   += statsBuffs.PetSpirit;
 
             int levelDifference = CalcOpts.TargetLevel - 80;
 

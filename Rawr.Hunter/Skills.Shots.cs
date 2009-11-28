@@ -459,6 +459,10 @@ namespace Rawr.Hunter.Skills
     #endregion
 
     public class ImmolationTrap : Ability { }
+    public class ExplosiveTrap : Ability { }
+    public class FreezingTrap : Ability { }
+    public class FrostTrap : Ability { }
+    public class Volley : Ability { }
     public class Readiness : Ability { }
     public class BeastialWrath : Ability { }
 
