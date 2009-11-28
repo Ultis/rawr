@@ -1236,6 +1236,11 @@ namespace Rawr {
                 // Herkuml War Token
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 17f }, 10f, 0f, 1f, 20));
             }
+            else if ((match = Regex.Match(line, @"Each time you are struck by a melee attack, you have a 60% chance to gain (?<stamina>\d+) stamina for the next 10 sec, stacking up to 10 times\.")).Success)
+            {
+                // Unidentifiable Organ
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Stamina = int.Parse(match.Groups["stamina"].Value) }, 10.0f, 0.0f, 0.6f, 10));
+            }
             #endregion
             else
             {

@@ -935,7 +935,7 @@ threat and limited threat scaled by the threat scale.",
                     buff.Name.StartsWith("Dreadnaught") || 
                     buff.Name.StartsWith("Siegebreaker") || 
                     buff.Name.StartsWith("Wrynn") ||
-                    buff.Name.StartsWith("Warrior Tanking") ||
+                    buff.Name.StartsWith("Ymirjar") ||
                     buff.Name.Contains("Gladiator")
                 ));
 
@@ -951,6 +951,7 @@ threat and limited threat scaled by the threat scale.",
                 AverageArmor = stats.AverageArmor,
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
+                Dodge = stats.Dodge,
                 DodgeRating = stats.DodgeRating,
                 ParryRating = stats.ParryRating,
                 BlockRating = stats.BlockRating,
@@ -1032,7 +1033,7 @@ threat and limited threat scaled by the threat scale.",
                 (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
                     stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
-                    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
+                    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.Dodge + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + stats.BonusHealthMultiplier +
                     stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +

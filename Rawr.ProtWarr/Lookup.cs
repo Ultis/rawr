@@ -213,7 +213,10 @@ namespace Rawr.ProtWarr
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
+            if(avoidanceType == HitResult.Crit)
+                return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
+            else
+                return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel));
         }
 
         public static bool IsAvoidable(Ability ability)
