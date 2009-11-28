@@ -115,7 +115,8 @@ namespace Rawr
 
             asyncCalculationStart = new AsynchronousDisplayCalculationDelegate(AsyncCalculationStart);
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
-                
+            Rawr.UserControls.Options.GeneralSettings.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
+                    
 			LoadModel(ConfigModel);
 			InitializeComponent();
             _defaultColor = itemButtonHead.BackColor;
@@ -1186,6 +1187,11 @@ namespace Rawr
             }
         }
 
+        void GeneralSettings_HideProfessionsChanged(object sender, EventArgs e)
+        {
+            UpdateProfessionControls();
+        }
+
         /// <summary>
         /// This routine updates controls on the main form based on the character's professions
         /// eg: whether to allow or disallow Blacksmithing sockets 
@@ -1208,8 +1214,9 @@ namespace Rawr
                         checkBoxWristBlacksmithingSocket.Checked = false;
                     }
                     // any other profession checks go here
-                    buffSelector1.RebuildControls();
                 }
+                Buff.InvalidateBuffs(); // forces rebuild of buff list
+                buffSelector1.RebuildControls();
             }
         }
         

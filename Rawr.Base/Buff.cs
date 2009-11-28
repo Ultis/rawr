@@ -215,6 +215,8 @@ namespace Rawr
             }
         }
 
+        public static void InvalidateBuffs() { _relevantBuffs = null; }
+
         private static List<Buff> _allSetBonuses = null;
         public static List<Buff> AllSetBonuses {
             get {

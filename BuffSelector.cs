@@ -136,31 +136,31 @@ namespace Rawr
 			foreach (Buff buff in buffs)
 			{
                 ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
-				checkBox.Tag = buff;
+                checkBox.Tag = buff;
                 if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && buff.Source != null)
                     checkBox.Text = buff.Name + " (" + buff.Source + ")";
                 else
                     checkBox.Text = buff.Name;
-				checkBox.AutoSize = true;
-				checkBox.Font = this.Font;
-				checkBox.Dock = DockStyle.Top;
+                checkBox.AutoSize = true;
+                checkBox.Font = this.Font;
+                checkBox.Dock = DockStyle.Top;
                 checkBox.ToolTipText = buff.Stats.ToString();
-				checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
-				GroupBoxes[buff.Group].Controls.Add(checkBox);
-				checkBox.BringToFront();
+                checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
+                GroupBoxes[buff.Group].Controls.Add(checkBox);
+                checkBox.BringToFront();
                 // only add Draenei Heroic Presence buff if Alliance
                 if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
                 {
-                    if(FormMain.Instance.Character.Faction == CharacterFaction.Alliance)
+                    if (FormMain.Instance.Character.Faction == CharacterFaction.Alliance)
                         CheckBoxes.Add(buff, checkBox);
                     else
-                        checkBox.Enabled=false;
+                        checkBox.Enabled = false;
                 }
                 else
                     CheckBoxes.Add(buff, checkBox);
-                
-				foreach (Buff improvement in buff.Improvements)
-				{
+
+                foreach (Buff improvement in buff.Improvements)
+                {
                     if (Character == null || !Rawr.Properties.GeneralSettings.Default.HideProfEnchants || Character.HasProfession(improvement.Professions))
                     {
                         ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
@@ -180,7 +180,7 @@ namespace Rawr
                         checkBoxImprovement.BringToFront();
                         CheckBoxes.Add(improvement, checkBoxImprovement);
                     }
-				}
+                }
 			}
 
 			//int groupY = 3;
