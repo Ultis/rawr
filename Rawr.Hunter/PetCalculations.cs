@@ -679,10 +679,9 @@ namespace Rawr.Hunter
 
             float damageAdjustMangle = 1 + statsHunterBuffs.BonusBleedDamageMultiplier;
 
-            float effectiveTargetArmor = CalcOpts.TargetArmor * calculatedStats.targetDebuffsArmor;
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
-            float damageAdjustMitigation = StatConversion.GetArmorDamageReduction(
-                character.Level, CalcOpts.TargetLevel, statsBuffs.ArmorPenetration, 0f, 0f);
+            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(
+                character.Level, CalcOpts.TargetArmor, statsBuffs.ArmorPenetration, 0f, 0f);
 
             float damageAdjustBase = 1f
                     * damageAdjustBonusPetDamageMult
@@ -737,7 +736,7 @@ namespace Rawr.Hunter
 
                 if (S.skillData.type == PetSkillType.FocusDump)
                 {
-                    float focusDumpDamageAverage = ((118 + 168) / 2) + damageBonusMeleeFromAP;
+                    float focusDumpDamageAverage = ((118f + 168f) / 2f) + damageBonusMeleeFromAP;
                     S.damage = focusDumpDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
                 }
 
