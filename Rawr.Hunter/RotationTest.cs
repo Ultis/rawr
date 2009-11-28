@@ -52,12 +52,12 @@ namespace Rawr.Hunter
             float CDCutoff = options.cooldownCutoff;
             float Longevity = character.HunterTalents.Longevity;
             float GCD = 1.5f;
-            float BA = calculatedStats.blackArrow.duration;
-            float it = calculatedStats.immolationTrap.duration;
-            float et = calculatedStats.explosiveTrap.duration;
-            float ft = calculatedStats.freezingTrap.duration;
-            float frt = calculatedStats.frostTrap.duration;
-            float vly = calculatedStats.volley.duration;
+            float BA = calculatedStats.blackArrow.Duration;
+            float it = calculatedStats.immolationTrap.Duration;
+            float et = calculatedStats.explosiveTrap.Duration;
+            float ft = calculatedStats.freezingTrap.Duration;
+            float frt = calculatedStats.frostTrap.Duration;
+            float vly = calculatedStats.volley.Duration;
             float LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * options.LALProcChance : -1;
             bool RandomProcs = options.randomizeProcs;
             int ISSfix = 0;
@@ -109,10 +109,10 @@ namespace Rawr.Hunter
             for (int i=0; i<calculatedStats.priorityRotation.priorities.Length; i++)
             {
                 ShotData shot = calculatedStats.priorityRotation.priorities[i];
-                if (shot != null && shot.type != Shots.None)
+                if (shot != null && shot.Type != Shots.None)
                 {
-                    shotData[shot.type] = new RotationShotInfo(shot);
-                    shotTable[i] = shotData[shot.type];
+                    shotData[shot.Type] = new RotationShotInfo(shot);
+                    shotTable[i] = shotData[shot.Type];
                 }
                 else
                 {
@@ -541,103 +541,63 @@ namespace Rawr.Hunter
                         #endif
                     }
 
-
                     // Set L&L Timer after Black Arrow/Immolation Trap was used
                     if (thisShot == Shots.BlackArrow
                         || thisShot == Shots.ImmolationTrap
                         || thisShot == Shots.ExplosiveTrap
                         || thisShot == Shots.FreezingTrap
-                        || thisShot == Shots.FrostTrap
-                        || thisShot == Shots.Volley)
+                        || thisShot == Shots.FrostTrap)
                     {
-
-                        if (thisShot == Shots.BlackArrow)
-                        {
-                            LALTimer = currentTime + BA;
+                        switch (thisShot) {
+                            case Shots.BlackArrow: { LALTimer = currentTime + BA; break; }
+                            case Shots.ImmolationTrap: { LALTimer = currentTime + it; break; }
+                            case Shots.ExplosiveTrap: { LALTimer = currentTime + et; break; }
+                            case Shots.FreezingTrap: { LALTimer = currentTime + ft; break; }
+                            default: { LALTimer = currentTime + frt; break; } // Shots.FrostTrap
                         }
-                        else if (thisShot == Shots.ImmolationTrap)
-                        {
-                            LALTimer = currentTime + it;
-                        }
-                        else if (thisShot == Shots.ExplosiveTrap)
-                        {
-                            LALTimer = currentTime + et;
-                        }
-                        else if (thisShot == Shots.FreezingTrap)
-                        {
-                            LALTimer = currentTime + ft;
-                        }
-                        else if (thisShot == Shots.FrostTrap)
-                        {
-                            LALTimer = currentTime + frt;
-                        }
-                        else //if (thisShot == Shots.Volley)
-                        {
-                            LALTimer = currentTime + vly;
-                        }
-
                         LALType = thisShot;
                         LastLALCheck = currentTime - 3;
                     }
 
                     
-                    if (currentTime + thisShotInfo.cooldown > ElapsedTime)
-                    {
-                        if (thisShotInfo.cooldown < GCD + Latency)
-                        {
+                    if (currentTime + thisShotInfo.cooldown > ElapsedTime) {
+                        if (thisShotInfo.cooldown < GCD + Latency) {
                             ElapsedTime = currentTime + GCD + Latency;
-                        }
-                        else
-                        {
+                        } else {
                             ElapsedTime = currentTime + thisShotInfo.cooldown;
                         }
                     }
 
-
                     // 'If we have Improved Steady Shot and have just cast Steady Shot
-                    if (ISSTalent > 0 && thisShot == Shots.SteadyShot)
-                    {
-                        if (RandomProcs)
-                        {
-                            if (randomProc(ISSTalent))
-                            {
+                    if (ISSTalent > 0 && thisShot == Shots.SteadyShot) {
+                        if (RandomProcs) {
+                            if (randomProc(ISSTalent)) {
                                 ISSDuration = currentTime + 12;
                             }
-                        }
-                        else if (ISSTalent > 0)
-                        {
+                        } else if (ISSTalent > 0) {
                             ISSfix++;
-                            if (ISSfix * ISSTalent > 100)
-                            {
+                            if (ISSfix * ISSTalent > 100) {
                                 ISSfix = 0;
                                 ISSDuration = currentTime + 12;
                             }
                         }
                     }
 
-
-                    if (ISSDuration > currentTime)
-                    {
-                        if (thisShot == Shots.AimedShot)
-                        {
+                    if (ISSDuration > currentTime) {
+                        if (thisShot == Shots.AimedShot) {
                             ISSprocsAimed++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
-                        }
-                        else if (thisShot == Shots.ArcaneShot)
-                        {
+                        } else if (thisShot == Shots.ArcaneShot) {
                             ISSProcsArcane++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
-                        }
-                        else if (thisShot == Shots.ChimeraShot)
-                        {
+                        } else if (thisShot == Shots.ChimeraShot) {
                             ISSProcsChimera++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
                         }
                     }
-            
 
                     // If we used Explosive Shot, set the duration of the debuff
                     if (thisShot == Shots.ExplosiveShot && LALShots > 0)
@@ -645,28 +605,21 @@ namespace Rawr.Hunter
                         LALDuration = currentTime + 2;
                     }
 
-
                     // If we used Explosive Shot, set Arcane Shot on CD as well and likewise
-                    if (thisShot == Shots.ArcaneShot && shotData.ContainsKey(Shots.ExplosiveShot))
-                    {
+                    if (thisShot == Shots.ArcaneShot && shotData.ContainsKey(Shots.ExplosiveShot)) {
                         shotData[Shots.ExplosiveShot].time_until_off_cd = currentTime + shotData[Shots.ExplosiveShot].cooldown + Latency;
                     }
-                    if (thisShot == Shots.ExplosiveShot && shotData.ContainsKey(Shots.ArcaneShot))
-                    {
+                    if (thisShot == Shots.ExplosiveShot && shotData.ContainsKey(Shots.ArcaneShot)) {
                         shotData[Shots.ArcaneShot].time_until_off_cd = currentTime + shotData[Shots.ArcaneShot].cooldown + Latency;
                     }
-        
 
                     // If we used Multi-Shot set Aimed Shot cooldown as well and vice-versa
-                    if (thisShot == Shots.MultiShot && shotData.ContainsKey(Shots.AimedShot))
-                    {
+                    if (thisShot == Shots.MultiShot && shotData.ContainsKey(Shots.AimedShot)) {
                         shotData[Shots.AimedShot].time_until_off_cd = currentTime + shotData[Shots.AimedShot].cooldown + Latency;
                     }
-                    if (thisShot == Shots.AimedShot && shotData.ContainsKey(Shots.MultiShot))
-                    {
+                    if (thisShot == Shots.AimedShot && shotData.ContainsKey(Shots.MultiShot)) {
                         shotData[Shots.MultiShot].time_until_off_cd = currentTime + shotData[Shots.MultiShot].cooldown + Latency;
                     }
-
 
                     // If Black Arrow is active (LALTimer) do check a proc every 3 seconds and if no LAL proc has occured within the last 22 seconds
                     if (LALTimer > currentTime && currentTime - LastLALCheck > 3 && LALDuration < currentTime && currentTime - LastLALProc > 22)
@@ -699,7 +652,6 @@ namespace Rawr.Hunter
                         LastLALCheck = currentTime;
                     }
 
-
                     // If we used Beast Within, set duration to 18 seconds
                     if (thisShot == Shots.BeastialWrath)
                     {
@@ -714,7 +666,6 @@ namespace Rawr.Hunter
                         // also record the time when it comes off CD
                         RFCD = thisShotInfo.time_until_off_cd;
                     }
-
 
                     // If Readiness is used, reset CD on other shots
                     if (thisShot == Shots.Readiness)
@@ -735,37 +686,24 @@ namespace Rawr.Hunter
                         }
                     }
 
-
                     if (LALTimer > currentTime)
                     {
                         //Cells(row, col + 5).value = "(" & LALType & ") " + Cells(row, col + 5).value
                     }
 
-
                     // Advance time by 0 if the shot is off the GCD, otherwise by GCD+Latency
-                    if (!checkGCD(thisShot))
-                    {
+                    if (!checkGCD(thisShot)) {
                         // do nothing
-                    }
-                    else if (thisShot == Shots.SteadyShot && thisShotInfo.castTime * (1 / SShaste) < GCD + Latency)
-                    {
+                    } else if (thisShot == Shots.SteadyShot && thisShotInfo.castTime * (1 / SShaste) < GCD + Latency) {
                         currentTime += GCD + Latency;
-                    }
-                    else if (thisShot == Shots.SteadyShot)
-                    {
+                    } else if (thisShot == Shots.SteadyShot) {
                         currentTime += thisShotInfo.castTime * (1 / SShaste) + Latency;
-                    }
-                    else
-                    {
+                    } else {
                         currentTime += GCD + Latency;
                     }
-
                     // more here...
-
                 }
-
                 #endregion
-                
             }
             while (currentTime < FightLength - 1);
 
@@ -782,7 +720,7 @@ namespace Rawr.Hunter
                 ShotData s = calculatedStats.priorityRotation.priorities[i];
                 if (s != null)
                 {
-                    s.setFrequency(calculatedStats.priorityRotation, shotData.ContainsKey(s.type) ? shotData[s.type].frequency : 0);
+                    s.setFrequency(calculatedStats.priorityRotation, shotData.ContainsKey(s.Type) ? shotData[s.Type].frequency : 0);
                 }
             }
 
@@ -800,18 +738,15 @@ namespace Rawr.Hunter
             this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? 1.0f * this.ISSProcsChimera / shotData[Shots.ChimeraShot].countUsed : 0;
 
             #endregion
-
             /*
                 ActiveWorkbook.Names.Add name:="RotationTestResultNames", RefersToR1C1:= _
                         "='Rotation Test'!R5C7:R" & row & "C7"
                 ActiveWorkbook.Names.Add name:="RotationTestTable", RefersToR1C1:= _
                         "='Rotation Test'!R5C6:R" & row & "C" & col + 5
             */
-
         }
 
-        private bool randomProc(float chance)
-        {
+        private bool randomProc(float chance) {
             if (chance < 0) return false;
             // 021109 Drizz: If I understand the rand.Next function correctly it is always below the 2nd parameter so (0,100) is what we want.
             //return rand.Next(0,99) < chance;
@@ -870,13 +805,13 @@ namespace Rawr.Hunter
         
         public RotationShotInfo(ShotData shot)
         {
-            this.type = shot.type;
-            this.cooldown = shot.cooldown;
-            this.castTime = shot.cooldown;
-            this.check_gcd = shot.gcd;
-            this.no_gcd = !shot.gcd && shot.type != Shots.Readiness;
-            this.damage = shot.damage;
-            if (shot.type == Shots.SerpentSting) this.cooldown = shot.duration;
+            this.type = shot.Type;
+            this.cooldown = shot.Cd;
+            this.castTime = shot.Cd;
+            this.check_gcd = shot.TriggersGCD;
+            this.no_gcd = !shot.TriggersGCD && shot.Type != Shots.Readiness;
+            this.damage = shot.Damage;
+            if (shot.Type == Shots.SerpentSting) this.cooldown = shot.Duration;
         }
     }
 /*
@@ -891,5 +826,4 @@ namespace Rawr.Hunter
         public bool flagBA;
     }
 */ 
-
 }

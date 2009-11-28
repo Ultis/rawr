@@ -844,10 +844,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         {
             ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();
 
-            float shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
-            float dps = shotWait > 0 ? (float)(shot.damage / shotWait) : 0;
+            float shotWait = shot.Duration > shot.Cd ? shot.Duration : shot.Cd;
+            float dps = shotWait > 0 ? (float)(shot.Damage / shotWait) : 0;
 
-            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.Name = Enum.GetName(typeof(Shots), shot.Type);
             comp.HunterDpsPoints = dps;
             comp.OverallPoints = dps;
             return comp;
@@ -857,10 +857,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
-            float shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
-            float mps = shotWait > 0 ? (float)(shot.mana / shotWait) : 0;
+            float shotWait = shot.Duration > shot.Cd ? shot.Duration : shot.Cd;
+            float mps = shotWait > 0 ? (float)(shot.ManaCost / shotWait) : 0;
 
-            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.Name = Enum.GetName(typeof(Shots), shot.Type);
             comp.SubPoints = new float[] { mps };
             comp.OverallPoints = mps;
             return comp;
@@ -869,18 +869,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         private ComparisonCalculationHunter comparisonFromShotRotationDPS(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
-            comp.Name = Enum.GetName(typeof(Shots), shot.type);
-            comp.SubPoints = new float[] { (float)shot.dps };
-            comp.OverallPoints = (float)shot.dps;
+            comp.Name = Enum.GetName(typeof(Shots), shot.Type);
+            comp.SubPoints = new float[] { (float)shot.DPS };
+            comp.OverallPoints = (float)shot.DPS;
             return comp;
         }
 
         private ComparisonCalculationHunter comparisonFromShotRotationMPS(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
-            comp.Name = Enum.GetName(typeof(Shots), shot.type);
-            comp.SubPoints = new float[] { (float)shot.mps };
-            comp.OverallPoints = (float)shot.mps;
+            comp.Name = Enum.GetName(typeof(Shots), shot.Type);
+            comp.SubPoints = new float[] { (float)shot.MPS };
+            comp.OverallPoints = (float)shot.MPS;
             return comp;
         }
 
@@ -888,9 +888,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
-            float dpm = shot.mana > 0 ? (float)(shot.damage / shot.mana) : 0;
+            float dpm = shot.ManaCost > 0 ? (float)(shot.Damage / shot.ManaCost) : 0;
 
-            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.Name = Enum.GetName(typeof(Shots), shot.Type);
             comp.SubPoints = new float[] { dpm };
             comp.OverallPoints = dpm;
             return comp;
@@ -991,68 +991,68 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
             #region August 2009 Shot Cooldowns & Durations
 
-            calculatedStats.serpentSting.cooldown = 1.5f;
-            calculatedStats.serpentSting.duration = talents.GlyphOfSerpentSting ? 21 : 15;
+            calculatedStats.serpentSting.Cd = 1.5f;
+            calculatedStats.serpentSting.Duration = talents.GlyphOfSerpentSting ? 21 : 15;
 
-            calculatedStats.aimedShot.cooldown = talents.GlyphOfAimedShot ? 8 : 10;
+            calculatedStats.aimedShot.Cd = talents.GlyphOfAimedShot ? 8 : 10;
 
-            calculatedStats.explosiveShot.cooldown = 6;
+            calculatedStats.explosiveShot.Cd = 6;
 
-            calculatedStats.chimeraShot.cooldown = talents.GlyphOfChimeraShot ? 9 : 10;
+            calculatedStats.chimeraShot.Cd = talents.GlyphOfChimeraShot ? 9 : 10;
 
-            calculatedStats.arcaneShot.cooldown = 6;
+            calculatedStats.arcaneShot.Cd = 6;
 
-            calculatedStats.multiShot.cooldown = talents.GlyphOfMultiShot ? 9 : 10;
+            calculatedStats.multiShot.Cd = talents.GlyphOfMultiShot ? 9 : 10;
 
-            calculatedStats.blackArrow.cooldown = 30 - (talents.Resourcefulness * 2);
-            calculatedStats.blackArrow.duration = 15;
+            calculatedStats.blackArrow.Cd = 30 - (talents.Resourcefulness * 2);
+            calculatedStats.blackArrow.Duration = 15;
 
-            calculatedStats.killShot.cooldown = talents.GlyphOfKillShot ? 9 : 15;
+            calculatedStats.killShot.Cd = talents.GlyphOfKillShot ? 9 : 15;
 
-            calculatedStats.silencingShot.cooldown = 20;
+            calculatedStats.silencingShot.Cd = 20;
 
-            calculatedStats.scorpidSting.cooldown = 20;
-            calculatedStats.scorpidSting.duration = 15;
+            calculatedStats.scorpidSting.Cd = 20;
+            calculatedStats.scorpidSting.Duration = 15;
 
-            calculatedStats.viperSting.cooldown = 15;
-            calculatedStats.viperSting.duration = 8;
+            calculatedStats.viperSting.Cd = 15;
+            calculatedStats.viperSting.Duration = 8;
 
-            calculatedStats.immolationTrap.cooldown = 30 - talents.Resourcefulness * 2;
-            calculatedStats.immolationTrap.duration = talents.GlyphOfImmolationTrap ? 9 : 15;
+            calculatedStats.immolationTrap.Cd = 30 - talents.Resourcefulness * 2;
+            calculatedStats.immolationTrap.Duration = talents.GlyphOfImmolationTrap ? 9 : 15;
 
-            calculatedStats.explosiveTrap.cooldown = 30 - talents.Resourcefulness * 2;
-            calculatedStats.explosiveTrap.duration = 20;
+            calculatedStats.explosiveTrap.Cd = 30 - talents.Resourcefulness * 2;
+            calculatedStats.explosiveTrap.Duration = 20;
 
-            calculatedStats.freezingTrap.cooldown = 30 - talents.Resourcefulness * 2;
-            calculatedStats.freezingTrap.duration = 20;
+            calculatedStats.freezingTrap.Cd = 30 - talents.Resourcefulness * 2;
+            calculatedStats.freezingTrap.Duration = 20;
 
-            calculatedStats.frostTrap.cooldown = 30 - talents.Resourcefulness * 2;
-            calculatedStats.frostTrap.duration = 30;
+            calculatedStats.frostTrap.Cd = 30 - talents.Resourcefulness * 2;
+            calculatedStats.frostTrap.Duration = 30;
 
-            calculatedStats.volley.cooldown = 1f;
-            calculatedStats.volley.duration = 6f;
+            calculatedStats.volley.Cd = 1f;
+            calculatedStats.volley.Duration = 6f;
 
             if (calculatedStats.priorityRotation.containsShot(Shots.Readiness))
             {
-                calculatedStats.rapidFire.cooldown = 157.5f - (30f * talents.RapidKilling);
+                calculatedStats.rapidFire.Cd = 157.5f - (30f * talents.RapidKilling);
             } else {
-                calculatedStats.rapidFire.cooldown = (5 - talents.RapidKilling) * 60f;
+                calculatedStats.rapidFire.Cd = (5 - talents.RapidKilling) * 60f;
             }
-            calculatedStats.rapidFire.duration = 15;
+            calculatedStats.rapidFire.Duration = 15;
 
             // We will set the correct value for this later, after we've calculated haste
-            calculatedStats.steadyShot.cooldown = 2;
+            calculatedStats.steadyShot.Cd = 2;
 
-            calculatedStats.readiness.cooldown = 180;
+            calculatedStats.readiness.Cd = 180;
 
-            calculatedStats.beastialWrath.cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
-            calculatedStats.beastialWrath.duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
+            calculatedStats.beastialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
+            calculatedStats.beastialWrath.Duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
 
-            calculatedStats.bloodFury.cooldown = 120;
-            calculatedStats.bloodFury.duration = 15;
+            calculatedStats.bloodFury.Cd = 120;
+            calculatedStats.bloodFury.Duration = 15;
 
-            calculatedStats.berserk.cooldown = 180;
-            calculatedStats.berserk.duration = 10;
+            calculatedStats.berserk.Cd = 180;
+            calculatedStats.berserk.Duration = 10;
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.initializeTimings();
@@ -1113,7 +1113,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Now we have the haste, we can calculate steady shot cast time,
             // then rebuild other various stats.
             // (future enhancement: we only really need to rebuild steady shot)
-            calculatedStats.steadyShot.cooldown = 2f / (1f + calculatedStats.hasteStaticTotal);
+            calculatedStats.steadyShot.Cd = 2f / (1f + calculatedStats.hasteStaticTotal);
             if (calcOpts.useRotationTest) {
                 calculatedStats.priorityRotation.initializeTimings();
                 calculatedStats.priorityRotation.recalculateRatios();
@@ -1188,33 +1188,33 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // crit chance = base_crit + 5%_rift_stalker_bonus + (2% * survivial_instincts)
             // to-maybe-do: add rift stalker set bonus
             float steadyShotCritChance = stats.PhysicalCrit + survivalInstinctsCritModifier;
-            calculatedStats.steadyShot.critChance = steadyShotCritChance;
+            calculatedStats.steadyShot.CritChance = steadyShotCritChance;
 
             // crit = base_crit + trueshot_aura_glyph + improved_barrage
             float aimedShotCrit = stats.PhysicalCrit
                                 + (talents.GlyphOfTrueshotAura && talents.TrueshotAura > 0 ? 0.10f : 0f)
                                 + improvedBarrageCritModifier;
-            calculatedStats.aimedShot.critChance = aimedShotCrit;
+            calculatedStats.aimedShot.CritChance = aimedShotCrit;
 
             // crit = base_crit + glyph_of_es + survival_instincts
             float explosiveShotCrit = stats.PhysicalCrit + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier;
-            calculatedStats.explosiveShot.critChance = explosiveShotCrit;
+            calculatedStats.explosiveShot.CritChance = explosiveShotCrit;
 
             // 29-10-2009 Drizz: Adding the critchance to SerpentSting
-            calculatedStats.serpentSting.critChance = stats.PhysicalCrit;
+            calculatedStats.serpentSting.CritChance = stats.PhysicalCrit;
 
-            calculatedStats.chimeraShot.critChance = stats.PhysicalCrit;
+            calculatedStats.chimeraShot.CritChance = stats.PhysicalCrit;
 
             float arcaneShotCrit = stats.PhysicalCrit + survivalInstinctsCritModifier;
-            calculatedStats.arcaneShot.critChance = arcaneShotCrit;
+            calculatedStats.arcaneShot.CritChance = arcaneShotCrit;
 
             float multiShotCrit = stats.PhysicalCrit + improvedBarrageCritModifier;
-            calculatedStats.multiShot.critChance = multiShotCrit;
+            calculatedStats.multiShot.CritChance = multiShotCrit;
 
             float killShotCrit = stats.PhysicalCrit + sniperTrainingCritModifier;
-            calculatedStats.killShot.critChance = killShotCrit;
+            calculatedStats.killShot.CritChance = killShotCrit;
 
-            calculatedStats.silencingShot.critChance = stats.PhysicalCrit;
+            calculatedStats.silencingShot.CritChance = stats.PhysicalCrit;
 
             calculatedStats.priorityRotation.calculateCrits();
 
@@ -1308,18 +1308,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 else
                 {
                     float ISSRealProcChance = 0f; // N120
-                    if (calculatedStats.steadyShot.freq > 0f)
+                    if (calculatedStats.steadyShot.Freq > 0f)
                     {
-                        float ISSSteadyFreq = calculatedStats.steadyShot.freq;
-                        float ISSOtherFreq = calculatedStats.arcaneShot.freq
-                                            + calculatedStats.chimeraShot.freq
-                                            + calculatedStats.aimedShot.freq;
+                        float ISSSteadyFreq = calculatedStats.steadyShot.Freq;
+                        float ISSOtherFreq = calculatedStats.arcaneShot.Freq
+                                            + calculatedStats.chimeraShot.Freq
+                                            + calculatedStats.aimedShot.Freq;
 
                         ISSRealProcChance = 1f - (float)Math.Pow(1f - ISSProcChance, ISSOtherFreq / ISSSteadyFreq);
                     }
-                    float ISSProcFreqChimera = ISSRealProcChance > 0f ? calculatedStats.chimeraShot.freq / ISSRealProcChance : 0f; // N121
-                    float ISSProcFreqArcane = ISSRealProcChance > 0f ? calculatedStats.arcaneShot.freq / ISSRealProcChance : 0f; // N122
-                    float ISSProcFreqAimed = ISSRealProcChance > 0f ? calculatedStats.aimedShot.freq / ISSRealProcChance : 0f; // N123
+                    float ISSProcFreqChimera = ISSRealProcChance > 0f ? calculatedStats.chimeraShot.Freq / ISSRealProcChance : 0f; // N121
+                    float ISSProcFreqArcane = ISSRealProcChance > 0f ? calculatedStats.arcaneShot.Freq / ISSRealProcChance : 0f; // N122
+                    float ISSProcFreqAimed = ISSRealProcChance > 0f ? calculatedStats.aimedShot.Freq / ISSRealProcChance : 0f; // N123
 
                     float ISSProcFreqSumInverse = (ISSProcFreqChimera > 0f ? 1f / ISSProcFreqChimera : 0f)
                                                  + (ISSProcFreqArcane > 0f ? 1f / ISSProcFreqArcane : 0f)
@@ -1344,24 +1344,24 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // we do this ASAP so that we can get the MPS.
             // this allows us to calculate viper/aspect bonuses & penalties
 
-            calculatedStats.steadyShot.mana = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
-            calculatedStats.serpentSting.mana = (baseMana * 0.09f) * efficiencyManaAdjust;
-            calculatedStats.aimedShot.mana = (baseMana * 0.08f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
-            calculatedStats.explosiveShot.mana = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.chimeraShot.mana = (baseMana * 0.12f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
-            calculatedStats.arcaneShot.mana = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
-            calculatedStats.multiShot.mana = (baseMana * 0.09f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.blackArrow.mana = (baseMana * 0.06f) * efficiencyManaAdjust * resourcefulnessManaAdjust;
-            calculatedStats.killShot.mana = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.silencingShot.mana = (baseMana * 0.06f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.scorpidSting.mana = (baseMana * 0.11f) * efficiencyManaAdjust;
-            calculatedStats.viperSting.mana = (baseMana * 0.08f) * efficiencyManaAdjust;
-            calculatedStats.immolationTrap.mana = (baseMana * 0.13f) * resourcefullnessManaAdjust;
-            calculatedStats.explosiveTrap.mana = (baseMana * 0.19f) * resourcefullnessManaAdjust;
-            calculatedStats.freezingTrap.mana = (baseMana * 0.03f) * resourcefullnessManaAdjust;
-            calculatedStats.frostTrap.mana = (baseMana * 0.02f) * resourcefullnessManaAdjust;
-            calculatedStats.volley.mana = (baseMana * 0.17f) * (1f - (talents.GlyphOfVolley ? 0.20f : 0.00f));
-            calculatedStats.rapidFire.mana = (baseMana * 0.03f);
+            calculatedStats.steadyShot.ManaCost = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
+            calculatedStats.serpentSting.ManaCost = (baseMana * 0.09f) * efficiencyManaAdjust;
+            calculatedStats.aimedShot.ManaCost = (baseMana * 0.08f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
+            calculatedStats.explosiveShot.ManaCost = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.chimeraShot.ManaCost = (baseMana * 0.12f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
+            calculatedStats.arcaneShot.ManaCost = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
+            calculatedStats.multiShot.ManaCost = (baseMana * 0.09f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.blackArrow.ManaCost = (baseMana * 0.06f) * efficiencyManaAdjust * resourcefulnessManaAdjust;
+            calculatedStats.killShot.ManaCost = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.silencingShot.ManaCost = (baseMana * 0.06f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.scorpidSting.ManaCost = (baseMana * 0.11f) * efficiencyManaAdjust;
+            calculatedStats.viperSting.ManaCost = (baseMana * 0.08f) * efficiencyManaAdjust;
+            calculatedStats.immolationTrap.ManaCost = (baseMana * 0.13f) * resourcefullnessManaAdjust;
+            calculatedStats.explosiveTrap.ManaCost = (baseMana * 0.19f) * resourcefullnessManaAdjust;
+            calculatedStats.freezingTrap.ManaCost = (baseMana * 0.03f) * resourcefullnessManaAdjust;
+            calculatedStats.frostTrap.ManaCost = (baseMana * 0.02f) * resourcefullnessManaAdjust;
+            calculatedStats.volley.ManaCost = (baseMana * 0.17f) * (1f - (talents.GlyphOfVolley ? 0.20f : 0.00f));
+            calculatedStats.rapidFire.ManaCost = (baseMana * 0.03f);
 
             calculatedStats.priorityRotation.calculateRotationMPS();
 
@@ -1388,20 +1388,20 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             
             // Rapid Recuperation
             calculatedStats.manaRegenRapidRecuperation = 0;
-            if (calculatedStats.rapidFire.freq > 0)
+            if (calculatedStats.rapidFire.Freq > 0)
             {
                 float rapidRecuperationManaGain = 0.02f * talents.RapidRecuperation * calculatedStats.BasicStats.Mana * 5;
-                calculatedStats.manaRegenRapidRecuperation = rapidRecuperationManaGain / calculatedStats.rapidFire.freq;
+                calculatedStats.manaRegenRapidRecuperation = rapidRecuperationManaGain / calculatedStats.rapidFire.Freq;
             }
 
             // Chimera shot refreshing Viper
             calculatedStats.manaRegenChimeraViperProc = 0;
             if (calculatedStats.priorityRotation.chimeraRefreshesViper)
             {
-                if (calculatedStats.chimeraShot.freq > 0)
+                if (calculatedStats.chimeraShot.Freq > 0)
                 {
                     //29-10-2009 Drizz: Comment, 3092 is fetched from the Viper Sting Table on the SpellValues sheet (v92b). The 0.6 comes from ChimeraShotEffect.
-                    calculatedStats.manaRegenChimeraViperProc = 0.6f * 3092 / calculatedStats.chimeraShot.freq;
+                    calculatedStats.manaRegenChimeraViperProc = 0.6f * 3092 / calculatedStats.chimeraShot.Freq;
                 }
             }
 
@@ -1411,16 +1411,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Hunting Party
             float huntingPartyProc = (float)talents.HuntingParty / 3.0f;
 
-            float huntingPartyArcaneFreq = calculatedStats.arcaneShot.freq;
-            float huntingPartyArcaneCrit = calculatedStats.arcaneShot.critChance;
+            float huntingPartyArcaneFreq = calculatedStats.arcaneShot.Freq;
+            float huntingPartyArcaneCrit = calculatedStats.arcaneShot.CritChance;
             float huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1 - (float)Math.Pow(1 - huntingPartyArcaneCrit * huntingPartyProc, 15 / huntingPartyArcaneFreq) : 0;
 
-            float huntingPartyExplosiveFreq = calculatedStats.explosiveShot.freq; // spreadsheet divides by 3, but doesn't use that value?
-            float huntingPartyExplosiveCrit = calculatedStats.explosiveShot.critChance;
+            float huntingPartyExplosiveFreq = calculatedStats.explosiveShot.Freq; // spreadsheet divides by 3, but doesn't use that value?
+            float huntingPartyExplosiveCrit = calculatedStats.explosiveShot.CritChance;
             float huntingPartyExplosiveUptime = huntingPartyExplosiveFreq > 0 ? 1 - (float)Math.Pow(1 - huntingPartyExplosiveCrit * huntingPartyProc, 15 / huntingPartyExplosiveFreq) : 0;
 
-            float huntingPartySteadyFreq = calculatedStats.steadyShot.freq;
-            float huntingPartySteadyCrit = calculatedStats.steadyShot.critChance;
+            float huntingPartySteadyFreq = calculatedStats.steadyShot.Freq;
+            float huntingPartySteadyCrit = calculatedStats.steadyShot.CritChance;
             float huntingPartySteadyUptime = huntingPartySteadyFreq > 0 ? 1 - (float)Math.Pow(1 - huntingPartySteadyCrit * huntingPartyProc, 15 / huntingPartySteadyFreq) : 0;
 
             float huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1 - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
@@ -1517,7 +1517,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 }
             }
 
-            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? calculatedStats.beastialWrath.cooldown / calculatedStats.beastialWrath.freq : 0;
+            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? calculatedStats.beastialWrath.Cd / calculatedStats.beastialWrath.Freq : 0;
 
             switch (calcOpts.selectedAspect)
             {
@@ -1573,7 +1573,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float RAP = calculatedStats.apTotal;
             #endregion
             #region August 2009 Armor Penetration
-            float ArmorDamageReduction = GetArmorDamageReduction(calcOpts, character, stats);
+            float ArmorDamageReduction = GetArmorDamageReduction(character, stats, calcOpts);
             calculatedStats.damageReductionFromArmor = (1f - ArmorDamageReduction);
             #endregion
             #region August 2009 Damage Adjustments
@@ -1601,7 +1601,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow))
             {
                 SpecialEffect blackarrow = new SpecialEffect(Trigger.Use,new Stats(),
-                                            calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq);
+                                            calculatedStats.blackArrow.Duration, calculatedStats.blackArrow.Freq);
                 blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.Duration);
             }
             float blackArrowAuraDamageAdjust = 1f + (0.06f * blackArrowUptime);
@@ -1609,7 +1609,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             //Noxious Stings
             float noxiousStingsSerpentUptime = 0;
-            if (calculatedStats.serpentSting.freq > 0) noxiousStingsSerpentUptime = calculatedStats.serpentSting.duration / calculatedStats.serpentSting.freq;
+            if (calculatedStats.serpentSting.Freq > 0) noxiousStingsSerpentUptime = calculatedStats.serpentSting.Duration / calculatedStats.serpentSting.Freq;
             if (calculatedStats.priorityRotation.chimeraRefreshesSerpent) noxiousStingsSerpentUptime = 1;
             float noxiousStingsDamageAdjust = 1f + (0.01f * talents.NoxiousStings * noxiousStingsSerpentUptime);
             float noxiousStingsSerpentDamageAdjust = 1f + (0.01f * talents.NoxiousStings);
@@ -1787,7 +1787,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             steadyShotDamageReal *= ArmorDamageReduction;
 
-            calculatedStats.steadyShot.damage = steadyShotDamageReal;
+            calculatedStats.steadyShot.Damage = steadyShotDamageReal;
             // ****************************************************************************
 
             //29-10-2009 Drizz: Added for PiercingShots
@@ -1799,7 +1799,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                           * steadyShotCritChance * steadyShotAvgCritDamage;
 
             //Drizz: Add the piercingShots effect
-            calculatedStats.steadyShot.damage = steadyShotDamageReal + steadyShotPiercingShots;
+            calculatedStats.steadyShot.Damage = steadyShotDamageReal + steadyShotPiercingShots;
 
             #endregion
             #region August 2009 Serpent Sting
@@ -1841,12 +1841,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // T8 2-piece bonus
             serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
 
-            float serpentStingTicks = calculatedStats.serpentSting.duration / 3f;
+            float serpentStingTicks = calculatedStats.serpentSting.Duration / 3f;
             float serpentStingDamagePerTick = (float)Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5f, 1);
             float serpentStingDamageReal = serpentStingDamagePerTick * serpentStingTicks;
 
-            calculatedStats.serpentSting.type = Shots.SerpentSting;
-            calculatedStats.serpentSting.damage = serpentStingDamageReal;
+            calculatedStats.serpentSting.Type = Shots.SerpentSting;
+            calculatedStats.serpentSting.Damage = serpentStingDamageReal;
 
             #endregion
             #region August 2009 Aimed Shot
@@ -1873,7 +1873,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             aimedShotDamageAdjust
                                           );
 
-            calculatedStats.aimedShot.damage = aimedShotDamageReal;
+            calculatedStats.aimedShot.Damage = aimedShotDamageReal;
 
             aimedShotDamageReal *= ArmorDamageReduction;
 
@@ -1886,7 +1886,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                          * aimedShotCrit * aimedShotAvgCritDamage;
 
             //Drizz: Trying out...
-            calculatedStats.aimedShot.damage = aimedShotDamageReal + aimedShotPiercingShots;
+            calculatedStats.aimedShot.Damage = aimedShotDamageReal + aimedShotPiercingShots;
 
             #endregion
             #region August 2009 Explosive Shot
@@ -1911,7 +1911,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float explosiveShotDamagePerShot = explosiveShotDamageReal * 3f;
 
-            calculatedStats.explosiveShot.damage = explosiveShotDamagePerShot;
+            calculatedStats.explosiveShot.Damage = explosiveShotDamagePerShot;
 
             #endregion
             #region August 2009 Chimera Shot
@@ -1949,7 +1949,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                            * calculatedStats.critRateOverall
                                            * chimeraShotAvgCritDamage;
 
-            calculatedStats.chimeraShot.damage = chimeraShotDamageReal + chimeraShotPiercingShots;
+            calculatedStats.chimeraShot.Damage = chimeraShotDamageReal + chimeraShotPiercingShots;
 
             // calculate damage from serpent sting
             // Drizz: Adding
@@ -1968,7 +1968,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float chimeraShotSerpentStingDamage = (float)Math.Round(serpentStingDamageBase * chimeraShotSerpentMultiplier / 5f, 1) * serpentStingTicks;
 
             float chimeraShotEffect;
-            if (calculatedStats.serpentSting.used)
+            if (calculatedStats.serpentSting.FailReason_AlreadyUsed)
                 chimeraShotEffect = chimeraShotSerpentStingDamage * 0.4f;
             else
                 chimeraShotEffect = 0;
@@ -1979,7 +1979,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1f + targetDebuffsNature);
 
-            calculatedStats.chimeraShot.damage += chimeraShotEffect * chimeraShotSerpentTotalAdjust;
+            calculatedStats.chimeraShot.Damage += chimeraShotEffect * chimeraShotSerpentTotalAdjust;
 
             #endregion
             #region August 2009 Arcane Shot
@@ -2003,7 +2003,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             arcaneShotDamageAdjust
                                           );
 
-            calculatedStats.arcaneShot.damage = arcaneShotDamageReal;
+            calculatedStats.arcaneShot.Damage = arcaneShotDamageReal;
 
             #endregion
             #region August 2009 Multi Shot
@@ -2021,7 +2021,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             multiShotDamageAdjust
                                          );
 
-            calculatedStats.multiShot.damage = multiShotDamageReal;
+            calculatedStats.multiShot.Damage = multiShotDamageReal;
             //calculatedStats.multiShot.Dump("Multi Shot");
 
             #endregion
@@ -2033,7 +2033,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float numvolleyTicks = 6f;
             float volleyDamageReal = volleyDamageNormal * numvolleyTicks;
 
-            calculatedStats.volley.damage = volleyDamageReal;
+            calculatedStats.volley.Damage = volleyDamageReal;
             #endregion
             #region August 2009 Black Arrow
 
@@ -2050,7 +2050,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
 
-            calculatedStats.blackArrow.damage = blackArrowDamage;
+            calculatedStats.blackArrow.Damage = blackArrowDamage;
 
             #endregion
             #region August 2009 Kill Shot
@@ -2074,7 +2074,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             killShotDamageAdjust
                                         );
 
-            calculatedStats.killShot.damage = killShotDamageReal;
+            calculatedStats.killShot.Damage = killShotDamageReal;
 
             #endregion
             #region August 2009 Silencing Shot
@@ -2091,7 +2091,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 silencingShotDamageAdjust
                                              );
 
-            calculatedStats.silencingShot.damage = silencingShotDamageReal;
+            calculatedStats.silencingShot.Damage = silencingShotDamageReal;
 
             #endregion
             #region August 2009 Immolation Trap
@@ -2102,7 +2102,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float immolationTrapDamagePerTick = immolationTrapProjectedDamage / (talents.GlyphOfImmolationTrap ? 2.5f : 5f);
             float immolationTrapTicks = talents.GlyphOfImmolationTrap ? 3f : 5f;
 
-            calculatedStats.immolationTrap.damage = immolationTrapDamagePerTick * immolationTrapTicks;
+            calculatedStats.immolationTrap.Damage = immolationTrapDamagePerTick * immolationTrapTicks;
             #endregion
             #region August 2009 Explosive Trap
             float explosiveTrapDamage = (((0.1f * RAP) + 523f) + ((0.1f * RAP) + 671f)) / 2f + 900f;
@@ -2118,7 +2118,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float explosiveTrapTicks = 20f;
 
             if (talents.GlyphOfExplosiveTrap) {
-                calculatedStats.explosiveTrap.damage = CalcEffectiveDamage(
+                calculatedStats.explosiveTrap.Damage = CalcEffectiveDamage(
                                                             explosiveTrapDamagePerTick,
                                                             0f,
                                                             stats.PhysicalCrit,
@@ -2127,17 +2127,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                         )
                                                       * explosiveTrapTicks;
             } else {
-                calculatedStats.explosiveTrap.damage = explosiveTrapDamagePerTick * explosiveTrapTicks;
+                calculatedStats.explosiveTrap.Damage = explosiveTrapDamagePerTick * explosiveTrapTicks;
             }
             #endregion
             #region August 2009 Freezing Trap
-            calculatedStats.freezingTrap.damage = 0f;
+            calculatedStats.freezingTrap.Damage = 0f;
             #endregion
             #region August 2009 Frost Trap
-            calculatedStats.frostTrap.damage = 0f;
+            calculatedStats.frostTrap.Damage = 0f;
             #endregion
             #region August 2009 Rapid Fire
-            calculatedStats.rapidFire.damage = 0;
+            calculatedStats.rapidFire.Damage = 0;
             #endregion
             #region October 2009 Piercing Shots
             //Drizz: Added for PiercingShots
@@ -2152,12 +2152,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 double piercingShotsDamageDone = character.HunterTalents.PiercingShots * 0.1;
                 double piercingShotsMangleOnTarget = targetDebuffBleed;
                 double piercingShotsTotalModifier = piercingShotsDamageDone * piercingShotsMangleOnTarget;
-                double piercingShotsSteadyShotFrequency = calculatedStats.steadyShot.freq;
+                double piercingShotsSteadyShotFrequency = calculatedStats.steadyShot.Freq;
                 double piercingShotsSteadyShotDamageAdded = steadyShotPiercingShots;
 
-                double piercingShotsAimedShotFrequency = calculatedStats.aimedShot.freq;
+                double piercingShotsAimedShotFrequency = calculatedStats.aimedShot.Freq;
                 double piercingShotsAimedShotDamageAdded = aimedShotPiercingShots;
-                double piercingShotsChimeraShotFrequency = calculatedStats.chimeraShot.freq;
+                double piercingShotsChimeraShotFrequency = calculatedStats.chimeraShot.Freq;
                 double piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
 
                 if (piercingShotsSteadyShotFrequency > 0) {
@@ -2192,9 +2192,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
             #region August 2009 Kill Shot Sub-20% Usage
 
-            float killShotCurrentFreq = calculatedStats.killShot.freq;
-            float killShotPossibleFreq = calcOpts.useRotationTest ? calculatedStats.killShot.freq : calculatedStats.killShot.start_freq;
-            float steadyShotCurrentFreq = calculatedStats.steadyShot.freq;
+            float killShotCurrentFreq = calculatedStats.killShot.Freq;
+            float killShotPossibleFreq = calcOpts.useRotationTest ? calculatedStats.killShot.Freq : calculatedStats.killShot.start_freq;
+            float steadyShotCurrentFreq = calculatedStats.steadyShot.Freq;
 
             float steadyShotNewFreq = steadyShotCurrentFreq;
             if (killShotCurrentFreq == 0f && steadyShotCurrentFreq > 0f && killShotPossibleFreq > 0f)
@@ -2202,12 +2202,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 steadyShotNewFreq = 1f / (1f / steadyShotCurrentFreq - 1f / killShotPossibleFreq);
             }
 
-            float oldKillShotDPS = calculatedStats.killShot.dps;
-            float newKillShotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.damage / killShotPossibleFreq : 0f;
+            float oldKillShotDPS = calculatedStats.killShot.DPS;
+            float newKillShotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.Damage / killShotPossibleFreq : 0f;
             newKillShotDPS *= (1f - viperDamagePenalty);
 
-            float oldSteadyShotDPS = calculatedStats.steadyShot.dps;
-            float newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.damage / steadyShotNewFreq : 0f;
+            float oldSteadyShotDPS = calculatedStats.steadyShot.DPS;
+            float newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.Damage / steadyShotNewFreq : 0f;
             newSteadyShotDPS *= (1f - viperDamagePenalty);
 
             float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
@@ -2623,17 +2623,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return null;
         }
 
-        public float GetArmorDamageReduction(CalculationOptionsHunter CalcOpts, Character Char, Stats StatS) {
-                float armorReduction;
-                float arpenBuffs = 0.0f;
+        public float GetArmorDamageReduction(Character Char, Stats StatS, CalculationOptionsHunter CalcOpts) {
+            float armorReduction;
+            float arpenBuffs = 0.0f;
 
-                if (CalcOpts == null) {
-                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[CalcOpts.TargetLevel - Char.Level], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
-                } else {
-                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
-                }
+            if (CalcOpts == null) {
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[CalcOpts.TargetLevel - Char.Level], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
+            } else {
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+            }
 
-                return armorReduction;
+            return armorReduction;
         }
         #endregion
 	}
