@@ -826,8 +826,8 @@ namespace Rawr.Mage
                 case SpellId.FrostboltNoCC:
                     s = Calculations.FrostboltTemplate.GetSpell(this, true, false, false, false);
                     break;
-                case SpellId.FrostboltFC:
-                    s = Calculations.FrostboltTemplate.GetSpell(this, false, true);
+                case SpellId.DeepFreeze:
+                    s = Calculations.DeepFreezeTemplate.GetSpell(this);
                     break;
                 case SpellId.Fireball:
                     s = Calculations.FireballTemplate.GetSpell(this, false, false);

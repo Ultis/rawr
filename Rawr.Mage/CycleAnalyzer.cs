@@ -130,11 +130,19 @@ namespace Rawr.Mage
                     break;
                 case "Frost":
                     castingState = new CastingState(calculationResult, 0, false);
-                    generator = new FrostCycleGenerator(castingState, true);
+                    generator = new FrostCycleGenerator(castingState, true, false);
                     break;
                 case "Frost (no latency combos)":
                     castingState = new CastingState(calculationResult, 0, false);
-                    generator = new FrostCycleGenerator(castingState, false);
+                    generator = new FrostCycleGenerator(castingState, false, false);
+                    break;
+                case "Frost+Deep Freeze":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new FrostCycleGenerator2(castingState, true, true);
+                    break;
+                case "Frost+Deep Freeze (no latency combos)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new FrostCycleGenerator2(castingState, false, true);
                     break;
             }
 
@@ -155,7 +163,18 @@ namespace Rawr.Mage
             sb.AppendLine("");
             for (int i = 0; i < generator.ControlOptions.Length; i++)
             {
-                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
+                sb.Append(i);
+                sb.Append(": ");
+                sb.Append(generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
+                sb.Append(": ");
+                foreach (var kvp in generator.SpellMap[i])
+                {
+                    sb.Append(kvp.Value);
+                    sb.Append("=");
+                    sb.Append(kvp.Key);
+                    sb.Append("  ");
+                }
+                sb.AppendLine();
             }
 
             textBoxDescription.Text = sb.ToString();

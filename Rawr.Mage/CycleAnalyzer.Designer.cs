@@ -153,7 +153,9 @@
             "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)",
             "Arcane (no ABar, MB duration collapsed)",
             "Frost",
-            "Frost (no latency combos)"});
+            "Frost (no latency combos)",
+            "Frost+Deep Freeze",
+            "Frost+Deep Freeze (no latency combos)"});
             this.comboBoxCycleGenerator.Location = new System.Drawing.Point(12, 7);
             this.comboBoxCycleGenerator.Name = "comboBoxCycleGenerator";
             this.comboBoxCycleGenerator.Size = new System.Drawing.Size(492, 21);

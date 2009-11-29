@@ -42,10 +42,11 @@ namespace Rawr.Mage
         [Description("Frostbolt")]
         FrostboltFOF,
         Frostbolt,
-        FrostboltFC,
         [Description("POM+Frostbolt")]
         FrostboltPOM,
         FrostboltNoCC,
+        [Description("Deep Freeze")]
+        DeepFreeze,
         [Description("Fireball")]
         Fireball,
         [Description("POM+Fireball")]
@@ -620,6 +621,65 @@ namespace Rawr.Mage
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
             NukeProcs = 1;
+        }
+    }
+
+    public class DeepFreezeTemplate : SpellTemplate
+    {
+        public static SpellData[] SpellData = new SpellData[11];
+        static DeepFreezeTemplate()
+        {
+            SpellData[0] = new SpellData() { Cost = (int)(0.09 * BaseMana[70]), MinDamage = 1919, MaxDamage = 2191, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.09 * BaseMana[71]), MinDamage = 1964, MaxDamage = 2236, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.09 * BaseMana[72]), MinDamage = 2009, MaxDamage = 2281, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.09 * BaseMana[73]), MinDamage = 2054, MaxDamage = 2326, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.09 * BaseMana[74]), MinDamage = 2099, MaxDamage = 2371, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.09 * BaseMana[75]), MinDamage = 2144, MaxDamage = 2416, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[6] = new SpellData() { Cost = (int)(0.09 * BaseMana[76]), MinDamage = 2189, MaxDamage = 2461, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[7] = new SpellData() { Cost = (int)(0.09 * BaseMana[77]), MinDamage = 2234, MaxDamage = 2506, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[8] = new SpellData() { Cost = (int)(0.09 * BaseMana[78]), MinDamage = 2279, MaxDamage = 2551, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[9] = new SpellData() { Cost = (int)(0.09 * BaseMana[79]), MinDamage = 2324, MaxDamage = 2596, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellData[10] = new SpellData() { Cost = (int)(0.09 * BaseMana[80]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[options.PlayerLevel - 70];
+        }
+
+        //float fingersOfFrostCritRate;
+
+        // 30 sec cooldown!!!
+        public DeepFreezeTemplate(CharacterCalculationsMage calculations)
+            : base("Deep Freeze", false, true, false, 30, 0, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
+        {
+            Calculate(calculations);
+            if (calculations.MageTalents.GlyphOfDeepFreeze)
+            {
+                Range += 10f;
+            }
+            // deep freeze can only be cast in frozen state
+            //float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
+            //fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
+        }
+
+        /*public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
+        {
+            Spell spell = Spell.New(this, castingState.Calculations);
+            spell.Calculate(castingState);
+            if (averageFingersOfFrost && castingState.CalculationOptions.TargetLevel > castingState.CalculationOptions.PlayerLevel + 2)
+            {
+                spell.CritRate += fingersOfFrostCritRate;
+            }
+            spell.CalculateDerivedStats(castingState);
+            return spell;
+        }*/
+
+        public override Spell GetSpell(CastingState castingState)
+        {
+            Spell spell = Spell.New(this, castingState.Calculations);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState);
+            return spell;
         }
     }
 

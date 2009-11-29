@@ -1302,6 +1302,7 @@ namespace Rawr.Mage
         public int[] ControlOptions;
         public int[] ControlValue;
         public int[] ControlIndex;
+        public Dictionary<string, int>[] SpellMap;
         public virtual string StateDescription
         {
             get
@@ -1368,14 +1369,14 @@ namespace Rawr.Mage
             ControlOptions = new int[controlledStates.Count];
             ControlValue = new int[controlledStates.Count];
 
-            Dictionary<string, int>[] spellMap = new Dictionary<string, int>[controlledStates.Count];
+            SpellMap = new Dictionary<string, int>[controlledStates.Count];
 
             foreach (CycleState state in StateList)
             {
                 int controlIndex = ControlIndex[state.Index];
-                if (spellMap[controlIndex] == null)
+                if (SpellMap[controlIndex] == null)
                 {
-                    spellMap[controlIndex] = new Dictionary<string, int>();
+                    SpellMap[controlIndex] = new Dictionary<string, int>();
                 }
                 foreach (CycleControlledStateTransition transition in state.Transitions)
                 {
@@ -1389,10 +1390,10 @@ namespace Rawr.Mage
                         n = "Pause";
                     }
                     int controlValue;
-                    if (!spellMap[controlIndex].TryGetValue(n, out controlValue))
+                    if (!SpellMap[controlIndex].TryGetValue(n, out controlValue))
                     {
-                        controlValue = spellMap[controlIndex].Keys.Count;
-                        spellMap[controlIndex][n] = controlValue;
+                        controlValue = SpellMap[controlIndex].Keys.Count;
+                        SpellMap[controlIndex][n] = controlValue;
                     }
                     transition.SetControls(controlIndex, ControlValue, controlValue);
                 }
@@ -1400,7 +1401,7 @@ namespace Rawr.Mage
 
             for (int i = 0; i < ControlOptions.Length; i++)
             {
-                ControlOptions[i] = spellMap[i].Keys.Count;
+                ControlOptions[i] = SpellMap[i].Keys.Count;
             }
         }
 

@@ -498,6 +498,19 @@ namespace Rawr.Mage
             }
         }
 
+        private DeepFreezeTemplate _DeepFreezeTemplate;
+        public DeepFreezeTemplate DeepFreezeTemplate
+        {
+            get
+            {
+                if (_DeepFreezeTemplate == null)
+                {
+                    _DeepFreezeTemplate = new DeepFreezeTemplate(this);
+                }
+                return _DeepFreezeTemplate;
+            }
+        }
+
         private ArcaneBlastTemplate _ArcaneBlastTemplate;
         public ArcaneBlastTemplate ArcaneBlastTemplate
         {
