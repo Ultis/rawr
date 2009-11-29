@@ -72,7 +72,17 @@ namespace Rawr.Mage
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             int targets = calculations.CalculationOptions.AoeTargets;
             float averageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (forceHit ? 1.0f : HitRate);
-            if (averageDamage > AoeDamageCap) averageDamage = AoeDamageCap;
+            if (calculations.CalculationOptions.Mode33)
+            {
+                if (targets > 10)
+                {
+                    averageDamage *= 10.0f / targets;
+                }
+            }
+            else
+            {
+                if (averageDamage > AoeDamageCap) averageDamage = AoeDamageCap;
+            }
             if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
             {
                 igniteDamage = averageDamage * PartialResistFactor * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);

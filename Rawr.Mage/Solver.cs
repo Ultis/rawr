@@ -960,7 +960,14 @@ namespace Rawr.Mage
             calculationResult.ArcanePowerDuration = 15.0 + (talents.GlyphOfArcanePower ? 3.0 : 0.0);
             calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
             calculationResult.WaterElementalCooldown = (180.0 - (talents.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
-            calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.EnduringWinter;
+            if (talents.GlyphOfEternalWater)
+            {
+                calculationResult.WaterElementalDuration = double.PositiveInfinity;
+            }
+            else
+            {
+                calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.EnduringWinter;
+            }
             calculationResult.PowerInfusionDuration = 15.0;
             calculationResult.PowerInfusionCooldown = 120.0;
             calculationResult.MirrorImageDuration = 30.0;
@@ -1837,21 +1844,45 @@ namespace Rawr.Mage
                     {
                         calculationResult.MaxEvocation = Math.Max(1, 1 + Math.Floor((calculationOptions.FightDuration - 90f) / calculationResult.EvocationCooldown));
                     }
-                    CastingState evoState = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation);
+                    int mask = 0;
+                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                    {
+                        mask |= (int)StandardEffect.WaterElemental;
+                    }
+                    CastingState evoState = null;
                     CastingState evoStateIV = null;
                     CastingState evoStateHero = null;
                     CastingState evoStateIVHero = null;
-                    if (calculationOptions.EnableHastedEvocation)
+                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
                     {
-                        evoStateIV = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins);
-                        evoStateHero = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism);
-                        evoStateIVHero = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism);
+                        evoState = CastingState.New(calculationResult, (int)StandardEffect.Evocation | mask, false);
+                        if (calculationOptions.EnableHastedEvocation)
+                        {
+                            evoStateIV = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask, false);
+                            evoStateHero = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask, false);
+                            evoStateIVHero = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask, false);
+                        }
+                    }
+                    else
+                    {
+                        evoState = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | mask);
+                        if (calculationOptions.EnableHastedEvocation)
+                        {
+                            evoStateIV = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask);
+                            evoStateHero = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask);
+                            evoStateIVHero = CastingState.NewRaw(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask);
+                        }
                     }
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
                         // base evocation
                         if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                         {
+                            float dps = 0.0f;
+                            if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                            {
+                                dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                            }
                             if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState });
                             column = lp.AddColumnUnsafe();
                             lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
@@ -1863,7 +1894,7 @@ namespace Rawr.Mage
                             lp.SetElementUnsafe(rowEvocation, column, 1.0);
                             lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
                             calculationResult.EvocationTps = tps;
-                            lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                            lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                             if (needsDisplayCalculations) tpsList.Add(tps);
                             if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                             if (restrictManaUse)
@@ -1892,6 +1923,11 @@ namespace Rawr.Mage
                             {
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoStateIV))
                                 {
+                                    float dps = 0.0f;
+                                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                                    {
+                                        dps = evoStateIV.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                    }
                                     // last tick of icy veins
                                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV });
                                     column = lp.AddColumnUnsafe();
@@ -1905,7 +1941,7 @@ namespace Rawr.Mage
                                     lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
                                     //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
                                     lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                                     if (needsDisplayCalculations) tpsList.Add(tps);
                                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                     if (segmentCooldowns)
@@ -1938,6 +1974,11 @@ namespace Rawr.Mage
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                                 {
                                     // remainder
+                                    float dps = 0.0f;
+                                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                                    {
+                                        dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                    }
                                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState });
                                     column = lp.AddColumnUnsafe();
                                     lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
@@ -1949,7 +1990,7 @@ namespace Rawr.Mage
                                     lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
                                     //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
                                     lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                                     if (needsDisplayCalculations) tpsList.Add(tps);
                                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                     if (restrictManaUse)
@@ -1977,6 +2018,11 @@ namespace Rawr.Mage
                             {
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoStateHero))
                                 {
+                                    float dps = 0.0f;
+                                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                                    {
+                                        dps = evoStateHero.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                    }
                                     // last tick of heroism
                                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoStateHero });
                                     column = lp.AddColumnUnsafe();
@@ -1990,7 +2036,7 @@ namespace Rawr.Mage
                                     lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
                                     //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0 - calculationResult.EvocationDurationHero / 0.1);
                                     lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                                     if (needsDisplayCalculations) tpsList.Add(tps);
                                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                     if (restrictManaUse)
@@ -2016,6 +2062,11 @@ namespace Rawr.Mage
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                                 {
                                     // remainder
+                                    float dps = 0.0f;
+                                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                                    {
+                                        dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                    }
                                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoState });
                                     column = lp.AddColumnUnsafe();
                                     lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
@@ -2027,7 +2078,7 @@ namespace Rawr.Mage
                                     lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
                                     //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0);
                                     lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                                     if (needsDisplayCalculations) tpsList.Add(tps);
                                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                     if (restrictManaUse)
@@ -2056,6 +2107,11 @@ namespace Rawr.Mage
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoStateIVHero))
                                 {
                                     // last tick of icy veins+heroism
+                                    float dps = 0.0f;
+                                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                                    {
+                                        dps = evoStateIVHero.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                    }
                                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoStateIVHero });
                                     column = lp.AddColumnUnsafe();
                                     lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
@@ -2071,7 +2127,7 @@ namespace Rawr.Mage
                                     lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
                                     //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0 - calculationResult.EvocationDurationIVHero / 0.1);
                                     lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                                     if (needsDisplayCalculations) tpsList.Add(tps);
                                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                     if (segmentCooldowns)
@@ -2104,6 +2160,11 @@ namespace Rawr.Mage
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                                 {
                                     // remainder
+                                    float dps = 0.0f;
+                                    if (waterElementalAvailable && talents.GlyphOfEternalWater)
+                                    {
+                                        dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                    }
                                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoState });
                                     column = lp.AddColumnUnsafe();
                                     lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
@@ -2116,7 +2177,7 @@ namespace Rawr.Mage
                                     lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
                                     //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0);
                                     lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
                                     if (needsDisplayCalculations) tpsList.Add(tps);
                                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                                     if (restrictManaUse)
@@ -2252,7 +2313,7 @@ namespace Rawr.Mage
                 }
                 #endregion
                 #region Summon Water Elemental
-                if (waterElementalAvailable)
+                if (waterElementalAvailable && !talents.GlyphOfEternalWater)
                 {
                     int waterElementalSegments = segmentList.Count; // always segment, we need it to guarantee each block has activation
                     manaRegen = (int)(0.16 * SpellTemplate.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseGlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
@@ -2285,9 +2346,12 @@ namespace Rawr.Mage
                             lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                             lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                            lp.SetElementUnsafe(rowSummonWaterElemental, column, -1 / calculationResult.BaseGlobalCooldown);
-                            lp.SetElementUnsafe(rowSummonWaterElementalCount, column, 1.0);
-                            lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
+                            if (!talents.GlyphOfEternalWater)
+                            {
+                                lp.SetElementUnsafe(rowSummonWaterElemental, column, -1 / calculationResult.BaseGlobalCooldown);
+                                lp.SetElementUnsafe(rowSummonWaterElementalCount, column, 1.0);
+                                lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
+                            }
                             lp.SetCostUnsafe(column, minimizeTime ? -1 : waterbolt.DamagePerSecond);
                             if (needsDisplayCalculations) tpsList.Add(0.0);
                             lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
@@ -2673,7 +2737,7 @@ namespace Rawr.Mage
                         AddSegmentTicks(ticks, calculationResult.IcyVeinsCooldown);
                         //if (!coldsnapAvailable) AddEffectTicks(ticks, calculationResult.IcyVeinsCooldown, 20.0);
                     }
-                    if (waterElementalAvailable) AddSegmentTicks(ticks, calculationResult.WaterElementalCooldown);
+                    if (waterElementalAvailable && !talents.GlyphOfEternalWater) AddSegmentTicks(ticks, calculationResult.WaterElementalCooldown);
                     foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
                     {
                         AddSegmentTicks(ticks, cooldown.Cooldown);
@@ -2828,14 +2892,21 @@ namespace Rawr.Mage
             double weDuration = 0.0;
             if (waterElementalAvailable)
             {
-                weDuration = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown);
-                if (coldsnapAvailable) weDuration = MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, out coldsnapCount);
+                if (talents.GlyphOfEternalWater)
+                {
+                    weDuration = calculationOptions.FightDuration;
+                }
+                else
+                {
+                    weDuration = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown);
+                    if (coldsnapAvailable) weDuration = MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, out coldsnapCount);
+                }
             }
 
             double combustionCount = combustionAvailable ? (1 + (int)((calculationOptions.FightDuration - 15f) / 195f)) : 0;
 
             double ivlength = 0.0;
-            if (!waterElementalAvailable && coldsnapAvailable)
+            if ((!waterElementalAvailable || talents.GlyphOfEternalWater) && coldsnapAvailable)
             {
                 ivlength = Math.Floor(MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, 20.0, calculationResult.IcyVeinsCooldown, out coldsnapCount));
             }
@@ -2932,7 +3003,7 @@ namespace Rawr.Mage
             if (manaGemEffectAvailable && manaConsum < calculationResult.MaxManaGem)*/ manaConsum = calculationResult.MaxManaGem;
             //lp.SetRHSUnsafe(rowManaPotionManaGem, manaConsum * 40.0);
             lp.SetRHSUnsafe(rowBerserking, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * 10.0 / 180.0 : 10.0 * (1 + (int)((calculationOptions.FightDuration - 10) / 180)));
-            if (waterElementalAvailable)
+            if (waterElementalAvailable && !talents.GlyphOfEternalWater)
             {
                 double duration = calculationOptions.AverageCooldowns ? (calculationResult.WaterElementalDuration / calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : weDuration;
                 lp.SetRHSUnsafe(rowWaterElemental, duration);
@@ -2994,7 +3065,7 @@ namespace Rawr.Mage
                     }
                 }
                 // water elemental
-                if (waterElementalAvailable)
+                if (waterElementalAvailable && !talents.GlyphOfEternalWater)
                 {
                     foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
                     {
@@ -3169,7 +3240,7 @@ namespace Rawr.Mage
             if (afterFightRegen) rowAfterFightRegenMana = rowCount++;
             //if (afterFightRegen) rowAfterFightRegenHealth = rowCount++;
             if (minimizeTime) rowTargetDamage = rowCount++;
-            if (waterElementalAvailable)
+            if (waterElementalAvailable && !talents.GlyphOfEternalWater)
             {
                 rowWaterElemental = rowCount++;
                 rowSummonWaterElemental = rowCount++;
@@ -3324,7 +3395,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (waterElementalAvailable)
+                if (waterElementalAvailable && !talents.GlyphOfEternalWater)
                 {
                     List<SegmentConstraint> list = rowSegmentWaterElemental;
                     double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
@@ -3489,7 +3560,7 @@ namespace Rawr.Mage
             {
                 lp.SetElementUnsafe(rowPotion, column, 1.0 / 15.0);
             }
-            if (state.WaterElemental)
+            if (state.WaterElemental && !talents.GlyphOfEternalWater)
             {
                 lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
                 lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseGlobalCooldown));

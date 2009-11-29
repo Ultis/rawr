@@ -306,7 +306,7 @@ namespace Rawr.Mage
             Calculate(calculations);
             Cooldown -= 1.0f * calculations.MageTalents.ImprovedFireBlast;
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
-            BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact + 0.02f * calculations.MageTalents.FirePower) / (1 + 0.02f * calculations.MageTalents.FirePower);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
         }
     }
 
@@ -348,7 +348,11 @@ namespace Rawr.Mage
             Calculate(calculations);
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
-            BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact + 0.02f * calculations.MageTalents.FirePower) / (1 + 0.02f * calculations.MageTalents.FirePower);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
+            if (calculations.CalculationOptions.Mode33 && calculations.MageTalents.GlyphOfImprovedScorch)
+            {
+                BaseSpellModifier *= 1.2f;
+            }
         }
     }
 
@@ -737,7 +741,7 @@ namespace Rawr.Mage
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier);
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
-            BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact + 0.02f * calculations.MageTalents.FirePower) / (1 + 0.02f * calculations.MageTalents.FirePower);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             NukeProcs = 1;
         }
     }
@@ -906,7 +910,7 @@ namespace Rawr.Mage
             Calculate(calculations);
             DotDuration = 12;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
-            BaseSpellModifier /= (1 + 0.02f * calculations.MageTalents.FirePower); // Living Bomb dot does not benefit from Fire Power
+            BaseAdditiveSpellModifier -= 0.02f * calculations.MageTalents.FirePower; // Living Bomb dot does not benefit from Fire Power
             BaseDirectDamageModifier *= (1 + 0.02f * calculations.MageTalents.FirePower);
         }
     }
@@ -976,7 +980,8 @@ namespace Rawr.Mage
             Cooldown *= (1 - 0.07f * calculations.MageTalents.IceFloes + (calculations.MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
             AoeDamageCap = 37500;
             int ImprovedConeOfCold = calculations.MageTalents.ImprovedConeOfCold;
-            BaseSpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0)) * (1 + 0.02f * calculations.MageTalents.SpellImpact);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
+            BaseSpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
         }
     }
@@ -1026,7 +1031,8 @@ namespace Rawr.Mage
             : base("Ice Lance", false, true, false, 30, 0, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact) * (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
+            BaseSpellModifier *= (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
         }
     }
 
@@ -1437,7 +1443,7 @@ namespace Rawr.Mage
             Calculate(calculations);
             if (calculations.MageTalents.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
-            BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             AoeDamageCap = 37500;
         }
     }
@@ -1470,7 +1476,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             AoeDamageCap = 37500;
-            BaseSpellModifier *= (1 + 0.02f * calculations.MageTalents.SpellImpact + 0.02f * calculations.MageTalents.FirePower) / (1 + 0.02f * calculations.MageTalents.FirePower);
+            BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
     }

@@ -580,7 +580,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -741,7 +741,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -969,7 +969,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -1127,7 +1127,7 @@ namespace Rawr.Mage
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
             if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch)
+            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
             {
                 averageScorchesNeeded = 1;
                 extraScorches = 0;
@@ -1216,7 +1216,7 @@ namespace Rawr.Mage
                 int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
                 int extraScorches = 1;
                 if (Sc.HitRate >= 1.0) extraScorches = 0;
-                if (castingState.MageTalents.GlyphOfImprovedScorch)
+                if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
                 {
                     averageScorchesNeeded = 1;
                     extraScorches = 0;
@@ -1267,7 +1267,7 @@ namespace Rawr.Mage
             {
                 int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
                 int extraScorches = 1;
-                if (castingState.MageTalents.GlyphOfImprovedScorch)
+                if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
                 {
                     averageScorchesNeeded = 1;
                     extraScorches = 0;

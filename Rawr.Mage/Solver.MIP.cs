@@ -731,8 +731,11 @@ namespace Rawr.Mage
                 // pi
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
-                if (waterElementalAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseGlobalCooldown)) return false;
-                if (waterElementalAvailable && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                if (waterElementalAvailable && !talents.GlyphOfEternalWater)
+                {
+                    if (!ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseGlobalCooldown)) return false;
+                    if (!ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                }
                 // mirror image
                 if (mirrorImageAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonMirrorImage, calculationResult.BaseGlobalCooldown)) return false;
                 if (mirrorImageAvailable && !ValidateCooldown((int)StandardEffect.MirrorImage, calculationResult.MirrorImageDuration, calculationResult.MirrorImageCooldown, true, calculationResult.MirrorImageDuration, rowSegmentMirrorImage, VariableType.None)) return false;
@@ -782,7 +785,7 @@ namespace Rawr.Mage
                 // ap
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
-                if (waterElementalAvailable && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                if (waterElementalAvailable && !talents.GlyphOfEternalWater && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // mirror image
                 if (mirrorImageAvailable)
                 {
@@ -867,7 +870,7 @@ namespace Rawr.Mage
 
             if (segmentCooldowns && advancedConstraintsLevel >= 5)
             {
-                if (waterElementalAvailable)
+                if (waterElementalAvailable && !talents.GlyphOfEternalWater)
                 {
                     if (coldsnapAvailable)
                     {
