@@ -506,32 +506,30 @@ namespace Rawr.RestoSham
             #region Create Final calcs via spell cast (Improve Water Shield Mana Return)
             HealsPerSec = RTPerSec + LHWPerSec + HWPerSec + CHPerSec;
             CritsPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
-            float healCastInterval = 1f / HealsPerSec;
-            /*float DoTTickInterval = 1f / 3f; // Once every 3 seconds*/
-            float critChance = CritsPerSec;
-            float fightDuration = options.FightLength * 60;
+            float healCastInterval = HealsPerSec;
+            float critChance = CriticalChance;
+            float fightDuration = options.FightLength * 60f;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 switch (effect.Trigger)
                 {
                     case (Trigger.HealingSpellCast):
-                        stats += effect.GetAverageStats(healCastInterval);
+                        effect.AccumulateAverageStats(stats, healCastInterval); 
                         break;
                     case (Trigger.HealingSpellCrit):
-                        stats += effect.GetAverageStats(healCastInterval, critChance, 1.0f, fightDuration);
+                        effect.AccumulateAverageStats(stats, healCastInterval, critChance, 1.0f, fightDuration);
                         // you can put 0 instead of fightDuration for a different effect
                         break;
                     case (Trigger.SpellCast):
-                        stats += effect.GetAverageStats(healCastInterval);
+                        effect.AccumulateAverageStats(stats, healCastInterval); 
                         break;
                     case (Trigger.SpellCrit):
-                        stats += effect.GetAverageStats(healCastInterval, critChance, 1.0f, fightDuration);
+                        effect.AccumulateAverageStats(stats, healCastInterval, critChance, 1.0f, fightDuration);
                         // you can put 0 instead of fightDuration for a different effect
                         break;
-                    case (Trigger.HealingSpellHit):
-                        stats += effect.GetAverageStats(healCastInterval);
+                    case (Trigger.SpellHit):
+                        effect.AccumulateAverageStats(stats, healCastInterval); 
                         break;
-                    // handle the other cases of triggers you care about, using the proper interval
                 }
             }
             stats.Mp5 += (RTCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5) 
@@ -620,7 +618,7 @@ namespace Rawr.RestoSham
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
-            #region Create the statistics for a given character: Code Flag = Penguin (Adjust Health in 3.2)
+            #region Create the statistics for a given characte
             Stats statsRace;
             switch (character.Race)
             {
@@ -796,14 +794,15 @@ namespace Rawr.RestoSham
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating +
-                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 + 
+                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
                 stats.ManaRestoreOnCrit_25_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestore + stats.HighestStat +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
-                stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost + 
+                stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost +
                 stats.TotemHWSpellpower + stats.TotemLHWSpellpower + stats.TotemThunderhead + stats.RestoSham2T9 + stats.RestoSham4T9) > 0;
         }
-        public Stats GetBuffsStats(Character character, CalculationOptionsRestoSham calcOpts) {
+        public Stats GetBuffsStats(Character character, CalculationOptionsRestoSham calcOpts)
+        {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
@@ -846,19 +845,23 @@ namespace Rawr.RestoSham
                 Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
                 Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
                 // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
-                }
-            }
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*/
+            /* }
+// If we have an enhanced Hunter's Mark, kill the Buff
+if (hasRelevantBuff > 0) {
+if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*/
+            /* }
+if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*/
+            /* }
+if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*/
+            /* }
+}
+}
+/* [More Buffs to Come to this method]
+* Ferocious Inspiration | Sanctified Retribution
+* Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
+* Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
+*/
             #endregion
 
             #region Special Pot Handling
@@ -886,10 +889,12 @@ namespace Rawr.RestoSham
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs) {
+            foreach (Buff b in removedBuffs)
+            {
                 character.ActiveBuffsAdd(b);
             }
-            foreach (Buff b in addedBuffs) {
+            foreach (Buff b in addedBuffs)
+            {
                 character.ActiveBuffs.Remove(b);
             }
 
