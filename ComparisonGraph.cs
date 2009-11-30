@@ -786,44 +786,51 @@ namespace Rawr
                     int itemIndex = (int) Math.Floor(((float) (e.Y - 44f + _scrollBar.Value)) / 36f);
                     if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
                     {
-                        Item item = ItemCalculations[itemIndex].Item;
-                        ItemInstance itemInstance = ItemCalculations[itemIndex].ItemInstance;
-                        ItemInstance[] characterItems = ItemCalculations[itemIndex].CharacterItems;
-                        Enchant itemEnchant = null;
-                        if (ItemCalculations[itemIndex].ItemInstance != null) itemEnchant = ItemCalculations[itemIndex].ItemInstance.Enchant;
-                        if (e.X < 10 && item != null && item.Id != 0)
-                            cursor = Cursors.Hand;
-
-                        if (item != _tooltipItem)
+                        if (ItemCalculations[itemIndex].Description != null && 
+                            ItemCalculations[itemIndex].Description != "")
                         {
                             int tipX = 118;
                             if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
                                 tipX = -249;
-                            if (itemInstance != null)
+
+                            ShowTooltip(ItemCalculations[itemIndex].Name + "|" + ItemCalculations[itemIndex].Description,
+                                new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                        }else{
+                            Item item = ItemCalculations[itemIndex].Item;
+                            ItemInstance itemInstance = ItemCalculations[itemIndex].ItemInstance;
+                            ItemInstance[] characterItems = ItemCalculations[itemIndex].CharacterItems;
+                            Enchant itemEnchant = null;
+                            if (ItemCalculations[itemIndex].ItemInstance != null) itemEnchant = ItemCalculations[itemIndex].ItemInstance.Enchant;
+                            if (e.X < 10 && item != null && item.Id != 0)
+                                cursor = Cursors.Hand;
+
+                            if (item != _tooltipItem)
                             {
-                                ShowTooltip(itemInstance, characterItems, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
-                            }
-                            else
-                            {
-                                ShowTooltip(item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                                int tipX = 118;
+                                if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
+                                    tipX = -249;
+                                if (itemInstance != null)
+                                {
+                                    ShowTooltip(itemInstance, characterItems, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                                }
+                                else
+                                {
+                                    ShowTooltip(item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        HideTooltip();
-                    }
-                }
-                else
-                {
-                    HideTooltip();
-                    //ItemTooltip.Instance.HideTooltip();
-                }
-                if (Cursor != cursor)
-                    Cursor = cursor;
+                    } else { HideTooltip(); }
+                } else { HideTooltip(); }
+                if (Cursor != cursor) { Cursor = cursor; }
             }
         }
 
+        /// <summary>
+        /// Show a Tooltip based on an ItemInstance at the specified location, including the full itemset.
+        /// </summary>
+        /// <param name="item">The Primary Item to show</param>
+        /// <param name="characterItems">The additional items to list in the tooltip</param>
+        /// <param name="location">The point where the tooltip should generate on screen</param>
         private void ShowTooltip(ItemInstance item, ItemInstance[] characterItems, Point location)
         {
             if (_tooltipItemInstance != item || _tooltipLocation != location)
@@ -831,11 +838,17 @@ namespace Rawr
                 _tooltipItem = null;
                 _tooltipItemInstance = item;
                 _tooltipCharacterItems = characterItems;
+                _tooltipDesc = null;
                 _tooltipLocation = location;
                 ShowHideTooltip();
             }
         }
 
+        /// <summary>
+        /// Show a Tooltip based on an Item at the specified location.
+        /// </summary>
+        /// <param name="item">The Item to show</param>
+        /// <param name="location">The point where the tooltip should generate on screen</param>
         private void ShowTooltip(Item item, Point location)
         {
             if (_tooltipItem != item || _tooltipLocation != location)
@@ -843,6 +856,25 @@ namespace Rawr
                 _tooltipItem = item;
                 _tooltipItemInstance = null;
                 _tooltipCharacterItems = null;
+                _tooltipDesc = null;
+                _tooltipLocation = location;
+                ShowHideTooltip();
+            }
+        }
+
+        /// <summary>
+        /// Show a Tooltip based on a Description String at the specified location.
+        /// </summary>
+        /// <param name="desc">The Description String to show</param>
+        /// <param name="location">The point where the tooltip should generate on screen</param>
+        private void ShowTooltip(string desc, Point location)
+        {
+            if (_tooltipDesc != desc || _tooltipLocation != location)
+            {
+                _tooltipItem = null;
+                _tooltipItemInstance = null;
+                _tooltipCharacterItems = null;
+                _tooltipDesc = desc;
                 _tooltipLocation = location;
                 ShowHideTooltip();
             }
@@ -850,31 +882,30 @@ namespace Rawr
 
         private void HideTooltip()
         {
-            if (_tooltipItem != null || _tooltipItemInstance != null)
+            if (_tooltipDesc != null || _tooltipItem != null || _tooltipItemInstance != null)
             {
                 _tooltipItem = null;
                 _tooltipItemInstance = null;
                 _tooltipCharacterItems = null;
+                _tooltipDesc = null;
                 ShowHideTooltip();
             }
         }
 
         private ItemInstance _tooltipItemInstance = null;
         private Item _tooltipItem = null;
+        private string _tooltipDesc = null;
         private ItemInstance[] _tooltipCharacterItems = null;
         private Point _tooltipLocation = Point.Empty;
         private void ShowHideTooltip()
         {
-            if (_tooltipItem != null && _tooltipLocation != Point.Empty)
-			{
-				ItemToolTip.Instance.Show(Character, _tooltipItem, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
-            }
-            else if (_tooltipItemInstance != null && _tooltipLocation != Point.Empty)
-            {
+            if (_tooltipDesc != null && _tooltipLocation != Point.Empty) {
+                ItemToolTip.Instance.Show(Character, _tooltipDesc, this, _tooltipLocation);
+            } else if (_tooltipItem != null && _tooltipLocation != Point.Empty) {
+                ItemToolTip.Instance.Show(Character, _tooltipItem, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
+            } else if (_tooltipItemInstance != null && _tooltipLocation != Point.Empty) {
                 ItemToolTip.Instance.Show(Character, _tooltipItemInstance, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
-            }
-            else
-            {
+            } else {
                 ItemToolTip.Instance.Hide(this);
             }
         }

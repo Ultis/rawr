@@ -1659,8 +1659,14 @@ namespace Rawr
         [XmlIgnore]
         public abstract Item Item { get; set; }
 
-		/// <summary>
-		/// Whether the object beign rated is currently equipped by the character. This controls whether
+        /// <summary>
+        /// For Non-Item Tooltips, to show a descriptive statement where we might otherwise get nothing.
+        /// Implementing this for the Glyph Comparison charts first, then Talents, etc.
+        /// </summary>
+        public abstract string Description { get; set; }
+
+        /// <summary>
+		/// Whether the object being rated is currently equipped by the character. This controls whether
 		/// the item's label is highlighted in light blue on the charts.
 		/// </summary>
 		public abstract bool Equipped { get; set; }

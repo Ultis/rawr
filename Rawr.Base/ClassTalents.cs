@@ -1454,9 +1454,10 @@ Unleashing this Seal's energy will judge an enemy, instantly causing 3 to 4 Holy
             LoadString(talents);
         }
         public static string[] TreeNames = new string[] {
-@"Beast Mastery",
-@"Marksmanship",
-@"Survival",};
+            @"Beast Mastery",
+            @"Marksmanship",
+            @"Survival",
+        };
 
         /// <summary>
         /// While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by [3 * Pts]% for 12 sec.

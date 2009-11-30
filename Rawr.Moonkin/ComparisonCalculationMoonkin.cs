@@ -19,6 +19,13 @@ namespace Rawr.Moonkin
             }
         }
 
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
         private float overallPoints = 0f;
         public override float OverallPoints
         {

@@ -12,6 +12,13 @@ namespace Rawr.DPSWarr
             set { _name = value; }
         }
 
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
         public override float OverallPoints { get; set; }
 
         public override float[] SubPoints {

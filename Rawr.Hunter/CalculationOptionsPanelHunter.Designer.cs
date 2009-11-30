@@ -180,7 +180,6 @@
             this.CK_RandomProcs = new System.Windows.Forms.CheckBox();
             this.CK_UseRotation = new System.Windows.Forms.CheckBox();
             this.CK_SpreadsheetUptimes = new System.Windows.Forms.CheckBox();
-            this.CK_EmulateBugs = new System.Windows.Forms.CheckBox();
             this.CK_UseBeastDuringBW = new System.Windows.Forms.CheckBox();
             this.label84 = new System.Windows.Forms.Label();
             this.CB_AspectUsage = new System.Windows.Forms.ComboBox();
@@ -1786,7 +1785,7 @@
             this.Page_01_Options.Padding = new System.Windows.Forms.Padding(3);
             this.Page_01_Options.Size = new System.Drawing.Size(292, 669);
             this.Page_01_Options.TabIndex = 0;
-            this.Page_01_Options.Text = "Hunter Options";
+            this.Page_01_Options.Text = "Basics";
             this.Page_01_Options.UseVisualStyleBackColor = true;
             // 
             // FLP_01_Options
@@ -2076,7 +2075,6 @@
             this.GB_GlobalSettings.Controls.Add(this.CK_RandomProcs);
             this.GB_GlobalSettings.Controls.Add(this.CK_UseRotation);
             this.GB_GlobalSettings.Controls.Add(this.CK_SpreadsheetUptimes);
-            this.GB_GlobalSettings.Controls.Add(this.CK_EmulateBugs);
             this.GB_GlobalSettings.Controls.Add(this.CK_UseBeastDuringBW);
             this.GB_GlobalSettings.Controls.Add(this.label84);
             this.GB_GlobalSettings.Controls.Add(this.CB_AspectUsage);
@@ -2086,7 +2084,7 @@
             this.GB_GlobalSettings.Controls.Add(this.CB_ManaPotion);
             this.GB_GlobalSettings.Location = new System.Drawing.Point(3, 267);
             this.GB_GlobalSettings.Name = "GB_GlobalSettings";
-            this.GB_GlobalSettings.Size = new System.Drawing.Size(280, 212);
+            this.GB_GlobalSettings.Size = new System.Drawing.Size(280, 192);
             this.GB_GlobalSettings.TabIndex = 19;
             this.GB_GlobalSettings.TabStop = false;
             this.GB_GlobalSettings.Text = "Hunter Settings";
@@ -2094,7 +2092,7 @@
             // CK_RandomProcs
             // 
             this.CK_RandomProcs.AutoSize = true;
-            this.CK_RandomProcs.Location = new System.Drawing.Point(18, 192);
+            this.CK_RandomProcs.Location = new System.Drawing.Point(18, 169);
             this.CK_RandomProcs.Name = "CK_RandomProcs";
             this.CK_RandomProcs.Size = new System.Drawing.Size(186, 17);
             this.CK_RandomProcs.TabIndex = 12;
@@ -2116,24 +2114,13 @@
             // CK_SpreadsheetUptimes
             // 
             this.CK_SpreadsheetUptimes.AutoSize = true;
-            this.CK_SpreadsheetUptimes.Location = new System.Drawing.Point(18, 169);
+            this.CK_SpreadsheetUptimes.Location = new System.Drawing.Point(18, 146);
             this.CK_SpreadsheetUptimes.Name = "CK_SpreadsheetUptimes";
             this.CK_SpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
             this.CK_SpreadsheetUptimes.TabIndex = 11;
             this.CK_SpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
             this.CK_SpreadsheetUptimes.UseVisualStyleBackColor = true;
             this.CK_SpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
-            // 
-            // CK_EmulateBugs
-            // 
-            this.CK_EmulateBugs.AutoSize = true;
-            this.CK_EmulateBugs.Location = new System.Drawing.Point(18, 146);
-            this.CK_EmulateBugs.Name = "CK_EmulateBugs";
-            this.CK_EmulateBugs.Size = new System.Drawing.Size(218, 17);
-            this.CK_EmulateBugs.TabIndex = 10;
-            this.CK_EmulateBugs.Text = "Emulate known bugs in spreadsheet 91e";
-            this.CK_EmulateBugs.UseVisualStyleBackColor = true;
-            this.CK_EmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
             // 
             // CK_UseBeastDuringBW
             // 
@@ -2222,7 +2209,7 @@
             // 
             this.GB_Misc.Controls.Add(this.CK_HideSplGear);
             this.GB_Misc.Controls.Add(this.CK_HidePvPGear);
-            this.GB_Misc.Location = new System.Drawing.Point(3, 485);
+            this.GB_Misc.Location = new System.Drawing.Point(3, 465);
             this.GB_Misc.Name = "GB_Misc";
             this.GB_Misc.Size = new System.Drawing.Size(280, 65);
             this.GB_Misc.TabIndex = 20;
@@ -2263,10 +2250,10 @@
             this.Tabs.Controls.Add(this.Page_04_PetBuffs);
             this.Tabs.Controls.Add(this.Page_05_Details);
             this.Tabs.Location = new System.Drawing.Point(0, 5);
+            this.Tabs.Multiline = true;
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
             this.Tabs.Size = new System.Drawing.Size(300, 695);
-            this.Tabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.Tabs.TabIndex = 0;
             // 
             // Page_02_Rotations
@@ -2737,10 +2724,10 @@
             this.Page_05_Details.Controls.Add(this.TB_Rotation);
             this.Page_05_Details.Controls.Add(this.GB_Rotation_Shots);
             this.Page_05_Details.Controls.Add(this.BT_Calculate);
-            this.Page_05_Details.Location = new System.Drawing.Point(4, 22);
+            this.Page_05_Details.Location = new System.Drawing.Point(4, 40);
             this.Page_05_Details.Name = "Page_05_Details";
             this.Page_05_Details.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_05_Details.Size = new System.Drawing.Size(292, 669);
+            this.Page_05_Details.Size = new System.Drawing.Size(292, 651);
             this.Page_05_Details.TabIndex = 4;
             this.Page_05_Details.Text = "Details";
             this.Page_05_Details.UseVisualStyleBackColor = true;
@@ -2756,7 +2743,7 @@
             this.TB_Rotation.Name = "TB_Rotation";
             this.TB_Rotation.ReadOnly = true;
             this.TB_Rotation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TB_Rotation.Size = new System.Drawing.Size(280, 479);
+            this.TB_Rotation.Size = new System.Drawing.Size(280, 461);
             this.TB_Rotation.TabIndex = 1;
             this.TB_Rotation.WordWrap = false;
             this.TB_Rotation.TextChanged += new System.EventHandler(this.TB_Rotation_TextChanged);
@@ -3030,7 +3017,6 @@
         private System.Windows.Forms.ComboBox CB_AspectUsage;
         private System.Windows.Forms.CheckBox CK_UseBeastDuringBW;
         private System.Windows.Forms.CheckBox CK_SpreadsheetUptimes;
-        private System.Windows.Forms.CheckBox CK_EmulateBugs;
         private System.Windows.Forms.Label label85;
         private System.Windows.Forms.ComboBox CB_PetPrio_05;
         private System.Windows.Forms.ComboBox CB_PetPrio_07;

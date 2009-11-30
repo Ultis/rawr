@@ -940,7 +940,14 @@ namespace Rawr.Cat
 			set { _name = value; }
 		}
 
-		private float _overallPoints = 0f;
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
+        private float _overallPoints = 0f;
 		public override float OverallPoints
 		{
 			get { return _overallPoints; }

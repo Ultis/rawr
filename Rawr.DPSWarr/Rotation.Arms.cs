@@ -102,7 +102,7 @@ namespace Rawr.DPSWarr {
             }
         }
 
-        public float SettleAll(float totalPercTimeLost, float percTimeUnder20,float availRage)
+        public float SettleAll(float totalPercTimeLost, float percTimeUnder20, float availRage)
         {
             availRage -= DoMaintenanceActivates(totalPercTimeLost);
             //availGCDs = NumGCDs - GCDsused;

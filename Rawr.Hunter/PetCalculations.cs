@@ -845,9 +845,6 @@ namespace Rawr.Hunter
 
                 #endregion
 
-                if (CalcOpts.emulateSpreadsheetBugs && S.skillType == PetAttacks.NetherShock) S.damage = 0; // still an issue in 91e
-                if (CalcOpts.emulateSpreadsheetBugs && S.skillType == PetAttacks.VenomWebSpray) S.damage = 0; // still an issue in 91e
-
                 S.CalculateDPS();
             }
 

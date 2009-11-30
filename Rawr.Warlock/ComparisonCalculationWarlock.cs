@@ -17,7 +17,14 @@ namespace Rawr.Warlock
             set { _name = value; }
         }
 
-		private float _overallPoints;
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
+        private float _overallPoints;
         public override float OverallPoints 
         {
 			get { return _overallPoints; }

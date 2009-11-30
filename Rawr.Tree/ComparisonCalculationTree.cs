@@ -4,8 +4,15 @@ namespace Rawr.Tree
     public class ComparisonCalculationTree : ComparisonCalculationBase
     {
         public override string Name { get; set;}
-        
-        public override float OverallPoints { get; set;}
+
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
+        public override float OverallPoints { get; set; }
 
         private float[] subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints

@@ -139,8 +139,6 @@ namespace Rawr.Hunter
             if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
 
             CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBeastialWrath;
-            CK_EmulateBugs.Checked = CalcOpts.emulateSpreadsheetBugs;
-            CK_SpreadsheetUptimes.Checked = CalcOpts.calculateUptimesLikeSpreadsheet;
             CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
             CK_UseRotation.Checked = CalcOpts.useRotationTest;
 
@@ -1008,13 +1006,6 @@ namespace Rawr.Hunter
         {
             if (isLoading) return;
             CalcOpts.useBeastDuringBeastialWrath = CK_UseBeastDuringBW.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void chkEmulateBugs_CheckedChanged(object sender, EventArgs e)
-        {
-            if (isLoading) return;
-            CalcOpts.emulateSpreadsheetBugs = CK_EmulateBugs.Checked;
             Character.OnCalculationsInvalidated();
         }
 

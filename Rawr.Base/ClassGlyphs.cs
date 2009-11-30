@@ -79,13 +79,13 @@ namespace Rawr
 		//Cat Glyphs
 		[GlyphData(0, "Glyph of Mangle", true, @"Increases the duration of Mangle by 6 sec.")]
 		public bool GlyphOfMangle { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
-		[GlyphData(1, "Glyph of Shred", true, @"")]
+		[GlyphData(1, "Glyph of Shred", true, @"Each time you Shred, the duration of your Rip on the target is extended 2 sec, up to a maximum of 6 sec.")]
 		public bool GlyphOfShred { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-		[GlyphData(2, "Glyph of Rip", true, @"")]
+		[GlyphData(2, "Glyph of Rip", true, @"Increases the duration of your Rip ability by 4 sec.")]
 		public bool GlyphOfRip { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-		[GlyphData(3, "Glyph of Berserk", true, @"")]
+		[GlyphData(3, "Glyph of Berserk", true, @"Increases the duration of Berserk by 5 sec.")]
 		public bool GlyphOfBerserk { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
-		[GlyphData(4, "Glyph of Savage Roar", true, @"")]
+		[GlyphData(4, "Glyph of Savage Roar", true, @"Your Savage Roar ability grants an additional 3% bonnus damage done.")]
 		public bool GlyphOfSavageRoar { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
 
 		//Bear Glyphs

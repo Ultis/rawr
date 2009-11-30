@@ -371,33 +371,44 @@ namespace Rawr
             CharacterCalculationsBase currentCalc;
             CharacterCalculationsBase newCalc;
             ComparisonCalculationBase compare;
-            int orig;
             currentCalc = Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
             foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
             {
                 TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
+                int orig = 0;
                 if (talentDatas.Length > 0)
                 {
                     TalentDataAttribute talentData = talentDatas[0];
                     orig = baseChar.CurrentTalents.Data[talentData.Index];
-                    if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null))
-                    {
+                    if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)) {
                         newChar.CurrentTalents.Data[talentData.Index]--;
                         newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                         compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.MaxPoints == orig);
-                    }
-                    else
-                    {
+                    } else {
                         newChar.CurrentTalents.Data[talentData.Index]++;
                         newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                         compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.MaxPoints == orig);
                     }
+                    string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, talentData.MaxPoints);
+                    if        (orig == 0) {
+                        // We originally didn't have it, so first rank is next rank
+                        text += "Next Rank:\r\n";
+                        text += talentData.Description[0];
+                    } else if (orig >= talentData.MaxPoints) {
+                        // We originally were at max, so there isn't a next rank, just show the capped one
+                        text += talentData.Description[talentData.MaxPoints - 1];
+                    } else {
+                        // We aren't at 0 or MaxPoints originally, so it's just a point in between
+                        text += talentData.Description[orig - 1];
+                        text += "\r\n\r\nNext Rank:\r\n";
+                        text += talentData.Description[orig];
+                    }
+                    compare.Description = text;
                     compare.Item = null;
                     talentCalculations.Add(compare);
                     newChar.CurrentTalents.Data[talentData.Index] = orig;
                 }
             }
-
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
@@ -437,6 +448,7 @@ namespace Rawr
                             newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                             compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig);
                         }
+                        compare.Description = glyphData.Description; // JOTHAY: WTB Tooltips that show info on these charts
                         compare.Item = null;
                         glyphCalculations.Add(compare);
                         newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;

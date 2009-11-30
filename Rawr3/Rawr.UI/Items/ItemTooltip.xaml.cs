@@ -13,6 +13,19 @@ namespace Rawr.UI
 {
 	public partial class ItemTooltip : UserControl
 	{
+        private string currentString;
+        public string CurrentString
+       {
+           get { return currentString; }
+            set
+            {
+                itemInstance = null;
+                item = null;
+                characterItems = null;
+                currentString = value;
+                UpdateTooltip();
+            }
+        }
 
         private ItemInstance itemInstance; 
         public ItemInstance ItemInstance {
@@ -22,6 +35,7 @@ namespace Rawr.UI
                 itemInstance = value;
                 item = null;
                 characterItems = null;
+                currentString = null;
                 UpdateTooltip();
             }
         }
@@ -35,6 +49,7 @@ namespace Rawr.UI
                 itemInstance = null;
                 item = value;
                 characterItems = null;
+                currentString = null;
                 UpdateTooltip();
             }
         }
@@ -100,19 +115,71 @@ namespace Rawr.UI
             }
         }
 
+        private void NonItemTooltip() {
+            RootLayout.Visibility = Visibility.Visible;
+            try
+            {
+                string Title = CurrentString.Split('|')[0].Trim();
+                string Desc = CurrentString.Split('|')[1].Trim();
+
+                #region Discover the minimum size needed
+                int widthCharCount = 47;
+
+                int nextIndex = 0, lastIndex = 0;
+
+                int loopcount = 0;
+                while (lastIndex + widthCharCount < Desc.Length && loopcount < 50)
+                {
+                    string sub = Desc.Substring(lastIndex + 2, Math.Min(lastIndex + widthCharCount, Desc.Length - lastIndex) - 2);
+                    if (sub.Contains("\r\n")) {
+                        lastIndex = lastIndex + sub.IndexOf("\r\n") + 2;
+                        continue;
+                    }
+                    nextIndex = Desc.IndexOf(" ", lastIndex + widthCharCount);
+                    if (nextIndex > 0) {
+                        Desc = Desc.Insert(nextIndex + 1, "\r\n");
+                        lastIndex = nextIndex + 1;
+                    } else {
+                        lastIndex = Desc.Length;
+                    }
+                    loopcount++;
+                }
+                #endregion
+
+                ItemName.Text = Title;
+                ItemName.Foreground = new SolidColorBrush(Colors.Purple);
+                //ItemName.FontSize = 10;
+                ItemLevel.Text = "";
+
+                StatPanel.Visibility = Visibility.Collapsed;
+                GemStack.Visibility = Visibility.Collapsed;
+                SocketBonusLabel.Visibility = Visibility.Collapsed;
+                EnchantLabel.Visibility = Visibility.Collapsed;
+
+                LocationLabel.Visibility = Visibility.Visible;
+                LocationLabel.Text = Desc;
+
+                ItemsGrid.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex) {
+                Rawr.DPSWarr.ErrorBoxDPSWarr eb = new Rawr.DPSWarr.ErrorBoxDPSWarr(
+                    "Error setting up a Non-Item Tooltip",
+                    ex.Message, "NonItemTooltip()", "No Additional Info",
+                    ex.StackTrace, 0);
+            }
+        }
+
         public void UpdateTooltip()
         {
             Item actualItem = null;
-            if (ItemInstance != null)
-            {
+            if (ItemInstance != null) {
                 actualItem = ItemInstance.Item;
-            }
-            else if (Item != null)
-            {
+            } else if (Item != null) {
                 actualItem = Item;
-            }
-            else
-            {
+            } else if (CurrentString != null && CurrentString != "") {
+                NonItemTooltip();
+                return;
+            } else {
                 RootLayout.Visibility = Visibility.Collapsed;
                 return;
             }
@@ -120,8 +187,19 @@ namespace Rawr.UI
 
             ItemName.Text = actualItem.Name;
             ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem.Quality));
-            if (actualItem.ItemLevel > 0) ItemLevel.Text = "[" + actualItem.ItemLevel + "]";
-            else ItemLevel.Text = "";
+            if (actualItem.ItemLevel > 0) {
+                string s = "";
+                if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
+                    s = string.Format("[{0}] ({1}) [{2}]", actualItem.ItemLevel, actualItem.Id, actualItem.SlotString);
+                } else if (Properties.GeneralSettings.Default.DisplayItemType) {
+                    s = string.Format("[{0}] [{1}]", actualItem.ItemLevel, actualItem.SlotString);
+                } else if (Properties.GeneralSettings.Default.DisplayItemIds) {
+                    s = string.Format("[{0}] ({1})", actualItem.ItemLevel, actualItem.Id);
+                } else {
+                    s = string.Format("[{0}]", actualItem.ItemLevel);
+                }
+                ItemLevel.Text = s;
+            } else { ItemLevel.Text = ""; }
 
             #region Displaying Item Stats
             List<string> statsList = new List<string>();
@@ -230,6 +308,7 @@ namespace Rawr.UI
             else SocketBonusLabel.Visibility = Visibility.Collapsed;
             #endregion
 
+            #region Gem Sockets
             EnchantLabel.Visibility = Visibility.Collapsed;
 
             if (ItemInstance != null)
@@ -306,13 +385,18 @@ namespace Rawr.UI
                     SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Gray);
                 else SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Black);
             }
+            #endregion
+
+            #region Location Section
             if (actualItem.Id > 0 && actualItem.Id < 100000)
             {
                 LocationLabel.Text = actualItem.LocationInfo.Description;
                 LocationLabel.Visibility = Visibility.Visible;
             }
             else LocationLabel.Visibility = Visibility.Collapsed;
+            #endregion
 
+            #region Additional Items, like in Build Upgrade List
             ItemsGrid.Children.Clear();
             ItemsGrid.RowDefinitions.Clear();
             if (CharacterItems == null || CharacterItems.Length == 0) ItemsGrid.Visibility = Visibility.Collapsed;
@@ -373,6 +457,7 @@ namespace Rawr.UI
                     row++;
                 }
             }
+            #endregion
         }
 
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }

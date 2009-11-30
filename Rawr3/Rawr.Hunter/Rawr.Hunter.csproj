@@ -78,6 +78,9 @@
     <Compile Include="..\..\Rawr.Hunter\RotationTest.cs">
       <Link>RotationTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Hunter\ShotData.cs">
+      <Link>ShotData.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Hunter\ShotPriority.cs">
       <Link>ShotPriority.cs</Link>
     </Compile>

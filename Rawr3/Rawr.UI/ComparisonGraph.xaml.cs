@@ -240,10 +240,11 @@ namespace Rawr.UI
         private void NameGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             ComparisonCalculationBase calc = ((Grid)sender).Tag as ComparisonCalculationBase;
-            if ((calc.ItemInstance != null || calc.Item != null) && (!ContextMenu.IsShown))
+            if ((calc.Description != null || calc.ItemInstance != null || calc.Item != null) && (!ContextMenu.IsShown))
             {
-                if (calc.ItemInstance != null) MainPage.Tooltip.ItemInstance = calc.ItemInstance;
-                else MainPage.Tooltip.Item = calc.Item;
+                if      (calc.ItemInstance != null) MainPage.Tooltip.ItemInstance = calc.ItemInstance;
+                else if (calc.Item         != null) MainPage.Tooltip.Item = calc.Item;
+                else MainPage.Tooltip.CurrentString = calc.Name + "|" + calc.Description;
                 if (calc is ComparisonCalculationUpgrades)
                 {
                     ComparisonCalculationUpgrades upgrades = calc as ComparisonCalculationUpgrades;

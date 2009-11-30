@@ -233,7 +233,6 @@ namespace Rawr.Hunter
         // and an ability has a 4 second cooldown, the spreadsheet says
         // you can use it 2.5 times, while we say you can use it twice.
         public bool calculateUptimesLikeSpreadsheet = true;
-        public bool emulateSpreadsheetBugs = true;
 
         // new priority rotation stuff
         public int PriorityIndex1 = 0;

@@ -11,7 +11,15 @@ namespace Rawr.TankDK {
             set { _name = value; }
         }
 
-        public float Survival {
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
+        public float Survival
+        {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; _overallPoints = Survival + Mitigation + Threat; }
         }

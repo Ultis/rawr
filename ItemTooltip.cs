@@ -94,7 +94,30 @@ namespace Rawr
             }
 		}
 
-		private CharacterSlot _currentSlot = CharacterSlot.None;
+        private string _currentString = null;
+        private string CurrentString
+        {
+            get { return _currentString; }
+            set
+            {
+                if (resetItem)
+                {
+                    _currentString = null;
+                    resetItem = false;
+                }
+                if (_currentString != value)
+                {
+                    _currentString = value;
+                    if (_cachedToolTipImage != null)
+                    {
+                        _cachedToolTipImage.Dispose();
+                        _cachedToolTipImage = null;
+                    }
+                }
+            }
+        }
+
+        private CharacterSlot _currentSlot = CharacterSlot.None;
 		private CharacterSlot CurrentSlot
 		{
 			get { return _currentSlot; }
@@ -118,7 +141,6 @@ namespace Rawr
 		}
 
         private Item _currentItem = null;
-
         private Item CurrentItem
         {
             get { return _currentItem; }
@@ -170,6 +192,7 @@ namespace Rawr
         {
             get
             {
+                // ===== For item tooltips =====
                 if (_cachedToolTipImage == null && _currentItem != null)
                 {
                     lock (_currentItem)
@@ -201,7 +224,7 @@ namespace Rawr
                                 initial = 21,
                                 step = 17
                             };
-                            
+
                             int xPos = xGrid.initial;
                             int yPos = yGrid.initial;
 
@@ -215,7 +238,7 @@ namespace Rawr
                                 string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
                                 statsList.Add(text);
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
-                                if (xPos + width > xGrid.end )
+                                if (xPos + width > xGrid.end)
                                 {
                                     xPos = xGrid.initial;
                                     yPos += yGrid.step;
@@ -288,32 +311,41 @@ namespace Rawr
                             #endregion
                             int statHeight = (xPos > xGrid.initial) ? yPos : Math.Max(0, yPos - yGrid.step);
 
+                            #region Location Section
                             int extraLocation = 0;
                             string location = "Unknown source";
-                            if (_currentItem.LocationInfo != null) {
+                            if (_currentItem.LocationInfo != null)
+                            {
                                 location = _currentItem.LocationInfo.Description;
                             }
                             SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
-                            if (locationSize.Width > 300) {
+                            if (locationSize.Width > 300)
+                            {
                                 extraLocation = (int)locationSize.Height;
                                 int index = location.IndexOf(" in ");
                                 index = (index == -1 ? -1 : index + 4);
                                 if (index != -1) { location = location.Insert(index, "\r\n    "); }
                             }
+                            #endregion
 
+                            #region Enchant Section
                             int extraEnchant = 0;
                             string enchant = "No Enchant";
-                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null) {
+                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
+                            {
                                 enchant = CurrentItemInstance.Enchant.ToString();
                             }
                             SizeF enchantsize = _dummyBitmap.MeasureString(enchant, _fontStats);
-                            if (enchantsize.Width > 300) {
+                            if (enchantsize.Width > 300)
+                            {
                                 extraEnchant = (int)enchantsize.Height;
                                 int index = enchant.IndexOf(": ");
                                 index = (index == -1 ? -1 : index + 2);
                                 if (index != -1) { enchant = enchant.Insert(index, "\r\n    "); }
                             }
+                            #endregion
 
+                            #region Gem Section
                             int gemInfoSize = 0;
                             if (CurrentItem.IsGem)
                             {
@@ -330,12 +362,14 @@ namespace Rawr
                                     if (CurrentItemInstance != null) gem = (i == 0 ? CurrentItemInstance.Gem1 : (i == 1 ? CurrentItemInstance.Gem2 : CurrentItemInstance.Gem3));
                                     if (gem != null)
                                         gemNamesSize += (int)gem_name_size.Height;
-                                } 
+                                }
                             }
+                            #endregion
 
+                            #region Extra Items Section (like in Build Upgrade List)
                             int numTinyItems = 0;
                             int tinyItemSize = 18;
-							if (CurrentCharacterItems != null)
+                            if (CurrentCharacterItems != null)
                             {
                                 for (int slot = 0; slot < Character.SlotCount; slot++)
                                 {
@@ -346,9 +380,11 @@ namespace Rawr
                                     }
                                 }
                             }
+                            #endregion
 
                             _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + (13) + extraLocation + (13) + extraEnchant + gemInfoSize + gemNamesSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
+                            #region Setup for Background of the tooltip
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -367,7 +403,9 @@ namespace Rawr
                             g.DrawRectangle(pen, rectBorder);
                             pen.Dispose();
                             pen = null;
+                            #endregion
 
+                            #region Item Name and Optionalized Add-Ons (iLevel, etc)
                             { // hide the name brush scope to reduce bugs
                                 Brush nameBrush = null;
                                 switch (_currentItem.Quality)
@@ -404,20 +442,24 @@ namespace Rawr
                             {
                                 SizeF name_size = g.MeasureString(CurrentItem.Name, _fontName);
                                 Brush ilvlBrush = Brushes.Gray;
+                                string s = "";
                                 if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
-                                    g.DrawString(string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id) + " [" + CurrentItem.SlotString + "]", _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                    s = string.Format("[{0}] ({1}) [{2}]", CurrentItem.ItemLevel, CurrentItem.Id, CurrentItem.SlotString);
                                 } else if (Properties.GeneralSettings.Default.DisplayItemType) {
-                                    g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel) + " [" + CurrentItem.SlotString + "]", _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                    s = string.Format("[{0}] [{1}]", CurrentItem.ItemLevel, CurrentItem.SlotString);
                                 } else if (Properties.GeneralSettings.Default.DisplayItemIds) {
-                                    g.DrawString(string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id), _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                    s = string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id);
                                 } else {
-                                    g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel), _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                    s = string.Format("[{0}]", CurrentItem.ItemLevel);
                                 }
+                                g.DrawString(s, _fontName, ilvlBrush, name_size.Width + 2, 4);
                             }
+                            #endregion
 
                             xPos = xGrid.initial;
                             yPos = yGrid.initial;
 
+                            #region Stats Section
                             foreach (string statText in statsList)
                             {
                                 float width = g.MeasureString(statText, _fontStats).Width;
@@ -436,6 +478,7 @@ namespace Rawr
                                     yPos += yGrid.step;
                                 }
                             }
+                            #endregion
 
                             // this is the next clean/empty line after we wrote the stats
                             if (xPos > xGrid.initial)
@@ -443,6 +486,7 @@ namespace Rawr
                                 yPos += yGrid.step;
                             }
 
+                            #region Sockets Section
                             if (hasSockets)
                             {
                                 int gemNameHeight = 0;
@@ -597,8 +641,10 @@ namespace Rawr
                                 SizeF gem_info_size = g.MeasureString(colors, _fontStats);
                                 yPos += (int)gem_info_size.Height;
                             }
+                            #endregion
 
-                            if (_currentItem.Quality != ItemQuality.Temp) {
+                            if (_currentItem.Quality != ItemQuality.Temp)
+                            {
                                 PointF draw_pos = new PointF(2, yPos);
                                 //Rectangle textRec = new Rectangle(2, (hasSockets ? 76 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, (int)locationSize.Height + extraLocation);
                                 g.DrawString(location, _fontStats, SystemBrushes.InfoText, draw_pos);
@@ -613,12 +659,13 @@ namespace Rawr
                                 yPos += (int)quality_size.Height;
                             }
 
-                            xPos = 2;                           
+                            xPos = 2;
                             //yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
 
+                            #region Extra Item Lists (like in Build Upgrade List)
                             if (CurrentCharacterItems != null)
                             {
-								for (int slot = 0; slot < Character.SlotCount; slot++)
+                                for (int slot = 0; slot < Character.SlotCount; slot++)
                                 {
                                     ItemInstance tinyItem = CurrentCharacterItems[slot];
                                     if (tinyItem != null && (_currentItemInstance == null || tinyItem.GemmedId != _currentItemInstance.GemmedId))
@@ -650,7 +697,7 @@ namespace Rawr
                                         { // hide the name brush scope to reduce bugs
                                             Brush nameBrush = null;
                                             switch (tinyItem.Item.Quality)
-                                            {                                                
+                                            {
                                                 case ItemQuality.Epic:
                                                     nameBrush = Brushes.Purple;
                                                     break;
@@ -683,18 +730,96 @@ namespace Rawr
                                     }
                                 }
                             }
+                            #endregion
 
                             g.Dispose();
                             g = null;
                         }
                     }
+                // ===== For non-item tooltips =====
+                } else if (_cachedToolTipImage == null && CurrentString != null && CurrentString != "") {
+                    // Discover the minimum size needed
+                    string Title = CurrentString.Split('|')[0].Trim();
+                    string Desc  = CurrentString.Split('|')[1].Trim();
+
+                    int extraSize = 0;
+                    int SizeofanExtraLine = 13;
+                    int countExtraLines = 1;
+                    int widthCharCount = 47;
+                    int nextIndex = 0, lastIndex = 0;
+                    int loopcount = 0;
+
+                    while (lastIndex + widthCharCount < Desc.Length && loopcount < 50)
+                    {
+                        string sub = Desc.Substring(lastIndex + 2, Math.Min(lastIndex + widthCharCount, Desc.Length - lastIndex) - 2);
+                        if (sub.Contains("\r\n")) {
+                            lastIndex = lastIndex + sub.IndexOf("\r\n") + 2;
+                            continue;
+                        }
+                        nextIndex = Desc.IndexOf(" ", lastIndex + widthCharCount);
+                        if (nextIndex > 0) {
+                            Desc = Desc.Insert(nextIndex + 1, "\r\n");
+                            lastIndex = nextIndex + 1;
+                            countExtraLines++;
+                        } else {
+                            lastIndex = Desc.Length;
+                        }
+                        loopcount++;
+                    }
+
+                    countExtraLines = Math.Max(countExtraLines, Desc.Split('\n').Length);
+                    extraSize = countExtraLines * SizeofanExtraLine;
+
+                    // Generate the Base Tooltip Image for the screen
+                    _cachedToolTipImage = new Bitmap(309, 13 + extraSize + 13, PixelFormat.Format32bppArgb);
+
+                    #region Setup for Background of the tooltip
+                    Graphics g = Graphics.FromImage(_cachedToolTipImage);
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+                    Rectangle rectBorder =
+                        new Rectangle(0, 0, _cachedToolTipImage.Width - 1, _cachedToolTipImage.Height - 1);
+                    LinearGradientBrush lgBrush = new LinearGradientBrush(rectBorder,
+                                                            Color.FromArgb(212, 212, 255), Color.FromArgb(192, 192, 255),
+                                                            90);
+                    g.FillRectangle(lgBrush, rectBorder);
+                    lgBrush.Dispose();
+                    lgBrush = null;
+
+                    Pen pen = new Pen(Color.FromArgb(128, 0, 0, 0));
+                    g.DrawRectangle(pen, rectBorder);
+                    pen.Dispose();
+                    pen = null;
+                    #endregion
+
+                    // Draw the tooltip Title text
+                    g.DrawString(Title, new Font("Microsoft Sans Serif", 10F, FontStyle.Bold, GraphicsUnit.Point, 0), Brushes.Black, 2, 4);
+
+                    // Draw the tooltip text
+                    g.DrawString(Desc, _fontName, SystemBrushes.InfoText, 2, 4 + 16);
+
+                    // JOTHAY NOTE: Try to add the info for desc level, like with talents: 2/5, maybe even a next level add-on
                 }
-                if (resetItem)
-                {
+                if (resetItem) {
                     CurrentItemInstance = null;
                     resetItem = false;
                 }
                 return _cachedToolTipImage;
+            }
+        }
+
+        public void Show(Character character, string desc, IWin32Window window, Point point)
+        {
+            Character = character;
+            CurrentItem = null;
+            CurrentCharacterItems = null;
+            CurrentSlot = CharacterSlot.None;
+            CurrentString = desc/*.Split('|')[1]*/;
+            if (CachedToolTipImage != null)
+            {
+                base.Show(desc/*.Split('|')[0]*/, window, point);
             }
         }
 
@@ -726,12 +851,11 @@ namespace Rawr
             CurrentItemInstance = item;
             CurrentCharacterItems = characterItems;
 			CurrentSlot = slot;
-            if (CachedToolTipImage != null && CurrentItemInstance != null)
+            if (CachedToolTipImage != null && CurrentItemInstance != null && item.Item != null)
             {
-                base.Show(item.Item.Name, window, point);
+                 base.Show(item.Item.Name, window, point);
             }
         }
-
 
         private void ItemToolTip_Popup(object sender, PopupEventArgs e)
         {

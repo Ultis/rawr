@@ -14,6 +14,13 @@ namespace Rawr.Enhance
             set { _name = value; }
         }
 
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
         private float _overallPoints = 0f;
         public override float OverallPoints
         {

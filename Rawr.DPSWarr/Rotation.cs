@@ -286,7 +286,7 @@ namespace Rawr.DPSWarr {
         public enum SwingResult : int { Attempt=0, Land, Crit, Parry, Dodge };
         public enum Hand : int { MH=0, OH, Both };
         public enum AttackType : int { Yellow=0, White, Both };
-        private float[,,] _atkOverDurs = new float[Enum.GetNames(typeof(SwingResult)).Length, Enum.GetNames(typeof(Hand)).Length, Enum.GetNames(typeof(AttackType)).Length];
+        private float[,,] _atkOverDurs = new float[5, 3, 3];
         public float GetAttackOverDuration(SwingResult swingResult, Hand hand, AttackType attackType)
         {
             if (_atkOverDurs[(int)swingResult, (int)hand, (int)attackType] == -1f)

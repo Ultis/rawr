@@ -210,6 +210,7 @@ namespace Rawr.Optimizer
     public class ComparisonCalculationUpgrades : ComparisonCalculationBase
     {
         public override string Name { get; set; }
+        public override string Description { get; set; }
         public override float OverallPoints { get; set; }
         public override float[] SubPoints { get; set; }
         public override ItemInstance ItemInstance { get; set; }

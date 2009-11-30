@@ -75,6 +75,9 @@
     <Compile Include="..\..\Rawr.DPSDK\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\RotationGene.cs">
+      <Link>RotationGene.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
     </Compile>
