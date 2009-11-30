@@ -268,10 +268,13 @@ namespace Rawr.Enhance
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
             float magmaSearingSpeed = firstPass ? (_calcOpts.Magma ? 20f : 60f) :
                     (_calcOpts.Magma ? AbilityCooldown(EnhanceAbility.MagmaTotem) : AbilityCooldown(EnhanceAbility.SearingTotem));
+            float fireNovaSpeed = firstPass ? (10f - 2f * _talents.ImprovedFireNova - (_talents.GlyphofFireNova ? 3f : 0f)) :
+                    AbilityCooldown(EnhanceAbility.FireNova);
             fireTotemUptime = _calcOpts.Magma ? 20f / magmaSearingSpeed : 60f / magmaSearingSpeed;
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.Enhance4T7;
             float edCritBonus = .03f * _talents.ElementalDevastation;
+            float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
             hitsPerSMHSS = 0f;
             hitsPerSOHSS = 0f;
             hitsPerSOH = 0f;
@@ -335,7 +338,8 @@ namespace Rawr.Enhance
                 secondsToFiveStack = 5f / mwProcsPerSecond;
 
                 // Elemental Devastation Uptime calc
-                spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed + 1f / magmaSearingSpeed;
+                staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
+                spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond;
                 float couldCritSpellsPerS = spellAttacksPerSec * (1f - chanceSpellMiss);
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
                 averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f + edUptime * edCritBonus;
@@ -354,17 +358,10 @@ namespace Rawr.Enhance
             chanceYellowCritOH += edBonusCrit;
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
             meleeCritsPerSec = (whiteHitsPerSMH * chanceWhiteCritMH) + (whiteHitsPerSOH * chanceWhiteCritOH) + (yellowHitsPerSMH * chanceYellowCritMH) + (yellowHitsPerSOH * chanceYellowCritOH);
-            spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed;
-            if (_calcOpts.MainhandImbue == "Flametongue")  // flametongue weapon imbue is spell damage so we have extra spell attacks per second with it imbued.
-                spellAttacksPerSec += hitsPerSMH;
-            if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
-                spellAttacksPerSec += hitsPerSOH;
             spellCritsPerSec = spellAttacksPerSec * ChanceSpellCrit;
             spellCastsPerSec = spellAttacksPerSec;
             spellMissesPerSec = spellAttacksPerSec * chanceSpellMiss;
             chanceMeleeHit = meleeAttacksPerSec / (swingsPerSMHMelee + swingsPerSOHMelee + 2f * wfProcsPerSecond + .25f + 1f/6f);
-            float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
-            staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
             maxMana = _stats.Mana;
         }
 

@@ -337,8 +337,8 @@ namespace Rawr
         public bool GlyphofFlametongueWeapon { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
         [GlyphData(6, "Glyph of Lava Lash", true, @"Damage on your Lava Lash is increased by an additional 10% if your weapon is enchanted with Flametongue.")]
         public bool GlyphofLavaLash { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        [GlyphData(7, "Glyph of Fire Nova Totem", true, @"Reduces the cooldown of your Fire Nova Totem by 3 seconds.")]
-        public bool GlyphofFireNovaTotem { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        [GlyphData(7, "Glyph of Fire Nova", true, @"Reduces the cooldown of your Fire Nova by 3 seconds.")]
+        public bool GlyphofFireNova { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         [GlyphData(8, "Glyph of Frost Shock", true, @"Increases the duration of your Frost Shock by 2 sec.")]
         public bool GlyphofFrostShock { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
         [GlyphData(9, "Glyph of Healing Stream Totem", true, @"Your Healing Stream Totem heals for an additional 20%.")]

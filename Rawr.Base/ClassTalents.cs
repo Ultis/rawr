@@ -4252,10 +4252,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// <summary>
         /// Increases the damage done by your Fire Nova Totem by [10 * Pts]%, and your Fire Nova totem has a [50 * Pts]% chance to stun all targets damaged by your Fire Nova Totem for 2 sec.
         /// </summary>
-        [TalentData(8, "Improved Fire Nova Totem", 2, 0, 1, 4, -1, new string[] {
-@"Increases the damage done by your Fire Nova Totem by 10%, and your Fire Nova totem has a 50% chance to stun all targets damaged by your Fire Nova Totem for 2 sec.",
-@"Increases the damage done by your Fire Nova Totem by 20%, and your Fire Nova totem has a 100% chance to stun all targets damaged by your Fire Nova Totem for 2 sec.",}, "spell_fire_sealoffire")]
-        public int ImprovedFireNovaTotem { get { return _data[8]; } set { _data[8] = value; } }
+        [TalentData(8, "Improved Fire Nova", 2, 0, 1, 4, -1, new string[] {
+@"Increases the damage done by your Fire Nova by 10% and reduces the cooldown by 2 sec.",
+@"Increases the damage done by your Fire Nova by 20% and reduces the cooldown by 4 sec.",}, "spell_fire_sealoffire")]
+        public int ImprovedFireNova { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
         /// Reduces the pushback suffered from damaging attacks while casting Lightning Bolt, Chain Lightning, Lava Burst and Hex spells by [70 / 3 * Pts]%.
         /// </summary>

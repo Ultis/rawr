@@ -33,7 +33,7 @@ namespace Rawr.Enhance
             float elementalFocus = (_talents.ElementalFocus == 1) ? .6f * _cs.ChanceSpellCrit : 1f;
             float ESMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.18f : baseMana * 0.18f; // 45% reduction if Shamanistic Focus
             float FSMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.17f : baseMana * 0.17f; // 45% reduction if Shamanistic Focus
-            float FNcooldown = (_talents.GlyphofFireNovaTotem ? 7f : 10f) - 2f * _talents.ImprovedFireNovaTotem;
+            float FNcooldown = (_talents.GlyphofFireNova ? 7f : 10f) - 2f * _talents.ImprovedFireNova;
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0 && _talents.ShamanisticRage == 1)
