@@ -483,6 +483,8 @@ namespace Rawr.Enhance
                 float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireNova = (FireNovaNormal + FireNovaCrit) * bonusFireDamage * bossFireResistance;
+                if (calcOpts.MultipleTargets)
+                    dpsFireNova += dpsFireNova * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
             }
 
             //9: Flametongue Weapon DPS++
