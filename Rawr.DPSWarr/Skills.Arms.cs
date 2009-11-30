@@ -22,6 +22,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Mortal Strike";
+            Description = "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
             ReqTalent = true;
             Talent2ChksValue = Talents.MortalStrike;
@@ -55,6 +56,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Sudden Death";
+            Description = "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
             Exec = ex as Execute;
             RageCost = Exec.RageCost;
@@ -107,6 +109,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Overpower";
+            Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
             SS = ss;
             ReqMeleeWeap = true;
@@ -160,7 +163,7 @@ namespace Rawr.DPSWarr.Skills
     {
         // Constructors
         /// <summary>
-        /// Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage.
+        /// Instantly overpower the enemy, causing weapon damage. Only usable after the target takes Rend Damage.
         /// The Overpower cannot be blocked, dodged or parried.
         /// </summary>
         /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
@@ -171,6 +174,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Taste for Blood";
+            Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_;
             ReqTalent = true;
             Talent2ChksValue = Talents.TasteForBlood;
@@ -223,6 +227,7 @@ namespace Rawr.DPSWarr.Skills
             //
             WW = ww;
             Name = "Bladestorm";
+            Description = "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bladestorm;
@@ -267,6 +272,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Sword Specialization";
+            Description = "Gives a (1*Pts)% chance to get an extra attack on the same target after hitting your target with your Sword. This effect cannot occur more than once every 6 seconds.";
             ReqTalent = true;
             Talent2ChksValue = Talents.SwordSpecialization;
             //Targets += StatS.BonusTargets;
@@ -354,6 +360,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Execute";
+            Description = "Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each extra point of rage into 38 additional damage. Only usable on enemies that have less than 20% health.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -409,6 +416,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Slam";
+            Description = "Slams the opponent, causing weapon damage plus 250.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -439,6 +447,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Rend";
+            Description = "Wounds the target causing them to bleed for 380 damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Rend_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -518,6 +527,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "MH White Swing";
+            Description = "White Damage";
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Cd = Whiteattacks.MhEffectiveSpeed;

@@ -19,6 +19,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Deep Wounds";
+            Description = "Your critical strikes cause the opponent to bleed, dealing (16*Pts)% of your melee weapon's average damage over 6 sec.";
             ReqTalent = true;
             Talent2ChksValue = Talents.DeepWounds;
             ReqMeleeWeap = true;
@@ -79,6 +80,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Berserker Rage";
+            Description = "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra tage when taking damage. Lasts 10 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             RageCost = 0f - (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
@@ -104,6 +106,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Enraged Regeneration";
+            Description = "You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect, consumes all Enrage effects and prevents any from affecting you for the full duration.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
             Cd = 3f * 60f; // In Seconds
             RageCost = 15f;
@@ -137,6 +140,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Bloodrage";
+            Description = "Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
             Cd = 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             Duration = 10f; // In Seconds
@@ -175,6 +179,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Battle Shout";
+            Description = "The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
             MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
             Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f * (1f + Talents.BoomingVoice * 0.25f);
@@ -214,6 +219,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Commanding Shout";
+            Description = "The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
             MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
             Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f * (1f + Talents.BoomingVoice * 0.25f);
@@ -250,6 +256,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Death Wish";
+            Description = "When activated you become enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
             ReqTalent = true;
             Talent2ChksValue = Talents.DeathWish;
@@ -279,6 +286,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Recklessness";
+            Description = "Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_;
             Cd = (5f * 60f - Talents.ImprovedDisciplines * 30f) * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             Duration = 12f; // In Seconds
@@ -293,9 +301,7 @@ namespace Rawr.DPSWarr.Skills
     public class SweepingStrikes : BuffEffect
     {
         // Constructors
-        /// <summary>
-        /// Your next 5 melee attacks strike an additional nearby opponent.
-        /// </summary>
+        /// <summary>Your next 5 melee attacks strike an additional nearby opponent.</summary>
         /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
         public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
@@ -303,6 +309,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Sweeping Strikes";
+            Description = "Your next 5 melee attacks strike an additional nearby opponent.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
             ReqTalent = true;
             Talent2ChksValue = Talents.SweepingStrikes;
@@ -333,6 +340,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Second Wind";
+            Description = "Whenever you are struck by a Stun of Immoblize effect you will generate 10*Pts Rage and (5*Pts)% of your total health over 10 sec.";
             //AbilIterater = -1f;
             ReqTalent = true;
             Talent2ChksValue = Talents.SecondWind;
@@ -382,6 +390,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Thunder Clap";
+            Description = "Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -438,7 +447,7 @@ namespace Rawr.DPSWarr.Skills
     public class SunderArmor : BuffEffect
     {
         // Constructors
-        /// <summary></summary>
+        /// <summary>Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.  Threat increased by attack power.  Can be applied up to 5 times.  Lasts 30 sec.</summary>
         /// <TalentsAffecting>Focused Rage [-(Pts) Rage Cost], Puncture [-(Pts) Rage Cost], </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Sunder Armor [+1 Targets]</GlyphsAffecting>
         public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
@@ -446,6 +455,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Sunder Armor";
+            Description = "Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.  Threat increased by attack power.  Can be applied up to 5 times.  Lasts 30 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -502,6 +512,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Shattering Throw";
+            Description = "Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power), reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_;
             ReqMeleeWeap = true;
             ReqMeleeRange = false;
@@ -535,6 +546,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Demoralizing Shout";
+            Description = "Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_;
             ReqMeleeWeap = false;
             ReqMeleeRange = false;
@@ -549,8 +561,8 @@ namespace Rawr.DPSWarr.Skills
             /*Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { /*AttackPower = 411f,*/
             /* }, // needs to be boss debuff
-Duration, Duration,
-MHAtkTable.Hit + MHAtkTable.Crit);*/
+            Duration, Duration,
+            MHAtkTable.Hit + MHAtkTable.Crit);*/
         }
         protected override float ActivatesOverride
         {
@@ -594,6 +606,7 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Hamstring";
+            Description = "Instant, No cd, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker) Maims the enemy, reducing movement speed by 50% for 15 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -656,6 +669,7 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Every Man for Himself";
+            Description = "Removes all movement impairing effects and all effects which cause loss of control of your character. This effect shares a cooldown with other similar effects.";
             Cd = 2f * 60f;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
@@ -677,6 +691,7 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Heroic Fury";
+            Description = "Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.";
             ReqTalent = true;
             Talent2ChksValue = Talents.HeroicFury;
             Cd = 45f;
@@ -705,22 +720,19 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
         /// Glyph of Rapid Charge [-7% Cd]
         /// Glyph of Charge [+5 yds MaxRange]
         /// </GlyphsAffecting>
-        public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
-        {
+        public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Charge";
+            Description = "Charge an enemy, generate 15 rage, and stun it for 1.50 sec. Cannot be used in combat.";
             MinRange = 8f;
             MaxRange = 25f + (Talents.GlyphOfCharge ? 5f : 0f); // In Yards 
             Cd = (15f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
             Duration = 1.5f;
             RageCost = -(15f + (Talents.ImprovedCharge * 5f));
-            if (Talents.Warbringer == 1)
-            {
+            if (Talents.Warbringer == 1) {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
-            }
-            else if (Talents.Juggernaut == 1)
-            {
+            } else if (Talents.Juggernaut == 1) {
                 StanceOkArms = true;
             }
             //
@@ -742,6 +754,8 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
+            Name = "Intercept";
+            Description = "Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.";
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
             Cd = 30f - (Talents.ImprovedIntercept * 5f) - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
@@ -769,6 +783,8 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
+            Name = "Intervene";
+            Description = "Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.";
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
             Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
@@ -795,6 +811,7 @@ MHAtkTable.Hit + MHAtkTable.Crit);*/
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Retaliation";
+            Description = "Instantly counterattack any enemy that strikes you in melee for 12 sec. Melee attacks made from behind cannot be counterattacked. A maximum of 20 attacks will cause retaliation.";
             StanceOkArms = true;
             ReqMeleeRange = true;
             ReqMeleeWeap = true;

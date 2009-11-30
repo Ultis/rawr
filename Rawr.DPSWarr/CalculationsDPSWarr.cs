@@ -833,14 +833,16 @@ These numbers to do not include racial bonuses.",
                     }
                     _subPointNameColors = _subPointNameColors_DPSDMG;
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                        foreach (Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
-                        {
-                            ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
-                            comparison.Name = aw.ability.Name;
-                            comparison.DPSPoints = aw.DPS;
-                            comparison.SurvPoints = aw.ability.DamageOnUse;
-                            comparisons.Add(comparison);
-                        }
+                    foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
+                    {
+                        if (aw.ability.DamageOnUse == 0) { continue; }
+                        ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                        comparison.Name = aw.ability.Name;
+                        comparison.Description = aw.ability.Description;
+                        comparison.DPSPoints = aw.DPS;
+                        comparison.SurvPoints = aw.ability.DamageOnUse;
+                        comparisons.Add(comparison);
+                    }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
@@ -914,13 +916,16 @@ These numbers to do not include racial bonuses.",
 
                     foreach (Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
                     {
+                        if (aw.ability.DamageOnUse == 0) { continue; }
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
-                        comparison.DPSPoints = (aw.ability.RageCost * aw.ability.AvgTargets) / aw.ability.DamageOnUse;
-                        comparison.SurvPoints = (aw.ability.MHAtkTable.Crit * aw.ability.AvgTargets) * (DeepWoundsDamage / aw.ability.DamageOnUse);
+                        comparison.Description = string.Format("Costs {0} Rage\r\n{1}",aw.ability.RageCost,aw.ability.Description);
+                        comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / aw.ability.RageCost;
+                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / aw.ability.RageCost;
                         comparisons.Add(comparison);
-                    }                    foreach (ComparisonCalculationDPSWarr comp in comparisons) {
-                        comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
+                    }
+                    foreach (ComparisonCalculationDPSWarr comp in comparisons) {
+                        comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
                     calcOpts.Maintenance = origMaints;
                     return comparisons.ToArray();

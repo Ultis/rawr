@@ -376,6 +376,7 @@ namespace Rawr.DPSWarr.Skills
             CalcOpts = null;
             // Ability Related
             Name = "Invalid";
+            Description = "Invalid";
             ReqTalent = false;
             CanBeDodged = true;
             CanBeParried = true;
@@ -415,16 +416,15 @@ namespace Rawr.DPSWarr.Skills
         #endregion
         #region Get/Set
         public string Name { get; protected set; }
+        public string Description { get; protected set; }
         protected bool ReqTalent { get; set; }
         protected int Talent2ChksValue { get; set; }
         public bool ReqMeleeWeap { get; set; }
         public bool ReqMeleeRange { get; set; }
         protected bool ReqMultiTargs { get; set; }
         private float _AvgTargets = -1f;
-        public float AvgTargets
-        {
-            get
-            {
+        public float AvgTargets {
+            get {
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {

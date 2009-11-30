@@ -5,7 +5,6 @@ using System;
 
 namespace Rawr.DPSWarr.Skills
 {
-
     public class ShieldSlam : Ability
     {
         /// <summary>

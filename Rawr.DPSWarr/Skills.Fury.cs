@@ -20,6 +20,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Bloodthirst";
+            Description = "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bloodthirst;
@@ -41,9 +42,8 @@ namespace Rawr.DPSWarr.Skills
     }
     public class WhirlWind : Ability
     {
-        // Constructors
         /// <summary>
-        /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,    
+        /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,
         /// causing weapon damage from both melee weapons to each enemy.
         /// </summary>
         /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
@@ -53,6 +53,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Whirlwind";
+            Description = "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -67,27 +68,19 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        // Variables
-        // Get/Set
-        // Functions
         // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>
         /// <param name="Override">When true, do not check for Bers Stance</param>
         /// <param name="isOffHand">When true, do calculations for off-hand damage instead of main-hand</param>
         /// <returns>Unmitigated damage of a single hit</returns>
-        private float GetDamage(bool isOffHand)
-        {
+        private float GetDamage(bool isOffHand) {
             float Damage;
-            if (isOffHand)
-            {
+            if (isOffHand) {
                 Damage = combatFactors.NormalizedOhWeaponDmg;
-            }
-            else
-            {
+            } else {
                 Damage = combatFactors.NormalizedMhWeaponDmg;
             }
-
             return Damage * DamageBonus;
         }
         public override float DamageOnUseOverride
@@ -158,6 +151,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Bloodsurge";
+            Description = "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bloodsurge;
@@ -233,6 +227,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Heroic Strike";
+            Description = "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -268,6 +263,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Cleave";
+            Description = "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -296,6 +292,5 @@ namespace Rawr.DPSWarr.Skills
         /// <GlyphsAffecting></GlyphsAffecting>
         ///  - (Talents.FocusedRage * 1f)
     }
-
     #endregion
 }

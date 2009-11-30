@@ -1427,6 +1427,7 @@ namespace Rawr
                 {
                     ccb.SubPoints[i] = (charCalcsUpper.SubPoints[i] - charCalcsLower.SubPoints[i]) / changePointDifference;
                 }
+                ccb.Description = string.Format("If you had {0} more{1}", 1/*changePointDifference*/, ccb.Name);
             }
             return ccb;
         }
