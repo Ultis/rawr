@@ -15,28 +15,32 @@ namespace Rawr.UI
 {
     public partial class BossPicker : UserControl
     {
+        private BossHandler _BossOptions;
+        public BossHandler BossOptions {
+            get { return _BossOptions; }
+            set {
+                if (_BossOptions != null) {
+                    _BossOptions.PropertyChanged -= new PropertyChangedEventHandler(bossOpts_PropertyChanged);
+                }
+                _BossOptions = value;
+                DataContext = _BossOptions;
+                _BossOptions.PropertyChanged += new PropertyChangedEventHandler(bossOpts_PropertyChanged);
+                bossOpts_PropertyChanged(this, null);
+            }
+        }
+
         private Character _char;
-        public Character Character
-        {
+        public Character Character {
             get { return _char; }
-            set
-            {
+            set {
                 if (_char != null) {
                     _char.ClassChanged -= new EventHandler(character_ClassChanged);
-                    /*if (_char.BossOptions != null) {
-                        _char.BossOptions.PropertyChanged -= new PropertyChangedEventHandler(bossOpts_PropertyChanged);
-                    }*/
                 }
                 _char = value;
-                if (_char != null)
-                {
+                if (_char != null) {
                     _char.ClassChanged += new EventHandler(character_ClassChanged);
                     character_ClassChanged(this, EventArgs.Empty);
-
-                    //BossHandler bossOpts = _char.BossOptions;
-                    //DataContext = bossOpts;
-                    //bossOpts.PropertyChanged += new PropertyChangedEventHandler(bossOpts_PropertyChanged);
-                    //bossOpts_PropertyChanged(this, null);
+                    BossOptions = Character.BossOptions;
                 }
             }
         }
@@ -50,7 +54,7 @@ namespace Rawr.UI
         private bool isLoading = false;
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            /*BossHandler bossOpts = Character.BossOptions;
+            //BossHandler bossOpts = Character.BossOptions;
             // Target Armor/Level
             if (!isLoading && CB_Level.SelectedIndex == -1) { CB_Level.SelectedIndex = 0; }
             if (!isLoading && CB_Armor.SelectedIndex == -1) { CB_Armor.SelectedIndex = 0; }
@@ -66,7 +70,7 @@ namespace Rawr.UI
             BT_Fears.IsEnabled = (bool)CK_FearingTargs.IsChecked;
             BT_Roots.IsEnabled = (bool)CK_RootingTargs.IsChecked;
             BT_Disarms.IsEnabled = (bool)CK_DisarmTargs.IsChecked;
-            BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;*/
+            BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;
             //
             Character.OnCalculationsInvalidated();
         }

@@ -72,9 +72,6 @@
     <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
       <Link>ComparisonCalculationsDPSWarr.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\ErrorBoxDPSWarr.cs">
-      <Link>ErrorBoxDPSWarr.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Markov\StateSpaceArms.cs">
       <Link>Markov\StateSpaceArms.cs</Link>
     </Compile>

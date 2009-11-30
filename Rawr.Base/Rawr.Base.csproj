@@ -99,9 +99,21 @@
     <Compile Include="ArrayUtils.cs" />
     <Compile Include="AvailableItemGenerator.cs" />
     <Compile Include="BatchOptimizer.cs" />
-    <Compile Include="Bosses.cs" />
-    <Compile Include="Bosses2.cs" />
-    <Compile Include="BossHandler.cs" />
+    <Compile Include="Bosses\Bosses.cs" />
+    <Compile Include="Bosses\Bosses2.cs" />
+    <Compile Include="Bosses\BossHandler.cs" />
+    <Compile Include="Bosses\DG_BossAttacks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Bosses\DG_BossAttacks.Designer.cs">
+      <DependentUpon>DG_BossAttacks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Bosses\DG_BossSitChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Bosses\DG_BossSitChanges.Designer.cs">
+      <DependentUpon>DG_BossSitChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Buff.cs" />
     <Compile Include="Calculations.cs">
       <SubType>UserControl</SubType>
@@ -109,9 +121,10 @@
     <Compile Include="Character.cs" />
     <Compile Include="CharacterProfilerData.cs" />
     <Compile Include="BaseStats.cs" />
-    <Compile Include="BossList.cs" />
+    <Compile Include="Bosses\BossList.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
+    <Compile Include="CustomControls\ErrorBox.cs" />
     <Compile Include="CustomControls\ExtendedToolTipCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -196,6 +209,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Bosses\DG_BossAttacks.resx">
+      <DependentUpon>DG_BossAttacks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Bosses\DG_BossSitChanges.resx">
+      <DependentUpon>DG_BossSitChanges.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Graph.resx">
       <DependentUpon>Graph.cs</DependentUpon>
       <SubType>Designer</SubType>

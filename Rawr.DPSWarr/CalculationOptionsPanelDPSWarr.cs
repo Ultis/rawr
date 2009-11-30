@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using Rawr.Base;
+using Rawr.Bosses;
 
 /* Things to add:
  * 
@@ -26,7 +27,6 @@ namespace Rawr.DPSWarr {
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
         public CalculationOptionsPanelDPSWarr() {
-            int line = 0;
             isLoading = true;
             try {
                 InitializeComponent();
@@ -38,7 +38,7 @@ namespace Rawr.DPSWarr {
                 CK_Markov.Visible  = false;
 #endif
 
-                CTL_Maints.ExpandAll(); line = 10;
+                CTL_Maints.ExpandAll();
 #region Tooltips
 #region Boss Selector
 LB_Under20Perc.ToolTipText =
@@ -115,7 +115,7 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 if (bosslist == null) { bosslist = new BossList(); }
                 // Populate the Boss List ComboBox
                 if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
-                if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); } line = 15;
+                if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); }
                 // Set the default Filter Type
                 if (CB_BL_FilterType.Text == "") { CB_BL_FilterType.Text = "Content"; }
                 // Set the Default filter to All and Populate the list based upon the Filter Type
@@ -124,45 +124,45 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
                 bosslist.GenCalledList(BossList.FilterType.Content, CB_BL_Filter.Text);
                 if (CB_BL_Filter.Items.Count < 2) { CB_BL_Filter.Items.AddRange(bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))); }
-                line = 20;
+                
                 if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
                 CB_BossList.Items.Add("Custom");
                 CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
                 #endregion
-                line = 25;
+                
                 CB_Duration.Minimum = 0;
                 CB_Duration.Maximum = 60 * 20; // 20 minutes
-                line = 50;
+                
                 CB_CalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
-                    ex.Message, "CalculationOptionsPanelDPSWarr()", "No Additional Info", ex.StackTrace, line);
+                new ErrorBox("Error in creating the DPSWarr Options Pane",
+                    ex.Message, "CalculationOptionsPanelDPSWarr()", "No Additional Info", ex.StackTrace);
             }
             isLoading = false;
         }
         protected override void LoadCalculationOptions() {
-            int line = 0; string info = "";
-            isLoading = true; line = 1;
-            CalculationOptionsDPSWarr calcOpts; line = 2;
+            string info = "";
+            isLoading = true;
+            CalculationOptionsDPSWarr calcOpts;
             try {
                 if (Character != null && Character.CalculationOptions == null) {
                     // If it's broke, make a new one with the defaults
-                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
-                    isLoading = true; line = 4;
+                    Character.CalculationOptions = new CalculationOptionsDPSWarr();
+                    isLoading = true;
                 }
-                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
-                CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString(); isLoading = true;
+                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                CB_BossList.Text = calcOpts.BossName; info = calcOpts.TargetLevel.ToString(); isLoading = true;
                 CB_TargLvl.Text = info; isLoading = true;// string.Format("{0}", calcOpts.TargetLevel);
-                line = 7; info = calcOpts.TargetArmor.ToString(); isLoading = true;
-                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8; isLoading = true;
-                CB_Duration.Value = (decimal)calcOpts.Duration; line = 9; isLoading = true;
-                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; line = 10; isLoading = true;
-                RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11; isLoading = true;
-                CK_PTRMode.Checked = calcOpts.PTRMode; line = 12; isLoading = true;
-                CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
-                CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
-                CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP; line = 13;
-                NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
+                info = calcOpts.TargetArmor.ToString(); isLoading = true;
+                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); isLoading = true;
+                CB_Duration.Value = (decimal)calcOpts.Duration; isLoading = true;
+                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; isLoading = true;
+                RB_StanceArms.Checked = !calcOpts.FuryStance;  isLoading = true;
+                CK_PTRMode.Checked = calcOpts.PTRMode; isLoading = true;
+                CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
+                CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+                CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
+                NUD_SurvScale.Value = (decimal)calcOpts.SurvScale;
 
                 CustomBoss.Stuns = calcOpts.Stuns;
                 CustomBoss.Moves = calcOpts.Moves;
@@ -178,7 +178,7 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
                 CB_BossList.Text = calcOpts.BossName;
                 isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
-                firstload = false; line = 15;
+                firstload = false;
 
                 // Rotational Changes
                 CK_InBack.Checked = calcOpts.InBack;
@@ -221,16 +221,16 @@ Turn all three of these options off for normal behavior based solely on Item Typ
 
                 // Abilities to Maintain
                 CK_Flooring.Checked = calcOpts.AllowFlooring;
-                LoadAbilBools(calcOpts); line = 30;
+                LoadAbilBools(calcOpts);
                 // Latency
                 CB_Lag.Value = (int)calcOpts.Lag;
-                CB_React.Value = (int)calcOpts.React; line = 40;
+                CB_React.Value = (int)calcOpts.React;
                 // Special Effects Special Option
                 CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
                 //
                 calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
                 RB_StanceFury.Checked = calcOpts.FuryStance;
-                RB_StanceArms.Checked = !RB_StanceFury.Checked; line = 50;
+                RB_StanceArms.Checked = !RB_StanceFury.Checked;
                 //
                 CK_Markov.Checked = calcOpts.UseMarkov;
                 //
@@ -247,8 +247,8 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 //
                 Character.OnCalculationsInvalidated();
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
+                new ErrorBox("Error in loading the DPSWarr Options Pane",
+                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
             }
             ItemCache.OnItemsChanged();
             isLoading = false;
@@ -371,7 +371,7 @@ PNStuff.Add(
 PNStuff.Add(
 "v2.2.25 (Nov 08, 2009 19:54)",
 @"- Fix for issue 14526 (Bladestorm eating all your GCDs in low rage settings). Also removed a reference to a variable in Rotation.cs that was never used
-- Refactored ErrorBoxDPSWarr to a new file
+- Refactored ErrorBox to a new file
 - Added a check for the iterator for Heroic Strikes/Cleaves to use the already set verification of (HS/CL)OK before attempting to loop, should imp perf a little for users not HS'g
 - Added a Dev Only Accessible checkbox to enable Markov Rotation for Arms (working a new method that's more intelligent and better adapted for Interference modeling, it doesn't actually do anything as we haven't fully constructed the necessary files)
 - Fix for Mongoose, fix for off-hand weapon enchants using MH speed in their uptime, some performance improvements
@@ -386,7 +386,7 @@ PNStuff.Add(
 - Rawr3: Significant improvements to the Options pane, objects should line up correctly, enable/disable and tie to the correct parameters. There's still work to be done but we're getting close to a fully functional Rawr3 model.
 - Added a verifier for bleed hit intervals (in Special Effects handling) to check if Rend is being maintained instead of assuming it is.
 - Cleaned out some old commented code
-- Added logfile creation for recording errors in DPSWarr that go through ErrorBoxDPSWarr class. This is primarily for Rawr3 debugging.
+- Added logfile creation for recording errors in DPSWarr that go through ErrorBox class. This is primarily for Rawr3 debugging.
 - Ability Maintenance Tree now ties to abilities, but for some reason when you open that tab, it resets all of them to off (thus making user re-activate them on each character load). Once reactivated, it seems to work fine.
 - Fixed the Ability Maintenance so it won't reset them all to not active (had to do away with the tree unfortunately)
 - Got some of the ComboBoxes working
@@ -1067,7 +1067,6 @@ CB_Version.Items.Add("All");
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, EventArgs e) {
-            int line = 0;
             try {
                 if (!isLoading && !isLoadingBoss) {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -1089,16 +1088,16 @@ CB_Version.Items.Add("All");
                         calcOpts.RootingTargets = boss.Roots.Count > 0;
                         calcOpts.DisarmingTargets = boss.Disarms.Count > 0;
                         calcOpts.AoETargets = ((calcOpts.AoETargetsFreq = (int)(boss.AoETargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.AoETargetsFreq != 0f);
-                        calcOpts.AoETargetsDMG = boss.AoETargsDMG; line = 16;
+                        calcOpts.AoETargetsDMG = boss.AoETargsDMG;
 
                         // Set Controls to those Values
                         CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
                         CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
                         CB_Duration.Value = (int)calcOpts.Duration;
-                        NUD_TargHP.Value = (int)calcOpts.TargetHP; line = 20;
+                        NUD_TargHP.Value = (int)calcOpts.TargetHP;
 
                         CK_InBack.Checked = calcOpts.InBack;
-                        CB_InBackPerc.Value = calcOpts.InBackPerc; line = 25;
+                        CB_InBackPerc.Value = calcOpts.InBackPerc;
 
                         CK_MultiTargs.Checked = calcOpts.MultipleTargets;
                         LB_Max.Enabled = calcOpts.MultipleTargets;
@@ -1106,7 +1105,7 @@ CB_Version.Items.Add("All");
                         CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
                         CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets;
                         CB_MultiTargsPerc.Value = calcOpts.MultipleTargetsPerc;
-                        CB_MultiTargsMax.Value = Math.Max(CB_MultiTargsMax.Minimum, Math.Min(CB_MultiTargsMax.Maximum, (int)calcOpts.MultipleTargetsMax)); line = 30;
+                        CB_MultiTargsMax.Value = Math.Max(CB_MultiTargsMax.Minimum, Math.Min(CB_MultiTargsMax.Maximum, (int)calcOpts.MultipleTargetsMax));
 
                         CK_StunningTargs.Checked = calcOpts.StunningTargets;
                         BT_Stun.Enabled = calcOpts.StunningTargets;
@@ -1137,7 +1136,7 @@ CB_Version.Items.Add("All");
                         NUD_AoEFreq.Enabled = calcOpts.AoETargets;
                         NUD_AoEDMG.Enabled = calcOpts.AoETargets;
                         NUD_AoEFreq.Value = (int)Math.Max(NUD_AoEFreq.Minimum, Math.Min(NUD_AoEFreq.Maximum, calcOpts.AoETargetsFreq));
-                        NUD_AoEDMG.Value = (int)Math.Max(NUD_AoEDMG.Minimum, Math.Min(NUD_AoEDMG.Maximum, (decimal)calcOpts.AoETargetsDMG)); line = 60;
+                        NUD_AoEDMG.Value = (int)Math.Max(NUD_AoEDMG.Minimum, Math.Min(NUD_AoEDMG.Maximum, (decimal)calcOpts.AoETargetsDMG));
 
                         Stats stats = calcs.GetCharacterStats(Character, null);
                         TB_BossInfo.Text = boss.GenInfoString(
@@ -1183,8 +1182,8 @@ CB_Version.Items.Add("All");
                 }
                 isLoadingBoss = false;
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in setting DPSWarr Character settings from Boss",
-                    ex.Message,"CB_BossList_SelectedIndexChanged()", "No Additional Info", ex.StackTrace , line);
+                new ErrorBox("Error in setting DPSWarr Character settings from Boss",
+                    ex.Message,"CB_BossList_SelectedIndexChanged()", "No Additional Info", ex.StackTrace);
             }
         }
         // Basics
@@ -1567,7 +1566,6 @@ CB_Version.Items.Add("All");
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]     = CTL_Maints.Nodes[4].Nodes[1].Checked;
         }
         private void LoadAbilBools(CalculationOptionsDPSWarr calcOpts) {
-            int line = 0;
             try {
                 CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
                 // Bounds Check
@@ -1610,8 +1608,8 @@ CB_Version.Items.Add("All");
                 //
                 this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in loading the DPSWarr Ability Bool Set",
-                    ex.Message, "LoadAbilBools()", "No Additional Info", ex.StackTrace, line);
+                new ErrorBox("Error in loading the DPSWarr Ability Bool Set",
+                    ex.Message, "LoadAbilBools()", "No Additional Info", ex.StackTrace);
             }
         }
         // Latency

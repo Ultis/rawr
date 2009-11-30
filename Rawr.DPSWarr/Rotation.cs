@@ -502,7 +502,7 @@ namespace Rawr.DPSWarr {
         #endregion
 
         #region Lost Time due to Combat Factors
-        private float _emActs, _emRecovery, _emRecoveryTotal;
+        private float _emActs/*, _emRecovery, _emRecoveryTotal*/;
 
         /// <summary>
         /// Calculates percentage of time lost due to moving, being rooted, etc
@@ -511,7 +511,7 @@ namespace Rawr.DPSWarr {
         /// <returns>Percentage of time lost as a float</returns>
         protected float CalculateTimeLost(Ability MS)
         {
-            _emActs = 0f; _emRecovery = 0f; _emRecoveryTotal = 0f;
+            _emActs = 0f; //_emRecovery = 0f; _emRecoveryTotal = 0f;
             TimeLostGDCs = 0;
             RageGainedWhileMoving = 0; 
 

@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Rawr.Base;
 
 /* Things to add:
  * 
@@ -85,33 +86,33 @@ namespace Rawr.DPSWarr {
                 //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
                 //line = 25;
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
-                    ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException.Message, ex.StackTrace, 0);
+                new ErrorBox("Error in creating the DPSWarr Options Pane",
+                    ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException.Message, ex.StackTrace);
             }
             isLoading = false;
         }
         public void LoadCalculationOptions()
         {
-            int line = 0; string info = "";
-            isLoading = true; line = 1;
+            string info = "";
+            isLoading = true;
             try {
-                CalculationOptionsDPSWarr calcOpts; line = 2;
+                CalculationOptionsDPSWarr calcOpts;
                 if (Character != null && Character.CalculationOptions == null)
                 {
                     // If it's broke, make a new one with the defaults
-                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
-                    isLoading = true; line = 4;
+                    Character.CalculationOptions = new CalculationOptionsDPSWarr();
+                    isLoading = true;
                 }
                 else if (Character == null) { return; }
-                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
+                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
                 CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
                 CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
-                CB_TargArmor.SelectedItem = calcOpts.TargetArmor.ToString(); line = 8;
+                CB_TargArmor.SelectedItem = calcOpts.TargetArmor.ToString();
                 CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
                 CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
-                ItemCache.OnItemsChanged(); line = 13;
+                ItemCache.OnItemsChanged();
 
                 // Boss Selector
                 // Save the new names
@@ -122,7 +123,7 @@ namespace Rawr.DPSWarr {
                 isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
                 //CB_BossList.Text = calcOpts.BossName;
                 isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
-                firstload = false; line = 15;
+                firstload = false;
 
                 // Rotational Changes
                 LB_InBehindPerc.IsEnabled = calcOpts.InBack;
@@ -145,12 +146,12 @@ namespace Rawr.DPSWarr {
                 NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
 
                 // Abilities to Maintain
-                LoadAbilBools(calcOpts); line = 30;
+                LoadAbilBools(calcOpts);
                 //
                 calcOpts_PropertyChanged(null, null);
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
+                new ErrorBox("Error in loading the DPSWarr Options Pane",
+                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
             }
             isLoading = false;
         }
@@ -965,8 +966,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     isLoading = false;
                 }
             }catch (Exception ex){
-                new ErrorBoxDPSWarr("Error in the Boss Options",
-                    ex.Message, "CB_BL_FilterType_SelectedIndexChanged()", "No Additional Info", ex.StackTrace, 0);
+                new ErrorBox("Error in the Boss Options",
+                    ex.Message, "CB_BL_FilterType_SelectedIndexChanged()", "No Additional Info", ex.StackTrace);
             }
         }
         private void CB_BL_Filter_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
@@ -993,8 +994,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     isLoading = false;
                 }
             }catch (Exception ex){
-                new ErrorBoxDPSWarr("Error in the Boss Options",
-                    ex.Message, "CB_BL_Filter_SelectedIndexChanged()", "No Additional Info", ex.StackTrace, 0);
+                new ErrorBox("Error in the Boss Options",
+                    ex.Message, "CB_BL_Filter_SelectedIndexChanged()", "No Additional Info", ex.StackTrace);
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
@@ -1105,8 +1106,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     Character.OnCalculationsInvalidated();
                 }
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in setting DPSWarr Character settings from Boss",
-                    ex.Message, "CB_BossList_SelectedIndexChanged()", "No Additional Info", ex.StackTrace, 0);
+                new ErrorBox("Error in setting DPSWarr Character settings from Boss",
+                    ex.Message, "CB_BossList_SelectedIndexChanged()", "No Additional Info", ex.StackTrace);
             }
             isLoading = false;
         }

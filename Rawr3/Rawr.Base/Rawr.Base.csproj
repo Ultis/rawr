@@ -95,17 +95,17 @@
     <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Bosses.cs">
-      <Link>Bosses.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\Bosses.cs">
+      <Link>Bosses\Bosses.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Bosses2.cs">
-      <Link>Bosses2.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\Bosses2.cs">
+      <Link>Bosses\Bosses2.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\BossHandler.cs">
-      <Link>BossHandler.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossHandler.cs">
+      <Link>Bosses\BossHandler.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\BossList.cs">
-      <Link>BossList.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossList.cs">
+      <Link>Bosses\BossList.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Buff.cs">
       <Link>Buff.cs</Link>
@@ -121,6 +121,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\ClassTalents.cs">
       <Link>ClassTalents.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\CustomControls\ErrorBox.cs">
+      <Link>CustomControls\ErrorBox.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Enchant.cs">
       <Link>Enchant.cs</Link>

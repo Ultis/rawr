@@ -6,13 +6,16 @@
 	mc:Ignorable="d"
 	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	xmlns:local="clr-namespace:Rawr.UI"
-    xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input" xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
+    xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     x:Class="Rawr.UI.BossPicker"
     d:DesignWidth="340" d:DesignHeight="580">
-    
+    <UserControl.DataContext>
+        <Rawr:BossHandler/>
+    </UserControl.DataContext>
     <Grid x:Name="LayoutRoot">
         <ScrollViewer BorderThickness="0,0,0,0" Padding="0">
-
         	<StackPanel>
         		<TextBlock x:Name="LB_NoticeNon" FontWeight="SemiBold" Foreground="#FFDC1111" Text="NOTICE: This Tab is non-functional at this time." TextAlignment="Center" TextWrapping="Wrap"/>
         		<TextBlock x:Name="LB_Notice" Margin="3,0" FontWeight="SemiBold" Foreground="#FFB4B524" Text="NOTICE: Many models do not yet support the Boss Handler so changes here will not have any effect on your character in those models." TextAlignment="Center" TextWrapping="Wrap"/>
@@ -59,7 +62,7 @@
         		</Grid>
         		<Grid x:Name="PN_HP" Height="26">
         			<dataInput:Label x:Name="LB_TargHP" Height="14" Content="Health:" TabIndex="22" HorizontalAlignment="Left" Margin="3,6,0,6"/>
-        			<inputToolkit:NumericUpDown x:Name="NUD_TargHP" Height="20" Maximum="100000000" Minimum="500000" TabIndex="23" Margin="165,3,35,3" />
+        			<inputToolkit:NumericUpDown x:Name="NUD_TargHP" Height="20" Maximum="100000000" Minimum="500000" TabIndex="23" Margin="165,3,35,3" Value="{Binding Health, Mode=TwoWay, UpdateSourceTrigger=Default}" />
         		</Grid>
         		<Grid x:Name="PN_Under35Perc" Height="26">
         			<dataInput:Label x:Name="LB_Under35Perc" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" HorizontalAlignment="Left" TabIndex="11" Margin="3,6,0,6" Content="% Time Spent Sub 35% HP:" d:LayoutOverrides="HorizontalAlignment"/>
@@ -73,13 +76,13 @@
         		</Grid>
         		<Grid x:Name="PN_InBackPerc" Height="26">
         			<CheckBox x:Name="CK_InBack" Content="You stand behind boss *" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="14" Margin="3,4,0,4" HorizontalAlignment="Left" Height="18"/>
-        			<inputToolkit:NumericUpDown x:Name="CB_InBackPerc" TabIndex="15" Margin="165,3,35,3" Height="20"/>
+        			<inputToolkit:NumericUpDown x:Name="CB_InBackPerc" TabIndex="15" Margin="165,3,35,3" Height="20" Value="{Binding InBackPerc_Melee, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
         			<dataInput:Label x:Name="LB_InBehindPerc" Content="%" TabIndex="16" Margin="0,6,3,6" HorizontalAlignment="Right" Width="30"/>
         		</Grid>
         		<Grid x:Name="PN_MultiTargs" Height="26">
         			<CheckBox x:Name="CK_MultiTargs" Content="Multiple Targets *" ToolTipService.ToolTip="How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4" IsChecked="{Binding MultipleTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="17" Margin="3,4,0,4" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment" Height="18"/>
-        			<inputToolkit:NumericUpDown x:Name="CB_MultiTargsMax" Maximum="8" Minimum="1" TabIndex="19" HorizontalAlignment="Left" Margin="165,3,0,3" Height="20" Width="44"/>
-        			<inputToolkit:NumericUpDown x:Name="CB_MultiTargsPerc" TabIndex="20" Margin="213,3,35,3" Height="20"/>
+        			<inputToolkit:NumericUpDown x:Name="CB_MultiTargsMax" Maximum="8" Minimum="1" TabIndex="19" HorizontalAlignment="Left" Margin="165,3,0,3" Height="20" Width="44" Value="{Binding MaxNumTargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+        			<inputToolkit:NumericUpDown x:Name="CB_MultiTargsPerc" TabIndex="20" Margin="213,3,35,3" Height="20" Value="{Binding MultiTargsPerc, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
         			<dataInput:Label x:Name="LB_MultiTargsPerc" Content="%" TabIndex="21" Margin="0,6,3,6" HorizontalAlignment="Right" Width="30"/>
         			<TextBlock x:Name="LB_Max" HorizontalAlignment="Left" Margin="135,6,0,6" Text="Max:" TextAlignment="Right"/>
         		</Grid>
@@ -109,7 +112,6 @@
         		</Grid>
         		<TextBox x:Name="TB_BossInfo" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="VerticalAlignment" Margin="3,2,3,3" Text="Boss Information would normally be displayed here"/>
         	</StackPanel>
-
         </ScrollViewer>
     </Grid>
 </UserControl>

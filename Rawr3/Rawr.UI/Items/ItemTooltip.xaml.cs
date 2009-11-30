@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using Rawr.Base;
 
 namespace Rawr.UI
 {
@@ -162,10 +163,10 @@ namespace Rawr.UI
                 ItemsGrid.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex) {
-                Rawr.DPSWarr.ErrorBoxDPSWarr eb = new Rawr.DPSWarr.ErrorBoxDPSWarr(
+                ErrorBox eb = new ErrorBox(
                     "Error setting up a Non-Item Tooltip",
                     ex.Message, "NonItemTooltip()", "No Additional Info",
-                    ex.StackTrace, 0);
+                    ex.StackTrace);
             }
         }
 

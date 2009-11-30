@@ -374,6 +374,7 @@ namespace Rawr
             m_character = new Character(m_sName, m_sRealm,
 			charRegion,
 			race,
+            new BossHandler(),
 			getGearStringBySlot(m_characterInfo, "Head", false),
             getGearStringBySlot(m_characterInfo, "Neck", false),
             getGearStringBySlot(m_characterInfo, "Shoulder", false),

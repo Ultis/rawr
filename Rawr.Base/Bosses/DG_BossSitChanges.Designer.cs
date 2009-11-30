@@ -1,4 +1,4 @@
-﻿namespace Rawr.DPSWarr
+﻿namespace Rawr.Bosses
 {
     partial class DG_BossSitChanges
     {

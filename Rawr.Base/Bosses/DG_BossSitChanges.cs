@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Rawr.DPSWarr
+namespace Rawr.Bosses
 {
     public partial class DG_BossSitChanges : Form
     {

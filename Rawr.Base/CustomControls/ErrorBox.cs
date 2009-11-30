@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.DPSWarr
+namespace Rawr.Base
 {
-    public class ErrorBoxDPSWarr
+    public class ErrorBox
     {
         /// <summary>
         /// Generates a pop-up message box with error info. This constructor does not show the box automatically, it must be called.
         /// </summary>
-        public ErrorBoxDPSWarr()
+        public ErrorBox()
         {
             Title = "There was an Error";
             Message = "No Message";
             Function = "No Function Name";
             StackTrace = "No Stack Trace";
             Info = "No Additional Info";
-            Line = 0;
         }
         /// <summary>
         /// Generates a pop-up message box with error info.
@@ -26,15 +25,13 @@ namespace Rawr.DPSWarr
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
         /// <param name="stacktrace">The Stack Trace leading to this point</param>
-        /// <param name="line">The line of the Function throwing the Error</param>
-        public ErrorBoxDPSWarr(string title, string message, string function, string info, string stacktrace, int line)
+        public ErrorBox(string title, string message, string function, string info, string stacktrace)
         {
             Title = title;
             Message = message;
             Function = function;
             StackTrace = stacktrace;
             Info = info;
-            Line = line;
             Show();
         }
         /// <summary>
@@ -44,15 +41,13 @@ namespace Rawr.DPSWarr
         /// <param name="message">The Error Message itself</param>
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
-        /// <param name="line">The line of the Function throwing the Error</param>
-        public ErrorBoxDPSWarr(string title, string message, string function, string info, int line)
+        public ErrorBox(string title, string message, string function, string info)
         {
             Title = title;
             Message = message;
             Function = function;
             StackTrace = "No Stack Trace";
             Info = info;
-            Line = line;
             Show();
         }
         /// <summary>
@@ -61,31 +56,13 @@ namespace Rawr.DPSWarr
         /// <param name="title">The Title, which appears on the Title bar</param>
         /// <param name="message">The Error Message itself</param>
         /// <param name="function">The Function throwing this Error</param>
-        /// <param name="line">The line of the Function throwing the Error</param>
-        public ErrorBoxDPSWarr(string title, string message, string function, int line)
+        public ErrorBox(string title, string message, string function)
         {
             Title = title;
             Message = message;
             Function = function;
             StackTrace = "No Stack Trace";
             Info = "No Additional Info";
-            Line = line;
-            Show();
-        }
-        /// <summary>
-        /// Generates a pop-up message box with error info.
-        /// </summary>
-        /// <param name="title">The Title, which appears on the Title bar</param>
-        /// <param name="message">The Error Message itself</param>
-        /// <param name="function">The Function throwing this Error</param>
-        public ErrorBoxDPSWarr(string title, string message, string function)
-        {
-            Title = title;
-            Message = message;
-            Function = function;
-            StackTrace = "No Stack Trace";
-            Info = "No Additional Info";
-            Line = 0;
             Show();
         }
         public string Title;
@@ -93,11 +70,10 @@ namespace Rawr.DPSWarr
         public string Function;
         public string Info;
         public string StackTrace;
-        public int Line;
         private string buildFullMessage()
         {
             string retVal = "";
-            retVal += Function + " Line: " + Line.ToString();
+            retVal += Function;
             retVal += "\r\n\r\n";
             retVal += "Error Message: " + Message;
             retVal += "\r\n\r\n";

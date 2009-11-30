@@ -135,7 +135,7 @@ namespace Rawr
 
                 itemsOnCharacter = new string[items.Values.Count];
                 items.Values.CopyTo(itemsOnCharacter, 0);
-				Character character = new Character(name, realm, region, race,
+				Character character = new Character(name, realm, region, race, new BossHandler(),
 					items.ContainsKey(CharacterSlot.Head) ? items[CharacterSlot.Head] : null,
 					items.ContainsKey(CharacterSlot.Neck) ? items[CharacterSlot.Neck] : null,
 					items.ContainsKey(CharacterSlot.Shoulders) ? items[CharacterSlot.Shoulders] : null,

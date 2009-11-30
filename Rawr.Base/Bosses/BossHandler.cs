@@ -199,31 +199,27 @@ namespace Rawr {
         // ==== Basics ====
         protected string GetVersionString(Versions v) { return BossVersionStrings[(int)v]; }
         protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
-        public string Name               { get { return NAME;               } set { NAME               = value; } }
-        public TierLevels Content        { get { return CONTENT;            } set { CONTENT            = value; } }
+        public string Name               { get { return NAME;               } set { NAME               = value; OnPropertyChanged("Name"              ); } }
+        public TierLevels Content        { get { return CONTENT;            } set { CONTENT            = value; OnPropertyChanged("Content"           ); } }
         public string ContentString      { get { return GetContentString(CONTENT); } }
-        public string Instance           { get { return INSTANCE;           } set { INSTANCE           = value; } }
-        public Versions Version          { get { return VERSION;            } set { VERSION            = value; } }
+        public string Instance           { get { return INSTANCE;           } set { INSTANCE           = value; OnPropertyChanged("Instance"          ); } }
+        public Versions Version          { get { return VERSION;            } set { VERSION            = value; OnPropertyChanged("Version"           ); } }
         public string VersionString      { get { return GetVersionString(VERSION); } }
-        public string Comment            { get { return COMMENT;            } set { COMMENT            = value; } }
-        public int    Level              { get { return LEVEL;              } set { LEVEL              = value; } }
-        public float  Health             { get { return HEALTH;             } set { HEALTH             = value; } }
-        public float  Armor              { get { return ARMOR;              } set { ARMOR              = value; } }
-        private int BERSERKTIMER;
-        public int BerserkTimer
-        {
-            get { return BERSERKTIMER; }
-            set { BERSERKTIMER = value; OnPropertyChanged("BerserkTimer"); }
-        }
-        public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; } }
-        public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; } }
+        public string Comment            { get { return COMMENT;            } set { COMMENT            = value; OnPropertyChanged("Comment"           ); } }
+        public int    Level              { get { return LEVEL;              } set { LEVEL              = value; OnPropertyChanged("Level"             ); } }
+        public float  Health             { get { return HEALTH;             } set { HEALTH             = value; OnPropertyChanged("Health"            ); } }
+        public float  Armor              { get { return ARMOR;              } set { ARMOR              = value; OnPropertyChanged("Armor"             ); } }
+        private int   BERSERKTIMER;
+        public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; OnPropertyChanged("BerserkTimer"      ); } }
+        public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; OnPropertyChanged("SpeedKillTimer"    ); } }
+        public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; OnPropertyChanged("UseParryHaste"     ); } }
         // ==== Situational Changes ====
         // Standing in back
-        public float  InBackPerc_Melee   { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; } }
-        public float  InBackPerc_Ranged  { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = value; } }
+        public float  InBackPerc_Melee   { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; OnPropertyChanged("InBackPerc_Melee"  ); } }
+        public float  InBackPerc_Ranged  { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = value; OnPropertyChanged("InBackPerc_Ranged" ); } }
         // Multiple Targets
-        public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; } }
-        public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; } }
+        public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; OnPropertyChanged("MultiTargsPerc"    ); } }
+        public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; OnPropertyChanged("MaxNumTargs"       ); } }
         // Impedences
         protected float Freq(List<Impedence> imps) {
             // Adds up the total number of impedences

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Rawr.DPSWarr.Skills;
+using Rawr.Base;
 
 namespace Rawr.DPSWarr
 {
@@ -127,8 +128,8 @@ namespace Rawr.DPSWarr
             }
             catch (Exception ex)
             {
-                ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in performing Fury Iterations",
-                    ex.Message, "doIterations()", "No Additional Info", ex.StackTrace, 0);
+                ErrorBox eb = new ErrorBox("Error in performing Fury Iterations",
+                    ex.Message, "doIterations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
         }
@@ -253,7 +254,6 @@ namespace Rawr.DPSWarr
             //doIterations();
 
             #region CalcOpts GCD Losses
-            float timeLost = 0f;
             #region Stuns
             /*if (CalcOpts.StunningTargets && CalcOpts.Stuns.Count > 0f) 
             {

@@ -82,7 +82,7 @@ namespace Rawr.UnitTests
         public void GetDRAvoidanceChanceTest_DK_TestFromForums()
         {
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestDK", "Malygos", CharacterRegion.US, CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "TankDK"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestDK", "Malygos", CharacterRegion.US, CharacterRace.Human, new BossHandler(), IIArray, new System.Collections.Generic.List<Buff>(), "TankDK"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
             toon.Class = CharacterClass.DeathKnight;
@@ -120,7 +120,7 @@ namespace Rawr.UnitTests
         {
             const float testValue = 689f;
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, new BossHandler(), IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
             toon.Class = CharacterClass.DeathKnight;
@@ -156,7 +156,7 @@ namespace Rawr.UnitTests
         {
             const float testValue = 10000f;
             ItemInstance[] IIArray = new ItemInstance[1];
-            Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
+            Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, new BossHandler(), IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
             toon.Class = CharacterClass.DeathKnight;

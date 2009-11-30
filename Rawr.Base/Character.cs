@@ -8,7 +8,6 @@ using System.Xml.Serialization;
 
 namespace Rawr //O O . .
 {
-
     public class Character
     {
         [XmlElement("Name")]
@@ -62,6 +61,7 @@ namespace Rawr //O O . .
             OnCalculationsInvalidated();
         }
 
+        #region Gem Slots
         private string GetGemmedId(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
@@ -115,6 +115,8 @@ namespace Rawr //O O . .
         public string _projectile { get { return GetGemmedId(CharacterSlot.Projectile); } set { SetGemmedId(CharacterSlot.Projectile, value); } }
 		[XmlElement("ProjectileBag")]
         public string _projectileBag { get { return GetGemmedId(CharacterSlot.ProjectileBag); } set { SetGemmedId(CharacterSlot.ProjectileBag, value); } }
+        #endregion
+
         // fix this to translate into new format if we want to preserve backward compatibility for character files
         //[XmlElement("ExtraWristSocket")]
         //public string _extraWristSocket { get { return _item[(int)CharacterSlot.ExtraWristSocket]; } set { _item[(int)CharacterSlot.ExtraWristSocket] = value; } }
@@ -148,8 +150,6 @@ namespace Rawr //O O . .
         //public int _offHandEnchant { get { return _itemEnchant[(int)CharacterSlot.OffHand]; } set { _itemEnchant[(int)CharacterSlot.OffHand] = value; } }
         //[XmlElement("RangedEnchant")]
         //public int _rangedEnchant { get { return _itemEnchant[(int)CharacterSlot.Ranged]; } set { _itemEnchant[(int)CharacterSlot.Ranged] = value; } }
-        [XmlElement("CalculationOptions")]
-		public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
         //[XmlElement("Talents")]
         //public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
@@ -164,13 +164,41 @@ namespace Rawr //O O . .
 
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
 
-        /*[XmlElement("Boss")]
-        public BossHandler SerializableBoss { get { return BossOptions ?? (BossOptions = new BossHandler()); }
-            set { BossOptions = value.Clone(); } }//new BossHandler(value)
-
+        [XmlElement("CalculationOptions")]
+        public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
         [XmlIgnore]
-        public BossHandler BossOptions = null;*/
+        private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
+		[XmlIgnore]
+		public ICalculationOptionBase CalculationOptions {
+			get {
+                ICalculationOptionBase ret;
+                _calculationOptions.TryGetValue(CurrentModel, out ret);
+                if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel)) {
+                    ret = Calculations.GetModel(CurrentModel).DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+                    // set parent Character for models that need backward link
+                    System.Reflection.PropertyInfo propertyInfo = ret.GetType().GetProperty("Character", typeof(Character));
+                    if (propertyInfo != null) propertyInfo.SetValue(ret, this, null);
+                    _calculationOptions[CurrentModel] = ret;
+                }
+                return ret;
+			}
+			set { _calculationOptions[CurrentModel] = value; }
+		}
 
+        [XmlElement("Boss")]
+        public BossHandler SerializableBoss {
+            get { return BossOptions; }
+            set { BossOptions = value.Clone(); }
+        }
+        [XmlIgnore]
+        private BossHandler _bossOptions = null;
+        [XmlIgnore]
+        public BossHandler BossOptions {
+            get { return _bossOptions ?? (_bossOptions = new BossHandler()); }
+            set { _bossOptions = value; }
+        }
+
+        #region Talents
         [XmlElement("WarriorTalents")]
 		public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } 
 			set { WarriorTalents = new WarriorTalents(value); } }
@@ -281,13 +309,13 @@ namespace Rawr //O O . .
                     default: DruidTalents = value as DruidTalents; break;
 				}
 			}
-		}
+        }
+        #endregion
 
         // set to true to suppress ItemsChanged event
         [XmlIgnore]
         public bool IsLoading { get; set; }
         
-
         [XmlIgnore]
         public string Name
         {
@@ -404,7 +432,7 @@ namespace Rawr //O O . .
 			return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
         }
 
-
+        #region Items in Slots
         [XmlIgnore]
         public ItemInstance Head { get { return this[CharacterSlot.Head]; } set { this[CharacterSlot.Head] = value; } }
 		[XmlIgnore]
@@ -481,31 +509,7 @@ namespace Rawr //O O . .
 		public Enchant OffHandEnchant { get { return GetEnchantBySlot(CharacterSlot.OffHand); } set { SetEnchantBySlot(CharacterSlot.OffHand, value); } }
         [XmlIgnore]
 		public Enchant RangedEnchant { get { return GetEnchantBySlot(CharacterSlot.Ranged); } set { SetEnchantBySlot(CharacterSlot.Ranged, value); } }
-
-		[XmlIgnore]
-        private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
-		[XmlIgnore]
-		public ICalculationOptionBase CalculationOptions
-		{
-			get
-			{
-                ICalculationOptionBase ret;
-                _calculationOptions.TryGetValue(CurrentModel, out ret);
-                if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel))
-                {
-                    ret = Calculations.GetModel(CurrentModel).DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
-                    // set parent Character for models that need backward link
-                    System.Reflection.PropertyInfo propertyInfo = ret.GetType().GetProperty("Character", typeof(Character));
-                    if (propertyInfo != null) propertyInfo.SetValue(ret, this, null);
-                    _calculationOptions[CurrentModel] = ret;
-                }
-                return ret;
-			}
-			set
-			{
-				_calculationOptions[CurrentModel] = value;
-			}
-		}
+        #endregion
 
 		[XmlIgnore]
 		public string CurrentModel
@@ -862,7 +866,6 @@ namespace Rawr //O O . .
                 OnAvailableItemsChanged();
             }
 		}
-
 
         public bool IsEquipped(ItemInstance itemToBeChecked)
         {
@@ -1708,7 +1711,7 @@ namespace Rawr //O O . .
 
         public Character() { }
 
-		public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
+		public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
 			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
 				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
 			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
@@ -1750,10 +1753,10 @@ namespace Rawr //O O . .
             IsLoading = false;
             RecalculateSetBonuses();
 
-            //BossOptions = boss;
+            BossOptions = boss.Clone();
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2,
             ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -1795,11 +1798,11 @@ namespace Rawr //O O . .
             OnRaceChanged();
             IsLoading = false;
             RecalculateSetBonuses();
-            //BossOptions = boss;
+            BossOptions = boss.Clone();
         }
 
         // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
 			ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2, 
 			ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -1837,10 +1840,10 @@ namespace Rawr //O O . .
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            //BossOptions = boss;
+            BossOptions = boss.Clone();
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, //BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
             object[] items, int count, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;
@@ -1856,10 +1859,10 @@ namespace Rawr //O O . .
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            //BossOptions = boss;
+            BossOptions = boss.Clone();
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, //BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
             ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;
@@ -1875,7 +1878,7 @@ namespace Rawr //O O . .
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            //BossOptions = boss;
+            BossOptions = boss.Clone();
         }
 
 		public Character Clone()
@@ -1886,7 +1889,7 @@ namespace Rawr //O O . .
                 ItemInstance itemInstance = _item[i];
                 if (itemInstance != null) clonedItemInstances[i] = itemInstance.Clone();
             }
-            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, //this.BossOptions,
+            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, this.BossOptions,
                 clonedItemInstances, ActiveBuffs, CurrentModel);
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
@@ -1901,7 +1904,7 @@ namespace Rawr //O O . .
             clone.OptimizationRequirements = this.OptimizationRequirements;
 #endif
             clone.CalculationToOptimize = this.CalculationToOptimize;
-           // clone.BossOptions = this.BossOptions;
+            clone.BossOptions = this.BossOptions;
 			return clone;
 		}
     
@@ -2109,7 +2112,6 @@ namespace Rawr //O O . .
 
 		public static Character FromCompressedString(string characterString)
 		{
-
 			return null;
 		}
 	}

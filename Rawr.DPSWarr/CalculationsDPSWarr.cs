@@ -9,6 +9,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 using Rawr.DPSWarr.Markov;
+using Rawr.Base;
 
 namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
@@ -940,16 +941,6 @@ These numbers to do not include racial bonuses.",
         #region Character Calcs
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-            #if RAWR3
-                // Forcing an error just to prove the stupid thing works
-                try {
-                    string isnull = null;
-                    string check = isnull + "1";
-                }catch (Exception ex) {
-                    new ErrorBoxDPSWarr("Test Title", ex.Message, "GetCharacterCalculations()",
-                        "This is a forced one, just making sure the frackin thing works", ex.StackTrace, 0);
-                }
-            #endif
 #if (!RAWR3 && DEBUG)
             if (character.Name == "") {
                 DateTime dtEnd = DateTime.Now.AddSeconds(10);
@@ -1058,8 +1049,8 @@ These numbers to do not include racial bonuses.",
                 }
 
             } catch (Exception ex) {
-                ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
-                    ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace, -1);
+                ErrorBox eb = new ErrorBox("Error in creating Stat Pane Calculations",
+                    ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
 #if (!RAWR3 && DEBUG)
@@ -1079,8 +1070,8 @@ These numbers to do not include racial bonuses.",
             try {
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions);
             } catch (Exception ex) {
-                ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in getting Character Stats",
-                    ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace, 0);
+                ErrorBox eb = new ErrorBox("Error in getting Character Stats",
+                    ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             return new Stats() { };
@@ -1396,7 +1387,7 @@ These numbers to do not include racial bonuses.",
 
                 return statsProcs;
             } catch (Exception ex) {
-                ErrorBoxDPSWarr box = new ErrorBoxDPSWarr("Error in creating SpecialEffects Stats", ex.Message, "GetSpecialEffectsStats()");
+                ErrorBox box = new ErrorBox("Error in creating SpecialEffects Stats", ex.Message, "GetSpecialEffectsStats()");
                 box.Show();
                 return new Stats();
             }
