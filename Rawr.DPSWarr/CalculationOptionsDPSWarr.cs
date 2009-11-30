@@ -34,11 +34,11 @@ namespace Rawr.DPSWarr {
 		    // Rotational Changes
 		    InBack           = true ; InBackPerc           = 100;
 		    MultipleTargets  = false; MultipleTargetsPerc  =  25; MultipleTargetsMax  =    3;
-		    MovingTargets    = false; //MovingTargetsFreq    = 120; MovingTargetsDur    = 5000;
-		    StunningTargets  = false; StunningTargetsFreq  = 120; StunningTargetsDur  = 5000;
-            FearingTargets   = false; //FearingTargetsFreq   = 120; FearingTargetsDur   = 5000;
-            RootingTargets   = false; RootingTargetsFreq   = 120; RootingTargetsDur   = 5000;
-		    DisarmingTargets = false; DisarmingTargetsFreq = 120; DisarmingTargetsDur = 5000;// nonfunctional
+		    MovingTargets    = false; 
+		    StunningTargets  = false; 
+            FearingTargets   = false; 
+            RootingTargets   = false; 
+		    DisarmingTargets = false; // nonfunctional
             AoETargets       = false; AoETargetsFreq       =  20; AoETargetsDMG       = 5000;
             // Maintenance
             _Maintenance = new bool[] {
@@ -248,18 +248,6 @@ namespace Rawr.DPSWarr {
             get { return _StunningTargets; }
             set { _StunningTargets = value; OnPropertyChanged("StunningTargets"); }
         }
-        private int _StunningTargetsFreq;
-        public int StunningTargetsFreq
-        {
-            get { return _StunningTargetsFreq; }
-            set { _StunningTargetsFreq = value; OnPropertyChanged("StunningTargetsFreq"); }
-        }
-        private float _StunningTargetsDur;
-        public float StunningTargetsDur
-        {
-            get { return _StunningTargetsDur; }
-            set { _StunningTargetsDur = value; OnPropertyChanged("StunningTargetsDur"); }
-        }
         private bool _FearingTargets;
         public bool FearingTargets
         {
@@ -272,35 +260,11 @@ namespace Rawr.DPSWarr {
             get { return _RootingTargets; }
             set { _RootingTargets = value; OnPropertyChanged("RootingTargets"); }
         }
-        private int _RootingTargetsFreq;
-        public int RootingTargetsFreq
-        {
-            get { return _RootingTargetsFreq; }
-            set { _RootingTargetsFreq = value; OnPropertyChanged("RootingTargetsFreq"); }
-        }
-        private float _RootingTargetsDur;
-        public float RootingTargetsDur
-        {
-            get { return _RootingTargetsDur; }
-            set { _RootingTargetsDur = value; OnPropertyChanged("RootingTargetsDur"); }
-        }
         private bool _DisarmingTargets;
         public bool DisarmingTargets
         {
             get { return _DisarmingTargets; }
             set { _DisarmingTargets = value; OnPropertyChanged("DisarmingTargets"); }
-        }
-        private int _DisarmingTargetsFreq;
-        public int DisarmingTargetsFreq
-        {
-            get { return _DisarmingTargetsFreq; }
-            set { _DisarmingTargetsFreq = value; OnPropertyChanged("DisarmingTargetsFreq"); }
-        }
-        private float _DisarmingTargetsDur;
-        public float DisarmingTargetsDur
-        {
-            get { return _DisarmingTargetsDur; }
-            set { _DisarmingTargetsDur = value; OnPropertyChanged("DisarmingTargetsDur"); }
         }
         private bool _AoETargets;
         public bool AoETargets
@@ -320,35 +284,35 @@ namespace Rawr.DPSWarr {
             get { return _AoETargetsDMG; }
             set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
         }
-        // ==============================================================
-        private List<Stun> _stuns;
-        public List<Stun> Stuns
+        // =====================================
+        private List<Impedence> _stuns;
+        public List<Impedence> Stuns
         {
-            get { return _stuns ?? (_stuns = new List<Stun>()); }
+            get { return _stuns ?? (_stuns = new List<Impedence>()); }
             set { _stuns = value; OnPropertyChanged("Stuns"); }
         }
-        private List<Move> _moves;
-        public List<Move> Moves
+        private List<Impedence> _moves;
+        public List<Impedence> Moves
         {
-            get { return _moves ?? (_moves = new List<Move>()); }
+            get { return _moves ?? (_moves = new List<Impedence>()); }
             set { _moves = value; OnPropertyChanged("Moves"); }
         }
-        private List<Fear> _fears;
-        public List<Fear> Fears
+        private List<Impedence> _fears;
+        public List<Impedence> Fears
         {
-            get { return _fears ?? (_fears = new List<Fear>()); }
+            get { return _fears ?? (_fears = new List<Impedence>()); }
             set { _fears = value; OnPropertyChanged("Fears"); }
         }
-        private List<Root> _roots;
-        public List<Root> Roots
+        private List<Impedence> _roots;
+        public List<Impedence> Roots
         {
-            get { return _roots ?? (_roots = new List<Root>()); }
+            get { return _roots ?? (_roots = new List<Impedence>()); }
             set { _roots = value; OnPropertyChanged("Roots"); }
         }
-        private List<Disarm> _disarms;
-        public List<Disarm> Disarms
+        private List<Impedence> _disarms;
+        public List<Impedence> Disarms
         {
-            get { return _disarms ?? (_disarms = new List<Disarm>()); }
+            get { return _disarms ?? (_disarms = new List<Impedence>()); }
             set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
         #endregion

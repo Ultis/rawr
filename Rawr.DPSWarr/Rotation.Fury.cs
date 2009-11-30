@@ -255,7 +255,7 @@ namespace Rawr.DPSWarr
             #region CalcOpts GCD Losses
             float timeLost = 0f;
             #region Stuns
-            if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0f && CalcOpts.StunningTargetsDur > 0f) 
+            /*if (CalcOpts.StunningTargets && CalcOpts.Stuns.Count > 0f) 
             {
                 float numStuns = FightDuration / CalcOpts.StunningTargetsFreq;
                 if (!CalcOpts.SE_UseDur) numStuns = (float)Math.Floor(numStuns);
@@ -280,7 +280,7 @@ namespace Rawr.DPSWarr
                     float stunDur = CalcOpts.StunningTargetsDur / 1000f * (1f - Talents.IronWill * 2f / 30f);
                     timeLost += stunDur * numStuns;
                 }
-            }
+            }*/
             #endregion
             float otherTimeLost = CalculateTimeLost(null);
             DoMaintenanceActivates(otherTimeLost);

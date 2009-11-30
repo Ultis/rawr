@@ -71,16 +71,16 @@ namespace Rawr {
         }
         #endregion
     }
-    /// <summary>Stores a Stun that the Boss Performs</summary>
-    public class Stun   : Impedence { public Stun()   { } }
+    /*/// <summary>Stores a Impedence that the Boss Performs</summary>
+    public class Impedence   : Impedence { public Impedence()   { } }
     /// <summary>Stores a Fear that the Boss Performs</summary>
     public class Fear   : Impedence { public Fear()   { } }
     /// <summary>Stores a Root that the Boss Performs</summary>
     public class Root   : Impedence { public Root()   { } }
-    /// <summary>Stores a Move that the Boss Performs</summary>
-    public class Move   : Impedence { public Move()   { } }
+    /// <summary>Stores a Impedence that the Boss Performs</summary>
+    public class Impedence   : Impedence { public Impedence()   { } }
     /// <summary>Stores a Disarm that the Boss Performs</summary>
-    public class Disarm : Impedence { public Disarm() { } }
+    public class Disarm : Impedence { public Disarm() { } }*/
     #endregion
 #if !RAWR3 && !SILVERLIGHT
     [Serializable]
@@ -130,10 +130,10 @@ namespace Rawr {
             BossHandler clone = (BossHandler)this.MemberwiseClone();
             //
             //clone.Attacks.Clear(); clone.Attacks.AddRange((Attack[])clone.Attacks.ToArray().Clone());
-            //clone.Stuns.Clear(); clone.Stuns.AddRange((Stun[])clone.Stuns.ToArray().Clone());
+            //clone.Stuns.Clear(); clone.Stuns.AddRange((Impedence[])clone.Stuns.ToArray().Clone());
             //clone.Fears.Clear(); clone.Fears.AddRange((Fear[])clone.Fears.ToArray().Clone());
             //clone.Roots.Clear(); clone.Roots.AddRange((Root[])clone.Roots.ToArray().Clone());
-            //clone.Moves.Clear(); clone.Moves.AddRange((Move[])clone.Moves.ToArray().Clone());
+            //clone.Moves.Clear(); clone.Moves.AddRange((Impedence[])clone.Moves.ToArray().Clone());
             //clone.Disarms.Clear(); clone.Disarms.AddRange((Disarm[])clone.Disarms.ToArray().Clone());
             //
             return clone;
@@ -178,11 +178,11 @@ namespace Rawr {
         // Attacks
         private List<Attack> ATTACKS;
         // Situational Changes
-        public List<Stun> Stuns = new List<Stun>();
-        public List<Fear> Fears = new List<Fear>();
-        public List<Root> Roots = new List<Root>();
-        public List<Move> Moves = new List<Move>();
-        public List<Disarm> Disarms = new List<Disarm>();
+        public List<Impedence> Stuns = new List<Impedence>();
+        public List<Impedence> Fears = new List<Impedence>();
+        public List<Impedence> Roots = new List<Impedence>();
+        public List<Impedence> Moves = new List<Impedence>();
+        public List<Impedence> Disarms = new List<Impedence>();
         private float INBACKPERC_MELEE, INBACKPERC_RANGED,
                       MULTITARGSPERC, MAXNUMTARGS,
                       STUNNINGTARGS_FREQ, STUNNINGTARGS_DUR, STUNNINGTARGS_CHANCE,
@@ -224,11 +224,22 @@ namespace Rawr {
         // Multiple Targets
         public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; } }
         public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; } }
+        // Impedences
+        protected float Freq(List<Impedence> imps) {
+            // Adds up the total number of impedences
+            // and evens them out over the Berserk Timer
+            float numImpsOverDur = 0f;
+            foreach (Impedence imp in imps) {
+                numImpsOverDur += (BerserkTimer / imp.Frequency) * imp.Chance;
+            }
+            float freq = BerserkTimer / numImpsOverDur;
+            return freq;
+        }
         // Stunning Targets
-        public Stun   DynamicCompiler_Stun {
+        public Impedence   DynamicCompiler_Stun {
             get {
                 // Make one
-                Stun retVal = new Stun() {
+                Impedence retVal = new Impedence() {
                     Frequency = 20f,
                     Duration = 1f * 1000f,
                     Chance = 1.00f,
@@ -246,7 +257,7 @@ namespace Rawr {
                 retVal.Chance = chance;
                 // Double-check we aren't sending a bad one
                 if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
-                    //retVal.Frequency = -1f; // if we are, use this as a flag
+                    retVal.Frequency = -1f; // if we are, use this as a flag
                 }
                 // Return results
                 return retVal;
@@ -255,13 +266,7 @@ namespace Rawr {
         public float  StunningTargsFreq  {
             get {
                 if (Stuns.Count > 0) {
-                    // Adds up the total number of stuns and evens them out over the Berserk Timer
-                    float numStunsOverDur = 0f;
-                    foreach (Stun s in Stuns) {
-                        numStunsOverDur += BerserkTimer / s.Frequency;
-                    }
-                    float freq = BerserkTimer / numStunsOverDur;
-                    return freq;
+                    return Freq(Stuns);
                 } else {
                     return STUNNINGTARGS_FREQ;
                 }
@@ -271,9 +276,9 @@ namespace Rawr {
         public float  StunningTargsDur   {
             get {
                 if (Stuns.Count > 0) {
-                    // Averages out the Stun Durations
+                    // Averages out the Impedence Durations
                     float TotalStunDur = 0f;
-                    foreach (Stun s in Stuns) { TotalStunDur += s.Duration; }
+                    foreach (Impedence s in Stuns) { TotalStunDur += s.Duration; }
                     float dur = TotalStunDur / (float)Stuns.Count;
                     return dur;
                 } else {
@@ -285,9 +290,9 @@ namespace Rawr {
         public float  StunningTargsChance {
             get {
                 if (Stuns.Count > 0) {
-                    // Averages out the Stun Chances
+                    // Averages out the Impedence Chances
                     float TotalStunChance = 0f;
-                    foreach (Stun s in Stuns) { TotalStunChance += s.Chance; }
+                    foreach (Impedence s in Stuns) { TotalStunChance += s.Chance; }
                     float chance = TotalStunChance / (float)Stuns.Count;
                     return chance;
                 } else {
@@ -307,10 +312,11 @@ namespace Rawr {
             }
         }
         // Moving Targets
-        public Move   DynamicCompiler_Move {
+        public Impedence DynamicCompiler_Move
+        {
             get {
                 // Make one
-                Move retVal = new Move() {
+                Impedence retVal = new Impedence() {
                     Frequency = 20f,
                     Duration = 1f * 1000f,
                     Chance = 1.00f,
@@ -339,7 +345,7 @@ namespace Rawr {
                 if (Moves.Count > 0) {
                     // Adds up the total number of Moves and evens them out over the Berserk Timer
                     float numMovesOverDur = 0;
-                    foreach (Move s in Moves) {
+                    foreach (Impedence s in Moves) {
                         numMovesOverDur += (BerserkTimer / s.Frequency) * s.Chance;
                     }
                     float freq = BerserkTimer / numMovesOverDur;
@@ -355,7 +361,7 @@ namespace Rawr {
                 if (Moves.Count > 0) {
                     // Averages out the Move Durations
                     float TotalMoveDur = 0;
-                    foreach (Move s in Moves) { TotalMoveDur += s.Duration; }
+                    foreach (Impedence s in Moves) { TotalMoveDur += s.Duration; }
                     float dur = TotalMoveDur / Moves.Count;
                     return dur;
                 } else {
@@ -369,7 +375,7 @@ namespace Rawr {
                 if (Moves.Count > 0) {
                     // Averages out the Move Chances
                     float TotalChance = 0f;
-                    foreach (Move s in Moves) { TotalChance += s.Chance; }
+                    foreach (Impedence s in Moves) { TotalChance += s.Chance; }
                     float chance = TotalChance / (float)Moves.Count;
                     return chance;
                 } else {
@@ -388,10 +394,11 @@ namespace Rawr {
             }
         }
         // Disarming Targets
-        public Disarm DynamicCompiler_Disarm {
+        public Impedence DynamicCompiler_Disarm
+        {
             get {
                 // Make one
-                Disarm retVal = new Disarm() {
+                Impedence retVal = new Impedence() {
                     Frequency = 20f,
                     Duration = 1f * 1000f,
                     Chance = 1.00f,
@@ -420,7 +427,7 @@ namespace Rawr {
                 if (Disarms.Count > 0) {
                     // Adds up the total number of Disarmes and evens them out over the Berserk Timer
                     float numDisarmsOverDur = 0;
-                    foreach (Disarm s in Disarms) {
+                    foreach (Impedence s in Disarms) {
                         numDisarmsOverDur += BerserkTimer / s.Frequency;
                     }
                     float freq = BerserkTimer / numDisarmsOverDur;
@@ -436,7 +443,7 @@ namespace Rawr {
                 if (Disarms.Count > 0) {
                     // Averages out the Disarme Durations
                     float TotalDisarmeDur = 0;
-                    foreach (Disarm s in Disarms) { TotalDisarmeDur += s.Duration; }
+                    foreach (Impedence s in Disarms) { TotalDisarmeDur += s.Duration; }
                     float dur = TotalDisarmeDur / Disarms.Count;
                     return dur;
                 } else {
@@ -450,7 +457,7 @@ namespace Rawr {
                 if (Disarms.Count > 0) {
                     // Averages out the Disarm Chances
                     float TotalChance = 0f;
-                    foreach (Disarm s in Disarms) { TotalChance += s.Chance; }
+                    foreach (Impedence s in Disarms) { TotalChance += s.Chance; }
                     float chance = TotalChance / (float)Disarms.Count;
                     return chance;
                 } else {
@@ -470,10 +477,11 @@ namespace Rawr {
             }
         }
         // Fearing Targets
-        public Fear   DynamicCompiler_Fear {
+        public Impedence DynamicCompiler_Fear
+        {
             get {
                 // Make one
-                Fear retVal = new Fear() {
+                Impedence retVal = new Impedence() {
                     Frequency = 20f,
                     Duration = 1f * 1000f,
                     Chance = 1.00f,
@@ -502,7 +510,7 @@ namespace Rawr {
                 if (Fears.Count > 0) {
                     // Adds up the total number of stuns and evens them out over the Berserk Timer
                     float numFearsOverDur = 0;
-                    foreach (Fear s in Fears) {
+                    foreach (Impedence s in Fears) {
                         numFearsOverDur += BerserkTimer / s.Frequency;
                     }
                     float freq = BerserkTimer / numFearsOverDur;
@@ -518,7 +526,7 @@ namespace Rawr {
                 if (Fears.Count > 0) {
                     // Averages out the Fear Durations
                     float TotalFearDur = 0;
-                    foreach (Fear s in Fears) { TotalFearDur += s.Duration; }
+                    foreach (Impedence s in Fears) { TotalFearDur += s.Duration; }
                     float dur = TotalFearDur / Fears.Count;
                     return dur;
                 } else {
@@ -532,7 +540,7 @@ namespace Rawr {
                 if (Fears.Count > 0) {
                     // Averages out the Fear Chances
                     float TotalChance = 0f;
-                    foreach (Fear s in Fears) { TotalChance += s.Chance; }
+                    foreach (Impedence s in Fears) { TotalChance += s.Chance; }
                     float chance = TotalChance / (float)Fears.Count;
                     return chance;
                 } else {
@@ -552,10 +560,12 @@ namespace Rawr {
             }
         }
         // Rooting Targets
-        public Root   DynamicCompiler_Root {
+        public Impedence DynamicCompiler_Root
+        {
             get {
                 // Make one
-                Root retVal = new Root() {
+                Impedence retVal = new Impedence()
+                {
                     Frequency = 20f,
                     Duration = 1f * 1000f,
                     Chance = 1.00f,
@@ -584,7 +594,8 @@ namespace Rawr {
                 if (Roots.Count > 0) {
                     // Adds up the total number of Roots and evens them out over the Berserk Timer
                     float numRootsOverDur = 0;
-                    foreach (Root s in Roots) {
+                    foreach (Impedence s in Roots)
+                    {
                         numRootsOverDur += BerserkTimer / s.Frequency;
                     }
                     float freq = BerserkTimer / numRootsOverDur;
@@ -600,7 +611,7 @@ namespace Rawr {
                 if (Roots.Count > 0) {
                     // Averages out the Root Durations
                     float TotalRootDur = 0;
-                    foreach (Root s in Roots) { TotalRootDur += s.Duration; }
+                    foreach (Impedence s in Roots) { TotalRootDur += s.Duration; }
                     float dur = TotalRootDur / Roots.Count;
                     return dur;
                 } else {
@@ -612,9 +623,9 @@ namespace Rawr {
         public float  RootingTargsChance {
             get {
                 if (Roots.Count > 0) {
-                    // Averages out the Stun Chances
+                    // Averages out the Impedence Chances
                     float TotalChance = 0f;
-                    foreach (Root s in Roots) { TotalChance += s.Chance; }
+                    foreach (Impedence s in Roots) { TotalChance += s.Chance; }
                     float chance = TotalChance / (float)Roots.Count;
                     return chance;
                 } else {

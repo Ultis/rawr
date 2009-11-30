@@ -687,7 +687,8 @@ These numbers to do not include racial bonuses.",
 
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (character.WarriorTalents.Rampage > 0) {
+            if (character.WarriorTalents.Rampage > 0 && calcOpts.FuryStance)
+            {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Rampage"));
                 buffGroup.Add(Buff.GetBuffByName("Leader of the Pack"));

@@ -24,69 +24,69 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelDPSWarr));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Berserker Rage");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Bloodrage");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Rage Generators", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Battle Shout");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Commanding Shout");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Shout Selection", new System.Windows.Forms.TreeNode[] {
-            treeNode4,
-            treeNode5});
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Demoralizing Shout");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Sunder Armor");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Thunder Clap");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Hamstring");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Maintenance", new System.Windows.Forms.TreeNode[] {
-            treeNode6,
-            treeNode7,
-            treeNode8,
-            treeNode9,
-            treeNode10});
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Shattering Throw");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Sweeping Strikes");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Death Wish");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Recklessness");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Enraged Regeneration");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Periodics", new System.Windows.Forms.TreeNode[] {
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15,
-            treeNode16});
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Whirlwind");
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Bloodthirst");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Bloodsurge");
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Fury", new System.Windows.Forms.TreeNode[] {
-            treeNode18,
-            treeNode19,
-            treeNode20});
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Bladestorm");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Mortal Strike");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Rend");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Overpower");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Taste for Blood");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Sudden Death");
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Slam");
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Arms", new System.Windows.Forms.TreeNode[] {
-            treeNode22,
-            treeNode23,
-            treeNode24,
-            treeNode25,
-            treeNode26,
-            treeNode27,
-            treeNode28});
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("<20% Execute Spamming");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Damage Dealers", new System.Windows.Forms.TreeNode[] {
-            treeNode21,
-            treeNode29,
-            treeNode30});
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Cleave");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Heroic Strike");
-            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Rage Dumps", new System.Windows.Forms.TreeNode[] {
-            treeNode32,
-            treeNode33});
+            System.Windows.Forms.TreeNode treeNode69 = new System.Windows.Forms.TreeNode("Berserker Rage");
+            System.Windows.Forms.TreeNode treeNode70 = new System.Windows.Forms.TreeNode("Bloodrage");
+            System.Windows.Forms.TreeNode treeNode71 = new System.Windows.Forms.TreeNode("Rage Generators", new System.Windows.Forms.TreeNode[] {
+            treeNode69,
+            treeNode70});
+            System.Windows.Forms.TreeNode treeNode72 = new System.Windows.Forms.TreeNode("Battle Shout");
+            System.Windows.Forms.TreeNode treeNode73 = new System.Windows.Forms.TreeNode("Commanding Shout");
+            System.Windows.Forms.TreeNode treeNode74 = new System.Windows.Forms.TreeNode("Shout Selection", new System.Windows.Forms.TreeNode[] {
+            treeNode72,
+            treeNode73});
+            System.Windows.Forms.TreeNode treeNode75 = new System.Windows.Forms.TreeNode("Demoralizing Shout");
+            System.Windows.Forms.TreeNode treeNode76 = new System.Windows.Forms.TreeNode("Sunder Armor");
+            System.Windows.Forms.TreeNode treeNode77 = new System.Windows.Forms.TreeNode("Thunder Clap");
+            System.Windows.Forms.TreeNode treeNode78 = new System.Windows.Forms.TreeNode("Hamstring");
+            System.Windows.Forms.TreeNode treeNode79 = new System.Windows.Forms.TreeNode("Maintenance", new System.Windows.Forms.TreeNode[] {
+            treeNode74,
+            treeNode75,
+            treeNode76,
+            treeNode77,
+            treeNode78});
+            System.Windows.Forms.TreeNode treeNode80 = new System.Windows.Forms.TreeNode("Shattering Throw");
+            System.Windows.Forms.TreeNode treeNode81 = new System.Windows.Forms.TreeNode("Sweeping Strikes");
+            System.Windows.Forms.TreeNode treeNode82 = new System.Windows.Forms.TreeNode("Death Wish");
+            System.Windows.Forms.TreeNode treeNode83 = new System.Windows.Forms.TreeNode("Recklessness");
+            System.Windows.Forms.TreeNode treeNode84 = new System.Windows.Forms.TreeNode("Enraged Regeneration");
+            System.Windows.Forms.TreeNode treeNode85 = new System.Windows.Forms.TreeNode("Periodics", new System.Windows.Forms.TreeNode[] {
+            treeNode80,
+            treeNode81,
+            treeNode82,
+            treeNode83,
+            treeNode84});
+            System.Windows.Forms.TreeNode treeNode86 = new System.Windows.Forms.TreeNode("Whirlwind");
+            System.Windows.Forms.TreeNode treeNode87 = new System.Windows.Forms.TreeNode("Bloodthirst");
+            System.Windows.Forms.TreeNode treeNode88 = new System.Windows.Forms.TreeNode("Bloodsurge");
+            System.Windows.Forms.TreeNode treeNode89 = new System.Windows.Forms.TreeNode("Fury", new System.Windows.Forms.TreeNode[] {
+            treeNode86,
+            treeNode87,
+            treeNode88});
+            System.Windows.Forms.TreeNode treeNode90 = new System.Windows.Forms.TreeNode("Bladestorm");
+            System.Windows.Forms.TreeNode treeNode91 = new System.Windows.Forms.TreeNode("Mortal Strike");
+            System.Windows.Forms.TreeNode treeNode92 = new System.Windows.Forms.TreeNode("Rend");
+            System.Windows.Forms.TreeNode treeNode93 = new System.Windows.Forms.TreeNode("Overpower");
+            System.Windows.Forms.TreeNode treeNode94 = new System.Windows.Forms.TreeNode("Taste for Blood");
+            System.Windows.Forms.TreeNode treeNode95 = new System.Windows.Forms.TreeNode("Sudden Death");
+            System.Windows.Forms.TreeNode treeNode96 = new System.Windows.Forms.TreeNode("Slam");
+            System.Windows.Forms.TreeNode treeNode97 = new System.Windows.Forms.TreeNode("Arms", new System.Windows.Forms.TreeNode[] {
+            treeNode90,
+            treeNode91,
+            treeNode92,
+            treeNode93,
+            treeNode94,
+            treeNode95,
+            treeNode96});
+            System.Windows.Forms.TreeNode treeNode98 = new System.Windows.Forms.TreeNode("<20% Execute Spamming");
+            System.Windows.Forms.TreeNode treeNode99 = new System.Windows.Forms.TreeNode("Damage Dealers", new System.Windows.Forms.TreeNode[] {
+            treeNode89,
+            treeNode97,
+            treeNode98});
+            System.Windows.Forms.TreeNode treeNode100 = new System.Windows.Forms.TreeNode("Cleave");
+            System.Windows.Forms.TreeNode treeNode101 = new System.Windows.Forms.TreeNode("Heroic Strike");
+            System.Windows.Forms.TreeNode treeNode102 = new System.Windows.Forms.TreeNode("Rage Dumps", new System.Windows.Forms.TreeNode[] {
+            treeNode100,
+            treeNode101});
             this.CB_TargLvl = new System.Windows.Forms.ComboBox();
             this.LB_TargLvl = new System.Windows.Forms.Label();
             this.LB_TargArmor = new System.Windows.Forms.Label();
@@ -129,12 +129,8 @@
             this.NUD_AoEDMG = new System.Windows.Forms.NumericUpDown();
             this.NUD_AoEFreq = new System.Windows.Forms.NumericUpDown();
             this.CK_AoETargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.NUD_DisarmDur = new System.Windows.Forms.NumericUpDown();
-            this.NUD_DisarmFreq = new System.Windows.Forms.NumericUpDown();
             this.LB_MultiTargsPerc = new System.Windows.Forms.Label();
             this.NUD_Under20Perc = new System.Windows.Forms.NumericUpDown();
-            this.NUD_RootDur = new System.Windows.Forms.NumericUpDown();
-            this.NUD_RootFreq = new System.Windows.Forms.NumericUpDown();
             this.CK_RootingTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_FearingTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.LB_Where = new System.Windows.Forms.Label();
@@ -144,12 +140,9 @@
             this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.CB_BossList = new System.Windows.Forms.ComboBox();
             this.LB_Freq = new System.Windows.Forms.Label();
-            this.NUD_StunDur = new System.Windows.Forms.NumericUpDown();
-            this.NUD_StunFreq = new System.Windows.Forms.NumericUpDown();
             this.LB_Dur = new System.Windows.Forms.Label();
             this.LB_Max = new System.Windows.Forms.Label();
             this.CB_MultiTargsMax = new System.Windows.Forms.NumericUpDown();
-            this.LB_InBehindPerc = new System.Windows.Forms.Label();
             this.CK_MultiTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
             this.CK_MovingTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -198,13 +191,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TargHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_AoEDMG)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_AoEFreq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmDur)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Under20Perc)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_RootDur)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_RootFreq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_StunDur)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_StunFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).BeginInit();
@@ -581,12 +568,8 @@
             this.Page_03_FightInfo.Controls.Add(this.NUD_AoEDMG);
             this.Page_03_FightInfo.Controls.Add(this.NUD_AoEFreq);
             this.Page_03_FightInfo.Controls.Add(this.CK_AoETargs);
-            this.Page_03_FightInfo.Controls.Add(this.NUD_DisarmDur);
-            this.Page_03_FightInfo.Controls.Add(this.NUD_DisarmFreq);
             this.Page_03_FightInfo.Controls.Add(this.LB_MultiTargsPerc);
             this.Page_03_FightInfo.Controls.Add(this.NUD_Under20Perc);
-            this.Page_03_FightInfo.Controls.Add(this.NUD_RootDur);
-            this.Page_03_FightInfo.Controls.Add(this.NUD_RootFreq);
             this.Page_03_FightInfo.Controls.Add(this.CK_RootingTargs);
             this.Page_03_FightInfo.Controls.Add(this.CK_FearingTargs);
             this.Page_03_FightInfo.Controls.Add(this.LB_Where);
@@ -596,12 +579,9 @@
             this.Page_03_FightInfo.Controls.Add(this.TB_BossInfo);
             this.Page_03_FightInfo.Controls.Add(this.CB_BossList);
             this.Page_03_FightInfo.Controls.Add(this.LB_Freq);
-            this.Page_03_FightInfo.Controls.Add(this.NUD_StunDur);
-            this.Page_03_FightInfo.Controls.Add(this.NUD_StunFreq);
             this.Page_03_FightInfo.Controls.Add(this.LB_Dur);
             this.Page_03_FightInfo.Controls.Add(this.LB_Max);
             this.Page_03_FightInfo.Controls.Add(this.CB_MultiTargsMax);
-            this.Page_03_FightInfo.Controls.Add(this.LB_InBehindPerc);
             this.Page_03_FightInfo.Controls.Add(this.CK_MultiTargs);
             this.Page_03_FightInfo.Controls.Add(this.CB_InBackPerc);
             this.Page_03_FightInfo.Controls.Add(this.CK_MovingTargs);
@@ -630,9 +610,9 @@
             this.BT_Disarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BT_Disarm.Location = new System.Drawing.Point(140, 274);
             this.BT_Disarm.Name = "BT_Disarm";
-            this.BT_Disarm.Size = new System.Drawing.Size(23, 20);
+            this.BT_Disarm.Size = new System.Drawing.Size(152, 20);
             this.BT_Disarm.TabIndex = 60;
-            this.BT_Disarm.Text = "X";
+            this.BT_Disarm.Text = "F: 120sec D: 5000ms C: 100% : B";
             this.BT_Disarm.UseVisualStyleBackColor = true;
             this.BT_Disarm.Click += new System.EventHandler(this.BT_Disarm_Click);
             // 
@@ -641,9 +621,9 @@
             this.BT_Root.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BT_Root.Location = new System.Drawing.Point(140, 248);
             this.BT_Root.Name = "BT_Root";
-            this.BT_Root.Size = new System.Drawing.Size(23, 20);
+            this.BT_Root.Size = new System.Drawing.Size(152, 20);
             this.BT_Root.TabIndex = 59;
-            this.BT_Root.Text = "X";
+            this.BT_Root.Text = "F: 120sec D: 5000ms C: 100% : B";
             this.BT_Root.UseVisualStyleBackColor = true;
             this.BT_Root.Click += new System.EventHandler(this.BT_Root_Click);
             // 
@@ -652,7 +632,7 @@
             this.BT_Fear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BT_Fear.Location = new System.Drawing.Point(140, 221);
             this.BT_Fear.Name = "BT_Fear";
-            this.BT_Fear.Size = new System.Drawing.Size(153, 20);
+            this.BT_Fear.Size = new System.Drawing.Size(152, 20);
             this.BT_Fear.TabIndex = 58;
             this.BT_Fear.Text = "F: 120sec D: 5000ms C: 100% : B";
             this.BT_Fear.UseVisualStyleBackColor = true;
@@ -663,7 +643,7 @@
             this.BT_Move.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BT_Move.Location = new System.Drawing.Point(140, 195);
             this.BT_Move.Name = "BT_Move";
-            this.BT_Move.Size = new System.Drawing.Size(153, 20);
+            this.BT_Move.Size = new System.Drawing.Size(152, 20);
             this.BT_Move.TabIndex = 57;
             this.BT_Move.Text = "F: 120sec D: 5000ms C: 100% : B";
             this.BT_Move.UseVisualStyleBackColor = true;
@@ -674,9 +654,9 @@
             this.BT_Stun.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BT_Stun.Location = new System.Drawing.Point(140, 170);
             this.BT_Stun.Name = "BT_Stun";
-            this.BT_Stun.Size = new System.Drawing.Size(23, 20);
+            this.BT_Stun.Size = new System.Drawing.Size(152, 20);
             this.BT_Stun.TabIndex = 56;
-            this.BT_Stun.Text = "X";
+            this.BT_Stun.Text = "F: 120sec D: 5000ms C: 100% : B";
             this.BT_Stun.UseVisualStyleBackColor = true;
             this.BT_Stun.Click += new System.EventHandler(this.BT_Stun_Click);
             // 
@@ -819,55 +799,6 @@
             this.CK_AoETargs.ToolTipText = "";
             this.CK_AoETargs.CheckedChanged += new System.EventHandler(this.RotChanges_AoE_ChecksChanged);
             // 
-            // NUD_DisarmDur
-            // 
-            this.NUD_DisarmDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_DisarmDur.Enabled = false;
-            this.NUD_DisarmDur.Location = new System.Drawing.Point(220, 274);
-            this.NUD_DisarmDur.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.NUD_DisarmDur.Minimum = new decimal(new int[] {
-            1500,
-            0,
-            0,
-            0});
-            this.NUD_DisarmDur.Name = "NUD_DisarmDur";
-            this.NUD_DisarmDur.Size = new System.Drawing.Size(73, 20);
-            this.NUD_DisarmDur.TabIndex = 45;
-            this.NUD_DisarmDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_DisarmDur.Value = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.NUD_DisarmDur.ValueChanged += new System.EventHandler(this.NUD_DisarmDur_ValueChanged);
-            // 
-            // NUD_DisarmFreq
-            // 
-            this.NUD_DisarmFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_DisarmFreq.Enabled = false;
-            this.NUD_DisarmFreq.Location = new System.Drawing.Point(164, 274);
-            this.NUD_DisarmFreq.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.NUD_DisarmFreq.Name = "NUD_DisarmFreq";
-            this.NUD_DisarmFreq.Size = new System.Drawing.Size(56, 20);
-            this.NUD_DisarmFreq.TabIndex = 44;
-            this.NUD_DisarmFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_DisarmFreq.Value = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.NUD_DisarmFreq.ValueChanged += new System.EventHandler(this.NUD_DisarmFreq_ValueChanged);
-            // 
             // LB_MultiTargsPerc
             // 
             this.LB_MultiTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -905,55 +836,6 @@
             0});
             this.NUD_Under20Perc.ValueChanged += new System.EventHandler(this.NUD_Under20Perc_ValueChanged);
             // 
-            // NUD_RootDur
-            // 
-            this.NUD_RootDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_RootDur.Enabled = false;
-            this.NUD_RootDur.Location = new System.Drawing.Point(220, 248);
-            this.NUD_RootDur.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.NUD_RootDur.Minimum = new decimal(new int[] {
-            1500,
-            0,
-            0,
-            0});
-            this.NUD_RootDur.Name = "NUD_RootDur";
-            this.NUD_RootDur.Size = new System.Drawing.Size(73, 20);
-            this.NUD_RootDur.TabIndex = 42;
-            this.NUD_RootDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_RootDur.Value = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.NUD_RootDur.ValueChanged += new System.EventHandler(this.NUD_RootDur_ValueChanged);
-            // 
-            // NUD_RootFreq
-            // 
-            this.NUD_RootFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_RootFreq.Enabled = false;
-            this.NUD_RootFreq.Location = new System.Drawing.Point(164, 248);
-            this.NUD_RootFreq.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.NUD_RootFreq.Name = "NUD_RootFreq";
-            this.NUD_RootFreq.Size = new System.Drawing.Size(56, 20);
-            this.NUD_RootFreq.TabIndex = 41;
-            this.NUD_RootFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_RootFreq.Value = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.NUD_RootFreq.ValueChanged += new System.EventHandler(this.NUD_RootFreq_ValueChanged);
-            // 
             // CK_RootingTargs
             // 
             this.CK_RootingTargs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -961,7 +843,7 @@
             this.CK_RootingTargs.BackColor = System.Drawing.Color.Transparent;
             this.CK_RootingTargs.Location = new System.Drawing.Point(3, 247);
             this.CK_RootingTargs.Name = "CK_RootingTargs";
-            this.CK_RootingTargs.Size = new System.Drawing.Size(155, 20);
+            this.CK_RootingTargs.Size = new System.Drawing.Size(131, 20);
             this.CK_RootingTargs.TabIndex = 40;
             this.CK_RootingTargs.Text = "Boss Roots You *";
             this.CK_RootingTargs.ToolTipText = "";
@@ -974,7 +856,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.CK_FearingTargs.Location = new System.Drawing.Point(3, 221);
             this.CK_FearingTargs.Name = "CK_FearingTargs";
-            this.CK_FearingTargs.Size = new System.Drawing.Size(147, 20);
+            this.CK_FearingTargs.Size = new System.Drawing.Size(131, 20);
             this.CK_FearingTargs.TabIndex = 37;
             this.CK_FearingTargs.Text = "Boss Fears You *";
             this.CK_FearingTargs.ToolTipText = "";
@@ -1070,55 +952,6 @@
             this.LB_Freq.Text = "Freq (sec)";
             this.LB_Freq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // NUD_StunDur
-            // 
-            this.NUD_StunDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_StunDur.Enabled = false;
-            this.NUD_StunDur.Location = new System.Drawing.Point(220, 170);
-            this.NUD_StunDur.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.NUD_StunDur.Minimum = new decimal(new int[] {
-            1500,
-            0,
-            0,
-            0});
-            this.NUD_StunDur.Name = "NUD_StunDur";
-            this.NUD_StunDur.Size = new System.Drawing.Size(73, 20);
-            this.NUD_StunDur.TabIndex = 33;
-            this.NUD_StunDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_StunDur.Value = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.NUD_StunDur.ValueChanged += new System.EventHandler(this.NUD_StunDur_ValueChanged);
-            // 
-            // NUD_StunFreq
-            // 
-            this.NUD_StunFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_StunFreq.Enabled = false;
-            this.NUD_StunFreq.Location = new System.Drawing.Point(164, 170);
-            this.NUD_StunFreq.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.NUD_StunFreq.Name = "NUD_StunFreq";
-            this.NUD_StunFreq.Size = new System.Drawing.Size(56, 20);
-            this.NUD_StunFreq.TabIndex = 32;
-            this.NUD_StunFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_StunFreq.Value = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.NUD_StunFreq.ValueChanged += new System.EventHandler(this.NUD_StunFreq_ValueChanged);
-            // 
             // LB_Dur
             // 
             this.LB_Dur.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -1168,17 +1001,6 @@
             0});
             this.CB_MultiTargsMax.ValueChanged += new System.EventHandler(this.RotChanges_MultiMax_ValueChanged);
             // 
-            // LB_InBehindPerc
-            // 
-            this.LB_InBehindPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_InBehindPerc.BackColor = System.Drawing.Color.Transparent;
-            this.LB_InBehindPerc.Location = new System.Drawing.Point(277, 170);
-            this.LB_InBehindPerc.Name = "LB_InBehindPerc";
-            this.LB_InBehindPerc.Size = new System.Drawing.Size(15, 20);
-            this.LB_InBehindPerc.TabIndex = 23;
-            this.LB_InBehindPerc.Text = "%";
-            this.LB_InBehindPerc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // CK_MultiTargs
             // 
             this.CK_MultiTargs.BackColor = System.Drawing.Color.Transparent;
@@ -1212,7 +1034,7 @@
             this.CK_MovingTargs.BackColor = System.Drawing.Color.Transparent;
             this.CK_MovingTargs.Location = new System.Drawing.Point(3, 195);
             this.CK_MovingTargs.Name = "CK_MovingTargs";
-            this.CK_MovingTargs.Size = new System.Drawing.Size(124, 20);
+            this.CK_MovingTargs.Size = new System.Drawing.Size(131, 20);
             this.CK_MovingTargs.TabIndex = 34;
             this.CK_MovingTargs.Text = "You have to Move *";
             this.CK_MovingTargs.ToolTipText = "";
@@ -1254,7 +1076,7 @@
             this.CK_DisarmTargs.Enabled = false;
             this.CK_DisarmTargs.Location = new System.Drawing.Point(3, 274);
             this.CK_DisarmTargs.Name = "CK_DisarmTargs";
-            this.CK_DisarmTargs.Size = new System.Drawing.Size(141, 20);
+            this.CK_DisarmTargs.Size = new System.Drawing.Size(131, 20);
             this.CK_DisarmTargs.TabIndex = 43;
             this.CK_DisarmTargs.Text = "Boss Disarms You *";
             this.CK_DisarmTargs.ToolTipText = "";
@@ -1268,7 +1090,7 @@
             this.CK_StunningTargs.BackColor = System.Drawing.Color.Transparent;
             this.CK_StunningTargs.Location = new System.Drawing.Point(3, 169);
             this.CK_StunningTargs.Name = "CK_StunningTargs";
-            this.CK_StunningTargs.Size = new System.Drawing.Size(147, 20);
+            this.CK_StunningTargs.Size = new System.Drawing.Size(131, 20);
             this.CK_StunningTargs.TabIndex = 31;
             this.CK_StunningTargs.Text = "Boss Stuns You *";
             this.CK_StunningTargs.ToolTipText = "";
@@ -1325,80 +1147,80 @@
             this.CTL_Maints.HotTracking = true;
             this.CTL_Maints.Location = new System.Drawing.Point(3, 29);
             this.CTL_Maints.Name = "CTL_Maints";
-            treeNode1.Name = "Node9";
-            treeNode1.Text = "Berserker Rage";
-            treeNode2.Name = "Node10";
-            treeNode2.Text = "Bloodrage";
-            treeNode3.Name = "Node0";
-            treeNode3.Text = "Rage Generators";
-            treeNode4.Name = "Node7";
-            treeNode4.Text = "Battle Shout";
-            treeNode5.Name = "Node8";
-            treeNode5.Text = "Commanding Shout";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Shout Selection";
-            treeNode7.Name = "Node11";
-            treeNode7.Text = "Demoralizing Shout";
-            treeNode8.Name = "Node12";
-            treeNode8.Text = "Sunder Armor";
-            treeNode9.Name = "Node13";
-            treeNode9.Text = "Thunder Clap";
-            treeNode10.Name = "Node29";
-            treeNode10.Text = "Hamstring";
-            treeNode11.Name = "Node1";
-            treeNode11.Text = "Maintenance";
-            treeNode12.Name = "Node14";
-            treeNode12.Text = "Shattering Throw";
-            treeNode13.Name = "Node15";
-            treeNode13.Text = "Sweeping Strikes";
-            treeNode14.Name = "Node16";
-            treeNode14.Text = "Death Wish";
-            treeNode15.Name = "Node17";
-            treeNode15.Text = "Recklessness";
-            treeNode16.Name = "Node0";
-            treeNode16.Text = "Enraged Regeneration";
-            treeNode17.Name = "Node2";
-            treeNode17.Text = "Periodics";
-            treeNode18.Name = "Node24";
-            treeNode18.Text = "Whirlwind";
-            treeNode19.Name = "Node25";
-            treeNode19.Text = "Bloodthirst";
-            treeNode20.Name = "Node26";
-            treeNode20.Text = "Bloodsurge";
-            treeNode21.Name = "Node30";
-            treeNode21.Text = "Fury";
-            treeNode22.Name = "Node18";
-            treeNode22.Text = "Bladestorm";
-            treeNode23.Name = "Node19";
-            treeNode23.Text = "Mortal Strike";
-            treeNode24.Name = "Node20";
-            treeNode24.Text = "Rend";
-            treeNode25.Name = "Node21";
-            treeNode25.Text = "Overpower";
-            treeNode26.Name = "Node1";
-            treeNode26.Text = "Taste for Blood";
-            treeNode27.Name = "Node22";
-            treeNode27.Text = "Sudden Death";
-            treeNode28.Name = "Node23";
-            treeNode28.Text = "Slam";
-            treeNode29.Name = "Node3";
-            treeNode29.Text = "Arms";
-            treeNode30.Name = "Node0";
-            treeNode30.Text = "<20% Execute Spamming";
-            treeNode31.Name = "Node4";
-            treeNode31.Text = "Damage Dealers";
-            treeNode32.Name = "Node27";
-            treeNode32.Text = "Cleave";
-            treeNode33.Name = "Node28";
-            treeNode33.Text = "Heroic Strike";
-            treeNode34.Name = "Node5";
-            treeNode34.Text = "Rage Dumps";
+            treeNode69.Name = "Node9";
+            treeNode69.Text = "Berserker Rage";
+            treeNode70.Name = "Node10";
+            treeNode70.Text = "Bloodrage";
+            treeNode71.Name = "Node0";
+            treeNode71.Text = "Rage Generators";
+            treeNode72.Name = "Node7";
+            treeNode72.Text = "Battle Shout";
+            treeNode73.Name = "Node8";
+            treeNode73.Text = "Commanding Shout";
+            treeNode74.Name = "Node6";
+            treeNode74.Text = "Shout Selection";
+            treeNode75.Name = "Node11";
+            treeNode75.Text = "Demoralizing Shout";
+            treeNode76.Name = "Node12";
+            treeNode76.Text = "Sunder Armor";
+            treeNode77.Name = "Node13";
+            treeNode77.Text = "Thunder Clap";
+            treeNode78.Name = "Node29";
+            treeNode78.Text = "Hamstring";
+            treeNode79.Name = "Node1";
+            treeNode79.Text = "Maintenance";
+            treeNode80.Name = "Node14";
+            treeNode80.Text = "Shattering Throw";
+            treeNode81.Name = "Node15";
+            treeNode81.Text = "Sweeping Strikes";
+            treeNode82.Name = "Node16";
+            treeNode82.Text = "Death Wish";
+            treeNode83.Name = "Node17";
+            treeNode83.Text = "Recklessness";
+            treeNode84.Name = "Node0";
+            treeNode84.Text = "Enraged Regeneration";
+            treeNode85.Name = "Node2";
+            treeNode85.Text = "Periodics";
+            treeNode86.Name = "Node24";
+            treeNode86.Text = "Whirlwind";
+            treeNode87.Name = "Node25";
+            treeNode87.Text = "Bloodthirst";
+            treeNode88.Name = "Node26";
+            treeNode88.Text = "Bloodsurge";
+            treeNode89.Name = "Node30";
+            treeNode89.Text = "Fury";
+            treeNode90.Name = "Node18";
+            treeNode90.Text = "Bladestorm";
+            treeNode91.Name = "Node19";
+            treeNode91.Text = "Mortal Strike";
+            treeNode92.Name = "Node20";
+            treeNode92.Text = "Rend";
+            treeNode93.Name = "Node21";
+            treeNode93.Text = "Overpower";
+            treeNode94.Name = "Node1";
+            treeNode94.Text = "Taste for Blood";
+            treeNode95.Name = "Node22";
+            treeNode95.Text = "Sudden Death";
+            treeNode96.Name = "Node23";
+            treeNode96.Text = "Slam";
+            treeNode97.Name = "Node3";
+            treeNode97.Text = "Arms";
+            treeNode98.Name = "Node0";
+            treeNode98.Text = "<20% Execute Spamming";
+            treeNode99.Name = "Node4";
+            treeNode99.Text = "Damage Dealers";
+            treeNode100.Name = "Node27";
+            treeNode100.Text = "Cleave";
+            treeNode101.Name = "Node28";
+            treeNode101.Text = "Heroic Strike";
+            treeNode102.Name = "Node5";
+            treeNode102.Text = "Rage Dumps";
             this.CTL_Maints.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode11,
-            treeNode17,
-            treeNode31,
-            treeNode34});
+            treeNode71,
+            treeNode79,
+            treeNode85,
+            treeNode99,
+            treeNode102});
             this.CTL_Maints.Size = new System.Drawing.Size(291, 572);
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
@@ -1729,13 +1551,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TargHP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_AoEDMG)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_AoEFreq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmDur)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Under20Perc)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_RootDur)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_RootFreq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_StunDur)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_StunFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).EndInit();
@@ -1780,7 +1596,6 @@
         private System.Windows.Forms.RichTextBox RTB_Version;
         private System.Windows.Forms.TreeView CTL_Maints;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_Flooring;
-        private System.Windows.Forms.Label LB_InBehindPerc;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_MultiTargs;
         private System.Windows.Forms.NumericUpDown CB_InBackPerc;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_MovingTargs;
@@ -1791,9 +1606,7 @@
         private System.Windows.Forms.NumericUpDown CB_MultiTargsMax;
         private System.Windows.Forms.Label LB_Max;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_PTRMode;
-        private System.Windows.Forms.NumericUpDown NUD_StunDur;
         private System.Windows.Forms.Label LB_Freq;
-        private System.Windows.Forms.NumericUpDown NUD_StunFreq;
         private System.Windows.Forms.Label LB_Dur;
         private System.Windows.Forms.NumericUpDown NUD_SurvScale;
         private System.Windows.Forms.Label LB_SurvScale;
@@ -1806,15 +1619,11 @@
         private System.Windows.Forms.Label LB_FAQ;
         private System.Windows.Forms.ComboBox CB_FAQ_Questions;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideDefGear;
-        private System.Windows.Forms.NumericUpDown NUD_RootDur;
-        private System.Windows.Forms.NumericUpDown NUD_RootFreq;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_RootingTargs;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_FearingTargs;
         public Rawr.CustomControls.ExtendedToolTipLabel LB_Under20Perc;
         private System.Windows.Forms.Label LB_MultiTargsPerc;
         private System.Windows.Forms.NumericUpDown NUD_Under20Perc;
-        private System.Windows.Forms.NumericUpDown NUD_DisarmDur;
-        private System.Windows.Forms.NumericUpDown NUD_DisarmFreq;
         private System.Windows.Forms.NumericUpDown NUD_AoEDMG;
         private System.Windows.Forms.NumericUpDown NUD_AoEFreq;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_AoETargs;

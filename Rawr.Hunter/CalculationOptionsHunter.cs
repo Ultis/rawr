@@ -150,34 +150,34 @@ namespace Rawr.Hunter
             set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
         }
         // ==============================================================
-        private List<Stun> _stuns;
-        public List<Stun> Stuns
+        private List<Impedence> _stuns;
+        public List<Impedence> Stuns
         {
-            get { return _stuns ?? (_stuns = new List<Stun>()); }
+            get { return _stuns ?? (_stuns = new List<Impedence>()); }
             set { _stuns = value; OnPropertyChanged("Stuns"); }
         }
-        private List<Move> _moves;
-        public List<Move> Moves
+        private List<Impedence> _moves;
+        public List<Impedence> Moves
         {
-            get { return _moves ?? (_moves = new List<Move>()); }
+            get { return _moves ?? (_moves = new List<Impedence>()); }
             set { _moves = value; OnPropertyChanged("Moves"); }
         }
-        private List<Fear> _fears;
-        public List<Fear> Fears
+        private List<Impedence> _fears;
+        public List<Impedence> Fears
         {
-            get { return _fears ?? (_fears = new List<Fear>()); }
+            get { return _fears ?? (_fears = new List<Impedence>()); }
             set { _fears = value; OnPropertyChanged("Fears"); }
         }
-        private List<Root> _roots;
-        public List<Root> Roots
+        private List<Impedence> _roots;
+        public List<Impedence> Roots
         {
-            get { return _roots ?? (_roots = new List<Root>()); }
+            get { return _roots ?? (_roots = new List<Impedence>()); }
             set { _roots = value; OnPropertyChanged("Roots"); }
         }
-        private List<Disarm> _disarms;
-        public List<Disarm> Disarms
+        private List<Impedence> _disarms;
+        public List<Impedence> Disarms
         {
-            get { return _disarms ?? (_disarms = new List<Disarm>()); }
+            get { return _disarms ?? (_disarms = new List<Impedence>()); }
             set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
         #endregion
