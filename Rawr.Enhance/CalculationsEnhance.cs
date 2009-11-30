@@ -90,6 +90,7 @@ namespace Rawr.Enhance
                     "Attacks:Earth Shock",
                     "Attacks:Flame Shock",
                     "Attacks:Lightning Bolt",
+                    "Attacks:Fire Nova",
                     "Attacks:Lightning Shield",
                     "Attacks:Spirit Wolf",
                     "Attacks:Total DPS",
@@ -229,6 +230,7 @@ namespace Rawr.Enhance
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
+            float fireNovaBonus = 1f + .1f * character.ShamanTalents.ImprovedFireNova;
             float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
             float shockBonus = stats.Enhance4T9 == 1f ? 1.25f : 1f;
             float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;
@@ -453,7 +455,7 @@ namespace Rawr.Enhance
 
             //8: Fire Totem DPS
             float dpsFireTotem = 0f;
-            if (calcOpts.Magma)
+            if (calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem))
             {
                 float damageFireTotem = (371f + .1f * spellPower) * callofFlameBonus;
                 float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
@@ -463,13 +465,24 @@ namespace Rawr.Enhance
                 if (calcOpts.MultipleTargets)
                     dpsFireTotem += dpsFireTotem * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
             }
-            else if(calcOpts.Searing)
+            else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
                 float damageFireTotem = (105f + .1667f * spellPower) * callofFlameBonus;
                 float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
+            }
+
+            //8b: Fire Nova DPS
+            float dpsFireNova = 0f;
+            if (calcOpts.PriorityInUse(EnhanceAbility.FireNova))
+            {
+                float damageFireNova = (945.0f + 0.2142f * spellPower) * callofFlameBonus * fireNovaBonus;
+                float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova)) * cs.FireTotemUptime;
+                float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
+                float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                dpsFireNova = (FireNovaNormal + FireNovaCrit) * bonusFireDamage * bossFireResistance;
             }
 
             //9: Flametongue Weapon DPS++
@@ -535,7 +548,7 @@ namespace Rawr.Enhance
             #endregion
 
             #region Set CalculatedStats
-            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsFireTotem + dpsFT + dpsDogs;
+            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs;
             calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
             calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
@@ -580,6 +593,7 @@ namespace Rawr.Enhance
             calculatedStats.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
+            calculatedStats.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
 
 #if RAWR3
             calculatedStats.Version = VERSION;

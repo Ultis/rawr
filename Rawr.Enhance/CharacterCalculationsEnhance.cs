@@ -288,6 +288,13 @@ namespace Rawr.Enhance
             set { _searingMagma = value; }
         }
 
+        private DPSAnalysis _fireNova;
+        public DPSAnalysis FireNova
+        {
+            get { return _fireNova; }
+            set { _fireNova = value; }
+        }
+
         private DPSAnalysis _stormstrike;
         public DPSAnalysis Stormstrike
         {
@@ -482,6 +489,7 @@ namespace Rawr.Enhance
             dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints, false));
             dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPSPoints, true));
             dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints, true));
+            dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPSPoints, false));
             dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPSPoints, false));
             dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints, true));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
