@@ -688,7 +688,7 @@ These numbers to do not include racial bonuses.",
 
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (character.WarriorTalents.Rampage > 0 && calcOpts.FuryStance)
+            if (character.WarriorTalents.Rampage > 0)
             {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Rampage"));
@@ -1127,7 +1127,7 @@ These numbers to do not include racial bonuses.",
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
             };
             // Add Talents that give SpecialEffects
-            if (talents.Rampage > 0 && calcOpts.FuryStance && isBuffed) {
+            if (talents.Rampage > 0 && isBuffed) {
                 /*SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
                 statsTalents.AddSpecialEffect(rampage);*/
                 statsTalents.PhysicalCrit += 0.05f;
