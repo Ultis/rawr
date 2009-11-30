@@ -51,22 +51,19 @@ namespace Rawr
 
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
-			BuildControls();
-			LoadBuffsFromCharacter();
-            ScrollHook.hookRec(this);
+            RebuildControls();
 		}
 
         void Character_RaceChanged(object sender, EventArgs e)
         {
-            BuildControls();
-            LoadBuffsFromCharacter();
-            ScrollHook.hookRec(this);
+            RebuildControls();
         }
 
         public void RebuildControls()
         {
             BuildControls();
             LoadBuffsFromCharacter();
+            UpdateEnabledStates();
             ScrollHook.hookRec(this);
         }
 
@@ -85,9 +82,7 @@ namespace Rawr
 
         void GeneralSettings_HideProfessionsChanged(object sender, EventArgs e)
         {
-            BuildControls();
-            LoadBuffsFromCharacter();
-            ScrollHook.hookRec(this);
+            RebuildControls();
         }
 
         public Dictionary<Buff, CheckBox> BuffCheckBoxes
