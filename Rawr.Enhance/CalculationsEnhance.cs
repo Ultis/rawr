@@ -224,8 +224,7 @@ namespace Rawr.Enhance
 
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts);
-            Stats specialEffects = se.getSpecialEffects();
-            stats.Accumulate(specialEffects);
+            stats.Accumulate(se.getSpecialEffects());
             //Set up some talent variables
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
@@ -777,6 +776,7 @@ namespace Rawr.Enhance
                 _relevantGlyphs.Add("Glyph of Flame Shock");
                 _relevantGlyphs.Add("Glyph of Stormstrike");
                 _relevantGlyphs.Add("Glyph of Windfury Weapon");
+                _relevantGlyphs.Add("Glyph of Fire Nova");
             }
             return _relevantGlyphs;
         }
