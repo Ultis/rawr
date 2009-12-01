@@ -83,7 +83,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbilityDK.Base.cs" />
+    <Compile Include="DKAbilities\AbilityDK.Base.cs" />
+    <Compile Include="DKAbilities\AbilityDK.BloodPlague.cs" />
+    <Compile Include="DKAbilities\AbilityDK.BloodStrike.cs" />
+    <Compile Include="DKAbilities\AbilityDK.FrostFever.cs" />
+    <Compile Include="DKAbilities\AbilityDK.IcyTouch.cs" />
+    <Compile Include="DKAbilities\AbilityDK.PlagueStrike.cs" />
     <Compile Include="CalculationOptionsPanelTankDK.cs">
       <SubType>UserControl</SubType>
     </Compile>
