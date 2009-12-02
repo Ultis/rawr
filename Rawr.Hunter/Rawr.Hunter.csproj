@@ -125,6 +125,7 @@
     <Compile Include="PetSkill.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PetTalents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CalculationOptionsPanelHunter.resx">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>
@@ -133,11 +134,17 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -177,6 +184,11 @@
       <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\bgCunning.jpg" />
+    <Content Include="Resources\bgFerocity.jpg" />
+    <Content Include="Resources\bgTenacity.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

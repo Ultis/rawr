@@ -2314,7 +2314,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (calcOpts.selectedAspect == Aspect.Hawk || (calcOpts.selectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                 statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
             }
-            if (calcOpts.PetTalents.CallOfTheWild > 0)
+            if (calcOpts.PetTalents.CallOfTheWild.Value > 0)
             {
                 SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusAttackPowerMultiplier = 0.10f, },
@@ -2339,8 +2339,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     10f, cooldown);
                 statsTalents.AddSpecialEffect(WrathBeastWithin);
             }
-            if (calcOpts.PTRMode && calcOpts.PetTalents.CullingTheHerd > 0) {
-                float val1 = calcOpts.PetTalents.CullingTheHerd * 0.01f;
+            if (calcOpts.PTRMode && calcOpts.PetTalents.CullingTheHerd.Value > 0)
+            {
+                float val1 = calcOpts.PetTalents.CullingTheHerd.Value * 0.01f;
                 SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
                     new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
                     10f, 0f);

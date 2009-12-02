@@ -72,7 +72,7 @@ namespace Rawr.Hunter
             float focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat)/4f;
 
             // owl's focus
-            float owlsFocusEffect = (CalcOpts.PetTalents.OwlsFocus > 0) ? owlsFocusEffect = 1f / (1f / (CalcOpts.PetTalents.OwlsFocus * 0.15f) + 1f) : 0f;
+            float owlsFocusEffect = (CalcOpts.PetTalents.OwlsFocus.Value > 0) ? owlsFocusEffect = 1f / (1f / (CalcOpts.PetTalents.OwlsFocus.Value * 0.15f) + 1f) : 0f;
 
             #endregion
             #region Special Abilities Priority Rotation
@@ -148,7 +148,7 @@ namespace Rawr.Hunter
 
             calculatedStats.petCritFromBase = 0.032f;
             calculatedStats.petCritFromAgility = critAgilityTotal / (100f * 62.5f);
-            calculatedStats.petCritFromSpidersBite = CalcOpts.PetTalents.SpidersBite * 0.03f;
+            calculatedStats.petCritFromSpidersBite = CalcOpts.PetTalents.SpidersBite.Value * 0.03f;
             calculatedStats.petCritFromFerocity = character.HunterTalents.Ferocity * 0.02f;
             calculatedStats.petCritFromGear = isWearingBeastTamersShoulders ? 0.02f : 0;
             calculatedStats.petCritFromBuffs = statsBuffs.PhysicalCrit + StatConversion.GetCritFromRating(statsBuffs.CritRating);
@@ -200,7 +200,7 @@ namespace Rawr.Hunter
 
             float attackSpeedFromSerpentsSwiftness = 1f + (character.HunterTalents.SerpentsSwiftness * 0.04f);
             float attackSpeedFromHeroism = 1f + calculatedStats.hasteFromHeroism;
-            float attackSpeedFromCobraReflexes = 1f + (CalcOpts.PetTalents.CobraReflexes * 0.15f);
+            float attackSpeedFromCobraReflexes = 1f + (CalcOpts.PetTalents.CobraReflexes.Value * 0.15f);
             float attackSpeedFromMultiplicitiveHasteBuffs = 1 + statsBuffs.PhysicalHaste;
             float attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
                                      * attackSpeedFromHeroism
@@ -388,7 +388,7 @@ namespace Rawr.Hunter
             petStats.Strength += statsBuffs.Strength;
             petStats.Strength *= 1.0f + statsBuffs.BonusStrengthMultiplier;
 
-            float apFromHunterScaling = 0.22f * (1 + CalcOpts.PetTalents.WildHunt * 0.15f);
+            float apFromHunterScaling = 0.22f * (1 + CalcOpts.PetTalents.WildHunt.Value * 0.15f);
             calculatedStats.petAPFromStrength = (petStats.Strength - 10f) * 2f;
             calculatedStats.petAPFromHunterVsWild = (float)Math.Floor(calculatedStats.BasicStats.Stamina * (0.1f * character.HunterTalents.HunterVsWild));
             calculatedStats.petAPFromBuffs = statsBuffs.AttackPower;
@@ -428,7 +428,7 @@ namespace Rawr.Hunter
             SpecialEffect rabid = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusAttackPowerMultiplier = 0.05f },
                 20, rabidCooldown, 0.50f, 5);
-            float rabidUptime = CalcOpts.PetTalents.Rabid * rabid.GetAverageUptime(0f, 1f, 2f, CalcOpts.Duration);
+            float rabidUptime = CalcOpts.PetTalents.Rabid.Value * rabid.GetAverageUptime(0f, 1f, 2f, CalcOpts.Duration);
 
             if (rabidUptime > 0)
             {
@@ -573,7 +573,7 @@ namespace Rawr.Hunter
 
             float damageAdjustUnleashedFury = 1f + (character.HunterTalents.UnleashedFury * 0.03f);
             float damageAdjustMood = CalcOpts.petHappiness == PetHappiness.Happy ? 1.25f : CalcOpts.petHappiness == PetHappiness.Content ? 1f : 0.75f;
-            float damageAdjustSpikedCollar = 1f + (CalcOpts.PetTalents.SpikedCollar * 0.03f);
+            float damageAdjustSpikedCollar = 1f + (CalcOpts.PetTalents.SpikedCollar.Value * 0.03f);
             float damageAdjustRaceModifier = character.Race == CharacterRace.Orc ? 1.05f : 1f;
             float damageAdjustGearModifier = isWearingBeastTamersShoulders ? 1.03f : 1f;
             float damageAdjustFerociousInspiration = calculatedStats.ferociousInspirationDamageAdjust;
@@ -581,19 +581,19 @@ namespace Rawr.Hunter
             float damageAdjustSancRetributionAura = 1f + statsBuffs.BonusDamageMultiplier;
             float damageAdjustTier7Bonus = 1f + statsHunterBuffs.BonusPetDamageMultiplier;
             float damageAdjustBonusPetDamageMult = 1f + StatS.BonusPetDamageMultiplier;
-            float damageAdjustSharkAttack = 1f + (CalcOpts.PetTalents.SharkAttack * 0.03f);
+            float damageAdjustSharkAttack = 1f + (CalcOpts.PetTalents.SharkAttack.Value * 0.03f);
             float damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
             float damageAdjustPetFamily = 1.05f;
             float damageAdjustMarkedForDeath = 1f + (character.HunterTalents.MarkedForDeath * 0.02f);
-            float damageAdjustCobraReflexes  = 1f - (CalcOpts.PetTalents.CobraReflexes * 0.075f); // this is a negative effect!
+            float damageAdjustCobraReflexes = 1f - (CalcOpts.PetTalents.CobraReflexes.Value * 0.075f); // this is a negative effect!
 
             // Feeding Frenzy
             float damageAdjustFeedingFrenzy = 1;
-            if (CalcOpts.PetTalents.FeedingFrenzy > 0)
+            if (CalcOpts.PetTalents.FeedingFrenzy.Value > 0)
             {
                 float feedingFrenzyTimeSpent = CalcOpts.timeSpentSub20 + CalcOpts.timeSpent35To20;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / CalcOpts.Duration : 0;
-                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * CalcOpts.PetTalents.FeedingFrenzy * 0.08f;
+                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * CalcOpts.PetTalents.FeedingFrenzy.Value * 0.08f;
             }
 
             // Glancing Blows

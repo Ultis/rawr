@@ -251,101 +251,26 @@ namespace Rawr.Hunter
         public int PriorityIndex8 = 0;
         public int PriorityIndex9 = 0;
         public int PriorityIndex10 = 0;
-		
-		// pet talents
-        public class PetTalentTree {
-            public PetTalentTree() { Reset(); }
-            public int CobraReflexes;
-            public int DiveDash;
-            public int ChargeSwoop;
-            public int GreatStamina;
-            public int NaturalArmor;
-            public int BoarsSpeed;
-            public int Mobility;
-            public int SpikedCollar;
-            public int ImprovedCower;
-            public int Bloodthirsty;
-            public int BloodOfTheRhino;
-            public int PetBarding;
-            public int Avoidance;
-            /// <summary>
-            /// Increases pet and hunter damage by 1/2/3% for 10 seconds each time
-            /// the pet deals a critical strike with Claw, Bite, or Smack.
-            /// </summary>
-            public int CullingTheHerd;
-            public int Lionhearted;
-            public int CarrionFeeder;
-            public int GuardDog;
-            public int Thunderstomp;
-            public int GreatResistance;
-            public int OwlsFocus;
-            public int Cornered;
-            public int FeedingFrenzy;
-            public int HeartOfThePhoenix;
-            public int SpidersBite;
-            public int WolverineBite;
-            public int RoarOfRecovery;
-            public int Bullheaded;
-            public int GraceOfTheMantis;
-            public int Rabid;
-            public int LickYourWounds;
-            /// <summary>
-            /// Your pet roars, increasing your pet's and your melee and ranged
-            /// attack power by 10%. Lasts 20 sec. 5 min cooldown.
-            /// </summary>
-            public int CallOfTheWild;
-            public int LastStand;
-            public int Taunt;
-            public int Intervene;
-            public int WildHunt;
-            public int RoarOfSacrifice;
-            public int SharkAttack;
-            public int Silverback;
-            public void Reset(){
-                CobraReflexes = 0;
-                DiveDash = 0;
-                ChargeSwoop = 0;
-                GreatStamina = 0;
-                NaturalArmor = 0;
-                BoarsSpeed = 0;
-                Mobility = 0;
-                SpikedCollar = 0;
-                ImprovedCower = 0;
-                Bloodthirsty = 0;
-                BloodOfTheRhino = 0;
-                PetBarding = 0;
-                Avoidance = 0; CullingTheHerd = 0;
-                Lionhearted = 0;
-                CarrionFeeder = 0;
-                GuardDog = 0;
-                Thunderstomp = 0;
-                GreatResistance = 0;
-                OwlsFocus = 0;
-                Cornered = 0;
-                FeedingFrenzy = 0;
-                HeartOfThePhoenix = 0;
-                SpidersBite = 0;
-                WolverineBite = 0;
-                RoarOfRecovery = 0;
-                Bullheaded = 0;
-                GraceOfTheMantis = 0;
-                Rabid = 0;
-                LickYourWounds = 0;
-                CallOfTheWild = 0;
-                LastStand = 0;
-                Taunt = 0;
-                Intervene = 0;
-                WildHunt = 0;
-                RoarOfSacrifice = 0;
-                SharkAttack = 0;
-                Silverback = 0;
-            }
-        }
+
+        [XmlIgnore]
         private PetTalentTree _PetTalents;
+        [XmlIgnore]
         public PetTalentTree PetTalents {
             get { return _PetTalents ?? (_PetTalents = new PetTalentTree()); }
             set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
         }
+
+        [XmlIgnore]
+        private string _petTalents;
+        public string petTalents
+        {
+            get { return _petTalents; }
+            set {
+                //PetTalents = new PetTalentTree(value); //_petTalents = PetTalents.ToString();
+                _petTalents = value;
+            }
+        }
+
         public PetFamily PetFamily
 		{
 			get { return _petFamily; }

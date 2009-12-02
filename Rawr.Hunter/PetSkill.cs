@@ -124,20 +124,20 @@ namespace Rawr.Hunter
             }
 
             // don't add skills that require a talent we are missing
-            if (skillType == PetAttacks.Bullheaded && options.PetTalents.Bullheaded == 0) return;
-            if (skillType == PetAttacks.CallOfTheWild && options.PetTalents.CallOfTheWild == 0) return;
-            if (skillType == PetAttacks.Dash && options.PetTalents.DiveDash == 0) return;
-            if (skillType == PetAttacks.Dive && options.PetTalents.DiveDash == 0) return;
-            if (skillType == PetAttacks.LastStand && options.PetTalents.LastStand == 0) return;
-            if (skillType == PetAttacks.LickYourWounds && options.PetTalents.LickYourWounds == 0) return;
-            if (skillType == PetAttacks.Rabid && options.PetTalents.Rabid == 0) return;
-            if (skillType == PetAttacks.RoarOfRecovery && options.PetTalents.RoarOfRecovery == 0) return;
-            if (skillType == PetAttacks.RoarOfSacrifice && options.PetTalents.RoarOfSacrifice == 0) return;
-            if (skillType == PetAttacks.Taunt && options.PetTalents.Taunt == 0) return;
-            if (skillType == PetAttacks.WolverineBite && options.PetTalents.WolverineBite == 0) return;
-            if (skillType == PetAttacks.Thunderstomp && options.PetTalents.Thunderstomp == 0) return;
-            if (skillType == PetAttacks.Charge && options.PetTalents.ChargeSwoop == 0) return;
-            if (skillType == PetAttacks.Swoop && options.PetTalents.ChargeSwoop == 0) return;
+            if (skillType == PetAttacks.Bullheaded && options.PetTalents.Bullheaded.Value == 0) return;
+            if (skillType == PetAttacks.CallOfTheWild && options.PetTalents.CallOfTheWild.Value == 0) return;
+            if (skillType == PetAttacks.Dash && options.PetTalents.DiveDash.Value == 0) return;
+            if (skillType == PetAttacks.Dive && options.PetTalents.DiveDash.Value == 0) return;
+            if (skillType == PetAttacks.LastStand && options.PetTalents.LastStand.Value == 0) return;
+            if (skillType == PetAttacks.LickYourWounds && options.PetTalents.LickYourWounds.Value == 0) return;
+            if (skillType == PetAttacks.Rabid && options.PetTalents.Rabid.Value == 0) return;
+            if (skillType == PetAttacks.RoarOfRecovery && options.PetTalents.RoarOfRecovery.Value == 0) return;
+            if (skillType == PetAttacks.RoarOfSacrifice && options.PetTalents.RoarOfSacrifice.Value == 0) return;
+            if (skillType == PetAttacks.Taunt && options.PetTalents.Taunt.Value == 0) return;
+            if (skillType == PetAttacks.WolverineBite && options.PetTalents.WolverineBite.Value == 0) return;
+            if (skillType == PetAttacks.Thunderstomp && options.PetTalents.Thunderstomp.Value == 0) return;
+            if (skillType == PetAttacks.Charge && options.PetTalents.ChargeSwoop.Value == 0) return;
+            if (skillType == PetAttacks.Swoop && options.PetTalents.ChargeSwoop.Value == 0) return;
 
             // it looks good - create an instance wrapper
             skills.Add(new PetSkillInstance(this, skillType, skillLibrary[skillType]));
@@ -177,8 +177,8 @@ namespace Rawr.Hunter
                 S.focus = S.skillData.focus;
                 S.can_crit = S.skillData.can_crit;
 
-                if (S.skillType == PetAttacks.Dive) S.cooldown -= options.PetTalents.DiveDash * 8f;
-                if (S.skillType == PetAttacks.Dash) S.cooldown -= options.PetTalents.DiveDash * 8f;
+                if (S.skillType == PetAttacks.Dive) S.cooldown -= options.PetTalents.DiveDash.Value * 8f;
+                if (S.skillType == PetAttacks.Dash) S.cooldown -= options.PetTalents.DiveDash.Value * 8f;
 
                 if (S.skillData.type != PetSkillType.FocusDump) S.cooldown *= longevityCooldownAdjust;
             }
@@ -204,10 +204,10 @@ namespace Rawr.Hunter
         {
             // if we're asking for the frequency of one of the 'always on' skills,
             // and we have the talent for it, just return the cooldown.
-            if (skill == PetAttacks.Rabid) return (options.PetTalents.Rabid > 0) ? skillLibrary[PetAttacks.Rabid].cooldown : 0;
-            if (skill == PetAttacks.CallOfTheWild) return (options.PetTalents.CallOfTheWild > 0) ? skillLibrary[PetAttacks.CallOfTheWild].cooldown : 0;
-            if (skill == PetAttacks.Bullheaded) return (options.PetTalents.Bullheaded > 0) ? skillLibrary[PetAttacks.Bullheaded].cooldown : 0;
-            if (skill == PetAttacks.RoarOfRecovery) return (options.PetTalents.RoarOfRecovery > 0) ? skillLibrary[PetAttacks.RoarOfRecovery].cooldown : 0;
+            if (skill == PetAttacks.Rabid) return (options.PetTalents.Rabid.Value > 0) ? skillLibrary[PetAttacks.Rabid].cooldown : 0;
+            if (skill == PetAttacks.CallOfTheWild) return (options.PetTalents.CallOfTheWild.Value > 0) ? skillLibrary[PetAttacks.CallOfTheWild].cooldown : 0;
+            if (skill == PetAttacks.Bullheaded) return (options.PetTalents.Bullheaded.Value > 0) ? skillLibrary[PetAttacks.Bullheaded].cooldown : 0;
+            if (skill == PetAttacks.RoarOfRecovery) return (options.PetTalents.RoarOfRecovery.Value > 0) ? skillLibrary[PetAttacks.RoarOfRecovery].cooldown : 0;
 
             foreach (PetSkillInstance S in skills)
             {

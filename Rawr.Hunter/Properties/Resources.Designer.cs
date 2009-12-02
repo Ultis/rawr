@@ -59,5 +59,26 @@ namespace Rawr.Hunter.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap bgCunning {
+            get {
+                object obj = ResourceManager.GetObject("bgCunning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap bgFerocity {
+            get {
+                object obj = ResourceManager.GetObject("bgFerocity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap bgTenacity {
+            get {
+                object obj = ResourceManager.GetObject("bgTenacity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
