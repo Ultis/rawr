@@ -151,7 +151,7 @@ namespace Rawr.DPSDK
             gcdType = GCDType.Melee;
             calcOpts = null;
         }
-        public String ToString()
+        public override String ToString()
         {
             return Name;
         }

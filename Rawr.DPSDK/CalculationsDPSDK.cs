@@ -248,8 +248,6 @@ namespace Rawr.DPSDK
             float dpsFrostFever = 0f;
             float dpsBloodPlague = 0f;
             float dpsScourgeStrike = 0f;
-            float dpsScourgeStrikeShadow = 0f;
-            float dpsScourgeStrikePhysical = 0f;
             float dpsUnholyBlight = 0f;
             float dpsFrostStrike = 0f;
             float dpsHowlingBlast = 0f;
@@ -316,8 +314,8 @@ namespace Rawr.DPSDK
             calcOpts.rotation.AvgDiseaseMult = calcOpts.rotation.NumDisease * (calcOpts.rotation.DiseaseUptime / 100);
             float commandMult = 0f;
 
-            double FightMilliseconds = calcOpts.FightLength * 60 * 1000;
-            double currentTime = 0d;
+       //     double FightMilliseconds = calcOpts.FightLength * 60 * 1000;
+      //      double currentTime = 0d;
             
             // talent-related buffs and debuffs: 100% proc chance or pre-calculated availability
             // Killing Machine
@@ -591,7 +589,6 @@ namespace Rawr.DPSDK
                         // Frost Fever is renewed with every Icy Touch and starts a new cd
                         float ITCD = (temp.IcyTouch + (talents.GlyphofHowlingBlast ? temp.HowlingBlast : 0f));
                         float FFDmg = 0f;
-                        String effectStats;
                         float ticksPerRotation = 5f + talents.Epidemic + (talents.GlyphofScourgeStrike ? Math.Min(temp.ScourgeStrike, 3f) : 0f);
                         if (ITCD > 1f)
                         {
@@ -607,53 +604,11 @@ namespace Rawr.DPSDK
                         if (PestRefresh * temp.Pestilence - combatTable.realDuration > 0f)
                         {
                             ticksPerRotation = combatTable.realDuration / 3f;
-                            Stats maxStats = GetCharacterStatsMaximum(character, additionalItem, calcOpts.FightLength * 60f);
-                            Stats tempStats;
-                            foreach (SpecialEffect effect in maxStats.SpecialEffects())
-                            {
-                                if (effect.Trigger != Trigger.Use)
-                                {
-                                    tempStats = new Stats();
-                                    tempStats += maxStats;
-                                    tempStats += effect.Stats;
-                                    tempStats.Strength += tempStats.HighestStat + tempStats.Paragon;
-                                    tempStats.Agility = (float)Math.Floor(tempStats.Agility * (1 + tempStats.BonusAgilityMultiplier));
-                                    tempStats.Strength = (float)Math.Floor(tempStats.Strength * (1 + tempStats.BonusStrengthMultiplier));
-                                    tempStats.AttackPower = (float)Math.Floor(tempStats.AttackPower + tempStats.Strength * 2);
-                                    // Copy from TankDK.
-                                    // tempStats.Armor = (float)Math.Floor((tempStats.Armor + tempStats.BonusArmor + 2f * tempStats.Agility) * 1f);
-                                    tempStats.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(tempStats.Agility) +
-                                                        StatConversion.ApplyMultiplier(tempStats.Armor, tempStats.BaseArmorMultiplier) +
-                                                        StatConversion.ApplyMultiplier(tempStats.BonusArmor, tempStats.BonusArmorMultiplier));
-                                    tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
-                                    tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
-                                    tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
-                                    if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
-                                    {
-                                        tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
-                                        tempStats.BonusSpellPowerMultiplier *= 1.15f;
-                                    }
-                                    else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
-                                    {
-                                        tempStats.PhysicalHaste += 0.15f;
-                                        tempStats.SpellHaste += 0.15f;
-                                    }
-                                    float tempFFDmg = BloodPlagueAPMult * tempStats.AttackPower + 31.1f;
-                                    if (tempFFDmg > FFDmg)
-                                    {
-                                        FFDmg = tempFFDmg;
-                                        effectStats = effect.ToString();
-                                    }
-                                }
-                            }
                         }
-                        else
-                        {
                             FFDmg = FrostFeverAPMult * stats.AttackPower;
-                        }
                         dpsFrostFever = FFDmg * ticksPerRotation / combatTable.realDuration;
                         dpsFrostFever *= 1.15f;	// Patch 3.2: Diseases hit 15% harder.
-                        if (PTR && talents.GlyphofIcyTouch)
+                        if (talents.GlyphofIcyTouch)
                         {
                             dpsFrostFever *= 1.2f;
                         }
@@ -671,7 +626,6 @@ namespace Rawr.DPSDK
                         float PestRefresh = (15f + talents.Epidemic * 3f +
                             (talents.GlyphofScourgeStrike ? Math.Min(3f * temp.ScourgeStrike, 9f) : 0f));
                         float BPDmg = 0f;
-                        String tempEffect = "";
                         float ticksPerRotation = 5f + talents.Epidemic + (talents.GlyphofScourgeStrike ? Math.Min(temp.ScourgeStrike, 3f) : 0f);
                         if (PSCD > 1f)
                         {
@@ -685,50 +639,9 @@ namespace Rawr.DPSDK
                         if (PestRefresh * temp.Pestilence - combatTable.realDuration > 0f)
                         {
                             ticksPerRotation = combatTable.realDuration / 3f;
-                            Stats maxStats = GetCharacterStatsMaximum(character, additionalItem, calcOpts.FightLength * 60f);
-                            Stats tempStats;
-                            foreach (SpecialEffect effect in maxStats.SpecialEffects())
-                            {
-                                if (effect.Trigger != Trigger.Use)
-                                {
-                                    tempStats = new Stats();
-                                    tempStats += maxStats;
-                                    tempStats += effect.Stats;
-                                    tempStats.Strength += tempStats.HighestStat + tempStats.Paragon;
-                                    tempStats.Agility = (float)Math.Floor(tempStats.Agility * (1 + tempStats.BonusAgilityMultiplier));
-                                    tempStats.Strength = (float)Math.Floor(tempStats.Strength * (1 + tempStats.BonusStrengthMultiplier));
-                                    tempStats.AttackPower = (float)Math.Floor(tempStats.AttackPower + tempStats.Strength * 2);
-                                    // Copy from TankDK.
-                                    // tempStats.Armor = (float)Math.Floor((tempStats.Armor + tempStats.BonusArmor + 2f * tempStats.Agility) * 1f);
-                                    tempStats.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(tempStats.Agility) +
-                                                        StatConversion.ApplyMultiplier(tempStats.Armor, tempStats.BaseArmorMultiplier) +
-                                                        StatConversion.ApplyMultiplier(tempStats.BonusArmor, tempStats.BonusArmorMultiplier));
-                                    tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
-                                    tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
-                                    tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
-                                    if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
-                                    {
-                                        tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
-                                        tempStats.BonusSpellPowerMultiplier *= 1.15f;
-                                    }
-                                    else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
-                                    {
-                                        tempStats.PhysicalHaste += 0.15f;
-                                        tempStats.SpellHaste += 0.15f;
-                                    }
-                                    float tempBPDmg = BloodPlagueAPMult * tempStats.AttackPower;
-                                    if (tempBPDmg > BPDmg)
-                                    {
-                                        BPDmg = tempBPDmg;
-                                        tempEffect = effect.ToString();
-                                    }
-                                }
-                            }
                         }
-                        else
-                        {
-                            BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
-                        }
+                            
+                        BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
                         dpsBloodPlague = BPDmg * ticksPerRotation / combatTable.realDuration;
                         dpsBloodPlague *= 1.15f; // Patch 3.2: Diseases hit 15% harder.
                         dpsWPFromBP = dpsBloodPlague * combatTable.physCrits;
@@ -742,10 +655,6 @@ namespace Rawr.DPSDK
                     {
                         float DiseaseCritDmgMult = 0.5f * (2f + stats.BonusCritMultiplier);
                         float DiseaseCrit = 1f + combatTable.spellCrits;
-                        if (!PTR)
-                        {
-                            dpsFrostFever *= DiseaseCrit;
-                        }
                         dpsBloodPlague *= DiseaseCrit;
                     }
                 }
@@ -762,42 +671,42 @@ namespace Rawr.DPSDK
                 {
                     if (talents.ScourgeStrike > 0 && temp.ScourgeStrike > 0f)
                     {
-                        if (!PTR)
-                        {
-                            float SSCD = combatTable.realDuration / temp.ScourgeStrike;
-                            float SSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) * 0.40f) + 317.5f +
-                                stats.BonusScourgeStrikeDamage;
-                            SSDmg *= 1f + 0.10f * temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
-                            dpsScourgeStrike = SSDmg / SSCD;
-                            float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
-                            float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion)
-                                                + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
-                            dpsScourgeStrike = dpsScourgeStrike * SSCrit;
-                            dpsScourgeStrike *= 1f + (0.2f / 3f * (float)talents.Outbreak);
-                        }
-                        else
-                        {
-                            float SSCD = combatTable.realDuration / temp.ScourgeStrike;
-                            float SSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) * 0.5f) + 317.5f +
-                                stats.BonusScourgeStrikeDamage;
-                            dpsScourgeStrikePhysical = SSDmg / SSCD;
-                            float SSCRitDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
-                            float SSCrit = 1f + ((combatTable.physCrits + (0.3f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion)
-                                                + stats.BonusScourgeStrikeCrit) * SSCRitDmgMult);
-                            dpsScourgeStrikePhysical *= SSCrit;
-                            dpsScourgeStrikePhysical *= 1f + (0.2f / 3f * (float)talents.Outbreak);
-                        }
+                        float SSCD = combatTable.realDuration / temp.ScourgeStrike;
+                        float SSDmg = 0;
+                        ScourgeStrike SS = new ScourgeStrike(character, stats, calcOpts, combatTable, talents);
+                        SS.DamageMod = (physPowerMult < 1 ? physPowerMult + 1 : physPowerMult) *
+                            combatTable.physicalMitigation *
+                            (1d + talents.Outbreak * 0.2d / 3) *
+                            (1d + talents.BloodyVengeance * .03d) *
+                            (1d + talents.BoneShield * .02d) *
+                            (1d + talents.Desolation * .01d) *
+                            (1d + talents.TwoHandedWeaponSpecialization * .02d);
+                        /*  After some testing on the PTR:
+                            5% Desolation, 15% Blood Presence, 2% Bone Shield and 10% Black Ice are addtivie, 
+                         * just like balance druids where some damage modifiers are additive, no clue why.
+                            So it is 0.25*3 * 1.13 * (1 +.15 +.05 +.02 ) * 1.04 = 1.0753 (1.1634 with black ice)
+                            The weird thing is that Rage of Rivendare does not affect the shadowdamage :/ 
+                         ( http://elitistjerks.com/f72/t72364-unholy_dps_3_3_ss_ill_stand_you/p51/#post1465790 )*/
+                        SS.SecondaryDamageMod = (((spellPowerMult < 1 ? spellPowerMult + 1 : spellPowerMult) / (temp.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.15d : 1d)) / (1d + talents.RageOfRivendare * .02d)) *
+                            0.94d *// Partial Resist
+                            (1d + (temp.presence == CalculationOptionsDPSDK.Presence.Blood ? .15d : 0d) + 
+                                (talents.Desolation * .05d) + 
+                                (talents.BoneShield * .02d) + 
+                                (talents.BlackIce * .02d)) *
+                            (1d + talents.TwoHandedWeaponSpecialization * .02d) *
+                            (CinderglacierMultiplier);
+                        SSDmg = (float)SS.Damage + (float)SS.SecondaryDamage;
+                        dpsScourgeStrike = SSDmg / SSCD;
+                        
                     }
                 }
                 #endregion
 
                 #region Unholy Blight
                 {
-                    // now does 20% damage of each death coil over 10 seconds, with glyph increasing
+                    // now does 10% damage of each death coil over 10 seconds, with glyph increasing
                     // damage by 40%. It rolls like deep wounds, but luckily, we don't care.
-                    if (talents.UnholyBlight > 0f && temp.DeathCoil > 0f && !PTR)
-                        dpsUnholyBlight = dpsDeathCoil * (0.2f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
-                    else if (talents.UnholyBlight > 0f && temp.DeathCoil > 0f && PTR)
+                    if (talents.UnholyBlight > 0f && temp.DeathCoil > 0f)
                         dpsUnholyBlight = dpsDeathCoil * (0.1f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
                     else
                         dpsUnholyBlight = 0f;
@@ -1164,8 +1073,6 @@ namespace Rawr.DPSDK
                 float DeathStrikeMult = 1f;
                 float PlagueStrikeMult = 1f;
                 float ScourgeStrikeMult = 1f;
-                float ScourgeStrikePhsyicalMult = 1f;
-                float ScourgeStrikeShadowMult = 1f;
                 float UnholyBlightMult = 1f;
                 float WhiteMult = 1f;
                 float WanderingPlagueMult = 1f;
@@ -1184,12 +1091,10 @@ namespace Rawr.DPSDK
                     dpsObliterate *= physMit;
                     dpsDeathStrike *= physMit;
                     dpsPlagueStrike *= physMit;
-                    dpsScourgeStrikePhysical *= physMit;
                     dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, stats.ArmorPenetration, 0f, 0f);
 
                     WhiteMult *= physPowerMult;
                     BCBMult *= physPowerMult;
-                    ScourgeStrikePhsyicalMult *= physPowerMult;
                     BloodStrikeMult *= physPowerMult;
                     HeartStrikeMult *= physPowerMult;
                     ObliterateMult *= physPowerMult;
@@ -1203,10 +1108,8 @@ namespace Rawr.DPSDK
                     float strikeMit = /*missedSpecial **/ partialResist;
                     strikeMit *= (!DW ? 1f + .02f * talents.TwoHandedWeaponSpecialization : 1f);
 
-                    ScourgeStrikeShadowMult *= strikeMit;
                     dpsFrostStrike *= strikeMit * (1f - missedSpecial) * (1f - combatTable.dodgedSpecial);
 
-                    ScourgeStrikeShadowMult *= spellPowerMult;
                     FrostStrikeMult *= frostSpellPowerMult;
                 }
                 #endregion
@@ -1241,7 +1144,6 @@ namespace Rawr.DPSDK
                     DeathCoilMult *= CinderglacierMultiplier;
                     HowlingBlastMult *= CinderglacierMultiplier;
                     IcyTouchMult *= CinderglacierMultiplier;
-                    ScourgeStrikeShadowMult *= CinderglacierMultiplier;
                     FrostStrikeMult *= CinderglacierMultiplier;
                 }
                 #endregion
@@ -1266,7 +1168,6 @@ namespace Rawr.DPSDK
                     DeathStrikeMult *= 1 + HysteriaMult;
                     PlagueStrikeMult *= 1 + HysteriaMult;
                     WhiteMult *= 1 + HysteriaMult;
-                    ScourgeStrikePhsyicalMult *= 1 + HysteriaMult;
 
                     float BlackIceMult = .02f * (float)talents.BlackIce;
                     FrostFeverMult *= 1 + BlackIceMult;
@@ -1274,7 +1175,6 @@ namespace Rawr.DPSDK
                     IcyTouchMult *= 1 + BlackIceMult;
                     FrostStrikeMult *= 1 + BlackIceMult;
                     DeathCoilMult *= 1 + BlackIceMult;
-                    ScourgeStrikeShadowMult *= 1 + BlackIceMult;
                     BloodPlagueMult *= 1 + BlackIceMult;
                     otherShadowMult *= 1 + BlackIceMult;
                     otherFrostMult *= 1 + BlackIceMult;
@@ -1309,8 +1209,6 @@ namespace Rawr.DPSDK
                     ObliterateMult *= 1 + DesecrationMult;
                     DeathStrikeMult *= 1 + DesecrationMult;
                     PlagueStrikeMult *= 1 + DesecrationMult;
-                    ScourgeStrikePhsyicalMult *= 1 + DesecrationMult;
-                    ScourgeStrikeShadowMult *= 1 + DesecrationMult;
                     UnholyBlightMult *= 1 + DesecrationMult;
                     WhiteMult *= 1 + DesecrationMult;
                     otherShadowMult *= 1 + DesecrationMult;
@@ -1330,8 +1228,6 @@ namespace Rawr.DPSDK
                         ObliterateMult *= 1 + BoneMult;
                         DeathStrikeMult *= 1 + BoneMult;
                         PlagueStrikeMult *= 1 + BoneMult;
-                        ScourgeStrikePhsyicalMult *= 1 + BoneMult;
-                        ScourgeStrikeShadowMult *= 1 + BoneMult;
                         UnholyBlightMult *= 1 + BoneMult;
                         WhiteMult *= 1 + BoneMult;
                         otherShadowMult *= 1 + BoneMult;
@@ -1350,18 +1246,9 @@ namespace Rawr.DPSDK
 
                 #region 2T10
                 {
-                    ScourgeStrikeShadowMult *= 1 + stats.BonusScourgeStrikeMultiplier;
-                    ScourgeStrikePhsyicalMult *= 1 + stats.BonusScourgeStrikeMultiplier;
+                    ScourgeStrikeMult *= 1 + stats.BonusScourgeStrikeMultiplier;
                     ObliterateMult *= 1 + stats.BonusObliterateMultiplier;
                     HeartStrikeMult *= 1 + stats.BonusHeartStrikeMultiplier;
-                }
-                #endregion
-
-                #region Scourge Strike Is Annoying
-                if (PTR)
-                {
-                    dpsScourgeStrikeShadow = dpsScourgeStrikePhysical * (0.25f * temp.AvgDiseaseMult);
-                    dpsScourgeStrike = dpsScourgeStrikePhysical * ScourgeStrikePhsyicalMult + dpsScourgeStrikeShadow * ScourgeStrikeShadowMult;
                 }
                 #endregion
 
@@ -1383,7 +1270,7 @@ namespace Rawr.DPSDK
                 calcs.ObliterateDPS = dpsObliterate * ObliterateMult;
                 calcs.DeathStrikeDPS = dpsDeathStrike * DeathStrikeMult;
                 calcs.PlagueStrikeDPS = dpsPlagueStrike * PlagueStrikeMult;
-                calcs.ScourgeStrikeDPS = dpsScourgeStrike * (!PTR ? ScourgeStrikeMult : 1f);
+                calcs.ScourgeStrikeDPS = dpsScourgeStrike * ScourgeStrikeMult;
                 calcs.UnholyBlightDPS = dpsUnholyBlight * DeathCoilMult;
                 calcs.WhiteDPS = dpsWhite * WhiteMult;
                 calcs.WanderingPlagueDPS = dpsWanderingPlague * WanderingPlagueMult;
@@ -1701,11 +1588,11 @@ namespace Rawr.DPSDK
 
             statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
 
-            statsTotal.BonusSpellPowerMultiplier = statsTotal.BonusShadowDamageMultiplier;
+            statsTotal.BonusSpellPowerMultiplier++;
+            statsTotal.BonusSpellPowerMultiplier *= 1f + statsTotal.BonusShadowDamageMultiplier;
 
             statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
-            statsTotal.BonusSpellPowerMultiplier++;
             statsTotal.BonusPhysicalDamageMultiplier++;
 
             if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
@@ -1991,6 +1878,7 @@ namespace Rawr.DPSDK
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
 
                 BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
                 BonusDeathCoilDamage = stats.BonusDeathCoilDamage,
