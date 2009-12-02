@@ -624,7 +624,7 @@ namespace Rawr
 					htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
 					htmlTooltip.Contains("Runetotem's") || htmlTooltip.Contains("Windrunner's Pursuit") ||
 					htmlTooltip.Contains("Thrall's") || htmlTooltip.Contains("Liadrin's") ||
-					htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's"))
+					htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's") || htmlTooltip.Contains("Koltira's"))
 				{
 					item.Faction = ItemFaction.Horde;
 				}
@@ -647,8 +647,9 @@ namespace Rawr
 										 .Replace("Thrall's", "Nobundo's") // Shaman T9
 										 .Replace("Liadrin's", "Turalyon's") // Paladin T9
 										 .Replace("Hellscream's", "Wrynn's") // Warrior T9
+                                         .Replace("Koltira's", "Thassarian's")  // Death Knight T9
 										 .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
-				item.SetName = htmlTooltip;
+				item.SetName = htmlTooltip.Trim();
 			}
 
 			if (filter && item.Quality == ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens

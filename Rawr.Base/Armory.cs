@@ -452,7 +452,7 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (ItemDamageType)Enum.Parse(typeof(ItemDamageType), node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText.Trim(); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/allowableClasses/class")) { requiredClasses.Add(node.InnerText); }
 
 				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/@level")) { itemLevel = int.Parse(node.InnerText); }
@@ -948,7 +948,8 @@ namespace Rawr
 								 .Replace("Thrall's", "Nobundo's") // Shaman T9
 								 .Replace("Liadrin's", "Turalyon's") // Paladin T9
 								 .Replace("Hellscream's", "Wrynn's") // Warrior T9
-								 .Replace("Kolitra's", "Thassarian's") // Death Knight T9
+                                 .Replace("Kolitra's", "Koltira's") // Fix for Death Knight T9 set name being misspelled
+                                 .Replace("Koltira's", "Thassarian's") // Death Knight T9
 								 .Replace("Regaila", "Regalia"); // Fix for Moonkin set name being misspelled
                 Item item = new Item()
                 {
