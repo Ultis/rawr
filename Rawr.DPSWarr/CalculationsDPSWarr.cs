@@ -411,8 +411,8 @@ These numbers to do not include racial bonuses.",
                 BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
                 BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
                 BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
-                BonusWarrior_T10_2P_DWAPProc = stats.BonusWarrior_T10_2P_DWAPProc
-                BonusWarrior_T10_4P_BSSDProcChange = stats.BonusWarrior_T10_4P_BSSDProcChange
+                BonusWarrior_T10_2P_DWAPProc = stats.BonusWarrior_T10_2P_DWAPProc,
+                BonusWarrior_T10_4P_BSSDProcChange = stats.BonusWarrior_T10_4P_BSSDProcChange,
                 // Special
                 BonusRageGen = stats.BonusRageGen,
                 BonusRageOnCrit = stats.BonusRageOnCrit,
@@ -1090,7 +1090,8 @@ These numbers to do not include racial bonuses.",
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
             Stats statsBuffs = (isBuffed ? GetBuffsStats(character, calcOpts) : new Stats());
             Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsOptionsPanel = new Stats() {
+            Stats statsOptionsPanel = new Stats()
+            {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f)
                     // handle boss level difference
@@ -1406,8 +1407,10 @@ These numbers to do not include racial bonuses.",
             float land = rotation.LandedAtksOverDur;
             float crit = rotation.CriticalAtksOverDur;
             float bleed = calcOpts.Duration * (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f);
+            float dwbleed = (character.WarriorTalents.DeepWounds > 0) ? 1f : 0f;
 
             float bleedHitInterval = fightDuration / bleed;
+            float dwbleedHitInterval = fightDuration / dwbleed;
             float attemptedAtkInterval = fightDuration / attempted;
             float landedAtksInterval = fightDuration / land;
             float dmgDoneInterval = fightDuration / (land + bleed);
@@ -1456,6 +1459,9 @@ These numbers to do not include racial bonuses.",
                     break;
                 case Trigger.HSorSLHit: // Set bonus handler
                     upTime = effect.GetAverageStackSize(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    break;
+                case Trigger.DeepWoundsTick: // T10 set bonus
+                    upTime = effect.GetAverageStackSize(dwbleed, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
             }
             if (upTime > 0f && upTime <= effect.MaxStack) {

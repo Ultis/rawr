@@ -4297,16 +4297,19 @@ namespace Rawr
             });
             #endregion
             #region Battlegear
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Ymirjar Lord's Battlegear 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusWarrior_T10_2P_DWAPProc = 1f, },
-                SetName = "Ymirjar Lord's Plate",
+                SetName = "Ymirjar Lord's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DeepWoundsTick,
+                new Stats() { BonusAttackPowerMultiplier = 0.16f, },
+                10f, 0f, 0.03f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Ymirjar Lord's Battlegear 4 Piece Bonus",
