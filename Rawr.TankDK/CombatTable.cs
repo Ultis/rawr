@@ -501,8 +501,8 @@ namespace Rawr.TankDK
                     DCDmg *= 1f + (talents.GlyphofDarkDeath ? .15f : 0f);
                     // Mobidity adds 5% per point of damage to each DC.
                     DCDmg *= 1f + (.05f * (float)talents.Morbidity);
-                    // Unholy Blight causes additional 20% DC damage over 10 sec. 
-                    DCDmg *= 1f + (talents.UnholyBlight * 0.2f);
+                    // Unholy Blight causes additional 10% DC damage over 10 sec. 
+                    DCDmg *= 1f + (talents.UnholyBlight * 0.1f);
                     // Since we're looking at total threat returned, do not divide the damage on a per-second basis.
                     fDamDeathCoil = DCDmg * DCCount;
                     float DCCritDmgMult = 1.5f * (1f + stats.BonusSpellCritMultiplier);
@@ -567,6 +567,8 @@ namespace Rawr.TankDK
                     FFCD = ((calcOpts.m_Rotation.IcyTouch - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
                     // Patch 3.2: Incease Damage by 15%
                     float FFDmg = (FrostFeverAPMult * stats.AttackPower + 25.6f) * 1.15f;
+                    // Patch 3.3: Glyph of IT increases damage by 20%
+                    FFDmg *= 1f + (talents.GlyphofIcyTouch ? .2f : 0f);
                     if (fDuration > 0)
                     {
                         fDamFrostFever = FFDmg / FFCD * fDuration;
@@ -640,9 +642,9 @@ namespace Rawr.TankDK
                 if (talents.ScourgeStrike > 0 && calcOpts.m_Rotation.ScourgeStrike > 0f)
                 {
                     float SSCount = calcOpts.m_Rotation.ScourgeStrike;
-                    float SSDmg = (MHDam * .40f) + 357.188f +
+                    float SSDmg = (MHDam * .50f) + 357.188f +
                         stats.BonusScourgeStrikeDamage;
-                    SSDmg *= 1f + 0.10f * calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
+                    SSDmg *= 1f + 0.25f * calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
                     SSDmg += 120; // Bonus threat
                     fDamScourgeStrike = SSDmg * SSCount;
                     float SSCritDmgMult = 2f * (1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier);
@@ -825,7 +827,7 @@ namespace Rawr.TankDK
                 float RSDmg = (MHDam + (150 * stats.AttackPower * 10 / 10000));
                 // Threat of Thassarian
                 RSDmg += (OHDam +(150 * stats.AttackPower * 10 / 10000)) * (talents.ThreatOfThassarian / 3f) * 0.5f;
-                RSDmg *= (1f + stats.BonusRuneStrikeMultiplier); // Two T8.
+                RSDmg *= (1.17f + stats.BonusRuneStrikeMultiplier); // Two T8. & 3.3 update to RS Threat.
                 // what's the threat modifier?
                 RSDmg *= 1.5f;
                 float RSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier + (talents.GlyphofRuneStrike ? .1f : 0f));

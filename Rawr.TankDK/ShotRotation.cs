@@ -61,21 +61,23 @@ namespace Rawr.TankDK {
 
         public enum Type { Custom, Blood, Frost, Unholy }
 
-        public float getMeleeSpecialsPerSecond() {
+        public float getMeleeSpecialsPerSecond() 
+        {
             float temp;
             temp = PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike + BloodStrike + HeartStrike;
             temp = temp / curRotationDuration;
             return temp;
         }
-        public float getSpellSpecialsPerSecond() {
+        public float getSpellSpecialsPerSecond() 
+        {
             float temp;
             temp = DeathCoil + IcyTouch + HowlingBlast + DeathNDecay + BloodBoil;
             temp = temp / curRotationDuration;
             return temp;
         }
-        public float getRP(DeathKnightTalents talents, Character character) {
+        public float getRP(DeathKnightTalents talents, Character character)
+        {
             fourT7 = character.ActiveBuffsContains("Scourgeborne Battlegear 4 Piece Bonus");
-            this.GlyphofIT = talents.GlyphofIcyTouch;
             this.GlyphofFS = talents.GlyphofFrostStrike;
 
             // Abilities that grant RP:
@@ -83,7 +85,7 @@ namespace Rawr.TankDK {
                  ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * ScourgeStrike) +
                  ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * DeathStrike) +
                  ((10 + 2.5f * talents.Dirge) * PlagueStrike) +
-                 ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * IcyTouch) +
+                 ((10 + 2.5f * talents.ChillOfTheGrave) * IcyTouch) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                   (15 * DeathNDecay) +
                   (10 * (BloodStrike + HeartStrike + BloodBoil + HornOfWinter)) +

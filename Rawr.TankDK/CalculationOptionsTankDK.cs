@@ -14,54 +14,158 @@ namespace Rawr.TankDK
         // No one will ever tank in anything other than Frost.
         //		public enum Presence { Blood, Frost, Unholy }
         #region Options
-        private int _TargetLevel = 83;
+        private int _TargetLevel;
         public int TargetLevel
         {
-            get { return _TargetLevel; }
+            get 
+            {
+                if (_TargetLevel == null || _TargetLevel < 80 || _TargetLevel > 83)
+                {
+                    _TargetLevel = 83;
+                }
+                return _TargetLevel; 
+            }
             set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
         }
-        private float _ThreatWeight = 1.00f;
+        private float _ThreatWeight;
         public float ThreatWeight
         {
-            get { return _ThreatWeight; }
+            get 
+            {
+                if (null == _ThreatWeight || _ThreatWeight < 0)
+                {
+                    _ThreatWeight = 1f;
+                }
+                return _ThreatWeight; 
+            }
             set { _ThreatWeight = value; OnPropertyChanged("ThreatWeight"); }
         }
-        private float _SurvivalWeight = 1.00f;
+        private float _SurvivalWeight;
         public float SurvivalWeight
         {
-            get { return _SurvivalWeight; }
+            get 
+            {
+                if (null == _SurvivalWeight || _SurvivalWeight < 0)
+                {
+                    _SurvivalWeight = 1f;
+                }
+                return _SurvivalWeight; 
+            }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
-        public uint IncomingDamage = 10000;
-		public float PercentIncomingFromMagic = .0f;
-		public float BossAttackSpeed = 2.5f;
-		public float BossArmor = StatConversion.NPC_ARMOR[83 - 80];
+        private uint _IncomingDamage;
+        public uint IncomingDamage
+        {
+            get 
+            {
+                if (null == _IncomingDamage || _IncomingDamage <= 0)
+                {
+                    _IncomingDamage = 10000u;
+                }
+                return _IncomingDamage; 
+            }
+            set { _IncomingDamage = value; OnPropertyChanged("IncomingDamage"); }
+        }
+        private float _PercentIncomingFromMagic;
+		public float PercentIncomingFromMagic
+        {
+            get 
+            {
+                if (null == _PercentIncomingFromMagic || _PercentIncomingFromMagic < 0)
+                {
+                    _PercentIncomingFromMagic = .0f;
+                }
+                return _PercentIncomingFromMagic; 
+            }
+            set { _PercentIncomingFromMagic = value; OnPropertyChanged("PercentIncomingFromMagic"); }
+        }
+		private float _BossAttackSpeed;
+		public float BossAttackSpeed
+        {
+            get 
+            {
+                if (null == _BossAttackSpeed || _BossAttackSpeed < 1f)
+                {
+                    _BossAttackSpeed = 2.5f;
+                }
+                return _BossAttackSpeed; 
+            }
+            set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
+        }
+
+        private float _BossArmor;
+        public float BossArmor 
+        {
+            get 
+            {
+                if (null == _BossArmor)
+                {
+                    _BossArmor = StatConversion.NPC_ARMOR[83 - 80];
+                }
+                return _BossArmor; 
+            }
+            set { _BossArmor = value; OnPropertyChanged("BossArmor"); }
+        }
 		public bool Bloodlust = false;
 
-        private float _fightLength = 10f;
+        private float _fightLength;
         public float FightLength
         {
-            get { return _fightLength; }
+            get 
+            {
+                if (null == _fightLength || _fightLength < 1f)
+                {
+                    _fightLength = 10f;
+                }
+                return _fightLength; 
+            }
             set { _fightLength = value; OnPropertyChanged("FightLength"); }
         }
 
-        private uint _uNumberTargets = 1;
+        private uint _uNumberTargets;
         public uint uNumberTargets
         {
-            get { return _uNumberTargets; }
+            get 
+            {
+                if (null == _uNumberTargets || _uNumberTargets < 1)
+                {
+                    _uNumberTargets = 1;
+                }
+                return _uNumberTargets; 
+            }
             set { _uNumberTargets = value; OnPropertyChanged("uNumberTargets"); }
         }
-        private CalculationType _cType = CalculationType.SMT;
+        private CalculationType _cType ;
         public CalculationType cType
         {
-            get { return _cType; }
+            get 
+            {
+                if (null == _cType)
+                {
+                    _cType = CalculationType.SMT;
+                }
+                return _cType; 
+            }
             set { _cType = value; OnPropertyChanged("cType"); }
         }
         #endregion
 
         #region Rotation
-        
-        public Rotation m_Rotation = new Rotation();
+
+        private Rotation _m_rotation;
+        public Rotation m_Rotation
+        {
+            get
+            {
+                if (null == _m_rotation)
+                {
+                    _m_rotation = new Rotation();
+                }
+                return _m_rotation;
+            }
+            set { _m_rotation = value; }
+        }
+
 
         [XmlIgnore]
         public float CurRotationDuration
