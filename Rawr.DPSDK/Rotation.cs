@@ -252,7 +252,7 @@ namespace Rawr.DPSDK
                 ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
                 ((10 + 2.5f * talents.Dirge) * (PlagueStrike)) +
                 (10 * (BloodStrike + HeartStrike + Pestilence + GhoulFrenzy)) +
-                ((10 + (GlyphofIT && !PTRCalcs ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
+                ((10 + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                 (10 * Horn) +
                 ((CurRotationDuration / 5f)*talents.Butchery);
@@ -365,10 +365,10 @@ namespace Rawr.DPSDK
                 case Type.Unholy:
                     NumDisease = 3f;
                     DiseaseUptime = 100f;
-                    DeathCoil = 2f;
+                    DeathCoil = 3.5f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
-                    ScourgeStrike = 1f;
+                    ScourgeStrike = 4f;
                     ManagedRP = true;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
@@ -376,8 +376,8 @@ namespace Rawr.DPSDK
                     BloodStrike = 2f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
-                    CurRotationDuration = 10f;
-                    Horn = 0.5f;
+                    CurRotationDuration = 20f;
+                    Horn = 1f;
                     GargoyleDuration = 30f;
                     DeathStrike = 0f;
                     GhoulFrenzy = 0f;
