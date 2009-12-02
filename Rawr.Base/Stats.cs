@@ -337,6 +337,8 @@ namespace Rawr {
         BonusWarrior_T9_2P_Crit,
         BonusWarrior_T9_2P_ArP,
         BonusWarrior_T9_4P_SLHSCritIncrease,
+        BonusWarrior_T10_2P_DWAPProc,
+        BonusWarrior_T10_4P_BSSDProcChange,
         BonusWarrior_PvP_4P_InterceptCDReduc,
         #endregion
         #region Set Bonuses: Rogue
@@ -4005,6 +4007,30 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease] = value; }
+        }
+
+        /// <summary>When your Deep Wounds ability deals damage you have a 3% chance to gain 16% attack power for 10 sec.</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName(" 3% chance on Deep Wounds damage to grant 16% Bonus Attack Power for 10 sec.")]
+        public float BonusWarrior_T10_2P_DWAPProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_2P_DWAPProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_2P_DWAPProc] = value; }
+        }
+
+        /// <summary>
+        /// You have a 20% chance for your Bloodsurge and Sudden Death talents to grant 2
+        /// charges of their effect instead of 1, reduce the global cooldown on Execute or
+        /// Slam by 0.5 sec, and for the duration of the effect to be increased by 100%.
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName("extra Sudden Death or Blood Surge charge per proc and 0.5 GCD reduction on Slams/Executes and double effect SD/BS durations")]
+        public float BonusWarrior_T10_4P_BSSDProcChange
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_4P_BSSDProcChange]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_4P_BSSDProcChange] = value; }
         }
 
         /// <summary>Your Intercept abilities cooldown is reduced by 5 sec.</summary>

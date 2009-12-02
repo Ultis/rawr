@@ -411,6 +411,8 @@ These numbers to do not include racial bonuses.",
                 BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
                 BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
                 BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
+                BonusWarrior_T10_2P_DWAPProc = stats.BonusWarrior_T10_2P_DWAPProc
+                BonusWarrior_T10_4P_BSSDProcChange = stats.BonusWarrior_T10_4P_BSSDProcChange
                 // Special
                 BonusRageGen = stats.BonusRageGen,
                 BonusRageOnCrit = stats.BonusRageOnCrit,
@@ -493,6 +495,8 @@ These numbers to do not include racial bonuses.",
                 stats.BonusWarrior_T9_2P_ArP +
                 stats.BonusWarrior_T9_4P_SLHSCritIncrease +
                 stats.BonusWarrior_PvP_4P_InterceptCDReduc +
+                stats.BonusWarrior_T10_2P_DWAPProc +
+                stats.BonusWarrior_T10_4P_BSSDProcChange +
                 // Special
                 stats.BonusRageGen +
                 stats.BonusRageOnCrit

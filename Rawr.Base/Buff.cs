@@ -4296,6 +4296,28 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
             #endregion
+            #region Battlegear
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Ymirjar Lord's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T10_2P_DWAPProc = 1f, },
+                SetName = "Ymirjar Lord's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Ymirjar Lord's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T10_4P_BSSDProcChange = 1f, },
+                SetName = "Ymirjar Lord's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
             #endregion
             #endregion
             #region PvP
