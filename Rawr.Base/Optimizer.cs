@@ -1564,7 +1564,11 @@ namespace Rawr.Optimizer
                         if (!character.ActiveBuffs.Contains(battle))
                         {
                             character.ActiveBuffsAdd(battle);
-                            if (mixology) character.ActiveBuffsAdd(battle.Improvements[0]);
+                            if (mixology && battle.Improvements.Count > 0)
+                            {
+                                // flask of the north doesn't have an improvement (mixology only)
+                                character.ActiveBuffsAdd(battle.Improvements[0]);
+                            }
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
                         }
                         else if (mixology)
