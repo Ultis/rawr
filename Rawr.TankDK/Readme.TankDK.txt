@@ -1,18 +1,27 @@
 ﻿Tracking doc for status of Rawr.Tank Module.
 
-2.2.25:
-* Graph of stat Values
-* Defect 14581: Glyph of UA fix
-* Defect 14400: T9 set bonuses
-* Defect 13990: Next step of Rawr3 implementation - still not complete.
-* Defect 14503: Narrowed discrepencies with Avoidance numbers.  Parry is now within ~0.01% and Dodge is within ~0.04%
+Currently targeting: 
+* Wow version 3.3.0
+
+2.3.0:
+* Update for 3.3.
+* Check ins for Ability base class and some implmented classes - not utilized yet
+* Defect 14568: Burst & Reaction time charts now update the labels properly.
+* Defect 13990: Should be the last of the plugging in of the Rawr3 UI to values in the model. It's a hack, no doubt, but it's better than nothing.
+* Defect 14841: Ebon Plaguebringer wasn't putting the crit bonus in the right field.
+* Defect 14527: VB & Glyph of VB changes along w/ some general Talent code clean up. 
+* No Defect: Tweaked bloodworms a bit.
+* Cleaned up commented out code.
+* Defect 14525: Mark of Blood fixed.
+* No Defect: +HealingRecieved has some value now, even though there's no inbound healing value yet.
+* No Defect: Imp Blood Presence fixed.
+* No Defect: Heart Strike adjusted for 2ndary target threat.
+* No Defect: Improved some documenting comments.
+* Defect 14751: Some rotations had RP deficits that would cause the RS count to drop negative.  So I put in a floor incase it does go negative, just over-ride and use what's already entered into the rotation dialog.  This is a patch until I can re-work the abilities and have RS take precedence over all other RP based abilities.
 
 Current TODOs:
 (kind of in order)
-* Finish Rawr3 Integration
-* Fix defects
-	* Vampiric Blood - completely skews all numbers.
-	* Mark of Blood - hangs system for long period of time.
+* Additional Rawr3 work.
 * Integrate the BossHandler class.
 * Fix shot rotation/threat modeling through re-work of ability usage.
 * Fix/finish talent evaluation so that optimizing for talents produces a result that makes sense.
