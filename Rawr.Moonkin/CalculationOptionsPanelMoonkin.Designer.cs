@@ -259,12 +259,14 @@
             // chkPtrMode
             // 
             this.chkPtrMode.AutoSize = true;
+            this.chkPtrMode.Enabled = false;
             this.chkPtrMode.Location = new System.Drawing.Point(6, 306);
             this.chkPtrMode.Name = "chkPtrMode";
             this.chkPtrMode.Size = new System.Drawing.Size(78, 17);
             this.chkPtrMode.TabIndex = 45;
             this.chkPtrMode.Text = "PTR Mode";
             this.chkPtrMode.UseVisualStyleBackColor = true;
+            this.chkPtrMode.Visible = false;
             this.chkPtrMode.CheckedChanged += new System.EventHandler(this.chkPtrMode_CheckedChanged);
             // 
             // CalculationOptionsPanelMoonkin

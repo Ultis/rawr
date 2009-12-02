@@ -139,11 +139,11 @@ namespace Rawr.Moonkin
         }
 
         // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
-        public float DamageDone(DruidTalents talents, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste, bool PTRMode)
+        public float DamageDone(DruidTalents talents, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             if (talents.Eclipse > 0)
             {
-                return DoEclipseCalcs(talents, calcs, Solver, spellPower, spellHit, spellCrit, spellHaste, PTRMode);
+                return DoEclipseCalcs(talents, calcs, Solver, spellPower, spellHit, spellCrit, spellHaste);
             }
             float latency = calcs.Latency;
 
@@ -313,7 +313,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private float DoEclipseCalcs(DruidTalents talents, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste, bool PTRMode)
+        private float DoEclipseCalcs(DruidTalents talents, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
 
@@ -331,7 +331,7 @@ namespace Rawr.Moonkin
             // Do SF glyph
             if (starfireGlyph && moonfire != null) moonfire.DotEffect.Duration += 9.0f;
 
-            float eclipseMultiplier = 0.3f + (PTRMode && calcs.BasicStats.EclipseBonus > 0 ? 0.07f : calcs.BasicStats.EclipseBonus);
+            float eclipseMultiplier = 0.4f + calcs.BasicStats.EclipseBonus;
 
             float eclipseDuration = 15.0f;
             //float eclipseCooldown = 30.0f;

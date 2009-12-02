@@ -2599,7 +2599,7 @@ namespace Rawr
                 Name = "Nightsong Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { EclipseBonus = 0.15f },
+                Stats = { EclipseBonus = 0.07f },
                 SetName = "Nightsong Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
