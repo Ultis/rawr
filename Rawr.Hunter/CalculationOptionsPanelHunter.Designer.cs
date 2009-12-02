@@ -32,145 +32,151 @@
             this.FLP_PetFamilies = new System.Windows.Forms.FlowLayoutPanel();
             this.GB_PetTalents_Tenacity = new System.Windows.Forms.GroupBox();
             this.TLP_Tenacity = new System.Windows.Forms.TableLayoutPanel();
-            this.label77 = new System.Windows.Forms.Label();
+            this.LB_TenacityCullingTheHerd = new System.Windows.Forms.Label();
+            this.CB_TenacityCullingTheHerd = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityCobraReflexes = new System.Windows.Forms.Label();
             this.CB_TenacityWildHunt = new System.Windows.Forms.ComboBox();
-            this.label58 = new System.Windows.Forms.Label();
+            this.LB_TenacityWildHunt = new System.Windows.Forms.Label();
             this.CB_TenacityCobraReflexes = new System.Windows.Forms.ComboBox();
             this.CB_TenacitySilverback = new System.Windows.Forms.ComboBox();
-            this.label60 = new System.Windows.Forms.Label();
-            this.label75 = new System.Windows.Forms.Label();
+            this.LB_TenacitySilverback = new System.Windows.Forms.Label();
+            this.LB_TenacityGreatStamina = new System.Windows.Forms.Label();
             this.CB_TenacityThunderstomp = new System.Windows.Forms.ComboBox();
             this.CB_TenacityGreatStamina = new System.Windows.Forms.ComboBox();
-            this.label78 = new System.Windows.Forms.Label();
+            this.LB_TenacityThunderStomp = new System.Windows.Forms.Label();
             this.CB_TenacityCharge = new System.Windows.Forms.ComboBox();
-            this.label76 = new System.Windows.Forms.Label();
+            this.LB_TenacityCharge = new System.Windows.Forms.Label();
             this.CB_TenacityNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.label74 = new System.Windows.Forms.Label();
-            this.label73 = new System.Windows.Forms.Label();
+            this.LB_TenacityNaturalArmor = new System.Windows.Forms.Label();
+            this.LB_TenacitySpikedCollar = new System.Windows.Forms.Label();
             this.CB_TenacitySpikedCollar = new System.Windows.Forms.ComboBox();
-            this.label71 = new System.Windows.Forms.Label();
+            this.LB_TenacityBloodOfTheRhino = new System.Windows.Forms.Label();
             this.CB_TenacityBloodOfTheRhino = new System.Windows.Forms.ComboBox();
-            this.label72 = new System.Windows.Forms.Label();
+            this.LB_TenacityBoarsSpeed = new System.Windows.Forms.Label();
             this.CB_TenacityBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.label70 = new System.Windows.Forms.Label();
+            this.LB_TenacityPetBarding = new System.Windows.Forms.Label();
             this.CB_TenacityPetBarding = new System.Windows.Forms.ComboBox();
-            this.label69 = new System.Windows.Forms.Label();
+            this.LB_TenacityAvoidance = new System.Windows.Forms.Label();
             this.CB_TenacityAvoidance = new System.Windows.Forms.ComboBox();
-            this.label67 = new System.Windows.Forms.Label();
+            this.LB_TenacityLionHearted = new System.Windows.Forms.Label();
             this.CB_TenacityGuardDog = new System.Windows.Forms.ComboBox();
             this.CB_TenacityLiohearted = new System.Windows.Forms.ComboBox();
-            this.label68 = new System.Windows.Forms.Label();
-            this.label62 = new System.Windows.Forms.Label();
+            this.LB_TenacityGuardDog = new System.Windows.Forms.Label();
+            this.LB_TenacityTaunt = new System.Windows.Forms.Label();
             this.CB_TenacityTaunt = new System.Windows.Forms.ComboBox();
             this.CB_TenacityLastStand = new System.Windows.Forms.ComboBox();
-            this.label63 = new System.Windows.Forms.Label();
-            this.label65 = new System.Windows.Forms.Label();
+            this.LB_TenacityLastStand = new System.Windows.Forms.Label();
+            this.LB_TenacityIntervene = new System.Windows.Forms.Label();
             this.CB_TenacityIntervene = new System.Windows.Forms.ComboBox();
             this.CB_TenacityRoarOfSacrifice = new System.Windows.Forms.ComboBox();
-            this.label61 = new System.Windows.Forms.Label();
-            this.label66 = new System.Windows.Forms.Label();
+            this.LB_TenacityRoarOfSacrifice = new System.Windows.Forms.Label();
+            this.LB_TenacityGraceOfTheMantis = new System.Windows.Forms.Label();
             this.CB_TenacityGraceOfTheMantis = new System.Windows.Forms.ComboBox();
-            this.label64 = new System.Windows.Forms.Label();
+            this.LB_TenacityGreatResistance = new System.Windows.Forms.Label();
             this.CB_TenacityGreatResistance = new System.Windows.Forms.ComboBox();
             this.GB_PetTalents_Cunning = new System.Windows.Forms.GroupBox();
             this.TLP_Cunning = new System.Windows.Forms.TableLayoutPanel();
-            this.label32 = new System.Windows.Forms.Label();
+            this.CB_CunningCullingTheHerd = new System.Windows.Forms.ComboBox();
+            this.LB_CunningCullingTheHerd = new System.Windows.Forms.Label();
+            this.LB_CunningCobraReflexes = new System.Windows.Forms.Label();
             this.CB_CunningRoarOfSacrifice = new System.Windows.Forms.ComboBox();
             this.CB_CunningCorbaReflexes = new System.Windows.Forms.ComboBox();
-            this.label50 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
+            this.LB_CunningRoarofSacrifice = new System.Windows.Forms.Label();
+            this.LB_CunningGreatStamina = new System.Windows.Forms.Label();
             this.CB_CunningWildHunt = new System.Windows.Forms.ComboBox();
             this.CB_CunningGreatStamina = new System.Windows.Forms.ComboBox();
-            this.label51 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
+            this.LB_CunningWildHunt = new System.Windows.Forms.Label();
+            this.LB_CunningDiveDash = new System.Windows.Forms.Label();
             this.CB_CunningGraceOfTheMantis = new System.Windows.Forms.ComboBox();
             this.CB_CunningDiveDash = new System.Windows.Forms.ComboBox();
-            this.label46 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
+            this.LB_CunningGraceOfTheMantis = new System.Windows.Forms.Label();
+            this.LB_CunningNaturalArmor = new System.Windows.Forms.Label();
             this.CB_CunningRoarOfRecovery = new System.Windows.Forms.ComboBox();
             this.CB_CunningBullheaded = new System.Windows.Forms.ComboBox();
-            this.label48 = new System.Windows.Forms.Label();
+            this.LB_CunningRoarofRecovery = new System.Windows.Forms.Label();
             this.CB_CunningNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.label47 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
+            this.LB_CunningBullheaded = new System.Windows.Forms.Label();
+            this.LB_CunningBoarsSpeed = new System.Windows.Forms.Label();
             this.CB_CunningBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.label36 = new System.Windows.Forms.Label();
+            this.LB_CunningSpikedCollar = new System.Windows.Forms.Label();
             this.CB_CunningWolverineBite = new System.Windows.Forms.ComboBox();
             this.CB_CunningSpikedCollar = new System.Windows.Forms.ComboBox();
-            this.label49 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
+            this.LB_CunningWolverineBite = new System.Windows.Forms.Label();
+            this.LB_CunningMobility = new System.Windows.Forms.Label();
             this.CB_CunningFeedingFrenzy = new System.Windows.Forms.ComboBox();
             this.CB_CunningMobility = new System.Windows.Forms.ComboBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.label41 = new System.Windows.Forms.Label();
+            this.LB_CunningFeedingFrenzy = new System.Windows.Forms.Label();
+            this.LB_CunningAvoidance = new System.Windows.Forms.Label();
             this.CB_CunningOwlsFocus = new System.Windows.Forms.ComboBox();
             this.CB_CunningCornered = new System.Windows.Forms.ComboBox();
-            this.label44 = new System.Windows.Forms.Label();
+            this.LB_CunningOwlsFocus = new System.Windows.Forms.Label();
             this.CB_CunningAvoidance = new System.Windows.Forms.ComboBox();
-            this.label43 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
+            this.LB_CunningCornered = new System.Windows.Forms.Label();
+            this.LB_CunningCarrionFeeder = new System.Windows.Forms.Label();
             this.CB_CunningCarrionFeeder = new System.Windows.Forms.ComboBox();
-            this.label40 = new System.Windows.Forms.Label();
+            this.LB_CunningLionHearted = new System.Windows.Forms.Label();
             this.CB_CunningGreatResistance = new System.Windows.Forms.ComboBox();
             this.CB_CunningLionhearted = new System.Windows.Forms.ComboBox();
-            this.label45 = new System.Windows.Forms.Label();
+            this.LB_CunningGreatResistance = new System.Windows.Forms.Label();
             this.GB_PetTalents_Ferocity = new System.Windows.Forms.GroupBox();
             this.TLP_Ferocity = new System.Windows.Forms.TableLayoutPanel();
-            this.label52 = new System.Windows.Forms.Label();
+            this.CB_FerocityCullingTheHerd = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityCullingTheHerd = new System.Windows.Forms.Label();
+            this.LB_FerocityCobraReflexes = new System.Windows.Forms.Label();
             this.CB_FerocityWildHunt = new System.Windows.Forms.ComboBox();
             this.CB_FerocityCobraReflexes = new System.Windows.Forms.ComboBox();
-            this.label57 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
+            this.LB_FerocityWildHunt = new System.Windows.Forms.Label();
+            this.LB_FerocityGreatStamina = new System.Windows.Forms.Label();
             this.CB_FerocitySharkAttack = new System.Windows.Forms.ComboBox();
             this.CB_FerocityGreatStamina = new System.Windows.Forms.ComboBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
+            this.LB_FerocitySharkAttack = new System.Windows.Forms.Label();
+            this.LB_FerocityDiveDash = new System.Windows.Forms.Label();
             this.CB_FerocityCallOfTheWild = new System.Windows.Forms.ComboBox();
             this.CB_FerocityLickYourWounds = new System.Windows.Forms.ComboBox();
-            this.label55 = new System.Windows.Forms.Label();
+            this.LB_FerocityCalloftheWild = new System.Windows.Forms.Label();
             this.CB_FerocityDiveDash = new System.Windows.Forms.ComboBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.LB_FerocityLickYourWounds = new System.Windows.Forms.Label();
+            this.LB_FerocityNaturalArmor = new System.Windows.Forms.Label();
             this.CB_FerocityNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.LB_FerocityImprovedCower = new System.Windows.Forms.Label();
             this.CB_FerocityRabid = new System.Windows.Forms.ComboBox();
             this.CB_FerocityImprovedCower = new System.Windows.Forms.ComboBox();
-            this.label56 = new System.Windows.Forms.Label();
+            this.LB_FerocityRabid = new System.Windows.Forms.Label();
             this.LB_Ferocity_SpikedCollar = new System.Windows.Forms.Label();
             this.CB_FerocitySpidersBite = new System.Windows.Forms.ComboBox();
             this.CB_FerocityGreatResistance = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
+            this.LB_FerocitySpidersBite = new System.Windows.Forms.Label();
             this.CB_FerocitySpikedCollar = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
+            this.LB_FerocityGreatResistance = new System.Windows.Forms.Label();
             this.LB_Ferocity_Bloodthirsty = new System.Windows.Forms.Label();
             this.CB_FerocityBloodthirsty = new System.Windows.Forms.ComboBox();
             this.LB_Ferocity_BoarsSpeed = new System.Windows.Forms.Label();
             this.CB_FerocityHeartOfThePhoenix = new System.Windows.Forms.ComboBox();
             this.CB_FerocityBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
+            this.LB_FerocityHeartOfThePheonix = new System.Windows.Forms.Label();
+            this.LB_FerocityAvoidance = new System.Windows.Forms.Label();
             this.CB_FerocityLionhearted = new System.Windows.Forms.ComboBox();
             this.CB_FerocityChargeSwoop = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
+            this.LB_FerocityLionHearted = new System.Windows.Forms.Label();
             this.CB_FerocityAvoidance = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.LB_FerocityChargeSwoop = new System.Windows.Forms.Label();
             this.LB_PetFamilies = new System.Windows.Forms.Label();
             this.CB_PetFamily = new System.Windows.Forms.ComboBox();
             this.Page_01_Options = new System.Windows.Forms.TabPage();
             this.FLP_01_Options = new System.Windows.Forms.FlowLayoutPanel();
             this.GB_FightSettings = new System.Windows.Forms.GroupBox();
             this.NUD_CDCutOff = new System.Windows.Forms.NumericUpDown();
-            this.label89 = new System.Windows.Forms.Label();
+            this.LB_CDCutoff = new System.Windows.Forms.Label();
             this.NUD_BossHP = new System.Windows.Forms.NumericUpDown();
-            this.label81 = new System.Windows.Forms.Label();
+            this.LB_BossStartHPPerc = new System.Windows.Forms.Label();
             this.NUD_35 = new System.Windows.Forms.NumericUpDown();
-            this.label80 = new System.Windows.Forms.Label();
+            this.LB_Sub35 = new System.Windows.Forms.Label();
             this.NUD_Time20 = new System.Windows.Forms.NumericUpDown();
-            this.label79 = new System.Windows.Forms.Label();
+            this.LB_Sub20 = new System.Windows.Forms.Label();
             this.CB_Duration = new System.Windows.Forms.NumericUpDown();
-            this.label25 = new System.Windows.Forms.Label();
+            this.LB_Duration = new System.Windows.Forms.Label();
             this.NUD_Latency = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
+            this.LB_Latency = new System.Windows.Forms.Label();
             this.LB_TargLvl = new System.Windows.Forms.Label();
             this.CB_TargetLevel = new System.Windows.Forms.ComboBox();
             this.Bar_TargArmor = new System.Windows.Forms.TrackBar();
@@ -181,13 +187,14 @@
             this.CK_UseRotation = new System.Windows.Forms.CheckBox();
             this.CK_SpreadsheetUptimes = new System.Windows.Forms.CheckBox();
             this.CK_UseBeastDuringBW = new System.Windows.Forms.CheckBox();
-            this.label84 = new System.Windows.Forms.Label();
+            this.LB_ViperUsage = new System.Windows.Forms.Label();
             this.CB_AspectUsage = new System.Windows.Forms.ComboBox();
-            this.label83 = new System.Windows.Forms.Label();
+            this.LB_Aspect = new System.Windows.Forms.Label();
             this.CB_Aspect = new System.Windows.Forms.ComboBox();
-            this.label82 = new System.Windows.Forms.Label();
+            this.LB_UseManaPot = new System.Windows.Forms.Label();
             this.CB_ManaPotion = new System.Windows.Forms.ComboBox();
             this.GB_Misc = new System.Windows.Forms.GroupBox();
+            this.CK_PTRMode = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HideSplGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HidePvPGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.Tabs = new System.Windows.Forms.TabControl();
@@ -216,17 +223,17 @@
             this.CB_ShotPriority_02 = new System.Windows.Forms.ComboBox();
             this.CB_ShotPriority_01 = new System.Windows.Forms.ComboBox();
             this.GB_PetRotation = new System.Windows.Forms.GroupBox();
-            this.label88 = new System.Windows.Forms.Label();
-            this.label87 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_07 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_06 = new System.Windows.Forms.Label();
             this.CB_PetPrio_07 = new System.Windows.Forms.ComboBox();
             this.CB_PetPrio_06 = new System.Windows.Forms.ComboBox();
-            this.label85 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_05 = new System.Windows.Forms.Label();
             this.CB_PetPrio_05 = new System.Windows.Forms.ComboBox();
-            this.label24 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_04 = new System.Windows.Forms.Label();
             this.CB_PetPrio_04 = new System.Windows.Forms.ComboBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_03 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_02 = new System.Windows.Forms.Label();
+            this.LB_ShotPriority_01 = new System.Windows.Forms.Label();
             this.CB_PetPrio_03 = new System.Windows.Forms.ComboBox();
             this.CB_PetPrio_02 = new System.Windows.Forms.ComboBox();
             this.CB_PetPrio_01 = new System.Windows.Forms.ComboBox();
@@ -301,7 +308,7 @@
             this.GB_PetTalents_Tenacity.Controls.Add(this.TLP_Tenacity);
             this.GB_PetTalents_Tenacity.Location = new System.Drawing.Point(3, 3);
             this.GB_PetTalents_Tenacity.Name = "GB_PetTalents_Tenacity";
-            this.GB_PetTalents_Tenacity.Size = new System.Drawing.Size(268, 330);
+            this.GB_PetTalents_Tenacity.Size = new System.Drawing.Size(268, 347);
             this.GB_PetTalents_Tenacity.TabIndex = 46;
             this.GB_PetTalents_Tenacity.TabStop = false;
             this.GB_PetTalents_Tenacity.Text = "Tenacity Talents";
@@ -313,45 +320,47 @@
             this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.TLP_Tenacity.Controls.Add(this.label77, 0, 0);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCullingTheHerd, 0, 5);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCullingTheHerd, 1, 5);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCobraReflexes, 0, 0);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityWildHunt, 3, 14);
-            this.TLP_Tenacity.Controls.Add(this.label58, 2, 14);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityWildHunt, 2, 14);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityCobraReflexes, 1, 0);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacitySilverback, 1, 14);
-            this.TLP_Tenacity.Controls.Add(this.label60, 0, 14);
-            this.TLP_Tenacity.Controls.Add(this.label75, 2, 0);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacitySilverback, 0, 14);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatStamina, 2, 0);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityThunderstomp, 3, 7);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityGreatStamina, 3, 0);
-            this.TLP_Tenacity.Controls.Add(this.label78, 2, 7);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityThunderStomp, 2, 7);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityCharge, 1, 1);
-            this.TLP_Tenacity.Controls.Add(this.label76, 0, 1);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCharge, 0, 1);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityNaturalArmor, 3, 1);
-            this.TLP_Tenacity.Controls.Add(this.label74, 2, 1);
-            this.TLP_Tenacity.Controls.Add(this.label73, 0, 3);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityNaturalArmor, 2, 1);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacitySpikedCollar, 0, 3);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacitySpikedCollar, 1, 3);
-            this.TLP_Tenacity.Controls.Add(this.label71, 2, 3);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityBloodOfTheRhino, 2, 3);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityBloodOfTheRhino, 3, 3);
-            this.TLP_Tenacity.Controls.Add(this.label72, 0, 4);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityBoarsSpeed, 0, 4);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityBoarsSpeed, 1, 4);
-            this.TLP_Tenacity.Controls.Add(this.label70, 2, 4);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityPetBarding, 2, 4);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityPetBarding, 3, 4);
-            this.TLP_Tenacity.Controls.Add(this.label69, 0, 6);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityAvoidance, 0, 6);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityAvoidance, 1, 6);
-            this.TLP_Tenacity.Controls.Add(this.label67, 2, 6);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityLionHearted, 2, 6);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityGuardDog, 1, 7);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityLiohearted, 3, 6);
-            this.TLP_Tenacity.Controls.Add(this.label68, 0, 7);
-            this.TLP_Tenacity.Controls.Add(this.label62, 0, 12);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGuardDog, 0, 7);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityTaunt, 0, 12);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityTaunt, 1, 12);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityLastStand, 1, 11);
-            this.TLP_Tenacity.Controls.Add(this.label63, 0, 11);
-            this.TLP_Tenacity.Controls.Add(this.label65, 2, 12);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityLastStand, 0, 11);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityIntervene, 2, 12);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityIntervene, 3, 12);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityRoarOfSacrifice, 3, 11);
-            this.TLP_Tenacity.Controls.Add(this.label61, 2, 11);
-            this.TLP_Tenacity.Controls.Add(this.label66, 0, 9);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityRoarOfSacrifice, 2, 11);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGraceOfTheMantis, 0, 9);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityGraceOfTheMantis, 1, 9);
-            this.TLP_Tenacity.Controls.Add(this.label64, 2, 9);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatResistance, 2, 9);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityGreatResistance, 3, 9);
             this.TLP_Tenacity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TLP_Tenacity.Location = new System.Drawing.Point(3, 16);
@@ -362,7 +371,7 @@
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
@@ -372,38 +381,63 @@
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TLP_Tenacity.Size = new System.Drawing.Size(262, 311);
+            this.TLP_Tenacity.Size = new System.Drawing.Size(262, 328);
             this.TLP_Tenacity.TabIndex = 108;
             // 
-            // label77
+            // LB_TenacityCullingTheHerd
             // 
-            this.label77.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label77.Location = new System.Drawing.Point(3, 0);
-            this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(87, 26);
-            this.label77.TabIndex = 68;
-            this.label77.Text = "Cobra Reflexes:";
-            this.label77.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityCullingTheHerd.Location = new System.Drawing.Point(3, 114);
+            this.LB_TenacityCullingTheHerd.Name = "LB_TenacityCullingTheHerd";
+            this.LB_TenacityCullingTheHerd.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityCullingTheHerd.TabIndex = 109;
+            this.LB_TenacityCullingTheHerd.Text = "Culling The Herd: (3.3)";
+            this.LB_TenacityCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // CB_TenacityCullingTheHerd
+            // 
+            this.CB_TenacityCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityCullingTheHerd.FormattingEnabled = true;
+            this.CB_TenacityCullingTheHerd.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.CB_TenacityCullingTheHerd.Location = new System.Drawing.Point(96, 117);
+            this.CB_TenacityCullingTheHerd.Name = "CB_TenacityCullingTheHerd";
+            this.CB_TenacityCullingTheHerd.Size = new System.Drawing.Size(32, 21);
+            this.CB_TenacityCullingTheHerd.TabIndex = 108;
+            this.CB_TenacityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityCobraReflexes
+            // 
+            this.LB_TenacityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityCobraReflexes.Location = new System.Drawing.Point(3, 0);
+            this.LB_TenacityCobraReflexes.Name = "LB_TenacityCobraReflexes";
+            this.LB_TenacityCobraReflexes.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityCobraReflexes.TabIndex = 68;
+            this.LB_TenacityCobraReflexes.Text = "Cobra Reflexes:";
+            this.LB_TenacityCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityWildHunt
             // 
             this.CB_TenacityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityWildHunt.FormattingEnabled = true;
-            this.CB_TenacityWildHunt.Location = new System.Drawing.Point(227, 287);
+            this.CB_TenacityWildHunt.Location = new System.Drawing.Point(227, 303);
             this.CB_TenacityWildHunt.Name = "CB_TenacityWildHunt";
             this.CB_TenacityWildHunt.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityWildHunt.TabIndex = 107;
             this.CB_TenacityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label58
+            // LB_TenacityWildHunt
             // 
-            this.label58.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label58.Location = new System.Drawing.Point(134, 284);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(87, 27);
-            this.label58.TabIndex = 106;
-            this.label58.Text = "Wild Hunt:";
-            this.label58.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityWildHunt.Location = new System.Drawing.Point(134, 300);
+            this.LB_TenacityWildHunt.Name = "LB_TenacityWildHunt";
+            this.LB_TenacityWildHunt.Size = new System.Drawing.Size(87, 28);
+            this.LB_TenacityWildHunt.TabIndex = 106;
+            this.LB_TenacityWildHunt.Text = "Wild Hunt:";
+            this.LB_TenacityWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityCobraReflexes
             // 
@@ -419,37 +453,37 @@
             // 
             this.CB_TenacitySilverback.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacitySilverback.FormattingEnabled = true;
-            this.CB_TenacitySilverback.Location = new System.Drawing.Point(96, 287);
+            this.CB_TenacitySilverback.Location = new System.Drawing.Point(96, 303);
             this.CB_TenacitySilverback.Name = "CB_TenacitySilverback";
             this.CB_TenacitySilverback.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacitySilverback.TabIndex = 105;
             this.CB_TenacitySilverback.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label60
+            // LB_TenacitySilverback
             // 
-            this.label60.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label60.Location = new System.Drawing.Point(3, 284);
-            this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(87, 27);
-            this.label60.TabIndex = 104;
-            this.label60.Text = "Silverback:";
-            this.label60.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacitySilverback.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacitySilverback.Location = new System.Drawing.Point(3, 300);
+            this.LB_TenacitySilverback.Name = "LB_TenacitySilverback";
+            this.LB_TenacitySilverback.Size = new System.Drawing.Size(87, 28);
+            this.LB_TenacitySilverback.TabIndex = 104;
+            this.LB_TenacitySilverback.Text = "Silverback:";
+            this.LB_TenacitySilverback.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label75
+            // LB_TenacityGreatStamina
             // 
-            this.label75.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label75.Location = new System.Drawing.Point(134, 0);
-            this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(87, 26);
-            this.label75.TabIndex = 72;
-            this.label75.Text = "Great Stamina:";
-            this.label75.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGreatStamina.Location = new System.Drawing.Point(134, 0);
+            this.LB_TenacityGreatStamina.Name = "LB_TenacityGreatStamina";
+            this.LB_TenacityGreatStamina.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityGreatStamina.TabIndex = 72;
+            this.LB_TenacityGreatStamina.Text = "Great Stamina:";
+            this.LB_TenacityGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityThunderstomp
             // 
             this.CB_TenacityThunderstomp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityThunderstomp.FormattingEnabled = true;
-            this.CB_TenacityThunderstomp.Location = new System.Drawing.Point(227, 153);
+            this.CB_TenacityThunderstomp.Location = new System.Drawing.Point(227, 169);
             this.CB_TenacityThunderstomp.Name = "CB_TenacityThunderstomp";
             this.CB_TenacityThunderstomp.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityThunderstomp.TabIndex = 91;
@@ -465,15 +499,15 @@
             this.CB_TenacityGreatStamina.TabIndex = 73;
             this.CB_TenacityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label78
+            // LB_TenacityThunderStomp
             // 
-            this.label78.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label78.Location = new System.Drawing.Point(134, 150);
-            this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(87, 26);
-            this.label78.TabIndex = 90;
-            this.label78.Text = "Thunderstomp:";
-            this.label78.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityThunderStomp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityThunderStomp.Location = new System.Drawing.Point(134, 166);
+            this.LB_TenacityThunderStomp.Name = "LB_TenacityThunderStomp";
+            this.LB_TenacityThunderStomp.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityThunderStomp.TabIndex = 90;
+            this.LB_TenacityThunderStomp.Text = "Thunderstomp:";
+            this.LB_TenacityThunderStomp.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityCharge
             // 
@@ -485,15 +519,15 @@
             this.CB_TenacityCharge.TabIndex = 71;
             this.CB_TenacityCharge.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label76
+            // LB_TenacityCharge
             // 
-            this.label76.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label76.Location = new System.Drawing.Point(3, 26);
-            this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(87, 26);
-            this.label76.TabIndex = 70;
-            this.label76.Text = "Charge:";
-            this.label76.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityCharge.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityCharge.Location = new System.Drawing.Point(3, 26);
+            this.LB_TenacityCharge.Name = "LB_TenacityCharge";
+            this.LB_TenacityCharge.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityCharge.TabIndex = 70;
+            this.LB_TenacityCharge.Text = "Charge:";
+            this.LB_TenacityCharge.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityNaturalArmor
             // 
@@ -505,25 +539,25 @@
             this.CB_TenacityNaturalArmor.TabIndex = 75;
             this.CB_TenacityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label74
+            // LB_TenacityNaturalArmor
             // 
-            this.label74.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label74.Location = new System.Drawing.Point(134, 26);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(87, 26);
-            this.label74.TabIndex = 74;
-            this.label74.Text = "Natural Armor:";
-            this.label74.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityNaturalArmor.Location = new System.Drawing.Point(134, 26);
+            this.LB_TenacityNaturalArmor.Name = "LB_TenacityNaturalArmor";
+            this.LB_TenacityNaturalArmor.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityNaturalArmor.TabIndex = 74;
+            this.LB_TenacityNaturalArmor.Text = "Natural Armor:";
+            this.LB_TenacityNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label73
+            // LB_TenacitySpikedCollar
             // 
-            this.label73.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label73.Location = new System.Drawing.Point(3, 62);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(87, 26);
-            this.label73.TabIndex = 76;
-            this.label73.Text = "Spiked Collar:";
-            this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacitySpikedCollar.Location = new System.Drawing.Point(3, 62);
+            this.LB_TenacitySpikedCollar.Name = "LB_TenacitySpikedCollar";
+            this.LB_TenacitySpikedCollar.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacitySpikedCollar.TabIndex = 76;
+            this.LB_TenacitySpikedCollar.Text = "Spiked Collar:";
+            this.LB_TenacitySpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacitySpikedCollar
             // 
@@ -535,15 +569,15 @@
             this.CB_TenacitySpikedCollar.TabIndex = 77;
             this.CB_TenacitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label71
+            // LB_TenacityBloodOfTheRhino
             // 
-            this.label71.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label71.Location = new System.Drawing.Point(134, 62);
-            this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(87, 26);
-            this.label71.TabIndex = 80;
-            this.label71.Text = "Blood of the Rhino:";
-            this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityBloodOfTheRhino.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityBloodOfTheRhino.Location = new System.Drawing.Point(134, 62);
+            this.LB_TenacityBloodOfTheRhino.Name = "LB_TenacityBloodOfTheRhino";
+            this.LB_TenacityBloodOfTheRhino.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityBloodOfTheRhino.TabIndex = 80;
+            this.LB_TenacityBloodOfTheRhino.Text = "Blood of the Rhino:";
+            this.LB_TenacityBloodOfTheRhino.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityBloodOfTheRhino
             // 
@@ -555,15 +589,15 @@
             this.CB_TenacityBloodOfTheRhino.TabIndex = 81;
             this.CB_TenacityBloodOfTheRhino.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label72
+            // LB_TenacityBoarsSpeed
             // 
-            this.label72.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label72.Location = new System.Drawing.Point(3, 88);
-            this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(87, 26);
-            this.label72.TabIndex = 78;
-            this.label72.Text = "Boar\'s Speed:";
-            this.label72.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityBoarsSpeed.Location = new System.Drawing.Point(3, 88);
+            this.LB_TenacityBoarsSpeed.Name = "LB_TenacityBoarsSpeed";
+            this.LB_TenacityBoarsSpeed.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityBoarsSpeed.TabIndex = 78;
+            this.LB_TenacityBoarsSpeed.Text = "Boar\'s Speed:";
+            this.LB_TenacityBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityBoarsSpeed
             // 
@@ -575,15 +609,15 @@
             this.CB_TenacityBoarsSpeed.TabIndex = 79;
             this.CB_TenacityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label70
+            // LB_TenacityPetBarding
             // 
-            this.label70.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label70.Location = new System.Drawing.Point(134, 88);
-            this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(87, 26);
-            this.label70.TabIndex = 82;
-            this.label70.Text = "Pet Barding:";
-            this.label70.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityPetBarding.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityPetBarding.Location = new System.Drawing.Point(134, 88);
+            this.LB_TenacityPetBarding.Name = "LB_TenacityPetBarding";
+            this.LB_TenacityPetBarding.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityPetBarding.TabIndex = 82;
+            this.LB_TenacityPetBarding.Text = "Pet Barding:";
+            this.LB_TenacityPetBarding.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityPetBarding
             // 
@@ -595,41 +629,41 @@
             this.CB_TenacityPetBarding.TabIndex = 83;
             this.CB_TenacityPetBarding.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label69
+            // LB_TenacityAvoidance
             // 
-            this.label69.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label69.Location = new System.Drawing.Point(3, 124);
-            this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(87, 26);
-            this.label69.TabIndex = 84;
-            this.label69.Text = "Avoidance:";
-            this.label69.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityAvoidance.Location = new System.Drawing.Point(3, 140);
+            this.LB_TenacityAvoidance.Name = "LB_TenacityAvoidance";
+            this.LB_TenacityAvoidance.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityAvoidance.TabIndex = 84;
+            this.LB_TenacityAvoidance.Text = "Avoidance: (3.2)";
+            this.LB_TenacityAvoidance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityAvoidance
             // 
             this.CB_TenacityAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityAvoidance.FormattingEnabled = true;
-            this.CB_TenacityAvoidance.Location = new System.Drawing.Point(96, 127);
+            this.CB_TenacityAvoidance.Location = new System.Drawing.Point(96, 143);
             this.CB_TenacityAvoidance.Name = "CB_TenacityAvoidance";
             this.CB_TenacityAvoidance.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityAvoidance.TabIndex = 85;
             this.CB_TenacityAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label67
+            // LB_TenacityLionHearted
             // 
-            this.label67.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label67.Location = new System.Drawing.Point(134, 124);
-            this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(87, 26);
-            this.label67.TabIndex = 88;
-            this.label67.Text = "Lionhearted:";
-            this.label67.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityLionHearted.Location = new System.Drawing.Point(134, 140);
+            this.LB_TenacityLionHearted.Name = "LB_TenacityLionHearted";
+            this.LB_TenacityLionHearted.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityLionHearted.TabIndex = 88;
+            this.LB_TenacityLionHearted.Text = "Lionhearted:";
+            this.LB_TenacityLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityGuardDog
             // 
             this.CB_TenacityGuardDog.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityGuardDog.FormattingEnabled = true;
-            this.CB_TenacityGuardDog.Location = new System.Drawing.Point(96, 153);
+            this.CB_TenacityGuardDog.Location = new System.Drawing.Point(96, 169);
             this.CB_TenacityGuardDog.Name = "CB_TenacityGuardDog";
             this.CB_TenacityGuardDog.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityGuardDog.TabIndex = 87;
@@ -639,37 +673,37 @@
             // 
             this.CB_TenacityLiohearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityLiohearted.FormattingEnabled = true;
-            this.CB_TenacityLiohearted.Location = new System.Drawing.Point(227, 127);
+            this.CB_TenacityLiohearted.Location = new System.Drawing.Point(227, 143);
             this.CB_TenacityLiohearted.Name = "CB_TenacityLiohearted";
             this.CB_TenacityLiohearted.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityLiohearted.TabIndex = 89;
             this.CB_TenacityLiohearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label68
+            // LB_TenacityGuardDog
             // 
-            this.label68.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label68.Location = new System.Drawing.Point(3, 150);
-            this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(87, 26);
-            this.label68.TabIndex = 86;
-            this.label68.Text = "Guard Dog:";
-            this.label68.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityGuardDog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGuardDog.Location = new System.Drawing.Point(3, 166);
+            this.LB_TenacityGuardDog.Name = "LB_TenacityGuardDog";
+            this.LB_TenacityGuardDog.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityGuardDog.TabIndex = 86;
+            this.LB_TenacityGuardDog.Text = "Guard Dog:";
+            this.LB_TenacityGuardDog.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label62
+            // LB_TenacityTaunt
             // 
-            this.label62.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label62.Location = new System.Drawing.Point(3, 248);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(87, 26);
-            this.label62.TabIndex = 98;
-            this.label62.Text = "Taunt:";
-            this.label62.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityTaunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityTaunt.Location = new System.Drawing.Point(3, 264);
+            this.LB_TenacityTaunt.Name = "LB_TenacityTaunt";
+            this.LB_TenacityTaunt.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityTaunt.TabIndex = 98;
+            this.LB_TenacityTaunt.Text = "Taunt:";
+            this.LB_TenacityTaunt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityTaunt
             // 
             this.CB_TenacityTaunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityTaunt.FormattingEnabled = true;
-            this.CB_TenacityTaunt.Location = new System.Drawing.Point(96, 251);
+            this.CB_TenacityTaunt.Location = new System.Drawing.Point(96, 267);
             this.CB_TenacityTaunt.Name = "CB_TenacityTaunt";
             this.CB_TenacityTaunt.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityTaunt.TabIndex = 99;
@@ -679,37 +713,37 @@
             // 
             this.CB_TenacityLastStand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityLastStand.FormattingEnabled = true;
-            this.CB_TenacityLastStand.Location = new System.Drawing.Point(96, 225);
+            this.CB_TenacityLastStand.Location = new System.Drawing.Point(96, 241);
             this.CB_TenacityLastStand.Name = "CB_TenacityLastStand";
             this.CB_TenacityLastStand.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityLastStand.TabIndex = 97;
             this.CB_TenacityLastStand.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label63
+            // LB_TenacityLastStand
             // 
-            this.label63.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label63.Location = new System.Drawing.Point(3, 222);
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(87, 26);
-            this.label63.TabIndex = 96;
-            this.label63.Text = "Last Stand:";
-            this.label63.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityLastStand.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityLastStand.Location = new System.Drawing.Point(3, 238);
+            this.LB_TenacityLastStand.Name = "LB_TenacityLastStand";
+            this.LB_TenacityLastStand.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityLastStand.TabIndex = 96;
+            this.LB_TenacityLastStand.Text = "Last Stand:";
+            this.LB_TenacityLastStand.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label65
+            // LB_TenacityIntervene
             // 
-            this.label65.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label65.Location = new System.Drawing.Point(134, 248);
-            this.label65.Name = "label65";
-            this.label65.Size = new System.Drawing.Size(87, 26);
-            this.label65.TabIndex = 102;
-            this.label65.Text = "Intervene:";
-            this.label65.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityIntervene.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityIntervene.Location = new System.Drawing.Point(134, 264);
+            this.LB_TenacityIntervene.Name = "LB_TenacityIntervene";
+            this.LB_TenacityIntervene.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityIntervene.TabIndex = 102;
+            this.LB_TenacityIntervene.Text = "Intervene:";
+            this.LB_TenacityIntervene.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityIntervene
             // 
             this.CB_TenacityIntervene.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityIntervene.FormattingEnabled = true;
-            this.CB_TenacityIntervene.Location = new System.Drawing.Point(227, 251);
+            this.CB_TenacityIntervene.Location = new System.Drawing.Point(227, 267);
             this.CB_TenacityIntervene.Name = "CB_TenacityIntervene";
             this.CB_TenacityIntervene.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityIntervene.TabIndex = 103;
@@ -719,57 +753,57 @@
             // 
             this.CB_TenacityRoarOfSacrifice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityRoarOfSacrifice.FormattingEnabled = true;
-            this.CB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(227, 225);
+            this.CB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(227, 241);
             this.CB_TenacityRoarOfSacrifice.Name = "CB_TenacityRoarOfSacrifice";
             this.CB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityRoarOfSacrifice.TabIndex = 101;
             this.CB_TenacityRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label61
+            // LB_TenacityRoarOfSacrifice
             // 
-            this.label61.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label61.Location = new System.Drawing.Point(134, 222);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(87, 26);
-            this.label61.TabIndex = 100;
-            this.label61.Text = "Roar of Sacrifice:";
-            this.label61.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(134, 238);
+            this.LB_TenacityRoarOfSacrifice.Name = "LB_TenacityRoarOfSacrifice";
+            this.LB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityRoarOfSacrifice.TabIndex = 100;
+            this.LB_TenacityRoarOfSacrifice.Text = "Roar of Sacrifice:";
+            this.LB_TenacityRoarOfSacrifice.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label66
+            // LB_TenacityGraceOfTheMantis
             // 
-            this.label66.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label66.Location = new System.Drawing.Point(3, 186);
-            this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(87, 26);
-            this.label66.TabIndex = 92;
-            this.label66.Text = "Grace of the Mantis:";
-            this.label66.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(3, 202);
+            this.LB_TenacityGraceOfTheMantis.Name = "LB_TenacityGraceOfTheMantis";
+            this.LB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityGraceOfTheMantis.TabIndex = 92;
+            this.LB_TenacityGraceOfTheMantis.Text = "Grace of the Mantis:";
+            this.LB_TenacityGraceOfTheMantis.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityGraceOfTheMantis
             // 
             this.CB_TenacityGraceOfTheMantis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityGraceOfTheMantis.FormattingEnabled = true;
-            this.CB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(96, 189);
+            this.CB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(96, 205);
             this.CB_TenacityGraceOfTheMantis.Name = "CB_TenacityGraceOfTheMantis";
             this.CB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityGraceOfTheMantis.TabIndex = 93;
             this.CB_TenacityGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label64
+            // LB_TenacityGreatResistance
             // 
-            this.label64.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label64.Location = new System.Drawing.Point(134, 186);
-            this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(87, 26);
-            this.label64.TabIndex = 94;
-            this.label64.Text = "Great Resistance:";
-            this.label64.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TenacityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGreatResistance.Location = new System.Drawing.Point(134, 202);
+            this.LB_TenacityGreatResistance.Name = "LB_TenacityGreatResistance";
+            this.LB_TenacityGreatResistance.Size = new System.Drawing.Size(87, 26);
+            this.LB_TenacityGreatResistance.TabIndex = 94;
+            this.LB_TenacityGreatResistance.Text = "Great Resistance:";
+            this.LB_TenacityGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_TenacityGreatResistance
             // 
             this.CB_TenacityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_TenacityGreatResistance.FormattingEnabled = true;
-            this.CB_TenacityGreatResistance.Location = new System.Drawing.Point(227, 189);
+            this.CB_TenacityGreatResistance.Location = new System.Drawing.Point(227, 205);
             this.CB_TenacityGreatResistance.Name = "CB_TenacityGreatResistance";
             this.CB_TenacityGreatResistance.Size = new System.Drawing.Size(32, 21);
             this.CB_TenacityGreatResistance.TabIndex = 95;
@@ -780,9 +814,9 @@
             this.GB_PetTalents_Cunning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_PetTalents_Cunning.Controls.Add(this.TLP_Cunning);
-            this.GB_PetTalents_Cunning.Location = new System.Drawing.Point(3, 339);
+            this.GB_PetTalents_Cunning.Location = new System.Drawing.Point(3, 356);
             this.GB_PetTalents_Cunning.Name = "GB_PetTalents_Cunning";
-            this.GB_PetTalents_Cunning.Size = new System.Drawing.Size(268, 356);
+            this.GB_PetTalents_Cunning.Size = new System.Drawing.Size(268, 372);
             this.GB_PetTalents_Cunning.TabIndex = 42;
             this.GB_PetTalents_Cunning.TabStop = false;
             this.GB_PetTalents_Cunning.Text = "Cunning Talents";
@@ -794,46 +828,48 @@
             this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.TLP_Cunning.Controls.Add(this.label32, 0, 0);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningCullingTheHerd, 1, 5);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCullingTheHerd, 0, 5);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCobraReflexes, 0, 0);
             this.TLP_Cunning.Controls.Add(this.CB_CunningRoarOfSacrifice, 3, 15);
             this.TLP_Cunning.Controls.Add(this.CB_CunningCorbaReflexes);
-            this.TLP_Cunning.Controls.Add(this.label50, 2, 15);
-            this.TLP_Cunning.Controls.Add(this.label34, 2, 0);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningRoarofSacrifice, 2, 15);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningGreatStamina, 2, 0);
             this.TLP_Cunning.Controls.Add(this.CB_CunningWildHunt, 1, 15);
             this.TLP_Cunning.Controls.Add(this.CB_CunningGreatStamina, 3, 0);
-            this.TLP_Cunning.Controls.Add(this.label51, 0, 15);
-            this.TLP_Cunning.Controls.Add(this.label33, 0, 1);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningWildHunt, 0, 15);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningDiveDash, 0, 1);
             this.TLP_Cunning.Controls.Add(this.CB_CunningGraceOfTheMantis, 3, 13);
             this.TLP_Cunning.Controls.Add(this.CB_CunningDiveDash, 1, 1);
-            this.TLP_Cunning.Controls.Add(this.label46, 2, 13);
-            this.TLP_Cunning.Controls.Add(this.label35, 2, 1);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningGraceOfTheMantis, 2, 13);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningNaturalArmor, 2, 1);
             this.TLP_Cunning.Controls.Add(this.CB_CunningRoarOfRecovery, 1, 13);
             this.TLP_Cunning.Controls.Add(this.CB_CunningBullheaded, 3, 12);
-            this.TLP_Cunning.Controls.Add(this.label48, 0, 13);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningRoarofRecovery, 0, 13);
             this.TLP_Cunning.Controls.Add(this.CB_CunningNaturalArmor, 3, 1);
-            this.TLP_Cunning.Controls.Add(this.label47, 2, 12);
-            this.TLP_Cunning.Controls.Add(this.label38, 0, 3);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningBullheaded, 2, 12);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningBoarsSpeed, 0, 3);
             this.TLP_Cunning.Controls.Add(this.CB_CunningBoarsSpeed, 1, 3);
-            this.TLP_Cunning.Controls.Add(this.label36, 2, 3);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningSpikedCollar, 2, 3);
             this.TLP_Cunning.Controls.Add(this.CB_CunningWolverineBite, 1, 12);
             this.TLP_Cunning.Controls.Add(this.CB_CunningSpikedCollar, 3, 3);
-            this.TLP_Cunning.Controls.Add(this.label49, 0, 12);
-            this.TLP_Cunning.Controls.Add(this.label37, 0, 4);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningWolverineBite, 0, 12);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningMobility, 0, 4);
             this.TLP_Cunning.Controls.Add(this.CB_CunningFeedingFrenzy, 3, 10);
             this.TLP_Cunning.Controls.Add(this.CB_CunningMobility, 1, 4);
-            this.TLP_Cunning.Controls.Add(this.label42, 2, 10);
-            this.TLP_Cunning.Controls.Add(this.label41, 0, 6);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningFeedingFrenzy, 2, 10);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningAvoidance, 0, 6);
             this.TLP_Cunning.Controls.Add(this.CB_CunningOwlsFocus, 1, 10);
             this.TLP_Cunning.Controls.Add(this.CB_CunningCornered, 3, 9);
-            this.TLP_Cunning.Controls.Add(this.label44, 0, 10);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningOwlsFocus, 0, 10);
             this.TLP_Cunning.Controls.Add(this.CB_CunningAvoidance, 1, 6);
-            this.TLP_Cunning.Controls.Add(this.label43, 2, 9);
-            this.TLP_Cunning.Controls.Add(this.label39, 2, 6);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCornered, 2, 9);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCarrionFeeder, 2, 6);
             this.TLP_Cunning.Controls.Add(this.CB_CunningCarrionFeeder, 3, 6);
-            this.TLP_Cunning.Controls.Add(this.label40, 0, 7);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningLionHearted, 0, 7);
             this.TLP_Cunning.Controls.Add(this.CB_CunningGreatResistance, 1, 9);
             this.TLP_Cunning.Controls.Add(this.CB_CunningLionhearted, 1, 7);
-            this.TLP_Cunning.Controls.Add(this.label45, 0, 9);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningGreatResistance, 0, 9);
             this.TLP_Cunning.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TLP_Cunning.Location = new System.Drawing.Point(3, 16);
             this.TLP_Cunning.Name = "TLP_Cunning";
@@ -843,7 +879,7 @@
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
@@ -854,25 +890,52 @@
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TLP_Cunning.Size = new System.Drawing.Size(262, 337);
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TLP_Cunning.Size = new System.Drawing.Size(262, 353);
             this.TLP_Cunning.TabIndex = 40;
             // 
-            // label32
+            // CB_CunningCullingTheHerd
             // 
-            this.label32.AutoSize = true;
-            this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label32.Location = new System.Drawing.Point(3, 0);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(87, 26);
-            this.label32.TabIndex = 0;
-            this.label32.Text = "Cobra Reflexes:";
-            this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CB_CunningCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningCullingTheHerd.FormattingEnabled = true;
+            this.CB_CunningCullingTheHerd.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.CB_CunningCullingTheHerd.Location = new System.Drawing.Point(96, 117);
+            this.CB_CunningCullingTheHerd.Name = "CB_CunningCullingTheHerd";
+            this.CB_CunningCullingTheHerd.Size = new System.Drawing.Size(32, 21);
+            this.CB_CunningCullingTheHerd.TabIndex = 41;
+            this.CB_CunningCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningCullingTheHerd
+            // 
+            this.LB_CunningCullingTheHerd.AutoSize = true;
+            this.LB_CunningCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCullingTheHerd.Location = new System.Drawing.Point(3, 114);
+            this.LB_CunningCullingTheHerd.Name = "LB_CunningCullingTheHerd";
+            this.LB_CunningCullingTheHerd.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningCullingTheHerd.TabIndex = 40;
+            this.LB_CunningCullingTheHerd.Text = "Culling The Herd: (3.3)";
+            this.LB_CunningCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LB_CunningCobraReflexes
+            // 
+            this.LB_CunningCobraReflexes.AutoSize = true;
+            this.LB_CunningCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCobraReflexes.Location = new System.Drawing.Point(3, 0);
+            this.LB_CunningCobraReflexes.Name = "LB_CunningCobraReflexes";
+            this.LB_CunningCobraReflexes.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningCobraReflexes.TabIndex = 0;
+            this.LB_CunningCobraReflexes.Text = "Cobra Reflexes:";
+            this.LB_CunningCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningRoarOfSacrifice
             // 
             this.CB_CunningRoarOfSacrifice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningRoarOfSacrifice.FormattingEnabled = true;
-            this.CB_CunningRoarOfSacrifice.Location = new System.Drawing.Point(227, 313);
+            this.CB_CunningRoarOfSacrifice.Location = new System.Drawing.Point(227, 329);
             this.CB_CunningRoarOfSacrifice.Name = "CB_CunningRoarOfSacrifice";
             this.CB_CunningRoarOfSacrifice.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningRoarOfSacrifice.TabIndex = 39;
@@ -888,33 +951,33 @@
             this.CB_CunningCorbaReflexes.TabIndex = 1;
             this.CB_CunningCorbaReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label50
+            // LB_CunningRoarofSacrifice
             // 
-            this.label50.AutoSize = true;
-            this.label50.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label50.Location = new System.Drawing.Point(134, 310);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(87, 27);
-            this.label50.TabIndex = 38;
-            this.label50.Text = "Roar of Sacrifice:";
-            this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningRoarofSacrifice.AutoSize = true;
+            this.LB_CunningRoarofSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningRoarofSacrifice.Location = new System.Drawing.Point(134, 326);
+            this.LB_CunningRoarofSacrifice.Name = "LB_CunningRoarofSacrifice";
+            this.LB_CunningRoarofSacrifice.Size = new System.Drawing.Size(87, 27);
+            this.LB_CunningRoarofSacrifice.TabIndex = 38;
+            this.LB_CunningRoarofSacrifice.Text = "Roar of Sacrifice:";
+            this.LB_CunningRoarofSacrifice.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label34
+            // LB_CunningGreatStamina
             // 
-            this.label34.AutoSize = true;
-            this.label34.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label34.Location = new System.Drawing.Point(134, 0);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(87, 26);
-            this.label34.TabIndex = 4;
-            this.label34.Text = "Great Stamina:";
-            this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningGreatStamina.AutoSize = true;
+            this.LB_CunningGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningGreatStamina.Location = new System.Drawing.Point(134, 0);
+            this.LB_CunningGreatStamina.Name = "LB_CunningGreatStamina";
+            this.LB_CunningGreatStamina.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningGreatStamina.TabIndex = 4;
+            this.LB_CunningGreatStamina.Text = "Great Stamina:";
+            this.LB_CunningGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningWildHunt
             // 
             this.CB_CunningWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningWildHunt.FormattingEnabled = true;
-            this.CB_CunningWildHunt.Location = new System.Drawing.Point(96, 313);
+            this.CB_CunningWildHunt.Location = new System.Drawing.Point(96, 329);
             this.CB_CunningWildHunt.Name = "CB_CunningWildHunt";
             this.CB_CunningWildHunt.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningWildHunt.TabIndex = 37;
@@ -930,33 +993,33 @@
             this.CB_CunningGreatStamina.TabIndex = 5;
             this.CB_CunningGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label51
+            // LB_CunningWildHunt
             // 
-            this.label51.AutoSize = true;
-            this.label51.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label51.Location = new System.Drawing.Point(3, 310);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(87, 27);
-            this.label51.TabIndex = 36;
-            this.label51.Text = "Wild Hunt:";
-            this.label51.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningWildHunt.AutoSize = true;
+            this.LB_CunningWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningWildHunt.Location = new System.Drawing.Point(3, 326);
+            this.LB_CunningWildHunt.Name = "LB_CunningWildHunt";
+            this.LB_CunningWildHunt.Size = new System.Drawing.Size(87, 27);
+            this.LB_CunningWildHunt.TabIndex = 36;
+            this.LB_CunningWildHunt.Text = "Wild Hunt:";
+            this.LB_CunningWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label33
+            // LB_CunningDiveDash
             // 
-            this.label33.AutoSize = true;
-            this.label33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label33.Location = new System.Drawing.Point(3, 26);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(87, 26);
-            this.label33.TabIndex = 2;
-            this.label33.Text = "Dive/Dash:";
-            this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningDiveDash.AutoSize = true;
+            this.LB_CunningDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningDiveDash.Location = new System.Drawing.Point(3, 26);
+            this.LB_CunningDiveDash.Name = "LB_CunningDiveDash";
+            this.LB_CunningDiveDash.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningDiveDash.TabIndex = 2;
+            this.LB_CunningDiveDash.Text = "Dive/Dash:";
+            this.LB_CunningDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningGraceOfTheMantis
             // 
             this.CB_CunningGraceOfTheMantis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningGraceOfTheMantis.FormattingEnabled = true;
-            this.CB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(227, 277);
+            this.CB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(227, 293);
             this.CB_CunningGraceOfTheMantis.Name = "CB_CunningGraceOfTheMantis";
             this.CB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningGraceOfTheMantis.TabIndex = 35;
@@ -972,33 +1035,33 @@
             this.CB_CunningDiveDash.TabIndex = 3;
             this.CB_CunningDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label46
+            // LB_CunningGraceOfTheMantis
             // 
-            this.label46.AutoSize = true;
-            this.label46.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label46.Location = new System.Drawing.Point(134, 274);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(87, 26);
-            this.label46.TabIndex = 34;
-            this.label46.Text = "Grace of the Mantis:";
-            this.label46.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningGraceOfTheMantis.AutoSize = true;
+            this.LB_CunningGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(134, 290);
+            this.LB_CunningGraceOfTheMantis.Name = "LB_CunningGraceOfTheMantis";
+            this.LB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningGraceOfTheMantis.TabIndex = 34;
+            this.LB_CunningGraceOfTheMantis.Text = "Grace of the Mantis:";
+            this.LB_CunningGraceOfTheMantis.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label35
+            // LB_CunningNaturalArmor
             // 
-            this.label35.AutoSize = true;
-            this.label35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label35.Location = new System.Drawing.Point(134, 26);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(87, 26);
-            this.label35.TabIndex = 6;
-            this.label35.Text = "Natural Armor:";
-            this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningNaturalArmor.AutoSize = true;
+            this.LB_CunningNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningNaturalArmor.Location = new System.Drawing.Point(134, 26);
+            this.LB_CunningNaturalArmor.Name = "LB_CunningNaturalArmor";
+            this.LB_CunningNaturalArmor.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningNaturalArmor.TabIndex = 6;
+            this.LB_CunningNaturalArmor.Text = "Natural Armor:";
+            this.LB_CunningNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningRoarOfRecovery
             // 
             this.CB_CunningRoarOfRecovery.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningRoarOfRecovery.FormattingEnabled = true;
-            this.CB_CunningRoarOfRecovery.Location = new System.Drawing.Point(96, 277);
+            this.CB_CunningRoarOfRecovery.Location = new System.Drawing.Point(96, 293);
             this.CB_CunningRoarOfRecovery.Name = "CB_CunningRoarOfRecovery";
             this.CB_CunningRoarOfRecovery.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningRoarOfRecovery.TabIndex = 31;
@@ -1008,22 +1071,22 @@
             // 
             this.CB_CunningBullheaded.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningBullheaded.FormattingEnabled = true;
-            this.CB_CunningBullheaded.Location = new System.Drawing.Point(227, 251);
+            this.CB_CunningBullheaded.Location = new System.Drawing.Point(227, 267);
             this.CB_CunningBullheaded.Name = "CB_CunningBullheaded";
             this.CB_CunningBullheaded.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningBullheaded.TabIndex = 33;
             this.CB_CunningBullheaded.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label48
+            // LB_CunningRoarofRecovery
             // 
-            this.label48.AutoSize = true;
-            this.label48.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label48.Location = new System.Drawing.Point(3, 274);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(87, 26);
-            this.label48.TabIndex = 30;
-            this.label48.Text = "Roar of Recovery:";
-            this.label48.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningRoarofRecovery.AutoSize = true;
+            this.LB_CunningRoarofRecovery.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningRoarofRecovery.Location = new System.Drawing.Point(3, 290);
+            this.LB_CunningRoarofRecovery.Name = "LB_CunningRoarofRecovery";
+            this.LB_CunningRoarofRecovery.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningRoarofRecovery.TabIndex = 30;
+            this.LB_CunningRoarofRecovery.Text = "Roar of Recovery:";
+            this.LB_CunningRoarofRecovery.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningNaturalArmor
             // 
@@ -1035,27 +1098,27 @@
             this.CB_CunningNaturalArmor.TabIndex = 7;
             this.CB_CunningNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label47
+            // LB_CunningBullheaded
             // 
-            this.label47.AutoSize = true;
-            this.label47.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label47.Location = new System.Drawing.Point(134, 248);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(87, 26);
-            this.label47.TabIndex = 32;
-            this.label47.Text = "Bullheaded:";
-            this.label47.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningBullheaded.AutoSize = true;
+            this.LB_CunningBullheaded.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningBullheaded.Location = new System.Drawing.Point(134, 264);
+            this.LB_CunningBullheaded.Name = "LB_CunningBullheaded";
+            this.LB_CunningBullheaded.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningBullheaded.TabIndex = 32;
+            this.LB_CunningBullheaded.Text = "Bullheaded:";
+            this.LB_CunningBullheaded.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label38
+            // LB_CunningBoarsSpeed
             // 
-            this.label38.AutoSize = true;
-            this.label38.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label38.Location = new System.Drawing.Point(3, 62);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(87, 26);
-            this.label38.TabIndex = 8;
-            this.label38.Text = "Boar\'s Speed:";
-            this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningBoarsSpeed.AutoSize = true;
+            this.LB_CunningBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningBoarsSpeed.Location = new System.Drawing.Point(3, 62);
+            this.LB_CunningBoarsSpeed.Name = "LB_CunningBoarsSpeed";
+            this.LB_CunningBoarsSpeed.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningBoarsSpeed.TabIndex = 8;
+            this.LB_CunningBoarsSpeed.Text = "Boar\'s Speed:";
+            this.LB_CunningBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningBoarsSpeed
             // 
@@ -1067,22 +1130,22 @@
             this.CB_CunningBoarsSpeed.TabIndex = 9;
             this.CB_CunningBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label36
+            // LB_CunningSpikedCollar
             // 
-            this.label36.AutoSize = true;
-            this.label36.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label36.Location = new System.Drawing.Point(134, 62);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(87, 26);
-            this.label36.TabIndex = 12;
-            this.label36.Text = "Spiked Collar:";
-            this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningSpikedCollar.AutoSize = true;
+            this.LB_CunningSpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningSpikedCollar.Location = new System.Drawing.Point(134, 62);
+            this.LB_CunningSpikedCollar.Name = "LB_CunningSpikedCollar";
+            this.LB_CunningSpikedCollar.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningSpikedCollar.TabIndex = 12;
+            this.LB_CunningSpikedCollar.Text = "Spiked Collar:";
+            this.LB_CunningSpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningWolverineBite
             // 
             this.CB_CunningWolverineBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningWolverineBite.FormattingEnabled = true;
-            this.CB_CunningWolverineBite.Location = new System.Drawing.Point(96, 251);
+            this.CB_CunningWolverineBite.Location = new System.Drawing.Point(96, 267);
             this.CB_CunningWolverineBite.Name = "CB_CunningWolverineBite";
             this.CB_CunningWolverineBite.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningWolverineBite.TabIndex = 29;
@@ -1098,33 +1161,33 @@
             this.CB_CunningSpikedCollar.TabIndex = 13;
             this.CB_CunningSpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label49
+            // LB_CunningWolverineBite
             // 
-            this.label49.AutoSize = true;
-            this.label49.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label49.Location = new System.Drawing.Point(3, 248);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(87, 26);
-            this.label49.TabIndex = 28;
-            this.label49.Text = "Wolverine Bite:";
-            this.label49.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningWolverineBite.AutoSize = true;
+            this.LB_CunningWolverineBite.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningWolverineBite.Location = new System.Drawing.Point(3, 264);
+            this.LB_CunningWolverineBite.Name = "LB_CunningWolverineBite";
+            this.LB_CunningWolverineBite.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningWolverineBite.TabIndex = 28;
+            this.LB_CunningWolverineBite.Text = "Wolverine Bite:";
+            this.LB_CunningWolverineBite.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label37
+            // LB_CunningMobility
             // 
-            this.label37.AutoSize = true;
-            this.label37.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label37.Location = new System.Drawing.Point(3, 88);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(87, 26);
-            this.label37.TabIndex = 10;
-            this.label37.Text = "Mobility:";
-            this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningMobility.AutoSize = true;
+            this.LB_CunningMobility.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningMobility.Location = new System.Drawing.Point(3, 88);
+            this.LB_CunningMobility.Name = "LB_CunningMobility";
+            this.LB_CunningMobility.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningMobility.TabIndex = 10;
+            this.LB_CunningMobility.Text = "Mobility:";
+            this.LB_CunningMobility.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningFeedingFrenzy
             // 
             this.CB_CunningFeedingFrenzy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningFeedingFrenzy.FormattingEnabled = true;
-            this.CB_CunningFeedingFrenzy.Location = new System.Drawing.Point(227, 215);
+            this.CB_CunningFeedingFrenzy.Location = new System.Drawing.Point(227, 231);
             this.CB_CunningFeedingFrenzy.Name = "CB_CunningFeedingFrenzy";
             this.CB_CunningFeedingFrenzy.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningFeedingFrenzy.TabIndex = 27;
@@ -1140,33 +1203,33 @@
             this.CB_CunningMobility.TabIndex = 11;
             this.CB_CunningMobility.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label42
+            // LB_CunningFeedingFrenzy
             // 
-            this.label42.AutoSize = true;
-            this.label42.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label42.Location = new System.Drawing.Point(134, 212);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(87, 26);
-            this.label42.TabIndex = 26;
-            this.label42.Text = "Feeding Frenzy:";
-            this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningFeedingFrenzy.AutoSize = true;
+            this.LB_CunningFeedingFrenzy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningFeedingFrenzy.Location = new System.Drawing.Point(134, 228);
+            this.LB_CunningFeedingFrenzy.Name = "LB_CunningFeedingFrenzy";
+            this.LB_CunningFeedingFrenzy.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningFeedingFrenzy.TabIndex = 26;
+            this.LB_CunningFeedingFrenzy.Text = "Feeding Frenzy:";
+            this.LB_CunningFeedingFrenzy.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label41
+            // LB_CunningAvoidance
             // 
-            this.label41.AutoSize = true;
-            this.label41.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label41.Location = new System.Drawing.Point(3, 124);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(87, 26);
-            this.label41.TabIndex = 14;
-            this.label41.Text = "Avoidance:";
-            this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningAvoidance.AutoSize = true;
+            this.LB_CunningAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningAvoidance.Location = new System.Drawing.Point(3, 140);
+            this.LB_CunningAvoidance.Name = "LB_CunningAvoidance";
+            this.LB_CunningAvoidance.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningAvoidance.TabIndex = 14;
+            this.LB_CunningAvoidance.Text = "Avoidance: (3.2)";
+            this.LB_CunningAvoidance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningOwlsFocus
             // 
             this.CB_CunningOwlsFocus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningOwlsFocus.FormattingEnabled = true;
-            this.CB_CunningOwlsFocus.Location = new System.Drawing.Point(96, 215);
+            this.CB_CunningOwlsFocus.Location = new System.Drawing.Point(96, 231);
             this.CB_CunningOwlsFocus.Name = "CB_CunningOwlsFocus";
             this.CB_CunningOwlsFocus.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningOwlsFocus.TabIndex = 23;
@@ -1176,81 +1239,81 @@
             // 
             this.CB_CunningCornered.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningCornered.FormattingEnabled = true;
-            this.CB_CunningCornered.Location = new System.Drawing.Point(227, 189);
+            this.CB_CunningCornered.Location = new System.Drawing.Point(227, 205);
             this.CB_CunningCornered.Name = "CB_CunningCornered";
             this.CB_CunningCornered.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningCornered.TabIndex = 25;
             this.CB_CunningCornered.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label44
+            // LB_CunningOwlsFocus
             // 
-            this.label44.AutoSize = true;
-            this.label44.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label44.Location = new System.Drawing.Point(3, 212);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(87, 26);
-            this.label44.TabIndex = 22;
-            this.label44.Text = "Owl\'s Focus:";
-            this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningOwlsFocus.AutoSize = true;
+            this.LB_CunningOwlsFocus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningOwlsFocus.Location = new System.Drawing.Point(3, 228);
+            this.LB_CunningOwlsFocus.Name = "LB_CunningOwlsFocus";
+            this.LB_CunningOwlsFocus.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningOwlsFocus.TabIndex = 22;
+            this.LB_CunningOwlsFocus.Text = "Owl\'s Focus:";
+            this.LB_CunningOwlsFocus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningAvoidance
             // 
             this.CB_CunningAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningAvoidance.FormattingEnabled = true;
-            this.CB_CunningAvoidance.Location = new System.Drawing.Point(96, 127);
+            this.CB_CunningAvoidance.Location = new System.Drawing.Point(96, 143);
             this.CB_CunningAvoidance.Name = "CB_CunningAvoidance";
             this.CB_CunningAvoidance.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningAvoidance.TabIndex = 15;
             this.CB_CunningAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label43
+            // LB_CunningCornered
             // 
-            this.label43.AutoSize = true;
-            this.label43.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label43.Location = new System.Drawing.Point(134, 186);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(87, 26);
-            this.label43.TabIndex = 24;
-            this.label43.Text = "Cornered:";
-            this.label43.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningCornered.AutoSize = true;
+            this.LB_CunningCornered.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCornered.Location = new System.Drawing.Point(134, 202);
+            this.LB_CunningCornered.Name = "LB_CunningCornered";
+            this.LB_CunningCornered.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningCornered.TabIndex = 24;
+            this.LB_CunningCornered.Text = "Cornered:";
+            this.LB_CunningCornered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label39
+            // LB_CunningCarrionFeeder
             // 
-            this.label39.AutoSize = true;
-            this.label39.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label39.Location = new System.Drawing.Point(134, 124);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(87, 26);
-            this.label39.TabIndex = 18;
-            this.label39.Text = "Carrion Feeder:";
-            this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningCarrionFeeder.AutoSize = true;
+            this.LB_CunningCarrionFeeder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCarrionFeeder.Location = new System.Drawing.Point(134, 140);
+            this.LB_CunningCarrionFeeder.Name = "LB_CunningCarrionFeeder";
+            this.LB_CunningCarrionFeeder.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningCarrionFeeder.TabIndex = 18;
+            this.LB_CunningCarrionFeeder.Text = "Carrion Feeder:";
+            this.LB_CunningCarrionFeeder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningCarrionFeeder
             // 
             this.CB_CunningCarrionFeeder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningCarrionFeeder.FormattingEnabled = true;
-            this.CB_CunningCarrionFeeder.Location = new System.Drawing.Point(227, 127);
+            this.CB_CunningCarrionFeeder.Location = new System.Drawing.Point(227, 143);
             this.CB_CunningCarrionFeeder.Name = "CB_CunningCarrionFeeder";
             this.CB_CunningCarrionFeeder.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningCarrionFeeder.TabIndex = 19;
             this.CB_CunningCarrionFeeder.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label40
+            // LB_CunningLionHearted
             // 
-            this.label40.AutoSize = true;
-            this.label40.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label40.Location = new System.Drawing.Point(3, 150);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(87, 26);
-            this.label40.TabIndex = 16;
-            this.label40.Text = "Lionhearted:";
-            this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningLionHearted.AutoSize = true;
+            this.LB_CunningLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningLionHearted.Location = new System.Drawing.Point(3, 166);
+            this.LB_CunningLionHearted.Name = "LB_CunningLionHearted";
+            this.LB_CunningLionHearted.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningLionHearted.TabIndex = 16;
+            this.LB_CunningLionHearted.Text = "Lionhearted:";
+            this.LB_CunningLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_CunningGreatResistance
             // 
             this.CB_CunningGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningGreatResistance.FormattingEnabled = true;
-            this.CB_CunningGreatResistance.Location = new System.Drawing.Point(96, 189);
+            this.CB_CunningGreatResistance.Location = new System.Drawing.Point(96, 205);
             this.CB_CunningGreatResistance.Name = "CB_CunningGreatResistance";
             this.CB_CunningGreatResistance.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningGreatResistance.TabIndex = 21;
@@ -1260,31 +1323,31 @@
             // 
             this.CB_CunningLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningLionhearted.FormattingEnabled = true;
-            this.CB_CunningLionhearted.Location = new System.Drawing.Point(96, 153);
+            this.CB_CunningLionhearted.Location = new System.Drawing.Point(96, 169);
             this.CB_CunningLionhearted.Name = "CB_CunningLionhearted";
             this.CB_CunningLionhearted.Size = new System.Drawing.Size(32, 21);
             this.CB_CunningLionhearted.TabIndex = 17;
             this.CB_CunningLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label45
+            // LB_CunningGreatResistance
             // 
-            this.label45.AutoSize = true;
-            this.label45.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label45.Location = new System.Drawing.Point(3, 186);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(87, 26);
-            this.label45.TabIndex = 20;
-            this.label45.Text = "Great Resistance:";
-            this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_CunningGreatResistance.AutoSize = true;
+            this.LB_CunningGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningGreatResistance.Location = new System.Drawing.Point(3, 202);
+            this.LB_CunningGreatResistance.Name = "LB_CunningGreatResistance";
+            this.LB_CunningGreatResistance.Size = new System.Drawing.Size(87, 26);
+            this.LB_CunningGreatResistance.TabIndex = 20;
+            this.LB_CunningGreatResistance.Text = "Great Resistance:";
+            this.LB_CunningGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // GB_PetTalents_Ferocity
             // 
             this.GB_PetTalents_Ferocity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_PetTalents_Ferocity.Controls.Add(this.TLP_Ferocity);
-            this.GB_PetTalents_Ferocity.Location = new System.Drawing.Point(3, 701);
+            this.GB_PetTalents_Ferocity.Location = new System.Drawing.Point(3, 734);
             this.GB_PetTalents_Ferocity.Name = "GB_PetTalents_Ferocity";
-            this.GB_PetTalents_Ferocity.Size = new System.Drawing.Size(268, 356);
+            this.GB_PetTalents_Ferocity.Size = new System.Drawing.Size(268, 372);
             this.GB_PetTalents_Ferocity.TabIndex = 47;
             this.GB_PetTalents_Ferocity.TabStop = false;
             this.GB_PetTalents_Ferocity.Text = "Ferocity Talents";
@@ -1296,44 +1359,46 @@
             this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.TLP_Ferocity.Controls.Add(this.label52, 0, 0);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCullingTheHerd, 1, 5);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCullingTheHerd, 0, 5);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCobraReflexes, 0, 0);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityWildHunt, 3, 15);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityCobraReflexes, 1, 0);
-            this.TLP_Ferocity.Controls.Add(this.label57, 2, 15);
-            this.TLP_Ferocity.Controls.Add(this.label19, 2, 0);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityWildHunt, 2, 15);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatStamina, 2, 0);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocitySharkAttack, 1, 15);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityGreatStamina, 3, 0);
-            this.TLP_Ferocity.Controls.Add(this.label59, 0, 15);
-            this.TLP_Ferocity.Controls.Add(this.label20, 0, 1);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySharkAttack, 0, 15);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityDiveDash, 0, 1);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityCallOfTheWild, 1, 13);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityLickYourWounds, 3, 12);
-            this.TLP_Ferocity.Controls.Add(this.label55, 0, 13);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCalloftheWild, 0, 13);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityDiveDash, 1, 1);
-            this.TLP_Ferocity.Controls.Add(this.label54, 2, 12);
-            this.TLP_Ferocity.Controls.Add(this.label18, 2, 1);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityLickYourWounds, 2, 12);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityNaturalArmor, 2, 1);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityNaturalArmor, 3, 1);
-            this.TLP_Ferocity.Controls.Add(this.label12, 0, 3);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityImprovedCower, 0, 3);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityRabid, 1, 12);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityImprovedCower, 1, 3);
-            this.TLP_Ferocity.Controls.Add(this.label56, 0, 12);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityRabid, 0, 12);
             this.TLP_Ferocity.Controls.Add(this.LB_Ferocity_SpikedCollar, 2, 3);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocitySpidersBite, 1, 10);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityGreatResistance, 3, 9);
-            this.TLP_Ferocity.Controls.Add(this.label17, 0, 10);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySpidersBite, 0, 10);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocitySpikedCollar, 3, 3);
-            this.TLP_Ferocity.Controls.Add(this.label13, 2, 9);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatResistance, 2, 9);
             this.TLP_Ferocity.Controls.Add(this.LB_Ferocity_Bloodthirsty, 0, 4);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityBloodthirsty, 1, 4);
             this.TLP_Ferocity.Controls.Add(this.LB_Ferocity_BoarsSpeed, 2, 4);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityHeartOfThePhoenix, 1, 9);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityBoarsSpeed, 3, 4);
-            this.TLP_Ferocity.Controls.Add(this.label53, 0, 9);
-            this.TLP_Ferocity.Controls.Add(this.label16, 0, 6);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityHeartOfThePheonix, 0, 9);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityAvoidance, 0, 6);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityLionhearted, 1, 7);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityChargeSwoop, 3, 6);
-            this.TLP_Ferocity.Controls.Add(this.label15, 0, 7);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityLionHearted, 0, 7);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityAvoidance, 1, 6);
-            this.TLP_Ferocity.Controls.Add(this.label14, 2, 6);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityChargeSwoop, 2, 6);
             this.TLP_Ferocity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TLP_Ferocity.Location = new System.Drawing.Point(3, 16);
             this.TLP_Ferocity.Name = "TLP_Ferocity";
@@ -1343,7 +1408,7 @@
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
@@ -1354,25 +1419,51 @@
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TLP_Ferocity.Size = new System.Drawing.Size(262, 337);
+            this.TLP_Ferocity.Size = new System.Drawing.Size(262, 353);
             this.TLP_Ferocity.TabIndex = 68;
             // 
-            // label52
+            // CB_FerocityCullingTheHerd
             // 
-            this.label52.AutoSize = true;
-            this.label52.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label52.Location = new System.Drawing.Point(3, 0);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(87, 26);
-            this.label52.TabIndex = 28;
-            this.label52.Text = "Cobra Reflexes:";
-            this.label52.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CB_FerocityCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityCullingTheHerd.FormattingEnabled = true;
+            this.CB_FerocityCullingTheHerd.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.CB_FerocityCullingTheHerd.Location = new System.Drawing.Point(96, 117);
+            this.CB_FerocityCullingTheHerd.Name = "CB_FerocityCullingTheHerd";
+            this.CB_FerocityCullingTheHerd.Size = new System.Drawing.Size(32, 21);
+            this.CB_FerocityCullingTheHerd.TabIndex = 69;
+            this.CB_FerocityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityCullingTheHerd
+            // 
+            this.LB_FerocityCullingTheHerd.AutoSize = true;
+            this.LB_FerocityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityCullingTheHerd.Location = new System.Drawing.Point(3, 114);
+            this.LB_FerocityCullingTheHerd.Name = "LB_FerocityCullingTheHerd";
+            this.LB_FerocityCullingTheHerd.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityCullingTheHerd.TabIndex = 68;
+            this.LB_FerocityCullingTheHerd.Text = "Culling The Herd: (3.3)";
+            this.LB_FerocityCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LB_FerocityCobraReflexes
+            // 
+            this.LB_FerocityCobraReflexes.AutoSize = true;
+            this.LB_FerocityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityCobraReflexes.Location = new System.Drawing.Point(3, 0);
+            this.LB_FerocityCobraReflexes.Name = "LB_FerocityCobraReflexes";
+            this.LB_FerocityCobraReflexes.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityCobraReflexes.TabIndex = 28;
+            this.LB_FerocityCobraReflexes.Text = "Cobra Reflexes:";
+            this.LB_FerocityCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityWildHunt
             // 
             this.CB_FerocityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityWildHunt.FormattingEnabled = true;
-            this.CB_FerocityWildHunt.Location = new System.Drawing.Point(227, 313);
+            this.CB_FerocityWildHunt.Location = new System.Drawing.Point(227, 329);
             this.CB_FerocityWildHunt.Name = "CB_FerocityWildHunt";
             this.CB_FerocityWildHunt.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityWildHunt.TabIndex = 67;
@@ -1388,33 +1479,33 @@
             this.CB_FerocityCobraReflexes.TabIndex = 29;
             this.CB_FerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label57
+            // LB_FerocityWildHunt
             // 
-            this.label57.AutoSize = true;
-            this.label57.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label57.Location = new System.Drawing.Point(134, 310);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(87, 27);
-            this.label57.TabIndex = 66;
-            this.label57.Text = "Wild Hunt:";
-            this.label57.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityWildHunt.AutoSize = true;
+            this.LB_FerocityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityWildHunt.Location = new System.Drawing.Point(134, 326);
+            this.LB_FerocityWildHunt.Name = "LB_FerocityWildHunt";
+            this.LB_FerocityWildHunt.Size = new System.Drawing.Size(87, 27);
+            this.LB_FerocityWildHunt.TabIndex = 66;
+            this.LB_FerocityWildHunt.Text = "Wild Hunt:";
+            this.LB_FerocityWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label19
+            // LB_FerocityGreatStamina
             // 
-            this.label19.AutoSize = true;
-            this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label19.Location = new System.Drawing.Point(134, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(87, 26);
-            this.label19.TabIndex = 32;
-            this.label19.Text = "Great Stamina:";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityGreatStamina.AutoSize = true;
+            this.LB_FerocityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityGreatStamina.Location = new System.Drawing.Point(134, 0);
+            this.LB_FerocityGreatStamina.Name = "LB_FerocityGreatStamina";
+            this.LB_FerocityGreatStamina.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityGreatStamina.TabIndex = 32;
+            this.LB_FerocityGreatStamina.Text = "Great Stamina:";
+            this.LB_FerocityGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocitySharkAttack
             // 
             this.CB_FerocitySharkAttack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocitySharkAttack.FormattingEnabled = true;
-            this.CB_FerocitySharkAttack.Location = new System.Drawing.Point(96, 313);
+            this.CB_FerocitySharkAttack.Location = new System.Drawing.Point(96, 329);
             this.CB_FerocitySharkAttack.Name = "CB_FerocitySharkAttack";
             this.CB_FerocitySharkAttack.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocitySharkAttack.TabIndex = 63;
@@ -1430,33 +1521,33 @@
             this.CB_FerocityGreatStamina.TabIndex = 33;
             this.CB_FerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label59
+            // LB_FerocitySharkAttack
             // 
-            this.label59.AutoSize = true;
-            this.label59.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label59.Location = new System.Drawing.Point(3, 310);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(87, 27);
-            this.label59.TabIndex = 62;
-            this.label59.Text = "Shark Attack:";
-            this.label59.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocitySharkAttack.AutoSize = true;
+            this.LB_FerocitySharkAttack.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocitySharkAttack.Location = new System.Drawing.Point(3, 326);
+            this.LB_FerocitySharkAttack.Name = "LB_FerocitySharkAttack";
+            this.LB_FerocitySharkAttack.Size = new System.Drawing.Size(87, 27);
+            this.LB_FerocitySharkAttack.TabIndex = 62;
+            this.LB_FerocitySharkAttack.Text = "Shark Attack:";
+            this.LB_FerocitySharkAttack.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label20
+            // LB_FerocityDiveDash
             // 
-            this.label20.AutoSize = true;
-            this.label20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label20.Location = new System.Drawing.Point(3, 26);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(87, 26);
-            this.label20.TabIndex = 30;
-            this.label20.Text = "Dive/Dash:";
-            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityDiveDash.AutoSize = true;
+            this.LB_FerocityDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityDiveDash.Location = new System.Drawing.Point(3, 26);
+            this.LB_FerocityDiveDash.Name = "LB_FerocityDiveDash";
+            this.LB_FerocityDiveDash.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityDiveDash.TabIndex = 30;
+            this.LB_FerocityDiveDash.Text = "Dive/Dash:";
+            this.LB_FerocityDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityCallOfTheWild
             // 
             this.CB_FerocityCallOfTheWild.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityCallOfTheWild.FormattingEnabled = true;
-            this.CB_FerocityCallOfTheWild.Location = new System.Drawing.Point(96, 277);
+            this.CB_FerocityCallOfTheWild.Location = new System.Drawing.Point(96, 293);
             this.CB_FerocityCallOfTheWild.Name = "CB_FerocityCallOfTheWild";
             this.CB_FerocityCallOfTheWild.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityCallOfTheWild.TabIndex = 59;
@@ -1466,22 +1557,22 @@
             // 
             this.CB_FerocityLickYourWounds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityLickYourWounds.FormattingEnabled = true;
-            this.CB_FerocityLickYourWounds.Location = new System.Drawing.Point(227, 251);
+            this.CB_FerocityLickYourWounds.Location = new System.Drawing.Point(227, 267);
             this.CB_FerocityLickYourWounds.Name = "CB_FerocityLickYourWounds";
             this.CB_FerocityLickYourWounds.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityLickYourWounds.TabIndex = 61;
             this.CB_FerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label55
+            // LB_FerocityCalloftheWild
             // 
-            this.label55.AutoSize = true;
-            this.label55.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label55.Location = new System.Drawing.Point(3, 274);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(87, 26);
-            this.label55.TabIndex = 58;
-            this.label55.Text = "Call of the Wild:";
-            this.label55.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityCalloftheWild.AutoSize = true;
+            this.LB_FerocityCalloftheWild.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityCalloftheWild.Location = new System.Drawing.Point(3, 290);
+            this.LB_FerocityCalloftheWild.Name = "LB_FerocityCalloftheWild";
+            this.LB_FerocityCalloftheWild.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityCalloftheWild.TabIndex = 58;
+            this.LB_FerocityCalloftheWild.Text = "Call of the Wild:";
+            this.LB_FerocityCalloftheWild.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityDiveDash
             // 
@@ -1493,27 +1584,27 @@
             this.CB_FerocityDiveDash.TabIndex = 31;
             this.CB_FerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label54
+            // LB_FerocityLickYourWounds
             // 
-            this.label54.AutoSize = true;
-            this.label54.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label54.Location = new System.Drawing.Point(134, 248);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(87, 26);
-            this.label54.TabIndex = 60;
-            this.label54.Text = "Lick Your Wounds:";
-            this.label54.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityLickYourWounds.AutoSize = true;
+            this.LB_FerocityLickYourWounds.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityLickYourWounds.Location = new System.Drawing.Point(134, 264);
+            this.LB_FerocityLickYourWounds.Name = "LB_FerocityLickYourWounds";
+            this.LB_FerocityLickYourWounds.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityLickYourWounds.TabIndex = 60;
+            this.LB_FerocityLickYourWounds.Text = "Lick Your Wounds:";
+            this.LB_FerocityLickYourWounds.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label18
+            // LB_FerocityNaturalArmor
             // 
-            this.label18.AutoSize = true;
-            this.label18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label18.Location = new System.Drawing.Point(134, 26);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(87, 26);
-            this.label18.TabIndex = 34;
-            this.label18.Text = "Natural Armor:";
-            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityNaturalArmor.AutoSize = true;
+            this.LB_FerocityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityNaturalArmor.Location = new System.Drawing.Point(134, 26);
+            this.LB_FerocityNaturalArmor.Name = "LB_FerocityNaturalArmor";
+            this.LB_FerocityNaturalArmor.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityNaturalArmor.TabIndex = 34;
+            this.LB_FerocityNaturalArmor.Text = "Natural Armor:";
+            this.LB_FerocityNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityNaturalArmor
             // 
@@ -1525,22 +1616,22 @@
             this.CB_FerocityNaturalArmor.TabIndex = 35;
             this.CB_FerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label12
+            // LB_FerocityImprovedCower
             // 
-            this.label12.AutoSize = true;
-            this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label12.Location = new System.Drawing.Point(3, 62);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(87, 26);
-            this.label12.TabIndex = 36;
-            this.label12.Text = "Improved Cower:";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityImprovedCower.AutoSize = true;
+            this.LB_FerocityImprovedCower.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityImprovedCower.Location = new System.Drawing.Point(3, 62);
+            this.LB_FerocityImprovedCower.Name = "LB_FerocityImprovedCower";
+            this.LB_FerocityImprovedCower.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityImprovedCower.TabIndex = 36;
+            this.LB_FerocityImprovedCower.Text = "Improved Cower:";
+            this.LB_FerocityImprovedCower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityRabid
             // 
             this.CB_FerocityRabid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityRabid.FormattingEnabled = true;
-            this.CB_FerocityRabid.Location = new System.Drawing.Point(96, 251);
+            this.CB_FerocityRabid.Location = new System.Drawing.Point(96, 267);
             this.CB_FerocityRabid.Name = "CB_FerocityRabid";
             this.CB_FerocityRabid.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityRabid.TabIndex = 57;
@@ -1556,16 +1647,16 @@
             this.CB_FerocityImprovedCower.TabIndex = 37;
             this.CB_FerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label56
+            // LB_FerocityRabid
             // 
-            this.label56.AutoSize = true;
-            this.label56.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label56.Location = new System.Drawing.Point(3, 248);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(87, 26);
-            this.label56.TabIndex = 56;
-            this.label56.Text = "Rabid:";
-            this.label56.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityRabid.AutoSize = true;
+            this.LB_FerocityRabid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityRabid.Location = new System.Drawing.Point(3, 264);
+            this.LB_FerocityRabid.Name = "LB_FerocityRabid";
+            this.LB_FerocityRabid.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityRabid.TabIndex = 56;
+            this.LB_FerocityRabid.Text = "Rabid:";
+            this.LB_FerocityRabid.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LB_Ferocity_SpikedCollar
             // 
@@ -1582,7 +1673,7 @@
             // 
             this.CB_FerocitySpidersBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocitySpidersBite.FormattingEnabled = true;
-            this.CB_FerocitySpidersBite.Location = new System.Drawing.Point(96, 215);
+            this.CB_FerocitySpidersBite.Location = new System.Drawing.Point(96, 231);
             this.CB_FerocitySpidersBite.Name = "CB_FerocitySpidersBite";
             this.CB_FerocitySpidersBite.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocitySpidersBite.TabIndex = 53;
@@ -1592,22 +1683,22 @@
             // 
             this.CB_FerocityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityGreatResistance.FormattingEnabled = true;
-            this.CB_FerocityGreatResistance.Location = new System.Drawing.Point(227, 189);
+            this.CB_FerocityGreatResistance.Location = new System.Drawing.Point(227, 205);
             this.CB_FerocityGreatResistance.Name = "CB_FerocityGreatResistance";
             this.CB_FerocityGreatResistance.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityGreatResistance.TabIndex = 55;
             this.CB_FerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label17
+            // LB_FerocitySpidersBite
             // 
-            this.label17.AutoSize = true;
-            this.label17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label17.Location = new System.Drawing.Point(3, 212);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(87, 26);
-            this.label17.TabIndex = 52;
-            this.label17.Text = "Spider\'s Bite:";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocitySpidersBite.AutoSize = true;
+            this.LB_FerocitySpidersBite.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocitySpidersBite.Location = new System.Drawing.Point(3, 228);
+            this.LB_FerocitySpidersBite.Name = "LB_FerocitySpidersBite";
+            this.LB_FerocitySpidersBite.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocitySpidersBite.TabIndex = 52;
+            this.LB_FerocitySpidersBite.Text = "Spider\'s Bite:";
+            this.LB_FerocitySpidersBite.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocitySpikedCollar
             // 
@@ -1619,16 +1710,16 @@
             this.CB_FerocitySpikedCollar.TabIndex = 41;
             this.CB_FerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label13
+            // LB_FerocityGreatResistance
             // 
-            this.label13.AutoSize = true;
-            this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label13.Location = new System.Drawing.Point(134, 186);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(87, 26);
-            this.label13.TabIndex = 54;
-            this.label13.Text = "Great Resistance:";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityGreatResistance.AutoSize = true;
+            this.LB_FerocityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityGreatResistance.Location = new System.Drawing.Point(134, 202);
+            this.LB_FerocityGreatResistance.Name = "LB_FerocityGreatResistance";
+            this.LB_FerocityGreatResistance.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityGreatResistance.TabIndex = 54;
+            this.LB_FerocityGreatResistance.Text = "Great Resistance:";
+            this.LB_FerocityGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LB_Ferocity_Bloodthirsty
             // 
@@ -1666,7 +1757,7 @@
             // 
             this.CB_FerocityHeartOfThePhoenix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityHeartOfThePhoenix.FormattingEnabled = true;
-            this.CB_FerocityHeartOfThePhoenix.Location = new System.Drawing.Point(96, 189);
+            this.CB_FerocityHeartOfThePhoenix.Location = new System.Drawing.Point(96, 205);
             this.CB_FerocityHeartOfThePhoenix.Name = "CB_FerocityHeartOfThePhoenix";
             this.CB_FerocityHeartOfThePhoenix.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityHeartOfThePhoenix.TabIndex = 51;
@@ -1682,33 +1773,33 @@
             this.CB_FerocityBoarsSpeed.TabIndex = 43;
             this.CB_FerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label53
+            // LB_FerocityHeartOfThePheonix
             // 
-            this.label53.AutoSize = true;
-            this.label53.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label53.Location = new System.Drawing.Point(3, 186);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(87, 26);
-            this.label53.TabIndex = 50;
-            this.label53.Text = "Heart of the Phoenix:";
-            this.label53.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityHeartOfThePheonix.AutoSize = true;
+            this.LB_FerocityHeartOfThePheonix.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityHeartOfThePheonix.Location = new System.Drawing.Point(3, 202);
+            this.LB_FerocityHeartOfThePheonix.Name = "LB_FerocityHeartOfThePheonix";
+            this.LB_FerocityHeartOfThePheonix.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityHeartOfThePheonix.TabIndex = 50;
+            this.LB_FerocityHeartOfThePheonix.Text = "Heart of the Phoenix:";
+            this.LB_FerocityHeartOfThePheonix.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label16
+            // LB_FerocityAvoidance
             // 
-            this.label16.AutoSize = true;
-            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label16.Location = new System.Drawing.Point(3, 124);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(87, 26);
-            this.label16.TabIndex = 44;
-            this.label16.Text = "Avoidance:";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityAvoidance.AutoSize = true;
+            this.LB_FerocityAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityAvoidance.Location = new System.Drawing.Point(3, 140);
+            this.LB_FerocityAvoidance.Name = "LB_FerocityAvoidance";
+            this.LB_FerocityAvoidance.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityAvoidance.TabIndex = 44;
+            this.LB_FerocityAvoidance.Text = "Avoidance: (3.2)";
+            this.LB_FerocityAvoidance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityLionhearted
             // 
             this.CB_FerocityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityLionhearted.FormattingEnabled = true;
-            this.CB_FerocityLionhearted.Location = new System.Drawing.Point(96, 153);
+            this.CB_FerocityLionhearted.Location = new System.Drawing.Point(96, 169);
             this.CB_FerocityLionhearted.Name = "CB_FerocityLionhearted";
             this.CB_FerocityLionhearted.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityLionhearted.TabIndex = 47;
@@ -1718,43 +1809,43 @@
             // 
             this.CB_FerocityChargeSwoop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityChargeSwoop.FormattingEnabled = true;
-            this.CB_FerocityChargeSwoop.Location = new System.Drawing.Point(227, 127);
+            this.CB_FerocityChargeSwoop.Location = new System.Drawing.Point(227, 143);
             this.CB_FerocityChargeSwoop.Name = "CB_FerocityChargeSwoop";
             this.CB_FerocityChargeSwoop.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityChargeSwoop.TabIndex = 49;
             this.CB_FerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label15
+            // LB_FerocityLionHearted
             // 
-            this.label15.AutoSize = true;
-            this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label15.Location = new System.Drawing.Point(3, 150);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(87, 26);
-            this.label15.TabIndex = 46;
-            this.label15.Text = "Lionhearted:";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityLionHearted.AutoSize = true;
+            this.LB_FerocityLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityLionHearted.Location = new System.Drawing.Point(3, 166);
+            this.LB_FerocityLionHearted.Name = "LB_FerocityLionHearted";
+            this.LB_FerocityLionHearted.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityLionHearted.TabIndex = 46;
+            this.LB_FerocityLionHearted.Text = "Lionhearted:";
+            this.LB_FerocityLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CB_FerocityAvoidance
             // 
             this.CB_FerocityAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_FerocityAvoidance.FormattingEnabled = true;
-            this.CB_FerocityAvoidance.Location = new System.Drawing.Point(96, 127);
+            this.CB_FerocityAvoidance.Location = new System.Drawing.Point(96, 143);
             this.CB_FerocityAvoidance.Name = "CB_FerocityAvoidance";
             this.CB_FerocityAvoidance.Size = new System.Drawing.Size(32, 21);
             this.CB_FerocityAvoidance.TabIndex = 45;
             this.CB_FerocityAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // label14
+            // LB_FerocityChargeSwoop
             // 
-            this.label14.AutoSize = true;
-            this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label14.Location = new System.Drawing.Point(134, 124);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(87, 26);
-            this.label14.TabIndex = 48;
-            this.label14.Text = "Charge/Swoop:";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_FerocityChargeSwoop.AutoSize = true;
+            this.LB_FerocityChargeSwoop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityChargeSwoop.Location = new System.Drawing.Point(134, 140);
+            this.LB_FerocityChargeSwoop.Name = "LB_FerocityChargeSwoop";
+            this.LB_FerocityChargeSwoop.Size = new System.Drawing.Size(87, 26);
+            this.LB_FerocityChargeSwoop.TabIndex = 48;
+            this.LB_FerocityChargeSwoop.Text = "Charge/Swoop:";
+            this.LB_FerocityChargeSwoop.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LB_PetFamilies
             // 
@@ -1803,17 +1894,17 @@
             // GB_FightSettings
             // 
             this.GB_FightSettings.Controls.Add(this.NUD_CDCutOff);
-            this.GB_FightSettings.Controls.Add(this.label89);
+            this.GB_FightSettings.Controls.Add(this.LB_CDCutoff);
             this.GB_FightSettings.Controls.Add(this.NUD_BossHP);
-            this.GB_FightSettings.Controls.Add(this.label81);
+            this.GB_FightSettings.Controls.Add(this.LB_BossStartHPPerc);
             this.GB_FightSettings.Controls.Add(this.NUD_35);
-            this.GB_FightSettings.Controls.Add(this.label80);
+            this.GB_FightSettings.Controls.Add(this.LB_Sub35);
             this.GB_FightSettings.Controls.Add(this.NUD_Time20);
-            this.GB_FightSettings.Controls.Add(this.label79);
+            this.GB_FightSettings.Controls.Add(this.LB_Sub20);
             this.GB_FightSettings.Controls.Add(this.CB_Duration);
-            this.GB_FightSettings.Controls.Add(this.label25);
+            this.GB_FightSettings.Controls.Add(this.LB_Duration);
             this.GB_FightSettings.Controls.Add(this.NUD_Latency);
-            this.GB_FightSettings.Controls.Add(this.label11);
+            this.GB_FightSettings.Controls.Add(this.LB_Latency);
             this.GB_FightSettings.Controls.Add(this.LB_TargLvl);
             this.GB_FightSettings.Controls.Add(this.CB_TargetLevel);
             this.GB_FightSettings.Controls.Add(this.Bar_TargArmor);
@@ -1844,14 +1935,14 @@
             0});
             this.NUD_CDCutOff.ValueChanged += new System.EventHandler(this.numericUpDownCDCutOff_ValueChanged);
             // 
-            // label89
+            // LB_CDCutoff
             // 
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(17, 131);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(67, 13);
-            this.label89.TabIndex = 33;
-            this.label89.Text = "CDCutoff (s):";
+            this.LB_CDCutoff.AutoSize = true;
+            this.LB_CDCutoff.Location = new System.Drawing.Point(17, 131);
+            this.LB_CDCutoff.Name = "LB_CDCutoff";
+            this.LB_CDCutoff.Size = new System.Drawing.Size(67, 13);
+            this.LB_CDCutoff.TabIndex = 33;
+            this.LB_CDCutoff.Text = "CDCutoff (s):";
             // 
             // NUD_BossHP
             // 
@@ -1876,14 +1967,14 @@
             0});
             this.NUD_BossHP.ValueChanged += new System.EventHandler(this.numericBossHP_ValueChanged);
             // 
-            // label81
+            // LB_BossStartHPPerc
             // 
-            this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(15, 234);
-            this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(96, 13);
-            this.label81.TabIndex = 31;
-            this.label81.Text = "Boss starting HP%:";
+            this.LB_BossStartHPPerc.AutoSize = true;
+            this.LB_BossStartHPPerc.Location = new System.Drawing.Point(15, 234);
+            this.LB_BossStartHPPerc.Name = "LB_BossStartHPPerc";
+            this.LB_BossStartHPPerc.Size = new System.Drawing.Size(96, 13);
+            this.LB_BossStartHPPerc.TabIndex = 31;
+            this.LB_BossStartHPPerc.Text = "Boss starting HP%:";
             // 
             // NUD_35
             // 
@@ -1908,14 +1999,14 @@
             0});
             this.NUD_35.ValueChanged += new System.EventHandler(this.numericTime35_ValueChanged);
             // 
-            // label80
+            // LB_Sub35
             // 
-            this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(15, 208);
-            this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(108, 13);
-            this.label80.TabIndex = 29;
-            this.label80.Text = "Time spent 35%-20%:";
+            this.LB_Sub35.AutoSize = true;
+            this.LB_Sub35.Location = new System.Drawing.Point(15, 208);
+            this.LB_Sub35.Name = "LB_Sub35";
+            this.LB_Sub35.Size = new System.Drawing.Size(108, 13);
+            this.LB_Sub35.TabIndex = 29;
+            this.LB_Sub35.Text = "Time spent 35%-20%:";
             // 
             // NUD_Time20
             // 
@@ -1940,14 +2031,14 @@
             0});
             this.NUD_Time20.ValueChanged += new System.EventHandler(this.numericTime20_ValueChanged);
             // 
-            // label79
+            // LB_Sub20
             // 
-            this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(15, 182);
-            this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(102, 13);
-            this.label79.TabIndex = 27;
-            this.label79.Text = "Time spent sub 20%";
+            this.LB_Sub20.AutoSize = true;
+            this.LB_Sub20.Location = new System.Drawing.Point(15, 182);
+            this.LB_Sub20.Name = "LB_Sub20";
+            this.LB_Sub20.Size = new System.Drawing.Size(102, 13);
+            this.LB_Sub20.TabIndex = 27;
+            this.LB_Sub20.Text = "Time spent sub 20%";
             // 
             // CB_Duration
             // 
@@ -1972,14 +2063,14 @@
             0});
             this.CB_Duration.ValueChanged += new System.EventHandler(this.duration_ValueChanged);
             // 
-            // label25
+            // LB_Duration
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(15, 156);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(110, 13);
-            this.label25.TabIndex = 25;
-            this.label25.Text = "Duration (in seconds):";
+            this.LB_Duration.AutoSize = true;
+            this.LB_Duration.Location = new System.Drawing.Point(15, 156);
+            this.LB_Duration.Name = "LB_Duration";
+            this.LB_Duration.Size = new System.Drawing.Size(110, 13);
+            this.LB_Duration.TabIndex = 25;
+            this.LB_Duration.Text = "Duration (in seconds):";
             // 
             // NUD_Latency
             // 
@@ -2004,14 +2095,14 @@
             0});
             this.NUD_Latency.ValueChanged += new System.EventHandler(this.numericUpDownLatency_ValueChanged);
             // 
-            // label11
+            // LB_Latency
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 107);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(70, 13);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "Latency (ms):";
+            this.LB_Latency.AutoSize = true;
+            this.LB_Latency.Location = new System.Drawing.Point(16, 107);
+            this.LB_Latency.Name = "LB_Latency";
+            this.LB_Latency.Size = new System.Drawing.Size(70, 13);
+            this.LB_Latency.TabIndex = 23;
+            this.LB_Latency.Text = "Latency (ms):";
             // 
             // LB_TargLvl
             // 
@@ -2076,11 +2167,11 @@
             this.GB_GlobalSettings.Controls.Add(this.CK_UseRotation);
             this.GB_GlobalSettings.Controls.Add(this.CK_SpreadsheetUptimes);
             this.GB_GlobalSettings.Controls.Add(this.CK_UseBeastDuringBW);
-            this.GB_GlobalSettings.Controls.Add(this.label84);
+            this.GB_GlobalSettings.Controls.Add(this.LB_ViperUsage);
             this.GB_GlobalSettings.Controls.Add(this.CB_AspectUsage);
-            this.GB_GlobalSettings.Controls.Add(this.label83);
+            this.GB_GlobalSettings.Controls.Add(this.LB_Aspect);
             this.GB_GlobalSettings.Controls.Add(this.CB_Aspect);
-            this.GB_GlobalSettings.Controls.Add(this.label82);
+            this.GB_GlobalSettings.Controls.Add(this.LB_UseManaPot);
             this.GB_GlobalSettings.Controls.Add(this.CB_ManaPotion);
             this.GB_GlobalSettings.Location = new System.Drawing.Point(3, 267);
             this.GB_GlobalSettings.Name = "GB_GlobalSettings";
@@ -2133,14 +2224,14 @@
             this.CK_UseBeastDuringBW.UseVisualStyleBackColor = true;
             this.CK_UseBeastDuringBW.CheckedChanged += new System.EventHandler(this.chkUseBeastDuringBW_CheckedChanged);
             // 
-            // label84
+            // LB_ViperUsage
             // 
-            this.label84.AutoSize = true;
-            this.label84.Location = new System.Drawing.Point(15, 76);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(68, 13);
-            this.label84.TabIndex = 4;
-            this.label84.Text = "Viper Usage:";
+            this.LB_ViperUsage.AutoSize = true;
+            this.LB_ViperUsage.Location = new System.Drawing.Point(15, 76);
+            this.LB_ViperUsage.Name = "LB_ViperUsage";
+            this.LB_ViperUsage.Size = new System.Drawing.Size(68, 13);
+            this.LB_ViperUsage.TabIndex = 4;
+            this.LB_ViperUsage.Text = "Viper Usage:";
             // 
             // CB_AspectUsage
             // 
@@ -2156,14 +2247,14 @@
             this.CB_AspectUsage.TabIndex = 5;
             this.CB_AspectUsage.SelectedIndexChanged += new System.EventHandler(this.cmbAspectUsage_SelectedIndexChanged);
             // 
-            // label83
+            // LB_Aspect
             // 
-            this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(15, 49);
-            this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(43, 13);
-            this.label83.TabIndex = 2;
-            this.label83.Text = "Aspect:";
+            this.LB_Aspect.AutoSize = true;
+            this.LB_Aspect.Location = new System.Drawing.Point(15, 49);
+            this.LB_Aspect.Name = "LB_Aspect";
+            this.LB_Aspect.Size = new System.Drawing.Size(43, 13);
+            this.LB_Aspect.TabIndex = 2;
+            this.LB_Aspect.Text = "Aspect:";
             // 
             // CB_Aspect
             // 
@@ -2182,14 +2273,14 @@
             this.CB_Aspect.TabIndex = 3;
             this.CB_Aspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
             // 
-            // label82
+            // LB_UseManaPot
             // 
-            this.label82.AutoSize = true;
-            this.label82.Location = new System.Drawing.Point(15, 22);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(92, 13);
-            this.label82.TabIndex = 0;
-            this.label82.Text = "Use Mana Potion:";
+            this.LB_UseManaPot.AutoSize = true;
+            this.LB_UseManaPot.Location = new System.Drawing.Point(15, 22);
+            this.LB_UseManaPot.Name = "LB_UseManaPot";
+            this.LB_UseManaPot.Size = new System.Drawing.Size(92, 13);
+            this.LB_UseManaPot.TabIndex = 0;
+            this.LB_UseManaPot.Text = "Use Mana Potion:";
             // 
             // CB_ManaPotion
             // 
@@ -2207,14 +2298,26 @@
             // 
             // GB_Misc
             // 
+            this.GB_Misc.Controls.Add(this.CK_PTRMode);
             this.GB_Misc.Controls.Add(this.CK_HideSplGear);
             this.GB_Misc.Controls.Add(this.CK_HidePvPGear);
             this.GB_Misc.Location = new System.Drawing.Point(3, 465);
             this.GB_Misc.Name = "GB_Misc";
-            this.GB_Misc.Size = new System.Drawing.Size(280, 65);
+            this.GB_Misc.Size = new System.Drawing.Size(280, 88);
             this.GB_Misc.TabIndex = 20;
             this.GB_Misc.TabStop = false;
             this.GB_Misc.Text = "Misc";
+            // 
+            // CK_PTRMode
+            // 
+            this.CK_PTRMode.AutoSize = true;
+            this.CK_PTRMode.Location = new System.Drawing.Point(18, 65);
+            this.CK_PTRMode.Name = "CK_PTRMode";
+            this.CK_PTRMode.Size = new System.Drawing.Size(85, 17);
+            this.CK_PTRMode.TabIndex = 16;
+            this.CK_PTRMode.Text = "PTR Mode *";
+            this.CK_PTRMode.ToolTipText = "";
+            this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
             // 
             // CK_HideSplGear
             // 
@@ -2541,17 +2644,17 @@
             // 
             // GB_PetRotation
             // 
-            this.GB_PetRotation.Controls.Add(this.label88);
-            this.GB_PetRotation.Controls.Add(this.label87);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_07);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_06);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_07);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_06);
-            this.GB_PetRotation.Controls.Add(this.label85);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_05);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_05);
-            this.GB_PetRotation.Controls.Add(this.label24);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_04);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_04);
-            this.GB_PetRotation.Controls.Add(this.label23);
-            this.GB_PetRotation.Controls.Add(this.label22);
-            this.GB_PetRotation.Controls.Add(this.label21);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_03);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_02);
+            this.GB_PetRotation.Controls.Add(this.LB_ShotPriority_01);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_03);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_02);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_01);
@@ -2562,23 +2665,23 @@
             this.GB_PetRotation.TabStop = false;
             this.GB_PetRotation.Text = "Pet Skill Priority";
             // 
-            // label88
+            // LB_ShotPriority_07
             // 
-            this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(6, 184);
-            this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(50, 13);
-            this.label88.TabIndex = 12;
-            this.label88.Text = "Priority 7:";
+            this.LB_ShotPriority_07.AutoSize = true;
+            this.LB_ShotPriority_07.Location = new System.Drawing.Point(6, 184);
+            this.LB_ShotPriority_07.Name = "LB_ShotPriority_07";
+            this.LB_ShotPriority_07.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_07.TabIndex = 12;
+            this.LB_ShotPriority_07.Text = "Priority 7:";
             // 
-            // label87
+            // LB_ShotPriority_06
             // 
-            this.label87.AutoSize = true;
-            this.label87.Location = new System.Drawing.Point(6, 157);
-            this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(50, 13);
-            this.label87.TabIndex = 10;
-            this.label87.Text = "Priority 6:";
+            this.LB_ShotPriority_06.AutoSize = true;
+            this.LB_ShotPriority_06.Location = new System.Drawing.Point(6, 157);
+            this.LB_ShotPriority_06.Name = "LB_ShotPriority_06";
+            this.LB_ShotPriority_06.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_06.TabIndex = 10;
+            this.LB_ShotPriority_06.Text = "Priority 6:";
             // 
             // CB_PetPrio_07
             // 
@@ -2604,14 +2707,14 @@
             this.CB_PetPrio_06.TabIndex = 11;
             this.CB_PetPrio_06.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
-            // label85
+            // LB_ShotPriority_05
             // 
-            this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(6, 130);
-            this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(50, 13);
-            this.label85.TabIndex = 8;
-            this.label85.Text = "Priority 5:";
+            this.LB_ShotPriority_05.AutoSize = true;
+            this.LB_ShotPriority_05.Location = new System.Drawing.Point(6, 130);
+            this.LB_ShotPriority_05.Name = "LB_ShotPriority_05";
+            this.LB_ShotPriority_05.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_05.TabIndex = 8;
+            this.LB_ShotPriority_05.Text = "Priority 5:";
             // 
             // CB_PetPrio_05
             // 
@@ -2625,14 +2728,14 @@
             this.CB_PetPrio_05.TabIndex = 9;
             this.CB_PetPrio_05.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
-            // label24
+            // LB_ShotPriority_04
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 103);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(50, 13);
-            this.label24.TabIndex = 6;
-            this.label24.Text = "Priority 4:";
+            this.LB_ShotPriority_04.AutoSize = true;
+            this.LB_ShotPriority_04.Location = new System.Drawing.Point(6, 103);
+            this.LB_ShotPriority_04.Name = "LB_ShotPriority_04";
+            this.LB_ShotPriority_04.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_04.TabIndex = 6;
+            this.LB_ShotPriority_04.Text = "Priority 4:";
             // 
             // CB_PetPrio_04
             // 
@@ -2646,32 +2749,32 @@
             this.CB_PetPrio_04.TabIndex = 7;
             this.CB_PetPrio_04.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
-            // label23
+            // LB_ShotPriority_03
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 76);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(50, 13);
-            this.label23.TabIndex = 4;
-            this.label23.Text = "Priority 3:";
+            this.LB_ShotPriority_03.AutoSize = true;
+            this.LB_ShotPriority_03.Location = new System.Drawing.Point(6, 76);
+            this.LB_ShotPriority_03.Name = "LB_ShotPriority_03";
+            this.LB_ShotPriority_03.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_03.TabIndex = 4;
+            this.LB_ShotPriority_03.Text = "Priority 3:";
             // 
-            // label22
+            // LB_ShotPriority_02
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 49);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(50, 13);
-            this.label22.TabIndex = 2;
-            this.label22.Text = "Priority 2:";
+            this.LB_ShotPriority_02.AutoSize = true;
+            this.LB_ShotPriority_02.Location = new System.Drawing.Point(6, 49);
+            this.LB_ShotPriority_02.Name = "LB_ShotPriority_02";
+            this.LB_ShotPriority_02.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_02.TabIndex = 2;
+            this.LB_ShotPriority_02.Text = "Priority 2:";
             // 
-            // label21
+            // LB_ShotPriority_01
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 22);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(50, 13);
-            this.label21.TabIndex = 0;
-            this.label21.Text = "Priority 1:";
+            this.LB_ShotPriority_01.AutoSize = true;
+            this.LB_ShotPriority_01.Location = new System.Drawing.Point(6, 22);
+            this.LB_ShotPriority_01.Name = "LB_ShotPriority_01";
+            this.LB_ShotPriority_01.Size = new System.Drawing.Size(50, 13);
+            this.LB_ShotPriority_01.TabIndex = 0;
+            this.LB_ShotPriority_01.Text = "Priority 1:";
             // 
             // CB_PetPrio_03
             // 
@@ -2724,10 +2827,10 @@
             this.Page_05_Details.Controls.Add(this.TB_Rotation);
             this.Page_05_Details.Controls.Add(this.GB_Rotation_Shots);
             this.Page_05_Details.Controls.Add(this.BT_Calculate);
-            this.Page_05_Details.Location = new System.Drawing.Point(4, 40);
+            this.Page_05_Details.Location = new System.Drawing.Point(4, 22);
             this.Page_05_Details.Name = "Page_05_Details";
             this.Page_05_Details.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_05_Details.Size = new System.Drawing.Size(292, 651);
+            this.Page_05_Details.Size = new System.Drawing.Size(292, 669);
             this.Page_05_Details.TabIndex = 4;
             this.Page_05_Details.Text = "Details";
             this.Page_05_Details.UseVisualStyleBackColor = true;
@@ -2843,78 +2946,78 @@
         private System.Windows.Forms.GroupBox GB_PetTalents_Cunning;
         private System.Windows.Forms.GroupBox GB_PetTalents_Ferocity;
         private System.Windows.Forms.GroupBox GB_PetTalents_Tenacity;
-        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label LB_CunningCobraReflexes;
         private System.Windows.Forms.ComboBox CB_CunningCorbaReflexes;
         private System.Windows.Forms.ComboBox CB_CunningDiveDash;
-        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label LB_CunningDiveDash;
         private System.Windows.Forms.ComboBox CB_CunningGreatStamina;
-        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label LB_CunningGreatStamina;
         private System.Windows.Forms.ComboBox CB_CunningNaturalArmor;
-        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label LB_CunningNaturalArmor;
         private System.Windows.Forms.ComboBox CB_CunningCarrionFeeder;
-        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label LB_CunningCarrionFeeder;
         private System.Windows.Forms.ComboBox CB_CunningLionhearted;
-        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label LB_CunningLionHearted;
         private System.Windows.Forms.ComboBox CB_CunningAvoidance;
-        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Label LB_CunningAvoidance;
         private System.Windows.Forms.ComboBox CB_CunningSpikedCollar;
-        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label LB_CunningSpikedCollar;
         private System.Windows.Forms.ComboBox CB_CunningMobility;
-        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label LB_CunningMobility;
         private System.Windows.Forms.ComboBox CB_CunningBoarsSpeed;
-        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label LB_CunningBoarsSpeed;
         private System.Windows.Forms.ComboBox CB_CunningRoarOfSacrifice;
-        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Label LB_CunningRoarofSacrifice;
         private System.Windows.Forms.ComboBox CB_CunningWildHunt;
-        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.Label LB_CunningWildHunt;
         private System.Windows.Forms.ComboBox CB_CunningGraceOfTheMantis;
-        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label LB_CunningGraceOfTheMantis;
         private System.Windows.Forms.ComboBox CB_CunningBullheaded;
-        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.Label LB_CunningBullheaded;
         private System.Windows.Forms.ComboBox CB_CunningRoarOfRecovery;
-        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.Label LB_CunningRoarofRecovery;
         private System.Windows.Forms.ComboBox CB_CunningWolverineBite;
-        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Label LB_CunningWolverineBite;
         private System.Windows.Forms.ComboBox CB_CunningFeedingFrenzy;
-        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label LB_CunningFeedingFrenzy;
         private System.Windows.Forms.ComboBox CB_CunningCornered;
-        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label LB_CunningCornered;
         private System.Windows.Forms.ComboBox CB_CunningOwlsFocus;
-        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.Label LB_CunningOwlsFocus;
         private System.Windows.Forms.ComboBox CB_CunningGreatResistance;
-        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label LB_CunningGreatResistance;
         private System.Windows.Forms.TabPage Page_02_Rotations;
         private System.Windows.Forms.GroupBox GB_PetRotation;
-        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label LB_ShotPriority_04;
         private System.Windows.Forms.ComboBox CB_PetPrio_04;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label LB_ShotPriority_03;
+        private System.Windows.Forms.Label LB_ShotPriority_02;
+        private System.Windows.Forms.Label LB_ShotPriority_01;
         private System.Windows.Forms.ComboBox CB_PetPrio_03;
         private System.Windows.Forms.ComboBox CB_PetPrio_02;
         private System.Windows.Forms.ComboBox CB_PetPrio_01;
         private System.Windows.Forms.ComboBox CB_FerocityWildHunt;
-        private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.Label LB_FerocityWildHunt;
         private System.Windows.Forms.ComboBox CB_FerocitySharkAttack;
-        private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.Label LB_FerocitySharkAttack;
         private System.Windows.Forms.ComboBox CB_FerocityLickYourWounds;
-        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.Label LB_FerocityLickYourWounds;
         private System.Windows.Forms.ComboBox CB_FerocityCallOfTheWild;
-        private System.Windows.Forms.Label label55;
+        private System.Windows.Forms.Label LB_FerocityCalloftheWild;
         private System.Windows.Forms.ComboBox CB_FerocityRabid;
-        private System.Windows.Forms.Label label56;
+        private System.Windows.Forms.Label LB_FerocityRabid;
         private System.Windows.Forms.ComboBox CB_FerocityGreatResistance;
-        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label LB_FerocityGreatResistance;
         private System.Windows.Forms.ComboBox CB_FerocitySpidersBite;
-        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label LB_FerocitySpidersBite;
         private System.Windows.Forms.ComboBox CB_FerocityHeartOfThePhoenix;
-        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.Label LB_FerocityHeartOfThePheonix;
         private System.Windows.Forms.ComboBox CB_FerocityChargeSwoop;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label LB_FerocityChargeSwoop;
         private System.Windows.Forms.ComboBox CB_FerocityLionhearted;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label LB_FerocityLionHearted;
         private System.Windows.Forms.ComboBox CB_FerocityAvoidance;
-        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label LB_FerocityAvoidance;
         private System.Windows.Forms.ComboBox CB_FerocityBoarsSpeed;
         private System.Windows.Forms.Label LB_Ferocity_BoarsSpeed;
         private System.Windows.Forms.ComboBox CB_FerocitySpikedCollar;
@@ -2922,60 +3025,60 @@
         private System.Windows.Forms.ComboBox CB_FerocityBloodthirsty;
         private System.Windows.Forms.Label LB_Ferocity_Bloodthirsty;
         private System.Windows.Forms.ComboBox CB_FerocityImprovedCower;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label LB_FerocityImprovedCower;
         private System.Windows.Forms.ComboBox CB_FerocityNaturalArmor;
-        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label LB_FerocityNaturalArmor;
         private System.Windows.Forms.ComboBox CB_FerocityGreatStamina;
-        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label LB_FerocityGreatStamina;
         private System.Windows.Forms.ComboBox CB_FerocityDiveDash;
-        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label LB_FerocityDiveDash;
         private System.Windows.Forms.ComboBox CB_FerocityCobraReflexes;
-        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label LB_FerocityCobraReflexes;
         private System.Windows.Forms.ComboBox CB_TenacityIntervene;
-        private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.Label LB_TenacityIntervene;
         private System.Windows.Forms.ComboBox CB_TenacityThunderstomp;
-        private System.Windows.Forms.Label label78;
+        private System.Windows.Forms.Label LB_TenacityThunderStomp;
         private System.Windows.Forms.ComboBox CB_TenacityWildHunt;
-        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.Label LB_TenacityWildHunt;
         private System.Windows.Forms.ComboBox CB_TenacitySilverback;
-        private System.Windows.Forms.Label label60;
+        private System.Windows.Forms.Label LB_TenacitySilverback;
         private System.Windows.Forms.ComboBox CB_TenacityRoarOfSacrifice;
-        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.Label LB_TenacityRoarOfSacrifice;
         private System.Windows.Forms.ComboBox CB_TenacityTaunt;
-        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.Label LB_TenacityTaunt;
         private System.Windows.Forms.ComboBox CB_TenacityLastStand;
-        private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Label LB_TenacityLastStand;
         private System.Windows.Forms.ComboBox CB_TenacityGreatResistance;
-        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.Label LB_TenacityGreatResistance;
         private System.Windows.Forms.ComboBox CB_TenacityGraceOfTheMantis;
-        private System.Windows.Forms.Label label66;
+        private System.Windows.Forms.Label LB_TenacityGraceOfTheMantis;
         private System.Windows.Forms.ComboBox CB_TenacityLiohearted;
-        private System.Windows.Forms.Label label67;
+        private System.Windows.Forms.Label LB_TenacityLionHearted;
         private System.Windows.Forms.ComboBox CB_TenacityGuardDog;
-        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.Label LB_TenacityGuardDog;
         private System.Windows.Forms.ComboBox CB_TenacityAvoidance;
-        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.Label LB_TenacityAvoidance;
         private System.Windows.Forms.ComboBox CB_TenacityPetBarding;
-        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label LB_TenacityPetBarding;
         private System.Windows.Forms.ComboBox CB_TenacityBloodOfTheRhino;
-        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label LB_TenacityBloodOfTheRhino;
         private System.Windows.Forms.ComboBox CB_TenacityBoarsSpeed;
-        private System.Windows.Forms.Label label72;
-        private System.Windows.Forms.Label label73;
+        private System.Windows.Forms.Label LB_TenacityBoarsSpeed;
+        private System.Windows.Forms.Label LB_TenacitySpikedCollar;
         private System.Windows.Forms.ComboBox CB_TenacityNaturalArmor;
-        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Label LB_TenacityNaturalArmor;
         private System.Windows.Forms.ComboBox CB_TenacityGreatStamina;
-        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.Label LB_TenacityGreatStamina;
         private System.Windows.Forms.ComboBox CB_TenacityCharge;
-        private System.Windows.Forms.Label label76;
+        private System.Windows.Forms.Label LB_TenacityCharge;
         private System.Windows.Forms.ComboBox CB_TenacityCobraReflexes;
-        private System.Windows.Forms.Label label77;
+        private System.Windows.Forms.Label LB_TenacityCobraReflexes;
         private System.Windows.Forms.GroupBox GB_GlobalSettings;
         private System.Windows.Forms.GroupBox GB_FightSettings;
         private System.Windows.Forms.NumericUpDown CB_Duration;
-        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label LB_Duration;
         private System.Windows.Forms.NumericUpDown NUD_Latency;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label LB_Latency;
         private System.Windows.Forms.Label LB_TargLvl;
         private System.Windows.Forms.ComboBox CB_TargetLevel;
         private System.Windows.Forms.TrackBar Bar_TargArmor;
@@ -3004,29 +3107,29 @@
         private System.Windows.Forms.ComboBox CB_ShotPriority_02;
         private System.Windows.Forms.ComboBox CB_ShotPriority_01;
         private System.Windows.Forms.NumericUpDown NUD_BossHP;
-        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.Label LB_BossStartHPPerc;
         private System.Windows.Forms.NumericUpDown NUD_35;
-        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.Label LB_Sub35;
         private System.Windows.Forms.NumericUpDown NUD_Time20;
-        private System.Windows.Forms.Label label79;
-        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.Label LB_Sub20;
+        private System.Windows.Forms.Label LB_UseManaPot;
         private System.Windows.Forms.ComboBox CB_ManaPotion;
-        private System.Windows.Forms.Label label83;
+        private System.Windows.Forms.Label LB_Aspect;
         private System.Windows.Forms.ComboBox CB_Aspect;
-        private System.Windows.Forms.Label label84;
+        private System.Windows.Forms.Label LB_ViperUsage;
         private System.Windows.Forms.ComboBox CB_AspectUsage;
         private System.Windows.Forms.CheckBox CK_UseBeastDuringBW;
         private System.Windows.Forms.CheckBox CK_SpreadsheetUptimes;
-        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.Label LB_ShotPriority_05;
         private System.Windows.Forms.ComboBox CB_PetPrio_05;
         private System.Windows.Forms.ComboBox CB_PetPrio_07;
         private System.Windows.Forms.ComboBox CB_PetPrio_06;
-        private System.Windows.Forms.Label label88;
-        private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.Label LB_ShotPriority_07;
+        private System.Windows.Forms.Label LB_ShotPriority_06;
         private System.Windows.Forms.CheckBox CK_UseRotation;
         private System.Windows.Forms.TabPage Page_04_PetBuffs;
         private System.Windows.Forms.NumericUpDown NUD_CDCutOff;
-        private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.Label LB_CDCutoff;
         private System.Windows.Forms.CheckBox CK_RandomProcs;
         private System.Windows.Forms.GroupBox GB_Misc;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideSplGear;
@@ -3043,5 +3146,12 @@
         private System.Windows.Forms.TextBox TB_Rotation;
         private System.Windows.Forms.Button BT_Calculate;
         private System.Windows.Forms.TextBox TB_Shots;
+        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_PTRMode;
+        private System.Windows.Forms.Label LB_TenacityCullingTheHerd;
+        private System.Windows.Forms.ComboBox CB_TenacityCullingTheHerd;
+        private System.Windows.Forms.ComboBox CB_CunningCullingTheHerd;
+        private System.Windows.Forms.Label LB_CunningCullingTheHerd;
+        private System.Windows.Forms.ComboBox CB_FerocityCullingTheHerd;
+        private System.Windows.Forms.Label LB_FerocityCullingTheHerd;
     }
 }

@@ -60,6 +60,7 @@ namespace Rawr
 		MangleCatOrShredHit,
         HSorSLHit, // Warriors
         SteadyShotHit, // Hunters
+        PetClawBiteSmackCrit, // Hunters
         NUM_Trigger // Should always be the last entry.
     }
 

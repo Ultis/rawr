@@ -217,6 +217,12 @@ namespace Rawr.Hunter
         public int LALShotsReplaced = 2; // not editable
         public float LALProcChance = 2; // not editable
 
+        private bool _PTRMode = false;
+        public bool PTRMode {
+            get { return _PTRMode; }
+            set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
+        }
+
         // rotation test
         public bool useRotationTest = true;
         // 29-10-2009: Drizz: Updated this to 30s from 15(being the default in spreadsheet v92b
@@ -247,47 +253,8 @@ namespace Rawr.Hunter
         public int PriorityIndex10 = 0;
 		
 		// pet talents
-        public class PetTalentTree
-        {
-            public PetTalentTree() {
-                CobraReflexes = 0;
-                DiveDash = 0;
-                ChargeSwoop = 0;
-                GreatStamina = 0;
-                NaturalArmor = 0;
-                BoarsSpeed = 0;
-                Mobility = 0;
-                SpikedCollar = 0;
-                ImprovedCower = 0;
-                Bloodthirsty = 0;
-                BloodOfTheRhino = 0;
-                PetBarding = 0;
-                Avoidance = 0;
-                Lionhearted = 0;
-                CarrionFeeder = 0;
-                GuardDog = 0;
-                Thunderstomp = 0;
-                GreatResistance = 0;
-                OwlsFocus = 0;
-                Cornered = 0;
-                FeedingFrenzy = 0;
-                HeartOfThePhoenix = 0;
-                SpidersBite = 0;
-                WolverineBite = 0;
-                RoarOfRecovery = 0;
-                Bullheaded = 0;
-                GraceOfTheMantis = 0;
-                Rabid = 0;
-                LickYourWounds = 0;
-                CallOfTheWild = 0;
-                LastStand = 0;
-                Taunt = 0;
-                Intervene = 0;
-                WildHunt = 0;
-                RoarOfSacrifice = 0;
-                SharkAttack = 0;
-                Silverback = 0;
-            }
+        public class PetTalentTree {
+            public PetTalentTree() { Reset(); }
             public int CobraReflexes;
             public int DiveDash;
             public int ChargeSwoop;
@@ -301,6 +268,11 @@ namespace Rawr.Hunter
             public int BloodOfTheRhino;
             public int PetBarding;
             public int Avoidance;
+            /// <summary>
+            /// Increases pet and hunter damage by 1/2/3% for 10 seconds each time
+            /// the pet deals a critical strike with Claw, Bite, or Smack.
+            /// </summary>
+            public int CullingTheHerd;
             public int Lionhearted;
             public int CarrionFeeder;
             public int GuardDog;
@@ -317,7 +289,10 @@ namespace Rawr.Hunter
             public int GraceOfTheMantis;
             public int Rabid;
             public int LickYourWounds;
-            /// <summary>Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.</summary>
+            /// <summary>
+            /// Your pet roars, increasing your pet's and your melee and ranged
+            /// attack power by 10%. Lasts 20 sec. 5 min cooldown.
+            /// </summary>
             public int CallOfTheWild;
             public int LastStand;
             public int Taunt;
@@ -339,7 +314,7 @@ namespace Rawr.Hunter
                 Bloodthirsty = 0;
                 BloodOfTheRhino = 0;
                 PetBarding = 0;
-                Avoidance = 0;
+                Avoidance = 0; CullingTheHerd = 0;
                 Lionhearted = 0;
                 CarrionFeeder = 0;
                 GuardDog = 0;

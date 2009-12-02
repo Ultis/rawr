@@ -2337,8 +2337,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusPetDamageMultiplier = 0.50f, BonusDamageMultiplier = val1, ManaCostPerc = val2 },
                     10f, cooldown);
-                Stats stats = WrathBeastWithin.GetAverageStats();
                 statsTalents.AddSpecialEffect(WrathBeastWithin);
+            }
+            if (calcOpts.PTRMode && calcOpts.PetTalents.CullingTheHerd > 0) {
+                float val1 = calcOpts.PetTalents.CullingTheHerd * 0.01f;
+                SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
+                    new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
+                    10f, 0f);
+                statsTalents.AddSpecialEffect(CullingTheHerd);
             }
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -2442,14 +2448,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float healthTaurenAdjust = character.Race == CharacterRace.Tauren ? 1.05 : 1;
             statsTotal.Health = (float)(healthSubTotal * healthTaurenAdjust);*/
 
-            float attemptedAtksInterval = 1f;
+            float attemptedAtksInterval = 1f, petattemptedAtksInterval = 1f;
             float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - statsTotal.PhysicalHit);
             float hitRate = (1f - ChanceToMiss);
             float critRate = statsTotal.PhysicalCrit;
             float bleedHitInterval = 1f;
             float dmgDoneInterval = 1f;
 
-            statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, hitRate, critRate,
+            statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval, hitRate, critRate,
                                     bleedHitInterval, dmgDoneInterval, statsTotal, null);
 
             // Base Stats
@@ -2491,7 +2497,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         }
 
         private Stats GetSpecialEffectsStats(Character Char,
-            float attemptedAtkInterval, float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
+            float attemptedAtkInterval, float petattemptedAtksInterval,
+            float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             cacheChar = Char;
@@ -2518,7 +2525,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                             float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                             Stats _stats2 = GetSpecialEffectsStats(Char,
-                                attemptedAtkInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
+                                attemptedAtkInterval, petattemptedAtksInterval,
+                                hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
                             _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
@@ -2548,6 +2556,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         if (attemptedAtkInterval > 0f)
                         {
                             Stats add = effect.GetAverageStats(attemptedAtkInterval * 0.1f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            statsProcs += add;
+                        }
+                        break;
+                    case Trigger.PetClawBiteSmackCrit:
+                        if (petattemptedAtksInterval > 0f)
+                        {
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval, critRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
