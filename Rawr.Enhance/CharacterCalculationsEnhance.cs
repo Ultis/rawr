@@ -295,6 +295,13 @@ namespace Rawr.Enhance
             set { _fireNova = value; }
         }
 
+        private FireElemental _fireElemental;
+        public FireElemental FireElemental
+        {
+            get { return _fireElemental; }
+            set { _fireElemental = value; }
+        }
+
         private DPSAnalysis _stormstrike;
         public DPSAnalysis Stormstrike
         {
@@ -490,6 +497,7 @@ namespace Rawr.Enhance
             dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPSPoints, true));
             dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints, true));
             dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPSPoints, false));
+            dictValues.Add("Fire Elemental", FireElemental.getDPSOutput());
             dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPSPoints, false));
             dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints, true));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));

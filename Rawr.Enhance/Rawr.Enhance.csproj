@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="CalculationsEnhance.cs" />
     <Compile Include="CharacterCalculationsEnhance.cs" />
+    <Compile Include="FireElemental.cs" />
     <Compile Include="Priority.cs" />
     <Compile Include="CombatStats.cs" />
     <Compile Include="ComparisonCalculationsEnhance.cs" />

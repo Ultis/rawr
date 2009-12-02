@@ -69,9 +69,6 @@
             this.btnUp = new System.Windows.Forms.Button();
             this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.tabPageEnhSim = new System.Windows.Forms.TabPage();
-            this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.btnEnhSim = new System.Windows.Forms.Button();
             this.tabPageGraph = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkStatsInt = new System.Windows.Forms.CheckBox();
@@ -87,6 +84,9 @@
             this.chkStatsAP = new System.Windows.Forms.CheckBox();
             this.chkStatsAgility = new System.Windows.Forms.CheckBox();
             this.chkStatsStrength = new System.Windows.Forms.CheckBox();
+            this.tabPageEnhSim = new System.Windows.Forms.TabPage();
+            this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.btnEnhSim = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
@@ -98,9 +98,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.tabPagePriorities.SuspendLayout();
-            this.tabPageEnhSim.SuspendLayout();
             this.tabPageGraph.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPageEnhSim.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -113,7 +113,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(281, 556);
+            this.tabControl.Size = new System.Drawing.Size(281, 547);
             this.tabControl.TabIndex = 9;
             // 
             // tabPageBasics
@@ -136,7 +136,7 @@
             this.tabPageBasics.Location = new System.Drawing.Point(4, 22);
             this.tabPageBasics.Name = "tabPageBasics";
             this.tabPageBasics.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBasics.Size = new System.Drawing.Size(273, 530);
+            this.tabPageBasics.Size = new System.Drawing.Size(273, 521);
             this.tabPageBasics.TabIndex = 0;
             this.tabPageBasics.Text = "Basics";
             this.tabPageBasics.UseVisualStyleBackColor = true;
@@ -653,39 +653,6 @@
             this.label6.TabIndex = 1;
             this.label6.Text = "Priority Queue";
             // 
-            // tabPageEnhSim
-            // 
-            this.tabPageEnhSim.Controls.Add(this.tbModuleNotes);
-            this.tabPageEnhSim.Controls.Add(this.btnEnhSim);
-            this.tabPageEnhSim.Location = new System.Drawing.Point(4, 22);
-            this.tabPageEnhSim.Name = "tabPageEnhSim";
-            this.tabPageEnhSim.Size = new System.Drawing.Size(273, 530);
-            this.tabPageEnhSim.TabIndex = 2;
-            this.tabPageEnhSim.Text = "EnhSim";
-            this.tabPageEnhSim.UseVisualStyleBackColor = true;
-            // 
-            // tbModuleNotes
-            // 
-            this.tbModuleNotes.AcceptsReturn = true;
-            this.tbModuleNotes.AcceptsTab = true;
-            this.tbModuleNotes.Location = new System.Drawing.Point(3, 68);
-            this.tbModuleNotes.Multiline = true;
-            this.tbModuleNotes.Name = "tbModuleNotes";
-            this.tbModuleNotes.ReadOnly = true;
-            this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbModuleNotes.Size = new System.Drawing.Size(258, 454);
-            this.tbModuleNotes.TabIndex = 1;
-            // 
-            // btnEnhSim
-            // 
-            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
-            this.btnEnhSim.Name = "btnEnhSim";
-            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
-            this.btnEnhSim.TabIndex = 0;
-            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
-            this.btnEnhSim.UseVisualStyleBackColor = true;
-            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
-            // 
             // tabPageGraph
             // 
             this.tabPageGraph.Controls.Add(this.groupBox1);
@@ -856,6 +823,39 @@
             this.chkStatsStrength.UseVisualStyleBackColor = true;
             this.chkStatsStrength.CheckedChanged += new System.EventHandler(this.chkStatsStrength_CheckedChanged);
             // 
+            // tabPageEnhSim
+            // 
+            this.tabPageEnhSim.Controls.Add(this.tbModuleNotes);
+            this.tabPageEnhSim.Controls.Add(this.btnEnhSim);
+            this.tabPageEnhSim.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEnhSim.Name = "tabPageEnhSim";
+            this.tabPageEnhSim.Size = new System.Drawing.Size(273, 530);
+            this.tabPageEnhSim.TabIndex = 2;
+            this.tabPageEnhSim.Text = "EnhSim";
+            this.tabPageEnhSim.UseVisualStyleBackColor = true;
+            // 
+            // tbModuleNotes
+            // 
+            this.tbModuleNotes.AcceptsReturn = true;
+            this.tbModuleNotes.AcceptsTab = true;
+            this.tbModuleNotes.Location = new System.Drawing.Point(3, 68);
+            this.tbModuleNotes.Multiline = true;
+            this.tbModuleNotes.Name = "tbModuleNotes";
+            this.tbModuleNotes.ReadOnly = true;
+            this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbModuleNotes.Size = new System.Drawing.Size(258, 454);
+            this.tbModuleNotes.TabIndex = 1;
+            // 
+            // btnEnhSim
+            // 
+            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
+            this.btnEnhSim.Name = "btnEnhSim";
+            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
+            this.btnEnhSim.TabIndex = 0;
+            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
+            this.btnEnhSim.UseVisualStyleBackColor = true;
+            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -863,7 +863,7 @@
             this.AutoScroll = true;
             this.Controls.Add(this.tabControl);
             this.Name = "CalculationOptionsPanelEnhance";
-            this.Size = new System.Drawing.Size(284, 561);
+            this.Size = new System.Drawing.Size(284, 554);
             this.tabControl.ResumeLayout(false);
             this.tabPageBasics.ResumeLayout(false);
             this.tabPageBasics.PerformLayout();
@@ -878,11 +878,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.tabPagePriorities.ResumeLayout(false);
             this.tabPagePriorities.PerformLayout();
-            this.tabPageEnhSim.ResumeLayout(false);
-            this.tabPageEnhSim.PerformLayout();
             this.tabPageGraph.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPageEnhSim.ResumeLayout(false);
+            this.tabPageEnhSim.PerformLayout();
             this.ResumeLayout(false);
 
 		}

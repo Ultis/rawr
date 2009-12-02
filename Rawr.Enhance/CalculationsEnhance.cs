@@ -91,6 +91,7 @@ namespace Rawr.Enhance
                     "Attacks:Flame Shock",
                     "Attacks:Lightning Bolt",
                     "Attacks:Fire Nova",
+                    "Attacks:Fire Elemental",
                     "Attacks:Lightning Shield",
                     "Attacks:Spirit Wolf",
                     "Attacks:Total DPS",
@@ -546,10 +547,17 @@ namespace Rawr.Enhance
             { 
                 calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0); 
             }
+
+            //11: Fire Elemental
+            if (calcOpts.PriorityInUse(EnhanceAbility.FireElemental))
+                calculatedStats.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect);
+            else
+                calculatedStats.FireElemental = new FireElemental(0, 0, 0);
+            float dpsFireElemental = calculatedStats.FireElemental.getDPS();
             #endregion
 
             #region Set CalculatedStats
-            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs;
+            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs + dpsFireElemental;
             calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
             calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
