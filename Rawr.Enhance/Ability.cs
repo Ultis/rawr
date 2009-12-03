@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Enhance
 {
-    public class Ability : IComparable<Ability>
+    class Ability : IComparable<Ability>
     {
         private EnhanceAbility _abilityType;
         private string _name;
@@ -56,9 +56,12 @@ namespace Rawr.Enhance
         }
 
         public void RemovePossibleClashingUses(float clashChance, float fightLength)
-        {
-            float possibleClashes = clashChance * (float)Math.Sqrt(_priority - 1) * fightLength / _duration;
-            _uses -= possibleClashes;
+        {   
+            if (_abilityType != EnhanceAbility.FireElemental)
+            {
+                float possibleClashes = clashChance * (float)Math.Sqrt(_priority - 1) * fightLength / _duration;
+                _uses -= possibleClashes;
+            }
             if (_uses < 0) _uses = 0;
         }
 

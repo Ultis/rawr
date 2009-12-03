@@ -346,7 +346,7 @@
             this.tabPageBoss.Location = new System.Drawing.Point(4, 22);
             this.tabPageBoss.Name = "tabPageBoss";
             this.tabPageBoss.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBoss.Size = new System.Drawing.Size(273, 530);
+            this.tabPageBoss.Size = new System.Drawing.Size(273, 521);
             this.tabPageBoss.TabIndex = 4;
             this.tabPageBoss.Text = "Boss";
             this.tabPageBoss.UseVisualStyleBackColor = true;
@@ -586,7 +586,7 @@
             this.tabPagePriorities.Location = new System.Drawing.Point(4, 22);
             this.tabPagePriorities.Name = "tabPagePriorities";
             this.tabPagePriorities.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePriorities.Size = new System.Drawing.Size(273, 530);
+            this.tabPagePriorities.Size = new System.Drawing.Size(273, 521);
             this.tabPagePriorities.TabIndex = 3;
             this.tabPagePriorities.Text = "Priorities";
             this.tabPagePriorities.UseVisualStyleBackColor = true;
@@ -596,11 +596,8 @@
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(7, 247);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(246, 109);
+            this.label10.Size = new System.Drawing.Size(246, 257);
             this.label10.TabIndex = 6;
-            this.label10.Text = "Please note new smoothing functions mean for time being that the order of priorit" +
-                "ies have only minimal effect on the dps results. Also note that currently priori" +
-                "tes are not included in EnhSim export.";
             // 
             // btnReset
             // 
@@ -658,7 +655,7 @@
             this.tabPageGraph.Controls.Add(this.groupBox1);
             this.tabPageGraph.Location = new System.Drawing.Point(4, 22);
             this.tabPageGraph.Name = "tabPageGraph";
-            this.tabPageGraph.Size = new System.Drawing.Size(273, 530);
+            this.tabPageGraph.Size = new System.Drawing.Size(273, 521);
             this.tabPageGraph.TabIndex = 5;
             this.tabPageGraph.Text = "Graph";
             this.tabPageGraph.UseVisualStyleBackColor = true;
@@ -829,7 +826,7 @@
             this.tabPageEnhSim.Controls.Add(this.btnEnhSim);
             this.tabPageEnhSim.Location = new System.Drawing.Point(4, 22);
             this.tabPageEnhSim.Name = "tabPageEnhSim";
-            this.tabPageEnhSim.Size = new System.Drawing.Size(273, 530);
+            this.tabPageEnhSim.Size = new System.Drawing.Size(273, 521);
             this.tabPageEnhSim.TabIndex = 2;
             this.tabPageEnhSim.Text = "EnhSim";
             this.tabPageEnhSim.UseVisualStyleBackColor = true;

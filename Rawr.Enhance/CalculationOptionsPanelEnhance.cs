@@ -70,6 +70,11 @@ namespace Rawr.Enhance
                 "button to replace the values in the EnhSimGUI with your Rawr values. Now all you need to do is click Simulate to get your results.\r\n\r\n" + 
                 "Refer to the EnhSim website for more detailed instructions on how to use the sim and its various options";
 
+            label10.Text = "Please note new smoothing functions mean for time being that the order of priorities have only minimal effect on the dps results.\r\n" +
+                            "Also note that currently priorites are not included in EnhSim export.\r\n\r\n" +
+                            "The Fire Elemental support added for patch 3.3 is currently quite rough calculations in particular more testing is needed " +
+                            "to establish the Fire Elementals crit rates.";
+
             _loadingCalculationOptions = false;
         }
 

@@ -33,6 +33,7 @@ namespace Rawr.Enhance
             float elementalFocus = (_talents.ElementalFocus == 1) ? .6f * _cs.ChanceSpellCrit : 1f;
             float ESMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.18f : baseMana * 0.18f; // 45% reduction if Shamanistic Focus
             float FSMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.17f : baseMana * 0.17f; // 45% reduction if Shamanistic Focus
+            float fireElementalCD = _talents.GlyphofFireElementalTotem ? 300f : 600f;
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0 && _talents.ShamanisticRage == 1)
@@ -66,7 +67,7 @@ namespace Rawr.Enhance
                 abilities.Add(new Ability(EnhanceAbility.FireNova, _cs.BaseFireNovaSpeed, gcd, 0.22f * baseMana, priority, false, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FireElemental);
             if (priority > 0 && _calcOpts.FireElemental)
-                abilities.Add(new Ability(EnhanceAbility.FireElemental, 120f, 1.0f, 0.23f * baseMana, priority, false, false));
+                abilities.Add(new Ability(EnhanceAbility.FireElemental, fireElementalCD, 1.0f, 0.23f * baseMana, priority, false, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.MagmaTotem);
             if (priority > 0 && _calcOpts.Magma)
                 abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, 0.27f * baseMana * elementalFocus, priority, false, false));
@@ -133,6 +134,17 @@ namespace Rawr.Enhance
                     return ability.Uses == 0 ? ability.Duration : fightLength / ability.Uses;
             }
             return fightLength;
+        }
+
+        public float FireElementalUses
+        {
+            get
+            {
+                foreach (Ability ability in _abilities)
+                    if (ability.AbilityType == EnhanceAbility.FireElemental)
+                        return ability.Uses;
+                return 0f;
+            }
         }
     }
 

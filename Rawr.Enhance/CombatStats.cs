@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Enhance
 {
-    class CombatStats
+    public class CombatStats
     {
 
         private CalculationOptionsEnhance _calcOpts;
@@ -134,6 +134,7 @@ namespace Rawr.Enhance
         public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova - (_talents.GlyphofFireNova ? 3f : 0f); } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
         public float StaticShockAvDuration { get { return StaticShockProcsPerS == 0 ? 600f : ((3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS); } }
+        public float MultiTargetMultiplier { get { return _calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f; } }
             
         public float HitsPerSOH { get { return hitsPerSOH; } }
         public float HitsPerSMH { get { return hitsPerSMH; } }
@@ -153,6 +154,7 @@ namespace Rawr.Enhance
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
         public float FireTotemUptime { get { return fireTotemUptime; } }
+        public float FireElementalUptime { get { return getFireElementalUptime(); } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
         public float DisplayMeleeCrit { get { return chanceCrit; } }
@@ -371,6 +373,29 @@ namespace Rawr.Enhance
             float result = 1 - (float)Math.Pow(1 - c, 3) + 3 * c * m * h * h + 6 * c * m * m * h * h + 3 * c * m * m * h +
                 c * m * m * m * (-6 * h * h * m * m - m * m - 3 * h * m * m + 15 * h * h * m + 2 * m + 7 * h * m - 10 * h * h - 1 - 4 * h) / (float)Math.Pow(m - 1, 3);
             return result;
+        }
+
+        private float getFireElementalUptime()
+        {
+            if (!_calcOpts.PriorityInUse(EnhanceAbility.FireElemental))
+                return 0f;
+            float cooldown = _talents.GlyphofFireElementalTotem ? 300f : 600f;
+            float duration = 120f;
+            float totalDuration = 0f;
+            float uses = 0f;
+            while (totalDuration < fightLength) {
+                if (totalDuration + duration >= fightLength)
+                {   // if next totem drop will exceed remaining fight length then only process part available
+                    uses = (fightLength - totalDuration) / duration;
+                    totalDuration += duration;
+                }
+                else
+                {
+                    uses++;
+                    totalDuration += cooldown;
+                }
+            }
+            return uses * duration / fightLength;
         }
         
         private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Shaman);}

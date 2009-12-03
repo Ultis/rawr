@@ -461,9 +461,7 @@ namespace Rawr.Enhance
                 float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
-                if (calcOpts.MultipleTargets)
-                    dpsFireTotem += dpsFireTotem * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
             }
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
@@ -473,6 +471,7 @@ namespace Rawr.Enhance
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
             }
+            dpsFireTotem *= (1f - cs.FireElementalUptime);
 
             //8b: Fire Nova DPS
             float dpsFireNova = 0f;
@@ -482,9 +481,7 @@ namespace Rawr.Enhance
                 float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova)) * cs.FireTotemUptime;
                 float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireNova = (FireNovaNormal + FireNovaCrit) * bonusFireDamage * bossFireResistance;
-                if (calcOpts.MultipleTargets)
-                    dpsFireNova += dpsFireNova * calcOpts.AdditionalTargets * calcOpts.AdditionalTargetPercent;
+                dpsFireNova = (FireNovaNormal + FireNovaCrit) * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
             }
 
             //9: Flametongue Weapon DPS++
@@ -510,38 +507,41 @@ namespace Rawr.Enhance
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             }
 
+            // needed for pets - spirit wolves and Fire Elemental
+            bool critDebuff = character.ActiveBuffsContains("Heart of the Crusader") ||
+                              character.ActiveBuffsContains("Master Poisioner") ||
+                              character.ActiveBuffsContains("Totem of Wrath");
+            bool critBuff = character.ActiveBuffsContains("Leader of the Pack") ||
+                            character.ActiveBuffsContains("Rampage");
+            float critbuffs = (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f);
+            float meleeHitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
+            float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - meleeHitBonus) + cs.AverageDodge;
+            float petMeleeMultipliers = cs.DamageReduction * bonusPhysicalDamage;
+                
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             // my analysis reveals they get 31% of shaman AP + 2 * their STR and base 206.17 dps.
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1 && calcOpts.PriorityInUse(EnhanceAbility.FeralSpirits))
             {
-                float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
                 float soeBuff = character.ActiveBuffsContains("Strength of Earth Totem") ? 155f : 0f;
                 float enhTotems = character.ActiveBuffsContains("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAgi = 113f + soeBuff + enhTotems; 
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
-                float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - hitBonus) + cs.AverageDodge;
-                bool critDebuff = character.ActiveBuffsContains("Heart of the Crusader") || 
-                                  character.ActiveBuffsContains("Master Poisioner") ||
-                                  character.ActiveBuffsContains("Totem of Wrath");
-                bool critBuff = character.ActiveBuffsContains("Leader of the Pack") ||
-                                character.ActiveBuffsContains("Rampage");
-                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f)) * (1 + stats.BonusCritChance);
+                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
                 float dogsBaseDamage = (206.17f + dogsAP / 14f) * dogsBaseSpeed;
 
-                float dogsMeleeNormal = dogsBaseDamage * (1 - dogsMissrate - dogsCrit - cs.GlancingRate);
+                float dogsMeleeNormal = dogsBaseDamage * (1 - petMeleeMissRate - dogsCrit - cs.GlancingRate);
                 float dogsMeleeCrits = dogsBaseDamage * dogsCrit * cs.CritMultiplierMelee;
                 float dogsMeleeGlances = dogsBaseDamage * cs.GlancingHitModifier;
 
-                float dogsTotalDPS = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
-                float dogsMultipliers = cs.DamageReduction * bonusPhysicalDamage;
+                float dogsTotalDamage = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
 
-                dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
-                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, cs.AverageDodge, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
+                dpsDogs = 2 * (45f / 180f) * dogsTotalDamage * dogsHitsPerS * petMeleeMultipliers;
+                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, petMeleeMissRate, cs.AverageDodge, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
             }
             else 
             { 
@@ -550,9 +550,16 @@ namespace Rawr.Enhance
 
             //11: Fire Elemental
             if (calcOpts.PriorityInUse(EnhanceAbility.FireElemental))
-                calculatedStats.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect);
+            {
+                float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
+                float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - spellHitBonus);
+                float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
+                float petCritRate = critbuffs * (1 + stats.BonusCritChance);
+                calculatedStats.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 
+                        petCritRate, petMeleeMissRate, petMeleeMultipliers, petSpellMissRate, petSpellMultipliers);
+            }
             else
-                calculatedStats.FireElemental = new FireElemental(0, 0, 0);
+                calculatedStats.FireElemental = new FireElemental(0, 0, 0, cs, 0, 0, 0, 0, 0);
             float dpsFireElemental = calculatedStats.FireElemental.getDPS();
             #endregion
 
@@ -785,6 +792,7 @@ namespace Rawr.Enhance
                 _relevantGlyphs.Add("Glyph of Stormstrike");
                 _relevantGlyphs.Add("Glyph of Windfury Weapon");
                 _relevantGlyphs.Add("Glyph of Fire Nova");
+                _relevantGlyphs.Add("Glyph of Fire Elemental Totem");
             }
             return _relevantGlyphs;
         }
