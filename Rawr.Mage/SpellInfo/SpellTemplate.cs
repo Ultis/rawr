@@ -370,7 +370,16 @@ namespace Rawr.Mage
                             }
                             if (procs == 0.0f) continue;
                             // until they put in some good trinkets with such effects just do a quick dirty calculation
-                            float effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                            float effectHasteRating;
+                            if (procs > Ticks)
+                            {
+                                // some 100% on cast procs, happens because AM has 6 cast procs and only 5 ticks
+                                effectHasteRating = effect.GetAverageStackSize(castTime / procs, 1.0f, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                            }
+                            else
+                            {
+                                effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                            }
 
                             castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
                             spellHasteRating += effectHasteRating;
