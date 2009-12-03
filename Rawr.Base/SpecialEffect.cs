@@ -62,7 +62,6 @@ namespace Rawr
         DeepWoundsTick, // Warriors
         SteadyShotHit, // Hunters
         PetClawBiteSmackCrit, // Hunters
-        NUM_Trigger // Should always be the last entry.
     }
 
     
@@ -437,12 +436,15 @@ namespace Rawr
             float averageStack = 0;
             if ((MaxStack > 1) && (Cooldown == 0f))
             {
-                // Simplified handling for stacking procs
-                float probToStack = 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
-                
+                float p = triggerChance * GetChance(attackSpeed);
+                float q = 1.0f - p;
+                float Q = (float)Math.Pow(q, Duration / triggerInterval);
+                float probToStack = 1.0f - Q;                
 
-                if (probToStack > 0)
+                if (probToStack > 0.99f)
                 {
+                    // Simplified handling for stacking procs
+                    // very high chance to stack, treat as remaining at max stacks after buildup
                     if (fightDuration == 0.0f)
                         averageStack = MaxStack;        // Infinite time, it will stack to Max
                     else
@@ -466,6 +468,135 @@ namespace Rawr
 
                         averageStack = value / fightDuration;
                     }
+                }
+                else if (probToStack > 0)
+                {
+                    // nontrivial chance to drop stacks, treat as stationary distribution
+                    // for now we don't have a nonstationary fixed duration solution
+
+                    //Sij: i stacks, j ticks left
+
+                    //S00:
+                    //=> S1T p
+                    //=> S00 1-p
+
+                    //S1j:
+                    //=> S2T p
+                    //=> S1(j-1) 1-p
+
+                    //S11:
+                    //=> S2T p
+                    //=> S00 1-p
+
+                    //SMj:
+                    //=> SMT p
+                    //=> SM(j-1) 1-p
+
+                    //SM1:
+                    //=> SMT p
+                    //=> S00 1-p
+
+                    //S00 = q * (S00 + S11 + S21 + .. + SM1)
+
+                    //S11 = q * S12
+                    //S12 = q * S13
+                    //..
+                    //S1(T-1) = q * S1T
+
+                    //=>
+
+                    //S11 = q ^ (T-1) * S1T
+
+                    //S1T = p * S00
+
+                    //=>
+
+                    //S11 = p * q ^ (T-1) * S00
+
+
+
+                    //S21 = q * S22
+                    //S22 = q * S23
+                    //..
+                    //S2(T-1) = q * S2T
+
+                    //=>
+
+                    //S21 = q ^ (T-1) * S2T
+
+                    //S2T = p * (S11 + S12 + .. + S1T)
+
+                    //S1j = p * q ^ (T-j) * S00
+
+                    //S11 + S12 + .. + S1T = p * S00 * (q ^ (T-1) + q ^ (T-2) + ... + 1) = S00 * (1 - q ^ T)
+
+                    //S2T = p * (1 - q ^ T) * S00
+
+                    //S2j = q ^ (T-j) * S2T
+
+
+
+
+                    //Sij = q ^ (T-j) * SiT
+
+                    //Si1 + Si2 + .. + SiT = SiT * (q ^ (T-1) + q ^ (T-2) + ... + 1) = SiT * (1 - q ^ T) / p
+
+
+
+
+                    //S31 = q * S32
+                    //S32 = q * S33
+                    //..
+                    //S3(T-1) = q * S3T
+
+                    //S31 = q ^ (T-1) * S3T
+
+                    //S3T = p * (S21 + S22 + .. + S2T) = S2T * (1 - q ^ T)
+
+
+
+                    //SMT = p * (S(M-1)1 + .. + S(M-1)T) + p * (SM1 + .. + SMT)
+                    //    = S(M-1)T * (1 - q ^ T) + SMT * (1 - q ^ T)
+                    //    = S00 * p * (1 - q ^ T) ^ (M-1) + SMT * (1 - q ^ T)
+
+                    //Q := q ^ T
+                    //P := 1 - Q
+
+                    //SMT = S00 * p * P ^ (M-1) + SMT * P
+                    //SMT = S00 * p * P ^ (M-1) / Q
+                    //SMT = S00 * p * P ^ (M-1)*(1/Q+1-1)
+                    //SMT = S00 * p * (P ^ (M-1) + P ^ (M-1)*(1/Q - Q/Q))
+                    //SMT = S00 * p * (P ^ (M-1) + P ^ M / Q)
+
+                    //S00 + (S11 + .. + S1T) + .. + (SM1 + .. + SMT) = 
+                    //S00 + S1T * (1 - q ^ T) / p + S2T * (1 - q ^ T) / p + .. + SMT * (1 - q ^ T) / p = 
+                    //S00 + (S1T + S2T + .. + SMT) * P / p =
+                    //S00 + S00 * (1 + P + P^2 + .. + P^(M-1)/Q) * P = 
+                    //S00 + S00 * (1 + P + P^2 + .. + P^(M-1) + P^M / Q) * P = 
+                    //S00 + S00 * (1 - P ^ M + P ^ M) * P / Q =
+                    //S00 + S00 * P / Q =
+                    //S00 * (1 + P / Q) =
+                    //S00 / Q == 1
+
+                    //=>
+
+                    //S00 = Q
+
+                    //average stack size = 0 * S00 + 1 * (S11 + .. + S1T) + 2 * (S21 + .. + S2T) + .. + M * (SM1 + .. + SMT) =
+
+                    //S1T * (1 - q ^ T) / p + 2 * S2T * (1 - q ^ T) / p + .. + M * SMT * (1 - q ^ T) / p =
+                    //S00 * (P + 2 * P^2 + 3 * P^3 + .. + M * P^M + M * P^(M+1)/Q) =
+                    //S00 * (((M*P - M - 1) * P^(M+1) + P)/Q^2 + M * P^(M+1)/Q) =
+                    //S00 * ((-M*Q - 1+M*Q) * P^(M+1) + P) / Q^2 =
+                    //S00 * (-P^(M+1) + P) / Q^2 =
+                    //S00 * P * (1 - P^M) / Q^2 =
+                    //P/Q * (1 - P^M)
+
+                    // P == probToStack
+
+                    float PM = (float)Math.Pow(probToStack, MaxStack);
+
+                    averageStack = probToStack / Q * (1.0f - (float)Math.Pow(probToStack, MaxStack));
                 }
                 else
                 {
