@@ -1467,24 +1467,27 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Flask of the North - Attack Power (Alchemy only)",
+                Name = "Flask of the North - Attack Power",
                 Group = "Elixirs and Flasks",
+                Source = "Alchemy",
                 Stats = { AttackPower = 80 },
                 Professions = new List<Profession>() { Profession.Alchemy },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Flask of the North - Spell Power (Alchemy only)",
+                Name = "Flask of the North - Spell Power",
                 Group = "Elixirs and Flasks",
+                Source = "Alchemy",
                 Stats = { SpellPower = 47 },
                 Professions = new List<Profession>() { Profession.Alchemy },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Flask of the North - Strength (Alchemy only)",
+                Name = "Flask of the North - Strength",
                 Group = "Elixirs and Flasks",
+                Source = "Alchemy",
                 Stats = { Strength = 40 },
                 Professions = new List<Profession>() { Profession.Alchemy },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
@@ -1782,6 +1785,7 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Runic Mana Potion (Alch Stone Bonus)",
+                            Professions = new List<Profession>() { Profession.Alchemy },
                             Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.40f, }
                         }
                     }
@@ -1794,6 +1798,7 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Runic Mana Injector (Engineer Bonus)",
+                            Professions = new List<Profession>() { Profession.Engineering },
                             Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.25f, }
                         }
                     }
@@ -1803,10 +1808,12 @@ namespace Rawr
                 Name = "Endless Mana Potion",
                 Group = "Potion",
                 Source = "Alchemy",
+                Professions = new List<Profession>() { Profession.Alchemy },
                 Stats = new Stats() { ManaRestore = (1800f + 3000f) / 2f, },
                 Improvements = {
                         new Buff {
                             Name = "Endless Mana Potion (Alch Stone Bonus)",
+                            Professions = new List<Profession>() { Profession.Alchemy },
                             Stats = new Stats() { ManaRestore = ((1800f + 3000f) / 2f) * 0.40f, }
                         }
                     }
@@ -1815,11 +1822,13 @@ namespace Rawr
              {
                 Name = "Endless Healing Potion",
                 Group = "Potion",
-                Stats = new Stats() { HealthRestore = (1500f + 2500f) / 2f, },
                 Source = "Alchemy",
+                Professions = new List<Profession>() { Profession.Alchemy },
+                Stats = new Stats() { HealthRestore = (1500f + 2500f) / 2f, },
                 Improvements = {
                         new Buff {
                             Name = "Endless Healing Potion (Alch Stone Bonus)",
+                            Professions = new List<Profession>() { Profession.Alchemy },
                             Stats = new Stats() { HealthRestore = ((1500f + 2500f) / 2f) * 0.40f, }
                         }
                     }
@@ -1832,6 +1841,7 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Runic Healing Potion (Alch Stone Bonus)",
+                            Professions = new List<Profession>() { Profession.Alchemy },
                             Stats = new Stats() { HealthRestore = ((2700f + 4500f) / 2f) * 0.40f, }
                         }
                     }
@@ -1844,6 +1854,7 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Runic Healing Injector (Engineer Bonus)",
+                            Professions = new List<Profession>() { Profession.Engineering },
                             Stats = new Stats() { HealthRestore = ((2700f + 4500f) / 2f) * 0.25f, }
                         }
                     }
@@ -1859,6 +1870,7 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Powerful Rejuvenation Potion (Alch Stone Bonus)",
+                            Professions = new List<Profession>() { Profession.Alchemy },
                             Stats = new Stats() {
                                 ManaRestore   = ((2475f + 4125f) / 2f) * 0.40f,
                                 HealthRestore = ((2475f + 4125f) / 2f) * 0.40f,

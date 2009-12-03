@@ -10,6 +10,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Rawr.DPSWarr.Markov;
 using Rawr.Base;
+using Rawr.Bosses;
 
 namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
