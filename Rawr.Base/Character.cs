@@ -648,17 +648,8 @@ namespace Rawr //O O . .
                 _faction = CharacterFaction.Alliance;
             else
                 _faction = CharacterFaction.Horde;
-            SetDraeneiHitBuff();
         }
-
-        private void SetDraeneiHitBuff()
-        {
-            if (_race == CharacterRace.Draenei && !ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-                ActiveBuffsAdd(("Heroic Presence"));
-            else if (Faction == CharacterFaction.Horde)
-                ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
-        }
-
+         
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
 
