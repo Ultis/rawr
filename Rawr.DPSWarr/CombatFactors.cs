@@ -312,7 +312,7 @@ namespace Rawr.DPSWarr {
         private float MhWhCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating)) +
+                return StatS.PhysicalCrit + 
                  ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
                 //return crit;
             }
@@ -320,22 +320,22 @@ namespace Rawr.DPSWarr {
         private float MhYwCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating))) +
-                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
+                return StatS.PhysicalCrit +
+                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
             }
         }
         private float OhWhCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating)) +
+                return StatS.PhysicalCrit +
                 ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
             }
         }
         private float OhYwCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(Math.Max(0, StatS.CritRating))) +
-                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
+                return StatS.PhysicalCrit +
+                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
             }
         }
         #endregion

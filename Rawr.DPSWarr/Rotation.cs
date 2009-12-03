@@ -912,7 +912,7 @@ namespace Rawr.DPSWarr {
             if (RK.Validated && CalcOpts.FuryStance)
             {
                 SpecialEffect reck = new SpecialEffect(Trigger.Use,
-                    new Stats() { PhysicalCrit = 1f - critRate, },
+                    new Stats() { PhysicalCrit = 1f - critRate },
                     landedAtksInterval * 3f, RK.Cd);
                 statsTotal.AddSpecialEffect(reck);
             }

@@ -997,7 +997,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
                     calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
                     calculatedStats.CritRating = stats.CritRating;
-                    calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
+                    calculatedStats.CritPercent = stats.PhysicalCrit;
                     calculatedStats.MhCrit = combatFactors._c_mhycrit;
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
                 } 
@@ -1134,8 +1134,6 @@ These numbers to do not include racial bonuses.",
             };
             // Add Talents that give SpecialEffects
             if (talents.Rampage > 0 && isBuffed) {
-                /*SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
-                statsTalents.AddSpecialEffect(rampage);*/
                 statsTalents.PhysicalCrit += 0.05f;
             }
             if (talents.WreckingCrew > 0) {
@@ -1164,69 +1162,16 @@ These numbers to do not include racial bonuses.",
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
             statsTotal.Accumulate(statsOptionsPanel);
+            statsTotal = UpdateStatsAndAdd(statsTotal, null, character);
             //Stats statsProcs = new Stats();
 
-            // Stamina
-            float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-            statsTotal.Stamina = /*(float)Math.Floor*/((1f + totalBSTAM) * statsRace.Stamina) +
-                                 /*(float)Math.Floor*/((1f + totalBSTAM) * (statsItems.Stamina + statsBuffs.Stamina));
-            //statsTotal.Stamina = staBase + staBonus;
-
-            // Health
-            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-            statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
-
-            // Strength
-            float totalBSM = statsTotal.BonusStrengthMultiplier;
-            statsTotal.Strength = /*(float)Math.Floor*/((1f + totalBSM) * statsRace.Strength) +
-                                  /*(float)Math.Floor*/((1f + totalBSM) * (statsItems.Strength + statsBuffs.Strength));
-            statsTotal.Strength = Math.Max(0, statsTotal.Strength);
-            //statsTotal.Strength = strBase + strBonus;
-
-            // Agility
-            float totalBAM = statsTotal.BonusAgilityMultiplier;
-            statsTotal.Agility = /*(float)Math.Floor*/((1f + totalBAM) * statsRace.Agility) +
-                                 /*(float)Math.Floor*/((1f + totalBAM) * (statsItems.Agility + statsBuffs.Agility));
-            statsTotal.Agility = Math.Max(0, statsTotal.Agility);
-            //statsTotal.Agility = agiBase + agiBonus;
-
-            // Armor
-            statsTotal.Armor = /*(float)Math.Floor*/(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
-            statsTotal.BonusArmor += statsTotal.Agility * 2f;
-            statsTotal.BonusArmor = /*(float)Math.Floor*/(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.Armor += statsTotal.BonusArmor;
-
-            // Attack Power
-            float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
-            statsTotal.AttackPower = /*(float)Math.Floor*/((1f + totalBAPM) * 
-                (statsRace.AttackPower + 
-                 statsTotal.Strength * 2f + 
-                ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth) +
-                 statsItems.AttackPower + statsBuffs.AttackPower));
-            statsTotal.AttackPower = Math.Max(0, statsTotal.AttackPower);
-            //statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusSTR + apBonusAttT + apBonusOther);
-
+           
             // Dodge (your dodging incoming attacks)
             statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, character.Class);
             statsTotal.Dodge += StatConversion.GetDodgeFromRating(statsTotal.DodgeRating, character.Class);
 
             // Parry (your parrying incoming attacks)
             statsTotal.Parry += StatConversion.GetParryFromRating(statsTotal.ParryRating, character.Class);
-
-            // Crit
-            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
-
-            // Haste
-            statsTotal.HasteRating = /*(float)Math.Floor*/(statsTotal.HasteRating);
-            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(Math.Max(0, statsTotal.HasteRating), character.Class);
-            statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
-                                       (1f + statsItems.PhysicalHaste) *
-                                       (1f + statsBuffs.PhysicalHaste) *
-                                       (1f + statsTalents.PhysicalHaste) *
-                                       (1f + statsOptionsPanel.PhysicalHaste) *
-                                     //(1f + statsProcs.PhysicalHaste) *
-                                       (1f + ratingHasteBonus)
-                                       - 1f;
 
             return statsTotal;
         }
@@ -1252,11 +1197,6 @@ These numbers to do not include racial bonuses.",
                 
             float fightDuration = calcOpts.Duration;
 
-            float attempted = Rot.AttemptedAtksOverDur;
-            float land = Rot.LandedAtksOverDur;
-            float crit = Rot.CriticalAtksOverDur;
-
-        
             SpecialEffect bersMainHand = null;
             SpecialEffect bersOffHand = null;
 
@@ -1292,11 +1232,7 @@ These numbers to do not include racial bonuses.",
                 float f = bersOffHand.GetAverageUptime( fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 bersStats.Accumulate(bersOffHand.Stats, f);    
             }
-            //float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
-            bersStats.AttackPower = (1f + statsTotal.BonusAttackPower) * (bersStats.AttackPower);
-            bersStats.Agility = (1f + statsTotal.BonusAgilityMultiplier) * (bersStats.Agility);
-            bersStats.Armor = (1f + statsTotal.BonusArmorMultiplier) * (bersStats.Armor);
-            combatFactors.StatS.Accumulate(bersStats);
+            combatFactors.StatS = UpdateStatsAndAdd(bersStats, combatFactors.StatS, character);
             combatFactors.InvalidateCache();
             return combatFactors.StatS;
         }
@@ -1407,9 +1343,9 @@ These numbers to do not include racial bonuses.",
             float attempted = rotation.AttemptedAtksOverDur;
             float land = rotation.LandedAtksOverDur;
             float crit = rotation.CriticalAtksOverDur;
-            float bleed = calcOpts.Duration * (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f);
-            float dwbleed = (character.WarriorTalents.DeepWounds > 0) ? 1f : 0f;
-
+            float dwbleed = (character.WarriorTalents.DeepWounds > 0) ? fightDuration : 0f;
+            float bleed = dwbleed + fightDuration * (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
+            
             float bleedHitInterval = fightDuration / bleed;
             float dwbleedHitInterval = fightDuration / dwbleed;
             float attemptedAtkInterval = fightDuration / attempted;
@@ -1462,7 +1398,7 @@ These numbers to do not include racial bonuses.",
                     upTime = effect.GetAverageStackSize(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.DeepWoundsTick: // T10 set bonus
-                    upTime = effect.GetAverageStackSize(dwbleed, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(dwbleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
             }
             if (upTime > 0f && upTime <= effect.MaxStack) {
@@ -1474,52 +1410,131 @@ These numbers to do not include racial bonuses.",
 
         private static Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
         {
-            Stats retVal = baseStats.Clone();
-            // Multipliers
-            float totalBSTAM = baseStats.BonusStaminaMultiplier;
-            float totalBSTRM = baseStats.BonusStrengthMultiplier;
-            float totalBAGIM = baseStats.BonusAgilityMultiplier;
-            float totalBAPM = baseStats.BonusAttackPowerMultiplier;
+            Stats retVal;
+            float newStaMult = 1f + statsToAdd.BonusStaminaMultiplier;
+            float newStrMult = 1f + statsToAdd.BonusStrengthMultiplier;
+            float newAgiMult = 1f + statsToAdd.BonusAgilityMultiplier;
+            float newArmMult = 1f + statsToAdd.BonusArmorMultiplier;
+            float newAtkMult = 1f + statsToAdd.BonusAttackPowerMultiplier;
+            float newHealthMult = 1f + statsToAdd.BonusHealthMultiplier;
+            if (baseStats != null)
+            {
+                retVal = baseStats.Clone();
+                retVal.Armor += retVal.BonusArmor;
+                retVal.BonusArmor = 0f;
+                newStaMult *= (1f + retVal.BonusStaminaMultiplier);
+                newStrMult *= (1f + retVal.BonusStrengthMultiplier);
+                newAgiMult *= (1f + retVal.BonusAgilityMultiplier);
+                newArmMult *= (1f + retVal.BonusArmorMultiplier);
+                newAtkMult *= (1f + retVal.BonusAttackPowerMultiplier);
+                newHealthMult *= (1f + retVal.BonusHealthMultiplier);
 
-            // Base Stats
-            statsToAdd.Stamina  = (statsToAdd.Stamina  * (1f + totalBSTAM) * (1f + statsToAdd.BonusStaminaMultiplier));
-            statsToAdd.Strength = (statsToAdd.Strength * (1f + totalBSTRM) * (1f + statsToAdd.BonusStrengthMultiplier));
-            statsToAdd.Agility  = (statsToAdd.Agility  * (1f + totalBAGIM) * (1f + statsToAdd.BonusAgilityMultiplier));
-            statsToAdd.Health  += (statsToAdd.Stamina  * 10f);
-            // Paragon
-            if (baseStats.Strength + statsToAdd.Strength > baseStats.Agility + statsToAdd.Agility) {
-                statsToAdd.Strength += (statsToAdd.Paragon * (1f + totalBSTRM) * (1f + statsToAdd.BonusStrengthMultiplier));
-                statsToAdd.Strength += (statsToAdd.HighestStat * (1f + totalBSTRM) * (1f + statsToAdd.BonusStrengthMultiplier));
-            } else {
-                statsToAdd.Agility += (statsToAdd.Paragon * (1f + totalBAGIM) * (1f + statsToAdd.BonusAgilityMultiplier));
-                statsToAdd.Agility += (statsToAdd.HighestStat * (1f + totalBAGIM) * (1f + statsToAdd.BonusAgilityMultiplier));
+                // normalize retVal with its old base stat values, since we're updating them below
+                retVal.Health -= retVal.Stamina * 10f;
+                retVal.Armor -= retVal.Agility * 2f;
+                retVal.AttackPower /= 1f + retVal.BonusAttackPowerMultiplier;
+                retVal.AttackPower -= (retVal.Strength * 2f) +
+                                      ((retVal.Armor + retVal.BonusArmor) / 108f * character.WarriorTalents.ArmoredToTheTeeth);
+                retVal.PhysicalCrit -= StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
+
             }
-
-            // Armor
-            statsToAdd.Armor = (statsToAdd.Armor * (1f + baseStats.BaseArmorMultiplier + statsToAdd.BaseArmorMultiplier));
-            statsToAdd.BonusArmor += statsToAdd.Agility * 2f;
-            statsToAdd.BonusArmor = (statsToAdd.BonusArmor * (1f + baseStats.BonusArmorMultiplier + statsToAdd.BonusArmorMultiplier));
+            else
+            {
+                retVal = null;
+            }
+            // no need to have 2 diff armor values
             statsToAdd.Armor += statsToAdd.BonusArmor;
-            statsToAdd.BonusArmor = 0; //it's been added to Armor so kill it
+            statsToAdd.BonusArmor = 0f;
+            
+            
+            #region Base Stats
+            statsToAdd.Stamina  *= newStaMult;
+            statsToAdd.Strength *= newStrMult;
+            statsToAdd.Agility *= newAgiMult;
 
-            // Attack Power
-            float totalBAPMProcs = (1f + baseStats.BonusAttackPowerMultiplier) * (1f + statsToAdd.BonusAttackPowerMultiplier) - 1f;
-            statsToAdd.AttackPower = (1f + totalBAPM) * (
-                (statsToAdd.Strength * 2f) +
-                ((statsToAdd.Armor / 108f) * character.WarriorTalents.ArmoredToTheTeeth) + 
-                (statsToAdd.AttackPower));
-            //statsToAdd.AttackPower = (apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
+            if (retVal != null)
+            {
+                // change retvals to use the new mults
+                retVal.Stamina *= newStaMult / (1f + retVal.BonusStaminaMultiplier);
+                retVal.Strength *= newStrMult / (1f + retVal.BonusStrengthMultiplier);
+                retVal.Agility *= newAgiMult / (1f + retVal.BonusAgilityMultiplier);
+            }
+            #endregion
+
+            #region Health
+            statsToAdd.Health *= newHealthMult;
+            statsToAdd.Health += (statsToAdd.Stamina * 10f);
+            if (retVal != null)
+            {
+                // Reset retVal with its new stamina and health mult values
+                retVal.Health *= newHealthMult / (1f + retVal.BonusHealthMultiplier);
+                retVal.Health += retVal.Stamina * 10f;
+            }
+            #endregion
+
+            #region Armor
+            statsToAdd.Armor += statsToAdd.Agility * 2f;
+            statsToAdd.Armor *= newArmMult;
+            if (retVal != null)
+            {
+                retVal.Armor += retVal.Agility * 2f;
+                retVal.Armor *= newArmMult / (1f + retVal.BonusArmorMultiplier);
+            }
+            #endregion
+
+            #region Attack Power
+            // stats to add
+            statsToAdd.AttackPower += (statsToAdd.Strength * 2f) +
+                                  ((statsToAdd.Armor + statsToAdd.BonusArmor) / 108f * character.WarriorTalents.ArmoredToTheTeeth) +
+                                  statsToAdd.BonusAttackPower;
+            statsToAdd.AttackPower *= newAtkMult;
+            // reset retval
+            if (retVal != null)
+            {
+                retVal.AttackPower += (retVal.Strength * 2f) +
+                                  ((retVal.Armor + retVal.BonusArmor) / 108f * character.WarriorTalents.ArmoredToTheTeeth);
+                retVal.AttackPower *= newAtkMult;
+            }
+            #endregion
 
             // Crit
             statsToAdd.PhysicalCrit += StatConversion.GetCritFromAgility(statsToAdd.Agility, character.Class);
-
+            statsToAdd.PhysicalCrit += StatConversion.GetCritFromRating(statsToAdd.CritRating, character.Class);
+            if (retVal != null)
+            {
+                retVal.PhysicalCrit += StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
+            }
             // Haste
             statsToAdd.PhysicalHaste = (1f + statsToAdd.PhysicalHaste)
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(Math.Max(0, statsToAdd.HasteRating), character.Class))
                                      - 1f;
+            if (retVal != null)
+            {
+                retVal.Accumulate(statsToAdd);
 
-            retVal.Accumulate(statsToAdd);
-            return retVal;
+                // Paragon
+                if (retVal.Paragon > 0f || retVal.HighestStat > 0f)
+                {
+                    float paragonValue = retVal.Paragon + retVal.HighestStat;
+                    retVal.Paragon = retVal.HighestStat = 0f;
+                    if (retVal.Strength > retVal.Agility)
+                    {
+                        return UpdateStatsAndAdd(new Stats { Strength = paragonValue }, retVal, character);
+                    }
+                    else
+                    {
+                        return UpdateStatsAndAdd(new Stats { Agility = paragonValue }, retVal, character);
+                    }
+                }
+                else
+                {
+                    return retVal;
+                }
+            }
+            else
+            {
+                return statsToAdd;
+            }
         }
 
         #endregion
