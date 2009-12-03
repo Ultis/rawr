@@ -1207,6 +1207,18 @@ namespace Rawr {
                 line = line.Substring("Your Water Shield ability grants an additional ".Length);
                 stats.TotemThunderhead = 1f; // Totem of the Thunderhead, Possible Future totems
             }
+            else if (line.StartsWith("Each time you cast Chain Heal, you have a chance to gain "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Each time you cast Chain Heal, you have a chance to gain ".Length);
+                stats.RestoShamRelicT9 = 234f; // T9 Resto Relic
+            }
+            else if (line.StartsWith("Your Riptide spell grants 85 spell power for 15 sec.  Stacks up to 3 times."))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Your Riptide spell grants 85 spell power for 15 sec.  Stacks up to 3 times.".Length);
+                stats.RestoShamRelicT10 = 85f * 3f; // T9 Resto Relic
+            }
             #endregion
             #endregion
             #region 3.2 Trinkets

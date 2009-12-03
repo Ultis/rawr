@@ -268,6 +268,10 @@ namespace Rawr {
         TotemThunderhead,
         RestoSham2T9,
         RestoSham4T9,
+        RestoSham2T10,
+        RestoSham4T10,
+        RestoShamRelicT9,
+        RestoShamRelicT10,
         #endregion
         #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
@@ -4488,6 +4492,43 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.RestoSham4T9]; }
             set { _rawAdditiveData[(int)AdditiveStat.RestoSham4T9] = value; }
         }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("RestoSham")]
+        [DisplayName("Your Riptide spell grants 20% spell haste for your next spellcast within 10 sec.")]
+        public float RestoSham2T10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RestoSham2T10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RestoSham2T10] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("RestoSham")]
+        [DisplayName("Your Chain Heal critical strikes cause the target to heal for 25% of the healed amount over 9 sec.")]
+        public float RestoSham4T10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RestoSham4T10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RestoSham4T10] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("RestoSham")]
+        [DisplayName("Each time you cast Chain Heal, you have a chance to gain 234 spell power for 15 sec.")]
+        public float RestoShamRelicT9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RestoShamRelicT9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RestoShamRelicT9] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("RestoSham")]
+        [DisplayName("Your Riptide spell grants 85 spell power for 15 sec.  Stacks up to 3 times.")]
+        public float RestoShamRelicT10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RestoShamRelicT10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RestoShamRelicT10] = value; }
+        }
+        
         #endregion
         #region Added by Rawr.ProtPaladin
              
