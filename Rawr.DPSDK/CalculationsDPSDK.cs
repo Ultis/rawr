@@ -683,7 +683,7 @@ namespace Rawr.DPSDK
                             (1d + talents.TwoHandedWeaponSpecialization * .02d);
                         /*  After some testing on the PTR:
                             5% Desolation, 15% Blood Presence, 2% Bone Shield and 10% Black Ice are addtivie, 
-                         * just like balance druids where some damage modifiers are additive, no clue why.
+                            just like balance druids where some damage modifiers are additive, no clue why.
                             So it is 0.25*3 * 1.13 * (1 +.15 +.05 +.02 ) * 1.04 = 1.0753 (1.1634 with black ice)
                             The weird thing is that Rage of Rivendare does not affect the shadowdamage :/ 
                          ( http://elitistjerks.com/f72/t72364-unholy_dps_3_3_ss_ill_stand_you/p51/#post1465790 )*/

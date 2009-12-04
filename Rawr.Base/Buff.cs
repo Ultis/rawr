@@ -1777,7 +1777,7 @@ namespace Rawr
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f, 20f * 60f));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f - 1f, 20f * 60f));
-            defaultBuffs.Add(buff = new Buff()
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Runic Mana Potion",
                 Group = "Potion",
@@ -1790,7 +1790,7 @@ namespace Rawr
                         }
                     }
             });
-            defaultBuffs.Add(buff = new Buff()
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Runic Mana Injector",
                 Group = "Potion",
@@ -1803,7 +1803,7 @@ namespace Rawr
                         }
                     }
             });
-             defaultBuffs.Add(buff = new Buff()
+             defaultBuffs.Add(new Buff()
              {
                 Name = "Endless Mana Potion",
                 Group = "Potion",
@@ -1818,7 +1818,7 @@ namespace Rawr
                         }
                     }
             });
-             defaultBuffs.Add(buff = new Buff()
+             defaultBuffs.Add(new Buff()
              {
                 Name = "Endless Healing Potion",
                 Group = "Potion",
@@ -1833,7 +1833,7 @@ namespace Rawr
                         }
                     }
             });
-            defaultBuffs.Add(buff = new Buff()
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Runic Healing Potion",
                 Group = "Potion",
@@ -1846,7 +1846,7 @@ namespace Rawr
                         }
                     }
             });
-            defaultBuffs.Add(buff = new Buff()
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Runic Healing Injector",
                 Group = "Potion",
@@ -1859,7 +1859,7 @@ namespace Rawr
                         }
                     }
             });
-            defaultBuffs.Add(buff = new Buff()
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Powerful Rejuvenation Potion",
                 Group = "Potion",
@@ -1874,6 +1874,27 @@ namespace Rawr
                             Stats = new Stats() {
                                 ManaRestore   = ((2475f + 4125f) / 2f) * 0.40f,
                                 HealthRestore = ((2475f + 4125f) / 2f) * 0.40f,
+                            }
+                        }
+                    }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Crazy Alchemist's Potion (proc not included)",
+                Group = "Potion",
+                Source = "Alchemy",
+                Professions = new List<Profession>() { Profession.Alchemy },
+                Stats = new Stats() {
+                    ManaRestore   = (4200f + 4400f) / 2f,
+                    HealthRestore = (3100f + 3500f) / 2f,
+                },
+                Improvements = {
+                        new Buff {
+                            Name = "Crazy Alchemist's Potion (Alch Stone Bonus)",
+                            Professions = new List<Profession>() { Profession.Alchemy },
+                            Stats = new Stats() {
+                                ManaRestore   = ((4200f + 4400f) / 2f) * 0.40f,
+                                HealthRestore = ((3100f + 3500f) / 2f) * 0.40f,
                             }
                         }
                     }

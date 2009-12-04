@@ -78,6 +78,9 @@
     <Compile Include="..\..\Rawr.Enhance\EnhSim.cs">
       <Link>EnhSim.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Enhance\FireElemental.cs">
+      <Link>FireElemental.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Enhance\Gemming.cs">
       <Link>Gemming.cs</Link>
     </Compile>

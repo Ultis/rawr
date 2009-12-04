@@ -117,107 +117,70 @@ namespace Rawr
 			}
 
 			List<Buff> buffs = Buff.RelevantBuffs;
-			//List<Buff> missingBuffs = new List<Buff>();
-			//foreach (Buff buff in buffs)
-			//{
-			//    if (!string.IsNullOrEmpty(buff.RequiredBuff))
-			//    {
-			//        Buff reqBuff = Buff.GetBuffByName(buff.RequiredBuff);
-			//        if (!buffs.Contains(reqBuff)) missingBuffs.Add(reqBuff);
-			//    }
-			//}
-			//buffs.AddRange(missingBuffs);
 
-			foreach (Buff buff in buffs)
-			{
-                ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
-                checkBox.Tag = buff;
-                if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && buff.Source != null)
-                    checkBox.Text = buff.Name + " (" + buff.Source + ")";
-                else
-                    checkBox.Text = buff.Name;
-                checkBox.AutoSize = true;
-                checkBox.Font = this.Font;
-                checkBox.Dock = DockStyle.Top;
-                checkBox.ToolTipText = buff.Stats.ToString();
-                checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
-                GroupBoxes[buff.Group].Controls.Add(checkBox);
-                checkBox.BringToFront();
-                // only add Draenei Heroic Presence buff if Alliance
-                if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
+            foreach (Buff buff in buffs)
+            {
+                if (Character == null || !Rawr.Properties.GeneralSettings.Default.HideProfEnchants || (buff.Professions != null && Character.HasProfession(buff.Professions)))
                 {
-                    if (FormMain.Instance.Character.Faction == CharacterFaction.Alliance)
-                        CheckBoxes.Add(buff, checkBox);
+                    ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
+                    checkBox.Tag = buff;
+                    if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && buff.Source != null)
+                        checkBox.Text = buff.Name + " (" + buff.Source + ")";
                     else
-                        checkBox.Enabled = false;
-                }
-                else
-                    CheckBoxes.Add(buff, checkBox);
-
-                foreach (Buff improvement in buff.Improvements)
-                {
-                    if (Character == null || !Rawr.Properties.GeneralSettings.Default.HideProfEnchants || Character.HasProfession(improvement.Professions))
+                        checkBox.Text = buff.Name;
+                    checkBox.AutoSize = true;
+                    checkBox.Font = this.Font;
+                    checkBox.Dock = DockStyle.Top;
+                    checkBox.ToolTipText = buff.Stats.ToString();
+                    checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
+                    GroupBoxes[buff.Group].Controls.Add(checkBox);
+                    checkBox.BringToFront();
+                    // only add Draenei Heroic Presence buff if Alliance
+                    if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
                     {
-                        ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
-                        checkBoxImprovement.Tag = improvement;
-                        if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && improvement.Source != null)
-                            checkBoxImprovement.Text = improvement.Name + " (" + improvement.Source + ")";
+                        if (FormMain.Instance.Character.Faction == CharacterFaction.Alliance)
+                            CheckBoxes.Add(buff, checkBox);
                         else
-                            checkBoxImprovement.Text = improvement.Name;
-                        checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
-                            checkBoxImprovement.Padding.Top, checkBoxImprovement.Padding.Right, checkBoxImprovement.Padding.Bottom);
-                        checkBoxImprovement.AutoSize = true;
-                        checkBoxImprovement.Font = this.Font;
-                        checkBoxImprovement.Dock = DockStyle.Top;
-                        checkBoxImprovement.ToolTipText = improvement.Stats.ToString();
-                        checkBoxImprovement.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
-                        GroupBoxes[buff.Group].Controls.Add(checkBoxImprovement);
-                        checkBoxImprovement.BringToFront();
-                        CheckBoxes.Add(improvement, checkBoxImprovement);
+                            checkBox.Enabled = false;
+                    }
+                    else
+                        CheckBoxes.Add(buff, checkBox);
+
+                    foreach (Buff improvement in buff.Improvements)
+                    {
+                        if (Character == null || !Rawr.Properties.GeneralSettings.Default.HideProfEnchants || Character.HasProfession(improvement.Professions))
+                        {
+                            ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
+                            checkBoxImprovement.Tag = improvement;
+                            if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && improvement.Source != null)
+                                checkBoxImprovement.Text = improvement.Name + " (" + improvement.Source + ")";
+                            else
+                                checkBoxImprovement.Text = improvement.Name;
+                            checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
+                                checkBoxImprovement.Padding.Top, checkBoxImprovement.Padding.Right, checkBoxImprovement.Padding.Bottom);
+                            checkBoxImprovement.AutoSize = true;
+                            checkBoxImprovement.Font = this.Font;
+                            checkBoxImprovement.Dock = DockStyle.Top;
+                            checkBoxImprovement.ToolTipText = improvement.Stats.ToString();
+                            checkBoxImprovement.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
+                            GroupBoxes[buff.Group].Controls.Add(checkBoxImprovement);
+                            checkBoxImprovement.BringToFront();
+                            CheckBoxes.Add(improvement, checkBoxImprovement);
+                        }
                     }
                 }
-			}
+            }
 
-			//int groupY = 3;
 			foreach (GroupBox groupBox in GroupBoxes.Values)
 			{
-				groupBox.Height = groupBox.Controls[0].Bottom + 2;
-				//int checkY = 19;
-				//foreach (CheckBox checkBox in groupBox.Controls)
-				//{
-				//    Buff buff = checkBox.Tag as Buff;
-				//    if (string.IsNullOrEmpty(buff.RequiredBuff))
-				//    {
-				//        checkBox.Location = new Point(6, checkY);
-				//        checkY += 23;
-				//    }
-				//}
-				//groupBox.Bounds = new Rectangle(3, groupY, this.Width, checkY);
-				//groupY += checkY + 6;
-				//bool hasImprovedBuffs = false;
-				//foreach (CheckBox checkBox in groupBox.Controls)
-				//{
-				//    Buff buff = checkBox.Tag as Buff;
-				//    if (!string.IsNullOrEmpty(buff.RequiredBuff))
-				//    {
-				//        hasImprovedBuffs = true;
-				//        foreach (CheckBox requiredCheckBox in groupBox.Controls)
-				//            if (requiredCheckBox.Text == buff.RequiredBuff)
-				//            {
-				//                checkBox.Location = new Point(this.Width - this.Width / 4 - checkBox.Width / 2, requiredCheckBox.Top + 1);
-				//                break;
-				//            }
-				//    }
-				//}
-
-				//if (hasImprovedBuffs)
-				//{
-				//    Label labelImproved = new Label();
-				//    labelImproved.Text = "Improved";
-				//    labelImproved.AutoSize = true;
-				//    labelImproved.Location = new Point(this.Width - (4 * labelImproved.Width) / 5, 6);
-				//    groupBox.Controls.Add(labelImproved);
-				//}
+                // Make sure not to index an empty array
+                if (groupBox.Controls.Count > 0) {
+                    groupBox.Height = groupBox.Controls[0].Bottom + 2;
+                }
+                // Hide empty group boxes
+                else {
+                    groupBox.Hide();
+                }
 			}
             ScrollHook.hookRec(this);
 			this.ResumeLayout();

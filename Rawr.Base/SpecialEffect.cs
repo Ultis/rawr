@@ -6,43 +6,68 @@ namespace Rawr
 {
     public enum Trigger : int
     {
+        /// <summary>The player activates the ability manually</summary>
         Use,
+
+        #region General Spells
+        /// <summary>Any spell (damage or heal) lands on the target (hit or crit)</summary>
         SpellHit,
+        /// <summary>Any spell (damage or heal) crits on the target</summary>
         SpellCrit,
+        /// <summary>Any spell (damage or heal) is cast, regardless of result</summary>
         SpellCast,
+        /// <summary>Any spell (damage or heal) misses the target</summary>
         SpellMiss,
+        #endregion
+        #region Damage Spells
+        /// <summary>Any Damage spell (non-heal) lands on the target (hit or crit)</summary>
         DamageSpellHit,
+        /// <summary>Any Damage spell (non-heal) crits on the target</summary>
         DamageSpellCrit,
+        /// <summary>Any Damage spell (non-heal) is cast, regardless of result</summary>
         DamageSpellCast,
+        #endregion
+        #region Healing Spells
+        /// <summary>Any Heal spell (non-damage) lands on the target (hit or crit)</summary>
         HealingSpellHit,
+        /// <summary>Any Heal spell (non-damage) crits on the target</summary>
         HealingSpellCrit,
+        /// <summary>Any Heal spell (non-damage) is cast, regardless of result</summary>
         HealingSpellCast,
-        MeleeHit,
-        MeleeCrit,
+        #endregion
+
+        #region General Physical Attacks
+        /// <summary>Any physical damage (melee or ranged) lands on the target (hit or crit)</summary>
         PhysicalHit,
+        /// <summary>Any physical damage (melee or ranged) crits on the target</summary>
         PhysicalCrit,
+        #endregion
+        #region Melee Physical Attacks
+        /// <summary>Any melee lands on the target (hit or crit)</summary>
+        MeleeHit,
+        /// <summary>Any melee crits on the target</summary>
+        MeleeCrit,
+        #endregion
+        #region Ranged Physical Attacks
+        /// <summary>Any ranged lands on the target (hit or crit)</summary>
+        RangedHit,
+        /// <summary>Any ranged crits on the target</summary>
+        RangedCrit,
+        #endregion
+
+        #region Damage, in or out
+        /// <summary>Any damage taken, regardless of type</summary>
 		DamageTaken,
         /// <summary>The player blocks, parries or dodges a melee attack</summary>
         DamageAvoided,
-        ManaGem,
-        DoTTick,
+        /// <summary>The player deals any form of damage, regardless of where it comes from</summary>
         DamageDone,
-        MageNukeCast,
-        JudgementHit,
-        HolyShield,
-        HammeroftheRighteous,
-        ShieldofRighteousness,
-        DivinePlea,
-        CrusaderStrikeHit,
-        InsectSwarmTick,
-        MoonfireCast,
-        MoonfireTick,
-        ShamanLightningBolt,
-        ShamanLavaLash,
-        ShamanShock,
-        ShamanFlameShockDoTTick,
-        ShamanStormStrike,
-        ShamanShamanisticRage,
+        /// <summary>The tick of a player's DoT on the target</summary>
+        DoTTick,
+        #endregion
+
+        // Class Specific
+        #region Added by Death Knight
         BloodStrikeHit,
         HeartStrikeHit,
         ObliterateHit,
@@ -52,19 +77,52 @@ namespace Rawr
         PlagueStrikeHit,
         IcyTouchHit,
         RuneStrikeHit,
+        #endregion
+        #region Added by Druid
+        InsectSwarmTick,
+        MoonfireCast,
+        MoonfireTick,
+        RejuvenationTick,
+        MangleCatHit,
+        MangleBearHit,
+        SwipeBearOrLacerateHit,
+        MangleCatOrShredHit,
+        #endregion
+        #region Added by Hunter
+        /// <summary>The Hunter's Steady Shot ability lands on the target (hit or crit)</summary>
+        SteadyShotHit,
+        /// <summary>The Hunter Pet's normal Damage ability (Claw, Bite or Smack) crits on the target</summary>
+        PetClawBiteSmackCrit,
+        #endregion
+        #region Added by Mage
+        ManaGem,
+        MageNukeCast,
+        #endregion
+        #region Added by Paladin
+        JudgementHit,
+        HolyShield,
+        HammeroftheRighteous,
+        ShieldofRighteousness,
+        DivinePlea,
+        CrusaderStrikeHit,
         SealOfVengeanceTick,
-		RejuvenationTick,
-		MangleCatHit,
-		MangleBearHit,
-		SwipeBearOrLacerateHit,
-		MangleCatOrShredHit,
-        HSorSLHit, // Warriors
-        DeepWoundsTick, // Warriors
-        SteadyShotHit, // Hunters
-        PetClawBiteSmackCrit, // Hunters
+        #endregion
+        #region Added by Shaman
+        ShamanLightningBolt,
+        ShamanLavaLash,
+        ShamanShock,
+        ShamanFlameShockDoTTick,
+        ShamanStormStrike,
+        ShamanShamanisticRage,
+        #endregion
+        #region Added by Warrior
+        /// <summary>The Warrior uses a Heroic Strike or Slam and it lands on the target (hit or crit)</summary>
+        HSorSLHit,
+        /// <summary>The Warrior's Deep Wounds ability ticks on the target</summary>
+        DeepWoundsTick,
+        #endregion
     }
 
-    
     public partial class SpecialEffect
     {
         public Trigger Trigger { get; set; }
