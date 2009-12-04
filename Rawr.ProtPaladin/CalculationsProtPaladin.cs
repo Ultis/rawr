@@ -1242,8 +1242,10 @@ focus on Survival Points.",
                 stats.BlockRating +
                 stats.Defense +
                 stats.DefenseRating +
+                stats.Dodge +
                 stats.DodgeRating +
                 stats.Miss +
+                stats.Parry +
                 stats.ParryRating +
                 stats.Resilience +
 
