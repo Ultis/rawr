@@ -1415,36 +1415,46 @@ These numbers to do not include racial bonuses.",
             float newStrMult = 1f + statsToAdd.BonusStrengthMultiplier;
             float newAgiMult = 1f + statsToAdd.BonusAgilityMultiplier;
             float newArmMult = 1f + statsToAdd.BonusArmorMultiplier;
+            float newBaseArmMult = 1f + statsToAdd.BaseArmorMultiplier;
             float newAtkMult = 1f + statsToAdd.BonusAttackPowerMultiplier;
             float newHealthMult = 1f + statsToAdd.BonusHealthMultiplier;
             if (baseStats != null)
             {
                 retVal = baseStats.Clone();
-                retVal.Armor += retVal.BonusArmor;
-                retVal.BonusArmor = 0f;
+                
                 newStaMult *= (1f + retVal.BonusStaminaMultiplier);
                 newStrMult *= (1f + retVal.BonusStrengthMultiplier);
                 newAgiMult *= (1f + retVal.BonusAgilityMultiplier);
                 newArmMult *= (1f + retVal.BonusArmorMultiplier);
+                newBaseArmMult *= (1f + retVal.BaseArmorMultiplier);
                 newAtkMult *= (1f + retVal.BonusAttackPowerMultiplier);
                 newHealthMult *= (1f + retVal.BonusHealthMultiplier);
 
                 // normalize retVal with its old base stat values, since we're updating them below
-                retVal.Health -= retVal.Stamina * 10f;
-                retVal.Armor -= retVal.Agility * 2f;
+                // This essentially reverses what gets done to statsToAdd, but only things that
+                // are affected by multipliers (like base stats, armor, AP, etc)
+                
+                retVal.Health -= retVal.Stamina * 10f; // Stamina is affected by a multiplier
+
+                // Since AP is set to (RawAP + 2*STR + A2T + BonusAP)*APMult, and Str/A2T are affected by mults too,
+                // we need to rewind the Str and Armor components out.  We will add them after we've updated Str/Armor, below
                 retVal.AttackPower /= 1f + retVal.BonusAttackPowerMultiplier;
                 retVal.AttackPower -= (retVal.Strength * 2f) +
-                                      ((retVal.Armor + retVal.BonusArmor) / 108f * character.WarriorTalents.ArmoredToTheTeeth);
-                retVal.PhysicalCrit -= StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
+                                      (retVal.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth);
 
+                // This is reversing the Armor = (Armor*BaseMult + Bonus)*BonusMult
+                retVal.Armor /= 1f + retVal.BonusArmorMultiplier;
+                retVal.Armor -= retVal.BonusArmor;
+                retVal.Armor /= 1f + retVal.BaseArmorMultiplier;
+                retVal.BonusArmor -= retVal.Agility * 2f;
+                
+                // Agi is multed, remove it from PhysicalCrit for now
+                retVal.PhysicalCrit -= StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
             }
             else
             {
                 retVal = null;
             }
-            // no need to have 2 diff armor values
-            statsToAdd.Armor += statsToAdd.BonusArmor;
-            statsToAdd.BonusArmor = 0f;
             
             
             #region Base Stats
@@ -1454,7 +1464,7 @@ These numbers to do not include racial bonuses.",
 
             if (retVal != null)
             {
-                // change retvals to use the new mults
+                // change retvals to use the new mults.  Combines Stat/=oldMult; Stat*=newMult
                 retVal.Stamina *= newStaMult / (1f + retVal.BonusStaminaMultiplier);
                 retVal.Strength *= newStrMult / (1f + retVal.BonusStrengthMultiplier);
                 retVal.Agility *= newAgiMult / (1f + retVal.BonusAgilityMultiplier);
@@ -1466,33 +1476,34 @@ These numbers to do not include racial bonuses.",
             statsToAdd.Health += (statsToAdd.Stamina * 10f);
             if (retVal != null)
             {
-                // Reset retVal with its new stamina and health mult values
+                // Combines rollback of oldmult and addition of newmult
                 retVal.Health *= newHealthMult / (1f + retVal.BonusHealthMultiplier);
                 retVal.Health += retVal.Stamina * 10f;
             }
             #endregion
 
             #region Armor
-            statsToAdd.Armor += statsToAdd.Agility * 2f;
-            statsToAdd.Armor *= newArmMult;
+            statsToAdd.BonusArmor += statsToAdd.Agility * 2f;
+            statsToAdd.Armor = (statsToAdd.Armor * newBaseArmMult + statsToAdd.BonusArmor) * newArmMult;
             if (retVal != null)
             {
-                retVal.Armor += retVal.Agility * 2f;
-                retVal.Armor *= newArmMult / (1f + retVal.BonusArmorMultiplier);
+                retVal.BonusArmor += retVal.Agility * 2f;
+                retVal.Armor = (retVal.Armor * newBaseArmMult + retVal.BonusArmor) * newArmMult;
             }
             #endregion
 
             #region Attack Power
             // stats to add
             statsToAdd.AttackPower += (statsToAdd.Strength * 2f) +
-                                  ((statsToAdd.Armor + statsToAdd.BonusArmor) / 108f * character.WarriorTalents.ArmoredToTheTeeth) +
+                                  (statsToAdd.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth) +
                                   statsToAdd.BonusAttackPower;
             statsToAdd.AttackPower *= newAtkMult;
             // reset retval
             if (retVal != null)
             {
+                // already rolled back AP's oldmult, so not combining
                 retVal.AttackPower += (retVal.Strength * 2f) +
-                                  ((retVal.Armor + retVal.BonusArmor) / 108f * character.WarriorTalents.ArmoredToTheTeeth);
+                                  (retVal.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth);
                 retVal.AttackPower *= newAtkMult;
             }
             #endregion
@@ -1508,16 +1519,18 @@ These numbers to do not include racial bonuses.",
             statsToAdd.PhysicalHaste = (1f + statsToAdd.PhysicalHaste)
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(Math.Max(0, statsToAdd.HasteRating), character.Class))
                                      - 1f;
+
+            // If we're adding two, then return the .Accumulate
             if (retVal != null)
             {
                 retVal.Accumulate(statsToAdd);
 
-                // Paragon
+                // Paragon and its friends
                 if (retVal.Paragon > 0f || retVal.HighestStat > 0f)
                 {
-                    float paragonValue = retVal.Paragon + retVal.HighestStat;
-                    retVal.Paragon = retVal.HighestStat = 0f;
-                    if (retVal.Strength > retVal.Agility)
+                    float paragonValue = retVal.Paragon + retVal.HighestStat; // how much paragon to add
+                    retVal.Paragon = retVal.HighestStat = 0f; // remove Paragon stat, since it's not needed
+                    if (retVal.Strength > retVal.Agility) // Now that we've added the two stats, we run UpdateStatsAndAdd again for paragon
                     {
                         return UpdateStatsAndAdd(new Stats { Strength = paragonValue }, retVal, character);
                     }
@@ -1531,7 +1544,7 @@ These numbers to do not include racial bonuses.",
                     return retVal;
                 }
             }
-            else
+            else // Just processing one, not adding two
             {
                 return statsToAdd;
             }
