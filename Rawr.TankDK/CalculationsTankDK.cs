@@ -393,7 +393,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             #endregion
 
-            float fChanceToGetHit = 1f - (stats.Miss + stats.Dodge + stats.Parry);
+            float fChanceToGetHit = 1f - (stats.Miss + stats.Dodge);
+            if (character.MainHand != null || character.OffHand != null)
+            {
+                fChanceToGetHit -= stats.Parry;
+            }
 
             #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
             bool bDualWielding = false;
@@ -530,13 +534,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // So let's populate the miss, dodge and parry values pulling them out of the avoidance number.
             fChanceToGetHit = 1f;
-            stats.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Miss]));
-            fChanceToGetHit -= stats.Miss;
+            stats.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Miss]);
+            fChanceToGetHit -= Math.Max(stats.Miss, 0);
             // Dodge needs to be factored in here.
-            stats.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Dodge]));
-            fChanceToGetHit -= stats.Dodge;
+            stats.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Dodge]);
+            fChanceToGetHit -= Math.Max(stats.Dodge, 0) ;
             // Pary factors
-            stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Parry]));
+            stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Parry]);
+            if (character.MainHand != null || character.OffHand != null) 
+            { 
+                fChanceToGetHit -= Math.Max(stats.Parry, 0); 
+            }
+
             float fChanceToGetCrit = fAvoidance[(int)HitResult.Crit];
             // The next call expect Defense rating to NOT be factored into the defense stat
             calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, iTargetLevel);
@@ -744,9 +753,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
 
             // Get the raw per-swing Reaction & Burst Time
-            float fAvoidanceTotal = stats.Dodge + stats.Miss;
-            // If the character has no weapon, his Parry chance == 0
-            if (character.MainHand != null || character.OffHand != null) { fAvoidanceTotal += stats.Parry; }
+            float fAvoidanceTotal = 1 - fChanceToGetHit;    
 
             // The next 2 returns are in swing count.
             float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
@@ -1028,11 +1035,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
-            statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Miss]));
-            // Dodge needs to be factored in here.
-            statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Dodge]));
-            // Pary factors
-            statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Parry]));
+            statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Miss]);
+            statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Dodge]);
+            statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Parry]);
         }
 
         /// <summary>
