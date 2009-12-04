@@ -182,12 +182,31 @@ namespace Rawr.DPSWarr.Skills
             // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
             float chanceWeDontProc = 1f;
             float actMod = 8f / FightDuration; // since we're assuming an 8sec rotation
+            bool is4T10 = (StatS.BonusWarrior_T10_4P_BSSDProcChange != 0f);
 
-            chanceWeDontProc *= (1f - actMod * hsActivates * procChance * MHAtkTable.AnyLand);
-            chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * MHAtkTable.AnyLand)
-                             * (1f - actMod * WW.Activates * procChance * OHAtkTable.AnyLand);
-            chanceWeDontProc *= (1f - actMod * BT.Activates * procChance * MHAtkTable.AnyLand);
-            return (1f - chanceWeDontProc) / actMod;
+            float bonusProcChance = 0f;
+            
+            // We can squeeze in a single slam from 7-8 if we get a proc
+            if (is4T10)
+            {
+                bonusProcChance = 1f -
+                                  (1f - actMod * BT.Activates / 2f * procChance * BT.MHAtkTable.AnyLand * 0.2f) * 
+                                  (1f - actMod * hsActivates * 3f / 8f * procChance * MHAtkTable.AnyLand * 0.2f); // 1proc left from this
+            }
+
+            // Only WW
+            chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * WW.MHAtkTable.AnyLand) *
+                                (1f - actMod * WW.Activates * procChance * WW.OHAtkTable.AnyLand);
+            // Second BT
+            chanceWeDontProc *= (1f - actMod * BT.Activates / 2f * procChance * BT.MHAtkTable.AnyLand);
+            // Other 5/8s of the HSes
+            chanceWeDontProc *= (1f - actMod * hsActivates * 5f / 8f * procChance * MHAtkTable.AnyLand);
+
+            // chanceWeDontProc% of the time, we don't proc. But bonusProcChance% of the time, we can use the leftover here
+            float numProcs = (1f + chanceWeDontProc) * bonusProcChance;
+            numProcs += (1f - chanceWeDontProc) * (is4T10 ? 1.2f : 1f);
+            return (numProcs / actMod);
+
         }
         private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
         {
