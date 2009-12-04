@@ -2875,6 +2875,34 @@ namespace Rawr
             });
             #endregion
             #region Tier 10 | Ahn'Kahar Blood Hunter's
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Ahn'Kahar Blood Hunter's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Ahn'Kahar Blood Hunter's Battlegear",
+                Stats = new Stats() { },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HunterAutoShotHit,
+                new Stats() { BonusDamageMultiplier = 0.15f },
+                10f, 0f, 0.05f
+            ));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Ahn'Kahar Blood Hunter's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Ahn'Kahar Blood Hunter's Battlegear",
+                Stats = new Stats() { },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SerpentWyvernStingsDoDamage,
+                new Stats() { BonusAttackPowerMultiplier = 0.20f },
+                10f, 0f, 0.05f
+            ));
             #endregion
             #endregion
             #region PvP

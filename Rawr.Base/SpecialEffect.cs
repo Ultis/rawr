@@ -89,10 +89,14 @@ namespace Rawr
         MangleCatOrShredHit,
         #endregion
         #region Added by Hunter
+        /// <summary>The Hunter's Auto Shot lands on the target (hit or crit)</summary>
+        HunterAutoShotHit,
         /// <summary>The Hunter's Steady Shot ability lands on the target (hit or crit)</summary>
         SteadyShotHit,
         /// <summary>The Hunter Pet's normal Damage ability (Claw, Bite or Smack) crits on the target</summary>
         PetClawBiteSmackCrit,
+        /// <summary>The Hunter's Serpent Sting and Wyvern Sting abilities deal damage</summary>
+        SerpentWyvernStingsDoDamage,
         #endregion
         #region Added by Mage
         ManaGem,

@@ -194,8 +194,6 @@
             this.CB_AspectUsage = new System.Windows.Forms.ComboBox();
             this.LB_Aspect = new System.Windows.Forms.Label();
             this.CB_Aspect = new System.Windows.Forms.ComboBox();
-            this.LB_UseManaPot = new System.Windows.Forms.Label();
-            this.CB_ManaPotion = new System.Windows.Forms.ComboBox();
             this.GB_Misc = new System.Windows.Forms.GroupBox();
             this.CK_PTRMode = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HideSplGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -1091,7 +1089,7 @@
             this.CB_CunningRoarOfRecovery.TabIndex = 31;
             this.CB_CunningRoarOfRecovery.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // LB_CunningRoarofRecovery
+            // LB_CunningRoarOfRecovery
             // 
             this.LB_CunningRoarOfRecovery.AutoSize = true;
             this.LB_CunningRoarOfRecovery.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1100,7 +1098,7 @@
             this.LB_CunningRoarOfRecovery.ImageList = this.TalentImageList;
             this.LB_CunningRoarOfRecovery.Location = new System.Drawing.Point(68, 310);
             this.LB_CunningRoarOfRecovery.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningRoarOfRecovery.Name = "LB_CunningRoarofRecovery";
+            this.LB_CunningRoarOfRecovery.Name = "LB_CunningRoarOfRecovery";
             this.LB_CunningRoarOfRecovery.Size = new System.Drawing.Size(59, 42);
             this.LB_CunningRoarOfRecovery.TabIndex = 30;
             this.LB_CunningRoarOfRecovery.Text = "Roar of Recovery:";
@@ -1179,12 +1177,12 @@
             this.LB_CunningDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LB_CunningDiveDash.ToolTipText = null;
             // 
-            // CB_CunningCorbaReflexes
+            // CB_CunningCobraReflexes
             // 
             this.CB_CunningCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_CunningCobraReflexes.FormattingEnabled = true;
             this.CB_CunningCobraReflexes.Location = new System.Drawing.Point(3, 49);
-            this.CB_CunningCobraReflexes.Name = "CB_CunningCorbaReflexes";
+            this.CB_CunningCobraReflexes.Name = "CB_CunningCobraReflexes";
             this.CB_CunningCobraReflexes.Size = new System.Drawing.Size(59, 21);
             this.CB_CunningCobraReflexes.TabIndex = 1;
             this.CB_CunningCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
@@ -2504,11 +2502,9 @@
             this.GB_GlobalSettings.Controls.Add(this.CB_AspectUsage);
             this.GB_GlobalSettings.Controls.Add(this.LB_Aspect);
             this.GB_GlobalSettings.Controls.Add(this.CB_Aspect);
-            this.GB_GlobalSettings.Controls.Add(this.LB_UseManaPot);
-            this.GB_GlobalSettings.Controls.Add(this.CB_ManaPotion);
             this.GB_GlobalSettings.Location = new System.Drawing.Point(3, 267);
             this.GB_GlobalSettings.Name = "GB_GlobalSettings";
-            this.GB_GlobalSettings.Size = new System.Drawing.Size(280, 192);
+            this.GB_GlobalSettings.Size = new System.Drawing.Size(280, 164);
             this.GB_GlobalSettings.TabIndex = 19;
             this.GB_GlobalSettings.TabStop = false;
             this.GB_GlobalSettings.Text = "Hunter Settings";
@@ -2516,7 +2512,7 @@
             // CK_RandomProcs
             // 
             this.CK_RandomProcs.AutoSize = true;
-            this.CK_RandomProcs.Location = new System.Drawing.Point(18, 169);
+            this.CK_RandomProcs.Location = new System.Drawing.Point(18, 142);
             this.CK_RandomProcs.Name = "CK_RandomProcs";
             this.CK_RandomProcs.Size = new System.Drawing.Size(186, 17);
             this.CK_RandomProcs.TabIndex = 12;
@@ -2527,7 +2523,7 @@
             // CK_UseRotation
             // 
             this.CK_UseRotation.AutoSize = true;
-            this.CK_UseRotation.Location = new System.Drawing.Point(18, 123);
+            this.CK_UseRotation.Location = new System.Drawing.Point(18, 96);
             this.CK_UseRotation.Name = "CK_UseRotation";
             this.CK_UseRotation.Size = new System.Drawing.Size(233, 17);
             this.CK_UseRotation.TabIndex = 9;
@@ -2538,7 +2534,7 @@
             // CK_SpreadsheetUptimes
             // 
             this.CK_SpreadsheetUptimes.AutoSize = true;
-            this.CK_SpreadsheetUptimes.Location = new System.Drawing.Point(18, 146);
+            this.CK_SpreadsheetUptimes.Location = new System.Drawing.Point(18, 119);
             this.CK_SpreadsheetUptimes.Name = "CK_SpreadsheetUptimes";
             this.CK_SpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
             this.CK_SpreadsheetUptimes.TabIndex = 11;
@@ -2549,7 +2545,7 @@
             // CK_UseBeastDuringBW
             // 
             this.CK_UseBeastDuringBW.AutoSize = true;
-            this.CK_UseBeastDuringBW.Location = new System.Drawing.Point(18, 100);
+            this.CK_UseBeastDuringBW.Location = new System.Drawing.Point(18, 73);
             this.CK_UseBeastDuringBW.Name = "CK_UseBeastDuringBW";
             this.CK_UseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
             this.CK_UseBeastDuringBW.TabIndex = 8;
@@ -2560,7 +2556,7 @@
             // LB_ViperUsage
             // 
             this.LB_ViperUsage.AutoSize = true;
-            this.LB_ViperUsage.Location = new System.Drawing.Point(15, 76);
+            this.LB_ViperUsage.Location = new System.Drawing.Point(15, 49);
             this.LB_ViperUsage.Name = "LB_ViperUsage";
             this.LB_ViperUsage.Size = new System.Drawing.Size(68, 13);
             this.LB_ViperUsage.TabIndex = 4;
@@ -2574,7 +2570,7 @@
             "No Viper",
             "Viper - Just Enough",
             "Viper - Fully Regen"});
-            this.CB_AspectUsage.Location = new System.Drawing.Point(128, 73);
+            this.CB_AspectUsage.Location = new System.Drawing.Point(128, 46);
             this.CB_AspectUsage.Name = "CB_AspectUsage";
             this.CB_AspectUsage.Size = new System.Drawing.Size(131, 21);
             this.CB_AspectUsage.TabIndex = 5;
@@ -2583,7 +2579,7 @@
             // LB_Aspect
             // 
             this.LB_Aspect.AutoSize = true;
-            this.LB_Aspect.Location = new System.Drawing.Point(15, 49);
+            this.LB_Aspect.Location = new System.Drawing.Point(15, 22);
             this.LB_Aspect.Name = "LB_Aspect";
             this.LB_Aspect.Size = new System.Drawing.Size(43, 13);
             this.LB_Aspect.TabIndex = 2;
@@ -2600,41 +2596,18 @@
             "Viper",
             "Monkey",
             "Dragonhawk"});
-            this.CB_Aspect.Location = new System.Drawing.Point(128, 46);
+            this.CB_Aspect.Location = new System.Drawing.Point(128, 19);
             this.CB_Aspect.Name = "CB_Aspect";
             this.CB_Aspect.Size = new System.Drawing.Size(131, 21);
             this.CB_Aspect.TabIndex = 3;
             this.CB_Aspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
-            // 
-            // LB_UseManaPot
-            // 
-            this.LB_UseManaPot.AutoSize = true;
-            this.LB_UseManaPot.Location = new System.Drawing.Point(15, 22);
-            this.LB_UseManaPot.Name = "LB_UseManaPot";
-            this.LB_UseManaPot.Size = new System.Drawing.Size(92, 13);
-            this.LB_UseManaPot.TabIndex = 0;
-            this.LB_UseManaPot.Text = "Use Mana Potion:";
-            // 
-            // CB_ManaPotion
-            // 
-            this.CB_ManaPotion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_ManaPotion.FormattingEnabled = true;
-            this.CB_ManaPotion.Items.AddRange(new object[] {
-            "None",
-            "Runic Mana Potion",
-            "Icy/Super Mana Potion"});
-            this.CB_ManaPotion.Location = new System.Drawing.Point(128, 19);
-            this.CB_ManaPotion.Name = "CB_ManaPotion";
-            this.CB_ManaPotion.Size = new System.Drawing.Size(131, 21);
-            this.CB_ManaPotion.TabIndex = 1;
-            this.CB_ManaPotion.SelectedIndexChanged += new System.EventHandler(this.cmbManaPotion_SelectedIndexChanged);
             // 
             // GB_Misc
             // 
             this.GB_Misc.Controls.Add(this.CK_PTRMode);
             this.GB_Misc.Controls.Add(this.CK_HideSplGear);
             this.GB_Misc.Controls.Add(this.CK_HidePvPGear);
-            this.GB_Misc.Location = new System.Drawing.Point(3, 465);
+            this.GB_Misc.Location = new System.Drawing.Point(3, 437);
             this.GB_Misc.Name = "GB_Misc";
             this.GB_Misc.Size = new System.Drawing.Size(280, 88);
             this.GB_Misc.TabIndex = 20;
@@ -3445,8 +3418,6 @@
         private System.Windows.Forms.Label LB_Sub35;
         private System.Windows.Forms.NumericUpDown NUD_Time20;
         private System.Windows.Forms.Label LB_Sub20;
-        private System.Windows.Forms.Label LB_UseManaPot;
-        private System.Windows.Forms.ComboBox CB_ManaPotion;
         private System.Windows.Forms.Label LB_Aspect;
         private System.Windows.Forms.ComboBox CB_Aspect;
         private System.Windows.Forms.Label LB_ViperUsage;

@@ -281,18 +281,26 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Special
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
- 				BonusHunter_PvP_4pc = stats.BonusHunter_PvP_4pc,
-                FireDamage = stats.FireDamage,
+                FireDamage   = stats.FireDamage,
                 ArcaneDamage = stats.ArcaneDamage,
                 ShadowDamage = stats.ShadowDamage,
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
+                NatureDamage = stats.NatureDamage,
                 MovementSpeed = stats.MovementSpeed,
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
+                ManaRestore = stats.ManaRestore,
                 HealthRestore = stats.HealthRestore,
+
+                // Set Bonuses
+                BonusHunter_PvP_4pc = stats.BonusHunter_PvP_4pc,
+                BonusHunter_T7_4P_ViperSpeed = stats.BonusHunter_T7_4P_ViperSpeed,
+                BonusHunter_T8_2P_SerpDmg = stats.BonusHunter_T8_2P_SerpDmg,
+                BonusHunter_T9_2P_SerpCanCrit = stats.BonusHunter_T9_2P_SerpCanCrit,
+                BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
 
                 // Multipliers
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -310,10 +318,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
-				BonusHunter_T7_4P_ViperSpeed = stats.BonusHunter_T7_4P_ViperSpeed,
-				BonusHunter_T8_2P_SerpDmg = stats.BonusHunter_T8_2P_SerpDmg,
-				BonusHunter_T9_2P_SerpCanCrit = stats.BonusHunter_T9_2P_SerpCanCrit,
-				BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
 
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
@@ -331,7 +335,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                      effect.Trigger == Trigger.PhysicalHit ||
                      effect.Trigger == Trigger.DoTTick ||
                      effect.Trigger == Trigger.DamageDone ||
-                     effect.Trigger == Trigger.DamageTaken)
+                     effect.Trigger == Trigger.DamageTaken ||
+                     effect.Trigger == Trigger.SteadyShotHit ||
+                     effect.Trigger == Trigger.PetClawBiteSmackCrit ||
+                     effect.Trigger == Trigger.HunterAutoShotHit ||
+                     effect.Trigger == Trigger.SerpentWyvernStingsDoDamage)
                     && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
@@ -365,7 +373,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.PhysicalHit +
                 stats.MovementSpeed + stats.StunDurReduc + stats.SnareRootDurReduc + stats.FearDurReduc +
                 stats.ManaRestore + // Mana Pots
-                stats.ManaRestoreFromMaxManaPerSecond + // Reblenishment Buffs
+                stats.ManaRestoreFromMaxManaPerSecond + // Replenishment Buffs
                 stats.ManaRestoreFromBaseManaPPM + // Judgement of Wisdom Buff
                 // Target Debuffs
                 // Procs
@@ -413,7 +421,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     || e.Trigger == Trigger.PhysicalCrit
                     || e.Trigger == Trigger.PhysicalHit
                     || e.Trigger == Trigger.Use
-                    || e.Trigger == Trigger.DamageTaken)
+                    || e.Trigger == Trigger.DamageTaken
+                    || e.Trigger == Trigger.SteadyShotHit
+                    || e.Trigger == Trigger.PetClawBiteSmackCrit
+                    || e.Trigger == Trigger.HunterAutoShotHit
+                    || e.Trigger == Trigger.SerpentWyvernStingsDoDamage)
                 {
                     isRelevant |= HasRelevantStats(e.Stats);
                 }
@@ -1249,7 +1261,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             float targetDebuffsMP5 = targetDebuffsMP5JudgmentOfWisdom; // Buffs!H77
 
-            float targetDebuffsFire = statsBuffs.BonusFireDamageMultiplier; // Buffs!I77
+            float targetDebuffsFire   = statsBuffs.BonusFireDamageMultiplier  ; // Buffs!I77
             float targetDebuffsArcane = statsBuffs.BonusArcaneDamageMultiplier; // Buffs!J77
             float targetDebuffsNature = statsBuffs.BonusNatureDamageMultiplier; // Buffs!K77
             float targetDebuffsShadow = statsBuffs.BonusShadowDamageMultiplier;
@@ -1344,24 +1356,24 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // we do this ASAP so that we can get the MPS.
             // this allows us to calculate viper/aspect bonuses & penalties
 
-            calculatedStats.steadyShot.ManaCost = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
-            calculatedStats.serpentSting.ManaCost = (baseMana * 0.09f) * efficiencyManaAdjust;
-            calculatedStats.aimedShot.ManaCost = (baseMana * 0.08f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
-            calculatedStats.explosiveShot.ManaCost = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.chimeraShot.ManaCost = (baseMana * 0.12f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
-            calculatedStats.arcaneShot.ManaCost = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
-            calculatedStats.multiShot.ManaCost = (baseMana * 0.09f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.blackArrow.ManaCost = (baseMana * 0.06f) * efficiencyManaAdjust * resourcefulnessManaAdjust;
-            calculatedStats.killShot.ManaCost = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.silencingShot.ManaCost = (baseMana * 0.06f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calculatedStats.scorpidSting.ManaCost = (baseMana * 0.11f) * efficiencyManaAdjust;
-            calculatedStats.viperSting.ManaCost = (baseMana * 0.08f) * efficiencyManaAdjust;
+            calculatedStats.steadyShot.ManaCost     = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
+            calculatedStats.serpentSting.ManaCost   = (baseMana * 0.09f) * efficiencyManaAdjust;
+            calculatedStats.aimedShot.ManaCost      = (baseMana * 0.08f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
+            calculatedStats.explosiveShot.ManaCost  = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.chimeraShot.ManaCost    = (baseMana * 0.12f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
+            calculatedStats.arcaneShot.ManaCost     = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
+            calculatedStats.multiShot.ManaCost      = (baseMana * 0.09f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.blackArrow.ManaCost     = (baseMana * 0.06f) * efficiencyManaAdjust * resourcefulnessManaAdjust;
+            calculatedStats.killShot.ManaCost       = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.silencingShot.ManaCost  = (baseMana * 0.06f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.scorpidSting.ManaCost   = (baseMana * 0.11f) * efficiencyManaAdjust;
+            calculatedStats.viperSting.ManaCost     = (baseMana * 0.08f) * efficiencyManaAdjust;
             calculatedStats.immolationTrap.ManaCost = (baseMana * 0.13f) * resourcefullnessManaAdjust;
-            calculatedStats.explosiveTrap.ManaCost = (baseMana * 0.19f) * resourcefullnessManaAdjust;
-            calculatedStats.freezingTrap.ManaCost = (baseMana * 0.03f) * resourcefullnessManaAdjust;
-            calculatedStats.frostTrap.ManaCost = (baseMana * 0.02f) * resourcefullnessManaAdjust;
-            calculatedStats.volley.ManaCost = (baseMana * 0.17f) * (1f - (talents.GlyphOfVolley ? 0.20f : 0.00f));
-            calculatedStats.rapidFire.ManaCost = (baseMana * 0.03f);
+            calculatedStats.explosiveTrap.ManaCost  = (baseMana * 0.19f) * resourcefullnessManaAdjust;
+            calculatedStats.freezingTrap.ManaCost   = (baseMana * 0.03f) * resourcefullnessManaAdjust;
+            calculatedStats.frostTrap.ManaCost      = (baseMana * 0.02f) * resourcefullnessManaAdjust;
+            calculatedStats.volley.ManaCost         = (baseMana * 0.17f) * (1f - (talents.GlyphOfVolley ? 0.20f : 0.00f));
+            calculatedStats.rapidFire.ManaCost      = (baseMana * 0.03f);
 
             calculatedStats.priorityRotation.calculateRotationMPS();
 
@@ -1369,7 +1381,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Mana Regen
 
             float mp5FromBuffs = statsItems.Mp5 + statsBuffs.Mp5;
-            calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5;
+            calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5f;
 
             //29-10-2009 Drizz: TODO Probably missing T7 Viper bonus
 
@@ -1377,20 +1389,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaRegenConstantViper = 0;
             if (calcOpts.selectedAspect == Aspect.Viper)
             {
-                float viperGlyphAdjust = talents.GlyphOfAspectOfTheViper ? 1.1f : 1;
-                float viperRegenShots = calculatedStats.BasicStats.Mana * rangedWeaponSpeed / 100 * totalShotsPerSecond * viperGlyphAdjust;
-                float viperRegenPassive = calculatedStats.BasicStats.Mana * 0.04f / 3;
+                float viperGlyphAdjust  = talents.GlyphOfAspectOfTheViper ? 1.1f : 1;
+                float viperRegenShots   = calculatedStats.BasicStats.Mana * rangedWeaponSpeed / 100f * totalShotsPerSecond * viperGlyphAdjust;
+                float viperRegenPassive = calculatedStats.BasicStats.Mana * 0.04f / 3f;
                 calculatedStats.manaRegenConstantViper = viperRegenShots + viperRegenPassive;
             }
 
-            // Roar of Recovery - calculated in the pet model
-            // calculatedStats.manaRegenRoarOfRecovery = 0;
-            
             // Rapid Recuperation
             calculatedStats.manaRegenRapidRecuperation = 0;
-            if (calculatedStats.rapidFire.Freq > 0)
-            {
-                float rapidRecuperationManaGain = 0.02f * talents.RapidRecuperation * calculatedStats.BasicStats.Mana * 5;
+            if (calculatedStats.rapidFire.Freq > 0) {
+                float rapidRecuperationManaGain = 0.02f * talents.RapidRecuperation * calculatedStats.BasicStats.Mana * 5f;
                 calculatedStats.manaRegenRapidRecuperation = rapidRecuperationManaGain / calculatedStats.rapidFire.Freq;
             }
 
@@ -1404,9 +1412,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     calculatedStats.manaRegenChimeraViperProc = 0.6f * 3092 / calculatedStats.chimeraShot.Freq;
                 }
             }
-
-            // Invigoration - this is being calculated in the pet model
-            //calculatedStats.manaRegenInvigoration = 0;
 
             // Hunting Party
             float huntingPartyProc = (float)talents.HuntingParty / 3.0f;
@@ -1430,13 +1435,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // If we've got a replenishment buff up, use that instead of our own Hunting Party
             float manaRegenReplenishment = statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana;
-            if (manaRegenReplenishment > 0)
-            {
+            if (manaRegenReplenishment > 0) {
                 calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
             }
 
+            calculatedStats.manaRegenFromPots = stats.ManaRestore / (float)calcOpts.Duration;
+
             // Target Debuffs
-            calculatedStats.manaRegenTargetDebuffs = targetDebuffsMP5 / 5;
+            calculatedStats.manaRegenTargetDebuffs = targetDebuffsMP5 / 5f;
 
             // Total
             calculatedStats.manaRegenTotal =
@@ -1447,7 +1453,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.manaRegenChimeraViperProc +
                 calculatedStats.manaRegenInvigoration +
                 calculatedStats.manaRegenHuntingParty +
-                calculatedStats.manaRegenTargetDebuffs;
+                calculatedStats.manaRegenTargetDebuffs +
+                calculatedStats.manaRegenFromPots;
 
 
             #endregion
@@ -1466,16 +1473,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaRegenViper = calculatedStats.BasicStats.Mana * (float)Math.Round(rangedWeaponSpeed, 1) / 100f * shotsPerSecondWithoutHawk
                                         * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
                                         + calculatedStats.BasicStats.Mana * 0.04f / 3f;
-
-            float manaFromPotion = 0;
-            if (calcOpts.useManaPotion == ManaPotionType.RunicManaPotion) manaFromPotion = 4300;
-            if (calcOpts.useManaPotion == ManaPotionType.SuperManaPotion) manaFromPotion = 2400;
-
-            bool manaHasAlchemistStone = false;
-            //if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
-            //if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
-
-            calculatedStats.manaRegenPotion = manaFromPotion / calcOpts.Duration * (manaHasAlchemistStone ? 1.4f : 1.0f);
 
             //float beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
@@ -2534,6 +2531,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         }
                         statsProcs += _stats;
                         break;
+                    case Trigger.RangedHit:
                     case Trigger.PhysicalHit:
                         if (attemptedAtkInterval > 0f) {
                             Stats add = effect.GetAverageStats(attemptedAtkInterval, hitRate, speed, fightDuration);
@@ -2541,6 +2539,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         }
                         break;
                     case Trigger.MeleeCrit:
+                    case Trigger.RangedCrit:
                     case Trigger.PhysicalCrit:
                         if (attemptedAtkInterval > 0f) {
                             Stats add = effect.GetAverageStats(attemptedAtkInterval, critRate, speed, fightDuration);
@@ -2553,17 +2552,27 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     case Trigger.DamageDone: // physical and dots
                         if (dmgDoneInterval > 0f) { statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, speed, fightDuration); }
                         break;
+                    case Trigger.HunterAutoShotHit:
+                        if (attemptedAtkInterval > 0f) {
+                            Stats add = effect.GetAverageStats(speed, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            statsProcs += add;
+                        }
+                        break;
                     case Trigger.SteadyShotHit:
-                        if (attemptedAtkInterval > 0f)
-                        {
+                        if (attemptedAtkInterval > 0f) {
                             Stats add = effect.GetAverageStats(attemptedAtkInterval * 0.1f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
                     case Trigger.PetClawBiteSmackCrit:
-                        if (petattemptedAtksInterval > 0f)
-                        {
+                        if (petattemptedAtksInterval > 0f) {
                             Stats add = effect.GetAverageStats(petattemptedAtksInterval, critRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            statsProcs += add;
+                        }
+                        break;
+                    case Trigger.SerpentWyvernStingsDoDamage:
+                        if (attemptedAtkInterval > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval * 0.05f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;

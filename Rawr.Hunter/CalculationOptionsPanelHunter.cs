@@ -193,10 +193,6 @@ namespace Rawr.Hunter
                 NUD_Time20.Maximum = CB_Duration.Value;
                 NUD_35.Maximum = CB_Duration.Value;
 
-                if (CalcOpts.useManaPotion == ManaPotionType.None) CB_ManaPotion.SelectedIndex = 0;
-                if (CalcOpts.useManaPotion == ManaPotionType.RunicManaPotion) CB_ManaPotion.SelectedIndex = 1;
-                if (CalcOpts.useManaPotion == ManaPotionType.SuperManaPotion) CB_ManaPotion.SelectedIndex = 2;
-
                 if (CalcOpts.selectedAspect == Aspect.None) CB_Aspect.SelectedIndex = 0;
                 if (CalcOpts.selectedAspect == Aspect.Beast) CB_Aspect.SelectedIndex = 1;
                 if (CalcOpts.selectedAspect == Aspect.Hawk) CB_Aspect.SelectedIndex = 2;
@@ -859,15 +855,6 @@ namespace Rawr.Hunter
         {
             if (isLoading) return;
             CalcOpts.bossHPPercentage = (float)(NUD_BossHP.Value / 100);
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cmbManaPotion_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (isLoading) return;
-            if (CB_ManaPotion.SelectedIndex == 0) CalcOpts.useManaPotion = ManaPotionType.None;
-            if (CB_ManaPotion.SelectedIndex == 1) CalcOpts.useManaPotion = ManaPotionType.RunicManaPotion;
-            if (CB_ManaPotion.SelectedIndex == 2) CalcOpts.useManaPotion = ManaPotionType.SuperManaPotion;
             Character.OnCalculationsInvalidated();
         }
 

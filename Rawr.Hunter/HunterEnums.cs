@@ -169,13 +169,6 @@ namespace Rawr.Hunter
         Unimplemented
     }
 
-    public enum ManaPotionType
-    {
-        None,
-        RunicManaPotion,
-        SuperManaPotion
-    }
-
     public enum AspectUsage
     {
         AlwaysOn,

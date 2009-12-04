@@ -181,6 +181,7 @@ namespace Rawr.Hunter
         public float manaRegenInvigoration { get; set; }
         public float manaRegenHuntingParty { get; set; }
         public float manaRegenTargetDebuffs { get; set; }
+        public float manaRegenFromPots { get; set; }
         public float manaRegenTotal { get; set; }
 
         public float manaRegenViper { get; set; }
@@ -439,14 +440,20 @@ namespace Rawr.Hunter
                            manaUsageRotation.ToString("F2") + " from shot rotation\n" +
                            manaUsageKillCommand.ToString("F2") + " from Kill Command");
             dictValues.Add("Mana Regen Per Second", manaRegenTotal.ToString("F2") + "*includes:\n" +
-                           manaRegenGearBuffs.ToString("F2") + " from Gear and Buffs\n" +
-                           manaRegenConstantViper.ToString("F2") + " from Aspect of the Viper\n" +
-                           manaRegenRoarOfRecovery.ToString("F2") + " from Roar of Recovery\n" +
-                           manaRegenRapidRecuperation.ToString("F2") + " from Rapid Recuperation\n" +
-                           manaRegenChimeraViperProc.ToString("F2") + " from Chimera Viper String Proc\n" +
-                           manaRegenInvigoration.ToString("F2") + " from Invigoration\n" +
-                           manaRegenHuntingParty.ToString("F2") + " from Hunting Party\n" +
-                           manaRegenTargetDebuffs.ToString("F2") + " from Target Debuffs");
+                (manaRegenGearBuffs + manaRegenConstantViper + manaRegenRoarOfRecovery
+                 + manaRegenRapidRecuperation + manaRegenChimeraViperProc + manaRegenInvigoration
+                 + manaRegenHuntingParty + manaRegenTargetDebuffs + manaRegenFromPots > 0f ? 
+                    (manaRegenGearBuffs != 0 ? manaRegenGearBuffs.ToString("F2") + " from Gear and Buffs\n" : "") +
+                    (manaRegenConstantViper != 0 ? manaRegenConstantViper.ToString("F2") + " from Aspect of the Viper\n" : "") +
+                    (manaRegenRoarOfRecovery != 0 ? manaRegenRoarOfRecovery.ToString("F2") + " from Roar of Recovery\n" : "") +
+                    (manaRegenRapidRecuperation != 0 ? manaRegenRapidRecuperation.ToString("F2") + " from Rapid Recuperation\n" : "") +
+                    (manaRegenChimeraViperProc != 0 ? manaRegenChimeraViperProc.ToString("F2") + " from Chimera Viper String Proc\n" : "") +
+                    (manaRegenInvigoration != 0 ? manaRegenInvigoration.ToString("F2") + " from Invigoration\n" : "") +
+                    (manaRegenHuntingParty != 0 ? manaRegenHuntingParty.ToString("F2") + " from Hunting Party\n" : "") +
+                    (manaRegenTargetDebuffs != 0 ? manaRegenTargetDebuffs.ToString("F2") + " from Target Debuffs\n" : "") +
+                    (manaRegenFromPots != 0 ? manaRegenFromPots.ToString("F2") + " from Pots" : "")
+                : "Nothing to add")
+            );
             dictValues.Add("Potion Regen Per Second", manaRegenPotion.ToString("F2"));
             dictValues.Add("Viper Regen Per Second", manaRegenViper.ToString("F2"));
             dictValues.Add("Normal Change", manaChangeDuringNormal.ToString("F2"));

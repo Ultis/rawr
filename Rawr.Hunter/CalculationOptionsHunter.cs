@@ -203,7 +203,6 @@ namespace Rawr.Hunter
         public int timeSpentSub20 = 72;
         public int timeSpent35To20 = 54;
         public float bossHPPercentage = 1;
-        public ManaPotionType useManaPotion = ManaPotionType.RunicManaPotion;
         public bool useBeastDuringBeastialWrath = false;
         public bool useKillCommand = true;
         public Aspect selectedAspect = Aspect.Dragonhawk;

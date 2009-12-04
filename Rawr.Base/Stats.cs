@@ -1043,6 +1043,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier] = value; }
         }
 
+        /// <summary>From Judgement of Wisdom</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Base Mana / Minute (PPM)")]
