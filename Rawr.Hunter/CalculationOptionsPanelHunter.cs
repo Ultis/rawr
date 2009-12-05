@@ -14,7 +14,6 @@ namespace Rawr.Hunter
         #region Instance Variables
         private bool isLoading = false;
 		private CalculationOptionsHunter CalcOpts = null;
-        private PetBuffSelector petBuffSelector = null;
         #endregion
 
         #region Constructors
@@ -94,18 +93,7 @@ namespace Rawr.Hunter
             initTalentValues(CB_TenacityWildHunt, 2);
             #endregion
 
-            // The PetBuffSelector doesn't work in the designer. bah
-            petBuffSelector = new PetBuffSelector();
-            petBuffSelector.character = Character;
-
-            Page_04_PetBuffs.Controls.Add(petBuffSelector);
-            petBuffSelector.AutoScroll = true;
-            petBuffSelector.Dock = System.Windows.Forms.DockStyle.Fill;
-            petBuffSelector.Location = new System.Drawing.Point(0, 0);
-            petBuffSelector.Name = "petBuffSelector";
-            petBuffSelector.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            petBuffSelector.Size = new System.Drawing.Size(303, 558);
-            petBuffSelector.TabIndex = 0;
+            PetBuffs.character = Character;
 
             InitializeShotList(CB_ShotPriority_01);
             InitializeShotList(CB_ShotPriority_02);
@@ -168,8 +156,8 @@ namespace Rawr.Hunter
 
                 CK_PTRMode.Checked = CalcOpts.PTRMode;
 
-                petBuffSelector.character = Character;
-                petBuffSelector.LoadBuffsFromOptions();
+                PetBuffs.character = Character;
+                PetBuffs.LoadBuffsFromOptions();
 
                 NUD_Latency.Value = (decimal)(CalcOpts.Latency * 1000.0);
 
@@ -207,8 +195,9 @@ namespace Rawr.Hunter
                 if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
 
                 CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBeastialWrath;
-                CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
                 CK_UseRotation.Checked = CalcOpts.useRotationTest;
+                CK_RandomProcs.Enabled = CK_UseRotation.Checked;
+                CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
 
                 PopulateAbilities();
 
@@ -897,6 +886,7 @@ namespace Rawr.Hunter
         {
             if (isLoading) return;
             CalcOpts.useRotationTest = CK_UseRotation.Checked;
+            CK_RandomProcs.Enabled = CK_UseRotation.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -978,6 +968,5 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
     }
 }

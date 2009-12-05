@@ -28,19 +28,15 @@ namespace Rawr.Hunter
         private bool _loadingBuffs = false;
         private Character _character = null;
 
-        public Character character
-        {
+        public Character character {
             get { return _character; }
-            set
-            {
-                if (_character != null)
-                {
+            set {
+                if (_character != null) {
                     _character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged);
                 }
                 _character = value;
 
-                if (_character != null)
-                {
+                if (_character != null) {
                     _character.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
                     options = character.CalculationOptions as CalculationOptionsHunter;
                     LoadBuffsFromOptions();
