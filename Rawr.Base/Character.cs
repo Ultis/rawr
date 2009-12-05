@@ -1740,7 +1740,6 @@ namespace Rawr //O O . .
 
             WaistBlacksmithingSocketEnabled = true;
             SetFaction();
-            OnRaceChanged();
             IsLoading = false;
             RecalculateSetBonuses();
 
@@ -1786,7 +1785,6 @@ namespace Rawr //O O . .
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
             SetFaction();
-            OnRaceChanged();
             IsLoading = false;
             RecalculateSetBonuses();
             BossOptions = boss.Clone();
