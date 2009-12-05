@@ -50,12 +50,8 @@ namespace Rawr.DPSWarr {
             }
         }
         public CalculationOptionsPanelDPSWarr() {
-            //int line = 0;
             isLoading = true;
             try {
-                /*new ErrorBoxDPSWarr("Test Title", "Test message", "CalculationOptionsPanelDPSWarr()",
-                    "This is a forced one, just making sure the frackin thing works", "test stack trace", 0);
-                 ...it doesnt -.- */
                 InitializeComponent();
                 SetUpFAQ();
                 SetUpPatchNotes();
@@ -67,7 +63,7 @@ namespace Rawr.DPSWarr {
                 //if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
                 //if (CB_BossList.Items.Count < 2) {
                     //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
-                //} line = 15;
+                //}
                 // Set the default Filter Type
                 //if (CB_BL_FilterType.SelectedIndex == -1) { CB_BL_FilterType.SelectedIndex = 0; }
                 // Set the Default filter to All and Populate the list based upon the Filter Type
@@ -80,11 +76,10 @@ namespace Rawr.DPSWarr {
                         //CB_BL_Filter.Items.Add(s);
                     //}
                 //}
-                //line = 20;
+
                 //if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
                 //CB_BossList.Items.Add("Custom");
                 //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
-                //line = 25;
             } catch (Exception ex) {
                 new ErrorBox("Error in creating the DPSWarr Options Pane",
                     ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException.Message, ex.StackTrace);
@@ -106,7 +101,6 @@ namespace Rawr.DPSWarr {
                 else if (Character == null) { return; }
                 calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
-                CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
                 CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
                 CB_TargArmor.SelectedItem = calcOpts.TargetArmor.ToString();
                 CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
@@ -233,11 +227,148 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+PNStuff.Add(
+"v2.2.28 (Unreleased)",
+@"- Fixed a bug where some of the interface wasn't initially setting it's enable/disable
+- Added the missing 7th WW hit for Bladestorm
+- Modification to OP GCD usage (uses less when the CD is less than a base GCD)
+- Same change to TfB
+*** Ebs is arms now, so he's making arms fixes! ***
+- MS activates are now also affected by Bladestorm
+- Fix for issue 14830 (Overpower eating up slam GCDs)
+- Added the 1sec Overpower logic to the execute spamming. Note that execute spamming is still not working properly
+Beginning to migrate my 'big patch' over, which isn't so big anymore, as I had to scrap a lot of it :(
+- Buff handling performance has been improved, a lot less strain on the garbage collector
+- MessageBox changes when errors are caught
+- Refactoring of GetCharacterStats
+- Agility from Mongoose procs is now affected by kings
+- Removed a lot of extraneous GetXOverDur calculations in the proc logic
+- Options Panel: maint tree is handled by a small algorithm rather than hard-coded switch statement
+- Moved the validated special effects of stats to Rotation
+More changes migrated from my busted patch
+- Created a Default Attack Table that we can reuse for abilities that don't have weird changes (increased crit chance from talents/glyphs, overpower, etc)
+- Fixed a bug where white attacks were using yellow crit chances instead of white ones
+- More errorbox fixes
+- Removed a lot of private fields that were being used in Getters/Setters. The compiler can do this for us - cleaner code and faster performance, woo!
+- Fury: Cleaned up the HS/Cleave calculations. Improved performance
+- Skills: Removed InitializeA(CalcOpts) and changed InitializeB(CalcOpts) to not pass any parameters. Cleaner code, more efficiency
+- Skills: Re-worked it so the only things that are overridden are Validated and Overrides. Not a bug-fix, but is consistent and makes more sense
+- Arms will now get deep wounds damage from Heroic Strike
+- Lowered DPS from Overpower after a dodged attack, because sometimes TfB has procced but you can't use it, or because you're keeping rend up, etc. As a result, Expertise will no longer be negative damage.
+- Changed accessor of AddValidatedSpecialEffects from internal unsafe to public (gogo 'Generate Method Stub')
+- Fix for 2-roll system on abilities with a bonus crit chance
+- Removed some dead code
+- Reverted DeepWounds change from arms, *mumbles something about spaghetti*
+- Some whitespace changes, nothing significant
+
+Refactoring of Rotation. It took a long time to untangle some of that spaghetti; hope I didn't miss anything.
+Added to Rotation object:
+- FightDuration param
+- TimeLostGCDs for Boss Handling
+- Pulled out the GCDs in the rotation, GCDs used and GCDs available to a property level
+- New Methods: protected CalculateTimeLost, privates CalculateFear, CalculateMovement, CalculateStun, CalculateRoot.
+Rotation.Arms:
+- Took out maintenance from the SettleAll loop. These never change while looping
+- Maintenance code is now generalized.
+- Took out <20% looping, as it's been broken forever. The option's still there, it just does nothing. It can be hooked back up when we fix it
+Misc Bug Fix: SecondWind/SweepingStrikes confusion in SecondWind's constructor.
+
+- All models using Prof enchant hiding have been changed to use the global sets on the Stats Pane and Options > General Settings > Hide enchants based on professions. Models that were handling this manually have been edited to the new method, models that didn't have it are now on it as the back end changed
+- Profession bonus Buffs (Toughness and the like) are now updated when you update your professions in all models. Models that were handling this manually have been edited to the new method, models that didn't have it are now on it as the back end changed
+- Minor fix to Slam when way under on rage performance
+- Implemented Stat Graph for DPSWarr (only in Rawr2, wanted to get the kinks out)
+- Using the data shown on the charts for small to large numbers, I've implemented several stat caps and bottoms, some things wouldn't happen in real life, but they show directly on the Graph
+- Made corrections to the HS/CL displays on the stats pane. The data used for display was garbage in certain situations, these now have good data coming in (this was a display issue only)
+- Added a fix to Fury where the percentage of rage wasn't be distributed between HS and CL
+- Added a fix to Fury where invalid HS/CL would have a NaN violation
+
+Next batch of major refactoring of Rotation. If you're familiar with DPSWarr, please test this and report issues. Major refactoring is dangerous, but in the long run it will be much much easier to maintain
+- Added AbilWrapper, which is a wrapper object for abilities, their activates, DPS, etc
+- Rotation holds a list of AbilWrapper that can be iterated over for getting numAtksOverDur, building comparison charts, etc
+- Added SwingsOffHand/SwingsPerActivate/UsesGCD to Ability to let us streamline special cases at the Ability level (whirlwind, bladestorm, etc)
+- Abilities that give rage now have a negative rage cost for easier identification
+- Moved the BossHandler fear/stun/move/root numbers to the Rotation base, which means Fury is able to use it. It probably needs some tweaking.
+- Float fail and cache fail fixed
+
+Arms tweaking to match Landsoul's sheet.
+- Reaction Allowance lowered from 250ms to 200ms
+- Expertise display now includes expertise from talents (was only a display issue)
+- Flooring/Casting of stats removed due to jaggedness of charts; will re-add eventually
+- More arms crowding added
+- LatentGCD now includes Reaction Allowance
+- GCDTime added to Ability object to facilitate knowledge of 1sec OP GCDs and 6sec Bladestorm GCDs at the Ability level
+- Overpower now uses full reaction time and TFB now uses reaction allowance since TFB procs aren't random.
+- Berserker Rage and Bloodrage now use full reaction time instead of reaction allowance time
+- Ability.UseTime added, which factors in Lag/Reaction/GCD time to tell you how much time is used up when you activate the ability.
+- OnAttacks are now default to not use the GCD (didn't change DPS but would have led to a bug later)
+
+- Tweaks to BossHandling to support shared HF/EM
+- Encounters with Movement will now support Intercept and Heroic Fury
+- All abilities by default have a rage cost of 0 instead of refunding 1 rage
+- Fixed a null exception error
+- Added some XmlIgnores to cut down on redundant variables in the char file save
+- Fixed Fears and Moves not recalling on char file load (We can now move forward on getting the rest of those moved to new method)
+- Killed a warning about a variable not in use
+- Added Descriptions to the abilities on the back end, so they can be used in our Custom Comp Charts as part of the tooltips
+- Updated the remaining Impedances to use the new multi-imp handling method
+- Moved our ErrorBox to Base (since I started referencing it a few times for stuff outside DPSWarr)
+- Removed a check for FuryStance on Rampage in two places, since rampage works in all stances.
+- Added base setups for T10 set bonuses (just the stats themselves, not the handling of those stats)
+- Starter setup for value of T10 2 pc, Ebs needs to look at it
+- The addition of 2pT10 set bonus has made me aware of a few problems in our stat multiplier and armor handling
+- Completely revamped UpdateStatsAndAdd to work with stat multipliers.
+- Removed some variables that weren't being used
+- Armor was just way off, it's now much more accurate
+- Berserking now interacts correctly with Armed to the Teeth
+- PhysicalCrit from CritRating is now done in one place rather than all over the place
+- 2pT10 is now supported and functional (unsure about if the actual items will activate the buffs, however). Still no value for 4pc
+- Slight boo-boo with BaseArmorMultiplier vs BonusArmorMultiplier. Now using TotalArmor = (BaseArmor * BaseMult + BonusArmor)*BonusMult. This makes the Toughness talent a little worse
+
+Fury's 4T10 has been implemented. Net result is slightly better than 2T9, so worth the upgrade.
+- The rotation has changed. It is still a 'BT/WW-first, Slam only when possible' rotation, but slam is now limited by the 5sec duration of the Bloodsurge buff.
+Without 4T10, BS now only procs from 1/2 your BTs and 5/8 of your HSes, due to the 5sec duration on the buff.
+With 4T10, the number of procs you get is increased by 20%. You also get 20% of the BS procs that were not included in the 'Without 4T10', since they can be squeezed in the 1sec gap between BT#2 and WW. The remaining proc gets used if you wouldn't have had a proc otherwise.
+New Rotation:
+0.0: WW
+1.5: BT
+3.0: Slam procced at all? If not, leftover from 4T10proc slam used at 7.0)?
+4.0: Bonus Slam from 4T10?
+5.5: BT
+7.0: 1s Slam from 4T10 proc? Leave second for use at 3.0
+8.0: WW(repeat from 0.0)");
+PNStuff.Add(
+"v2.2.27 (Nov 10, 2009 03:45)",
+@"- No commits for this release");
+PNStuff.Add(
+"v2.2.26 (Nov 09, 2009 01:53)",
+@"- No commits for this release");
+PNStuff.Add(
+"v2.2.25 (Nov 08, 2009 20:15)",
+@"- Fix for issue 14526 (Bladestorm eating all your GCDs in low rage settings)
+- Also removed a reference to a variable in Rotation.cs that was never used
+- Refactored ErrorBoxDPSWarr to a new file
+- Added a check for the iterator for Heroic Strikes/Cleaves to use the already set verification of (HS/CL)OK before attempting to loop, should imp perf a little for users not HS'g
+- Added a Dev Only Accessible checkbox to enable Markov Rotation for Arms (working a new method that's more intelligent and better adapted for Interference modeling, it doesn't actually do anything as we haven't fully constructed the necessary files)
+- Fix for Mongoose, fix for off-hand weapon enchants using MH speed in their uptime, some performance improvements
+- Committing work on Markov method for arms rotation, note that it has absolutely no bearing on anything right now
+- Updates for markov model.
+- Well Kavan and I got to working on it and it is generating states... like 140,000 of them /facepalm. Turned it off for now so it doesn't affect anything
+- Converted CalcOpts' variables to properties with an OnPropertyChanged event (to be used later in Rawr3)
+- Some cleanup on the Options pane... but it isn't showing up in Rawr3 when run for some reason
+- LOTS of work on the Options Pane and now it's not crashing (well, almost not) and it's functioning (selecting options actually does stuff)
+- Updated the Options pane to reflect work from Rawr2 (still not done but definitely closer)
+- More Markov work with Kavan
+- Added a verifier for bleed hit intervals (in Special Effects handling) to check if Rend is being maintained instead of assuming it is.
+- Cleaned out some old commented code
+- Added logfile creation for recording errors in DPSWarr that go through ErrorBoxDPSWarr class. This is primarily for Rawr3 debugging.
+- Rawr3: Significant improvements to the Options pane, objects should line up correctly, enable/disable and tie to the correct parameters. There's still work to be done but we're getting close to a fully functional Rawr3 model.
+- Rawr3: Ability Maintenance Tree now ties to abilities, but for some reason when you open that tab, it resets all of them to off (thus making user re-activate them on each character load). Once reactivated, it seems to work fine.
+- Rawr3: Fixed the Ability Maintenance so it won't reset them all to not active (had to do away with the tree unfortunately)
+- Rawr3: Got some of the ComboBoxes working
+- Fixed the cooldown on Intercept and added PvP 4 pc set bonus to it
+- Added comments to the Hunter and Warrior Set Bonus Stats");
             PNStuff.Add(
-            "v2.2.25 (Unreleased)",
-            @"");
-            PNStuff.Add(
-            "v2.2.24 (Projected Release: Oct 24, 2009 18:00)",
+            "v2.2.24 (Oct 24, 2009 18:00)",
             @"- Added new naming/colors for the custom chart so you know what each number actually means
 - Fixed a bug with Sword Spec to show values when not using a Swordspec
 - Fixed a bug with Needed Rage in Arms Rotation, making it visually double-dip
