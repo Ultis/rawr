@@ -69,14 +69,14 @@
     <Compile Include="..\..\Rawr.Hunter\HunterEnums.cs">
       <Link>HunterEnums.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Hunter\PetCalculations.cs">
-      <Link>PetCalculations.cs</Link>
+    <Compile Include="..\..\Rawr.Hunter\Pet\PetCalculations.cs">
+      <Link>Pet\PetCalculations.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Hunter\PetSkill.cs">
-      <Link>PetSkill.cs</Link>
+    <Compile Include="..\..\Rawr.Hunter\Pet\PetSkill.cs">
+      <Link>Pet\PetSkill.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Hunter\PetTalents.cs">
-      <Link>PetTalents.cs</Link>
+    <Compile Include="..\..\Rawr.Hunter\Pet\PetTalents.cs">
+      <Link>Pet\PetTalents.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Hunter\RotationTest.cs">
       <Link>RotationTest.cs</Link>
@@ -109,6 +109,17 @@
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\Rawr.Hunter\Resources\bgCunning.jpg">
+      <Link>Resources\bgCunning.jpg</Link>
+    </Resource>
+    <Resource Include="..\..\Rawr.Hunter\Resources\bgFerocity.jpg">
+      <Link>Resources\bgFerocity.jpg</Link>
+    </Resource>
+    <Resource Include="..\..\Rawr.Hunter\Resources\bgTenacity.jpg">
+      <Link>Resources\bgTenacity.jpg</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\v3.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
