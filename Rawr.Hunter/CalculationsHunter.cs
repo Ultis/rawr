@@ -60,11 +60,7 @@ namespace Rawr.Hunter {
             private CalculationOptionsPanelBase calculationOptionsPanel = null;
 		    public override CalculationOptionsPanelBase CalculationOptionsPanel
         #endif
-            {
-                get {
-				    return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter());
-                }
-            }
+            { get { return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels {
@@ -78,12 +74,12 @@ namespace Rawr.Hunter {
                         "Basic Stats:Ranged Attack Power",
 				        "Basic Stats:Intellect",
 				        @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks
-Focused Aim 0 - 8%-0%=8%=264 Rating soft cap
+Focused Aim 0 - 8%-0%=8%=263 Rating soft cap
 Focused Aim 1 - 8%-1%=7%=230 Rating soft cap
 Focused Aim 2 - 8%-2%=6%=197 Rating soft cap
 Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				        "Basic Stats:Crit",
-				        @"Basic Stats:Armor Penetration*Rating Cap- 1400",
+				        "Basic Stats:Armor Penetration*Rating Cap 1400",
 				        "Basic Stats:Haste",
 
                         "Pet Stats:Pet Attack Power",
@@ -105,22 +101,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Shot Stats:Kill Shot",
 				        "Shot Stats:Explosive Shot",
 				        "Shot Stats:Black Arrow",
-                        "Shot Stats:Immolation Trap",
-                        "Shot Stats:Explosive Trap",
-                        "Shot Stats:Freezing Trap",
-                        "Shot Stats:Frost Trap",
                         "Shot Stats:Volley",
                         "Shot Stats:Chimera Shot",
                         "Shot Stats:Rapid Fire",
                         "Shot Stats:Readiness",
                         "Shot Stats:Beastial Wrath",
-                        "Shot Stats:Blood Fury",
-                        "Shot Stats:Berserk",
+
+                        "Trap Stats:Immolation Trap",
+                        "Trap Stats:Explosive Trap",
+                        "Trap Stats:Freezing Trap",
+                        "Trap Stats:Frost Trap",
 
                         "Mana:Mana Usage Per Second",
                         "Mana:Mana Regen Per Second",
-                        "Mana:Potion Regen Per Second",
-                        "Mana:Viper Regen Per Second",
                         "Mana:Normal Change",
                         "Mana:Change during Viper",
                         "Mana:Time to OOM",
@@ -748,8 +741,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedMPS(calculations.rapidFire),
                         comparisonFromShotSpammedMPS(calculations.readiness),
                         comparisonFromShotSpammedMPS(calculations.beastialWrath),
-                        comparisonFromShotSpammedMPS(calculations.bloodFury),
-                        comparisonFromShotSpammedMPS(calculations.berserk),
                     };
 
                 case "Rotation DPS":
@@ -806,8 +797,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationMPS(calculations.rapidFire),
                         comparisonFromShotRotationMPS(calculations.readiness),
                         comparisonFromShotRotationMPS(calculations.beastialWrath),
-                        comparisonFromShotRotationMPS(calculations.bloodFury),
-                        comparisonFromShotRotationMPS(calculations.berserk),
                         comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
                     };
 
@@ -1041,8 +1030,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.frostTrap.Cd = 30 - talents.Resourcefulness * 2;
             calculatedStats.frostTrap.Duration = 30;
 
-            calculatedStats.volley.Cd = 1f;
-            calculatedStats.volley.Duration = 6f;
+            if (calcOpts.MultipleTargets && calcOpts.MultipleTargetsPerc > 0) {
+                // Good to go, now change the cooldown based on the multitargs uptime
+                calculatedStats.volley.Duration = 6f;
+                calculatedStats.volley.Cd = (1f / ((calcOpts.MultipleTargetsPerc * calcOpts.Duration) / calculatedStats.volley.Duration)) * calcOpts.Duration;
+            } else {
+                // invalidate it
+                calculatedStats.volley.Cd = -1f;
+                //calculatedStats.volley.CastTime = -1f;
+                calculatedStats.volley.Duration = -1f;
+            }
 
             if (calculatedStats.priorityRotation.containsShot(Shots.Readiness))
             {
@@ -1059,12 +1056,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.beastialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
             calculatedStats.beastialWrath.Duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
-
-            calculatedStats.bloodFury.Cd = 120;
-            calculatedStats.bloodFury.Duration = 15;
-
-            calculatedStats.berserk.Cd = 180;
-            calculatedStats.berserk.Duration = 10;
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.initializeTimings();
@@ -1484,8 +1475,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaUsageTotal = calculatedStats.manaUsageRotation
                                            + calculatedStats.manaUsageKillCommand;
 
-            calculatedStats.manaChangeDuringViper = calculatedStats.manaRegenViper + calculatedStats.manaRegenPotion + calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
-            calculatedStats.manaChangeDuringNormal = calculatedStats.manaRegenTotal + calculatedStats.manaRegenPotion - calculatedStats.manaUsageTotal;
+            calculatedStats.manaChangeDuringViper = calculatedStats.manaRegenViper + calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
+            calculatedStats.manaChangeDuringNormal = calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
 
             calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper > 0f ? calculatedStats.BasicStats.Mana / calculatedStats.manaChangeDuringViper : -1;
             calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0f ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
@@ -2023,12 +2014,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Volley
-            float volleyDamageNormal = 353f; // * NumTargets
+            float volleyDamageNormal = 353f + RAP * 0.0837f; // * AvgNumTargets
             float volleyDamageAdjust = talentDamageAdjust
                                      * partialResistDamageAdjust
                                      * BonusDamageAdjust;
             float numvolleyTicks = 6f;
             float volleyDamageReal = volleyDamageNormal * numvolleyTicks;
+
+            // TODO: Add possibility to crit
+            // TODO: Enforce channelled aspect of this ability,
+            //       right now it acts like they can just keep going
 
             calculatedStats.volley.Damage = volleyDamageReal;
             #endregion
@@ -2643,8 +2638,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (index == 18) return calculatedStats.rapidFire;
             if (index == 19) return calculatedStats.readiness;
             if (index == 20) return calculatedStats.beastialWrath;
-            if (index == 21) return calculatedStats.bloodFury;
-            if (index == 22) return calculatedStats.berserk;
             return null;
         }
 

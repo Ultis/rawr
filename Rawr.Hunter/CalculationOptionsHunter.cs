@@ -41,8 +41,8 @@ namespace Rawr.Hunter
             get { return _InBack; }
             set { _InBack = value; OnPropertyChanged("InBack"); }
         }
-        private int _InBackPerc;
-        public int InBackPerc
+        private float _InBackPerc;
+        public float InBackPerc
         {
             get { return _InBackPerc; }
             set { _InBackPerc = value; OnPropertyChanged("InBackPerc"); }
@@ -53,8 +53,8 @@ namespace Rawr.Hunter
             get { return _MultipleTargets; }
             set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
         }
-        private int _MultipleTargetsPerc;
-        public int MultipleTargetsPerc
+        private float _MultipleTargetsPerc;
+        public float MultipleTargetsPerc
         {
             get { return _MultipleTargetsPerc; }
             set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
@@ -232,12 +232,6 @@ namespace Rawr.Hunter
         public bool interleaveLAL = false; // not editable
         public bool prioritiseArcAimedOverSteady = true; // not editable
         public bool debugShotRotation = false; // not editable
-
-        // NOTE: setting this to true does 'bad' uptime calculations,
-        // to help match the spread sheet. if a fight last 10 seconds
-        // and an ability has a 4 second cooldown, the spreadsheet says
-        // you can use it 2.5 times, while we say you can use it twice.
-        public bool calculateUptimesLikeSpreadsheet = true;
 
         // new priority rotation stuff
         public int PriorityIndex1 = 0;

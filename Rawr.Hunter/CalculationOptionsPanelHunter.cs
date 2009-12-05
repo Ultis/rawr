@@ -142,8 +142,6 @@ namespace Rawr.Hunter
             cb.Items.Add("Rapid Fire");
             cb.Items.Add("Readiness");
             cb.Items.Add("Beastial Wrath");
-            cb.Items.Add("Orc - Blood Fury");
-            cb.Items.Add("Troll - Berserk");
         }
         protected override void LoadCalculationOptions() {
             try {
@@ -174,6 +172,10 @@ namespace Rawr.Hunter
                 petBuffSelector.LoadBuffsFromOptions();
 
                 NUD_Latency.Value = (decimal)(CalcOpts.Latency * 1000.0);
+
+                CK_MultipleTargets.Checked = CalcOpts.MultipleTargets;
+                NUD_MultiTargsUptime.Enabled = CalcOpts.MultipleTargets;
+                NUD_MultiTargsUptime.Value = (int)(CalcOpts.MultipleTargetsPerc * 100f);
 
                 Bar_TargArmor.Value = CalcOpts.TargetArmor;
                 LB_TargArmorValue.Text = CalcOpts.TargetArmor.ToString();
@@ -886,13 +888,6 @@ namespace Rawr.Hunter
             Character.OnCalculationsInvalidated();
         }
 
-        private void chkSpreadsheetUptimes_CheckedChanged(object sender, EventArgs e)
-        {
-            if (isLoading) return;
-            CalcOpts.calculateUptimesLikeSpreadsheet = CK_SpreadsheetUptimes.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
         private void CalculationOptionsPanelHunter_Resize(object sender, EventArgs e)
         {
             Tabs.Height = Tabs.Parent.Height - 5;
@@ -963,6 +958,23 @@ namespace Rawr.Hunter
             if (!isLoading) {
                 CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
                 calcOpts.PTRMode = CK_PTRMode.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void NUD_MultiTargsUptime_ValueChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+                calcOpts.MultipleTargetsPerc = (float)NUD_MultiTargsUptime.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void CK_MultipleTargets_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+                calcOpts.MultipleTargets = CK_MultipleTargets.Checked;
+                NUD_MultiTargsUptime.Enabled = CalcOpts.MultipleTargets;
                 Character.OnCalculationsInvalidated();
             }
         }

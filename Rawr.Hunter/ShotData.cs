@@ -25,6 +25,7 @@ namespace Rawr.Hunter
         public bool FailReason_SteadyBefore       = false; // used in tooltip display
         public bool FailReason_SharedCooldownUsed = false; // used in tooltip display
         public bool FailReason_LackTalent         = false; // used in tooltip display
+        public bool FailReason_RequiresMultiTargs = false; // used in tooltip display
         public bool FailReason_AlreadyUsed        = false; // for de-duping the priority list
 
         public float rotation_cooldown = 0f;
@@ -293,6 +294,7 @@ namespace Rawr.Hunter
                 ret += FailReason_SharedCooldownUsed ? "Not being used in rotation:\n- Shares a cooldown with a higher priority shot" : 
                        FailReason_LackTalent         ? "Not being used in rotation:\n- You lack the needed talent" :
                        FailReason_SteadyBefore       ? "Not being used in rotation:\n- Steady shot has a higher priority" :
+                       FailReason_RequiresMultiTargs ? "Not being used in rotation:\n- Multiple Targets isn't set" :
                        "(Not in rotation)";
             }
 

@@ -44,9 +44,7 @@ namespace Rawr.Hunter
         FrostTrap,
         Volley,
         Readiness,
-        BeastialWrath,
-        BloodFury,
-        Berserk
+        BeastialWrath
     }
 
     public enum PetFamily

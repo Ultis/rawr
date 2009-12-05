@@ -157,13 +157,11 @@ namespace Rawr.Hunter
         public ShotData explosiveTrap = new ShotData(Shots.ExplosiveTrap, false, false, true);
         public ShotData freezingTrap = new ShotData(Shots.FreezingTrap, true, false, true);
         public ShotData frostTrap = new ShotData(Shots.FrostTrap, true, false, true);
-        public ShotData volley = new ShotData(Shots.Volley, false, false, true);
+        public ShotData volley = new ShotData(Shots.Volley, false, true, true);
         public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, false, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, true, false, false);
         public ShotData readiness = new ShotData(Shots.Readiness, true, false, true);
         public ShotData beastialWrath = new ShotData(Shots.BeastialWrath, true, false, false);
-        public ShotData bloodFury = new ShotData(Shots.BloodFury, true, false, false);
-        public ShotData berserk = new ShotData(Shots.Berserk, true, false, false);
 
         public ShotPriority priorityRotation = null;
 
@@ -185,7 +183,6 @@ namespace Rawr.Hunter
         public float manaRegenTotal { get; set; }
 
         public float manaRegenViper { get; set; }
-        public float manaRegenPotion { get; set; }
         #endregion
 
         #region Mana Usage
@@ -423,28 +420,29 @@ namespace Rawr.Hunter
             dictValues.Add("Kill Shot", killShot.GenTooltip());
             dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());
             dictValues.Add("Black Arrow", blackArrow.GenTooltip());
-            dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());
-            dictValues.Add("Explosive Trap", explosiveTrap.GenTooltip());
-            dictValues.Add("Freezing Trap", freezingTrap.GenTooltip());
-            dictValues.Add("Frost Trap", frostTrap.GenTooltip());
             dictValues.Add("Volley", volley.GenTooltip());
             dictValues.Add("Chimera Shot", chimeraShot.GenTooltip());
             dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
             dictValues.Add("Readiness", readiness.GenTooltip());
             dictValues.Add("Beastial Wrath", beastialWrath.GenTooltip());
-            dictValues.Add("Blood Fury", bloodFury.GenTooltip());
-            dictValues.Add("Berserk", berserk.GenTooltip());
+
+            // Trap Stats
+            dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());
+            dictValues.Add("Explosive Trap", explosiveTrap.GenTooltip());
+            dictValues.Add("Freezing Trap", freezingTrap.GenTooltip());
+            dictValues.Add("Frost Trap", frostTrap.GenTooltip());
 
             // Mana
             dictValues.Add("Mana Usage Per Second", manaUsageTotal.ToString("F2") + "*includes:\n" +
                            manaUsageRotation.ToString("F2") + " from shot rotation\n" +
                            manaUsageKillCommand.ToString("F2") + " from Kill Command");
             dictValues.Add("Mana Regen Per Second", manaRegenTotal.ToString("F2") + "*includes:\n" +
-                (manaRegenGearBuffs + manaRegenConstantViper + manaRegenRoarOfRecovery
+                (manaRegenGearBuffs + manaRegenConstantViper + manaRegenViper + manaRegenRoarOfRecovery
                  + manaRegenRapidRecuperation + manaRegenChimeraViperProc + manaRegenInvigoration
                  + manaRegenHuntingParty + manaRegenTargetDebuffs + manaRegenFromPots > 0f ? 
                     (manaRegenGearBuffs != 0 ? manaRegenGearBuffs.ToString("F2") + " from Gear and Buffs\n" : "") +
-                    (manaRegenConstantViper != 0 ? manaRegenConstantViper.ToString("F2") + " from Aspect of the Viper\n" : "") +
+                    (manaRegenConstantViper != 0 ? manaRegenConstantViper.ToString("F2") + " from Constant Aspect of the Viper\n" : "") +
+                    (manaRegenViper != 0 ? manaRegenViper.ToString("F2") + " from Aspect of the Viper\n" : "") +
                     (manaRegenRoarOfRecovery != 0 ? manaRegenRoarOfRecovery.ToString("F2") + " from Roar of Recovery\n" : "") +
                     (manaRegenRapidRecuperation != 0 ? manaRegenRapidRecuperation.ToString("F2") + " from Rapid Recuperation\n" : "") +
                     (manaRegenChimeraViperProc != 0 ? manaRegenChimeraViperProc.ToString("F2") + " from Chimera Viper String Proc\n" : "") +
@@ -454,8 +452,6 @@ namespace Rawr.Hunter
                     (manaRegenFromPots != 0 ? manaRegenFromPots.ToString("F2") + " from Pots" : "")
                 : "Nothing to add")
             );
-            dictValues.Add("Potion Regen Per Second", manaRegenPotion.ToString("F2"));
-            dictValues.Add("Viper Regen Per Second", manaRegenViper.ToString("F2"));
             dictValues.Add("Normal Change", manaChangeDuringNormal.ToString("F2"));
             dictValues.Add("Change during Viper", manaChangeDuringViper.ToString("F2"));
             dictValues.Add("Time to OOM", manaTimeToOOM.ToString("F2"));

@@ -54,7 +54,10 @@ namespace Rawr.Hunter {
                 if (priorities[i] != null && (priorities[i].Type == Shots.ExplosiveTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
                 if (priorities[i] != null && (priorities[i].Type == Shots.FreezingTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
                 if (priorities[i] != null && (priorities[i].Type == Shots.FrostTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
-                if (priorities[i] != null && (priorities[i].Type == Shots.Volley && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
+                //if (priorities[i] != null && (priorities[i].Type == Shots.Volley && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
+
+                // Requires Multiple Targets
+                if (priorities[i] != null && (priorities[i].Type == Shots.Volley && (!CalcOpts.MultipleTargets || (CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc == 0)))) { priorities[i].FailReason_RequiresMultiTargs = true; priorities[i] = null; }
 
                 // shots which require talents
                 if (priorities[i] != null && priorities[i].Type == Shots.BlackArrow && Talents.BlackArrow == 0){ priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
@@ -78,7 +81,7 @@ namespace Rawr.Hunter {
                     if (priorities[i].Type == Shots.ExplosiveTrap) used_black_immo = true;
                     if (priorities[i].Type == Shots.FreezingTrap) used_black_immo = true;
                     if (priorities[i].Type == Shots.FrostTrap) used_black_immo = true;
-                    if (priorities[i].Type == Shots.Volley) used_black_immo = true;
+                    //if (priorities[i].Type == Shots.Volley) used_black_immo = true;
                 }
             }
    
@@ -175,14 +178,12 @@ namespace Rawr.Hunter {
                 if (priorities[i] == null) continue;
                 ShotData s = priorities[i];
 
-                specialShotsPerSecond += 1 / s.final_freq;
-                
-                if (s.final_freq > 0)
-                    if (s.Type == Shots.SerpentSting)
-                        critSpecialShotsPerSecond += 1 / (s.final_freq/ s.rotation_cooldown * 3);
-                    else
-                        critSpecialShotsPerSecond += 1 / s.final_freq;
-               
+                if (s.final_freq > 0) {
+                    specialShotsPerSecond += 1f / s.final_freq;
+
+                    if (s.Type == Shots.SerpentSting) { critSpecialShotsPerSecond += 1f / (s.final_freq / s.rotation_cooldown * 3f); }
+                    else                              { critSpecialShotsPerSecond += 1f / (s.final_freq                           ); }
+                }
                 critsRatioSum += s.CritsRatio;
             }
         }

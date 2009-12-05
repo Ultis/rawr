@@ -87,8 +87,10 @@ namespace Rawr.Hunter
             float ElapsedTime;
             float BWTime;
             float RFTime;
+            float VolleyTime;
             float BWCD;
             float RFCD;
+            float VLYCD;
             float LALTimer;      // timer till current serpent sting expires
             float LALShots;      // amount of free shots left
             float LALDuration;   // time since last Explosive Shot while having L&L up
@@ -102,37 +104,32 @@ namespace Rawr.Hunter
             bool SerpentUsed;  // Have we used Serpent Sting yet?
 
             #region Initialize shotData & shotTable
-
             shotData = new Dictionary<Shots, RotationShotInfo>(); // the shot info (mana, cooldown, etc)
             shotTable = new RotationShotInfo[10]; // the rotation info
             
-            for (int i=0; i<calculatedStats.priorityRotation.priorities.Length; i++)
-            {
+            for (int i=0; i<calculatedStats.priorityRotation.priorities.Length; i++) {
                 ShotData shot = calculatedStats.priorityRotation.priorities[i];
-                if (shot != null && shot.Type != Shots.None)
-                {
+                if (shot != null && shot.Type != Shots.None) {
                     shotData[shot.Type] = new RotationShotInfo(shot);
                     shotTable[i] = shotData[shot.Type];
-                }
-                else
-                {
-                    shotTable[i] = null;
-                }
+                } else { shotTable[i] = null; }
             }
-
             #endregion
             #region Shot Timing Adjustments
 
             // we need to adjust rapid fire cooldown, since we accounted for readiness initially
-            if (shotData.ContainsKey(Shots.RapidFire))
-            {
+            if (shotData.ContainsKey(Shots.RapidFire)) {
                 shotData[Shots.RapidFire].cooldown = (5 - character.HunterTalents.RapidKilling) * 60f;
             }
 
             // set Steady Shot cast time so it's only static haste
-            if (shotData.ContainsKey(Shots.SteadyShot))
-            {
+            if (shotData.ContainsKey(Shots.SteadyShot)) {
                 shotData[Shots.SteadyShot].castTime = 2f / (1f + calculatedStats.hasteStaticTotal);
+            }
+
+            // set Steady Shot cast time so it's only static haste
+            if (shotData.ContainsKey(Shots.Volley)) {
+                shotData[Shots.Volley].castTime = 6f;
             }
 
             // Set Auto Shot Speed to statically hasted value
@@ -166,9 +163,11 @@ namespace Rawr.Hunter
 
             // some things not initialized in the spreadsheet
             BWTime = 0;
+            VolleyTime = 0;
             RFTime = 0;
             BWCD = 0;
             RFCD = 0;
+            VLYCD = 0;
             currentTime = 0;
             LALProcs = 0;
             float IAotHUptime = 0;
@@ -187,31 +186,21 @@ namespace Rawr.Hunter
                     RotationShotInfo s = shotTable[i];
                     if (s != null)
                     {
-                        if (s.type == Shots.BeastialWrath && BWTime > currentTime)
-                        {
+                        if (s.type == Shots.BeastialWrath && BWTime > currentTime) {
                             // do nothing if Rapid Fire is still active
-                        }
-                        else if (s.type == Shots.RapidFire && RFTime > currentTime)
-                        {
+                        } else if (s.type == Shots.RapidFire && RFTime > currentTime) {
                             // Check if TBW/BW CD is nearly up if we want to use Rapid Fire
-                        }
-                        else if (BMSpec && s.type == Shots.Readiness && BWCD < (currentTime + CDCutoff))
-                        {
+                        } else if (BMSpec && s.type == Shots.Readiness && BWCD < (currentTime + CDCutoff)) {
                             // Wait for Rapid Fire if it's close too
-                        }
-                        else if (s.type == Shots.Readiness && RFCD < (currentTime + CDCutoff))
-                        {
+                        } else if (s.type == Shots.Readiness && RFCD < (currentTime + CDCutoff)) {
                             // wait for Rapid Fire
-                        }
-                        else if (s.type == Shots.BeastialWrath && !BMSpec)
-                        {
+                        } else if (s.type == Shots.BeastialWrath && !BMSpec) {
                             // do nothing
-                        }
-                        else
-                        {
+                        //} else if (s.type == Shots.Volley && VLYCD < (currentTime + CDCutoff)) {
+                            // do nothing, we're channelling
+                        } else {
                             // check if the shot is off the GCD
-                            if (s.no_gcd && s.time_until_off_cd <= currentTime)
-                            {
+                            if (s.no_gcd && s.time_until_off_cd <= currentTime) {
                                 thisShot = s.type;
                                 haveShot = true;
                             }
@@ -226,8 +215,7 @@ namespace Rawr.Hunter
                 for (int i=0; i<shotTable.Length && !haveShot; i++)
                 {
                     RotationShotInfo s = shotTable[i]; // known as thisShot
-                    if (s != null)
-                    {            
+                    if (s != null) {            
                         // During L&L proc Explosive Shot gets priority over everything else
                         // Do nothing if L&L just proc'ed and ES is still on CD
                         if (s.time_until_off_cd > currentTime && LALShots == 3 && s.type == Shots.ExplosiveShot)
@@ -335,47 +323,29 @@ namespace Rawr.Hunter
                         // somewhere from a float->float cast.
                         // the issue is that we have currentTime at (e.g.) 65.35 and steady shot CD is at 65.3500000001
                         // so we skip forward by 0.1 seconds when we didn;t really need to.
-                        if (!haveShot && s.time_until_off_cd <= currentTime+0.00001)
-                        {
-                            // do nothing for refreshed Serpent Sting except the first time
-                            if (s.type == Shots.SerpentSting && chimeraRefreshesSerpent && SerpentUsed)
-                            {
-                            }
-                            // Do not use Kill Shot if Boss HP is above 20%
-                            else if (s.type == Shots.KillShot && (!UseKillShot || currentTime < Sub20Time))
-                            {
-                            }
-                            // do nothing if TBW or BW is still active
-                            else if (s.type == Shots.BeastialWrath && BWTime > currentTime)
-                            {
-                            }
-                            // do nothing if Rapid Fire is still active
-                            else if (s.type == Shots.RapidFire && RFTime > currentTime)
-                            {
-                            }
-                            // Check if TBW/BW CD is nearly up if we want to use Rapid Fire
-                            else if (BMSpec && s.type == Shots.Readiness && BWCD < (currentTime + CDCutoff))
-                            {
-                            }
-                            // Wait for Rapid Fire if it's close too
-                            else if (s.type == Shots.Readiness &&  RFCD < (currentTime + CDCutoff))
-                            {
-                            }
-                            // do nothing if Rapid Fire is about to come off CD
-                            // do nothing if we don't get all the ticks of Serpent Sting anyway
-                            else if (s.type == Shots.SerpentSting && FightLength - currentTime < s.cooldown)
-                            {
-                            }
-                            // ditto for Black Arrow
-                            else if (s.type == Shots.BlackArrow && FightLength - currentTime < BA)
-                            {
-                            }
-                            // do nothing
-                            else if (s.type == Shots.BeastialWrath && !BMSpec)
-                            {
-                            }
-                            else
-                            {
+                        if (!haveShot && s.time_until_off_cd <= currentTime+0.00001) {
+                            if (s.type == Shots.SerpentSting && chimeraRefreshesSerpent && SerpentUsed) {
+                                // do nothing for refreshed Serpent Sting except the first time
+                            } else if (s.type == Shots.KillShot && (!UseKillShot || currentTime < Sub20Time)) {
+                                // Do not use Kill Shot if Boss HP is above 20%
+                            } else if (s.type == Shots.Volley && VolleyTime > currentTime) {
+                                // do nothing if Volley is still active
+                            } else if (s.type == Shots.BeastialWrath && BWTime > currentTime) {
+                                // do nothing if TBW or BW is still active
+                            } else if (s.type == Shots.RapidFire && RFTime > currentTime) {
+                                // do nothing if Rapid Fire is still active
+                            } else if (BMSpec && s.type == Shots.Readiness && BWCD < (currentTime + CDCutoff)) {
+                                // Check if TBW/BW CD is nearly up if we want to use Rapid Fire
+                            } else if (s.type == Shots.Readiness &&  RFCD < (currentTime + CDCutoff)) {
+                                // Wait for Rapid Fire if it's close too
+                            } else if (s.type == Shots.SerpentSting && FightLength - currentTime < s.cooldown) {
+                                // do nothing if Rapid Fire is about to come off CD
+                                // do nothing if we don't get all the ticks of Serpent Sting anyway
+                            } else if (s.type == Shots.BlackArrow && FightLength - currentTime < BA) {
+                                // ditto for Black Arrow
+                            } else if (s.type == Shots.BeastialWrath && !BMSpec) {
+                                // do nothing
+                            } else {
                                 thisShot = s.type;
                                 haveShot = true;
                             }
@@ -492,6 +462,10 @@ namespace Rawr.Hunter
                     {
                         thisShotInfo.time_until_off_cd = currentTime + thisShotInfo.castTime * (1f / SShaste) + Latency;
                     }
+                    else if (thisShot == Shots.Volley)
+                    {
+                        thisShotInfo.time_until_off_cd = currentTime + Math.Max(thisShotInfo.castTime, thisShotInfo.cooldown) + Latency;
+                    }
                     else if (checkGCD(thisShot))
                     {
                         thisShotInfo.time_until_off_cd = currentTime + thisShotInfo.cooldown + Latency;
@@ -504,7 +478,7 @@ namespace Rawr.Hunter
 
 
                     // Note down shot current time and shot used
-                    // 091109 Drizz: If we now can get the debug info wihtin Rawr, no need to go by debug option.
+                    // 091109 Drizz: If we now can get the debug info within Rawr, no need to go by debug option.
                     if (calculatedStats.collectSequence) 
                     {
                         float timeUsed = 0;
@@ -524,6 +498,11 @@ namespace Rawr.Hunter
                             {
                                 timeUsed = thisShotInfo.castTime * (1 / SShaste) + Latency;
                                 castEnd = currentTime + thisShotInfo.castTime * (1 / SShaste) + Latency;
+                            }
+                            else if (thisShot == Shots.Volley)
+                            {
+                                timeUsed = thisShotInfo.castTime + Latency;
+                                castEnd = currentTime + thisShotInfo.castTime + Latency;
                             }
                             else
                             {
@@ -568,7 +547,7 @@ namespace Rawr.Hunter
                         }
                     }
 
-                    // 'If we have Improved Steady Shot and have just cast Steady Shot
+                    // If we have Improved Steady Shot and have just cast Steady Shot
                     if (ISSTalent > 0 && thisShot == Shots.SteadyShot) {
                         if (RandomProcs) {
                             if (randomProc(ISSTalent)) {
@@ -660,6 +639,14 @@ namespace Rawr.Hunter
                         BWCD = thisShotInfo.time_until_off_cd;
                     }
 
+                    // If we used Volley, set duration to 6 seconds
+                    if (thisShot == Shots.Volley)
+                    {
+                        VolleyTime = currentTime + thisShotInfo.castTime;
+                        // also record the time when it comes off CD
+                        VLYCD = thisShotInfo.time_until_off_cd;
+                    }
+
                     if (thisShot == Shots.RapidFire)
                     {
                         RFTime = currentTime + 15;
@@ -670,15 +657,16 @@ namespace Rawr.Hunter
                     // If Readiness is used, reset CD on other shots
                     if (thisShot == Shots.Readiness)
                     {
-                        // Reset everything but Readiness and Serpent Sting/Blood Fury/Berserking (racial) and TBW
+                        // Reset everything but Readiness and Serpent Sting and TBW
                         for (int i = 0; i < shotTable.Length; i++)
                         {
                             RotationShotInfo s = shotTable[i];
                             if (s != null)
                             {
-                                if (s.type != Shots.Readiness && s.type != Shots.SerpentSting
-                                    && s.type != Shots.BloodFury && s.type != Shots.BeastialWrath
-                                    && s.type != Shots.Berserk)
+                                if (s.type != Shots.Readiness
+                                    && s.type != Shots.SerpentSting
+                                    && s.type != Shots.BeastialWrath
+                                    && s.type != Shots.Volley)
                                 {
                                     s.time_until_off_cd = 0;
                                 }
@@ -694,10 +682,12 @@ namespace Rawr.Hunter
                     // Advance time by 0 if the shot is off the GCD, otherwise by GCD+Latency
                     if (!checkGCD(thisShot)) {
                         // do nothing
-                    } else if (thisShot == Shots.SteadyShot && thisShotInfo.castTime * (1 / SShaste) < GCD + Latency) {
+                    } else if (thisShot == Shots.SteadyShot && thisShotInfo.castTime * (1f / SShaste) < GCD + Latency) {
                         currentTime += GCD + Latency;
                     } else if (thisShot == Shots.SteadyShot) {
-                        currentTime += thisShotInfo.castTime * (1 / SShaste) + Latency;
+                        currentTime += thisShotInfo.castTime * (1f / SShaste) + Latency;
+                    } else if (thisShot == Shots.Volley) {
+                        currentTime += thisShotInfo.castTime + Latency;
                     } else {
                         currentTime += GCD + Latency;
                     }

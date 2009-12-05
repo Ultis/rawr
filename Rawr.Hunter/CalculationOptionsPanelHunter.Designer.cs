@@ -168,6 +168,7 @@
             this.Page_01_Options = new System.Windows.Forms.TabPage();
             this.FLP_01_Options = new System.Windows.Forms.FlowLayoutPanel();
             this.GB_FightSettings = new System.Windows.Forms.GroupBox();
+            this.NUD_MultiTargsUptime = new System.Windows.Forms.NumericUpDown();
             this.NUD_CDCutOff = new System.Windows.Forms.NumericUpDown();
             this.LB_CDCutoff = new System.Windows.Forms.Label();
             this.NUD_BossHP = new System.Windows.Forms.NumericUpDown();
@@ -188,7 +189,6 @@
             this.GB_GlobalSettings = new System.Windows.Forms.GroupBox();
             this.CK_RandomProcs = new System.Windows.Forms.CheckBox();
             this.CK_UseRotation = new System.Windows.Forms.CheckBox();
-            this.CK_SpreadsheetUptimes = new System.Windows.Forms.CheckBox();
             this.CK_UseBeastDuringBW = new System.Windows.Forms.CheckBox();
             this.LB_ViperUsage = new System.Windows.Forms.Label();
             this.CB_AspectUsage = new System.Windows.Forms.ComboBox();
@@ -244,6 +244,7 @@
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
             this.BT_Calculate = new System.Windows.Forms.Button();
+            this.CK_MultipleTargets = new System.Windows.Forms.CheckBox();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
@@ -255,6 +256,7 @@
             this.Page_01_Options.SuspendLayout();
             this.FLP_01_Options.SuspendLayout();
             this.GB_FightSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_MultiTargsUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_CDCutOff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_BossHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_35)).BeginInit();
@@ -2218,12 +2220,15 @@
             this.FLP_01_Options.Controls.Add(this.GB_Misc);
             this.FLP_01_Options.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FLP_01_Options.Location = new System.Drawing.Point(3, 3);
+            this.FLP_01_Options.Margin = new System.Windows.Forms.Padding(0);
             this.FLP_01_Options.Name = "FLP_01_Options";
             this.FLP_01_Options.Size = new System.Drawing.Size(286, 663);
             this.FLP_01_Options.TabIndex = 21;
             // 
             // GB_FightSettings
             // 
+            this.GB_FightSettings.Controls.Add(this.NUD_MultiTargsUptime);
+            this.GB_FightSettings.Controls.Add(this.CK_MultipleTargets);
             this.GB_FightSettings.Controls.Add(this.NUD_CDCutOff);
             this.GB_FightSettings.Controls.Add(this.LB_CDCutoff);
             this.GB_FightSettings.Controls.Add(this.NUD_BossHP);
@@ -2243,14 +2248,27 @@
             this.GB_FightSettings.Controls.Add(this.LB_TargArmor);
             this.GB_FightSettings.Location = new System.Drawing.Point(3, 3);
             this.GB_FightSettings.Name = "GB_FightSettings";
-            this.GB_FightSettings.Size = new System.Drawing.Size(280, 258);
+            this.GB_FightSettings.Size = new System.Drawing.Size(280, 283);
             this.GB_FightSettings.TabIndex = 18;
             this.GB_FightSettings.TabStop = false;
             this.GB_FightSettings.Text = "Fight Settings";
             // 
+            // NUD_MultiTargsUptime
+            // 
+            this.NUD_MultiTargsUptime.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.NUD_MultiTargsUptime.Location = new System.Drawing.Point(163, 253);
+            this.NUD_MultiTargsUptime.Name = "NUD_MultiTargsUptime";
+            this.NUD_MultiTargsUptime.Size = new System.Drawing.Size(96, 20);
+            this.NUD_MultiTargsUptime.TabIndex = 18;
+            this.NUD_MultiTargsUptime.ValueChanged += new System.EventHandler(this.NUD_MultiTargsUptime_ValueChanged);
+            // 
             // NUD_CDCutOff
             // 
-            this.NUD_CDCutOff.Location = new System.Drawing.Point(164, 129);
+            this.NUD_CDCutOff.Location = new System.Drawing.Point(163, 123);
             this.NUD_CDCutOff.Maximum = new decimal(new int[] {
             60,
             0,
@@ -2258,7 +2276,7 @@
             0});
             this.NUD_CDCutOff.Name = "NUD_CDCutOff";
             this.NUD_CDCutOff.Size = new System.Drawing.Size(96, 20);
-            this.NUD_CDCutOff.TabIndex = 34;
+            this.NUD_CDCutOff.TabIndex = 8;
             this.NUD_CDCutOff.Value = new decimal(new int[] {
             30,
             0,
@@ -2269,10 +2287,10 @@
             // LB_CDCutoff
             // 
             this.LB_CDCutoff.AutoSize = true;
-            this.LB_CDCutoff.Location = new System.Drawing.Point(17, 131);
+            this.LB_CDCutoff.Location = new System.Drawing.Point(16, 125);
             this.LB_CDCutoff.Name = "LB_CDCutoff";
             this.LB_CDCutoff.Size = new System.Drawing.Size(67, 13);
-            this.LB_CDCutoff.TabIndex = 33;
+            this.LB_CDCutoff.TabIndex = 7;
             this.LB_CDCutoff.Text = "CDCutoff (s):";
             // 
             // NUD_BossHP
@@ -2282,7 +2300,7 @@
             0,
             0,
             0});
-            this.NUD_BossHP.Location = new System.Drawing.Point(163, 232);
+            this.NUD_BossHP.Location = new System.Drawing.Point(163, 227);
             this.NUD_BossHP.Minimum = new decimal(new int[] {
             1,
             0,
@@ -2290,7 +2308,7 @@
             0});
             this.NUD_BossHP.Name = "NUD_BossHP";
             this.NUD_BossHP.Size = new System.Drawing.Size(96, 20);
-            this.NUD_BossHP.TabIndex = 32;
+            this.NUD_BossHP.TabIndex = 16;
             this.NUD_BossHP.Value = new decimal(new int[] {
             100,
             0,
@@ -2301,10 +2319,10 @@
             // LB_BossStartHPPerc
             // 
             this.LB_BossStartHPPerc.AutoSize = true;
-            this.LB_BossStartHPPerc.Location = new System.Drawing.Point(15, 234);
+            this.LB_BossStartHPPerc.Location = new System.Drawing.Point(16, 229);
             this.LB_BossStartHPPerc.Name = "LB_BossStartHPPerc";
             this.LB_BossStartHPPerc.Size = new System.Drawing.Size(96, 13);
-            this.LB_BossStartHPPerc.TabIndex = 31;
+            this.LB_BossStartHPPerc.TabIndex = 15;
             this.LB_BossStartHPPerc.Text = "Boss starting HP%:";
             // 
             // NUD_35
@@ -2314,7 +2332,7 @@
             0,
             0,
             0});
-            this.NUD_35.Location = new System.Drawing.Point(163, 206);
+            this.NUD_35.Location = new System.Drawing.Point(163, 201);
             this.NUD_35.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -2322,7 +2340,7 @@
             0});
             this.NUD_35.Name = "NUD_35";
             this.NUD_35.Size = new System.Drawing.Size(96, 20);
-            this.NUD_35.TabIndex = 30;
+            this.NUD_35.TabIndex = 14;
             this.NUD_35.Value = new decimal(new int[] {
             54,
             0,
@@ -2333,10 +2351,10 @@
             // LB_Sub35
             // 
             this.LB_Sub35.AutoSize = true;
-            this.LB_Sub35.Location = new System.Drawing.Point(15, 208);
+            this.LB_Sub35.Location = new System.Drawing.Point(16, 203);
             this.LB_Sub35.Name = "LB_Sub35";
             this.LB_Sub35.Size = new System.Drawing.Size(108, 13);
-            this.LB_Sub35.TabIndex = 29;
+            this.LB_Sub35.TabIndex = 13;
             this.LB_Sub35.Text = "Time spent 35%-20%:";
             // 
             // NUD_Time20
@@ -2346,7 +2364,7 @@
             0,
             0,
             0});
-            this.NUD_Time20.Location = new System.Drawing.Point(163, 180);
+            this.NUD_Time20.Location = new System.Drawing.Point(163, 175);
             this.NUD_Time20.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -2354,7 +2372,7 @@
             0});
             this.NUD_Time20.Name = "NUD_Time20";
             this.NUD_Time20.Size = new System.Drawing.Size(96, 20);
-            this.NUD_Time20.TabIndex = 28;
+            this.NUD_Time20.TabIndex = 12;
             this.NUD_Time20.Value = new decimal(new int[] {
             72,
             0,
@@ -2365,10 +2383,10 @@
             // LB_Sub20
             // 
             this.LB_Sub20.AutoSize = true;
-            this.LB_Sub20.Location = new System.Drawing.Point(15, 182);
+            this.LB_Sub20.Location = new System.Drawing.Point(16, 177);
             this.LB_Sub20.Name = "LB_Sub20";
             this.LB_Sub20.Size = new System.Drawing.Size(102, 13);
-            this.LB_Sub20.TabIndex = 27;
+            this.LB_Sub20.TabIndex = 11;
             this.LB_Sub20.Text = "Time spent sub 20%";
             // 
             // CB_Duration
@@ -2378,7 +2396,7 @@
             0,
             0,
             0});
-            this.CB_Duration.Location = new System.Drawing.Point(163, 154);
+            this.CB_Duration.Location = new System.Drawing.Point(163, 149);
             this.CB_Duration.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -2386,7 +2404,7 @@
             0});
             this.CB_Duration.Name = "CB_Duration";
             this.CB_Duration.Size = new System.Drawing.Size(96, 20);
-            this.CB_Duration.TabIndex = 26;
+            this.CB_Duration.TabIndex = 10;
             this.CB_Duration.Value = new decimal(new int[] {
             360,
             0,
@@ -2397,10 +2415,10 @@
             // LB_Duration
             // 
             this.LB_Duration.AutoSize = true;
-            this.LB_Duration.Location = new System.Drawing.Point(15, 156);
+            this.LB_Duration.Location = new System.Drawing.Point(16, 151);
             this.LB_Duration.Name = "LB_Duration";
             this.LB_Duration.Size = new System.Drawing.Size(110, 13);
-            this.LB_Duration.TabIndex = 25;
+            this.LB_Duration.TabIndex = 9;
             this.LB_Duration.Text = "Duration (in seconds):";
             // 
             // NUD_Latency
@@ -2410,7 +2428,7 @@
             0,
             0,
             0});
-            this.NUD_Latency.Location = new System.Drawing.Point(163, 105);
+            this.NUD_Latency.Location = new System.Drawing.Point(163, 97);
             this.NUD_Latency.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2418,7 +2436,7 @@
             0});
             this.NUD_Latency.Name = "NUD_Latency";
             this.NUD_Latency.Size = new System.Drawing.Size(96, 20);
-            this.NUD_Latency.TabIndex = 24;
+            this.NUD_Latency.TabIndex = 6;
             this.NUD_Latency.Value = new decimal(new int[] {
             200,
             0,
@@ -2429,19 +2447,19 @@
             // LB_Latency
             // 
             this.LB_Latency.AutoSize = true;
-            this.LB_Latency.Location = new System.Drawing.Point(16, 107);
+            this.LB_Latency.Location = new System.Drawing.Point(16, 99);
             this.LB_Latency.Name = "LB_Latency";
             this.LB_Latency.Size = new System.Drawing.Size(70, 13);
-            this.LB_Latency.TabIndex = 23;
+            this.LB_Latency.TabIndex = 5;
             this.LB_Latency.Text = "Latency (ms):";
             // 
             // LB_TargLvl
             // 
             this.LB_TargLvl.AutoSize = true;
-            this.LB_TargLvl.Location = new System.Drawing.Point(16, 30);
+            this.LB_TargLvl.Location = new System.Drawing.Point(16, 22);
             this.LB_TargLvl.Name = "LB_TargLvl";
             this.LB_TargLvl.Size = new System.Drawing.Size(77, 13);
-            this.LB_TargLvl.TabIndex = 18;
+            this.LB_TargLvl.TabIndex = 0;
             this.LB_TargLvl.Text = "Target\'s Level:";
             // 
             // CB_TargetLevel
@@ -2453,23 +2471,23 @@
             "81",
             "82",
             "83"});
-            this.CB_TargetLevel.Location = new System.Drawing.Point(128, 27);
+            this.CB_TargetLevel.Location = new System.Drawing.Point(128, 19);
             this.CB_TargetLevel.Name = "CB_TargetLevel";
             this.CB_TargetLevel.Size = new System.Drawing.Size(131, 21);
-            this.CB_TargetLevel.TabIndex = 19;
+            this.CB_TargetLevel.TabIndex = 1;
             this.CB_TargetLevel.SelectedIndexChanged += new System.EventHandler(this.cmbTargetLevel_SelectedIndexChanged);
             // 
             // Bar_TargArmor
             // 
             this.Bar_TargArmor.BackColor = System.Drawing.SystemColors.Control;
             this.Bar_TargArmor.LargeChange = 1000;
-            this.Bar_TargArmor.Location = new System.Drawing.Point(128, 54);
+            this.Bar_TargArmor.Location = new System.Drawing.Point(128, 46);
             this.Bar_TargArmor.Maximum = 20000;
             this.Bar_TargArmor.Minimum = 6000;
             this.Bar_TargArmor.Name = "Bar_TargArmor";
             this.Bar_TargArmor.Size = new System.Drawing.Size(131, 45);
             this.Bar_TargArmor.SmallChange = 100;
-            this.Bar_TargArmor.TabIndex = 20;
+            this.Bar_TargArmor.TabIndex = 3;
             this.Bar_TargArmor.TickFrequency = 2000;
             this.Bar_TargArmor.Value = 10643;
             this.Bar_TargArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_Scroll);
@@ -2477,34 +2495,33 @@
             // LB_TargArmorValue
             // 
             this.LB_TargArmorValue.AutoSize = true;
-            this.LB_TargArmorValue.Location = new System.Drawing.Point(37, 72);
+            this.LB_TargArmorValue.Location = new System.Drawing.Point(37, 64);
             this.LB_TargArmorValue.Name = "LB_TargArmorValue";
             this.LB_TargArmorValue.Size = new System.Drawing.Size(37, 13);
-            this.LB_TargArmorValue.TabIndex = 22;
+            this.LB_TargArmorValue.TabIndex = 4;
             this.LB_TargArmorValue.Text = "10634";
             // 
             // LB_TargArmor
             // 
             this.LB_TargArmor.AutoSize = true;
-            this.LB_TargArmor.Location = new System.Drawing.Point(15, 59);
+            this.LB_TargArmor.Location = new System.Drawing.Point(16, 51);
             this.LB_TargArmor.Name = "LB_TargArmor";
             this.LB_TargArmor.Size = new System.Drawing.Size(78, 13);
-            this.LB_TargArmor.TabIndex = 21;
+            this.LB_TargArmor.TabIndex = 2;
             this.LB_TargArmor.Text = "Target\'s Armor:";
             // 
             // GB_GlobalSettings
             // 
             this.GB_GlobalSettings.Controls.Add(this.CK_RandomProcs);
             this.GB_GlobalSettings.Controls.Add(this.CK_UseRotation);
-            this.GB_GlobalSettings.Controls.Add(this.CK_SpreadsheetUptimes);
             this.GB_GlobalSettings.Controls.Add(this.CK_UseBeastDuringBW);
             this.GB_GlobalSettings.Controls.Add(this.LB_ViperUsage);
             this.GB_GlobalSettings.Controls.Add(this.CB_AspectUsage);
             this.GB_GlobalSettings.Controls.Add(this.LB_Aspect);
             this.GB_GlobalSettings.Controls.Add(this.CB_Aspect);
-            this.GB_GlobalSettings.Location = new System.Drawing.Point(3, 267);
+            this.GB_GlobalSettings.Location = new System.Drawing.Point(3, 292);
             this.GB_GlobalSettings.Name = "GB_GlobalSettings";
-            this.GB_GlobalSettings.Size = new System.Drawing.Size(280, 164);
+            this.GB_GlobalSettings.Size = new System.Drawing.Size(280, 142);
             this.GB_GlobalSettings.TabIndex = 19;
             this.GB_GlobalSettings.TabStop = false;
             this.GB_GlobalSettings.Text = "Hunter Settings";
@@ -2512,10 +2529,10 @@
             // CK_RandomProcs
             // 
             this.CK_RandomProcs.AutoSize = true;
-            this.CK_RandomProcs.Location = new System.Drawing.Point(18, 142);
+            this.CK_RandomProcs.Location = new System.Drawing.Point(18, 119);
             this.CK_RandomProcs.Name = "CK_RandomProcs";
             this.CK_RandomProcs.Size = new System.Drawing.Size(186, 17);
-            this.CK_RandomProcs.TabIndex = 12;
+            this.CK_RandomProcs.TabIndex = 7;
             this.CK_RandomProcs.Text = "Randomize Procs on rotation Test";
             this.CK_RandomProcs.UseVisualStyleBackColor = true;
             this.CK_RandomProcs.CheckedChanged += new System.EventHandler(this.chkRandomProcs_CheckedChanged);
@@ -2526,21 +2543,10 @@
             this.CK_UseRotation.Location = new System.Drawing.Point(18, 96);
             this.CK_UseRotation.Name = "CK_UseRotation";
             this.CK_UseRotation.Size = new System.Drawing.Size(233, 17);
-            this.CK_UseRotation.TabIndex = 9;
+            this.CK_UseRotation.TabIndex = 5;
             this.CK_UseRotation.Text = "Use shot rotation test instead of frequencies";
             this.CK_UseRotation.UseVisualStyleBackColor = true;
             this.CK_UseRotation.CheckedChanged += new System.EventHandler(this.chkUseRotation_CheckedChanged);
-            // 
-            // CK_SpreadsheetUptimes
-            // 
-            this.CK_SpreadsheetUptimes.AutoSize = true;
-            this.CK_SpreadsheetUptimes.Location = new System.Drawing.Point(18, 119);
-            this.CK_SpreadsheetUptimes.Name = "CK_SpreadsheetUptimes";
-            this.CK_SpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
-            this.CK_SpreadsheetUptimes.TabIndex = 11;
-            this.CK_SpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
-            this.CK_SpreadsheetUptimes.UseVisualStyleBackColor = true;
-            this.CK_SpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
             // 
             // CK_UseBeastDuringBW
             // 
@@ -2548,7 +2554,7 @@
             this.CK_UseBeastDuringBW.Location = new System.Drawing.Point(18, 73);
             this.CK_UseBeastDuringBW.Name = "CK_UseBeastDuringBW";
             this.CK_UseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
-            this.CK_UseBeastDuringBW.TabIndex = 8;
+            this.CK_UseBeastDuringBW.TabIndex = 4;
             this.CK_UseBeastDuringBW.Text = "Use Aspect of the Beast during Beastial Wrath";
             this.CK_UseBeastDuringBW.UseVisualStyleBackColor = true;
             this.CK_UseBeastDuringBW.CheckedChanged += new System.EventHandler(this.chkUseBeastDuringBW_CheckedChanged);
@@ -2559,7 +2565,7 @@
             this.LB_ViperUsage.Location = new System.Drawing.Point(15, 49);
             this.LB_ViperUsage.Name = "LB_ViperUsage";
             this.LB_ViperUsage.Size = new System.Drawing.Size(68, 13);
-            this.LB_ViperUsage.TabIndex = 4;
+            this.LB_ViperUsage.TabIndex = 2;
             this.LB_ViperUsage.Text = "Viper Usage:";
             // 
             // CB_AspectUsage
@@ -2573,7 +2579,7 @@
             this.CB_AspectUsage.Location = new System.Drawing.Point(128, 46);
             this.CB_AspectUsage.Name = "CB_AspectUsage";
             this.CB_AspectUsage.Size = new System.Drawing.Size(131, 21);
-            this.CB_AspectUsage.TabIndex = 5;
+            this.CB_AspectUsage.TabIndex = 3;
             this.CB_AspectUsage.SelectedIndexChanged += new System.EventHandler(this.cmbAspectUsage_SelectedIndexChanged);
             // 
             // LB_Aspect
@@ -2582,7 +2588,7 @@
             this.LB_Aspect.Location = new System.Drawing.Point(15, 22);
             this.LB_Aspect.Name = "LB_Aspect";
             this.LB_Aspect.Size = new System.Drawing.Size(43, 13);
-            this.LB_Aspect.TabIndex = 2;
+            this.LB_Aspect.TabIndex = 0;
             this.LB_Aspect.Text = "Aspect:";
             // 
             // CB_Aspect
@@ -2599,7 +2605,7 @@
             this.CB_Aspect.Location = new System.Drawing.Point(128, 19);
             this.CB_Aspect.Name = "CB_Aspect";
             this.CB_Aspect.Size = new System.Drawing.Size(131, 21);
-            this.CB_Aspect.TabIndex = 3;
+            this.CB_Aspect.TabIndex = 1;
             this.CB_Aspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
             // 
             // GB_Misc
@@ -2607,7 +2613,7 @@
             this.GB_Misc.Controls.Add(this.CK_PTRMode);
             this.GB_Misc.Controls.Add(this.CK_HideSplGear);
             this.GB_Misc.Controls.Add(this.CK_HidePvPGear);
-            this.GB_Misc.Location = new System.Drawing.Point(3, 437);
+            this.GB_Misc.Location = new System.Drawing.Point(3, 440);
             this.GB_Misc.Name = "GB_Misc";
             this.GB_Misc.Size = new System.Drawing.Size(280, 88);
             this.GB_Misc.TabIndex = 20;
@@ -2620,7 +2626,7 @@
             this.CK_PTRMode.Location = new System.Drawing.Point(18, 65);
             this.CK_PTRMode.Name = "CK_PTRMode";
             this.CK_PTRMode.Size = new System.Drawing.Size(85, 17);
-            this.CK_PTRMode.TabIndex = 16;
+            this.CK_PTRMode.TabIndex = 2;
             this.CK_PTRMode.Text = "PTR Mode *";
             this.CK_PTRMode.ToolTipText = "";
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
@@ -2633,7 +2639,7 @@
             this.CK_HideSplGear.Location = new System.Drawing.Point(18, 19);
             this.CK_HideSplGear.Name = "CK_HideSplGear";
             this.CK_HideSplGear.Size = new System.Drawing.Size(107, 17);
-            this.CK_HideSplGear.TabIndex = 14;
+            this.CK_HideSplGear.TabIndex = 0;
             this.CK_HideSplGear.Text = "Hide Spell Gear *";
             this.CK_HideSplGear.ToolTipText = "";
             this.CK_HideSplGear.CheckedChanged += new System.EventHandler(this.CK_HideBadItems_Spl_CheckedChanged);
@@ -2646,7 +2652,7 @@
             this.CK_HidePvPGear.Location = new System.Drawing.Point(18, 42);
             this.CK_HidePvPGear.Name = "CK_HidePvPGear";
             this.CK_HidePvPGear.Size = new System.Drawing.Size(104, 17);
-            this.CK_HidePvPGear.TabIndex = 15;
+            this.CK_HidePvPGear.TabIndex = 1;
             this.CK_HidePvPGear.Text = "Hide PvP Gear *";
             this.CK_HidePvPGear.ToolTipText = "";
             this.CK_HidePvPGear.CheckedChanged += new System.EventHandler(this.CK_HideBadItems_PvP_CheckedChanged);
@@ -3193,6 +3199,17 @@
             this.BT_Calculate.UseVisualStyleBackColor = true;
             this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
             // 
+            // CK_MultipleTargets
+            // 
+            this.CK_MultipleTargets.AutoSize = true;
+            this.CK_MultipleTargets.Location = new System.Drawing.Point(19, 255);
+            this.CK_MultipleTargets.Name = "CK_MultipleTargets";
+            this.CK_MultipleTargets.Size = new System.Drawing.Size(149, 17);
+            this.CK_MultipleTargets.TabIndex = 19;
+            this.CK_MultipleTargets.Text = "Multiple Targs Uptime %: *";
+            this.CK_MultipleTargets.UseVisualStyleBackColor = true;
+            this.CK_MultipleTargets.CheckedChanged += new System.EventHandler(this.CK_MultipleTargets_CheckedChanged);
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3216,6 +3233,7 @@
             this.FLP_01_Options.ResumeLayout(false);
             this.GB_FightSettings.ResumeLayout(false);
             this.GB_FightSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_MultiTargsUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_CDCutOff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_BossHP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_35)).EndInit();
@@ -3423,7 +3441,6 @@
         private System.Windows.Forms.Label LB_ViperUsage;
         private System.Windows.Forms.ComboBox CB_AspectUsage;
         private System.Windows.Forms.CheckBox CK_UseBeastDuringBW;
-        private System.Windows.Forms.CheckBox CK_SpreadsheetUptimes;
         private System.Windows.Forms.Label LB_ShotPriority_05;
         private System.Windows.Forms.ComboBox CB_PetPrio_05;
         private System.Windows.Forms.ComboBox CB_PetPrio_07;
@@ -3458,5 +3475,7 @@
         private System.Windows.Forms.ComboBox CB_FerocityCullingTheHerd;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_FerocityCullingTheHerd;
         private System.Windows.Forms.ImageList TalentImageList;
+        private System.Windows.Forms.NumericUpDown NUD_MultiTargsUptime;
+        private System.Windows.Forms.CheckBox CK_MultipleTargets;
     }
 }
