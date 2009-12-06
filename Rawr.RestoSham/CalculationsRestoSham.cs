@@ -311,7 +311,9 @@ namespace Rawr.RestoSham
             cacheChar = character;
             return GetCharacterCalculations(character, additionalItem, null);
         }
-
+        public float HealPerSec = 0;
+        public float CritPerSec = 0;
+        public float FightSeconds = 0;
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
                                                                   Stats statModifier)
         {
@@ -342,7 +344,7 @@ namespace Rawr.RestoSham
                 stats.SpellHaste = .3f / (60 * options.FightLength);
             calcStats.TotalManaPool = (((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((character.ShamanTalents.GlyphofManaTideTotem ? 0.4f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) + 
-                stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+                stats.Mana + onUse + stats.ManaRestore + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f)) + ((stats.Mp5 / 5) * 60 * options.FightLength) - HeroismMana;
             calcStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
@@ -506,6 +508,9 @@ namespace Rawr.RestoSham
             #region Create Final calcs via spell cast (Improve Water Shield Mana Return)
             HealsPerSec = RTPerSec + LHWPerSec + HWPerSec + CHPerSec;
             CritsPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
+            HealPerSec = HealsPerSec;
+            CritPerSec = CritsPerSec;
+            FightSeconds = options.FightLength * 60f;
             if (RTPerSec > 0)
                 stats.SpellHaste += stats.RestoSham2T10 * (.2f / 6f);
             if (RTPerSec > 0)
@@ -573,7 +578,7 @@ namespace Rawr.RestoSham
             float ESUsage = (float)Math.Round(((options.FightLength * 60) / ESTimer), 0);
             float Time = (options.FightLength * 60) - (1.5f * ESUsage) - 4;
             float Converter = Time / (options.FightLength * 60);
-            calcStats.MAPS = ((calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength) + stats.ManaRestore ) / (60f * options.FightLength) * Converter) - ESMPS;
+            calcStats.MAPS = ((calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / (60f * options.FightLength) * Converter) - ESMPS;
             float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS * Converter)), 1);
             calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + ESHPS;
             calcStats.SustainedHPS = ((SustHPS * Converter) * MAPSConvert) + ESHPS;
@@ -630,36 +635,33 @@ namespace Rawr.RestoSham
             if (statModifier != null)
                 statsTotal += statModifier;
             #region Proc Handling
-            CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             Stats statsProcs = new Stats();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
                 switch (effect.Trigger)
                 {
                     case (Trigger.HealingSpellCast):
-                        statsProcs += effect.GetAverageStats(calcStats.HealPerSec);
+                        effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case (Trigger.HealingSpellCrit):
-                        statsProcs += effect.GetAverageStats(calcStats.CritPerSec);
-                        // you can put 0 instead of fightDuration for a different effect
+                        effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case (Trigger.SpellCast):
-                        statsProcs += effect.GetAverageStats(calcStats.HealPerSec);
+                        effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case (Trigger.SpellCrit):
-                        statsProcs += effect.GetAverageStats(calcStats.CritPerSec);
-                        // you can put 0 instead of fightDuration for a different effect
+                        effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case (Trigger.SpellHit):
-                        statsProcs += effect.GetAverageStats(calcStats.HealPerSec);
+                        effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case Trigger.Use:
-                        statsProcs += effect.GetAverageStats(0f, 1f, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, effect.Cooldown, 1f, 0f, effect.Duration);
                         break;
                 }
             }
             #endregion
-            statsProcs.ManaRestore += statsProcs.ManaRestore * (60 * calcOpts.FightLength);
+            statsProcs.ManaRestore += statsProcs.ManaRestore * FightSeconds;
             statsTotal += statsProcs;
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
