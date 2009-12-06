@@ -298,22 +298,20 @@ namespace Rawr.RestoSham
             return new CharacterCalculationsRestoSham();
         }
         #endregion
-        #region Calculations
-        //
-        // Do the actual calculations:
-        // Current Flags:
-        // Qwerty = Patch 3.2 Removal flags
-        // Dodger = Old code removal flags
-        // Penguin = Code still needed flags
-        //
+        #region Calculations Begin
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             cacheChar = character;
             return GetCharacterCalculations(character, additionalItem, null);
         }
+        #region Calculations Variables to be Carried Over
         public float HealPerSec = 0;
         public float CritPerSec = 0;
         public float FightSeconds = 0;
+        public float ELWHPS = 0;
+        public float HeroismMana = 0;
+        public float TotalManaPool = 0;
+        #endregion
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
                                                                   Stats statModifier)
         {
@@ -328,14 +326,9 @@ namespace Rawr.RestoSham
             float Healing = 1.88f * stats.SpellPower;
             #endregion
             #region Intellect and MP5 Based Calcs
-            float onUse = 0.0f;
-            if (options.ManaPotAmount > 0)
-                onUse += options.ManaPotAmount * (1 + stats.BonusManaPotion);
-            stats.Mp5 += 0;
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0) + (stats.TotemThunderhead * 2);
             float OrbRegen = (character.ShamanTalents.GlyphofWaterMastery ? 130 : 100);
             stats.Mp5 += ((options.WaterShield ? OrbRegen : 0)) + (stats.TotemThunderhead * 2) + (options.WaterShield ? (100f * stats.WaterShieldIncrease) : 0);
-            float HeroismMana = 0;
             if (options.Heroism.Equals("Me"))
                 HeroismMana = .19f * 4396f;
             if (options.Heroism.Equals("Me"))
@@ -344,8 +337,8 @@ namespace Rawr.RestoSham
                 stats.SpellHaste = .3f / (60 * options.FightLength);
             calcStats.TotalManaPool = (((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((character.ShamanTalents.GlyphofManaTideTotem ? 0.4f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) + 
-                stats.Mana + onUse + stats.ManaRestore + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
-                (options.BurstPercentage * .01f)) + ((stats.Mp5 / 5) * 60 * options.FightLength) - HeroismMana;
+                stats.Mana + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+                (options.BurstPercentage * .01f))  - HeroismMana;
             calcStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes +
@@ -360,7 +353,6 @@ namespace Rawr.RestoSham
             float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + Thunderhead;
             #endregion
             #region Earthliving Weapon Calculations
-            float ELWHPS = 0;
             if (character.ActiveBuffsContains("Earthliving Weapon"))
                 ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * (1f + ((character.ShamanTalents.Purification) * .02f));
             float ExtraELW = (options.TankHeal ? 0 : 1) + (character.ShamanTalents.GlyphofEarthlivingWeapon ? .5f : 0);
@@ -385,21 +377,6 @@ namespace Rawr.RestoSham
             float HealsPerSec = 0;
             float CritsPerSec = 0;
             #endregion
-            #region Base Spells ( TankCH / RTHeal / LHWHeal / HWHeal / CHHeal )
-            float PlusLHW = ((Healing + stats.TotemLHWSpellpower) * (.02f * character.ShamanTalents.TidalWaves)) * (1.5f/3.5f);
-            float PlusHW = ((Healing + stats.TotemHWSpellpower) * (.04f * character.ShamanTalents.TidalWaves)) 
-                * ((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) / 3.5f);
-            float TankCH = (options.TankHeal ? 1 : (1.75f + (character.ShamanTalents.GlyphofChainHeal ? .125f : 0)));
-            float RTHeal = (((1670f + (Healing * .5f)) * (1f + ((character.ShamanTalents.Purification) * .02f)))) * ( 1 + ( .2f * stats.RestoSham2T9));
-            float LHWHeal = (1720 + (Healing + PlusLHW + ((1.88f * stats.TotemLHWSpellpower) * (1.5f / 3.5f)))) 
-                * (options.TankHeal ? (character.ShamanTalents.GlyphofLesserHealingWave ? 1.2f : 1) : 1);
-            float HWHeal = ((3250 + (Healing + PlusHW + (((1.88f * stats.TotemHWSpellpower)) * ((3  - (character.ShamanTalents.ImprovedHealingWave * .1f)) 
-                / 3.5f)))) * (1f + (character.ShamanTalents.Purification * .02f))  * (character.ShamanTalents.GlyphofHealingWave ? 1.2f : 1)) * (1 + (.25f 
-                * character.ShamanTalents.HealingWay / 3));
-            float CHHeal = (((((((1130 + stats.TotemCHBaseHeal) + ((Healing + stats.RestoShamRelicT9) * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) 
-                * (1f + ((character.ShamanTalents.Purification) * .02f))) * (Critical + (.05f * stats.RestoSham4T9))) * TankCH) + (ExtraELW * ELWHPS * (2.5f * ((1 + (stats.HasteRating 
-                / 3270) + stats.SpellHaste))) / 2f)) * (1f + stats.CHHWHealIncrease + (.25f * CriticalChance * stats.RestoSham2T10)));
-            #endregion
             #region Base Speeds ( Hasted / RTCast / LHWCast / HWCast / CHCast )
             float Hasted = (1 + ((stats.HasteRating / 3270) + stats.SpellHaste));
             float RTCast = (float)Math.Max((1.5 * (1 + ((stats.HasteRating / 3270) + stats.SpellHaste))), 1f);
@@ -407,6 +384,18 @@ namespace Rawr.RestoSham
                 * ((1 + ((stats.HasteRating / 3270) + stats.SpellHaste))));
             float LHWCast = (float)Math.Max(((1.5f * (1 - (calcStats.SpellHaste)))), 1.1f);
             float CHCast = (float)Math.Max(((2.6 - stats.CHCTDecrease) * (1 - (calcStats.SpellHaste))), 1f);
+            #endregion
+            #region Base Spells ( TankCH / RTHeal / LHWHeal / HWHeal / CHHeal )
+            float TankCH = (options.TankHeal ? 1 : (1.75f + (character.ShamanTalents.GlyphofChainHeal ? .125f : 0)));
+            float RTHeal = (((1670f + (Healing * .5f)) * (1f + ((character.ShamanTalents.Purification) * .02f)))) * (1 + (.2f * stats.RestoSham2T9));
+            float LHWHeal = (1720 + (Healing + (((stats.TotemLHWSpellpower) * (.02f * character.ShamanTalents.TidalWaves)) * (1.5f / 3.5f)) + ((1.88f * stats.TotemLHWSpellpower) *
+                (1.5f / 3.5f)))) * (options.TankHeal ? (character.ShamanTalents.GlyphofLesserHealingWave ? 1.2f : 1) : 1);
+            float HWHeal = ((3250 + (Healing + (((stats.TotemHWSpellpower) * (.04f * character.ShamanTalents.TidalWaves)) * ((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) / 3.5f)) 
+                + (((1.88f * stats.TotemHWSpellpower)) * ((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) / 3.5f)))) 
+                * (1f + (character.ShamanTalents.Purification * .02f)) * (character.ShamanTalents.GlyphofHealingWave ? 1.2f : 1)) * (1 + (.25f * character.ShamanTalents.HealingWay / 3));
+            float CHHeal = (((((((1130 + stats.TotemCHBaseHeal) + ((Healing + stats.RestoShamRelicT9) * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f))
+                * (1f + ((character.ShamanTalents.Purification) * .02f))) * (Critical + (.05f * stats.RestoSham4T9))) * TankCH) + (ExtraELW * ELWHPS * (2.5f * ((1 + (stats.HasteRating
+                / 3270) + stats.SpellHaste))) / 2f)) * (1f + stats.CHHWHealIncrease + (.25f * CriticalChance * stats.RestoSham2T10)));
             #endregion
             #region Base Costs ( Preserve / RTCost / LHWCost / CHCost )
             float Preserve = stats.ManacostReduceWithin15OnHealingCast * .02f;
@@ -515,14 +504,40 @@ namespace Rawr.RestoSham
                 stats.SpellHaste += stats.RestoSham2T10 * (.2f / 6f);
             if (RTPerSec > 0)
                 stats.SpellPower += stats.RestoShamRelicT10;
-            
-            stats.Mp5 += (RTCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5) 
-                + (LHWCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5 * .6f) 
-                + (HWCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5) 
-                + (CHCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5 * .3f);
+
+            #region Proc Handling for Mana Restore only
+            Stats statsProcs2 = new Stats();
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                switch (effect.Trigger)
+                {
+                    case (Trigger.HealingSpellCast):
+                        effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case (Trigger.HealingSpellCrit):
+                        effect.AccumulateAverageStats(statsProcs2, (1f / CritPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case (Trigger.SpellCast):
+                        effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case (Trigger.SpellCrit):
+                        effect.AccumulateAverageStats(statsProcs2, (1f / CritPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case (Trigger.SpellHit):
+                        effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case Trigger.Use:
+                        effect.AccumulateAverageStats(statsProcs2, effect.Cooldown, 1f, 0f, effect.Duration);
+                        break;
+                }
+            }
             stats.Mp5 += stats.ManaRestoreOnCrit_25_45 / (0.5f / (CritsPerSec * .25f) + 45) * 5; // Mana per Crit, to be removed when Special effects are implimented
             stats.Mp5 += stats.ManaRestoreOnCast_5_15 / (0.5f / (HealsPerSec * .05f) + 15) * 5; // Mana per Cast, to be removed when Special effects are implimented
             stats.Mp5 += stats.ManaRestoreOnCast_10_45 / (0.5f / (HealsPerSec * .1f) + 45) * 5; // Mana per Cast, to be removed when Special effects are implimented
+            stats.ManaRestore += statsProcs2.ManaRestore * FightSeconds;
+            #endregion
+            stats.Mp5 += (RTCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5) + (LHWCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5 * .6f) 
+                + (HWCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5)+ (CHCPerSec * (Orb * (character.ShamanTalents.ImprovedWaterShield / 3)) * 5 * .3f);
             #endregion
             #region Calculate Sequence HPS/MPS
             calcStats.HSTHeals = (((stats.SpellPower * .044f) + 25) * (1f + (character.ShamanTalents.RestorativeTotems * .15f)) * (1f + (character.ShamanTalents.GlyphofHealingStreamTotem ? .2f : 0))) / 2;
@@ -578,7 +593,7 @@ namespace Rawr.RestoSham
             float ESUsage = (float)Math.Round(((options.FightLength * 60) / ESTimer), 0);
             float Time = (options.FightLength * 60) - (1.5f * ESUsage) - 4;
             float Converter = Time / (options.FightLength * 60);
-            calcStats.MAPS = ((calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / (60f * options.FightLength) * Converter) - ESMPS;
+            calcStats.MAPS = (((calcStats.TotalManaPool + stats.ManaRestore) + (stats.Mp5 / 5 * 60 * options.FightLength)) / (60f * options.FightLength) * Converter) - ESMPS;
             float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS * Converter)), 1);
             calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + ESHPS;
             calcStats.SustainedHPS = ((SustHPS * Converter) * MAPSConvert) + ESHPS;
@@ -661,7 +676,6 @@ namespace Rawr.RestoSham
                 }
             }
             #endregion
-            statsProcs.ManaRestore += statsProcs.ManaRestore * FightSeconds;
             statsTotal += statsProcs;
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
