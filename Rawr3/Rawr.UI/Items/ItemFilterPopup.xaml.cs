@@ -16,28 +16,17 @@ namespace Rawr.UI
 		{
 			// Required to initialize variables
 			InitializeComponent();
-		}
-
-		private void HidePopup(object sender, RoutedEventArgs e)
-		{
-            FilterPopup.IsOpen = false;
-		}
-
-		private void ShowPopup(object sender, RoutedEventArgs e)
-		{
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
-            FilterPopup.IsOpen = true;
-		}
+        }
 
-        private void FocusLost(object sender, RoutedEventArgs e)
+        private void Close()
         {
-            FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
-            DependencyObject parent = VisualTreeHelper.GetParent(focus);
-            while (parent != null && parent != FilterTree) parent = VisualTreeHelper.GetParent(parent);
-            if (parent == null)
-            {
-                Toggle.IsChecked = false;
-            }
+            PopupFilter.IsOpen = false;
+        }
+
+        private void Background_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Close();
         }
 	}
 }
