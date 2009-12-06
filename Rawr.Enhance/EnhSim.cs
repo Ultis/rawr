@@ -127,6 +127,11 @@ namespace Rawr.Enhance
             sb.AppendLine("glyph_minor2                    -");
             sb.AppendLine("glyph_minor3                    -");
             sb.AppendLine();
+
+            sb.AppendLine("necrotic_touch                  " + (character.MainHand.Id == 30035 ? "1" : "0"));
+            sb.AppendLine("mixology                        " + 
+                (character.PrimaryProfession == Profession.Alchemy ||
+                 character.SecondaryProfession == Profession.Alchemy ? "1" : "0"));
  //           addPriorities(calcOpts, sb);
             addManaConfigs(character, calcOpts, sb);
             sb.AppendLine();
@@ -182,7 +187,7 @@ namespace Rawr.Enhance
 			catch { }
             if(Clipboard.Success)
                 MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.1.2 or higher, to import it\n" +
+                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.3.0 or higher, to import it\n" +
                     "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                     "Enhance Module", MessageBoxButton.OK);
         }
@@ -195,7 +200,7 @@ namespace Rawr.Enhance
 			}
 			catch { }
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.1.2 or higher, to import it\n" +
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.3.0 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
