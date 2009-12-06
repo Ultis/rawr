@@ -179,65 +179,192 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB4AM0234MBAM";
 
-            // S0: no proc
-            // AB0-AB1-AB2-AB3-AM4    => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
-            // AB0-AB1-AB2-AB3-MBAM4   => S0   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB)) * (1 - T8)
-            // AB0-AB1-AB2-AB3-MBAM4   => S1   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB)) * T8
-            // AB0-AB1-AB2-MBAM3   => S0       (1 - MB) * MB * (1 - T8)
-            // AB0-AB1-AB2-MBAM3   => S1       (1 - MB) * MB * T8
-            // AB0-AB1-MBAM2   => S0           MB * (1 - T8)
-            // AB0-AB1-MBAM2   => S1           MB * T8
-
-            // S1: proc
-            // MBAM0   => S0   (1 - T8)
-            // MBAM0   => S1   T8
-
-            // K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
-            // S1 = S0 * (1 - K0) * T8 + S1 * T8
-            // S0 + S1 = 1
-
-            // S1 = S0 * (1 - K0) * T8 / (1 - T8)
-            // S0 = (1 - T8) / (1 - K0 * T8)
-            // S1 = (1 - K0) * T8 / (1 - K0 * T8)
-
-
-            Spell AM4 = castingState.GetSpell(SpellId.ArcaneMissiles4);
-            Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
-            Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
-
-            float MB = 0.08f * castingState.MageTalents.MissileBarrage;
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
-            float S0 = (1 - T8) / (1 - K0 * T8);
-            float S1 = (1 - K0) * T8 / (1 - K0 * T8);
-            float K1 = S0 * K0;
-            float K2 = S0 * (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB));
-            float K3 = S0 * (1 - MB) * MB;
-            float K4 = S0 * MB;
-
-            if (needsDisplayCalculations)
+            if (castingState.BaseStats.Mage2T10 > 0)
             {
-                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
-                cycle.AddSpell(needsDisplayCalculations, AB0, S0);
-                cycle.AddSpell(needsDisplayCalculations, AB1, S0);
-                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2);
+                // doesn't support haste transferring over several loops
+
+                // S0A-nonhasted:
+                // AB0-AB1-AB2-AB3-AM4    => S1    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-AB3-MBAM4   => S0AB   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // AB0-AB1-AB2-MBAM3   => S0AB       (1 - MB) * MB
+                // AB0-AB1-MBAM2   => S0AB           MB
+                // S0B-hasted:
+                // AB0-AB1-AB2-AB3-AM4    => S1    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-AB3-MBAM4   => S0AB   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // AB0-AB1-AB2-MBAM3   => S0AB       (1 - MB) * MB
+                // AB0-AB1-MBAM2   => S0AB           MB
+                // S1-no 2T10:
+                // AB0-AB1-AB2-AB3-AM4    => S1    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-AB3-MBAM4   => S0A   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // AB0-AB1-AB2-MBAM3   => S0A       (1 - MB) * MB
+                // AB0-AB1-MBAM2   => S0A           MB
+
+                // K0 := (1-MB)*(1-MB)*(1-MB)*(1-MB)
+
+                // MC := 1-MB
+
+                // K2 := (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // K3 := (1 - MB) * MB
+
+                // S0A = S0A * (K2 * X2A + K3 * X3A + MB * X4A) + S0B * (K2 * X2B + K3 * X3B + MB * X4B) + S1 * (1 - K0)
+                // S0B = S0A * (K2 * Y2A + K3 * Y3A + MB * Y4A) + S0B * (K2 * Y2B + K3 * Y3B + MB * Y4B)
+                // S0AB = 1 - K0
+                // S1 = K0
+
+                // S0B = 1 - K0 - S0A
+
+                // S0A * (1 - (K2 * (X2A-X2B) + K3 * (X3A-X3B) + MB * (X4A-X4B))) = (1 - K0) * (K2 * X2B + K3 * X3B + MB * X4B) + K0 * (1 - K0)
+                // S0A = ((1 - K0) * (K2 * X2B + K3 * X3B + MB * X4B) + K0 * (1 - K0)) / (1 - (K2 * (X2A-X2B) + K3 * (X3A-X3B) + MB * (X4A-X4B)))
+
+
+                Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                Spell AM4 = castingState.GetSpell(SpellId.ArcaneMissiles4);
+                Spell MBAM2 = castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+                float m2T10time = 5.0f - MBAM4.CastTime;
+                Spell AB0A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0A.CastTime;
+                Spell AB1A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1A.CastTime;
+                float X4A = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast2) : castingState.GetSpell(SpellId.ArcaneBlast2);
+                m2T10time -= AB2A.CastTime;
+                float X3A = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM3A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB3) : castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AB3A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast3) : castingState.GetSpell(SpellId.ArcaneBlast3);
+                m2T10time -= AB3A.CastTime;
+                float X2A = (m2T10time > 0.0f) ? 0 : 1;
+                float X1A = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM4A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB4) : castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                Spell AM4A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissiles4) : castingState.GetSpell(SpellId.ArcaneMissiles4);
+
+                m2T10time = 5.0f - MBAM2.CastTime;
+                Spell AB0B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0B.CastTime;
+                Spell AB1B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1B.CastTime;
+                float X4B = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast2) : castingState.GetSpell(SpellId.ArcaneBlast2);
+                m2T10time -= AB2B.CastTime;
+                float X3B = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM3B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB3) : castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AB3B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast3) : castingState.GetSpell(SpellId.ArcaneBlast3);
+                m2T10time -= AB3B.CastTime;
+                float X2B = (m2T10time > 0.0f) ? 0 : 1;
+                float X1B = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM4B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB4) : castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                Spell AM4B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissiles4) : castingState.GetSpell(SpellId.ArcaneMissiles4);
+
+                Spell AB0C = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1C = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2C = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AB3C = castingState.GetSpell(SpellId.ArcaneBlast3);
+                Spell MBAM4C = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                Spell AM4C = castingState.GetSpell(SpellId.ArcaneMissiles4);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float MC = 1 - MB;
+                float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                float K2 = (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB));
+                float K3 = (1 - MB) * MB;
+
+                float S0A = ((1 - K0) * (K2 * X2B + K3 * X3B + MB * X4B) + K0 * (1 - K0)) / (1 - (K2 * (X2A - X2B) + K3 * (X3A - X3B) + MB * (X4A - X4B)));
+                float S0B = 1 - K0 - S0A;
+                float S1 = K0;
+
+                cycle.AddSpell(needsDisplayCalculations, AB0A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB1A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB2A, S0A * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB3A, S0A * MC * MC);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2A, S0A * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3A, S0A * K3);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4A, S0A * K2);
+                cycle.AddSpell(needsDisplayCalculations, AM4A, S0A * K0);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB1B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB2B, S0B * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB3B, S0B * MC * MC);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2B, S0B * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3B, S0B * K3);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4B, S0B * K2);
+                cycle.AddSpell(needsDisplayCalculations, AM4B, S0B * K0);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0C, S1);
+                cycle.AddSpell(needsDisplayCalculations, AB1C, S1);
+                cycle.AddSpell(needsDisplayCalculations, AB2C, S1 * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB3C, S1 * MC * MC);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2C, S1 * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3C, S1 * K3);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4C, S1 * K2);
+                cycle.AddSpell(needsDisplayCalculations, AM4C, S1 * K0);
             }
             else
             {
-                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, S0, S0, K1 + K2 + K3, K1 + K2);
+                // S0: no proc
+                // AB0-AB1-AB2-AB3-AM4    => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-AB3-MBAM4   => S0   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB)) * (1 - T8)
+                // AB0-AB1-AB2-AB3-MBAM4   => S1   (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB)) * T8
+                // AB0-AB1-AB2-MBAM3   => S0       (1 - MB) * MB * (1 - T8)
+                // AB0-AB1-AB2-MBAM3   => S1       (1 - MB) * MB * T8
+                // AB0-AB1-MBAM2   => S0           MB * (1 - T8)
+                // AB0-AB1-MBAM2   => S1           MB * T8
+
+                // S1: proc
+                // MBAM0   => S0   (1 - T8)
+                // MBAM0   => S1   T8
+
+                // K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+                // S1 = S0 * (1 - K0) * T8 + S1 * T8
+                // S0 + S1 = 1
+
+                // S1 = S0 * (1 - K0) * T8 / (1 - T8)
+                // S0 = (1 - T8) / (1 - K0 * T8)
+                // S1 = (1 - K0) * T8 / (1 - K0 * T8)
+
+
+                Spell AM4 = castingState.GetSpell(SpellId.ArcaneMissiles4);
+                Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+                float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                float S0 = (1 - T8) / (1 - K0 * T8);
+                float S1 = (1 - K0) * T8 / (1 - K0 * T8);
+                float K1 = S0 * K0;
+                float K2 = S0 * (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB));
+                float K3 = S0 * (1 - MB) * MB;
+                float K4 = S0 * MB;
+
+                if (needsDisplayCalculations)
+                {
+                    Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                    Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                    Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                    Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                    cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+                    cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+                    cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                    cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2);
+                }
+                else
+                {
+                    Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                    castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, S0, S0, K1 + K2 + K3, K1 + K2);
+                }
+                cycle.AddSpell(needsDisplayCalculations, AM4, K1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4, K2);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3, K3);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
+                cycle.AddSpell(needsDisplayCalculations, MBAM0, S1);
             }
-            cycle.AddSpell(needsDisplayCalculations, AM4, K1);
-            cycle.AddSpell(needsDisplayCalculations, MBAM4, K2);
-            cycle.AddSpell(needsDisplayCalculations, MBAM3, K3);
-            cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
-            cycle.AddSpell(needsDisplayCalculations, MBAM0, S1);
 
             cycle.Calculate();
             return cycle;
@@ -314,58 +441,163 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB3AM023MBAM";
 
-            // S0: no proc
-            // AB0-AB1-AB2-AM3    => S0    (1 - MB) * (1 - MB) * (1 - MB)
-            // AB0-AB1-AB2-MBAM3   => S0   (1 - MB) * (1 - (1 - MB) * (1 - MB)) * (1 - T8)
-            // AB0-AB1-AB2-MBAM3   => S1   (1 - MB) * (1 - (1 - MB) * (1 - MB)) * T8
-            // AB0-AB1-MBAM2   => S0       MB * (1 - T8)
-            // AB0-AB1-MBAM2   => S1       MB * T8
-
-            // S1: proc
-            // MBAM0   => S0   (1 - T8)
-            // MBAM0   => S1   T8
-
-            // K0 = (1 - MB) * (1 - MB) * (1 - MB)
-            // S1 = S0 * (1 - K0) * T8 + S1 * T8
-            // S0 + S1 = 1
-
-            // S1 = S0 * (1 - K0) * T8 / (1 - T8)
-            // S0 = (1 - T8) / (1 - K0 * T8)
-            // S1 = (1 - K0) * T8 / (1 - K0 * T8)
-
-
-            Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
-            Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
-
-            float MB = 0.08f * castingState.MageTalents.MissileBarrage;
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            float K0 = (1 - MB) * (1 - MB) * (1 - MB);
-            float S0 = (1 - T8) / (1 - K0 * T8);
-            float S1 = (1 - K0) * T8 / (1 - K0 * T8);
-            float K1 = S0 * K0;
-            float K2 = S0 * (1 - MB) * (1 - (1 - MB) * (1 - MB));
-            float K4 = S0 * MB;
-
-            if (needsDisplayCalculations)
+            if (castingState.BaseStats.Mage2T10 > 0)
             {
-                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-                cycle.AddSpell(needsDisplayCalculations, AB0, S0);
-                cycle.AddSpell(needsDisplayCalculations, AB1, S0);
-                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+                // doesn't support haste transferring over several loops
+
+                // S0A-nonhasted:
+                // AB0-AB1-AB2-AM3    => S1    (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-MBAM3   => S0AB   (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // AB0-AB1-MBAM2   => S0AB       MB
+                // S0B-hasted:
+                // AB0-AB1-AB2-AM3    => S1    (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-MBAM3   => S0AB   (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // AB0-AB1-MBAM2   => S0AB       MB
+                // S1-no 2T10:
+                // AB0-AB1-AB2-AM3    => S1    (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-MBAM3   => S0A   (1 - MB) * (1 - (1 - MB) * (1 - MB))
+                // AB0-AB1-MBAM2   => S0A       MB
+
+                // K0 := (1-MB)*(1-MB)*(1-MB)
+
+                // MC := 1-MB
+
+                // K2 := (1 - MB) * (1 - (1 - MB) * (1 - MB))
+
+                // S0A = S0A * (K2 * X2A + MB * X3A) + S0B * (K2 * X2B + MB * X3B) + S1 * (1 - K0)
+                // S0B = S0A * (K2 * Y2A + MB * Y3A) + S0B * (K2 * Y2B + MB * Y3B)
+                // S0AB = 1 - K0
+                // S1 = K0
+
+                // S0B = 1 - K0 - S0A
+
+                // S0A = S0A * (K2 * (X2A-X2B) + MB * (X3A-X3B)) + (1 - K0) * (K2 * X2B + MB * X3B) + S1 * (1 - K0)
+                // S0A * (1 - (K2 * (X2A-X2B) + MB * (X3A-X3B))) = (1 - K0) * (K2 * X2B + MB * X3B) + K0 * (1 - K0)
+                // S0A = ((1 - K0) * (K2 * X2B + MB * X3B) + K0 * (1 - K0)) / (1 - (K2 * (X2A-X2B) + MB * (X3A-X3B)))
+
+
+                Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
+                Spell MBAM2 = castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+                float m2T10time = 5.0f - MBAM3.CastTime;
+                Spell AB0A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0A.CastTime;
+                Spell AB1A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1A.CastTime;
+                float X3A = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast2) : castingState.GetSpell(SpellId.ArcaneBlast2);
+                m2T10time -= AB2A.CastTime;
+                float X2A = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM3A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB3) : castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AM3A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissiles3) : castingState.GetSpell(SpellId.ArcaneMissiles3);
+
+                m2T10time = 5.0f - MBAM2.CastTime;
+                Spell AB0B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0B.CastTime;
+                Spell AB1B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1B.CastTime;
+                float X3B = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast2) : castingState.GetSpell(SpellId.ArcaneBlast2);
+                m2T10time -= AB2B.CastTime;
+                float X2B = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM3B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB3) : castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AM3B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissiles3) : castingState.GetSpell(SpellId.ArcaneMissiles3);
+
+                Spell AB0C = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1C = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2C = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AM3C = castingState.GetSpell(SpellId.ArcaneMissiles3);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float MC = 1 - MB;
+                float K0 = (1 - MB) * (1 - MB) * (1 - MB);
+                float K2 = (1 - MB) * (1 - (1 - MB) * (1 - MB));
+
+                float S0A = ((1 - K0) * (K2 * X2B + MB * X3B) + K0 * (1 - K0)) / (1 - (K2 * (X2A - X2B) + MB * (X3A - X3B)));
+                float S0B = 1 - K0 - S0A;
+                float S1 = K0;
+
+                cycle.AddSpell(needsDisplayCalculations, AB0A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB1A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB2A, S0A * MC);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2A, S0A * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3A, S0A * K2);
+                cycle.AddSpell(needsDisplayCalculations, AM3A, S0A * K0);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB1B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB2B, S0B * MC);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2B, S0B * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3B, S0B * K2);
+                cycle.AddSpell(needsDisplayCalculations, AM3B, S0B * K0);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0C, S1);
+                cycle.AddSpell(needsDisplayCalculations, AB1C, S1);
+                cycle.AddSpell(needsDisplayCalculations, AB2C, S1 * MC);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2C, S1 * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3C, S1 * K2);
+                cycle.AddSpell(needsDisplayCalculations, AM3C, S1 * K0);
             }
             else
             {
-                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, S0, S0, K1 + K2, 0);
+                // S0: no proc
+                // AB0-AB1-AB2-AM3    => S0    (1 - MB) * (1 - MB) * (1 - MB)
+                // AB0-AB1-AB2-MBAM3   => S0   (1 - MB) * (1 - (1 - MB) * (1 - MB)) * (1 - T8)
+                // AB0-AB1-AB2-MBAM3   => S1   (1 - MB) * (1 - (1 - MB) * (1 - MB)) * T8
+                // AB0-AB1-MBAM2   => S0       MB * (1 - T8)
+                // AB0-AB1-MBAM2   => S1       MB * T8
+
+                // S1: proc
+                // MBAM0   => S0   (1 - T8)
+                // MBAM0   => S1   T8
+
+                // K0 = (1 - MB) * (1 - MB) * (1 - MB)
+                // S1 = S0 * (1 - K0) * T8 + S1 * T8
+                // S0 + S1 = 1
+
+                // S1 = S0 * (1 - K0) * T8 / (1 - T8)
+                // S0 = (1 - T8) / (1 - K0 * T8)
+                // S1 = (1 - K0) * T8 / (1 - K0 * T8)
+
+
+                Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
+                Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+                float K0 = (1 - MB) * (1 - MB) * (1 - MB);
+                float S0 = (1 - T8) / (1 - K0 * T8);
+                float S1 = (1 - K0) * T8 / (1 - K0 * T8);
+                float K1 = S0 * K0;
+                float K2 = S0 * (1 - MB) * (1 - (1 - MB) * (1 - MB));
+                float K4 = S0 * MB;
+
+                if (needsDisplayCalculations)
+                {
+                    Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                    Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                    Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                    cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+                    cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+                    cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+                }
+                else
+                {
+                    Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                    castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, S0, S0, K1 + K2, 0);
+                }
+                cycle.AddSpell(needsDisplayCalculations, AM3, K1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3, K2);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
+                cycle.AddSpell(needsDisplayCalculations, MBAM0, S1);
             }
-            cycle.AddSpell(needsDisplayCalculations, AM3, K1);
-            cycle.AddSpell(needsDisplayCalculations, MBAM3, K2);
-            cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
-            cycle.AddSpell(needsDisplayCalculations, MBAM0, S1);
 
             cycle.Calculate();
             return cycle;
@@ -379,40 +611,122 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB2AM";
 
-            // S0: no proc
-            // AB0-AB1-AM2    => S0   (1 - MB) * (1 - MB)
-            // AB0-AB1-MBAM   => S0   (1 - (1 - MB) * (1 - MB)) * (1 - T8)
-            // AB0-AB1-MBAM   => S1   (1 - (1 - MB) * (1 - MB)) * T8
-
-            // S1: proc
-            // AB0-AB1-MBAM   => S0   (1 - T8)
-            // AB0-AB1-MBAM   => S1   T8
-
-            // S1 = S0 * (1 - (1 - MB) * (1 - MB)) * T8 + S1 * T8
-            // S0 + S1 = 1
-
-            Spell AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
-            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-
-            float MB = 0.08f * castingState.MageTalents.MissileBarrage;
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            float K1 = (1 - MB) * (1 - MB);
-            float S0 = (1 - T8) / (1 - K1 * T8);
-
-            if (needsDisplayCalculations)
+            if (castingState.BaseStats.Mage2T10 > 0)
             {
-                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-                cycle.AddSpell(needsDisplayCalculations, AB0, 1);
-                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                // doesn't support haste transferring over several loops
+
+                // S0A-nonhasted:
+                // AB0-AB1-AM2    => S1   (1 - MB) * (1 - MB)
+                // AB0-AB1-MBAM2   => S0AB   (1 - (1 - MB) * (1 - MB))
+                // S0B-hasted:
+                // AB0-AB1-AM2    => S1   (1 - MB) * (1 - MB)
+                // AB0-AB1-MBAM2   => S0AB   (1 - (1 - MB) * (1 - MB))
+                // S1-no 2T10:
+                // AB0-AB1-AM2    => S1   (1 - MB) * (1 - MB)
+                // AB0-AB1-MBAM2   => S0A   (1 - (1 - MB) * (1 - MB))
+
+                // K0 := (1-MB)*(1-MB)
+
+                // MC := 1-MB
+
+                // S0A = S0A * (1 - K0) * XA + S0B * (1 - K0) * XB + S1 * (1 - K0)
+                // S0B = S0A * (1 - K0) * YA + S0B * (1 - K0) * YB
+                // S0 = 1 - K0
+                // S1 = K0
+
+                // S0B = 1 - K0 - S0A
+
+                // S0A = S0A * (1 - K0) * (XA - XB) + (1 - K0) * (1 - K0) * XB + K0 * (1 - K0)
+                // S0A * (1 - (1 - K0) * (XA - XB)) = (1 - K0) * (1 - K0) * XB + K0 * (1 - K0)
+                // S0A = ((1 - K0) * (1 - K0) * XB + K0 * (1 - K0)) / (1 - (1 - K0) * (XA - XB))
+
+                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
+                Spell MBAM2H = castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+                float m2T10time = 5.0f - MBAM2.CastTime;
+                Spell AB0A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0A.CastTime;
+                Spell AB1A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1A.CastTime;
+                float XA = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AM2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissiles2) : castingState.GetSpell(SpellId.ArcaneMissiles2);
+
+                m2T10time = 5.0f - MBAM2H.CastTime;
+                Spell AB0B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0B.CastTime;
+                Spell AB1B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1B.CastTime;
+                float XB = (m2T10time > 0.0f) ? 0 : 1;
+                Spell MBAM2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AM2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissiles2) : castingState.GetSpell(SpellId.ArcaneMissiles2);
+
+                Spell AB0C = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1C = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AM2C = castingState.GetSpell(SpellId.ArcaneMissiles2);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float MC = 1 - MB;
+                float K0 = (1 - MB) * (1 - MB);
+
+                float S0A = ((1 - K0) * (1 - K0) * XB + K0 * (1 - K0)) / (1 - (1 - K0) * (XA - XB));
+                float S0B = 1 - K0 - S0A;
+                float S1 = K0;
+
+                cycle.AddSpell(needsDisplayCalculations, AB0A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB1A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2A, S0A * (1 - K0));
+                cycle.AddSpell(needsDisplayCalculations, AM2A, S0A * K0);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB1B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2B, S0B * (1 - K0));
+                cycle.AddSpell(needsDisplayCalculations, AM2B, S0B * K0);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0C, S1);
+                cycle.AddSpell(needsDisplayCalculations, AB1C, S1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2C, S1 * (1 - K0));
+                cycle.AddSpell(needsDisplayCalculations, AM2C, S1 * K0);
             }
             else
             {
-                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, 1, 1, 0, 0);
+                // S0: no proc
+                // AB0-AB1-AM2    => S0   (1 - MB) * (1 - MB)
+                // AB0-AB1-MBAM   => S0   (1 - (1 - MB) * (1 - MB)) * (1 - T8)
+                // AB0-AB1-MBAM   => S1   (1 - (1 - MB) * (1 - MB)) * T8
+
+                // S1: proc
+                // AB0-AB1-MBAM   => S0   (1 - T8)
+                // AB0-AB1-MBAM   => S1   T8
+
+                // S1 = S0 * (1 - (1 - MB) * (1 - MB)) * T8 + S1 * T8
+                // S0 + S1 = 1
+
+                Spell AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
+                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+                float K1 = (1 - MB) * (1 - MB);
+                float S0 = (1 - T8) / (1 - K1 * T8);
+
+                if (needsDisplayCalculations)
+                {
+                    Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                    Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                    cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+                    cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                }
+                else
+                {
+                    Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                    castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, 1, 1, 0, 0);
+                }
+                cycle.AddSpell(needsDisplayCalculations, AM2, S0 * K1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2, 1 - S0 * K1);
             }
-            cycle.AddSpell(needsDisplayCalculations, AM2, S0 * K1);
-            cycle.AddSpell(needsDisplayCalculations, MBAM2, 1 - S0 * K1);
 
             cycle.Calculate();
             return cycle;
@@ -1546,76 +1860,185 @@ namespace Rawr.Mage
             float K1, K2, K3, K4, K5, K6, K7, S0, S1;
             cycle.Name = "ABSpam0234MBAM";
 
-            // always ramp up to 4 AB before using MBAM
-
-            // S0:
-            // AB0-AB1-MBAM2 => S0               MB*(1-T8)                         first AB procs
-            // AB0-AB1-MBAM2 => S2               MB*T8                             first AB procs
-            // AB0-AB1-AB2-MBAM3 => S0           (1-MB)*MB*(1-T8)                  2nd AB procs
-            // AB0-AB1-AB2-MBAM3 => S2           (1-MB)*MB*T8                      2nd AB procs
-            // AB0-AB1-AB2-AB3-MBAM4 => S0       (1-MB)*(1-MB)*MB*(1-T8)           3rd AB procs
-            // AB0-AB1-AB2-AB3-MBAM4 => S2       (1-MB)*(1-MB)*MB*T8               3rd AB procs
-            // AB0-AB1-AB2-AB3-AB4-MBAM4 => S0   (1-MB)*(1-MB)*(1-MB)*MB*(1-T8)    fourth AB procs
-            // AB0-AB1-AB2-AB3-AB4-MBAM4 => S2   (1-MB)*(1-MB)*(1-MB)*MB*T8        fourth AB procs
-            // AB0-AB1-AB2-AB3 => S1             (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
-            // S1:
-            // AB4-AB4-MBAM4 => S0           MB*(1-T8)                     proc
-            // AB4-AB4-MBAM4 => S2           MB*T8                     proc
-            // AB4 => S1                    (1-MB)                 no proc
-            // S2:
-            // MBAM0 => S0       (1-T8)     
-            // MBAM0 => S2       T8     
-
-            // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
-
-            // S0 = (1 - K0) * (1 - T8) * S0 + MB * (1 - T8) * S1 + (1 - T8) * S2
-            // S1 = K0 * S0 + (1-MB) * S1
-            // S2 = (1 - K0) * T8 * S0 + MB * T8 * S1 + T8 * S2
-            // S0 + S1 + S2 = 1
-
-            Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-
-            float MB = 0.08f * castingState.MageTalents.MissileBarrage;
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
-            S0 = (MB * T8 - MB) / (K0 * T8 - MB - K0);
-            S1 = (K0 * T8 - K0) / (K0 * T8 - MB - K0);
-            float S2 = -(MB * T8) / (K0 * T8 - MB - K0);
-            K6 = S0 * MB;
-            K7 = S0 * MB * (1 - MB);
-            K1 = S0 * MB * (1 - MB) * (1 - MB);
-            K2 = S0 * MB * (1 - MB) * (1 - MB) * (1 - MB);
-            K3 = S0 * K0;
-            K4 = S1 * MB;
-            K5 = S1 * (1 - MB);
-
-            if (needsDisplayCalculations)
+            if (castingState.BaseStats.Mage2T10 > 0)
             {
-                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
-                Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6 + K7);
-                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6 + K7);
-                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
-                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                // needs a completely different state graph because the MBAM can be either hasted or not hasted
+                // but we don't need to worry about T8, can't have 4T8 and 2T10 together
+                // still assume that at 4 stack 2T10 is always out to simplify things a bit
 
-                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-                Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                // S0A-nonhasted:
+                // AB0-AB1-MBAM2 => S0A               MB*X0                        first AB procs
+                // AB0-AB1-MBAM2 => S0B               MB*(1-X0)                        first AB procs
+                // AB0-AB1-AB2-MBAM3 => S0A           (1-MB)*MB*X1                  2nd AB procs
+                // AB0-AB1-AB2-MBAM3 => S0B           (1-MB)*MB*(1-X1)                  2nd AB procs
+                // AB0-AB1-AB2-AB3-MBAM4 => S0A       (1-MB)*(1-MB)*MB           3rd AB procs
+                // AB0-AB1-AB2-AB3-AB4-MBAM4 => S0A   (1-MB)*(1-MB)*(1-MB)*MB    fourth AB procs
+                // AB0-AB1-AB2-AB3 => S1             (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+                // S0B-hasted:
+                // AB0-AB1-MBAM2 => S0A               MB*X2                        first AB procs
+                // AB0-AB1-MBAM2 => S0B               MB*(1-X2)                        first AB procs
+                // AB0-AB1-AB2-MBAM3 => S0A           (1-MB)*MB*X3                  2nd AB procs
+                // AB0-AB1-AB2-MBAM3 => S0B           (1-MB)*MB*(1-X3)                  2nd AB procs
+                // AB0-AB1-AB2-AB3-MBAM4 => S0A       (1-MB)*(1-MB)*MB           3rd AB procs
+                // AB0-AB1-AB2-AB3-AB4-MBAM4 => S0A   (1-MB)*(1-MB)*(1-MB)*MB    fourth AB procs
+                // AB0-AB1-AB2-AB3 => S1             (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+                // S1:
+                // AB4-AB4-MBAM4 => S0A           MB                     proc
+                // AB4 => S1                    (1-MB)                 no proc
+
+                // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
+
+                // MC := 1-MB
+
+                // S0A = S0A * (MB*X0 + MC*MB*X1 + MC*MC*(1 - MC*MC)) + S0B * (MB*X2 + MC*MB*X3 + MC*MC*(1 - MC*MC)) + S1 * MB
+                // S0B = S0A * (MB*Y0 + MC*MB*Y1) + S0B * (MB*Y2 + MC*MB*Y3)
+                // S1 = K0 * S0A + K0 * S0B + (1-MB)*S1
+
+                // S0 = S0A + S0B
+                // S1 = K0 * S0 + (1-MB)*S1
+                // S0 + S1 = 1
+
+                // S0 + K0 * S0 = 1
+                // S0 = MB / (MB + K0)
+                // S1 = K0 / (MB + K0)
+
+                // S0B = S0A * (MB*Y0 + MC*MB*Y1) + S0B * (MB*Y2 + MC*MB*Y3)
+                // S0B * (1 - MB*Y2 - MC*MB*Y3) = S0A * (MB*Y0 + MC*MB*Y1)
+                // S0B = S0A * (MB*Y0 + MC*MB*Y1) / (1 - MB*Y2 - MC*MB*Y3)
+
+                // S0A + S0B = S0A * (1 - MB*Y2 - MC*MB*Y3 + MB*Y0 + MC*MB*Y1) / (1 - MB*Y2 - MC*MB*Y3) = MB / (MB + K0)
+                // S0A = MB * (1 - MB*Y2 - MC*MB*Y3) / ((MB + K0) * (1 - MB*Y2 - MC*MB*Y3 + MB*Y0 + MC*MB*Y1))
+
                 Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
-                cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
-                cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
-                cycle.AddSpell(needsDisplayCalculations, MBAM3, K7);
-                cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+                Spell MBAM2 = castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+                float m2T10time = 5.0f - MBAM4.CastTime;
+                Spell AB0A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0A.CastTime;
+                Spell AB1A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1A.CastTime;
+                float Y0 = (m2T10time > 0.0f) ? 1 : 0;
+                Spell MBAM2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast2) : castingState.GetSpell(SpellId.ArcaneBlast2);
+                m2T10time -= AB2A.CastTime;
+                float Y1 = (m2T10time > 0.0f) ? 1 : 0;
+                Spell MBAM3A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB3) : castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AB3A = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast3) : castingState.GetSpell(SpellId.ArcaneBlast3);
+                Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+
+                m2T10time = 5.0f - MBAM2.CastTime;
+                Spell AB0B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast0) : castingState.GetSpell(SpellId.ArcaneBlast0);
+                m2T10time -= AB0B.CastTime;
+                Spell AB1B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast1) : castingState.GetSpell(SpellId.ArcaneBlast1);
+                m2T10time -= AB1B.CastTime;
+                float Y2 = (m2T10time > 0.0f) ? 1 : 0;
+                Spell MBAM2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB2) : castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell AB2B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast2) : castingState.GetSpell(SpellId.ArcaneBlast2);
+                m2T10time -= AB2B.CastTime;
+                float Y3 = (m2T10time > 0.0f) ? 1 : 0;
+                Spell MBAM3B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneMissilesMB3) : castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell AB3B = (m2T10time > 0.0f) ? castingState.Tier10TwoPieceState.GetSpell(SpellId.ArcaneBlast3) : castingState.GetSpell(SpellId.ArcaneBlast3);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float MC = 1 - MB;
+                float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                S0 = MB / (MB + K0);
+                S1 = 1 - S0;
+                float S0A = MB * (1 - MB * Y2 - MC * MB * Y3) / ((MB + K0) * (1 - MB * Y2 - MC * MB * Y3 + MB * Y0 + MC * MB * Y1));
+                float S0B = S0 - S0A;
+
+                K1 = (1 - MB) * MB;
+                K2 = (1 - MB) * (1 - MB) * MB;
+                K3 = (1 - MB) * (1 - MB) * (1 - MB) * MB;
+                K4 = MC * MC * (1 - MC * MC);
+
+                cycle.AddSpell(needsDisplayCalculations, AB0A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB1A, S0A);
+                cycle.AddSpell(needsDisplayCalculations, AB2A, S0A * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB3A, S0A * MC * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB0B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB1B, S0B);
+                cycle.AddSpell(needsDisplayCalculations, AB2B, S0B * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB3B, S0B * MC * MC);
+                cycle.AddSpell(needsDisplayCalculations, AB4, S0 * K3 + S1 * (MB + 1));
+                cycle.AddSpell(needsDisplayCalculations, MBAM2A, S0A * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2B, S0B * MB);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3A, S0A * K1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3B, S0B * K1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4, S0 * K4 + S1 * MB);
             }
             else
             {
-                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                CharacterCalculationsMage calc = castingState.Calculations;
-                calc.ArcaneBlastTemplate.AddToCycle(calc, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
-                calc.ArcaneMissilesTemplate.AddToCycle(calc, cycle, MBAM0, S2, 0, K6, K7, K1 + K2 + K4);
+
+                // S0:
+                // AB0-AB1-MBAM2 => S0               MB*(1-T8)                         first AB procs
+                // AB0-AB1-MBAM2 => S2               MB*T8                             first AB procs
+                // AB0-AB1-AB2-MBAM3 => S0           (1-MB)*MB*(1-T8)                  2nd AB procs
+                // AB0-AB1-AB2-MBAM3 => S2           (1-MB)*MB*T8                      2nd AB procs
+                // AB0-AB1-AB2-AB3-MBAM4 => S0       (1-MB)*(1-MB)*MB*(1-T8)           3rd AB procs
+                // AB0-AB1-AB2-AB3-MBAM4 => S2       (1-MB)*(1-MB)*MB*T8               3rd AB procs
+                // AB0-AB1-AB2-AB3-AB4-MBAM4 => S0   (1-MB)*(1-MB)*(1-MB)*MB*(1-T8)    fourth AB procs
+                // AB0-AB1-AB2-AB3-AB4-MBAM4 => S2   (1-MB)*(1-MB)*(1-MB)*MB*T8        fourth AB procs
+                // AB0-AB1-AB2-AB3 => S1             (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+                // S1:
+                // AB4-AB4-MBAM4 => S0           MB*(1-T8)                     proc
+                // AB4-AB4-MBAM4 => S2           MB*T8                     proc
+                // AB4 => S1                    (1-MB)                 no proc
+                // S2:
+                // MBAM0 => S0       (1-T8)     
+                // MBAM0 => S2       T8     
+
+                // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
+
+                // S0 = (1 - K0) * (1 - T8) * S0 + MB * (1 - T8) * S1 + (1 - T8) * S2
+                // S1 = K0 * S0 + (1-MB) * S1
+                // S2 = (1 - K0) * T8 * S0 + MB * T8 * S1 + T8 * S2
+                // S0 + S1 + S2 = 1
+
+                Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+                float MB = 0.08f * castingState.MageTalents.MissileBarrage;
+                float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+                float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                S0 = (MB * T8 - MB) / (K0 * T8 - MB - K0);
+                S1 = (K0 * T8 - K0) / (K0 * T8 - MB - K0);
+                float S2 = -(MB * T8) / (K0 * T8 - MB - K0);
+                K6 = S0 * MB;
+                K7 = S0 * MB * (1 - MB);
+                K1 = S0 * MB * (1 - MB) * (1 - MB);
+                K2 = S0 * MB * (1 - MB) * (1 - MB) * (1 - MB);
+                K3 = S0 * K0;
+                K4 = S1 * MB;
+                K5 = S1 * (1 - MB);
+
+                if (needsDisplayCalculations)
+                {
+                    Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                    Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                    Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                    Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                    Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+                    cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6 + K7);
+                    cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6 + K7);
+                    cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
+                    cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                    cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+
+                    Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                    Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                    Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                    cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+                    cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+                    cycle.AddSpell(needsDisplayCalculations, MBAM3, K7);
+                    cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+                }
+                else
+                {
+                    Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                    CharacterCalculationsMage calc = castingState.Calculations;
+                    calc.ArcaneBlastTemplate.AddToCycle(calc, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                    calc.ArcaneMissilesTemplate.AddToCycle(calc, cycle, MBAM0, S2, 0, K6, K7, K1 + K2 + K4);
+                }
             }
 
             cycle.Calculate();

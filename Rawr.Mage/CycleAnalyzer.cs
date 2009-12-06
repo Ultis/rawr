@@ -79,9 +79,16 @@ namespace Rawr.Mage
             if (!e.Cancelled && e.Error == null)
             {
                 StringBuilder sb = new StringBuilder();
+                Cycle lastCycle = null;
                 foreach (Cycle cycle in (List<Cycle>)e.Result)
                 {
-                    sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
+                    sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps");
+                    if (lastCycle != null)
+                    {
+                        sb.Append(", " + (cycle.DamagePerSecond - lastCycle.DamagePerSecond) / (cycle.ManaPerSecond - lastCycle.ManaPerSecond) + " dpm tradeoff");
+                    }
+                    sb.AppendLine();
+                    lastCycle = cycle;
                 }
                 textBoxResult.Text = sb.ToString();
             }
