@@ -13,8 +13,8 @@ namespace Rawr.Hunter
 	{
 		private int _TargetLevel = 83;
 		private int _TargetArmor = 10643; //Wrath boss armor
-        private PetFamily _petFamily = PetFamily.Cat;
 
+        #region Pet
         public PetAttacks PetPriority1 = PetAttacks.Growl;
         public PetAttacks PetPriority2 = PetAttacks.Bite;
         public PetAttacks PetPriority3 = PetAttacks.None;
@@ -22,17 +22,46 @@ namespace Rawr.Hunter
         public PetAttacks PetPriority5 = PetAttacks.None;
         public PetAttacks PetPriority6 = PetAttacks.None;
         public PetAttacks PetPriority7 = PetAttacks.None;
-        
         [XmlIgnore]
-        private List<Buff> _petActiveBuffs = new List<Buff>();
+        private List<Buff> _petActiveBuffs;
         [XmlElement("petActiveBuffs")]
         public List<string> _petActiveBuffsXml = new List<string>();
         [XmlIgnore]
-        public List<Buff> petActiveBuffs
-        {
-            get { return _petActiveBuffs; }
-            set { _petActiveBuffs = value; }
+        public List<Buff> petActiveBuffs {
+            get { return _petActiveBuffs ?? (_petActiveBuffs = new List<Buff>()); }
+            set { _petActiveBuffs = value; OnPropertyChanged("PetActiveBuffs"); }
         }
+        private int _petLevel = 80; // Not Editable
+        public int PetLevel {
+            get { return _petLevel; }
+            set { _petLevel = value; OnPropertyChanged("PetLevel"); }
+        }
+        private PetHappiness _petHappiness = PetHappiness.Happy; // Not Editable
+        public PetHappiness PetHappinessLevel {
+            get { return _petHappiness; }
+            set { _petHappiness = value; OnPropertyChanged("PetHappinessLevel"); }
+        }
+        [XmlIgnore]
+        private PetTalentTree _PetTalents;
+        [XmlIgnore]
+        public PetTalentTree PetTalents {
+            get { return _PetTalents ?? (_PetTalents = new PetTalentTree()); }
+            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
+        }
+        private string _petTalents;
+        public string petTalents {
+            get {
+                if (String.IsNullOrEmpty(_petTalents) && _PetTalents != null) { _petTalents = _PetTalents.ToString(); }
+                return _petTalents;
+            }
+            set { _petTalents = value; }
+        }
+        private PetFamily _petFamily = PetFamily.Cat;
+        public PetFamily PetFamily {
+            get { return _petFamily; }
+            set { _petFamily = value; OnPropertyChanged("PetFamily"); }
+        }
+        #endregion
 
         #region Rotational Changes
         private bool _InBack;
@@ -207,8 +236,6 @@ namespace Rawr.Hunter
         public bool useKillCommand = true;
         public Aspect selectedAspect = Aspect.Dragonhawk;
         public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
-        public int petLevel = 80; // not editable
-        public PetHappiness petHappiness = PetHappiness.Happy; // not editable
         public float gcdsToLayImmoTrap = 2.0f; // not editable
         public float gcdsToLayExploTrap = 2.0f; // not editable
         public float gcdsToVolley = 4.0f; // not editable, 6 seconds
@@ -245,31 +272,6 @@ namespace Rawr.Hunter
         public int PriorityIndex9 = 0;
         public int PriorityIndex10 = 0;
 
-        [XmlIgnore]
-        private PetTalentTree _PetTalents;
-        [XmlIgnore]
-        public PetTalentTree PetTalents {
-            get { return _PetTalents ?? (_PetTalents = new PetTalentTree()); }
-            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
-        }
-
-        [XmlIgnore]
-        private string _petTalents;
-        public string petTalents
-        {
-            get { return _petTalents; }
-            set {
-                //PetTalents = new PetTalentTree(value); //_petTalents = PetTalents.ToString();
-                _petTalents = value;
-            }
-        }
-
-        public PetFamily PetFamily
-		{
-			get { return _petFamily; }
-            set { _petFamily = value; OnPropertyChanged("PetFamily"); }
-		}
-        
         public int TargetLevel
 		{
 			get { return _TargetLevel; }

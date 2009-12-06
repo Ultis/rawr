@@ -546,7 +546,7 @@ namespace Rawr.Hunter
                 || TalentTree.Count <= 0
                 || TalentTree.Count > 38)
             {
-                TalentTree.Clear();
+                if (TalentTree != null) { TalentTree.Clear(); }
                 Initialize();
             }
             foreach (PetTalent pt in TalentTree) {

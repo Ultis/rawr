@@ -572,7 +572,7 @@ namespace Rawr.Hunter
             float damageAdjustHitCritSpecials = (2 * calculatedStats.petCritTotalSpecials) + (calculatedStats.petHitTotal - calculatedStats.petCritTotalSpecials - calculatedStats.petTargetDodge); // CritAdjustments
 
             float damageAdjustUnleashedFury = 1f + (character.HunterTalents.UnleashedFury * 0.03f);
-            float damageAdjustMood = CalcOpts.petHappiness == PetHappiness.Happy ? 1.25f : CalcOpts.petHappiness == PetHappiness.Content ? 1f : 0.75f;
+            float damageAdjustMood = CalcOpts.PetHappinessLevel == PetHappiness.Happy ? 1.25f : CalcOpts.PetHappinessLevel == PetHappiness.Content ? 1f : 0.75f;
             float damageAdjustSpikedCollar = 1f + (CalcOpts.PetTalents.SpikedCollar.Value * 0.03f);
             float damageAdjustRaceModifier = character.Race == CharacterRace.Orc ? 1.05f : 1f;
             float damageAdjustGearModifier = isWearingBeastTamersShoulders ? 1.03f : 1f;
@@ -597,7 +597,7 @@ namespace Rawr.Hunter
             }
 
             // Glancing Blows
-            float glancingBlowsSkillDiff = (CalcOpts.TargetLevel * 5) - (CalcOpts.petLevel * 5); // F55
+            float glancingBlowsSkillDiff = (CalcOpts.TargetLevel * 5) - (CalcOpts.PetLevel * 5); // F55
             if (glancingBlowsSkillDiff < 0) glancingBlowsSkillDiff = 0;
             float glancingBlowsChance  = glancingBlowsSkillDiff > 15 ? 0.25f : 0.1f + glancingBlowsSkillDiff * 0.01f; // F56
             float glancingBlowsLowEnd  = (float)Math.Min(1.3f - 0.05f * glancingBlowsSkillDiff, 0.91f); // F57
