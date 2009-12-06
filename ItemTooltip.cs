@@ -199,6 +199,7 @@ namespace Rawr
                     {
                         if (_currentItem != null)
                         {
+                            #region Figure out the size of the tooltip needed
                             bool hasSockets = _currentItem.SocketColor1 != ItemSlot.None ||
                                               _currentItem.SocketColor2 != ItemSlot.None ||
                                               _currentItem.SocketColor3 != ItemSlot.None;
@@ -381,6 +382,7 @@ namespace Rawr
                                 }
                             }
                             #endregion
+                            #endregion
 
                             _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + (13) + extraLocation + (13) + extraEnchant + gemInfoSize + gemNamesSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
@@ -504,20 +506,11 @@ namespace Rawr
                                     {
                                         Rectangle rectGemBorder = new Rectangle(3 + (103 * (i)), 25 + statHeight, 35, 35);
                                         Brush brushGemBorder = Brushes.Silver;
-                                        switch (slotColor)
-                                        {
-                                            case ItemSlot.Red:
-                                                brushGemBorder = Brushes.Red;
-                                                break;
-                                            case ItemSlot.Yellow:
-                                                brushGemBorder = Brushes.Yellow;
-                                                break;
-                                            case ItemSlot.Blue:
-                                                brushGemBorder = Brushes.Blue;
-                                                break;
-                                            case ItemSlot.Prismatic:
-                                                brushGemBorder = Brushes.Silver;
-                                                break;
+                                        switch (slotColor) {
+                                            case ItemSlot.Red:      brushGemBorder = Brushes.Red;    break;
+                                            case ItemSlot.Yellow:   brushGemBorder = Brushes.Yellow; break;
+                                            case ItemSlot.Blue:     brushGemBorder = Brushes.Blue;   break;
+                                            case ItemSlot.Prismatic:brushGemBorder = Brushes.Silver; break;
                                         }
                                         g.FillRectangle(brushGemBorder, rectGemBorder);
                                         brushGemBorder = null;
@@ -553,6 +546,15 @@ namespace Rawr
                                             }
 
                                             string[] stats = gem.Stats.ToString().Split(',');
+
+                                            // Fixes a text too big issue
+                                            if (stats.Length > 0) {
+                                                for (int l = 0; l < stats.Length; l++) {
+                                                    if (stats[l].Contains("Armor Penetration")) {
+                                                        stats[l] = stats[l].Replace("Armor Penetration", "ArP");
+                                                    }
+                                                }
+                                            }
 
                                             switch (stats.Length)
                                             {

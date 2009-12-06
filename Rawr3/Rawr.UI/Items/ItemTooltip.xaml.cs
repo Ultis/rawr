@@ -335,8 +335,9 @@ namespace Rawr.UI
                     GemImage1.Source = Icons.ItemIcon(ItemInstance.Gem1.IconPath);
                     foreach (string s in Calculations.GetRelevantStats(ItemInstance.Gem1.Stats).ToString().Split(','))
                     {
+                        string r = s.Contains("Armor Penetration") ? s.Replace("Armor Penetration", "ArP") : s;
                         TextBlock t = new TextBlock();
-                        t.Text = s.StartsWith(" ") ? s.Substring(1) : s;
+                        t.Text = r.Trim();
                         GemStat1.Children.Add(t);
                     }
                 }
@@ -355,8 +356,9 @@ namespace Rawr.UI
                     GemImage2.Source = Icons.ItemIcon(ItemInstance.Gem2.IconPath);
                     foreach (string s in Calculations.GetRelevantStats(ItemInstance.Gem2.Stats).ToString().Split(','))
                     {
+                        string r = s.Contains("Armor Penetration") ? s.Replace("Armor Penetration", "ArP") : s;
                         TextBlock t = new TextBlock();
-                        t.Text = s.StartsWith(" ") ? s.Substring(1) : s;
+                        t.Text = r.Trim();
                         GemStat2.Children.Add(t);
                     }
                 }
@@ -375,8 +377,9 @@ namespace Rawr.UI
                     GemImage3.Source = Icons.ItemIcon(ItemInstance.Gem3.IconPath);
                     foreach (string s in Calculations.GetRelevantStats(ItemInstance.Gem3.Stats).ToString().Split(','))
                     {
+                        string r = s.Contains("Armor Penetration") ? s.Replace("Armor Penetration", "ArP") : s;
                         TextBlock t = new TextBlock();
-                        t.Text = s.StartsWith(" ") ? s.Substring(1) : s;
+                        t.Text = r.Trim();
                         GemStat3.Children.Add(t);
                     }
                 }
