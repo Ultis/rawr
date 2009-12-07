@@ -361,10 +361,6 @@ namespace Rawr.Tree {
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             periodicTicks += 1 * druidTalents.NaturesSplendor;
 
-            //gcd *= 1 - 0.04f * druidTalents.GiftOfTheEarthmother;
-            // use base gcd
-            gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
-
             manaCost *= 1 - 0.2f * druidTalents.TreeOfLife;
 
             // 6% chance to get Omen of Clarity...
@@ -410,15 +406,9 @@ namespace Rawr.Tree {
             healingBonus        = calculatedStats.SpellPower;
             critPercent         = calculatedStats.SpellCrit;
 
-            //if (calcOpts.Patch3_2) {
-                minHeal = 776f;         // Patch 3.2 nerfs bloom value
-                maxHeal = 776f;
-                coefDH = 0.645f * 0.8f; // 20 % Nerf
-            /*} else { // patch 3.1
-                minHeal = 970f;
-                maxHeal = 970f;
-                coefDH = 0.645f;
-            }*/
+            minHeal = 776f;         // Patch 3.2 nerfs bloom value
+            maxHeal = 776f;
+            coefDH = 0.645f * 0.8f; // 20 % Nerf
 
             periodicTick = 53f;
             periodicTicks = 7f;
@@ -443,6 +433,7 @@ namespace Rawr.Tree {
 
             applyHaste();
         }
+
         public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats, int numStacks, bool fastStack) : this(calcs, calculatedStats) {
             float newPeriodicTicks = periodicTicks;
 
@@ -499,9 +490,7 @@ namespace Rawr.Tree {
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             periodicTicks += 2f * druidTalents.NaturesSplendor;
 
-            //gcd *= (1f - 0.04f * druidTalents.GiftOfTheEarthmother);
-            // use base gcd
-            gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
+            gcdBeforeHaste -= 1.5f * 0.02f * druidTalents.GiftOfTheEarthmother;
 
             manaCost *= (1f - 0.2f * druidTalents.TreeOfLife);
 
@@ -583,10 +572,6 @@ namespace Rawr.Tree {
             applyHaste();
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            //gcd *= (1f - 0.04f * druidTalents.GiftOfTheEarthmother);
-            // use base gcd
-            gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
-
             manaCost *= (1f - 0.2f * druidTalents.TreeOfLife);
 
             // 6% chance to get Omen of Clarity...

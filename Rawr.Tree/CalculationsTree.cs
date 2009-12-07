@@ -1172,7 +1172,7 @@ applied and result is scaled down by 100)",
                 BonusSpiritMultiplier    = 0.01f * talents.SurvivalOfTheFittest * 2f,
                 BonusStaminaMultiplier   = 0.01f * talents.SurvivalOfTheFittest * 2f,
                 BonusStrengthMultiplier  = 0.01f * talents.SurvivalOfTheFittest * 2f,
-                SpellHaste               = 0.01f * talents.CelestialFocus,
+                SpellHaste               = ((1f + 0.01f * talents.CelestialFocus) * (1f + 0.02f * talents.GiftOfTheEarthmother)) - 1f,
             };
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
