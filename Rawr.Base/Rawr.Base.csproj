@@ -98,7 +98,9 @@
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
     <Compile Include="AvailableItemGenerator.cs" />
+    <Compile Include="BatchCharacter.cs" />
     <Compile Include="BatchOptimizer.cs" />
+    <Compile Include="BatchTools.cs" />
     <Compile Include="Bosses\Bosses.cs" />
     <Compile Include="Bosses\Bosses2.cs" />
     <Compile Include="Bosses\BossHandler.cs" />

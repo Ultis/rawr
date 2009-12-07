@@ -290,7 +290,7 @@ namespace Rawr.Optimizer
     {
         private Character _character;
         private string _calculationToOptimize;
-        private OptimizationRequirement[] _requirements;
+        private List<OptimizationRequirement> _requirements;
         private CalculationsBase model;
 
         private const int characterSlots = 19;
@@ -650,9 +650,9 @@ namespace Rawr.Optimizer
         }
 
         private AsyncOperation asyncOperation;
-        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
-        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade);
+        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter);
+        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades);
+        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade);
 
         public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
         public event OptimizeCharacterProgressChangedEventHandler OptimizeCharacterProgressChanged;
@@ -676,13 +676,18 @@ namespace Rawr.Optimizer
         {
             public Character Character { get; set; }
             public string CalculationToOptimize { get; set; }
-            public OptimizationRequirement[] Requirements { get; set; }
+            public List<OptimizationRequirement> Requirements { get; set; }
             public int Thoroughness { get; set; }
             public bool InjectCharacter { get; set; }
         }
 #endif
 
-        public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
+        public void OptimizeCharacterAsync(Character character, int thoroughness, bool injectCharacter)
+        {
+            OptimizeCharacterAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, injectCharacter);
+        }
+
+        public void OptimizeCharacterAsync(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -736,7 +741,7 @@ namespace Rawr.Optimizer
                     state.Character, currentCharacterValue, injected, error, cancellationPending));
         }
 #endif
-        private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
+        private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter)
         {
             Exception error = null;
             Character optimizedCharacter = null;
@@ -764,7 +769,7 @@ namespace Rawr.Optimizer
         }
 
 
-        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness)
         {
             ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, null);
         }
@@ -780,7 +785,12 @@ namespace Rawr.Optimizer
         }
 #endif
 
-        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public void ComputeUpgradesAsync(Character character, int thoroughness, Item singleItemUpgrades)
+        {
+            ComputeUpgradesAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, singleItemUpgrades);
+        }
+
+        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -820,7 +830,7 @@ namespace Rawr.Optimizer
         }
 #endif
 
-        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
@@ -846,7 +856,12 @@ namespace Rawr.Optimizer
         }
 #endif
 
-        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
+        public void EvaluateUpgradeAsync(Character character, int thoroughness, ItemInstance upgrade)
+        {
+            EvaluateUpgradeAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, upgrade);
+        }
+
+        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -887,7 +902,7 @@ namespace Rawr.Optimizer
         }
 #endif
 
-        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
+        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade)
         {
             Exception error = null;
             ComparisonCalculationUpgrades comparisonUpgrade = null;
@@ -923,7 +938,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        public Character OptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
+        public Character OptimizeCharacter(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -937,7 +952,7 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        private Character PrivateOptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter, out bool injected, out Exception error)
+        private Character PrivateOptimizeCharacter(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter, out bool injected, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -981,7 +996,7 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -1025,7 +1040,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -1169,7 +1184,7 @@ namespace Rawr.Optimizer
             return upgrades;
         }
 
-        public float EvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade, out ComparisonCalculationUpgrades comparisonUpgrade)
+        public float EvaluateUpgrade(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade, out ComparisonCalculationUpgrades comparisonUpgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -1182,7 +1197,7 @@ namespace Rawr.Optimizer
             return upgradeValue;
         }
 
-        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade, out Exception error, out ComparisonCalculationUpgrades comparisonUpgrade)
+        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade, out Exception error, out ComparisonCalculationUpgrades comparisonUpgrade)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -1488,13 +1503,13 @@ namespace Rawr.Optimizer
         public static float GetOptimizationValue(Character character, CalculationsBase model)
         {
             float ignore;
-            return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray(), out ignore);
+            return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements, out ignore);
         }
 
-        private float GetOptimizationValue(Character individual, CharacterCalculationsBase valuation)
+        public static float GetOptimizationValue(Character character, CharacterCalculationsBase valuation)
         {
             float ignore;
-            return GetCalculationsValue(individual, valuation, _calculationToOptimize, _requirements, out ignore);
+            return GetCalculationsValue(character, valuation, character.CalculationToOptimize, character.OptimizationRequirements, out ignore);
         }
 
         protected override float GetOptimizationValue(OptimizerCharacter individual, CharacterCalculationsBase valuation)
@@ -1542,6 +1557,8 @@ namespace Rawr.Optimizer
             character.BossOptions = _character.BossOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character, false);
+            character.CalculationToOptimize = _character.CalculationToOptimize;
+            character.OptimizationRequirements = _character.OptimizationRequirements;
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
             if (optimizeFood)
             {
@@ -1635,7 +1652,7 @@ namespace Rawr.Optimizer
             return new OptimizerCharacter() { Character = character, Items = items };
         }
 
-        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements, out float nonJewelerValue)
+        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, List<OptimizationRequirement> requirements, out float nonJewelerValue)
         {
             float gemValue = -100000 * character.GemRequirementsInvalid;
             float nonJewelerGemValue = -100000 * character.NonjewelerGemRequirementsInvalid;

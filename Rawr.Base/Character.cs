@@ -1889,9 +1889,7 @@ namespace Rawr //O O . .
             clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;
             clone.WristBlacksmithingSocketEnabled = this.WristBlacksmithingSocketEnabled;
             clone.HandsBlacksmithingSocketEnabled = this.HandsBlacksmithingSocketEnabled;
-#if !RAWR3
             clone.OptimizationRequirements = this.OptimizationRequirements;
-#endif
             clone.CalculationToOptimize = this.CalculationToOptimize;
             clone.BossOptions = this.BossOptions;
 			return clone;

@@ -206,7 +206,6 @@ namespace Rawr
 					requirements.Add(requirement);
 				}
 			}
-            OptimizationRequirement[] _requirements = requirements.ToArray();
 
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
@@ -239,7 +238,7 @@ namespace Rawr
 
             buttonCancel.DialogResult = DialogResult.None;
 
-            _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
+            _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, requirements, _thoroughness, false);
 		}
 
 		private string GetCalculationStringFromComboBox(ComboBox comboBox, ComboBox comboBoxTalent)
@@ -544,7 +543,6 @@ namespace Rawr
                     requirements.Add(requirement);
                 }
             }
-            OptimizationRequirement[] _requirements = requirements.ToArray();
 
             if ((_overrideReenchant || _overrideRegem || _thoroughness > 100) && Properties.Optimizer.Default.WarningsEnabled)
             {
@@ -575,7 +573,7 @@ namespace Rawr
 				comboBoxCalculationToOptimize.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness, _itemToEvaluate);
+            _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, requirements, _thoroughness, _itemToEvaluate);
         }
 
         private void FormOptimize_FormClosed(object sender, FormClosedEventArgs e)

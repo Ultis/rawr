@@ -2668,7 +2668,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double nextPot = 0;
             double nextEvo = 0;
             double maxTps = 50000.0;
-            double evocationFactor = 1.0;
+            //double evocationFactor = 1.0;
             if (SequenceItem.Calculations.CalculationOptions.TpsLimit > 0.0)
             {
                 maxTps = SequenceItem.Calculations.CalculationOptions.TpsLimit;
@@ -2977,7 +2977,16 @@ namespace Rawr.Mage.SequenceReconstruction
                         for (i = superIndex; i >= 0; i--)
                         {
                             double mpsdiff = sequence[i].Mps - sequence[lowestMpsIndex].Mps;
-                            if (sequence[i].Group.Count == 0 && (!sequence[i].IsManaPotionOrGem && !sequence[i].IsEvocation) && mpsdiff > 0)
+                            bool good = sequence[i].Group.Count == 0 && (!sequence[i].IsManaPotionOrGem && !sequence[i].IsEvocation) && mpsdiff > 0;
+                            // don't allow swaps if the non-cooldown has time restrictions that won't be met after swap
+                            if (good)
+                            {
+                                if (sequence[lowestMpsIndex].Timestamp < sequence[i].MinTime - eps || sequence[lowestMpsIndex].Timestamp > sequence[i].MaxTime + eps)
+                                {
+                                    good = false;
+                                }
+                            }
+                            if (good)
                             {
                                 // we can do the swap, this will happen at i < superIndex
                                 // this can happen at i == superIndex also if there are items later that can't be pushed back
@@ -3042,7 +3051,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 double gem = nextGem;
                 double pot = nextPot;
                 //double evo = nextEvo;
-                bool evoMoved = false;
+                //bool evoMoved = false;
                 if (gemTime > 0) gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue, Math.Max(time, nextGem), 4);
                 if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * potMaxValue, Math.Max(time, nextPot), 3);
                 /*if (evoTime > 0)

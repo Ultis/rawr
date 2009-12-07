@@ -51,7 +51,13 @@
             this.saveCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCharactersAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.batchCharacterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.newScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
+            this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
+            this.diffBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.statusStrip1 = new Rawr.FormBatchTools.MyStatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -68,20 +74,16 @@
             this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
             this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.newScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
-            this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
-            this.diffBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
+            this.batchCharacterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.batchToolsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRounds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchToolsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -106,53 +108,53 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.importToolStripMenuItem.Text = "&Import";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(122, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(120, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -171,81 +173,81 @@
             this.saveCharactersToolStripMenuItem,
             this.saveCharactersAsCopyToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // setAvailableItemsToolStripMenuItem
             // 
             this.setAvailableItemsToolStripMenuItem.Name = "setAvailableItemsToolStripMenuItem";
-            this.setAvailableItemsToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.setAvailableItemsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.setAvailableItemsToolStripMenuItem.Text = "Set Available Items";
             this.setAvailableItemsToolStripMenuItem.Click += new System.EventHandler(this.setAvailableGearToolStripMenuItem_Click);
             // 
             // replaceUnavailableToolStripMenuItem
             // 
             this.replaceUnavailableToolStripMenuItem.Name = "replaceUnavailableToolStripMenuItem";
-            this.replaceUnavailableToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.replaceUnavailableToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.replaceUnavailableToolStripMenuItem.Text = "Replace Unavailable";
             this.replaceUnavailableToolStripMenuItem.Click += new System.EventHandler(this.replaceUnavailableToolStripMenuItem_Click);
             // 
             // optimizeToolStripMenuItem
             // 
             this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
-            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.optimizeToolStripMenuItem.Text = "Optimize";
             this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
             // 
             // buildUpgradeListToolStripMenuItem
             // 
             this.buildUpgradeListToolStripMenuItem.Name = "buildUpgradeListToolStripMenuItem";
-            this.buildUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.buildUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.buildUpgradeListToolStripMenuItem.Text = "Build Upgrade List";
             this.buildUpgradeListToolStripMenuItem.Click += new System.EventHandler(this.buildUpgradeListToolStripMenuItem_Click);
             // 
             // bathcOptimizeToolStripMenuItem
             // 
             this.bathcOptimizeToolStripMenuItem.Name = "bathcOptimizeToolStripMenuItem";
-            this.bathcOptimizeToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.bathcOptimizeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.bathcOptimizeToolStripMenuItem.Text = "Batch Optimize";
             this.bathcOptimizeToolStripMenuItem.Click += new System.EventHandler(this.bathcOptimizeToolStripMenuItem_Click);
             // 
             // buildBatchUpgradeListToolStripMenuItem
             // 
             this.buildBatchUpgradeListToolStripMenuItem.Name = "buildBatchUpgradeListToolStripMenuItem";
-            this.buildBatchUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.buildBatchUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.buildBatchUpgradeListToolStripMenuItem.Text = "Build Batch Upgrade List";
             this.buildBatchUpgradeListToolStripMenuItem.Click += new System.EventHandler(this.buildBatchUpgradeListToolStripMenuItem_Click);
             // 
             // progressiveOptimizeToolStripMenuItem
             // 
             this.progressiveOptimizeToolStripMenuItem.Name = "progressiveOptimizeToolStripMenuItem";
-            this.progressiveOptimizeToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.progressiveOptimizeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.progressiveOptimizeToolStripMenuItem.Text = "Progressive Optimize";
             this.progressiveOptimizeToolStripMenuItem.Click += new System.EventHandler(this.progressiveOptimizeToolStripMenuItem_Click);
             // 
             // buildProgressiveUpgradeListToolStripMenuItem
             // 
             this.buildProgressiveUpgradeListToolStripMenuItem.Name = "buildProgressiveUpgradeListToolStripMenuItem";
-            this.buildProgressiveUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.buildProgressiveUpgradeListToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.buildProgressiveUpgradeListToolStripMenuItem.Text = "Build Progressive Upgrade List";
             this.buildProgressiveUpgradeListToolStripMenuItem.Click += new System.EventHandler(this.buildProgressiveUpgradeListToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(215, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(230, 6);
             // 
             // saveCharactersToolStripMenuItem
             // 
             this.saveCharactersToolStripMenuItem.Name = "saveCharactersToolStripMenuItem";
-            this.saveCharactersToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.saveCharactersToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.saveCharactersToolStripMenuItem.Text = "Save Characters";
             this.saveCharactersToolStripMenuItem.Click += new System.EventHandler(this.saveCharactersToolStripMenuItem_Click);
             // 
             // saveCharactersAsCopyToolStripMenuItem
             // 
             this.saveCharactersAsCopyToolStripMenuItem.Name = "saveCharactersAsCopyToolStripMenuItem";
-            this.saveCharactersAsCopyToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+            this.saveCharactersAsCopyToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.saveCharactersAsCopyToolStripMenuItem.Text = "Save Characters As Copy";
             this.saveCharactersAsCopyToolStripMenuItem.Click += new System.EventHandler(this.saveCharactersAsCopyToolStripMenuItem_Click);
             // 
@@ -273,10 +275,68 @@
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
-            // batchCharacterListBindingSource
+            // Locked
             // 
-            this.batchCharacterListBindingSource.DataSource = typeof(Rawr.BatchCharacterList);
-            this.batchCharacterListBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.batchCharacterListBindingSource_ListChanged);
+            this.Locked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Locked.DataPropertyName = "Locked";
+            this.Locked.HeaderText = "Locked";
+            this.Locked.Name = "Locked";
+            this.Locked.Width = 49;
+            // 
+            // weightColumn
+            // 
+            this.weightColumn.DataPropertyName = "Weight";
+            this.weightColumn.HeaderText = "Weight";
+            this.weightColumn.Name = "weightColumn";
+            this.weightColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.weightColumn.Width = 50;
+            // 
+            // scoreColumn
+            // 
+            this.scoreColumn.DataPropertyName = "Score";
+            this.scoreColumn.HeaderText = "Score";
+            this.scoreColumn.Name = "scoreColumn";
+            this.scoreColumn.ReadOnly = true;
+            this.scoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.scoreColumn.Width = 66;
+            // 
+            // newScoreColumn
+            // 
+            this.newScoreColumn.DataPropertyName = "NewScore";
+            this.newScoreColumn.HeaderText = "New Score";
+            this.newScoreColumn.Name = "newScoreColumn";
+            this.newScoreColumn.ReadOnly = true;
+            this.newScoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.newScoreColumn.Width = 66;
+            // 
+            // loadBatchCharacterColumn
+            // 
+            this.loadBatchCharacterColumn.DataPropertyName = "RelativePath";
+            this.loadBatchCharacterColumn.HeaderText = "";
+            this.loadBatchCharacterColumn.Name = "loadBatchCharacterColumn";
+            this.loadBatchCharacterColumn.NewRowButtonVisible = true;
+            this.loadBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.loadBatchCharacterColumn.Text = "...";
+            this.loadBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.loadBatchCharacterColumn.Width = 20;
+            // 
+            // showBatchCharacterColumn
+            // 
+            this.showBatchCharacterColumn.HeaderText = "";
+            this.showBatchCharacterColumn.Name = "showBatchCharacterColumn";
+            this.showBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.showBatchCharacterColumn.Text = "Show";
+            this.showBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.showBatchCharacterColumn.Width = 50;
+            // 
+            // diffBatchCharacterColumn
+            // 
+            this.diffBatchCharacterColumn.HeaderText = "";
+            this.diffBatchCharacterColumn.Name = "diffBatchCharacterColumn";
+            this.diffBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.diffBatchCharacterColumn.Text = "Diff";
+            this.diffBatchCharacterColumn.UseColumnTextForButtonValue = true;
+            this.diffBatchCharacterColumn.Width = 50;
             // 
             // statusStrip1
             // 
@@ -374,6 +434,7 @@
             // 
             // trackBarMaxRounds
             // 
+            this.trackBarMaxRounds.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.batchToolsBindingSource, "MaxRounds", true));
             this.trackBarMaxRounds.LargeChange = 1;
             this.trackBarMaxRounds.Location = new System.Drawing.Point(79, 122);
             this.trackBarMaxRounds.Maximum = 5;
@@ -404,6 +465,7 @@
             // checkBoxOverrideReenchant
             // 
             this.checkBoxOverrideReenchant.AutoSize = true;
+            this.checkBoxOverrideReenchant.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.batchToolsBindingSource, "OverrideReenchant", true));
             this.checkBoxOverrideReenchant.Location = new System.Drawing.Point(6, 99);
             this.checkBoxOverrideReenchant.Name = "checkBoxOverrideReenchant";
             this.checkBoxOverrideReenchant.Size = new System.Drawing.Size(122, 17);
@@ -414,6 +476,7 @@
             // checkBoxOverrideRegem
             // 
             this.checkBoxOverrideRegem.AutoSize = true;
+            this.checkBoxOverrideRegem.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.batchToolsBindingSource, "OverrideRegem", true));
             this.checkBoxOverrideRegem.Location = new System.Drawing.Point(6, 76);
             this.checkBoxOverrideRegem.Name = "checkBoxOverrideRegem";
             this.checkBoxOverrideRegem.Size = new System.Drawing.Size(103, 17);
@@ -423,6 +486,7 @@
             // 
             // trackBarThoroughness
             // 
+            this.trackBarThoroughness.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.batchToolsBindingSource, "Thoroughness", true));
             this.trackBarThoroughness.Location = new System.Drawing.Point(6, 25);
             this.trackBarThoroughness.Maximum = 400;
             this.trackBarThoroughness.Minimum = 1;
@@ -441,68 +505,14 @@
             this.characterColumn.ReadOnly = true;
             this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // Locked
+            // batchCharacterListBindingSource
             // 
-            this.Locked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Locked.DataPropertyName = "Locked";
-            this.Locked.HeaderText = "Locked";
-            this.Locked.Name = "Locked";
-            this.Locked.Width = 49;
+            this.batchCharacterListBindingSource.DataSource = typeof(Rawr.BatchCharacterList);
+            this.batchCharacterListBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.batchCharacterListBindingSource_ListChanged);
             // 
-            // weightColumn
+            // batchToolsBindingSource
             // 
-            this.weightColumn.DataPropertyName = "Weight";
-            this.weightColumn.HeaderText = "Weight";
-            this.weightColumn.Name = "weightColumn";
-            this.weightColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.weightColumn.Width = 50;
-            // 
-            // scoreColumn
-            // 
-            this.scoreColumn.DataPropertyName = "Score";
-            this.scoreColumn.HeaderText = "Score";
-            this.scoreColumn.Name = "scoreColumn";
-            this.scoreColumn.ReadOnly = true;
-            this.scoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.scoreColumn.Width = 66;
-            // 
-            // newScoreColumn
-            // 
-            this.newScoreColumn.DataPropertyName = "NewScore";
-            this.newScoreColumn.HeaderText = "New Score";
-            this.newScoreColumn.Name = "newScoreColumn";
-            this.newScoreColumn.ReadOnly = true;
-            this.newScoreColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.newScoreColumn.Width = 66;
-            // 
-            // loadBatchCharacterColumn
-            // 
-            this.loadBatchCharacterColumn.DataPropertyName = "RelativePath";
-            this.loadBatchCharacterColumn.HeaderText = "";
-            this.loadBatchCharacterColumn.Name = "loadBatchCharacterColumn";
-            this.loadBatchCharacterColumn.NewRowButtonVisible = true;
-            this.loadBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.loadBatchCharacterColumn.Text = "...";
-            this.loadBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.loadBatchCharacterColumn.Width = 20;
-            // 
-            // showBatchCharacterColumn
-            // 
-            this.showBatchCharacterColumn.HeaderText = "";
-            this.showBatchCharacterColumn.Name = "showBatchCharacterColumn";
-            this.showBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.showBatchCharacterColumn.Text = "Show";
-            this.showBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.showBatchCharacterColumn.Width = 50;
-            // 
-            // Diff
-            // 
-            this.diffBatchCharacterColumn.HeaderText = "";
-            this.diffBatchCharacterColumn.Name = "diffBatchCharacterColumn";
-            this.diffBatchCharacterColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.diffBatchCharacterColumn.Text = "Diff";
-            this.diffBatchCharacterColumn.UseColumnTextForButtonValue = true;
-            this.diffBatchCharacterColumn.Width = 50;
+            this.batchToolsBindingSource.DataSource = typeof(Rawr.BatchTools);
             // 
             // FormBatchTools
             // 
@@ -522,13 +532,14 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRounds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchToolsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -582,5 +593,6 @@
         private FormBatchTools.MyDataGridViewButtonColumn loadBatchCharacterColumn;
         private FormBatchTools.MyDataGridViewButtonColumn showBatchCharacterColumn;
         private FormBatchTools.MyDataGridViewButtonColumn diffBatchCharacterColumn;
+        private System.Windows.Forms.BindingSource batchToolsBindingSource;
     }
 }

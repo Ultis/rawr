@@ -890,7 +890,8 @@ namespace Rawr
                 case FileType.Batch:
                     FormBatchTools form = new FormBatchTools(this);
                     AddRecentCharacter(path);
-                    form.batchCharacterListBindingSource.DataSource = BatchCharacterList.Load(path);
+                    form.batchTools.BatchCharacterList = BatchCharacterList.Load(path);
+                    form.batchCharacterListBindingSource.DataSource = form.batchTools.BatchCharacterList;
                     form.Show();
                     break;
             }

@@ -573,6 +573,7 @@
     <Content Include="DefaultDataFiles\ItemSource.xml" />
     <Content Include="DefaultDataFiles\Talents.xml" />
     <Content Include="RawrIcon.ico" />
+    <None Include="BatchTools.datasource" />
     <None Include="ItemFilterRegex.datasource" />
     <None Include="ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
