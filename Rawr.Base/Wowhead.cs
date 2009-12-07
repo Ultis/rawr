@@ -587,9 +587,36 @@ namespace Rawr
 			{
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
 				string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
-				if (line.StartsWith("Equip: ")) equipLines.Add(line.Substring("Equip: ".Length));
-                else if (line.StartsWith("Chance on hit: ")) equipLines.Add(line.Substring("Chance on hit: ".Length));
-                else if (line.StartsWith("Use: ")) useLines.Add(line.Substring("Use: ".Length));
+				if (line.StartsWith("Equip: "))
+				{
+					string equipLine = line.Substring("Equip: ".Length);
+					if (equipLine.StartsWith("<a"))
+					{
+						equipLine = equipLine.Substring(equipLine.IndexOf(">") + 1);
+						equipLine = equipLine.Substring(0, equipLine.IndexOf("<"));
+					}
+					equipLines.Add(equipLine);
+				}
+				else if (line.StartsWith("Chance on hit: "))
+				{
+					string chanceLine = line.Substring("Chance on hit: ".Length);
+					if (chanceLine.StartsWith("<a"))
+					{
+						chanceLine = chanceLine.Substring(chanceLine.IndexOf(">") + 1);
+						chanceLine = chanceLine.Substring(0, chanceLine.IndexOf("<"));
+					}
+					equipLines.Add(chanceLine);
+				}
+				else if (line.StartsWith("Use: "))
+				{
+					string useLine = line.Substring("Use: ".Length);
+					if (useLine.StartsWith("<a"))
+					{
+						useLine = useLine.Substring(useLine.IndexOf(">") + 1);
+						useLine = useLine.Substring(0, useLine.IndexOf("<"));
+					}
+					useLines.Add(useLine);
+				}
 				htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
 			}
 			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
