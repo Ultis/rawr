@@ -123451,7 +123451,21 @@
     <DisplayId>64629</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>spell_frost_frostnova</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ShamanFlameShockDoTTick</Trigger>
+          <Stats>
+            <HasteRating>44</HasteRating>
+          </Stats>
+          <Duration>30</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>5</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Totem</Type>
     <Faction>Neutral</Faction>
@@ -123540,14 +123554,14 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>SpellHit</Trigger>
+          <Trigger>ShamanStormStrike</Trigger>
           <Stats>
             <AttackPower>146</AttackPower>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
+          <MaxStack>3</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
