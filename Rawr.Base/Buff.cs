@@ -4292,7 +4292,7 @@ namespace Rawr
                 Name = "Siegebreaker Battlegear (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusWarrior_T8_2P_HasteProc = 1, },
+                Stats = new Stats() { /*BonusWarrior_T8_2P_HasteProc = 1,*/ },
                 SetName = "Siegebreaker Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -4382,7 +4382,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Ymirjar Lord's Battlegear 2 Piece Bonus",
+                Name = "Ymirjar Lord's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusWarrior_T10_2P_DWAPProc = 1f, },
@@ -4395,7 +4395,7 @@ namespace Rawr
                 10f, 0f, 0.03f));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Ymirjar Lord's Battlegear 4 Piece Bonus",
+                Name = "Ymirjar Lord's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusWarrior_T10_4P_BSSDProcChange = 1f, },
