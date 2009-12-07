@@ -239,7 +239,13 @@ namespace Rawr
                                 string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
                                 statsList.Add(text);
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
-                                if (xPos + width > xGrid.end)
+                                if (xPos + width > xGrid.end && xPos != xGrid.initial)
+                                {
+                                    xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
+                                // Force stats that are in the 1st column that would STILL fall off to Text Wrap
+                                if (xPos + width > xGrid.end && xPos == xGrid.initial)
                                 {
                                     xPos = xGrid.initial;
                                     yPos += yGrid.step;
@@ -255,6 +261,7 @@ namespace Rawr
                                 }
                             }
 
+                            #region Weapon DPS
                             if (_currentItem.DPS > 0)
                             {
                                 float dps = (float)Math.Round(_currentItem.DPS * 100f) / 100f;
@@ -288,15 +295,22 @@ namespace Rawr
                                     yPos += yGrid.step;
                                 }
                             }
+                            #endregion
 
                             foreach (SpecialEffect effect in relevantStats.SpecialEffects())
                             {
                                 string text = effect.ToString();
                                 statsList.Add(text);
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
-                                if (xPos + width > xGrid.end)
+                                // Force stats that are in a 2nd or 3rd column to a new line if they'd fall off the tooltip
+                                if (xPos + width > xGrid.end && xPos != xGrid.initial)
                                 {
                                     xPos = xGrid.initial;
+                                    yPos += yGrid.step;
+                                }
+                                // Force stats that are in the 1st column that would STILL fall off to Text Wrap
+                                if (xPos + width > xGrid.end && xPos == xGrid.initial)
+                                {
                                     yPos += yGrid.step;
                                 }
                                 // once we write on a line store where the next line would be
@@ -315,54 +329,57 @@ namespace Rawr
                             #region Location Section
                             int extraLocation = 0;
                             string location = "Unknown source";
-                            if (_currentItem.LocationInfo != null)
+                            if (_currentItem.Quality != ItemQuality.Temp)
                             {
-                                location = _currentItem.LocationInfo.Description;
-                            }
-                            SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
-                            if (locationSize.Width > 300)
-                            {
-                                extraLocation = (int)locationSize.Height;
-                                int index = location.IndexOf(" in ");
-                                index = (index == -1 ? -1 : index + 4);
-                                if (index != -1) { location = location.Insert(index, "\r\n    "); }
+                                if (_currentItem.LocationInfo != null)
+                                {
+                                    location = _currentItem.LocationInfo.Description;
+                                }
+                                SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
+                                if (locationSize.Width > 300)
+                                {
+                                    extraLocation = (int)locationSize.Height;
+                                    int index = location.IndexOf(" in ");
+                                    index = (index == -1 ? -1 : index + 4);
+                                    if (index != -1) { location = location.Insert(index, "\r\n    "); }
+                                }
                             }
                             #endregion
 
                             #region Enchant Section
                             int extraEnchant = 0;
                             string enchant = "No Enchant";
-                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
+                            if (_currentItem.Quality != ItemQuality.Temp)
                             {
-                                enchant = CurrentItemInstance.Enchant.ToString();
-                            }
-                            SizeF enchantsize = _dummyBitmap.MeasureString(enchant, _fontStats);
-                            if (enchantsize.Width > 300)
-                            {
-                                extraEnchant = (int)enchantsize.Height;
-                                int index = enchant.IndexOf(": ");
-                                index = (index == -1 ? -1 : index + 2);
-                                if (index != -1) { enchant = enchant.Insert(index, "\r\n    "); }
+                                if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
+                                {
+                                    enchant = CurrentItemInstance.Enchant.ToString();
+                                }
+                                SizeF enchantsize = _dummyBitmap.MeasureString(enchant, _fontStats);
+                                if (enchantsize.Width > 300)
+                                {
+                                    extraEnchant = (int)enchantsize.Height;
+                                    int index = enchant.IndexOf(": ");
+                                    index = (index == -1 ? -1 : index + 2);
+                                    if (index != -1) { enchant = enchant.Insert(index, "\r\n    "); }
+                                }
                             }
                             #endregion
 
                             #region Gem Section
                             int gemInfoSize = 0;
-                            if (CurrentItem.IsGem)
-                            {
-                                SizeF gem_info_size = _dummyBitmap.MeasureString("Matches:", _fontStats);
-                                gemInfoSize = (int)gem_info_size.Height;
-                            }
                             int gemNamesSize = 0;
-                            if (Rawr.Properties.GeneralSettings.Default.DisplayGemNames && !CurrentItem.IsGem && hasSockets)
-                            {
-                                SizeF gem_name_size = _dummyBitmap.MeasureString("Name of Gem", _fontStats);
-                                for (int i = 0; i < 3; i++)
-                                {
-                                    Item gem = null;
-                                    if (CurrentItemInstance != null) gem = (i == 0 ? CurrentItemInstance.Gem1 : (i == 1 ? CurrentItemInstance.Gem2 : CurrentItemInstance.Gem3));
-                                    if (gem != null)
-                                        gemNamesSize += (int)gem_name_size.Height;
+                            if (_currentItem.Quality != ItemQuality.Temp) {
+                                if (CurrentItem.IsGem) {
+                                    SizeF gem_info_size = _dummyBitmap.MeasureString("Matches:", _fontStats);
+                                    gemInfoSize = (int)gem_info_size.Height;
+                                }else if (Rawr.Properties.GeneralSettings.Default.DisplayGemNames && !CurrentItem.IsGem && hasSockets) {
+                                    SizeF gem_name_size = _dummyBitmap.MeasureString("Name of Gem", _fontStats);
+                                    for (int i = 0; i < 3; i++) {
+                                        Item gem = null;
+                                        if (CurrentItemInstance != null) gem = (i == 0 ? CurrentItemInstance.Gem1 : (i == 1 ? CurrentItemInstance.Gem2 : CurrentItemInstance.Gem3));
+                                        if (gem != null) { gemNamesSize += (int)gem_name_size.Height; }
+                                    }
                                 }
                             }
                             #endregion
@@ -384,7 +401,13 @@ namespace Rawr
                             #endregion
                             #endregion
 
-                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + (13) + extraLocation + (13) + extraEnchant + gemInfoSize + gemNamesSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
+                            _cachedToolTipImage = new Bitmap(309,
+                                (hasSockets ? 78 : 20) + statHeight                                   // Stats
+                                + (_currentItem.Quality != ItemQuality.Temp ? 13 + extraLocation : 0) // Location
+                                + (_currentItem.Quality != ItemQuality.Temp ? 13 + extraEnchant  : 0) // Enchant
+                                + gemInfoSize + gemNamesSize                                          // Gems
+                                + numTinyItems * tinyItemSize,                                        // Tiny Items, like in Build Upgrade list
+                                PixelFormat.Format32bppArgb);
 
                             #region Setup for Background of the tooltip
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
@@ -464,13 +487,18 @@ namespace Rawr
                             #region Stats Section
                             foreach (string statText in statsList)
                             {
+                                string text = statText;
                                 float width = g.MeasureString(statText, _fontStats).Width;
-                                if (xPos + width > xGrid.end)
+                                // Force stats that are in a 2nd or 3rd column to a new line if they'd fall off the tooltip
+                                if (xPos + width > xGrid.end && xPos != xGrid.initial)
                                 {
                                     xPos = xGrid.initial;
                                     yPos += yGrid.step;
                                 }
-                                g.DrawString(statText, _fontStats, SystemBrushes.InfoText, xPos, yPos);
+                                // Force stats that are in the 1st column that would STILL fall off to Text Wrap
+                                if (xPos + width > xGrid.end && xPos == xGrid.initial) { text = text.Insert(text.IndexOf(" ", 47) + 1, "\r\n   "); }
+                                g.DrawString(text, _fontStats, SystemBrushes.InfoText, xPos, yPos);
+                                if (xPos + width > xGrid.end && xPos == xGrid.initial) { yPos += yGrid.step; }
                                 // once we write on a line store where the next line would be
                                 // (alternatively we could put the yPos update code below this at the top of the loop)
                                 xPos += (int)Math.Ceiling(width / xGrid.step) * xGrid.step;

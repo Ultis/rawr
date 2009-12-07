@@ -3978,7 +3978,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("% increased Fury Crit on Warrior 2-Piece T9")]
+        [DisplayName("% increased Berserker Stance Crit Bonus")]
         public float BonusWarrior_T9_2P_Crit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_Crit]; }
@@ -3989,7 +3989,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("% increased Arms ArP on Warrior 2-Piece T9")]
+        [DisplayName("% increased Battle Stance ArP Bonus")]
         public float BonusWarrior_T9_2P_ArP
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_ArP]; }
