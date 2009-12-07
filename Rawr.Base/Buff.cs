@@ -4400,7 +4400,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusWarrior_T10_4P_BSSDProcChange = 1f, },
                 SetName = "Ymirjar Lord's Battlegear",
-                SetThreshold = 2,
+                SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
             #endregion

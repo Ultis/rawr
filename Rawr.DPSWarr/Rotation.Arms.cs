@@ -394,6 +394,7 @@ namespace Rawr.DPSWarr {
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     SD.numActivates = (1f - MSspace) * Abil_GCDs;
                     SD_ability.FreeRage = 0f; // we will do Extra Rage later
+                    SD_ability.SetGCDTime(AttemptedAtksOverDur);
                     /*float rageuse = SD.GetRageUseOverDur(_SD_GCDs);
                     float extraRage = availRage - rageuse;
                     if        (availRage > 0f && extraRage >  0f) {
@@ -410,7 +411,7 @@ namespace Rawr.DPSWarr {
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= SD.Rage;
                 }
-                SDspace = SD.numActivates / NumGCDs * SD.ability.UseTime / LatentGCD;
+                SDspace = (SD.numActivates / NumGCDs) * (SD.ability.UseTime / LatentGCD);
                 // Slam for remainder of GCDs
                 if (SL.ability.Validated && PercFailRage == 1f)
                 {
@@ -488,22 +489,22 @@ namespace Rawr.DPSWarr {
                     GCDUsage += "\n";
                 }
                 foreach (AbilWrapper aw in GetDamagingAbilities())
-        {
+                {
                     if (aw.numActivates > 0)
                         GCDUsage += aw.numActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + aw.ability.Name + (aw.ability.UsesGCD ? "\n" : "(Doesn't use GCDs)\n");
-        }
+                }
                 GCDUsage += "\n" + GCDsAvailable.ToString("000") + " : Avail GCDs";
-        }
+            }
 
             float DPS_TTL = 0f;
             float rageNeeded = 0f, rageGenOther = 0f;
             foreach (AbilWrapper aw in GetAbilityList())
-        {
+            {
                 DPS_TTL += aw.DPS;
                 _HPS_TTL += aw.HPS;
                 if (aw.Rage > 0) rageNeeded += aw.Rage;
                 else rageGenOther -= aw.Rage;
-        }
+            }
 
             DPS_TTL += (WhiteAtks.MhDPS + (CombatFactors.useOH ? WhiteAtks.OhDPS : 0f)) * (1f - totalPercTimeLost);
            // InvalidateCache();

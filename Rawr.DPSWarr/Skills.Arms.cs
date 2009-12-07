@@ -51,6 +51,11 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
         /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
+        /// <SetsAffecting>
+        /// T10-4P [You have a 20% chance for your Sudden Death talent to grant 2 charges of
+        /// its effect instead of 1, reduce the global cooldown on Execute or Slam by 0.5 sec,
+        /// and for the duration of the effect to be increased by 100%.]
+        /// </SetsAffecting>
         public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ex)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -75,15 +80,35 @@ namespace Rawr.DPSWarr.Skills
         public Execute Exec;
         public float FreeRage { get { return Exec.FreeRage; } set { Exec.FreeRage = value; } }
         public float UsedExtraRage { get { return Exec.UsedExtraRage; } set { Exec.UsedExtraRage = value; } }
+        public void SetGCDTime(float landedatksoverdur) {
+            if (StatS.BonusWarrior_T10_4P_BSSDProcChange == 0) { return; }
+            float uptime = GetBuffBaseUptime(landedatksoverdur);
+            GCDTime -= (0.5f * uptime);
+        }
+        private SpecialEffect _buff;
+        protected SpecialEffect Buff {
+            get {
+                return _buff ?? (_buff = new SpecialEffect(
+                    Trigger.MeleeHit,
+                    new Stats() { },
+                    (StatS.BonusWarrior_T10_4P_BSSDProcChange > 0 ? 20f : 10f),
+                    0f,
+                    Talents.SuddenDeath * 0.03f));
+            }
+            set { _buff = value; }
+        }
         // Functions
-        public float GetActivates(float landedatksoverdur)
-        {
+        private float GetBuffBaseUptime(float landedatksoverdur) {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-            float rate = Talents.SuddenDeath * 0.03f;
-            float avoid = MHAtkTable.Dodge + MHAtkTable.Parry + MHAtkTable.Miss;
-            SpecialEffect e = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, 1.5f, rate);
-            float acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
+            if (StatS.BonusWarrior_T10_4P_BSSDProcChange == 0) { return 0f; }
+            float uptime = Buff.GetAverageUptime(landedatksoverdur / FightDuration, MHAtkTable.AnyLand, combatFactors._c_mhItemSpeed, FightDuration);
+            return uptime;
+        }
+        public float GetActivates(float landedatksoverdur) {
+            if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
+            float acts = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, MHAtkTable.AnyLand, combatFactors._c_mhItemSpeed, FightDuration);
             acts *= FightDuration;
+            //if (StatS.BonusWarrior_T10_4P_BSSDProcChange > 0) { acts *= 1.20f; }
 
             return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + UsedExtraRage));
         }
