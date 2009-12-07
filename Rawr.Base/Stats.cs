@@ -426,7 +426,8 @@ namespace Rawr {
         BonusCritHealMultiplier,
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
-        BonusMaulDamageMultiplier,
+		BonusMaulDamageMultiplier,
+		BonusBearSwipeDamageMultiplier,
         BonusEnrageDamageMultiplier,
         BonusShadowDamageMultiplier,
         BonusHolyDamageMultiplier,
@@ -1913,14 +1914,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusShredDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusShredDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float BonusLacerateDamageMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -4058,7 +4051,18 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Lacerate Dmg")]
+		[Category("Feral")]
+		public float BonusLacerateDamageMultiplier
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier] = value; }
+		}
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Feral")]
@@ -4146,6 +4150,16 @@ namespace Rawr {
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.BonusRipCrit]; }
 			set { _rawAdditiveData[(int)AdditiveStat.BonusRipCrit] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[Category("Feral")]
+		[DisplayName("% Swipe (Bear) Dmg")]
+		public float BonusBearSwipeDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBearSwipeDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBearSwipeDamageMultiplier] = value; }
 		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

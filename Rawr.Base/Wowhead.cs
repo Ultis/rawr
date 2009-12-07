@@ -614,11 +614,11 @@ namespace Rawr
 
 			if (htmlTooltip.Contains(" (0/"))
 			{
-				htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf(" (0/"));
+				htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
                 htmlTooltip = htmlTooltip.Replace("Relentless ", "").Replace("Furious ", "").Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia");
+					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
 
 				if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
 					htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
@@ -1854,14 +1854,15 @@ namespace Rawr
             }
         }
 
-        public static void ImportItemsFromWowhead(string filter)
+		public static void ImportItemsFromWowhead(string filter) { ImportItemsFromWowhead(filter, false); }
+        public static void ImportItemsFromWowhead(string filter, bool usePTR)
         {
             WebRequestWrapper.ResetFatalErrorIndicator();
 
             XmlDocument docUpgradeSearch = null;
             try
             {
-                string site = /*usePTR ? "ptr" :*/ "www";
+                string site = usePTR ? "ptr" : "www";
                 StatusMessaging.UpdateStatus("ImportWowheadFilter", "Downloading Item List");
                 WebRequestWrapper wrw = new WebRequestWrapper();
                 docUpgradeSearch = wrw.DownloadUpgradesWowhead(site, filter);
@@ -1881,7 +1882,7 @@ namespace Rawr
                         {
                             StatusMessaging.UpdateStatus("ImportWowheadFilter", string.Format("Downloading definition {0} of {1} items", i, nodeList.Count));
                             string id = nodeList[i].Value.Substring(7);
-                            if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
+                            //if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
                             {
                                 Item item = GetItem(site, id, true);
                                 if (item != null)

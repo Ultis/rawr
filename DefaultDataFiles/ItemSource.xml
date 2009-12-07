@@ -63174,4 +63174,3044 @@
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="NoSource" />
     </value>
   </item>
+  <item>
+    <key>
+      <string>49792</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49823</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49832</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49842</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49998</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50668</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50764</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50791</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50859</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49786</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49791</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49816</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49825</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49826</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49841</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49951</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50001</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50024</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Rotface</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50038</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50213</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50266</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50272</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50285</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50294</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50297</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50300</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50312</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50800</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50801</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50968</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51902</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51903</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49795</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49798</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49805</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49831</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49890</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Tailoring</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49893</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Tailoring</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49894</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49895</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49896</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49897</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49905</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49906</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49907</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50009</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50062</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50207</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50215</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50283</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50286</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50295</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50305</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50308</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50772</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50788</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50804</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51899</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50287</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Unknown - -101</Area>
+        <Quest>Kalu'ak Fishing Derby</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50255</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Unknown - -101</Area>
+        <Quest>Kalu'ak Fishing Derby</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49800</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49803</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49812</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49949</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49967</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49977</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49999</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50008</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50271</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50306</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50313</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50414</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50790</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50803</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49788</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49828</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49837</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49838</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49843</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49979</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50011</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50037</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50194</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50212</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50284</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50299</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50304</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50799</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50811</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50967</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51904</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49804</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49824</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49830</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49849</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49851</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49952</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50060</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50197</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50206</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50214</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50298</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50311</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50797</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50807</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51554</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Blood-Queen Lana'thel</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50309</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49784</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49794</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49811</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49817</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49822</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49836</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49847</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49891</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Tailoring</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49892</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Tailoring</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49898</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49899</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49900</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49901</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Leatherworking</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49902</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49903</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49904</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49964</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50042</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50056</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50229</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50265</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50269</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50775</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50806</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50808</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50858</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50990</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51897</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49845</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49846</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49968</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50028</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Rotface</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50035</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50210</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50227</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50771</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50793</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49799</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49818</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49975</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50005</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50061</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50196</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50211</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50228</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50310</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50763</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50809</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50852</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51894</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49783</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49789</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49807</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49827</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49840</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50191</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50203</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50268</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50290</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50303</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50411</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50412</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50672</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50759</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50760</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50787</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50810</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51916</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52020</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Engineering</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52021</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Engineering</Skill>
+        <Level>0</Level>
+        <Bind>None</Bind>
+        <SpellName>NAME</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49813</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49844</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50262</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50291</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51385</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Blood-Queen Lana'thel</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49821</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49835</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49976</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50794</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49785</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49829</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49834</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49848</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49980</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50003</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50059</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50193</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50208</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50233</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50234</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50293</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50792</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50988</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50169</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50198</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50235</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50259</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50260</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50340</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50344</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50345</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50352</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50353</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Rotface</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50359</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50362</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50363</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49623</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Unknown - 4812</Area>
+        <Quest>NAME...</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49790</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49793</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49801</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49802</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49839</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50040</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50267</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50273</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50296</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Marwyn</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50415</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50761</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50798</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50805</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50966</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51898</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51905</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49796</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49806</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49808</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49810</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49978</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50010</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50036</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50063</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50263</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50270</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50314</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>The Captain's Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50413</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50762</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50773</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50795</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49787</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Bronjahm</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49797</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49809</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49820</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Scourgelord Tyrannus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49960</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50002</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50032</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Rotface</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50209</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Devourer of Souls</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50230</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Forgemaster Garfrost</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50264</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Ick</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50292</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Falric</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50670</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50774</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Lord Marrowgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50789</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50796</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>false</Heroic>
+        <Container>Gunship Armory</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50802</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50985</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Festergut</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51901</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Heroic>false</Heroic>
+        <Boss>Deathbringer Saurfang</Boss>
+      </ItemLocation>
+    </value>
+  </item>
 </dictionary>

@@ -593,7 +593,7 @@ the Threat Scale defined on the Options tab.",
 			float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
 			float maulDamageRaw = (baseDamage + 578) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMaulDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
 			float mangleDamageRaw = (baseDamage * 1.15f + 299) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
-			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * modArmor;
+			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * (1f + stats.BonusBearSwipeDamageMultiplier) * modArmor;
 			float faerieFireDamageRaw = (stats.AttackPower * 0.15f + 1f) * (1f + stats.BonusDamageMultiplier);
 			float lacerateDamageRaw = (stats.AttackPower * 0.01f + 88f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor * (1f + stats.BonusLacerateDamageMultiplier);
 			float lacerateDamageDotRaw = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
@@ -1344,8 +1344,9 @@ the Threat Scale defined on the Options tab.",
                 ArmorPenetration = stats.ArmorPenetration,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusMangleBearThreat = stats.BonusMangleBearThreat,
-                BonusLacerateDamageMultiplier = stats.BonusLacerateDamageMultiplier,
+				BonusMangleBearThreat = stats.BonusMangleBearThreat,
+				BonusLacerateDamageMultiplier = stats.BonusLacerateDamageMultiplier,
+				BonusBearSwipeDamageMultiplier = stats.BonusBearSwipeDamageMultiplier,
                 BonusSwipeDamageMultiplier = stats.BonusSwipeDamageMultiplier,
                 BloodlustProc = stats.BloodlustProc,
                 BonusMangleBearDamage = stats.BonusMangleBearDamage,
@@ -1379,7 +1380,7 @@ the Threat Scale defined on the Options tab.",
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +
-				stats.ArmorPenetrationRating + stats.PhysicalHaste
+				stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.BonusBearSwipeDamageMultiplier
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit

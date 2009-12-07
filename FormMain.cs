@@ -1562,7 +1562,7 @@ namespace Rawr
 
         void bw_ImportWowheadFilter(object sender, DoWorkEventArgs e)
         {
-            this.ImportWowheadFilter((string)e.Argument);
+			this.ImportWowheadFilter((string)e.Argument, usePTRDataToolStripMenuItem.Checked);
         }
 
         void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1674,11 +1674,11 @@ namespace Rawr
             _character.InvalidateItemInstances();
         }
 
-        public void ImportWowheadFilter(string filter)
+        public void ImportWowheadFilter(string filter, bool usePTR)
         {
             WebRequestWrapper.ResetFatalErrorIndicator();
             StatusMessaging.UpdateStatus("ImportWowheadFilter", "Importing Items From Wowhead");
-            Wowhead.ImportItemsFromWowhead(filter);
+            Wowhead.ImportItemsFromWowhead(filter, usePTR);
             ItemCache.OnItemsChanged();
             StatusMessaging.UpdateStatusFinished("ImportWowheadFilter");
         }
