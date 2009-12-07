@@ -7,7 +7,6 @@ namespace Rawr
 {
     public class TalentItem
     {
-
         private TalentTree _talentTree;
         public TalentTree TalentTree
         {

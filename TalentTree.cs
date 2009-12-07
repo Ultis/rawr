@@ -172,7 +172,5 @@ namespace Rawr
             _mouseRow = -1;
             _mouseCol = -1;
         }
-
-
     }
 }

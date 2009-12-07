@@ -266,7 +266,7 @@ namespace Rawr {
             else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 16 attack power for the next 10 sec., stacking up to 20 times."))
             {
                 // Fury of the Five Flights
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 16f }, 10f, 0f, 1f, 20));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 16f }, 10f, 0f, 1f, 20));
                 //stats.AttackPower += 320; //Fury of the Five Flights = 320ap
             }
             else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times."))
