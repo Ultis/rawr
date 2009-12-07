@@ -50,6 +50,7 @@ namespace Rawr.Tree {
         protected float periodicTick = 0f;
         protected float periodicTicks = 0f;
         public float PeriodicTicks { get { return periodicTicks; } }
+        protected float periodicTickTimeBeforeHaste = 3f; // this is only for rejuvenation at the moment
         protected float periodicTickTime = 3f;
         public float PeriodicTickTime { get { return periodicTickTime; } }
         public float coefHoT = 0f; //coef for HoT
@@ -129,6 +130,12 @@ namespace Rawr.Tree {
             if (gcd < 1f) { gcd = 1f; }
             castTime = (float)Math.Round(castTimeBeforeHaste / (speed * NGspeed), 4);
             if (castTime < 1f) { castTime = 1f; }
+        }
+
+        protected virtual void applyHasteToPeriodicTickTime() {
+            // Does Nature's Grace affect the duration of Rejuvenate?
+            // It says: "casting speed" so I expect not...
+            periodicTickTime = periodicTickTimeBeforeHaste / speed;
         }
 
         protected float OmenProc(float chance, float maxReduction) { return manaCost * (1.0f - chance) + (manaCost < maxReduction ? 0f : chance * (manaCost - maxReduction)); }
@@ -332,12 +339,12 @@ namespace Rawr.Tree {
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols etc
-            //z.B.: Harold's Rejuvenating Broach 
+            //e.g.: Harold's Rejuvenating Broach 
             healingBonus += calculatedStats.RejuvenationSpellpower;
-            //z.B.: Idol of Pure Thoughts
+            //e.g.: Idol of Pure Thoughts
             periodicTick += calculatedStats.RejuvenationHealBonus;
 
-            //z.B.: Idol of Budding Life (-36 Manacost)
+            //e.g.: Idol of Budding Life (-36 Manacost) Idol of Awakening (-106 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
             #endregion
 
@@ -356,12 +363,19 @@ namespace Rawr.Tree {
             //Should set  critPercent = critHoTPercent;   to allow instantTick to also be crittable, but cannot have 4 piece setbonus simultanuously
             #endregion
 
+            #region Glyph of Rapid Rejuvenation
+            if (calcs.LocalCharacter.DruidTalents.GlyphOfRapidRejuvenation)
+            {
+                applyHasteToPeriodicTickTime();
+            }
+            #endregion
+
             applyHaste();
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             periodicTicks += 1 * druidTalents.NaturesSplendor;
 
-            manaCost *= 1 - 0.2f * druidTalents.TreeOfLife;
+            manaCost *= 1 - 0.2f * druidTalents.TreeOfLife - 0.03f * druidTalents.Moonglow;
 
             // 6% chance to get Omen of Clarity...
             manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
@@ -616,7 +630,8 @@ namespace Rawr.Tree {
 
             #region Base Values
             castTimeBeforeHaste = 1.5f;
-//            coefDH = 0.6611f; // Spreadsheet says .69, wowwiki says .6611, 1.5/3.5 = .43, confused!
+            //coefDH = 0.6611f; // Spreadsheet says .69, wowwiki says .6611, 1.5/3.5 = .43, confused!
+            //coefDH = 0.67305f; // Value used in TreeCalcs
             coefDH = 0.671429f; // Best guess based on tests reported in workitem http://rawr.codeplex.com/WorkItem/View.aspx?WorkItemId=13809
             manaCost = 0.18f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower;
@@ -644,7 +659,7 @@ namespace Rawr.Tree {
             applyHaste();
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            manaCost *= (1f - druidTalents.TranquilSpirit * 0.02f);
+            manaCost *= (1f - druidTalents.TranquilSpirit * 0.02f - druidTalents.Moonglow * 0.03f);
 
 			critPercent += 2f * druidTalents.NaturesMajesty;
             critPercent += 5f * druidTalents.NaturesBounty;
@@ -666,9 +681,9 @@ namespace Rawr.Tree {
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
-            //if (calcOpts.Patch3_2)
-                coefDH += (0.1f * druidTalents.EmpoweredTouch);     // From 3.2 Empowered Touch also boosts Nourish
-            //  Assume also additive, also see http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
+            coefDH += (0.1f * druidTalents.EmpoweredTouch);     // From 3.2 Empowered Touch also boosts Nourish
+            // Assume also additive, also see http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
+            // This is also the value TreeCalcs uses at the moment (8th december 2009)
 
             coefDH *=
                 (1f + 0.02f * druidTalents.GiftOfNature) *

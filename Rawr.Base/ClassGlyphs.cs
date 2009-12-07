@@ -73,7 +73,7 @@ namespace Rawr
 
 	public partial class DruidTalents
 	{
-		private bool[] _glyphData = new bool[24];
+		private bool[] _glyphData = new bool[25];
 		public override bool[] GlyphData { get { return _glyphData; } }
 
 		//Cat Glyphs
@@ -131,6 +131,8 @@ namespace Rawr
 		public bool GlyphOfSwiftmend { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
 		[GlyphData(23, "Glyph of Wild Growth", true, @"Wild Growth can affect 1 additional target.")]
 		public bool GlyphOfWildGrowth { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Rapid Rejuvenation", true, @"Your haste now reduces the time between the periodic healing ticks of your Rejuvenation spell.")]
+        public bool GlyphOfRapidRejuvenation { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
 	}
 
     public partial class PaladinTalents
