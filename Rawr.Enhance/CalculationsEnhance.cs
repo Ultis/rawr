@@ -319,7 +319,7 @@ namespace Rawr.Enhance
             #endregion
 
             #region Individual DPS
-            //1: Melee DPS
+            #region Melee DPS
             float APDPS = (attackPower / 14f);
             float adjustedMHDPS = (wdpsMH + APDPS);
             float adjustedOHDPS = 0f;
@@ -341,6 +341,7 @@ namespace Rawr.Enhance
                 dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
             }
             float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
+            #endregion
 
             // Generic MH & OH damage values used for SS, LL & WF
             float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
@@ -348,7 +349,7 @@ namespace Rawr.Enhance
             if (character.ShamanTalents.DualWield == 1)
                 damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
 
-            //2: Stormstrike DPS
+            #region Stormstrike DPS
             float dpsSS = 0f;
             float stormstrikeMultiplier = 1f;
             if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
@@ -360,8 +361,9 @@ namespace Rawr.Enhance
                 float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
                 dpsSS = (SSnormal + SScrit) * cs.DamageReduction * weaponMastery * bonusNatureDamage * Enhance2T8 * bossNatureResistance;
             }
+            #endregion
 
-            //3: Lavalash DPS
+            #region Lavalash DPS
             float dpsLL = 0f;
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1 && calcOpts.PriorityInUse(EnhanceAbility.LavaLash))
             {
@@ -377,8 +379,9 @@ namespace Rawr.Enhance
                         dpsLL *= 1.25f;
                 }
             }
+            #endregion
 
-            //4: Earth Shock DPS
+            #region Earth Shock DPS
             float dpsES = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.EarthShock))
             {
@@ -390,8 +393,9 @@ namespace Rawr.Enhance
                 float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance * shockBonus;
             }
+            #endregion
 
-            //4.5: Flame Shock DPS
+            #region Flame Shock DPS
             float dpsFS = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.FlameShock))
             {
@@ -413,7 +417,9 @@ namespace Rawr.Enhance
                 }
                 dpsFS = (flameShockNormal + flameShockCrit) * bonusFireDamage * bossFireResistance * shockBonus;
             }
-            //5: Lightning Bolt DPS
+            #endregion
+
+            #region Lightning Bolt DPS
             float dpsLB = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningBolt))
             {
@@ -428,8 +434,9 @@ namespace Rawr.Enhance
                 if (character.ShamanTalents.GlyphofLightningBolt)
                     dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             }
+            #endregion
 
-            //6: Windfury DPS
+            #region Windfury DPS
             float dpsWF = 0f;
             if (calcOpts.MainhandImbue == "Windfury")
             {
@@ -439,8 +446,9 @@ namespace Rawr.Enhance
                 float WFcrit = WFdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
                 dpsWF = (WFnormal + WFcrit) * weaponMastery * cs.DamageReduction * bonusPhysicalDamage * windfuryDamageBonus;
             }
+            #endregion
 
-            //7: Lightning Shield DPS
+            #region Lightning Shield DPS
             float dpsLS = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
             {
@@ -452,8 +460,9 @@ namespace Rawr.Enhance
                 if (character.ShamanTalents.GlyphofLightningShield)
                     dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
             }
+            #endregion
 
-            //8: Fire Totem DPS
+            #region Fire Totem DPS
             float dpsFireTotem = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem))
             {
@@ -472,8 +481,9 @@ namespace Rawr.Enhance
                 dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
             }
             dpsFireTotem *= (1f - cs.FireElementalUptime);
+            #endregion
 
-            //8b: Fire Nova DPS
+            #region Fire Nova DPS
             float dpsFireNova = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.FireNova))
             {
@@ -483,8 +493,9 @@ namespace Rawr.Enhance
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireNova = (FireNovaNormal + FireNovaCrit) * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
             }
+            #endregion
 
-            //9: Flametongue Weapon DPS++
+            #region Flametongue Weapon DPS
             float dpsFT = 0f;
             if (calcOpts.MainhandImbue == "Flametongue")
             {
@@ -506,7 +517,9 @@ namespace Rawr.Enhance
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             }
+            #endregion
 
+            #region Pet calculations
             // needed for pets - spirit wolves and Fire Elemental
             bool critDebuff = character.ActiveBuffsContains("Heart of the Crusader") ||
                               character.ActiveBuffsContains("Master Poisioner") ||
@@ -517,8 +530,10 @@ namespace Rawr.Enhance
             float meleeHitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
             float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - meleeHitBonus) + cs.AverageDodge;
             float petMeleeMultipliers = cs.DamageReduction * bonusPhysicalDamage;
-                
-            //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
+            #endregion
+
+            #region Doggies!
+            // TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             // my analysis reveals they get 31% of shaman AP + 2 * their STR and base 206.17 dps.
             float dpsDogs = 0f;
             if (character.ShamanTalents.FeralSpirit == 1 && calcOpts.PriorityInUse(EnhanceAbility.FeralSpirits))
@@ -545,10 +560,11 @@ namespace Rawr.Enhance
             }
             else 
             { 
-                calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0); 
+                calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0);
             }
+            #endregion
 
-            //11: Fire Elemental
+            #region Fire Elemental
             if (calcOpts.PriorityInUse(EnhanceAbility.FireElemental))
             {
                 float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
@@ -561,6 +577,7 @@ namespace Rawr.Enhance
             else
                 calculatedStats.FireElemental = new FireElemental(0, 0, 0, cs, 0, 0, 0, 0, 0);
             float dpsFireElemental = calculatedStats.FireElemental.getDPS();
+            #endregion
             #endregion
 
             #region Set CalculatedStats
