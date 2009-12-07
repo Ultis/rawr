@@ -454,7 +454,8 @@ namespace Rawr.DPSWarr {
                 float rage = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
-                    if (aw.Rage > 0f) rage += aw.Rage;
+                    if (aw.Rage > 0f) 
+                        rage += aw.Rage;
                 }
                 return rage;
             }
@@ -545,7 +546,7 @@ namespace Rawr.DPSWarr {
                     rootActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / r.Frequency) : FightDuration / r.Frequency;
                     if (rootActs > 0f)
                     {
-                        TimesFeared += rootActs;
+                        TimesRooted += rootActs;
                         if (HFMaxActs - HFActualActs > 0f)
                         {
                             MaxTimeRegain = Math.Max(0f, (BaseRootDur - LatentGCD - CalcOpts.React / 1000f));
@@ -593,7 +594,8 @@ namespace Rawr.DPSWarr {
                 timelostwhilerooted = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilerooted) : timelostwhilerooted;
                 percTimeInRoot = timelostwhilerooted / FightDuration;
             }
-
+            SecondWind SndW = GetWrapper<SecondWind>().ability as SecondWind;
+            SndW.NumStunsOverDur += TimesRooted;
             return percTimeInRoot;
         }
 
@@ -648,7 +650,7 @@ namespace Rawr.DPSWarr {
                 percTimeInStun = timelostwhilestunned / FightDuration;
 
                 SecondWind SndW = GetWrapper<SecondWind>().ability as SecondWind;
-                SndW.NumStunsOverDur = stunActs;
+                SndW.NumStunsOverDur += stunActs;
             }
             
             return percTimeInStun;

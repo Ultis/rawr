@@ -344,9 +344,9 @@ namespace Rawr.DPSWarr.Skills
             //AbilIterater = -1f;
             ReqTalent = true;
             Talent2ChksValue = Talents.SecondWind;
-            NumStunsOverDur = 1f;
+            Cd = -1f;
+            NumStunsOverDur = 0f;
             Duration = 10f; // Using 4 seconds to sim consume time
-            Cd = 1.5f + CalcOpts.Latency;
             RageCost = -10f * Talents.SecondWind;
             StanceOkDef = StanceOkFury = StanceOkArms = true;
             //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);

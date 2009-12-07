@@ -209,10 +209,10 @@ namespace Rawr.DPSWarr {
             {
                 // Reset a couple of items so we can keep iterating
                 //availGCDs = origavailGCDs;
+                WhiteAtks.Slam_Freq = SL.numActivates;
                 oldBLSGCDs = BLS.numActivates; oldMSGCDs = MS.numActivates; oldRDGCDs = RD.numActivates; oldOPGCDs = OP.numActivates; oldTBGCDs = TB.numActivates;
                 oldSDGCDs = SD.numActivates; oldEXGCDs = EX.numActivates; oldSLGCDs = SL.numActivates; oldSSActs = SS.numActivates;
                 BLS.numActivates = MS.numActivates = RD.numActivates = OP.numActivates = TB.numActivates = SD.numActivates = EX.numActivates = SL.numActivates = 0;
-                WhiteAtks.Slam_Freq = SL.numActivates;
                 availRage = origAvailRage;
                 availRage += WhiteAtks.whiteRageGenOverDur * (1f - totalPercTimeLost) * (1f - percTimeUnder20);
 
@@ -422,6 +422,7 @@ namespace Rawr.DPSWarr {
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= SL.Rage;
                 } else { SL.numActivates = 0f; }
+                WhiteAtks.Slam_Freq = SL.numActivates;
                 SLspace = SL.numActivates / NumGCDs * SL.ability.UseTime / LatentGCD;
                 float TotalSpace = (RDspace + BLSspace + MSspace + OPspace + TFBspace + SDspace + SLspace);
                 repassAvailRage = availRage; // check for not enough rage to maintain rotation
