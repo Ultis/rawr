@@ -35,51 +35,65 @@ namespace Rawr.Enhance
             float FSMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.17f : baseMana * 0.17f; // 45% reduction if Shamanistic Focus
             float fireElementalCD = _talents.GlyphofFireElementalTotem ? 300f : 600f;
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
+
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0 && _talents.ShamanisticRage == 1)
                 abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, 1.5f, 0f, priority, false, true));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits);
             if (priority > 0 && _talents.FeralSpirit == 1)
-                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, 0f, 0.12f * baseMana, priority, false, false));
+                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f * baseMana, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningBolt);
             if (priority > 0 && _talents.MaelstromWeapon > 0)
                 abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * baseMana * convection * elementalFocus, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FlameShock);
             if (priority > 0)
                 if (_talents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, 1.0f, FSMana * convection * elementalFocus, priority, false, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, gcd, FSMana * convection * elementalFocus, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0 && _talents.Stormstrike == 1)
                 abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, 1.5f, 0.08f * baseMana, priority, false, true));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock);
             if (priority > 0)
                 if (_talents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ESMana * convection * elementalFocus, priority, false, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection * elementalFocus, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash);
             if (priority > 0 && _talents.LavaLash == 1)
                 abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, 1.5f, 0.04f * baseMana, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FireNova);
             if (priority > 0)
                 abilities.Add(new Ability(EnhanceAbility.FireNova, _cs.BaseFireNovaSpeed, gcd, 0.22f * baseMana, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FireElemental);
             if (priority > 0 && _calcOpts.FireElemental)
                 abilities.Add(new Ability(EnhanceAbility.FireElemental, fireElementalCD, 1.0f, 0.23f * baseMana, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.MagmaTotem);
             if (priority > 0 && _calcOpts.Magma)
                 abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, 0.27f * baseMana * elementalFocus, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.SearingTotem);
             if (priority > 0 && !_calcOpts.Magma)
                 abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, 0.07f * baseMana * elementalFocus, priority, false, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningShield);
             if (priority > 0 && _talents.StaticShock > 0)
                     abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, priority, true, false));
+
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.RefreshTotems);
             if (priority > 0)
                 abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, 0.24f * baseMana, _calcOpts.GetAbilityPriorityValue(EnhanceAbility.RefreshTotems), true, false)); // patch 3.2 takes just 1 second GCD to refresh totems.
+
             abilities.Sort();
             return abilities;
         }
@@ -119,7 +133,6 @@ namespace Rawr.Enhance
                 foreach (Ability ability in _abilities)
                     ability.AverageUses(totalManaUsed / _cs.MaxMana); 
             // at this stage have the upper bounds of number of uses - ie: no GCD interference
-            float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             foreach (Ability ability in _abilities)
             {
                 ability.RemovePossibleClashingUses(0.075f, fightLength);
