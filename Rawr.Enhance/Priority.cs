@@ -37,7 +37,7 @@ namespace Rawr.Enhance
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0 && _talents.ShamanisticRage == 1)
-                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, priority, false, true));
+                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, 1.5f, 0f, priority, false, true));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits);
             if (priority > 0 && _talents.FeralSpirit == 1)
                 abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, 0f, 0.12f * baseMana, priority, false, false));
@@ -52,7 +52,7 @@ namespace Rawr.Enhance
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, gcd, FSMana * convection * elementalFocus, priority, false, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0 && _talents.Stormstrike == 1)
-                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f * baseMana, priority, false, true));
+                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, 1.5f, 0.08f * baseMana, priority, false, true));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock);
             if (priority > 0)
                 if (_talents.GlyphofShocking)
@@ -61,7 +61,7 @@ namespace Rawr.Enhance
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection * elementalFocus, priority, false, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash);
             if (priority > 0 && _talents.LavaLash == 1)
-                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f * baseMana, priority, false, false));
+                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, 1.5f, 0.04f * baseMana, priority, false, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FireNova);
             if (priority > 0)
                 abilities.Add(new Ability(EnhanceAbility.FireNova, _cs.BaseFireNovaSpeed, gcd, 0.22f * baseMana, priority, false, false));
