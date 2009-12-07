@@ -1,12 +1,15 @@
-Rawr v2.2.27.0
+Rawr v2.2.28.0
 ------------
-Welcome to Rawr 2.2.27.0.
+Welcome to Rawr 2.2.28.0.
    
 Recent Changes:
- - Rawr.Hunter: Fix for a crash with Dwarves/Trolls.
- - Rawr.Enhance: Fix for major bug with Windfury calculations from yesterday's builds. Fix for fire totem damage.
- - Rawr.Rogue: Fix for a crash with Deadly Poisons.
-
+ - Teir 10 set bonus added for most classes.
+ - Rawr.Hunter: Many bug fixes and calculation changes.
+ - Rawr.TankDK: Reworked tanking rotation calculations, Mark of Blood is now propery valued. Heart strike now does the proper threat on its 2nd target.
+ - Rawr.DPSWarr: Bladestorm now uses the correct amount of whirlwinds. Arms rotation refactored
+ - Rawr.Enhance: Many conditions added to the optimizer. Hit no longer reduces glancing blows (thus fixing hit being over valued). Fire nova modeling added for 3.3.
+ - Rawr.Cat: Very high crit values no longer do funny things to the combat table. 
+ - Rawr.RestoSham: Mana restore effects (from procs/trinkets) now work correctly. 
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -114,6 +117,11 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.27.0
+ - Rawr.Hunter: Fix for a crash with Dwarves/Trolls.
+ - Rawr.Enhance: Fix for major bug with Windfury calculations from yesterday's builds. Fix for fire totem damage.
+ - Rawr.Rogue: Fix for a crash with Deadly Poisons.
+
 v2.2.26.0
  - Fix for a crash on loading a few characters from Armory
 

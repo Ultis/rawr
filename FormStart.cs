@@ -18,10 +18,14 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.27.0
- - Rawr.Hunter: Fix for a crash with Dwarves/Trolls.
- - Rawr.Enhance: Fix for major bug with Windfury calculations from yesterday's builds. Fix for fire totem damage.
- - Rawr.Rogue: Fix for a crash with Deadly Poisons.";
+			labelVersionHistory.Text = @"v2.2.28.0
+ - Teir 10 set bonus added for most classes.
+ - Rawr.Hunter: Many bug fixes and calculation changes.
+ - Rawr.TankDK: Reworked tanking rotation calculations, Mark of Blood is now propery valued. Heart strike now does the proper threat on its 2nd target.
+ - Rawr.DPSWarr: Bladestorm now uses the correct amount of whirlwinds. Arms rotation refactored
+ - Rawr.Enhance: Many conditions added to the optimizer. Hit no longer reduces glancing blows (thus fixing hit being over valued). Fire nova modeling added for 3.3.
+ - Rawr.Cat: Very high crit values no longer do funny things to the combat table. 
+ - Rawr.RestoSham: Mana restore effects (from procs/trinkets) now work correctly. ";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;

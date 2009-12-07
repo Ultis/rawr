@@ -120717,6 +120717,19 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_qirajidol_onyx</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalCrit</Trigger>
+          <Stats>
+            <ArmorPenetrationRating>678</ArmorPenetrationRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <CritRating>114</CritRating>
     </Stats>
     <Quality>Epic</Quality>
