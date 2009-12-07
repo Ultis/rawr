@@ -126,9 +126,9 @@ namespace Rawr.Enhance
                 if (ability.AbilityType == EnhanceAbility.StormStrike)
                     totalManaUsed -= uses * _cs.ImpStormStrikeMana;
             }
-            if (totalTimeUsed > fightLength)
-                foreach (Ability ability in _abilities)
-                    ability.AverageUses(totalTimeUsed / fightLength); 
+//            if (totalTimeUsed > fightLength)
+//                foreach (Ability ability in _abilities)
+//                   ability.AverageUses(totalTimeUsed / fightLength); 
             if (totalManaUsed > _cs.MaxMana && _calcOpts.UseMana)
                 foreach (Ability ability in _abilities)
                     ability.AverageUses(totalManaUsed / _cs.MaxMana); 
