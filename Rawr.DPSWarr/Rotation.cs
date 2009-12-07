@@ -134,7 +134,8 @@ namespace Rawr.DPSWarr {
                 float gcds = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
-                    if (aw.ability.UsesGCD) gcds += aw.numActivates * aw.ability.UseTime / LatentGCD;
+                    if (aw.ability.UsesGCD)
+                        gcds += aw.numActivates * aw.ability.UseTime / LatentGCD;
                 }
                 return gcds;
             }

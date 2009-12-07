@@ -71,6 +71,16 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = Exec.GetReqMeleeRange();
             //Targets += StatS.BonusTargets;
             Cd = Exec.Cd;
+            if (s.BonusWarrior_T10_4P_BSSDProcChange > 0f)
+            {
+                // 20% proc rate, so 20% of the time we get 2 SDs over 2*(GCD-0.5)
+                float procRate = 0.2f;
+                float numSDActivates = 1f + procRate;
+                float activatesHasted = procRate * 2f; // assuming both activates have the 0.5sec GCD redux
+                float percActivatesHasted = activatesHasted / numSDActivates;
+                float percActivatesUnhasted = 1f - percActivatesHasted;
+                GCDTime = ((Cd - 0.5f) * percActivatesHasted) + percActivatesUnhasted * Cd;
+            }
             StanceOkArms = true;
             UseReact = true;
             //
@@ -80,11 +90,6 @@ namespace Rawr.DPSWarr.Skills
         public Execute Exec;
         public float FreeRage { get { return Exec.FreeRage; } set { Exec.FreeRage = value; } }
         public float UsedExtraRage { get { return Exec.UsedExtraRage; } set { Exec.UsedExtraRage = value; } }
-        public void SetGCDTime(float landedatksoverdur) {
-            if (StatS.BonusWarrior_T10_4P_BSSDProcChange == 0) { return; }
-            float uptime = GetBuffBaseUptime(landedatksoverdur);
-            GCDTime -= (0.5f * uptime);
-        }
         private SpecialEffect _buff;
         protected SpecialEffect Buff {
             get {
@@ -98,17 +103,11 @@ namespace Rawr.DPSWarr.Skills
             set { _buff = value; }
         }
         // Functions
-        private float GetBuffBaseUptime(float landedatksoverdur) {
-            if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-            if (StatS.BonusWarrior_T10_4P_BSSDProcChange == 0) { return 0f; }
-            float uptime = Buff.GetAverageUptime(landedatksoverdur / FightDuration, MHAtkTable.AnyLand, combatFactors._c_mhItemSpeed, FightDuration);
-            return uptime;
-        }
         public float GetActivates(float landedatksoverdur) {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
             float acts = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, MHAtkTable.AnyLand, combatFactors._c_mhItemSpeed, FightDuration);
             acts *= FightDuration;
-            //if (StatS.BonusWarrior_T10_4P_BSSDProcChange > 0) { acts *= 1.20f; }
+            if (StatS.BonusWarrior_T10_4P_BSSDProcChange > 0) { acts *= 1.20f; }
 
             return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + UsedExtraRage));
         }

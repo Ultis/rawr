@@ -394,7 +394,7 @@ namespace Rawr.DPSWarr {
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     SD.numActivates = (1f - MSspace) * Abil_GCDs;
                     SD_ability.FreeRage = 0f; // we will do Extra Rage later
-                    SD_ability.SetGCDTime(AttemptedAtksOverDur);
+                    //SD_ability.SetGCDTime(AttemptedAtksOverDur);
                     /*float rageuse = SD.GetRageUseOverDur(_SD_GCDs);
                     float extraRage = availRage - rageuse;
                     if        (availRage > 0f && extraRage >  0f) {
