@@ -145,11 +145,19 @@ namespace Rawr.Mage
                     break;
                 case "Frost+Deep Freeze":
                     castingState = new CastingState(calculationResult, 0, false);
-                    generator = new FrostCycleGenerator2(castingState, true, true);
+                    generator = new FrostCycleGenerator2(castingState, true, true, false);
                     break;
                 case "Frost+Deep Freeze (no latency combos)":
                     castingState = new CastingState(calculationResult, 0, false);
-                    generator = new FrostCycleGenerator2(castingState, false, true);
+                    generator = new FrostCycleGenerator2(castingState, false, true, false);
+                    break;
+                case "Frost+Deep Freeze (2T10 duration collapsed)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new FrostCycleGenerator2(castingState, true, true, true);
+                    break;
+                case "Frost+Deep Freeze (2T10 duration collapsed, no latency combos)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new FrostCycleGenerator2(castingState, false, true, true);
                     break;
             }
 

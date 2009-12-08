@@ -547,40 +547,73 @@ z = actual count on Fingers of Frost
             public int FingersOfFrostActual { get; set; }
             public bool LatentFingersOfFrostWindow { get; set; }
             public float DeepFreezeCooldown { get; set; }
+            public float Tier10TwoPieceDuration { get; set; }
         }
 
-        public Spell FrB, FrBS, FB, FBS, IL, ILS, DFS;
+        public Spell[,] FrB, FB, IL, DF;
 
         private float BF;
         private float FOF;
         private float T8;
+        private bool T10;
 
         private bool deepFreeze;
         private bool useLatencyCombos;
+        private bool Tier10TwoPieceCollapsed;
 
-        public FrostCycleGenerator2(CastingState castingState, bool useLatencyCombos, bool useDeepFreeze)
+        public FrostCycleGenerator2(CastingState castingState, bool useLatencyCombos, bool useDeepFreeze, bool tier10TwoPieceCollapsed)
         {
             this.useLatencyCombos = useLatencyCombos;
+            this.Tier10TwoPieceCollapsed = tier10TwoPieceCollapsed;
 
-            FrB = castingState.GetSpell(SpellId.Frostbolt);
-            FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
-            FB = castingState.GetSpell(SpellId.FireballBF);
-            FBS = castingState.FrozenState.GetSpell(SpellId.FireballBF);
-            IL = castingState.GetSpell(SpellId.IceLance);
-            ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
-            DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+            FrB = new Spell[2, 2];
+            FB = new Spell[2, 2];
+            IL = new Spell[2, 2];
+            DF = new Spell[2, 2];
+
+            for (int fof = 0; fof < 2; fof++)
+            {
+                for (int t10 = 0; t10 < 2; t10++)
+                {
+                    CastingState cstate = castingState;
+                    string label = "";
+                    if (t10 == 1)
+                    {
+                        cstate = cstate.Tier10TwoPieceState;
+                        label = "2T10";
+                    }
+                    if (fof == 1)
+                    {
+                        cstate = cstate.FrozenState;
+                        label = label.Length > 0 ? label + "+" + "FOF" : "FOF";
+                    }
+                    if (label.Length > 0)
+                    {
+                        label += ":";
+                    }
+                    FrB[fof, t10] = cstate.GetSpell(SpellId.Frostbolt);
+                    FrB[fof, t10].Label = label + "Frostbolt";
+                    FB[fof, t10] = cstate.GetSpell(SpellId.FireballBF);
+                    FB[fof, t10].Label = label + "Fireball";
+                    IL[fof, t10] = cstate.GetSpell(SpellId.IceLance);
+                    IL[fof, t10].Label = label + "IceLance";
+                    DF[fof, t10] = cstate.GetSpell(SpellId.DeepFreeze);
+                    DF[fof, t10].Label = label + "DeepFreeze";
+                }
+            }
 
             BF = 0.05f * castingState.MageTalents.BrainFreeze;
             FOF = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             deepFreeze = useDeepFreeze;
+            T10 = castingState.BaseStats.Mage2T10 > 0;
 
             GenerateStateDescription();
         }
 
         protected override CycleState GetInitialState()
         {
-            return GetState(false, false, 0, 0, false, 0.0f);
+            return GetState(false, false, 0, 0, false, 0.0f, 0.0f);
         }
 
         protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
@@ -591,27 +624,28 @@ z = actual count on Fingers of Frost
             Spell IL = null;
             Spell FB = null;
             Spell DF = null;
+            int t10 = s.Tier10TwoPieceDuration > 0 ? 1 : 0;
             if (s.FingersOfFrostActual > 0)
             {
-                FrB = this.FrBS;
+                FrB = this.FrB[1, t10];
             }
             else
             {
-                FrB = this.FrB;
+                FrB = this.FrB[0, t10];
             }
             if (s.FingersOfFrostActual > 0 || (useLatencyCombos && s.LatentFingersOfFrostWindow))
             {
-                IL = this.ILS;
-                FB = this.FBS;
+                IL = this.IL[1, t10];
+                FB = this.FB[1, t10];
             }
             else
             {
-                IL = this.IL;
-                FB = this.FB;
+                IL = this.IL[0, t10];
+                FB = this.FB[0, t10];
             }
             if (s.DeepFreezeCooldown == 0.0f && (s.FingersOfFrostRegistered > 0 || (useLatencyCombos && s.LatentFingersOfFrostWindow)))
             {
-                DF = this.DFS;
+                DF = this.DF[1, t10];
             }
             if (FOF > 0 && BF > 0)
             {
@@ -624,7 +658,8 @@ z = actual count on Fingers of Frost
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         2,
                         s.FingersOfFrostActual > 0,
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                        Math.Max(0, s.Tier10TwoPieceDuration - FrB.CastTime)
                     ),
                     TransitionProbability = FOF * BF
                 });
@@ -640,7 +675,8 @@ z = actual count on Fingers of Frost
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         2,
                         s.FingersOfFrostActual > 0,
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                        Math.Max(0, s.Tier10TwoPieceDuration - FrB.CastTime)
                     ),
                     TransitionProbability = FOF * (1 - BF)
                 });
@@ -656,7 +692,8 @@ z = actual count on Fingers of Frost
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         s.FingersOfFrostActual > 0,
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                        Math.Max(0, s.Tier10TwoPieceDuration - FrB.CastTime)
                     ),
                     TransitionProbability = (1 - FOF) * BF
                 });
@@ -670,7 +707,8 @@ z = actual count on Fingers of Frost
                     Math.Max(0, s.FingersOfFrostActual - 1),
                     Math.Max(0, s.FingersOfFrostActual - 1),
                     s.FingersOfFrostActual > 0,
-                    Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                    Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime),
+                    Math.Max(0, s.Tier10TwoPieceDuration - FrB.CastTime)
                 ),
                 TransitionProbability = (1 - FOF) * (1 - BF)
             });
@@ -685,7 +723,8 @@ z = actual count on Fingers of Frost
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         s.FingersOfFrostActual > 1,
-                        Math.Max(0, s.DeepFreezeCooldown - IL.CastTime)
+                        Math.Max(0, s.DeepFreezeCooldown - IL.CastTime),
+                        Math.Max(0, s.Tier10TwoPieceDuration - IL.CastTime)
                     ),
                     TransitionProbability = 1
                 });
@@ -703,7 +742,8 @@ z = actual count on Fingers of Frost
                             Math.Max(0, s.FingersOfFrostActual - 1),
                             Math.Max(0, s.FingersOfFrostActual - 1),
                             s.FingersOfFrostActual > 1,
-                            Math.Max(0, s.DeepFreezeCooldown - FB.CastTime)
+                            Math.Max(0, s.DeepFreezeCooldown - FB.CastTime),
+                            Math.Max(0, T10 ? 5.0f - FB.CastTime : s.Tier10TwoPieceDuration - FB.CastTime)
                         ),
                         TransitionProbability = T8
                     });
@@ -717,7 +757,8 @@ z = actual count on Fingers of Frost
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         s.FingersOfFrostActual > 1,
-                        Math.Max(0, s.DeepFreezeCooldown - FB.CastTime)
+                        Math.Max(0, s.DeepFreezeCooldown - FB.CastTime),
+                        Math.Max(0, T10 ? 5.0f - FB.CastTime : s.Tier10TwoPieceDuration - FB.CastTime)
                     ),
                     TransitionProbability = 1 - T8
                 });
@@ -733,7 +774,8 @@ z = actual count on Fingers of Frost
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         s.FingersOfFrostActual > 1,
-                        Math.Max(0, 15 - DF.CastTime)
+                        Math.Max(0, 15 - DF.CastTime),
+                        Math.Max(0, s.Tier10TwoPieceDuration - DF.CastTime)
                     ),
                     TransitionProbability = 1
                 });
@@ -744,17 +786,17 @@ z = actual count on Fingers of Frost
 
         private Dictionary<string, State> stateDictionary = new Dictionary<string, State>();
 
-        private State GetState(bool brainFreezeRegistered, bool brainFreezeProcced, int fingersOfFrostRegistered, int fingersOfFrostActual, bool latentFingersOfFrostWindow, float deepFreezeCooldown)
+        private State GetState(bool brainFreezeRegistered, bool brainFreezeProcced, int fingersOfFrostRegistered, int fingersOfFrostActual, bool latentFingersOfFrostWindow, float deepFreezeCooldown, float tier10TwoPieceDuration)
         {
             if (!useLatencyCombos)
             {
                 latentFingersOfFrostWindow = false;
             }
-            string name = string.Format("BF{0}{1},FOF{2}{3}({4}),DF{5}", brainFreezeProcced ? "+" : "-", brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, latentFingersOfFrostWindow ? "+" : "-", fingersOfFrostActual, deepFreezeCooldown);
+            string name = string.Format("BF{0}{1},FOF{2}{3}({4}),DF{5},2T10={6}", brainFreezeProcced ? "+" : "-", brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, latentFingersOfFrostWindow ? "+" : "-", fingersOfFrostActual, deepFreezeCooldown, tier10TwoPieceDuration);
             State state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
-                state = new State() { Name = name, BrainFreezeProcced = brainFreezeProcced, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, LatentFingersOfFrostWindow = latentFingersOfFrostWindow, DeepFreezeCooldown = deepFreezeCooldown };
+                state = new State() { Name = name, BrainFreezeProcced = brainFreezeProcced, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, LatentFingersOfFrostWindow = latentFingersOfFrostWindow, DeepFreezeCooldown = deepFreezeCooldown, Tier10TwoPieceDuration = tier10TwoPieceDuration };
                 stateDictionary[name] = state;
             }
             return state;
@@ -768,6 +810,8 @@ z = actual count on Fingers of Frost
                 a.FingersOfFrostRegistered != b.FingersOfFrostRegistered ||
                 a.LatentFingersOfFrostWindow != b.LatentFingersOfFrostWindow ||
                 (a.DeepFreezeCooldown == 0 && (a.FingersOfFrostRegistered > 0 || a.LatentFingersOfFrostWindow)) != (b.DeepFreezeCooldown == 0 && (b.FingersOfFrostRegistered > 0 || b.LatentFingersOfFrostWindow)) ||
+                (Tier10TwoPieceCollapsed && ((a.Tier10TwoPieceDuration > 0) != (b.Tier10TwoPieceDuration > 0))) ||
+                (!Tier10TwoPieceCollapsed && (a.Tier10TwoPieceDuration != b.Tier10TwoPieceDuration)) ||
                 a.BrainFreezeRegistered != b.BrainFreezeRegistered);
         }
 
@@ -776,7 +820,7 @@ z = actual count on Fingers of Frost
             get
             {
                 return @"Cycle Code Legend: 0 = FrB, 1 = IL, 2 = FB, 3 = DF
-State Descriptions: BF+-+-,FOFy+-(z),DFw
+State Descriptions: BF+-+-,FOFy+-(z),DFw,2T10=z
 + = Brain Freeze procced
 - = Brain Freeze not procced
 + = Brain Freeze proc visible
@@ -785,7 +829,8 @@ y = visible count on Fingers of Frost
 + = ghost Fingers of Frost charge for instant available
 - = ghost Fingers of Frost charge for instant not available
 z = actual count on Fingers of Frost
-w = Deep Freeze cooldown";
+w = Deep Freeze cooldown
+z = remaining duration on 2T10";
             }
         }
     }
