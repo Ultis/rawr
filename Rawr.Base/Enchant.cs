@@ -698,6 +698,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f }));
             defaultEnchants.Add(new Enchant(3594, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f }));
             defaultEnchants.Add(new Enchant(3847, "Rune of the Stoneskin Gargoyle", ItemSlot.TwoHand, new Stats() { Defense = 25.0f, BonusStaminaMultiplier = 0.02f }));
+            defaultEnchants.Add(new Enchant(3883, "Rune of the Nerubian Carapace", ItemSlot.OneHand, new Stats() { Defense = 13f, BonusStaminaMultiplier = 0.01f }));
 
             // Engineering enchant
             Stats hyper = new Stats();
