@@ -1853,6 +1853,34 @@ namespace Rawr {
                 // Estimate cast as every 2.0f seconds, average stack height is 0.5f of final value
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Mp5 = mp5 * int.Parse(match.Groups["duration"].Value) * 0.5f / 2.0f }, int.Parse(match.Groups["duration"].Value), 120));
             }
+            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<amount>\d+) spell power.  Stacks up to (?<stacks>\d+) times.  Entire effect lasts (?<duration>\d+) sec.")).Success)
+            {   // Binding Light / Stone
+                // Make a guess.......
+                // There is no way to properly model a use effect that's further triggered by spellcasts
+                // There could be two alternative ways to model it
+                // 1. As a Trigger.HealingSpell with cooldown = and cooldownSinceFirstApply set to the Use cooldown
+                // 2. As a Trigger.Use that is further triggered by Trigger.HealingSpell, but this is much harder to implement
+                // Temporary solution: make assumptions. Similar to Talisman of Troll Divinity... 1.5 seconds per spell cast
+                int maxStack = int.Parse(match.Groups["stacks"].Value);
+                float duration = (float)int.Parse(match.Groups["duration"].Value);
+                float loadTime = maxStack * 1.5f;
+                float averageBuff = (maxStack * (duration - loadTime) + (maxStack - 1) * loadTime / 2) / duration;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = averageBuff * (float)int.Parse(match.Groups["amount"].Value) }, duration, 120f));
+            }
+            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<amount>\d+) spell power. nbsp;Stacks up to (?<stacks>\d+) times. nbsp;Entire effect lasts (?<duration>\d+) sec.")).Success)
+            {   // Binding Light / Stone
+                // Make a guess.......
+                // There is no way to properly model a use effect that's further triggered by spellcasts
+                // There could be two alternative ways to model it
+                // 1. As a Trigger.HealingSpell with cooldown = and cooldownSinceFirstApply set to the Use cooldown
+                // 2. As a Trigger.Use that is further triggered by Trigger.HealingSpell, but this is much harder to implement
+                // Temporary solution: make assumptions. Similar to Talisman of Troll Divinity... 1.5 seconds per spell cast
+                int maxStack = int.Parse(match.Groups["stacks"].Value);
+                float duration = (float)int.Parse(match.Groups["duration"].Value);
+                float loadTime = maxStack * 1.5f;
+                float averageBuff = (maxStack * (duration - loadTime) + (maxStack - 1) * loadTime / 2) / duration;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = averageBuff * (float)int.Parse(match.Groups["amount"].Value) }, duration, 120f));
+            }
             else if ((match = Regex.Match(line, @"Each time you cast a harmful spell, you gain (?<hasteRating>\d+) haste rating\. .*Stacks up to (?<stacks>\d+) times\. .*Entire effect lasts (?<duration>\d+) sec\.( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
             {
                 // Fetish of Volatile Power
