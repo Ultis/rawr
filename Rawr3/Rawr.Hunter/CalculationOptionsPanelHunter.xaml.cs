@@ -626,29 +626,18 @@ Rawr.HunterSE:
         }
         private void SetUpOther()
         {
-            RTB_Welcome.Text = @"Welcome to Rawr.DPSWarr!
+            RTB_Welcome.Text = @"Welcome to Rawr.Hunter!
 
-This module is designed for Warriors hoping to fulfill the DPS role in a raid, either as Fury or Arms Specialized.
+This module is designed for Hunters hoping to fulfill the DPS role in a raid, regardless of their specific spec (MM, BM, Surv).
 
-To begin, assuming you have already imported your character from either Character Profiler or the WoW Armory, select your talent specialization above as either Fury or Arms if it did not do so automatically. If you would like to check your numbers against information from the next patch (at present, this is 3.2.2) you can check that item.
+To begin we assume you have already imported your character from either Character Profiler or the WoW Armory. If you would like to check your numbers against information from the next patch (at present, this is 3.3) you can check that item.
 
-Next, jump over to the Fight Info Tab to set some background rules for the fight you want to measure against.
-- Lag is the average Latency reported in your WoW client. Many with broadband connections usually see a value between 100 ms and 200 ms. Those with slower connection types such as dial-up will see much larger numbers.
-- Reaction is the average amount of time it takes for you (the player) to react to a button that becomes available. For example, when an opponent dodges and the Overpower ability procs, how long does it take you to process this mentally and command your finger to push the hotkey for Overpower. The WoW client gives 250 ms (1/4 second) allowance for this before your reactions count against you. Most players fall under this 250 ms rule.
-NOTE: Lag and Reaction are combined into a single calculable value. Small adjustments to these numbers yield *very* small adjustments in your DPS.
-- The Boss Selector is a new method of using defined Presets for your 'Situational' settings. Selecting a specific boss will tailor the Duration, in back time, multiple targets etc to what is necessary for that fight. Please note that as this is a new method, many of the values for the presets still need to be fine-tuned.
-- Target Level can be changed from 80 to 83. 83 is the numeric representation of all Raid Bosses (who show themselves as Level '??')
-- Target Armor is currently defaulted to 10,643 for all Level 83 Bosses. This is the currently accepted rule of thumb and there is little reason to change off of this.
-- Fight Duration is the length of the fight in seconds. A value of 600 is 10 minutes. Most boss fights take 6 minutes (value 360) or less but we left a high upper value for those wanting to see total damage for a greater period of time. The maximum for this box is 20 minutes, just above KT's Enrage Timer, which is a value of 1200.
-- The Situational boxes provide the basic situation you will normally be fighting in. The default setting should be all disabled except 'Standing in Back' at 100%. See the Advanced Instructions (the next tab over from this one) for more info on these settings.
-
-Finally, go to the Ability Maintenance Tab and choose the abilities you will be maintaining during your battles. Note that changing one or the other can have serious effects on your total DPS output, and some abilities act differently if you are in different situations. For example, Bladestorm will have a much larger DPS number if there are multiple targets throughout the fight.
-NOTE: If you have Flooring active, turn it off unless you really want to see what it does. The methods behind it have not been refined and it is presently not as accurate as having it disabled.";
+... More to come, these instructions have to be rewritten for Rawr3";
             RTB_Advanced.Text = @"This section is for advanced users only, most players do not need to concern themselves with these settings.
 
 Since you have gotten your feet wet, looked at your gear, maybe even run an optimization or two, now you must be hungry for more. Fear not, there's plenty more you can tweak with your character.
 
-The Fight Info Tab
+The Boss Handler Tab
 
 We will be adding functionality to maintain damage taken, for survivability and for the additional rage generated from damage taken at some point, but time takes time.
 

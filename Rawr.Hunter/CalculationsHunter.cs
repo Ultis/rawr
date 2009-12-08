@@ -2368,10 +2368,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             statsTotal.Agility = agiBase + agiBonus + agiFromAvg;
 
             if (talents.ExposeWeakness > 0) {
-                SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.PhysicalCrit,
+                SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.RangedCrit,
                     new Stats() { AttackPower = statsTotal.Agility * 0.25f },
                     7f, 0f, (1f / 3f * talents.ExposeWeakness));
-                statsTalents.AddSpecialEffect(ExposeWeakness);
+                statsTotal.AddSpecialEffect(ExposeWeakness);
             }
 
             // Intellect

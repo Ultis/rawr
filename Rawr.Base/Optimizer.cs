@@ -801,7 +801,7 @@ namespace Rawr.Optimizer
             {
                 Character = character,
                 CalculationToOptimize = calculationToOptimize,
-                Requirements = requirements,
+                Requirements = requirements.ToArray(),
                 Thoroughness = thoroughness,
                 SingleItemUpgrades = singleItemUpgrades
             };
@@ -820,7 +820,7 @@ namespace Rawr.Optimizer
             try
             {
                 upgrades = PrivateComputeUpgrades(state.Character, state.CalculationToOptimize,
-                    state.Requirements, state.Thoroughness, state.SingleItemUpgrades, out error);
+                    new List<OptimizationRequirement>(state.Requirements), state.Thoroughness, state.SingleItemUpgrades, out error);
             }
             catch (Exception ex)
             {
@@ -872,7 +872,7 @@ namespace Rawr.Optimizer
             {
                 Character = character,
                 CalculationToOptimize = calculationToOptimize,
-                Requirements = requirements,
+                Requirements = requirements.ToArray(),
                 Thoroughness = thoroughness,
                 Upgrade = upgrade
             };
@@ -892,7 +892,7 @@ namespace Rawr.Optimizer
             try
             {
                 upgradeValue = PrivateEvaluateUpgrade(state.Character, state.CalculationToOptimize,
-                    state.Requirements, state.Thoroughness, state.Upgrade, out error, out comparisonUpgrade);
+                    new List<OptimizationRequirement>(state.Requirements), state.Thoroughness, state.Upgrade, out error, out comparisonUpgrade);
             }
             catch (Exception ex)
             {

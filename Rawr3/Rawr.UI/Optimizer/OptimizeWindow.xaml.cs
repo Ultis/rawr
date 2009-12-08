@@ -311,7 +311,7 @@ namespace Rawr.UI
             DoneButton.Visibility = Visibility.Collapsed;
 
             ControlsEnabled(false);
-            optimizer.OptimizeCharacterAsync(character, calculationToOptimize, requirements, thoroughness, false);
+            optimizer.OptimizeCharacterAsync(character, calculationToOptimize, new List<OptimizationRequirement>(requirements), thoroughness, false);
         }
 
         private void optimizer_OptimizeCharacterCompleted(object sender, OptimizeCharacterCompletedEventArgs e)
@@ -396,7 +396,7 @@ namespace Rawr.UI
 
             ControlsEnabled(false);
 
-            optimizer.ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, itemToEvaluate);
+            optimizer.ComputeUpgradesAsync(character, calculationToOptimize, new List<OptimizationRequirement>(requirements), thoroughness, itemToEvaluate);
         }
 
         private void optimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)

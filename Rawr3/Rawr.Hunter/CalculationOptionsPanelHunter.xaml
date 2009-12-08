@@ -26,7 +26,7 @@
                         </controls:TabItem>
                         <controls:TabItem x:Name="Tab_FAQ" Header="F.A.Q.">
                             <Grid x:Name="Tab_FAQ_Layout">
-                                <dataInput:Label x:Name="LB_FAQ" Height="48" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="298" RenderTransformOrigin="0.474,-14.575" Content="Got a question about Rawr.DPSWarr?&#xd;&#xa;The answer may be here...&#xd;&#xa;Select a Question or choose All to display All"/>
+                                <dataInput:Label x:Name="LB_FAQ" Height="48" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="298" RenderTransformOrigin="0.474,-14.575" Content="Got a question about Rawr.Hunter?&#xd;&#xa;The answer may be here...&#xd;&#xa;Select a Question or choose All to display All"/>
                                 <ComboBox x:Name="CB_FAQ_Questions" Height="21" Margin="3,52,3,0" VerticalAlignment="Top" SelectionChanged="CB_FAQ_Questions_SelectedIndexChanged"/>
                                 <TextBox x:Name="RTB_FAQ" Margin="3,77,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
                             </Grid>

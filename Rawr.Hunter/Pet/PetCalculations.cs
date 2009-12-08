@@ -398,7 +398,7 @@ namespace Rawr.Hunter
             calculatedStats.petAPFromTier9 = 0;
 
             // 31-10-2009 Drizz: Name in buffs seems to be Battlegear instead of Pursuit (i.e. not Alliance just Horde)
-            if (character.ActiveBuffsContains("Windrunner's Battlegear 4 Piece Bonus"))
+            if (calculatedStats.BasicStats.BonusHunter_T9_4P_SteadyShotPetAPProc > 0)
             {
                 float tier9BonusTimePetShot = 0.9f;
                 float tier9BonusTimeBetween = tier9BonusTimePetShot > 0 ? 1f / 0.15f * tier9BonusTimePetShot + 45f : 0;
