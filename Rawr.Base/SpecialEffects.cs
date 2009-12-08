@@ -1351,6 +1351,60 @@ namespace Rawr {
                         stats.AddSpecialEffect(SE2);
                     }
                 }
+                /*
+                 * Equip: Your Obliterate, Scourge Strike, and Death Strike abilities grants 73 Strength for 15 sec.  Stacks up to 3 times.
+                 * */
+                regex = new Regex(@"Your (?<ability>\w+\s*\w*), (?<ability2>\w+\s*\w*), and (?<ability3>\w+\s*\w*) (abilities )?grants (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec. nbsp;Stacks up to (?<stacks>\d*) times.");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float duration = int.Parse(match.Groups["duration"].Value);
+                    int stacks = int.Parse(match.Groups["stacks"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
+                    string ability3 = match.Groups["ability3"].Value;
+
+                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f, 1f, stacks);
+                    stats.AddSpecialEffect(SE1);
+                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f, 1f, stacks);
+                    SpecialEffect SE3 = EvalRegex(statName, amount, duration, ability3, 0f, 1f, stacks);
+                    if (SE1.ToString() != SE2.ToString())
+                    {
+                        stats.AddSpecialEffect(SE2);
+                    }
+                    if (SE3.ToString() != SE2.ToString() && SE3.ToString() != SE1.ToString())
+                    {
+                        stats.AddSpecialEffect(SE3);
+                    }
+                }
+
+                regex = new Regex(@"Your (?<ability>\w+\s*\w*), (?<ability2>\w+\s*\w*), and (?<ability3>\w+\s*\w*) (abilities )?grants (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec. Stacks up to (?<stacks>\d*) times.");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float duration = int.Parse(match.Groups["duration"].Value);
+                    int stacks = int.Parse(match.Groups["stacks"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
+                    string ability3 = match.Groups["ability3"].Value;
+
+                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f, 1f, stacks);
+                    stats.AddSpecialEffect(SE1);
+                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f, 1f, stacks);
+                    SpecialEffect SE3 = EvalRegex(statName, amount, duration, ability3, 0f, 1f, stacks);
+                    if (SE1.ToString() != SE2.ToString())
+                    {
+                        stats.AddSpecialEffect(SE2);
+                    }
+                    if (SE3.ToString() != SE2.ToString() && SE3.ToString() != SE1.ToString())
+                    {
+                        stats.AddSpecialEffect(SE3);
+                    }
+                }
 
                 regex = new Regex(@"Each time you use your (?<ability3>\w+\s*\w*), (?<ability>\w+\s*\w*), or (?<ability2>\w+\s*\w*) ability, you have a chance to gain (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
                 match = regex.Match(line);
@@ -1969,7 +2023,7 @@ namespace Rawr {
             }
         }
 
-        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown) { return EvalRegex(statName, amount, duration, ability, cooldown, 1f); } 
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown) { return EvalRegex(statName, amount, duration, ability, cooldown, 1f); }
         /// <summary>
         /// For those objects that have a special effect trigger (As opposed to just straight stat upgrades)
         /// This allows you to pass in a statName, amount, duration, trigger type, and cooldown and get a SpecialEffect back.
@@ -1981,7 +2035,8 @@ namespace Rawr {
         /// <param name="cooldown">How long in seconds?</param>
         /// <param name="chance">What is the percent chance? (0-1)</param>
         /// <returns>A new SpecialEffect instance that can be used in Stats.AddSpecialEffect()</returns>
-        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown, float chance) {
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown, float chance)
+        {
             Stats s = new Stats();
 
             if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
@@ -2005,8 +2060,8 @@ namespace Rawr {
 
             switch (ability)
             {
-                case "Icy Touch": 
-                    trigger = Trigger.IcyTouchHit; 
+                case "Icy Touch":
+                    trigger = Trigger.IcyTouchHit;
                     break;
                 case "Plague Strike":
                     trigger = Trigger.PlagueStrikeHit;
@@ -2036,7 +2091,79 @@ namespace Rawr {
             }
 
             return new SpecialEffect(trigger, s, duration, cooldown, chance);
- 
+
+        }
+
+
+        /// <summary>
+        /// For those objects that have a special effect trigger (As opposed to just straight stat upgrades)
+        /// This allows you to pass in a statName, amount, duration, trigger type, and cooldown and get a SpecialEffect back.
+        /// </summary>
+        /// <param name="statName">What stat does the special effect target</param>
+        /// <param name="amount">By what amount?</param>
+        /// <param name="duration">How long in seconds?</param>
+        /// <param name="ability">What is the spell triggering? For right now, this only effects the Sigils.  So we're going to use the ability to setup the trigger.</param>
+        /// <param name="cooldown">How long in seconds?</param>
+        /// <param name="chance">What is the percent chance? (0-1)</param>
+        /// <param name="stacks"> How many stacks?</param>
+        /// <returns>A new SpecialEffect instance that can be used in Stats.AddSpecialEffect()</returns>
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown, float chance, int stacks)
+        {
+            Stats s = new Stats();
+
+            if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+            else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
+            else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
+            else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
+            else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
+            else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
+            else if (statName.Equals("defense rating", StringComparison.InvariantCultureIgnoreCase)) { s.DefenseRating = amount; }
+            else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+            else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
+            else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
+            else if (statName.Equals("haste rating", StringComparison.InvariantCultureIgnoreCase)) { s.HasteRating = amount; }
+            else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
+            else if (statName.Equals("parry", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+            else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
+            else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
+            else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
+            else if (statName.Equals("strength", StringComparison.InvariantCultureIgnoreCase)) { s.Strength = amount; }
+            Trigger trigger = new Trigger();
+
+            switch (ability)
+            {
+                case "Icy Touch":
+                    trigger = Trigger.IcyTouchHit;
+                    break;
+                case "Plague Strike":
+                    trigger = Trigger.PlagueStrikeHit;
+                    break;
+                case "Rune Strike":
+                    trigger = Trigger.RuneStrikeHit;
+                    break;
+                case "Blood Strike":
+                    trigger = Trigger.BloodStrikeHit;
+                    break;
+                case "Heart Strike":
+                case "Heart Strikes":
+                    trigger = Trigger.HeartStrikeHit;
+                    break;
+                case "Obliterate":
+                    trigger = Trigger.ObliterateHit;
+                    break;
+                case "Scourge Strike":
+                    trigger = Trigger.ScourgeStrikeHit;
+                    break;
+                case "Death Strike":
+                    trigger = Trigger.DeathStrikeHit;
+                    break;
+                default:
+                    trigger = Trigger.SpellHit;
+                    break;
+            }
+
+            return new SpecialEffect(trigger, s, duration, cooldown, chance, stacks);
+
         }
 
         /// <summary>
