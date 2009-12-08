@@ -3592,7 +3592,52 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 10 | Crimson Acolyte's
+            #region Raiment
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Crimson Acolyte's Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestHeal_T10_2pc = 0.33f },
+                SetName = "Crimson Acolyte's Raiment",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Crimson Acolyte's Raiment 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestHeal_T10_4pc = 0.2f },
+                SetName = "Crimson Acolyte's Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
             #endregion
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Crimson Acolyte's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestDPS_T10_2pc = 0.05f },
+                SetName = "Crimson Acolyte's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Crimson Acolyte's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestDPS_T10_4pc = 0.51f },
+                SetName = "Crimson Acolyte's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #endregion
+
             #endregion
             #region PvP
             defaultBuffs.Add(new Buff()

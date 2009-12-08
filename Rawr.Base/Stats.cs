@@ -184,6 +184,8 @@ namespace Rawr {
         PWSBonusSpellPowerProc,
         PriestHeal_T9_2pc,
         PriestHeal_T9_4pc,
+        PriestHeal_T10_2pc,
+        PriestHeal_T10_4pc,
         #endregion
         #region Added by Rawr.ShadowPriest
         SWPDurationIncrease,
@@ -193,6 +195,8 @@ namespace Rawr {
         MindBlastHasteProc,
         PriestDPS_T9_2pc,
         PriestDPS_T9_4pc,
+        PriestDPS_T10_2pc,
+        PriestDPS_T10_4pc,
         #endregion
         #region Added by Rawr.Mage
         AldorRegaliaInterruptProtection,
@@ -4322,6 +4326,25 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.PriestDPS_T9_4pc] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Priest")]
+        [DisplayName("% increased critical hit chance on Shadow Word: Pain, Vampiric Touch and Devouring Plague. (Priest)")]
+        public float PriestDPS_T10_2pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestDPS_T10_2pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestDPS_T10_2pc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Priest")]
+        [DisplayName(" seconds reduced cast time on Mind Flay. (Priest)")]
+        public float PriestDPS_T10_4pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestDPS_T10_4pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestDPS_T10_4pc] = value; }
+        }
+
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -4428,6 +4451,25 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.PriestHeal_T9_4pc] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% chance of causing to heal for 33% of healed amount over 9 sec. (Priest)")]
+        [Category("Priest")]
+        public float PriestHeal_T10_2pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestHeal_T10_2pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestHeal_T10_2pc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% chance for Circle of Healing or Penance to reset cooldown of Circle of Healing or Penance when casting Flash Heal within 6 seconds. (Priest)")]
+        [Category("Priest")]
+        public float PriestHeal_T10_4pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestHeal_T10_4pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestHeal_T10_4pc] = value; }
+        }
 
 
         #endregion

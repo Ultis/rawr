@@ -237,7 +237,9 @@ namespace Rawr.ShadowPriest {
 
 
             if (character.PriestTalents.Shadowform > 0) {
-                CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
+                CritChance = stats.SpellCrit
+                    + character.PriestTalents.MindMelt * 0.03f
+                    + stats.PriestDPS_T10_2pc;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
                 // Apparently made SPriests too good.
                 //    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
@@ -290,7 +292,9 @@ namespace Rawr.ShadowPriest {
             CastTime = (float)Math.Max(1f, BaseCastTime / (1f + stats.SpellHaste));
 
             if (character.PriestTalents.Shadowform > 0) {
-                CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
+                CritChance = stats.SpellCrit
+                    + character.PriestTalents.MindMelt * 0.03f
+                    + stats.PriestDPS_T10_2pc;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
                 DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
             }
@@ -445,7 +449,7 @@ namespace Rawr.ShadowPriest {
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + talents.ShadowPower * 0.2f) + 1f;
 
-            CastTime = (float)Math.Max(1f, BaseCastTime / (1 + stats.SpellHaste));
+            CastTime = (float)Math.Max(1f, BaseCastTime - stats.PriestDPS_T10_4pc / (1 + stats.SpellHaste));
             Range = (int)Math.Round(BaseRange * (1f + talents.ShadowReach * 0.1f));
         }
         public override string ToString() {
@@ -581,7 +585,9 @@ namespace Rawr.ShadowPriest {
 
             if (character.PriestTalents.Shadowform > 0)
             {
-                CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
+                CritChance = stats.SpellCrit
+                    + character.PriestTalents.MindMelt * 0.03f
+                    + stats.PriestDPS_T10_2pc;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
                 DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
             }

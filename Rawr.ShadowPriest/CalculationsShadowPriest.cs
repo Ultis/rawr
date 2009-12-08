@@ -738,6 +738,8 @@ namespace Rawr.ShadowPriest
                 MindBlastHasteProc = stats.MindBlastHasteProc,
                 PriestDPS_T9_2pc = stats.PriestDPS_T9_2pc,
                 PriestDPS_T9_4pc = stats.PriestDPS_T9_4pc,
+                PriestDPS_T10_2pc = stats.PriestDPS_T10_2pc,
+                PriestDPS_T10_4pc = stats.PriestDPS_T10_4pc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 ManaRestore = stats.ManaRestore,
                 SpellsManaReduction = stats.SpellsManaReduction,
@@ -818,6 +820,7 @@ namespace Rawr.ShadowPriest
                 + stats.WeakenedSoulDurationDecrease
                 + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
                 + stats.PriestDPS_T9_2pc + stats.PriestDPS_T9_4pc
+                + stats.PriestDPS_T10_2pc + stats.PriestDPS_T10_4pc
                 + stats.ManaRestoreFromBaseManaPPM + stats.BonusSpellCritMultiplier
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
                 + stats.ShadowDamage
