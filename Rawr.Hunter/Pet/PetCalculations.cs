@@ -10,7 +10,7 @@ namespace Rawr.Hunter
         Character character;
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter CalcOpts;
-        Stats statsBuffs;
+        Stats statsPetBuffs;
         Stats statsHunterBuffs;
         Stats statsGear;
         Stats StatS;
@@ -25,16 +25,19 @@ namespace Rawr.Hunter
         private float compositeSpeed;
         private float killCommandCooldown;
         private float critSpecialsAdjust;
-        private bool isWearingBeastTamersShoulders;
+
+        private float PetChanceToMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[83 - 80];
+        private float PetChanceToSpellMiss = StatConversion.GetSpellMiss(83 - 80, false);
+        private float PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[83 - 80];
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options,
-            Stats stats,Stats statsHunterBuffs, Stats statsBuffs, Stats statsGear)
+            Stats stats,Stats statsHunterBuffs, Stats statsPetBuffs, Stats statsGear)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.CalcOpts = options;
             this.statsHunterBuffs = statsHunterBuffs;
-            this.statsBuffs = statsBuffs;
+            this.statsPetBuffs = statsPetBuffs;
             this.statsGear = statsGear;
             this.StatS = stats;
 
@@ -53,11 +56,16 @@ namespace Rawr.Hunter
             petStats.Intellect = 65;
             petStats.Spirit = 10;
 
-            statsBuffs.Stamina  += statsBuffs.PetStamina;
-            statsBuffs.Strength += statsBuffs.PetStrength;
-            statsBuffs.Spirit   += statsBuffs.PetSpirit;
+            statsPetBuffs.Stamina  += statsPetBuffs.PetStamina;
+            statsPetBuffs.Strength += statsPetBuffs.PetStrength;
+            statsPetBuffs.Spirit   += statsPetBuffs.PetSpirit;
 
-            int levelDifference = CalcOpts.TargetLevel - 80;
+            if (statsPetBuffs._rawSpecialEffectData != null && statsPetBuffs._rawSpecialEffectData.Length > 0) {
+                Stats add = statsPetBuffs._rawSpecialEffectData[0].GetAverageStats();
+                statsPetBuffs.PhysicalHaste *= (1f + add.PhysicalHaste);
+            }
+
+            int levelDifference = CalcOpts.TargetLevel - character.Level;
 
             #region Focus Regen
 
@@ -111,49 +119,38 @@ namespace Rawr.Hunter
 
             #endregion
             #region Hit Chance
+            // This is tied directly to the Hunter's chance to miss
+            PetChanceToMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference] - calculatedStats.BasicStats.PhysicalHit);
+            PetChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDifference, false) - calculatedStats.BasicStats.SpellHit);
 
-            calculatedStats.petHitFromBase = 0.95f;
-            calculatedStats.petHitFromTargetDebuffs = 0;
-            calculatedStats.petHitFromFocusedAim = character.HunterTalents.FocusedAim * 0.01f;
-            calculatedStats.petHitFromRacial = character.Race == CharacterRace.Draenei ? 0.01f : statsBuffs.SpellHit;
-            calculatedStats.petHitFromHunter = StatConversion.GetHitFromRating(calculatedStats.BasicStats.HitRating);
-            calculatedStats.petHitFromLevelAdjust = 0f - levelDifference / 100.0f;
+            calculatedStats.petHitTotal = calculatedStats.BasicStats.PhysicalHit;
+            calculatedStats.petHitSpellTotal = calculatedStats.BasicStats.SpellHit;
+            //calculatedStats.petExpTotal = 1f - PetChanceToSpellMiss;
 
-            calculatedStats.petHitTotal = calculatedStats.petHitFromBase
-                            + calculatedStats.petHitFromTargetDebuffs
-                            + calculatedStats.petHitFromFocusedAim
-                            + calculatedStats.petHitFromRacial
-                            + calculatedStats.petHitFromHunter
-                            + calculatedStats.petHitFromLevelAdjust;
+            petStats.PhysicalHit = calculatedStats.BasicStats.PhysicalHit;
+            petStats.SpellHit    = calculatedStats.BasicStats.SpellHit;
 
-            calculatedStats.petHitSpellTotal = calculatedStats.petHitFromTargetDebuffs
-                            + calculatedStats.petHitFromFocusedAim
-                            + calculatedStats.petHitFromRacial
-                            + calculatedStats.petHitFromHunter;
-
-            if (calculatedStats.petHitTotal > 1) calculatedStats.petHitTotal = 1; // PetHit
-            if (calculatedStats.petHitSpellTotal > 1) calculatedStats.petHitSpellTotal = 1;
-
-            petStats.PhysicalHit = (float)calculatedStats.petHitTotal;
-
+            // If the Hunter is Hit Capped, the pet is also Exp Capped
+            // If not, Pet is proportionately lower based on Hunter's Hit
+            // Expertise itself doesn't factor in at all
+            PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[levelDifference]
+                                * (1f - (calculatedStats.BasicStats.PhysicalHit / StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]));
+            calculatedStats.petTargetDodge = PetChanceToBeDodged;
             #endregion
             #region Crit Chance
 
-            isWearingBeastTamersShoulders = character.Shoulders != null && character.Shoulders.Id == 30892;
-
             float critAgilityBase = petStats.Agility;
-            float critAgilityBuffsAdditive = statsBuffs.Agility;
-            float critAgilityBuffsMultiplicitive = statsBuffs.BonusAgilityMultiplier;
+            float critAgilityBuffsAdditive = statsPetBuffs.Agility;
+            float critAgilityBuffsMultiplicitive = statsPetBuffs.BonusAgilityMultiplier;
             float critAgilityTotal = (critAgilityBase + critAgilityBuffsAdditive) * (1 + critAgilityBuffsMultiplicitive);
 
             calculatedStats.petCritFromBase = 0.032f;
-            calculatedStats.petCritFromAgility = critAgilityTotal / (100f * 62.5f);
+            calculatedStats.petCritFromAgility = StatConversion.GetCritFromAgility(critAgilityTotal, CharacterClass.Warrior); // it matched the warrior before, probably need to proof this
             calculatedStats.petCritFromSpidersBite = CalcOpts.PetTalents.SpidersBite.Value * 0.03f;
             calculatedStats.petCritFromFerocity = character.HunterTalents.Ferocity * 0.02f;
-            calculatedStats.petCritFromGear = isWearingBeastTamersShoulders ? 0.02f : 0;
-            calculatedStats.petCritFromBuffs = statsBuffs.PhysicalCrit + StatConversion.GetCritFromRating(statsBuffs.CritRating);
+            calculatedStats.petCritFromBuffs = statsPetBuffs.PhysicalCrit + StatConversion.GetCritFromRating(statsPetBuffs.CritRating);
             calculatedStats.petCritFromTargetDebuffs = calculatedStats.targetDebuffsCrit;
-            calculatedStats.petCritFromDepression = (levelDifference > 2) ? 0f - (0.03f + (levelDifference * 0.006f)) : 0f - ((levelDifference * 5f * 0.04f) / 100f);
+            calculatedStats.petCritFromDepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];
 
             // PetCritBaseChance
             calculatedStats.petCritTotalMelee = calculatedStats.petCritFromBase
@@ -170,26 +167,26 @@ namespace Rawr.Hunter
             float cobraStrikesProc = character.HunterTalents.CobraStrikes * 0.2f;
             if (cobraStrikesProc > 0)
             {
-                float cobraStrikesCritFreqSteady = calculatedStats.steadyShot.Freq * (1 / calculatedStats.steadyShot.CritChance);
-                float cobraStrikesCritFreqArcane = calculatedStats.arcaneShot.Freq * (1 / calculatedStats.arcaneShot.CritChance);
-                float cobraStrikesCritFreqKill = calculatedStats.killShot.Freq * (1 / calculatedStats.killShot.CritChance);
+                float cobraStrikesCritFreqSteady = calculatedStats.steadyShot.Freq * (1f / calculatedStats.steadyShot.CritChance);
+                float cobraStrikesCritFreqArcane = calculatedStats.arcaneShot.Freq * (1f / calculatedStats.arcaneShot.CritChance);
+                float cobraStrikesCritFreqKill = calculatedStats.killShot.Freq * (1f / calculatedStats.killShot.CritChance);
 
-                float cobraStrikesCritFreqSteadyInv = cobraStrikesCritFreqSteady > 0 ? 1 / cobraStrikesCritFreqSteady : 0;
-                float cobraStrikesCritFreqArcaneInv = cobraStrikesCritFreqArcane > 0 ? 1 / cobraStrikesCritFreqArcane : 0;
-                float cobraStrikesCritFreqKillInv = cobraStrikesCritFreqKill > 0 ? 1 / cobraStrikesCritFreqKill : 0;
+                float cobraStrikesCritFreqSteadyInv = cobraStrikesCritFreqSteady > 0 ? 1f / cobraStrikesCritFreqSteady : 0;
+                float cobraStrikesCritFreqArcaneInv = cobraStrikesCritFreqArcane > 0 ? 1f / cobraStrikesCritFreqArcane : 0;
+                float cobraStrikesCritFreqKillInv = cobraStrikesCritFreqKill > 0 ? 1f / cobraStrikesCritFreqKill : 0;
                 float cobraStrikesCritFreqInv = cobraStrikesCritFreqSteadyInv + cobraStrikesCritFreqArcaneInv + cobraStrikesCritFreqKillInv;
-                float cobraStrikesCritFreq = cobraStrikesCritFreqInv > 0 ? 1 / cobraStrikesCritFreqInv : 0;
+                float cobraStrikesCritFreq = cobraStrikesCritFreqInv > 0 ? 1f / cobraStrikesCritFreqInv : 0;
                 float cobraStrikesProcAdjust = cobraStrikesCritFreq / cobraStrikesProc;
 
-                float cobraStrikesFreqSteadyInv = calculatedStats.steadyShot.Freq > 0 ? 1 / calculatedStats.steadyShot.Freq : 0;
-                float cobraStrikesFreqArcaneInv = calculatedStats.arcaneShot.Freq > 0 ? 1 / calculatedStats.arcaneShot.Freq : 0;
-                float cobraStrikesFreqKillInv = calculatedStats.killShot.Freq > 0 ? 1 / calculatedStats.killShot.Freq : 0;
+                float cobraStrikesFreqSteadyInv = calculatedStats.steadyShot.Freq > 0 ? 1f / calculatedStats.steadyShot.Freq : 0;
+                float cobraStrikesFreqArcaneInv = calculatedStats.arcaneShot.Freq > 0 ? 1f / calculatedStats.arcaneShot.Freq : 0;
+                float cobraStrikesFreqKillInv = calculatedStats.killShot.Freq > 0 ? 1f / calculatedStats.killShot.Freq : 0;
                 float cobraStrikesFreqInv = cobraStrikesFreqSteadyInv + cobraStrikesFreqArcaneInv + cobraStrikesFreqKillInv;
 
-                float cobraStrikesTwoSpecials = 2 * priorityRotation.petSpecialFrequency;
+                float cobraStrikesTwoSpecials = 2f * priorityRotation.petSpecialFrequency;
                 float cobraStrikesUptime = 1f - (float)Math.Pow(1f - calculatedStats.steadyShot.CritChance * cobraStrikesProc, cobraStrikesFreqInv * cobraStrikesTwoSpecials);
 
-                calculatedStats.petCritFromCobraStrikes = (cobraStrikesUptime + (1 - cobraStrikesUptime) * calculatedStats.petCritTotalMelee) - calculatedStats.petCritTotalMelee;
+                calculatedStats.petCritFromCobraStrikes = (cobraStrikesUptime + (1f - cobraStrikesUptime) * calculatedStats.petCritTotalMelee) - calculatedStats.petCritTotalMelee;
             }
 
             calculatedStats.petCritTotalSpecials = calculatedStats.petCritTotalMelee + calculatedStats.petCritFromCobraStrikes; // PetCritChance
@@ -197,64 +194,40 @@ namespace Rawr.Hunter
 
             #endregion
             #region Attack Speed
+            float attackSpeedBase = CalcOpts.PetFamily == PetFamily.None ? 0.0f : 2.0f;
 
             float attackSpeedFromSerpentsSwiftness = 1f + (character.HunterTalents.SerpentsSwiftness * 0.04f);
-            float attackSpeedFromHeroism = 1f + calculatedStats.hasteFromHeroism;
             float attackSpeedFromCobraReflexes = 1f + (CalcOpts.PetTalents.CobraReflexes.Value * 0.15f);
-            float attackSpeedFromMultiplicitiveHasteBuffs = 1 + statsBuffs.PhysicalHaste;
+            float attackSpeedFromMultiplicitiveHasteBuffs = 1f + statsPetBuffs.PhysicalHaste;
             float attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
-                                     * attackSpeedFromHeroism
                                      * attackSpeedFromCobraReflexes
                                      * attackSpeedFromMultiplicitiveHasteBuffs;
 
-            float attackSpeedBase = CalcOpts.PetFamily == PetFamily.None ? 0.0f : 2.0f;
             float attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
 
-            // Frenzy
-            float attackSpeedFrenzyUptime = 0;
-            if (character.HunterTalents.Frenzy > 0)
-            {
-                float frenzyNormalSpeed = attackSpeedAdjusted; // L5
-                float frenzySpecialSpeed = priorityRotation.petSpecialFrequency; // L6
-                float frenzyFrenziedSpeed = frenzyNormalSpeed / 1.3f; // L7
-                float frenzyNumberAttacks = (float)Math.Floor(8f / frenzyFrenziedSpeed) + (frenzySpecialSpeed == 0f ? 0f : (8f / frenzySpecialSpeed)); // L8
-
-                float frenzyNormalSpeedInvert = frenzyNormalSpeed > 0 ? 1f / frenzyNormalSpeed : 0f; // 1/L5
-                float frenzySpecialSpeedInvert = frenzySpecialSpeed > 0 ? 1f / frenzySpecialSpeed : 0f; // 1/L6
-
-                float frenzyChancePart1 = frenzySpecialSpeed > 0 ? calculatedStats.petCritTotalSpecials * (frenzySpecialSpeedInvert / (frenzyNormalSpeedInvert + frenzySpecialSpeedInvert)) : 0;
-                float frenzyChancePart2 = frenzyNormalSpeed > 0 ? calculatedStats.petCritTotalMelee * (frenzyNormalSpeedInvert / (frenzyNormalSpeedInvert + frenzySpecialSpeedInvert)) : 0;
-
-                float frenzyChanceToCause = (frenzyChancePart1 + frenzyChancePart2) * character.HunterTalents.Frenzy * 0.2f; // L4
-
-                float frenzyChanceToNot = (float)Math.Pow(1f - frenzyChanceToCause, frenzyNumberAttacks);
-
-                attackSpeedFrenzyUptime = 1f - frenzyChanceToNot;
+            if (character.HunterTalents.Frenzy > 0) {
+                SpecialEffect frenzy = new SpecialEffect(Trigger.MeleeCrit,
+                    new Stats() { PhysicalHaste = 0.30f, },
+                    8f, 0f, character.HunterTalents.Frenzy * 0.20f);
+                float FrenzyHaste = frenzy.GetAverageStats(attackSpeedAdjusted,
+                    calculatedStats.petCritTotalMelee, attackSpeedAdjusted, CalcOpts.Duration).PhysicalHaste;
+                attackSpeedAdjust *= 1f + FrenzyHaste;
             }
+            attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
 
-            float attackSpeedFrenzyBoost = 1f + (0.3f * attackSpeedFrenzyUptime);
+            //float attackSpeedFrenzyBoost = 1f + (0.3f * attackSpeedFrenzyUptime);
 
-            attackSpeedEffective = attackSpeedAdjusted / attackSpeedFrenzyBoost; // EffectivePetAttackSpeed            
+            attackSpeedEffective = attackSpeedAdjusted; // EffectivePetAttackSpeed            
 
             compositeSpeed = 1f / (1f / attackSpeedEffective + (priorityRotation.petSpecialFrequency > 0 ? 1f / priorityRotation.petSpecialFrequency : 0)); // PetCompSpeed
-
             #endregion
             #region Target Debuffs
-
-            // Expertise
-            float hitFromHunterWhole = StatConversion.GetHitFromRating(calculatedStats.BasicStats.HitRating);
-            float expertiseRatingGain = (float)Math.Round(hitFromHunterWhole * 3.25f * 100f);
-            float expertiseDodgeReduced = expertiseRatingGain / 4f / 100f;
-
-            calculatedStats.petTargetDodge = (0.05f + levelDifference * 0.005f) - expertiseDodgeReduced; // PetTargetDodge
-            if (calculatedStats.petTargetDodge < 0) calculatedStats.petTargetDodge = 0;
-
             float armorDebuffSporeCloud = 0;
             float sporeCloudFrequency = priorityRotation.getSkillFrequency(PetAttacks.SporeCloud);
             if (sporeCloudFrequency > 0)
             {
-                float sporeCloudDuration = 9;
-                float sporeCloudUptime = sporeCloudDuration > sporeCloudFrequency ? 1 : sporeCloudDuration / sporeCloudFrequency;
+                float sporeCloudDuration = 9f;
+                float sporeCloudUptime = sporeCloudDuration > sporeCloudFrequency ? 1f : sporeCloudDuration / sporeCloudFrequency;
 
                 armorDebuffSporeCloud = sporeCloudUptime * 0.03f;
             }
@@ -266,10 +239,10 @@ namespace Rawr.Hunter
                 float acidSpitCalcFreq = priorityRotation.getSkillCooldown(PetAttacks.AcidSpit);
                 float acidSpitDuration = 30;
 
-                float acidSpitChanceToApply = calculatedStats.petHitTotal - calculatedStats.petTargetDodge; // V45
+                float acidSpitChanceToApply = 1f - PetChanceToMiss - PetChanceToBeDodged; // V45
                 float acidSpitChancesToMaintain = (float)Math.Floor((acidSpitDuration - 1f) / acidSpitFrequency); // V46
                 float acidSpitChanceToApplyFirst = acidSpitChancesToMaintain == 0 ? 0 : acidSpitChanceToApply; // V47
-                float acidSpitChanceToStop = 1 - acidSpitChanceToApplyFirst; // AcidSpitChanceToStop
+                float acidSpitChanceToStop = 1f - acidSpitChanceToApplyFirst; // AcidSpitChanceToStop
                 float acidSpitAverageTimeToInc = acidSpitChanceToApplyFirst > 0 ? acidSpitFrequency : 0; // AcidSpitTimeToInc
                 float acidSpitTimeSpentAtMax = acidSpitAverageTimeToInc + (acidSpitDuration * acidSpitChanceToStop); // AcidSpitAverageStackTime
 
@@ -385,13 +358,13 @@ namespace Rawr.Hunter
             // setup
             #region Attack Power
 
-            petStats.Strength += statsBuffs.Strength;
-            petStats.Strength *= 1.0f + statsBuffs.BonusStrengthMultiplier;
+            petStats.Strength += statsPetBuffs.Strength;
+            petStats.Strength *= 1.0f + statsPetBuffs.BonusStrengthMultiplier;
 
             float apFromHunterScaling = 0.22f * (1 + CalcOpts.PetTalents.WildHunt.Value * 0.15f);
             calculatedStats.petAPFromStrength = (petStats.Strength - 10f) * 2f;
             calculatedStats.petAPFromHunterVsWild = (float)Math.Floor(calculatedStats.BasicStats.Stamina * (0.1f * character.HunterTalents.HunterVsWild));
-            calculatedStats.petAPFromBuffs = statsBuffs.AttackPower;
+            calculatedStats.petAPFromBuffs = statsPetBuffs.AttackPower;
             calculatedStats.petAPFromHunterRAP = (float)Math.Floor(calculatedStats.apSelfBuffed * apFromHunterScaling);
 
             // Tier 9 4-pice bonus is complex
@@ -419,7 +392,7 @@ namespace Rawr.Hunter
             calculatedStats.petAPFromAnimalHandler = character.HunterTalents.AnimalHandler * 0.05f;
             calculatedStats.petAPFromAspectOfTheBeast = calculatedStats.aspectBonusAPBeast;
 
-            calculatedStats.petAPFromOutsideBuffs = statsBuffs.BonusAttackPowerMultiplier;
+            calculatedStats.petAPFromOutsideBuffs = statsPetBuffs.BonusAttackPowerMultiplier;
 
             calculatedStats.petAPFromRabidProc = 0;
 
@@ -428,15 +401,25 @@ namespace Rawr.Hunter
             SpecialEffect rabid = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusAttackPowerMultiplier = 0.05f },
                 20, rabidCooldown, 0.50f, 5);
-            float rabidUptime = CalcOpts.PetTalents.Rabid.Value * rabid.GetAverageUptime(0f, 1f, 2f, CalcOpts.Duration);
+            //float rabidUptime = CalcOpts.PetTalents.Rabid.Value * rabid.GetAverageUptime(0f, 1f, 2f, CalcOpts.Duration);
 
+            if(CalcOpts.PetTalents.Rabid.Value > 0){
+                SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats() { }, 20f, rabidCooldown);
+                SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit,
+                    new Stats() { BonusAttackPowerMultiplier = 0.05f }, 20f, 0f, 0.50f, 5);
+                calculatedStats.petAPFromRabidProc = secondary.Stats.BonusAttackPowerMultiplier
+                    * (secondary.GetAverageStackSize(compositeSpeed, (1f - PetChanceToMiss - PetChanceToBeDodged), compositeSpeed, CalcOpts.Duration)
+                    * primary.GetAverageUptime(0f, 1f, compositeSpeed, CalcOpts.Duration));
+            }
+
+            /* OBSOLETE WITH SPECIAL EFFECTS
             if (rabidUptime > 0)
             {
                 float rabidDuration = 20; // Q24
                 // Q25 - rabidCooldown
                 float rabidEffectiveRate = compositeSpeed; // Q26
-                float rabidHit = calculatedStats.petHitTotal; // Q27
-                float rabidDodge = calculatedStats.petTargetDodge; // Q28
+                float rabidHit = PetChanceToMiss;
+                float rabidDodge = PetChanceToBeDodged; // Q28
                 float rabidChanceToApply = 0.5f * (rabidHit - rabidDodge); // Q29
                 float rabidChancesToMaintain = rabidUptime > 0 ? rabidCooldown / rabidEffectiveRate : 0; // Q30
 
@@ -521,7 +504,7 @@ namespace Rawr.Hunter
                 calculatedStats.petAPFromRabidProc = rabidEffectiveRate > 0 ? stacks[0].total + stacks[1].total + stacks[2].total + stacks[3].total
                                                                + stacks[4].total + stacks[5].total + stacks[6].total : 0;
             }
-
+            */
             float apScalingFactor = 1f
                                  //* (1f + calculatedStats.petAPFromCallOfTheWild)
                                  * (1f + calculatedStats.petAPFromRabidProc)
@@ -552,9 +535,9 @@ namespace Rawr.Hunter
             if (levelDifference == 2) levelResistFactor = 0.06f;
             if (levelDifference == 3) levelResistFactor = 0.08f;
             
-            float fullResist = levelResistFactor - calculatedStats.petHitSpellTotal;
+            float fullResist = levelResistFactor - (1f - PetChanceToSpellMiss);
             if (fullResist < 0) fullResist = 0;
-            float fullResistDamageAdjust = 1 - fullResist;
+            float fullResistDamageAdjust = 1f - fullResist;
 
             //Partial Resists (Spell Hit)
             float averageResist = (CalcOpts.TargetLevel - character.Level) * 0.02f;
@@ -566,19 +549,18 @@ namespace Rawr.Hunter
             #region Damage Adjustments
 
             // Dodge adjust can't help us, only hinder
-            float damageAdjustDodge = Math.Min(1f, 1f - calculatedStats.petTargetDodge);
+            float damageAdjustDodge = Math.Min(1f, 1f - PetChanceToBeDodged);
 
-            float damageAdjustHitCritMelee    = (2 * calculatedStats.petCritTotalMelee   ) + (calculatedStats.petHitTotal - calculatedStats.petCritTotalMelee    - calculatedStats.petTargetDodge);
-            float damageAdjustHitCritSpecials = (2 * calculatedStats.petCritTotalSpecials) + (calculatedStats.petHitTotal - calculatedStats.petCritTotalSpecials - calculatedStats.petTargetDodge); // CritAdjustments
+            float damageAdjustHitCritMelee    = (2f * calculatedStats.petCritTotalMelee   ) + (1f - (PetChanceToMiss + PetChanceToBeDodged) - calculatedStats.petCritTotalMelee);
+            float damageAdjustHitCritSpecials = (2f * calculatedStats.petCritTotalSpecials) + (1f - (PetChanceToMiss + PetChanceToBeDodged) - calculatedStats.petCritTotalSpecials); // CritAdjustments
 
             float damageAdjustUnleashedFury = 1f + (character.HunterTalents.UnleashedFury * 0.03f);
             float damageAdjustMood = CalcOpts.PetHappinessLevel == PetHappiness.Happy ? 1.25f : CalcOpts.PetHappinessLevel == PetHappiness.Content ? 1f : 0.75f;
             float damageAdjustSpikedCollar = 1f + (CalcOpts.PetTalents.SpikedCollar.Value * 0.03f);
             float damageAdjustRaceModifier = character.Race == CharacterRace.Orc ? 1.05f : 1f;
-            float damageAdjustGearModifier = isWearingBeastTamersShoulders ? 1.03f : 1f;
             float damageAdjustFerociousInspiration = calculatedStats.ferociousInspirationDamageAdjust;
             float damageAdjustKindredSpirits = 1f + (character.HunterTalents.KindredSpirits * 0.04f);
-            float damageAdjustSancRetributionAura = 1f + statsBuffs.BonusDamageMultiplier;
+            float damageAdjustSancRetributionAura = 1f + statsPetBuffs.BonusDamageMultiplier;
             float damageAdjustTier7Bonus = 1f + statsHunterBuffs.BonusPetDamageMultiplier;
             float damageAdjustBonusPetDamageMult = 1f + StatS.BonusPetDamageMultiplier;
             float damageAdjustSharkAttack = 1f + (CalcOpts.PetTalents.SharkAttack.Value * 0.03f);
@@ -630,7 +612,7 @@ namespace Rawr.Hunter
                 float monstrousBiteUseFreq = monstrousBiteFrequency;
                 float monstrousBiteDuration = 12;
 
-                float monstrousBiteChanceToApply = calculatedStats.petHitTotal - calculatedStats.petTargetDodge;
+                float monstrousBiteChanceToApply = 1f - PetChanceToMiss - PetChanceToBeDodged;
                 float monstrousBiteChancesToMaintain = 1;
 
                 float monstrousBiteChanceToApplyFirst = monstrousBiteChancesToMaintain == 0 ? 0 : monstrousBiteChanceToApply;
@@ -681,7 +663,7 @@ namespace Rawr.Hunter
 
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
             float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(
-                character.Level, CalcOpts.TargetArmor, statsBuffs.ArmorPenetration, 0f, 0f);
+                character.Level, CalcOpts.TargetArmor, statsPetBuffs.ArmorPenetration, 0f, 0f);
 
             float damageAdjustBase = 1f
                     * damageAdjustBonusPetDamageMult
@@ -689,7 +671,6 @@ namespace Rawr.Hunter
                     * damageAdjustMood
                     * damageAdjustSpikedCollar
                     * damageAdjustRaceModifier
-                    * damageAdjustGearModifier
                     * damageAdjustFerociousInspiration
                  // * damageAdjustBeastialWrath
                     * damageAdjustKindredSpirits

@@ -38,12 +38,6 @@ namespace Rawr.Hunter
         #endregion
 
         #region Pet Hit
-        public float petHitFromBase { get; set; }
-        public float petHitFromTargetDebuffs { get; set; }
-        public float petHitFromFocusedAim { get; set; }
-        public float petHitFromRacial { get; set; }
-        public float petHitFromHunter { get; set; }
-        public float petHitFromLevelAdjust { get; set; }
         public float petHitTotal { get; set; }
         public float petHitSpellTotal { get; set; }
         #endregion
@@ -83,7 +77,6 @@ namespace Rawr.Hunter
         #endregion
 
         #region Haste Stats
-        public float hasteFromHeroism { get; set; }
         public float hasteFromTalentsStatic { get; set; }
         public float hasteFromRapidFire { get; set; }
         public float hasteFromProcs { get; set; }
@@ -385,13 +378,7 @@ namespace Rawr.Hunter
                             petAPFromOutsideBuffs.ToString("P2") + " from outside buffs\n" +
                             petAPFromAnimalHandler.ToString("P2") + " from Animal Handler\n" +
                             petAPFromAspectOfTheBeast.ToString("P2") + " from Aspect of the Beast");
-            dictValues.Add("Pet Hit Percentage", petHitTotal.ToString("P2") + "*includes:\n" +
-                            petHitFromBase.ToString("P2") + " from base\n"+
-                            petHitFromTargetDebuffs.ToString("P2") + " from target debuffs\n" +
-                            petHitFromFocusedAim.ToString("P2") + " from Focused Aim\n" +
-                            petHitFromRacial.ToString("P2") + " from Racial\n" +
-                            petHitFromHunter.ToString("P2") + " from Hunter\n" +
-                            petHitFromLevelAdjust.ToString("P2") + " from level penalty");
+            dictValues.Add("Pet Hit Percentage", petHitTotal.ToString("P2"));
             dictValues.Add("Pet Melee Crit Percentage", petCritTotalMelee.ToString("P2") + "*includes:\n" +
                             petCritFromBase.ToString("P2") + " from base\n" +
                             petCritFromAgility.ToString("P2") + " from agility\n" +

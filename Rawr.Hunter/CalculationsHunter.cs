@@ -536,12 +536,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (buff.Group == "Set Bonuses") return false;
             if (buff.Group == "Profession Buffs") return false;
             if (buff.Group == "Temporary Buffs") return false;
+            if (buff.Group == "Potion") return false;
             if (buff.Group == "Critical Strike Chance Taken") return false; // target debuff
+            //if (buff.Group == "Heroism/Bloodlust") return true;
 
             // Greater Blessing of Kings
             if (buff.Stats.BonusAgilityMultiplier != 0) return true;
             if (buff.Stats.BonusStrengthMultiplier != 0) return true;
-            if (buff.Stats.BonusStaminaMultiplier != 0) return true;
+            //if (buff.Stats.BonusStaminaMultiplier != 0) return true;
 
             //Commanding Shout & Blood Pact
             //if (buff.Stats.Health != 0) return true;
@@ -564,14 +566,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 		    if (buff.Stats.PhysicalHaste != 0) return true;
 
             // Ret Aura & Feroc. Insp.
-		    if (buff.Stats.BonusDamageMultiplier  != 0) return true;
-
-            // Draenei racial (not you)
-		    if (buff.Stats.PhysicalHit != 0) return true;
+		    if (buff.Stats.BonusDamageMultiplier != 0) return true;
 
             // Pet Food
             //if (buff.Stats.PetStamina != 0) return true;
             if (buff.Stats.PetStrength != 0) return true;
+
+            if (buff.Stats._rawSpecialEffectData != null && buff.Stats._rawSpecialEffectData.Length > 0) {
+                return IsPetBuffRelevant(new Buff() { Group = buff.Group, Stats = buff.Stats._rawSpecialEffectData[0].Stats });
+            }
 
             return false;
         }
@@ -2425,6 +2428,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Hit
             statsTotal.HitRating += statsTotal.RangedHitRating;
             statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating);
+            statsTotal.SpellHit += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.SpellHitRating);
 
             // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
             // (20-(20/15)) = 18.66666
@@ -2443,6 +2447,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float attemptedAtksInterval = 1f, petattemptedAtksInterval = 1f;
             float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - statsTotal.PhysicalHit);
+            float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(calcOpts.TargetLevel - character.Level, false) - statsTotal.SpellHit);
             float hitRate = (1f - ChanceToMiss);
             float critRate = statsTotal.PhysicalCrit;
             float bleedHitInterval = 1f;
