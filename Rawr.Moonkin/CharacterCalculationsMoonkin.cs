@@ -41,26 +41,79 @@ namespace Rawr.Moonkin
             retVal.Add("Intellect", baseStats.Intellect.ToString());
             retVal.Add("Spirit", baseStats.Spirit.ToString());
             retVal.Add("Spell Power", SpellPower.ToString());
-            retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating", 100 * SpellHit, baseStats.HitRating));
-            retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating", 100 * SpellCrit, baseStats.CritRating));
-            retVal.Add("Spell Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * SpellHaste, baseStats.HasteRating));
-            retVal.Add("O5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen, ManaRegen * 5.0f));
-            retVal.Add("I5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen5SR, ManaRegen5SR * 5.0f));
-            retVal.Add("Sustained DPS Rotation", RotationName);
-            retVal.Add("Burst DPS Rotation", DpsRotationName);
-            retVal.Add("Sustained Damage Points", String.Format("{0:F2}",SubPoints[0]));
-            retVal.Add("Burst Damage Points", String.Format("{0:F2}",SubPoints[1]));
-            retVal.Add("Overall Points", String.Format("{0:F2}",SubPoints[0]+SubPoints[1]));
+            retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating, {2:F}% Hit From Gear, {3} Rating To Cap",
+                100 * SpellHit,
+                baseStats.HitRating,
+                100 * StatConversion.GetSpellHitFromRating(baseStats.HitRating),
+                StatConversion.GetRatingFromHit(Math.Max(0, 0.17f - SpellHit))));
+            retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating, {2:F}% Crit From Gear, {3:F}% Crit From Intellect",
+                100 * SpellCrit,
+                baseStats.CritRating,
+                100 * StatConversion.GetSpellCritFromRating(baseStats.CritRating),
+                100 * StatConversion.GetSpellCritFromIntellect(baseStats.Intellect)));
+            retVal.Add("Spell Haste", String.Format("{0:F}%*{1} Haste Rating, {2:F}% Haste From Gear",
+                100 * SpellHaste,
+                baseStats.HasteRating,
+                100 * StatConversion.GetSpellHasteFromRating(baseStats.HasteRating)));
+            retVal.Add("MP5 Not Casting", String.Format("{0:F0}", ManaRegen * 5.0f));
+            retVal.Add("MP5 While Casting", String.Format("{0:F0}", ManaRegen5SR * 5.0f));
+            retVal.Add("Total Score", String.Format("{0:F2}", SubPoints[0]+SubPoints[1]));
+            retVal.Add("Selected Rotation", SelectedRotation.Name);
+            retVal.Add("Selected DPS", String.Format("{0:F2}", SelectedRotation.RotationData.DPS));
+            retVal.Add("Selected Time To OOM", String.Format(SelectedRotation.RotationData.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", SelectedRotation.RotationData.TimeToOOM.Minutes, SelectedRotation.RotationData.TimeToOOM.Seconds));
+            retVal.Add("Selected Cycle Length", String.Format("{0:F1} s", SelectedRotation.Duration));
 
-            foreach (KeyValuePair<string, RotationData> pair in Rotations)
-            {
-                RotationData r = pair.Value;
-                string name = pair.Key;
-                retVal.Add(name + " BDPS", String.Format("{0:F}", r.BurstDPS));
-                retVal.Add(name + " DPS", String.Format("{0:F}", r.DPS));
-                retVal.Add(name + " DPM", String.Format("{0:F}", r.DPM));
-                retVal.Add(name + " OOM", String.Format(r.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", r.TimeToOOM.Minutes, r.TimeToOOM.Seconds));
-            }
+            StringBuilder sb = new StringBuilder("*");
+            float rotationDamage = SelectedRotation.RotationData.DPS * SelectedRotation.Duration;
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Starfire", 100 * SelectedRotation.Solver.Starfire.DamagePerHit * SelectedRotation.StarfireCount / rotationDamage,
+                SelectedRotation.Solver.Starfire.DamagePerHit * SelectedRotation.StarfireCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Moonfire", 100 * (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts / rotationDamage,
+                (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Insect Swarm", 100 * SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks) / rotationDamage,
+                SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks)));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Wrath", 100 * SelectedRotation.Solver.Wrath.DamagePerHit * SelectedRotation.WrathCount / rotationDamage,
+                SelectedRotation.Solver.Wrath.DamagePerHit * SelectedRotation.WrathCount));
+
+            retVal.Add("Selected Spell Breakdown", sb.ToString());
+            retVal.Add("Burst Rotation", BurstDPSRotation.Name);
+            retVal.Add("Burst DPS", String.Format("{0:F2}", BurstDPSRotation.RotationData.DPS));
+            retVal.Add("Burst Time To OOM", String.Format(BurstDPSRotation.RotationData.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", BurstDPSRotation.RotationData.TimeToOOM.Minutes, BurstDPSRotation.RotationData.TimeToOOM.Seconds));
+            retVal.Add("Burst Cycle Length", String.Format("{0:F1} s", BurstDPSRotation.Duration));
+
+            sb = new StringBuilder("*");
+            rotationDamage = BurstDPSRotation.RotationData.DPS * BurstDPSRotation.Duration;
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Starfire", 100 * BurstDPSRotation.Solver.Starfire.DamagePerHit * BurstDPSRotation.StarfireCount / rotationDamage,
+                BurstDPSRotation.Solver.Starfire.DamagePerHit * BurstDPSRotation.StarfireCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Moonfire", 100 * (BurstDPSRotation.Solver.Moonfire.DamagePerHit + BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts / rotationDamage,
+                (BurstDPSRotation.Solver.Moonfire.DamagePerHit + BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) * BurstDPSRotation.MoonfireCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Insect Swarm", 100 * BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (BurstDPSRotation.InsectSwarmTicks / BurstDPSRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks) / rotationDamage,
+                BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (BurstDPSRotation.InsectSwarmTicks / BurstDPSRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks)));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Wrath", 100 * BurstDPSRotation.Solver.Wrath.DamagePerHit * BurstDPSRotation.WrathCount / rotationDamage,
+                BurstDPSRotation.Solver.Wrath.DamagePerHit * BurstDPSRotation.WrathCount));
+
+            retVal.Add("Burst Spell Breakdown", sb.ToString());
+            retVal.Add("Starfire", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} s w/NG\n{3:F2} avg hit\n{4:F0} avg mana",
+                SelectedRotation.Solver.Starfire.DamagePerHit / SelectedRotation.Solver.Starfire.CastTime,
+                SelectedRotation.Solver.Starfire.CastTime,
+                SelectedRotation.Solver.Starfire.NGCastTime,
+                SelectedRotation.Solver.Starfire.DamagePerHit,
+                SelectedRotation.Solver.Starfire.ManaCost));
+            retVal.Add("Wrath", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} s w/NG\n{3:F2} avg hit\n{4:F0} avg mana",
+                SelectedRotation.Solver.Wrath.DamagePerHit / SelectedRotation.Solver.Wrath.CastTime,
+                SelectedRotation.Solver.Wrath.CastTime,
+                SelectedRotation.Solver.Wrath.NGCastTime,
+                SelectedRotation.Solver.Wrath.DamagePerHit,
+                SelectedRotation.Solver.Wrath.ManaCost));
+            retVal.Add("Moonfire", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} avg hit\n{3:F0} avg mana",
+                (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) / SelectedRotation.Solver.Moonfire.DotEffect.Duration,
+                SelectedRotation.Solver.Moonfire.CastTime,
+                (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit),
+                SelectedRotation.Solver.Moonfire.ManaCost));
+            retVal.Add("Insect Swarm", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} avg hit\n{3:F0} avg mana",
+                SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit / SelectedRotation.Solver.InsectSwarm.DotEffect.Duration,
+                SelectedRotation.Solver.InsectSwarm.CastTime,
+                SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit,
+                SelectedRotation.Solver.InsectSwarm.ManaCost));
 
             return retVal;
         }
