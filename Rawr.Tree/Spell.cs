@@ -207,7 +207,7 @@ namespace Rawr.Tree {
             critPercent += 2f * druidTalents.NaturesMajesty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
-            critModifier += 0.1f * druidTalents.LivingSeed;
+            critModifier += 0.1f * druidTalents.LivingSeed * calcOpts.LivingSeedEfficiency / 100f;
 
             // 6% chance to get Omen of Clarity...
             manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
@@ -284,7 +284,7 @@ namespace Rawr.Tree {
 
             critPercent += 5f * druidTalents.NaturesBounty;
             //Living Seed
-            critModifier += 0.1f * druidTalents.LivingSeed;
+            critModifier += 0.1f * druidTalents.LivingSeed * calcOpts.LivingSeedEfficiency / 100f;
 
             // 6% chance to get Omen of Clarity...
             manaCost *= 1f - 0.06f * druidTalents.OmenOfClarity;
@@ -666,7 +666,7 @@ namespace Rawr.Tree {
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             //if (calcOpts.useLivingSeedAsCritMultiplicator)
-            critModifier += 0.1f * druidTalents.LivingSeed;
+            critModifier += 0.1f * druidTalents.LivingSeed * calcOpts.LivingSeedEfficiency / 100f;
 
             // 6% chance to get Omen of Clarity...
             manaCost *= 1f - 0.06f * druidTalents.OmenOfClarity;

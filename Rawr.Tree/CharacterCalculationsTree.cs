@@ -34,7 +34,7 @@ namespace Rawr.Tree {
             haste       = 1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating);
             spellhaste  = 1f + BasicStats.SpellHaste;
             float hard  = (1.5f / (1f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
-            float soft  = (1.5f * (1.0f - 0.04f * LocalCharacter.DruidTalents.GiftOfTheEarthmother) / (1.0f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
+            float soft  = (1.5f / (1f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
             haste_until_hard_cap = hard - BasicStats.HasteRating;
             haste_until_soft_cap = soft - BasicStats.HasteRating;
         }
@@ -113,9 +113,9 @@ namespace Rawr.Tree {
             }
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
 
-            dictValues.Add("Number of tanks",           Simulation.rotSettings.noTanks.ToString());
-            dictValues.Add("Lifebloom method",          LifebloomMethod_ToString(Simulation.rotSettings.lifeBloomStackSize, Simulation.rotSettings.lifeBloomFastStack));
-            dictValues.Add("Extra Tank HoTs",           (Simulation.rotSettings.rgOnTank ? "Regrowth" : "") + (Simulation.rotSettings.rejuvOnTank ? " Rejuv" : ""));
+            //dictValues.Add("Number of tanks",           Simulation.rotSettings.noTanks.ToString());
+            //dictValues.Add("Lifebloom method",          LifebloomMethod_ToString(Simulation.rotSettings.lifeBloomStackSize, Simulation.rotSettings.lifeBloomFastStack));
+            //dictValues.Add("Extra Tank HoTs",           (Simulation.rotSettings.rgOnTank ? "Regrowth" : "") + (Simulation.rotSettings.rejuvOnTank ? " Rejuv" : ""));
             dictValues.Add("HPS for primary heal",      Math.Round(Simulation.HPSFromPrimary,2).ToString());
             dictValues.Add("HPS for tank HoTs",         Math.Round(Simulation.HPSFromHots, 2).ToString() + "*" + Math.Round(Simulation.HPSFromTrueHots, 2).ToString() + " from true HoTs\n" + Math.Round(Simulation.HPSFromHots - Simulation.HPSFromTrueHots, 2).ToString()+" in the form of bursts from Regrowth and LB Blooms");
             dictValues.Add("MPS for primary heal",      Math.Round(Simulation.MPSFromPrimary,2).ToString());

@@ -48,13 +48,16 @@ namespace Rawr.Tree {
 
     public enum SpellList { HealingTouch = 0, Nourish, Regrowth, Rejuvenation };
 
+    public enum LifeBloomType { Slow = 0, Fast, Rolling };
+
     public class RotationSettings {
-        public bool rejuvOnTank, rgOnTank;
-        public int lifeBloomStackSize, noTanks;
-        public bool lifeBloomFastStack;
+        public float averageRejuvs, averageRegrowth, averageLifebloomStacks, averageLifeblooms;
+        public float nourish0, nourish1, nourish2, nourish3, nourish4;
+        public LifeBloomType lifeBloomType;
         public SpellList primaryHeal;
         public HealTargetTypes healTarget;
         public int SwiftmendPerMin, WildGrowthPerMinute;
+        public float livingSeedEfficiency;
     }
 
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", CharacterClass.Druid)]
@@ -390,20 +393,16 @@ applied and result is scaled down by 100)",
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTree(); }
         private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, out float Healing) {
             #region New_SpecialEffect_Handling
-
             Stats resultNew = new Stats();
             foreach (Rawr.SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use) {
                     resultNew += effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration);   // 0 cooldown, 100% chance to use
                 } else if (effect.Trigger == Trigger.SpellCast ) {
                     resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
-                }
-                else if (effect.Trigger == Trigger.HealingSpellCast)
-                {
-                    // Same as SpellCast, but split to allow easir placement of breakpoints
+                } else if (effect.Trigger == Trigger.HealingSpellCast) {
+                    // Same as SpellCast, but split to allow easier placement of breakpoints
                     resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
-                }
-                else if (effect.Trigger == Trigger.HealingSpellHit) {
+                } else if (effect.Trigger == Trigger.HealingSpellHit) {
                     // Heal interval measures time between HoTs as well, direct heals are a different interval
                     resultNew += effect.GetAverageStats(HealInterval, 1.0f, CastInterval, FightDuration);
                 } else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit) {
@@ -412,92 +411,67 @@ applied and result is scaled down by 100)",
                     resultNew += effect.GetAverageStats(RejuvInterval, 1.0f, RejuvInterval, FightDuration);
                 } else {
                     // Trigger isn't relevant. Physical Hit, Damage Spell etc.
-                    //int i = 0;
                 }
             }
             #endregion
+
+            float extraSpellPower = (resultNew.Spirit * character.DruidTalents.ImprovedTreeOfLife * 0.05f);
 
             Healing = resultNew.Healed;
             return new Stats() {
                 Spirit = resultNew.Spirit,
                 HasteRating = resultNew.HasteRating,
-                SpellPower = resultNew.SpellPower,
+                SpellPower = resultNew.SpellPower + extraSpellPower,
                 CritRating = resultNew.CritRating,
                 Mp5 = resultNew.Mp5 + (resultNew.ManaRestore *5.0f),
                 SpellCombatManaRegeneration = resultNew.SpellCombatManaRegeneration,
                 BonusHealingReceived = resultNew.BonusHealingReceived,
                 SpellsManaReduction = resultNew.SpellsManaReduction,
                 HighestStat = resultNew.HighestStat,
-                ShieldFromHealed = resultNew.ShieldFromHealed,
-                
+                ShieldFromHealed = resultNew.ShieldFromHealed,                
             };
         }
         protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings) {
             float primaryFrac;
-            float lifebloomDuration = 0.0f;
 
             #region Setup Spells
-            int hots = 0;
-            if (rotSettings.rejuvOnTank) hots++;
-            if (rotSettings.rgOnTank) hots++;
-            if (rotSettings.lifeBloomStackSize > 0) hots++;
-            //Spell regrowth = new Regrowth(calculatedStats, stats, false);
-            Spell regrowth = new Regrowth(calculatedStats, stats, true);
-            Spell lifebloom = null;
-            if ((rotSettings.lifeBloomStackSize >= 1) && (rotSettings.lifeBloomStackSize <= 3)) {
-                lifebloom = new Lifebloom(calculatedStats, stats, rotSettings.lifeBloomStackSize, rotSettings.lifeBloomFastStack);
-                lifebloomDuration = lifebloom.Duration + 1.0f; // Add 1 sec, to make sure bloom has taken place, before applying again
-            } else if (rotSettings.lifeBloomStackSize == 4) {
-                lifebloom = new LifebloomStack(calculatedStats, stats);
-                lifebloomDuration = lifebloom.Duration;
-            }
+            Spell regrowth = new Regrowth(calculatedStats, stats, false);
+            Spell regrowthAgain = new Regrowth(calculatedStats, stats, true);
+            Spell lifebloom = new Lifebloom(calculatedStats, stats);
+            Spell lifebloomSlowStack = new Lifebloom(calculatedStats, stats, 3, false);
+            Spell lifebloomFastStack = new Lifebloom(calculatedStats, stats, 3, true);
+            Spell lifebloomRollingStack = new LifebloomStack(calculatedStats, stats);
             
             Spell rejuvenate = new Rejuvenation(calculatedStats, stats);
-            //Spell nourish = new Nourish(calculatedStats, stats);
-            //Spell nourishWithHoT = new Nourish(calculatedStats, stats, hots > 0 ? hots : 1);
-            //Spell healingTouch = new HealingTouch(calculatedStats, stats);
+            Spell[] nourish = new Nourish[5];
+            nourish[0] = new Nourish(calculatedStats, stats, 0);
+            nourish[1] = new Nourish(calculatedStats, stats, 1);
+            nourish[2] = new Nourish(calculatedStats, stats, 2);
+            nourish[3] = new Nourish(calculatedStats, stats, 3);
+            nourish[4] = new Nourish(calculatedStats, stats, 4);
+            Spell healingTouch = new HealingTouch(calculatedStats, stats);
             WildGrowth wildGrowth = new WildGrowth(calculatedStats, stats);
-
-            Spell primaryHeal;
-            switch (rotSettings.primaryHeal) {
-                case SpellList.Nourish: {
-                    if (rotSettings.healTarget == HealTargetTypes.RaidHealing) {
-                        primaryHeal = new Nourish(calculatedStats, stats, 0);
-                    } else {
-                        int noTankHots = 0;
-                        noTankHots += (rotSettings.rgOnTank) ? 1 : 0;
-                        noTankHots += (rotSettings.rejuvOnTank) ? 1 : 0;
-                        noTankHots += (rotSettings.lifeBloomStackSize>0) ? 1 : 0;
-                        primaryHeal = new Nourish(calculatedStats, stats, noTankHots);
-                    }
-                    break;
-                }
-                case SpellList.Regrowth    : { primaryHeal = new Regrowth(calculatedStats, stats, rotSettings.healTarget == HealTargetTypes.TankHealing); break; }
-                case SpellList.Rejuvenation: { primaryHeal = new Rejuvenation(calculatedStats, stats); break; }
-                case SpellList.HealingTouch:
-                default: { primaryHeal = new HealingTouch(calculatedStats, stats); break;}
-            }
             #endregion
 
             float castsPerMinute = 0;
             float critsPerMinute = 0;
             float healsPerMinute = 0;
-
             float rejuvTicksPerMinute = 0;
 
             #region WildGrowthPerMinute
-                // If talent isn't chosen disregard WildGrowth
+            // If talent isn't chosen disregard WildGrowth
             float WildGrowthPerMinute = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? rotSettings.WildGrowthPerMinute : 0;
-                
-            float wgCastTime = wildGrowth.CastTime / 60f * WildGrowthPerMinute;
-            float wgMPS = wildGrowth.ManaCost / 60f * WildGrowthPerMinute;
-            float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * WildGrowthPerMinute;  // Assume no overhealing
+
+            float wgCastTime = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? wildGrowth.CastTime / 60f * WildGrowthPerMinute : 0;
+            float wgMPS = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? wildGrowth.ManaCost / 60f * WildGrowthPerMinute : 0;
+            float wgHPS = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? 
+                wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * WildGrowthPerMinute : 0;  // Assume no overhealing
 
             castsPerMinute += WildGrowthPerMinute;
-            healsPerMinute += WildGrowthPerMinute * 10; // assumption it will go 10 times ;)
+            healsPerMinute += WildGrowthPerMinute * wildGrowth.maxTargets * wildGrowth.PeriodicTicks; // Assume no overhealing
             #endregion
 
-            #region HotsOnTanks
+            #region Maintained Hots
             float hotsHPS = 0;
             float trueHotsHPS = 0;
             float hotsCastTime = 0;
@@ -505,46 +479,60 @@ applied and result is scaled down by 100)",
             float hotsCastsPerMinute = 0;
             float hotsCritsPerMinute = 0;
             float hotsHealsPerMinute = 0;
-            if (rotSettings.rejuvOnTank) {
-                hotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
-                trueHotsHPS += rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration); // rejuvenate.HPS to cater for instant tick from T8_4 set bonus
-                hotsMPS += rejuvenate.ManaCost / rejuvenate.Duration;
-                hotsCastTime += rejuvenate.CastTime / rejuvenate.Duration;
-                hotsCastsPerMinute += 60f / rejuvenate.Duration;
-                hotsHealsPerMinute += 20f; // hot component
-                rejuvTicksPerMinute += 20f;
+            if (rotSettings.averageRejuvs > 0) {
+                hotsHPS += rotSettings.averageRejuvs * (rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration));
+                trueHotsHPS += rotSettings.averageRejuvs * (rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration));
+                hotsMPS += rotSettings.averageRejuvs * rejuvenate.ManaCost / rejuvenate.Duration;
+                hotsCastTime += rotSettings.averageRejuvs * rejuvenate.CastTime / rejuvenate.Duration;
+                hotsCastsPerMinute += rotSettings.averageRejuvs * 60f / rejuvenate.Duration;
+                hotsHealsPerMinute += rotSettings.averageRejuvs * 60f / rejuvenate.PeriodicTickTime; 
+                rejuvTicksPerMinute += rotSettings.averageRejuvs * 60f / rejuvenate.PeriodicTickTime;
             }
-            if (rotSettings.rgOnTank) {
-                hotsHPS += regrowth.HPSHoT + regrowth.HPS / regrowth.Duration;
-                trueHotsHPS += regrowth.HPSHoT;
-                hotsMPS += regrowth.ManaCost / regrowth.Duration;
-                hotsCastTime += regrowth.CastTime / regrowth.Duration;
-                hotsCastsPerMinute += 60f / regrowth.Duration;
-                hotsCritsPerMinute += 60f / regrowth.Duration * regrowth.CritPercent / 100f;
-                hotsHealsPerMinute += 60f / regrowth.Duration; // direct component
-                hotsHealsPerMinute += 20f; // hot component
+            if (rotSettings.averageRegrowth > 0) {
+                hotsHPS += rotSettings.averageRegrowth * (regrowth.HPSHoT + regrowth.HPS / regrowth.Duration);
+                trueHotsHPS += rotSettings.averageRegrowth * regrowth.HPSHoT;
+                hotsMPS += rotSettings.averageRegrowth * regrowth.ManaCost / regrowth.Duration;
+                hotsCastTime += rotSettings.averageRegrowth * regrowth.CastTime / regrowth.Duration;
+                hotsCastsPerMinute += rotSettings.averageRegrowth * 60f / regrowth.Duration;
+                hotsCritsPerMinute += rotSettings.averageRegrowth * 60f / regrowth.Duration * regrowth.CritPercent / 100f;
+                hotsHealsPerMinute += rotSettings.averageRegrowth * 60f / regrowth.Duration; // direct component
+                hotsHealsPerMinute += rotSettings.averageRegrowth * 20f; // hot component
             }
-            if ((rotSettings.lifeBloomStackSize > 0) && (lifebloom != null)) {
-                           // HoT part                 Bloom Part
-                hotsHPS += lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloomDuration;
-                trueHotsHPS += lifebloom.HPSHoT;
-                hotsMPS += lifebloom.ManaCost / lifebloomDuration;
-                hotsCastTime += lifebloom.CastTime / lifebloomDuration;
-                hotsCastsPerMinute += 60f / lifebloomDuration;
-                hotsHealsPerMinute += 60f; // hot component
-                hotsCritsPerMinute += 60f / lifebloomDuration * lifebloom.CritPercent / 100f;  // Bloom crits
+            if (rotSettings.averageLifeblooms > 0) {
+                hotsHPS += rotSettings.averageLifeblooms * (lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloom.Duration);
+                trueHotsHPS += rotSettings.averageLifeblooms * lifebloom.HPSHoT;
+                hotsMPS += rotSettings.averageLifeblooms * lifebloom.ManaCost / lifebloom.Duration;
+                hotsCastTime += rotSettings.averageLifeblooms * lifebloom.CastTime / lifebloom.Duration;
+                hotsCastsPerMinute += rotSettings.averageLifeblooms * 60f / lifebloom.Duration;
+                hotsHealsPerMinute += rotSettings.averageLifeblooms * 60f; // hot component
+                hotsCritsPerMinute += rotSettings.averageLifeblooms * 60f / lifebloom.Duration * lifebloom.CritPercent / 100f;  // Bloom crits
             }
-            hotsHPS *= rotSettings.noTanks;
-            trueHotsHPS *= rotSettings.noTanks;
-            hotsMPS *= rotSettings.noTanks;
-            hotsCastTime *= rotSettings.noTanks;
-            hotsCastsPerMinute *= rotSettings.noTanks;
-            hotsCritsPerMinute *= rotSettings.noTanks;
-            hotsHealsPerMinute *= rotSettings.noTanks;
-            castsPerMinute += hotsCastsPerMinute;
-            critsPerMinute += hotsCritsPerMinute;
-            healsPerMinute += hotsHealsPerMinute;
-            rejuvTicksPerMinute *= rotSettings.noTanks;
+            if (rotSettings.averageLifebloomStacks > 0) {
+                Spell spell;
+                float duration;
+                switch (rotSettings.lifeBloomType)
+                {
+                    case LifeBloomType.Slow:
+                        spell = lifebloomSlowStack;
+                        duration = spell.Duration + 1f; // need a second before reapplying
+                        break;
+                    case LifeBloomType.Fast:
+                        spell = lifebloomFastStack;
+                        duration = spell.Duration + 1f; // need a second before reapplying
+                        break;
+                    default:
+                        spell = lifebloomRollingStack;
+                        duration = spell.Duration;
+                        break;
+                }
+                hotsHPS += rotSettings.averageLifebloomStacks * (spell.HPSHoT * spell.Duration + spell.AverageHealingwithCrit) / duration;
+                trueHotsHPS += rotSettings.averageLifebloomStacks * spell.HPSHoT * spell.Duration / duration;
+                hotsMPS += rotSettings.averageLifeblooms * spell.ManaCost / duration;
+                hotsCastTime += rotSettings.averageLifeblooms * spell.CastTime / duration;
+                hotsCastsPerMinute += rotSettings.averageLifeblooms * 60f / duration;
+                hotsHealsPerMinute += rotSettings.averageLifeblooms * 60f; // hot component
+                hotsCritsPerMinute += rotSettings.averageLifeblooms * 60f / duration * spell.CritPercent / 100f;  // Bloom crits
+            }
             #endregion
 
             #region Swiftmend
@@ -552,9 +540,9 @@ applied and result is scaled down by 100)",
             float swiftHPS = 0.0f;
             float swiftMPS = 0.0f;
             float swiftCastTime = 0.0f;
-            if ((hots > 0) && (rotSettings.SwiftmendPerMin > 0) && ( calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0) )
+            if ((rotSettings.averageRejuvs > 0 || rotSettings.averageRegrowth > 0) && (rotSettings.SwiftmendPerMin > 0) && (calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0))
             {
-                swift = new Swiftmend(calculatedStats, stats,(rotSettings.rejuvOnTank ? rejuvenate : null), (rotSettings.rgOnTank ? regrowth : null));
+                swift = new Swiftmend(calculatedStats, stats, rotSettings.averageRejuvs>0?rejuvenate:null, rotSettings.averageRegrowth>0?regrowth:null);
 
                 swiftCastTime = swift.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
                 swiftHPS = swift.TotalAverageHealing * rotSettings.SwiftmendPerMin / 60.0f;
@@ -588,14 +576,7 @@ applied and result is scaled down by 100)",
 
             spiritRegen *= 5.0f;    // Change to MP5, since GetSpiritRegenSec works per sec 
             
-            float replenishment;
-            //if (1){ //calcOpts.Patch3_2
-//                replenishment = stats.Mana * 0.01f * (calcOpts.ReplenishmentUptime / 100f); // Now 1% every 5 sec
-                replenishment = stats.Mana * stats.ManaRestoreFromMaxManaPerSecond * 5.0f * (calcOpts.ReplenishmentUptime / 100f); // Use the buff values (they are /sec, multiply by 5 to get to mp5)
-            
-            /*}else{ // patch 3.1
-                replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);   // Old: 0.25% every sec
-            }*/
+            float replenishment = stats.Mana * stats.ManaRestoreFromMaxManaPerSecond * 5.0f * (calcOpts.ReplenishmentUptime / 100f); // Use the buff values (they are /sec, multiply by 5 to get to mp5)
             float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegen * stats.SpellCombatManaRegeneration;
             float ManaRegenOutFSR = stats.Mp5 + replenishment + spiritRegen;
             //float ManaRegenOutFSRNoCast =  stats.Mp5 + replenishment + 0.2f * spiritRegen + 0.8f * spiritRegen;
@@ -632,10 +613,36 @@ applied and result is scaled down by 100)",
             extraMana += manaFromInnervates;
             #endregion
 
+            #region Primary Heal
+            Spell primaryHeal;
+            switch (rotSettings.primaryHeal)
+            {
+                case SpellList.Nourish:
+                    primaryHeal = nourish[0];
+                    break;
+                case SpellList.Regrowth:
+                    primaryHeal = rotSettings.healTarget == HealTargetTypes.TankHealing ? regrowthAgain : regrowth;
+                    break;
+                case SpellList.Rejuvenation:
+                    primaryHeal = rejuvenate;
+                    break;
+                case SpellList.HealingTouch:
+                default:
+                    primaryHeal = healingTouch;
+                    break;
+            }
+            #endregion
+
             #region Determine if Mana or GCD limited
-            //if (calcOpts.patch3_1) {
-                    primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
-            //}else{primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);}
+            if (primaryHeal is Nourish) {
+                nourish[0].calculateNewNaturesGrace(nourish[0].CritPercent / 100f);
+                nourish[1].calculateNewNaturesGrace(nourish[1].CritPercent / 100f);
+                nourish[2].calculateNewNaturesGrace(nourish[2].CritPercent / 100f);
+                nourish[3].calculateNewNaturesGrace(nourish[3].CritPercent / 100f);
+                nourish[4].calculateNewNaturesGrace(nourish[4].CritPercent / 100f);
+            } else {
+                primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
+            }
 
             float tpsHealing = 1f - (hotsCastTime + wgCastTime + swiftCastTime);
             float MaxPrimaryFraction = 1.0f;
@@ -696,15 +703,47 @@ applied and result is scaled down by 100)",
             float hpsHealing = 0;
             float hpsHeal100 = 0;
             // Wildebees: 20090221 : Changed check to be based on raidHealing, instead of just handling lifebloom and rejuv differently
-            if (rotSettings.healTarget == HealTargetTypes.RaidHealing) {
-                hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
-                //   by total healing by primaryHeal/cast time
-                // This assumes full HoT duration is effective on raid
-                //   members. 
-                hpsHeal100 = tpsHeal100 * primaryHeal.HPCT;
-            }else{
-                hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
-                hpsHeal100 = tpsHeal100 * primaryHeal.HPS;
+            if (primaryHeal is Nourish)
+            {
+                if (rotSettings.healTarget == HealTargetTypes.TankHealing)
+                {
+                    float _hps = rotSettings.nourish0 * nourish[0].HPS +
+                        rotSettings.nourish1 * nourish[1].HPS +
+                        rotSettings.nourish2 * nourish[2].HPS +
+                        rotSettings.nourish3 * nourish[3].HPS +
+                        rotSettings.nourish4 * nourish[4].HPS;
+                    hpsHealing = tpsHealing * _hps;      // For single target healing, don't receive the full HoT effect
+                    hpsHeal100 = tpsHeal100 * _hps;
+                }
+                else
+                {
+                    float _hpct = rotSettings.nourish0 * nourish[0].HPCT +
+                        rotSettings.nourish1 * nourish[1].HPCT +
+                        rotSettings.nourish2 * nourish[2].HPCT +
+                        rotSettings.nourish3 * nourish[3].HPCT +
+                        rotSettings.nourish4 * nourish[4].HPCT;
+                    hpsHealing = tpsHealing * _hpct;     // fraction of time casting primaryHeal multiplied
+                    //   by total healing by primaryHeal/cast time
+                    // This assumes full HoT duration is effective on raid
+                    //   members. 
+                    hpsHeal100 = tpsHeal100 * _hpct;
+                }
+            }
+            else
+            {
+                if (rotSettings.healTarget == HealTargetTypes.RaidHealing)
+                {
+                    hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
+                    //   by total healing by primaryHeal/cast time
+                    // This assumes full HoT duration is effective on raid
+                    //   members. 
+                    hpsHeal100 = tpsHeal100 * primaryHeal.HPCT;
+                }
+                else
+                {
+                    hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
+                    hpsHeal100 = tpsHeal100 * primaryHeal.HPS;
+                }
             }
             mpsHealing = tpsHealing * primaryHeal.ManaCost / primaryHeal.CastTime;
             castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
@@ -790,350 +829,95 @@ applied and result is scaled down by 100)",
                 rotSettings = rotSettings,
             };
         }
-        protected RotationSettings predefinedRotation(int rotation, Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
-            //Rotation result = null;
+        protected RotationSettings predefinedRotation(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
             RotationSettings settings = new RotationSettings();
 
-            settings.lifeBloomFastStack = false;
-
-            switch (rotation) {
-                case 1: { // 1 Tank (RJ/RG/slow 3xLB/N*)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 2: { // 1 Tank (RJ/RG/fast 3xLB/N*)
-                    settings.lifeBloomFastStack = true;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 3: { // 2 Tanks (RJ/RG/LB/N*)
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 4: { // 2 Tank (RJ/RG/slow 3xLB/N*)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 5: { // 2 Tank (RJ/RG/fast 3xLB/N*)
-                    settings.lifeBloomFastStack = true;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 6: { // 1 Tank (RJ/RG/LB/HT*)
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.HealingTouch;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 7: { // 2 Tanks (RJ/RG/LB/HT*)
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.HealingTouch;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 8: { // 1 Tank (RJ/RG/LB/RG*)
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 9: { // 1 Tanks (RJ/RG/slow 3xLB*/RG*)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 10: { // 1 Tanks (RJ/RG/fast 3xLB*/RG*)
-                    settings.lifeBloomFastStack = true;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 11: { // 2 Tanks (RJ/RG/LB/RG*)
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 12: { // 2 Tanks (RJ/RG/slow 3xLB*/RG*)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 13: { // 2 Tanks (RJ/RG/fast 3xLB*/RG*)
-                    settings.lifeBloomFastStack = true;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 14: { // RG Raid (1 Tank RJ/LBStack)
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 15: { // RG Raid (1 Tank RJ/1xLB)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 16: { // RG Raid (2 Tanks RJ/LBStack)
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 17: { // RG Raid (2 Tanks RJ/Slow3xLB)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 18: { // RJ Raid (1 Tank RJ/LBStack)
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Rejuvenation;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 19: { // RJ Raid (1 Tank RJ/3xLB)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Rejuvenation;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 20: { // RJ Raid (2 Tanks RJ/LBStack)
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Rejuvenation;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 21: { // RJ Raid (2 Tanks RJ/3xLB)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Rejuvenation;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 22: { // N Raid (1 Tank RJ/LBStack)
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 23: { // N Raid (1 Tank RJ/3xLB)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 24: { // N Raid (2 Tanks RJ/LBStack)
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 25: { // N Raid (2 Tanks RJ/3xLB)
-                    settings.lifeBloomFastStack = false;
-                    settings.noTanks = 2;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 3;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 26: { // N spam
-                    settings.noTanks = 0;
-                    settings.rejuvOnTank = false;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 0;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 27: { // HT spam
-                    settings.noTanks = 0;
-                    settings.rejuvOnTank = false;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 0;
-                    settings.primaryHeal = SpellList.HealingTouch;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 28: { // RG spam on tank
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = false;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 0;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.TankHealing;
-                    break;
-                }
-                case 29: { // RG spam on raid
-                    settings.noTanks = 0;
-                    settings.rejuvOnTank = false;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 0;
-                    settings.primaryHeal = SpellList.Regrowth;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
-                case 30: { // Rej spam
-                    settings.noTanks = 0;
-                    settings.rejuvOnTank = false;
-                    settings.rgOnTank = false;
-                    settings.lifeBloomStackSize = 0;
-                    settings.primaryHeal = SpellList.Rejuvenation;
-                    settings.healTarget = HealTargetTypes.RaidHealing;
-                    break;
-                }
+            settings.averageRejuvs = (float)calcOpts.AverageRejuv / 4.0f;
+            settings.averageLifeblooms = (float)calcOpts.AverageLifebloom;
+            settings.averageLifebloomStacks = (float)calcOpts.AverageLifebloomStack;
+            settings.averageRegrowth = (float)calcOpts.AverageRegrowths / 4.0f;
+            switch (calcOpts.LifebloomStackType)
+            {
                 case 0:
-                default: { // 1 Tank (RJ/RG/LB/N*)
-                    settings.noTanks = 1;
-                    settings.rejuvOnTank = true;
-                    settings.rgOnTank = true;
-                    settings.lifeBloomStackSize = 4;
-                    settings.primaryHeal = SpellList.Nourish;
-                    settings.healTarget = HealTargetTypes.TankHealing;
+                    settings.lifeBloomType = LifeBloomType.Slow;
                     break;
-                }
+                case 1:
+                    settings.lifeBloomType = LifeBloomType.Fast;
+                    break;
+                case 2:
+                default:
+                    settings.lifeBloomType = LifeBloomType.Rolling;
+                    break;
             }
+            switch (calcOpts.PrimaryHeal)
+            {
+                case 0:
+                default:
+                    settings.primaryHeal = SpellList.Nourish;
+                    break;
+                case 1:
+                    settings.primaryHeal = SpellList.HealingTouch;
+                    break;
+                case 2:
+                    settings.primaryHeal = SpellList.Regrowth;
+                    break;
+                case 3:
+                    settings.primaryHeal = SpellList.Rejuvenation;
+                    break;
+            }
+            settings.nourish1 = (float)calcOpts.Nourish1 / 100f;
+            settings.nourish2 = (float)calcOpts.Nourish2 / 100f;
+            settings.nourish3 = (float)calcOpts.Nourish3 / 100f;
+            settings.nourish4 = (float)calcOpts.Nourish4 / 100f;
+            settings.nourish0 = 1.0f - (settings.nourish1 + settings.nourish2 + settings.nourish3 + settings.nourish4);
+
+            settings.healTarget = HealTargetTypes.RaidHealing;
 
             settings.SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
             settings.WildGrowthPerMinute = calcOpts.WildGrowthPerMinute;
+            settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
             return settings;
         }
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             cacheChar = character;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)character.CalculationOptions;
-            CharacterCalculationsTree calculatedStats = new CharacterCalculationsTree();
-            calculatedStats.LocalCharacter = character;
 
-            calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
+            CharacterCalculationsTree calculationResult = new CharacterCalculationsTree();
+            calculationResult.LocalCharacter = character;
+            calculationResult.BasicStats = GetCharacterStats(character, additionalItem);
 
             #region Rotations
-            Stats combinedStats = calculatedStats.BasicStats;
-            Stats stats = calculatedStats.BasicStats;
+            Stats stats = calculationResult.BasicStats;
             float ExtraHPS = 0f;
-            RotationSettings settings = predefinedRotation(calcOpts.Rotation, stats, calcOpts, calculatedStats);
-            if (calcOpts.Rotation == 99) { settings = calcOpts.customRotationSettings; }
+            RotationSettings settings = predefinedRotation(stats, calcOpts, calculationResult);
 
-            Rotation rot = SimulateHealing(calculatedStats, stats, calcOpts, settings);
+            // Initial run
+            Rotation rot = SimulateHealing(calculationResult, stats, calcOpts, settings);
+
             int nPasses = 3, k;
             for (k = 0; k < nPasses; k++) {
-                Stats procs = getTrinketStats(calculatedStats.LocalCharacter, stats,
+                Stats procs = getTrinketStats(character, stats,
                     rot.TotalTime, 60f / rot.TotalCastsPerMinute,
                     60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
                     60 / rot.RejuvenationHealsPerMinute, 
                     out ExtraHPS);
+
                 // Create a new stats instance that uses the proc effects
-                combinedStats = GetCharacterStats(character, additionalItem, procs);
-                rot = SimulateHealing(calculatedStats, combinedStats, calcOpts, settings);  
+                stats = GetCharacterStats(character, additionalItem, procs);
+
+                // New run
+                rot = SimulateHealing(calculationResult, stats, calcOpts, settings);  
             }
-            calculatedStats.Simulation = rot;
-            calculatedStats.BasicStats = combinedStats;     // Replace BasicStats to get Spirit while casting included
+            calculationResult.Simulation = rot;
+            calculationResult.BasicStats = stats;     // Replace BasicStats to get Spirit while casting included
             #endregion
 
-            calculatedStats.BurstPoints = rot.MaxHPS + ExtraHPS;
-            calculatedStats.SustainedPoints = (rot.TotalHealing + ExtraHPS * rot.TotalTime) / rot.TotalTime;
+            calculationResult.BurstPoints = rot.MaxHPS + ExtraHPS;
+            calculationResult.SustainedPoints = (rot.TotalHealing + ExtraHPS * rot.TotalTime) / rot.TotalTime;
 
             #region Survival Points
-            float DamageReduction = StatConversion.GetArmorDamageReduction(83, combinedStats.Armor, 0, 0, 0);
-            calculatedStats.SurvivalPoints = combinedStats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
+            float DamageReduction = StatConversion.GetArmorDamageReduction(83, stats.Armor, 0, 0, 0);
+            calculationResult.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
             #endregion
 
             /*// Penalty
@@ -1149,13 +933,13 @@ applied and result is scaled down by 100)",
 
             // ADJUST POINT VALUE (BURST SUSTAINED RATIO)
             float bsRatio = .01f * calcOpts.BSRatio;
-            calculatedStats.BurstPoints *= (1f-bsRatio) * 2;
-            calculatedStats.SustainedPoints *= bsRatio * 2;
+            calculationResult.BurstPoints *= (1f-bsRatio) * 2;
+            calculationResult.SustainedPoints *= bsRatio * 2;
 
-            calculatedStats.OverallPoints = calculatedStats.BurstPoints + calculatedStats.SustainedPoints + calculatedStats.SurvivalPoints;
+            calculationResult.OverallPoints = calculationResult.BurstPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
 
             //calcOpts.calculatedStats = calculatedStats;
-            return calculatedStats;
+            return calculationResult;
         }
         public override Stats GetCharacterStats(Character character, Item additionalItem) { return GetCharacterStats(character, additionalItem, new Stats()); }
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statsProcs) {
@@ -1195,27 +979,6 @@ applied and result is scaled down by 100)",
             //statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
             statsTotal.ExtraSpiritWhileCasting = 0f;
 
-            /*if (statsTotal.GreatnessProc>0) {
-                // Highest stat in combat
-                if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect)
-                {
-                    // spirit proc (Greatness)
-                    float extraSpi = statsTotal.GreatnessProc * 15f / 50f;
-                    extraSpi *= 1 + statsTotal.BonusSpiritMultiplier;
-                    extraSpi *= 1 + character.DruidTalents.LivingSpirit * 0.05f;
-                    extraSpi *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
-                    statsTotal.Spirit += (float)Math.Floor(extraSpi);
-                }
-                else {
-                    // int proc (Greatness)
-                    float extraInt = statsTotal.GreatnessProc * 15f / 50f;
-                    extraInt *= 1 + statsTotal.BonusIntellectMultiplier;
-                    extraInt *= 1 + character.DruidTalents.HeartOfTheWild * 0.04f;
-                    extraInt *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
-                    statsTotal.Intellect += (float)Math.Floor(extraInt);
-                }
-            }*/
-
             if (statsTotal.HighestStat > 0) {
                 // Highest stat in combat
                 if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect) {
@@ -1241,15 +1004,12 @@ applied and result is scaled down by 100)",
                                                     + (statsTotal.Intellect * talents.LunarGuidance * 0.04)
                                                     + (talents.NurturingInstinct * 0.35f * statsTotal.Agility));
 
-            //statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f); //don't know why, but it's right..
             statsTotal.Mana = statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
 
-            //statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f);
             statsTotal.Health = (float)Math.Round(statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina));
             statsTotal.Mp5   += (float)Math.Floor(statsTotal.Intellect * (talents.Dreamstate > 0 ? talents.Dreamstate * 0.03f + 0.01f : 0f));
 
-            //statsTotal.SpellCrit = (float)Math.Round((statsTotal.Intellect * 0.006f) + (statsTotal.CritRating / 45.906f) + (statsTotal.SpellCrit*100.0f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
             statsTotal.SpellCrit = (float)Math.Round((StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                                                     + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                                                     + (statsTotal.SpellCrit)
@@ -1261,129 +1021,8 @@ applied and result is scaled down by 100)",
 
             return statsTotal;
         }
-        private ComparisonCalculationTree getRotationData(Character character, int rotation, String rotationName) {
-            CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
-            int old = calcOpts.Rotation;
-            calcOpts.Rotation = rotation;
-            CharacterCalculationsTree calcs = GetCharacterCalculations(character) as CharacterCalculationsTree;
-            calcOpts.Rotation = old;
-            return new ComparisonCalculationTree() {
-                CharacterItems  = character.GetItems(),
-                Name            = rotationName,
-                OverallPoints   = calcs.OverallPoints,
-                BurstPoints     = calcs.BurstPoints,
-                SustainedPoints = calcs.SustainedPoints,
-            };
-        }
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
-            switch (chartName) {
-                case "Spell rotations":
-                    List<ComparisonCalculationBase> comparisonsDPS = new List<ComparisonCalculationBase>();
-
-                    for (int i = 0; i < PredefRotations.Length; i++) {
-                        comparisonsDPS.Add(getRotationData(character, i, PredefRotations[i]));
-                    }   
-
-                    // Tank Healing Rotations
-                    RotationSettings rotSettings = new RotationSettings();
-                    string rotName;
-                    rotSettings.healTarget = HealTargetTypes.TankHealing;
-                    rotSettings.SwiftmendPerMin = ((CalculationOptionsTree)(character.CalculationOptions)).SwiftmendPerMinute;
-                    rotSettings.WildGrowthPerMinute = ((CalculationOptionsTree)(character.CalculationOptions)).WildGrowthPerMinute;
-
-                    for (SpellList spList = SpellList.HealingTouch; spList < SpellList.Rejuvenation; spList++) {
-                        rotSettings.primaryHeal = spList;
-                        for (int noTanks = 1; noTanks < 3; noTanks++) {
-                            rotSettings.noTanks = noTanks;
-                            for (int lbMode = 0; lbMode < 7; lbMode++) {
-                                rotName = "Tx" + noTanks.ToString() + " " + spList.ToString() + " (RG+RJ";
-                                switch (lbMode) {
-                                    case 0: { rotSettings.lifeBloomStackSize = 0;                                       /*rotName += "No LB";*/     break; }
-                                    case 1: { rotSettings.lifeBloomStackSize = 1;                                         rotName += "+1xLB";       break; }
-                                    case 2: { rotSettings.lifeBloomStackSize = 2; rotSettings.lifeBloomFastStack = false; rotName += "+Slow 2xLB";  break; }
-                                    case 3: { rotSettings.lifeBloomStackSize = 3; rotSettings.lifeBloomFastStack = false; rotName += "+Slow 3xLB";  break; }
-                                    case 4: { rotSettings.lifeBloomStackSize = 4; rotSettings.lifeBloomFastStack = false; rotName += "+Rolling LB"; break; }
-                                    case 5: { rotSettings.lifeBloomStackSize = 2; rotSettings.lifeBloomFastStack = true ; rotName += "+Fast 2xLB";  break; }
-                                    case 6: { rotSettings.lifeBloomStackSize = 3; rotSettings.lifeBloomFastStack = true ; rotName += "+Fast 3xLB";  break; }
-                                }
-
-                                rotSettings.rgOnTank = true;
-                                rotSettings.rejuvOnTank = true;
-                                rotName += ")";
-                                ((CalculationOptionsTree)(character.CalculationOptions)).customRotationSettings = rotSettings;
-                                comparisonsDPS.Add(getRotationData(character, 99, rotName));
-                            }
-                        }
-                    }
-
-                    // Raid Healing Rotations
-                    rotSettings.healTarget = HealTargetTypes.RaidHealing;
-                    for (SpellList spList = SpellList.HealingTouch; spList <= SpellList.Rejuvenation; spList++) {
-                        rotSettings.primaryHeal = spList;
-
-                        rotSettings.noTanks = 0;
-                        ((CalculationOptionsTree)(character.CalculationOptions)).customRotationSettings = rotSettings;
-                        rotName = "Raid only " + spList.ToString();
-                        comparisonsDPS.Add(getRotationData(character, 99, rotName));
-
-                        for (int noTanks = 1; noTanks < 3; noTanks++) {
-                            rotSettings.noTanks = noTanks;
-                            for (int lbMode = 0; lbMode < 7; lbMode++) {
-                                rotName = "Raid+Tx" + noTanks.ToString() + " " + spList.ToString() + " (RG+RJ";
-                                switch (lbMode) {
-                                    case 0: {
-                                        rotSettings.lifeBloomStackSize = 0;
-                                        //rotName += "No LB";
-                                        break;
-                                    }
-                                    case 1: {
-                                        rotSettings.lifeBloomStackSize = 1;
-                                        rotName += "+1xLB";
-                                        break;
-                                    }
-                                    case 2: {
-                                        rotSettings.lifeBloomStackSize = 2;
-                                        rotSettings.lifeBloomFastStack = false;
-                                        rotName += "+Slow 2xLB";
-                                        break;
-                                    }
-                                    case 3: {
-                                        rotSettings.lifeBloomStackSize = 3;
-                                        rotSettings.lifeBloomFastStack = false;
-                                        rotName += "+Slow 3xLB";
-                                        break;
-                                    }
-                                    case 4: {
-                                        rotSettings.lifeBloomStackSize = 4;
-                                        rotSettings.lifeBloomFastStack = false;
-                                        rotName += "+Rolling LB";
-                                        break;
-                                    }
-                                    case 5: {
-                                        rotSettings.lifeBloomStackSize = 2;
-                                        rotSettings.lifeBloomFastStack = true;
-                                        rotName += "+Fast 2xLB";
-                                        break;
-                                    }
-                                    case 6: {
-                                        rotSettings.lifeBloomStackSize = 3;
-                                        rotSettings.lifeBloomFastStack = true;
-                                        rotName += "+Fast 3xLB";
-                                        break;
-                                    }
-                                }
-
-                                rotSettings.rgOnTank = true;
-                                rotSettings.rejuvOnTank = true;
-                                rotName += ")";
-                                ((CalculationOptionsTree)(character.CalculationOptions)).customRotationSettings = rotSettings;
-                                comparisonsDPS.Add(getRotationData(character, 99, rotName));
-                            }
-                        }
-                    }
-                    return comparisonsDPS.ToArray();
-                default: { return new ComparisonCalculationBase[0]; }
-            }
+            return new ComparisonCalculationBase[0]; 
         }
         public override Stats GetRelevantStats(Stats stats) {
             //return SpecialEffects.GetRelevantStats(stats) + new Stats()
@@ -1600,8 +1239,6 @@ applied and result is scaled down by 100)",
     }
     public static class TreeConstants {
         // Master is now in Base.BaseStats and Base.StatConversion
-        // Source: http://www.wowwiki.com/Base_mana
         public static float BaseMana;  // Keep since this is more convenient reference than calling the whole BaseStats function every time // = 3496f;
-        //public static float HasteRatingToHaste = 3279f;
     }
 }

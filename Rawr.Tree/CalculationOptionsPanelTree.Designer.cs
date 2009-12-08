@@ -38,16 +38,26 @@
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.lblIdleFraction = new System.Windows.Forms.Label();
+            this.tbNourish1 = new System.Windows.Forms.TrackBar();
+            this.lblNourish1 = new System.Windows.Forms.Label();
+            this.cbPrimarySpell = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cbLifebloomStackType = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tbAvgLifebloomStacks = new System.Windows.Forms.TrackBar();
+            this.lblAvgLifebloomStacks = new System.Windows.Forms.Label();
+            this.tbAvgLifeblooms = new System.Windows.Forms.TrackBar();
             this.tbIdlePercentage = new System.Windows.Forms.TrackBar();
+            this.lblAvgLifeblooms = new System.Windows.Forms.Label();
+            this.tbAvgRegrowths = new System.Windows.Forms.TrackBar();
+            this.lblAvgRegrowths = new System.Windows.Forms.Label();
+            this.tbAvgRejuv = new System.Windows.Forms.TrackBar();
+            this.lblAvgRejuv = new System.Windows.Forms.Label();
+            this.lblIdleFraction = new System.Windows.Forms.Label();
             this.tbSwiftmendPerMin = new System.Windows.Forms.TrackBar();
             this.lblSwiftMend = new System.Windows.Forms.Label();
-            this.tbPrimaryHealFrac = new System.Windows.Forms.TrackBar();
-            this.lblPrimaryHeal = new System.Windows.Forms.Label();
             this.tbWildGrowth = new System.Windows.Forms.TrackBar();
-            this.cbRotation = new System.Windows.Forms.ComboBox();
             this.lblWG = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -61,6 +71,14 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.tbNourish2 = new System.Windows.Forms.TrackBar();
+            this.lblNourish2 = new System.Windows.Forms.Label();
+            this.tbNourish3 = new System.Windows.Forms.TrackBar();
+            this.lblNourish3 = new System.Windows.Forms.Label();
+            this.tbNourish4 = new System.Windows.Forms.TrackBar();
+            this.lblNourish4 = new System.Windows.Forms.Label();
+            this.tbLivingSeed = new System.Windows.Forms.TrackBar();
+            this.lblLivingSeed = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -69,9 +87,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgLifebloomStacks)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgLifeblooms)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbIdlePercentage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgRegrowths)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgRejuv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbSwiftmendPerMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             this.tabPage5.SuspendLayout();
@@ -79,6 +101,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbLivingSeed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -170,6 +196,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.AutoScroll = true;
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -181,164 +208,255 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.lblIdleFraction);
+            this.groupBox7.Controls.Add(this.tbLivingSeed);
+            this.groupBox7.Controls.Add(this.lblLivingSeed);
+            this.groupBox7.Controls.Add(this.tbNourish4);
+            this.groupBox7.Controls.Add(this.lblNourish4);
+            this.groupBox7.Controls.Add(this.tbNourish3);
+            this.groupBox7.Controls.Add(this.lblNourish3);
+            this.groupBox7.Controls.Add(this.tbNourish2);
+            this.groupBox7.Controls.Add(this.lblNourish2);
+            this.groupBox7.Controls.Add(this.tbNourish1);
+            this.groupBox7.Controls.Add(this.lblNourish1);
+            this.groupBox7.Controls.Add(this.cbPrimarySpell);
+            this.groupBox7.Controls.Add(this.label5);
+            this.groupBox7.Controls.Add(this.cbLifebloomStackType);
+            this.groupBox7.Controls.Add(this.label4);
+            this.groupBox7.Controls.Add(this.tbAvgLifebloomStacks);
+            this.groupBox7.Controls.Add(this.lblAvgLifebloomStacks);
+            this.groupBox7.Controls.Add(this.tbAvgLifeblooms);
             this.groupBox7.Controls.Add(this.tbIdlePercentage);
+            this.groupBox7.Controls.Add(this.lblAvgLifeblooms);
+            this.groupBox7.Controls.Add(this.tbAvgRegrowths);
+            this.groupBox7.Controls.Add(this.lblAvgRegrowths);
+            this.groupBox7.Controls.Add(this.tbAvgRejuv);
+            this.groupBox7.Controls.Add(this.lblAvgRejuv);
+            this.groupBox7.Controls.Add(this.lblIdleFraction);
             this.groupBox7.Controls.Add(this.tbSwiftmendPerMin);
             this.groupBox7.Controls.Add(this.lblSwiftMend);
-            this.groupBox7.Controls.Add(this.tbPrimaryHealFrac);
-            this.groupBox7.Controls.Add(this.lblPrimaryHeal);
             this.groupBox7.Controls.Add(this.tbWildGrowth);
-            this.groupBox7.Controls.Add(this.cbRotation);
             this.groupBox7.Controls.Add(this.lblWG);
-            this.groupBox7.Controls.Add(this.label11);
             this.groupBox7.Controls.Add(this.trkFightLength);
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 412);
+            this.groupBox7.Size = new System.Drawing.Size(259, 804);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
             // 
-            // lblIdleFraction
+            // tbNourish1
             // 
-            this.lblIdleFraction.AutoSize = true;
-            this.lblIdleFraction.Location = new System.Drawing.Point(6, 314);
-            this.lblIdleFraction.Name = "lblIdleFraction";
-            this.lblIdleFraction.Size = new System.Drawing.Size(143, 13);
-            this.lblIdleFraction.TabIndex = 56;
-            this.lblIdleFraction.Text = "Non-casting fraction required";
+            this.tbNourish1.BackColor = System.Drawing.SystemColors.Window;
+            this.tbNourish1.Location = new System.Drawing.Point(6, 372);
+            this.tbNourish1.Maximum = 100;
+            this.tbNourish1.Name = "tbNourish1";
+            this.tbNourish1.Size = new System.Drawing.Size(247, 45);
+            this.tbNourish1.TabIndex = 70;
+            this.tbNourish1.TickFrequency = 5;
+            this.tbNourish1.Scroll += new System.EventHandler(this.tbNourish1_Scroll);
+            // 
+            // lblNourish1
+            // 
+            this.lblNourish1.AutoSize = true;
+            this.lblNourish1.Location = new System.Drawing.Point(6, 356);
+            this.lblNourish1.Name = "lblNourish1";
+            this.lblNourish1.Size = new System.Drawing.Size(88, 13);
+            this.lblNourish1.TabIndex = 69;
+            this.lblNourish1.Text = "Nourish on 1 hot:";
+            // 
+            // cbPrimarySpell
+            // 
+            this.cbPrimarySpell.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPrimarySpell.FormattingEnabled = true;
+            this.cbPrimarySpell.Items.AddRange(new object[] {
+            "Nourish",
+            "Healing Touch",
+            "Regrowth",
+            "Rejuvenation"});
+            this.cbPrimarySpell.Location = new System.Drawing.Point(9, 328);
+            this.cbPrimarySpell.MaxDropDownItems = 10;
+            this.cbPrimarySpell.Name = "cbPrimarySpell";
+            this.cbPrimarySpell.Size = new System.Drawing.Size(244, 21);
+            this.cbPrimarySpell.TabIndex = 68;
+            this.cbPrimarySpell.SelectedIndexChanged += new System.EventHandler(this.cbPrimarySpell_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 312);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(68, 13);
+            this.label5.TabIndex = 67;
+            this.label5.Text = "Primary spell:";
+            // 
+            // cbLifebloomStackType
+            // 
+            this.cbLifebloomStackType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbLifebloomStackType.FormattingEnabled = true;
+            this.cbLifebloomStackType.Items.AddRange(new object[] {
+            "Slow build and bloom",
+            "Fast build and bloom",
+            "Rolling no bloom"});
+            this.cbLifebloomStackType.Location = new System.Drawing.Point(9, 285);
+            this.cbLifebloomStackType.MaxDropDownItems = 10;
+            this.cbLifebloomStackType.Name = "cbLifebloomStackType";
+            this.cbLifebloomStackType.Size = new System.Drawing.Size(244, 21);
+            this.cbLifebloomStackType.TabIndex = 66;
+            this.cbLifebloomStackType.SelectedIndexChanged += new System.EventHandler(this.cbLifebloomStackType_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 269);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(107, 13);
+            this.label4.TabIndex = 65;
+            this.label4.Text = "Lifebloom stack type:";
+            // 
+            // tbAvgLifebloomStacks
+            // 
+            this.tbAvgLifebloomStacks.BackColor = System.Drawing.SystemColors.Window;
+            this.tbAvgLifebloomStacks.Location = new System.Drawing.Point(6, 234);
+            this.tbAvgLifebloomStacks.Maximum = 4;
+            this.tbAvgLifebloomStacks.Name = "tbAvgLifebloomStacks";
+            this.tbAvgLifebloomStacks.Size = new System.Drawing.Size(247, 45);
+            this.tbAvgLifebloomStacks.TabIndex = 64;
+            this.tbAvgLifebloomStacks.Scroll += new System.EventHandler(this.tbAvgLifebloomStacks_Scroll);
+            // 
+            // lblAvgLifebloomStacks
+            // 
+            this.lblAvgLifebloomStacks.AutoSize = true;
+            this.lblAvgLifebloomStacks.Location = new System.Drawing.Point(6, 218);
+            this.lblAvgLifebloomStacks.Name = "lblAvgLifebloomStacks";
+            this.lblAvgLifebloomStacks.Size = new System.Drawing.Size(214, 13);
+            this.lblAvgLifebloomStacks.TabIndex = 63;
+            this.lblAvgLifebloomStacks.Text = "Average number of active Lifebloom stacks:";
+            // 
+            // tbAvgLifeblooms
+            // 
+            this.tbAvgLifeblooms.BackColor = System.Drawing.SystemColors.Window;
+            this.tbAvgLifeblooms.Location = new System.Drawing.Point(6, 186);
+            this.tbAvgLifeblooms.Maximum = 6;
+            this.tbAvgLifeblooms.Name = "tbAvgLifeblooms";
+            this.tbAvgLifeblooms.Size = new System.Drawing.Size(247, 45);
+            this.tbAvgLifeblooms.TabIndex = 62;
+            this.tbAvgLifeblooms.Scroll += new System.EventHandler(this.tbAvgLifeblooms_Scroll);
             // 
             // tbIdlePercentage
             // 
             this.tbIdlePercentage.BackColor = System.Drawing.SystemColors.Window;
-            this.tbIdlePercentage.Location = new System.Drawing.Point(6, 330);
+            this.tbIdlePercentage.Location = new System.Drawing.Point(6, 767);
             this.tbIdlePercentage.Maximum = 100;
             this.tbIdlePercentage.Name = "tbIdlePercentage";
-            this.tbIdlePercentage.Size = new System.Drawing.Size(262, 45);
+            this.tbIdlePercentage.Size = new System.Drawing.Size(247, 45);
             this.tbIdlePercentage.TabIndex = 55;
             this.tbIdlePercentage.TickFrequency = 5;
             this.tbIdlePercentage.Scroll += new System.EventHandler(this.tbIdlePercentage_Scroll);
             // 
+            // lblAvgLifeblooms
+            // 
+            this.lblAvgLifeblooms.AutoSize = true;
+            this.lblAvgLifeblooms.Location = new System.Drawing.Point(6, 170);
+            this.lblAvgLifeblooms.Name = "lblAvgLifeblooms";
+            this.lblAvgLifeblooms.Size = new System.Drawing.Size(185, 13);
+            this.lblAvgLifeblooms.TabIndex = 61;
+            this.lblAvgLifeblooms.Text = "Average number of active Lifeblooms:";
+            // 
+            // tbAvgRegrowths
+            // 
+            this.tbAvgRegrowths.BackColor = System.Drawing.SystemColors.Window;
+            this.tbAvgRegrowths.Location = new System.Drawing.Point(6, 135);
+            this.tbAvgRegrowths.Maximum = 24;
+            this.tbAvgRegrowths.Name = "tbAvgRegrowths";
+            this.tbAvgRegrowths.Size = new System.Drawing.Size(247, 45);
+            this.tbAvgRegrowths.TabIndex = 60;
+            this.tbAvgRegrowths.TickFrequency = 4;
+            this.tbAvgRegrowths.Scroll += new System.EventHandler(this.tbAvgRegrowths_Scroll);
+            // 
+            // lblAvgRegrowths
+            // 
+            this.lblAvgRegrowths.AutoSize = true;
+            this.lblAvgRegrowths.Location = new System.Drawing.Point(6, 119);
+            this.lblAvgRegrowths.Name = "lblAvgRegrowths";
+            this.lblAvgRegrowths.Size = new System.Drawing.Size(186, 13);
+            this.lblAvgRegrowths.TabIndex = 59;
+            this.lblAvgRegrowths.Text = "Average number of active Regrowths:";
+            // 
+            // tbAvgRejuv
+            // 
+            this.tbAvgRejuv.BackColor = System.Drawing.SystemColors.Window;
+            this.tbAvgRejuv.Location = new System.Drawing.Point(6, 84);
+            this.tbAvgRejuv.Maximum = 24;
+            this.tbAvgRejuv.Name = "tbAvgRejuv";
+            this.tbAvgRejuv.Size = new System.Drawing.Size(247, 45);
+            this.tbAvgRejuv.TabIndex = 58;
+            this.tbAvgRejuv.TickFrequency = 4;
+            this.tbAvgRejuv.Scroll += new System.EventHandler(this.tbAvgRejuv_Scroll);
+            // 
+            // lblAvgRejuv
+            // 
+            this.lblAvgRejuv.AutoSize = true;
+            this.lblAvgRejuv.Location = new System.Drawing.Point(6, 68);
+            this.lblAvgRejuv.Name = "lblAvgRejuv";
+            this.lblAvgRejuv.Size = new System.Drawing.Size(203, 13);
+            this.lblAvgRejuv.TabIndex = 57;
+            this.lblAvgRejuv.Text = "Average number of active Rejuvenations:";
+            // 
+            // lblIdleFraction
+            // 
+            this.lblIdleFraction.AutoSize = true;
+            this.lblIdleFraction.Location = new System.Drawing.Point(6, 751);
+            this.lblIdleFraction.Name = "lblIdleFraction";
+            this.lblIdleFraction.Size = new System.Drawing.Size(46, 13);
+            this.lblIdleFraction.TabIndex = 56;
+            this.lblIdleFraction.Text = "Idle time";
+            // 
             // tbSwiftmendPerMin
             // 
             this.tbSwiftmendPerMin.BackColor = System.Drawing.SystemColors.Window;
-            this.tbSwiftmendPerMin.Location = new System.Drawing.Point(6, 266);
+            this.tbSwiftmendPerMin.Location = new System.Drawing.Point(6, 703);
             this.tbSwiftmendPerMin.Maximum = 4;
             this.tbSwiftmendPerMin.Name = "tbSwiftmendPerMin";
-            this.tbSwiftmendPerMin.Size = new System.Drawing.Size(262, 45);
+            this.tbSwiftmendPerMin.Size = new System.Drawing.Size(247, 45);
             this.tbSwiftmendPerMin.TabIndex = 54;
             this.tbSwiftmendPerMin.Scroll += new System.EventHandler(this.tbSwiftmend_Scroll);
             // 
             // lblSwiftMend
             // 
             this.lblSwiftMend.AutoSize = true;
-            this.lblSwiftMend.Location = new System.Drawing.Point(6, 250);
+            this.lblSwiftMend.Location = new System.Drawing.Point(6, 687);
             this.lblSwiftMend.Name = "lblSwiftMend";
             this.lblSwiftMend.Size = new System.Drawing.Size(136, 13);
             this.lblSwiftMend.TabIndex = 53;
             this.lblSwiftMend.Text = "Swiftmends cast per minute";
             // 
-            // tbPrimaryHealFrac
-            // 
-            this.tbPrimaryHealFrac.BackColor = System.Drawing.SystemColors.Window;
-            this.tbPrimaryHealFrac.Location = new System.Drawing.Point(9, 138);
-            this.tbPrimaryHealFrac.Maximum = 100;
-            this.tbPrimaryHealFrac.Name = "tbPrimaryHealFrac";
-            this.tbPrimaryHealFrac.Size = new System.Drawing.Size(262, 45);
-            this.tbPrimaryHealFrac.TabIndex = 51;
-            this.tbPrimaryHealFrac.TickFrequency = 5;
-            this.tbPrimaryHealFrac.Visible = false;
-            this.tbPrimaryHealFrac.Scroll += new System.EventHandler(this.tbPrimaryHealFrac_Scroll);
-            // 
-            // lblPrimaryHeal
-            // 
-            this.lblPrimaryHeal.AutoSize = true;
-            this.lblPrimaryHeal.Location = new System.Drawing.Point(6, 122);
-            this.lblPrimaryHeal.Name = "lblPrimaryHeal";
-            this.lblPrimaryHeal.Size = new System.Drawing.Size(103, 13);
-            this.lblPrimaryHeal.TabIndex = 52;
-            this.lblPrimaryHeal.Text = "Primary Heal Usage:";
-            this.lblPrimaryHeal.Visible = false;
-            // 
             // tbWildGrowth
             // 
             this.tbWildGrowth.BackColor = System.Drawing.SystemColors.Window;
-            this.tbWildGrowth.Location = new System.Drawing.Point(6, 202);
+            this.tbWildGrowth.Location = new System.Drawing.Point(6, 639);
             this.tbWildGrowth.Name = "tbWildGrowth";
-            this.tbWildGrowth.Size = new System.Drawing.Size(262, 45);
+            this.tbWildGrowth.Size = new System.Drawing.Size(247, 45);
             this.tbWildGrowth.TabIndex = 39;
             this.tbWildGrowth.Scroll += new System.EventHandler(this.tbWildGrowth_Scroll);
-            // 
-            // cbRotation
-            // 
-            this.cbRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbRotation.FormattingEnabled = true;
-            this.cbRotation.Items.AddRange(new object[] {
-            "Tank Nourish (plus RJ/RG/Roll LB)",
-            "Tank Nourish (plus RJ/RG/Slow 3xLB)",
-            "Tank Nourish (plus RJ/RG/Fast 3xLB)",
-            "Tank Nourish (2 Tanks RJ/RG/LB)",
-            "Tank Nourish (2 Tanks RJ/RG/Slow 3xLB)",
-            "Tank Nourish (2 Tanks RJ/RG/Fast 3xLB)",
-            "Tank Healing Touch (plus RJ/RG/LB)",
-            "Tank Healing Touch (2 Tanks RJ/RG/LB)",
-            "Tank Regrowth (plus RJ/RG/Roll LB)",
-            "Tank Regrowth (plus RJ/RG/Slow 3xLB)",
-            "Tank Regrowth (plus RJ/RG/Fast 3xLB)",
-            "Tank Regrowth (2 Tanks RJ/RG/Roll LB)",
-            "Tank Regrowth (2 Tanks RJ/RG/Slow 3xLB)",
-            "Tank Regrowth (2 Tanks RJ/RG/Fast 3xLB)",
-            "Raid heal with Regrowth (1 Tank RJ/Roll LB)",
-            "Raid heal with Regrowth (1 Tank RJ/Slow 3xLB)",
-            "Raid heal with Regrowth (2 Tanks RJ/Roll LB)",
-            "Raid heal with Regrowth (2 Tanks RJ/Slow 3xLB)",
-            "Raid heal with Rejuv (1 Tank RJ/Roll LB)",
-            "Raid heal with Rejuv (1 Tank RJ/Slow 3xLB)",
-            "Raid heal with Rejuv (2 Tanks RJ/Roll LB)",
-            "Raid heal with Rejuv (2 Tanks RJ/Slow 3xLB)",
-            "Raid heal with Nourish (1 Tank RJ/Roll LB)",
-            "Raid heal with Nourish (1 Tank RJ/Slow 3xLB)",
-            "Raid heal with Nourish (2 Tanks RJ/Roll LB)",
-            "Raid heal with Nourish (2 Tanks RJ/Slow 3xLB)",
-            "Nourish spam",
-            "Healing Touch spam",
-            "Regrowth spam on tank",
-            "Regrowth spam on raid",
-            "Rejuvenation spam on raid"});
-            this.cbRotation.Location = new System.Drawing.Point(9, 34);
-            this.cbRotation.MaxDropDownItems = 10;
-            this.cbRotation.Name = "cbRotation";
-            this.cbRotation.Size = new System.Drawing.Size(262, 21);
-            this.cbRotation.TabIndex = 49;
-            this.cbRotation.SelectedIndexChanged += new System.EventHandler(this.cbRotation_SelectedIndexChanged);
             // 
             // lblWG
             // 
             this.lblWG.AutoSize = true;
-            this.lblWG.Location = new System.Drawing.Point(6, 186);
+            this.lblWG.Location = new System.Drawing.Point(6, 623);
             this.lblWG.Name = "lblWG";
             this.lblWG.Size = new System.Drawing.Size(148, 13);
             this.lblWG.TabIndex = 5;
             this.lblWG.Text = "Wild Growth casts per minute:";
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 18);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(67, 13);
-            this.label11.TabIndex = 48;
-            this.label11.Text = "Spell Usage:";
-            // 
             // trkFightLength
             // 
             this.trkFightLength.BackColor = System.Drawing.SystemColors.Window;
-            this.trkFightLength.Location = new System.Drawing.Point(9, 74);
+            this.trkFightLength.Location = new System.Drawing.Point(6, 33);
             this.trkFightLength.Maximum = 60;
             this.trkFightLength.Minimum = 1;
             this.trkFightLength.Name = "trkFightLength";
-            this.trkFightLength.Size = new System.Drawing.Size(262, 45);
+            this.trkFightLength.Size = new System.Drawing.Size(247, 45);
             this.trkFightLength.TabIndex = 39;
             this.trkFightLength.TickFrequency = 4;
             this.trkFightLength.Value = 1;
@@ -347,7 +465,7 @@
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
-            this.lblFightLength.Location = new System.Drawing.Point(6, 58);
+            this.lblFightLength.Location = new System.Drawing.Point(6, 17);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(69, 13);
             this.lblFightLength.TabIndex = 38;
@@ -481,6 +599,86 @@
             this.tbModuleNotes.Size = new System.Drawing.Size(283, 513);
             this.tbModuleNotes.TabIndex = 0;
             // 
+            // tbNourish2
+            // 
+            this.tbNourish2.BackColor = System.Drawing.SystemColors.Window;
+            this.tbNourish2.Location = new System.Drawing.Point(6, 423);
+            this.tbNourish2.Maximum = 100;
+            this.tbNourish2.Name = "tbNourish2";
+            this.tbNourish2.Size = new System.Drawing.Size(247, 45);
+            this.tbNourish2.TabIndex = 72;
+            this.tbNourish2.TickFrequency = 5;
+            this.tbNourish2.Scroll += new System.EventHandler(this.tbNourish2_Scroll);
+            // 
+            // lblNourish2
+            // 
+            this.lblNourish2.AutoSize = true;
+            this.lblNourish2.Location = new System.Drawing.Point(6, 407);
+            this.lblNourish2.Name = "lblNourish2";
+            this.lblNourish2.Size = new System.Drawing.Size(93, 13);
+            this.lblNourish2.TabIndex = 71;
+            this.lblNourish2.Text = "Nourish on 2 hots:";
+            // 
+            // tbNourish3
+            // 
+            this.tbNourish3.BackColor = System.Drawing.SystemColors.Window;
+            this.tbNourish3.Location = new System.Drawing.Point(6, 474);
+            this.tbNourish3.Maximum = 100;
+            this.tbNourish3.Name = "tbNourish3";
+            this.tbNourish3.Size = new System.Drawing.Size(247, 45);
+            this.tbNourish3.TabIndex = 74;
+            this.tbNourish3.TickFrequency = 5;
+            this.tbNourish3.Scroll += new System.EventHandler(this.tbNourish3_Scroll);
+            // 
+            // lblNourish3
+            // 
+            this.lblNourish3.AutoSize = true;
+            this.lblNourish3.Location = new System.Drawing.Point(6, 458);
+            this.lblNourish3.Name = "lblNourish3";
+            this.lblNourish3.Size = new System.Drawing.Size(93, 13);
+            this.lblNourish3.TabIndex = 73;
+            this.lblNourish3.Text = "Nourish on 3 hots:";
+            // 
+            // tbNourish4
+            // 
+            this.tbNourish4.BackColor = System.Drawing.SystemColors.Window;
+            this.tbNourish4.Location = new System.Drawing.Point(6, 525);
+            this.tbNourish4.Maximum = 100;
+            this.tbNourish4.Name = "tbNourish4";
+            this.tbNourish4.Size = new System.Drawing.Size(247, 45);
+            this.tbNourish4.TabIndex = 76;
+            this.tbNourish4.TickFrequency = 5;
+            this.tbNourish4.Scroll += new System.EventHandler(this.tbNourish4_Scroll);
+            // 
+            // lblNourish4
+            // 
+            this.lblNourish4.AutoSize = true;
+            this.lblNourish4.Location = new System.Drawing.Point(6, 509);
+            this.lblNourish4.Name = "lblNourish4";
+            this.lblNourish4.Size = new System.Drawing.Size(93, 13);
+            this.lblNourish4.TabIndex = 75;
+            this.lblNourish4.Text = "Nourish on 4 hots:";
+            // 
+            // tbLivingSeed
+            // 
+            this.tbLivingSeed.BackColor = System.Drawing.SystemColors.Window;
+            this.tbLivingSeed.Location = new System.Drawing.Point(6, 576);
+            this.tbLivingSeed.Maximum = 100;
+            this.tbLivingSeed.Name = "tbLivingSeed";
+            this.tbLivingSeed.Size = new System.Drawing.Size(247, 45);
+            this.tbLivingSeed.TabIndex = 78;
+            this.tbLivingSeed.TickFrequency = 5;
+            this.tbLivingSeed.Scroll += new System.EventHandler(this.tbLivingSeed_Scroll);
+            // 
+            // lblLivingSeed
+            // 
+            this.lblLivingSeed.AutoSize = true;
+            this.lblLivingSeed.Location = new System.Drawing.Point(6, 560);
+            this.lblLivingSeed.Name = "lblLivingSeed";
+            this.lblLivingSeed.Size = new System.Drawing.Size(108, 13);
+            this.lblLivingSeed.TabIndex = 77;
+            this.lblLivingSeed.Text = "Living Seed average:";
+            // 
             // CalculationOptionsPanelTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -500,9 +698,13 @@
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgLifebloomStacks)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgLifeblooms)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbIdlePercentage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgRegrowths)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAvgRejuv)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbSwiftmendPerMin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             this.tabPage5.ResumeLayout(false);
@@ -512,6 +714,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbNourish4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbLivingSeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -522,10 +728,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.Label lblFightLength;
-        private System.Windows.Forms.TrackBar trkFightLength;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox cbRotation;
         private System.Windows.Forms.TrackBar tbWildGrowth;
         private System.Windows.Forms.Label lblWG;
         private System.Windows.Forms.TabPage tabPage4;
@@ -533,8 +735,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblBSRatio;
         private System.Windows.Forms.TrackBar tbBSRatio;
-        private System.Windows.Forms.TrackBar tbPrimaryHealFrac;
-        private System.Windows.Forms.Label lblPrimaryHeal;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TrackBar tkReplenishment;
         private System.Windows.Forms.Label lblReplenishment;
@@ -551,5 +751,29 @@
         private System.Windows.Forms.TrackBar tbSurvMulti;
         private System.Windows.Forms.Label lblIdleFraction;
         private System.Windows.Forms.TrackBar tbIdlePercentage;
+        private System.Windows.Forms.TrackBar tbAvgLifeblooms;
+        private System.Windows.Forms.Label lblAvgLifeblooms;
+        private System.Windows.Forms.TrackBar tbAvgRegrowths;
+        private System.Windows.Forms.Label lblAvgRegrowths;
+        private System.Windows.Forms.TrackBar tbAvgRejuv;
+        private System.Windows.Forms.Label lblAvgRejuv;
+        private System.Windows.Forms.TrackBar trkFightLength;
+        private System.Windows.Forms.Label lblFightLength;
+        private System.Windows.Forms.ComboBox cbLifebloomStackType;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TrackBar tbAvgLifebloomStacks;
+        private System.Windows.Forms.Label lblAvgLifebloomStacks;
+        private System.Windows.Forms.ComboBox cbPrimarySpell;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TrackBar tbNourish1;
+        private System.Windows.Forms.Label lblNourish1;
+        private System.Windows.Forms.TrackBar tbNourish4;
+        private System.Windows.Forms.Label lblNourish4;
+        private System.Windows.Forms.TrackBar tbNourish3;
+        private System.Windows.Forms.Label lblNourish3;
+        private System.Windows.Forms.TrackBar tbNourish2;
+        private System.Windows.Forms.Label lblNourish2;
+        private System.Windows.Forms.TrackBar tbLivingSeed;
+        private System.Windows.Forms.Label lblLivingSeed;
     }
 }
