@@ -225,11 +225,10 @@ namespace Rawr.ShadowPriest {
                 (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * modifiers;
 
-            if (stats.SWPDurationIncrease > 0) {
-                DebuffDuration = BaseDebuffDuration + stats.SWPDurationIncrease;
-                MinDamage = MaxDamage = MinDamage * DebuffDuration / BaseDebuffDuration;
-                DebuffTicks = BaseDebuffTicks + (int)(stats.SWPDurationIncrease / 3f);
-            }
+            DebuffDuration = BaseDebuffDuration + stats.SWPDurationIncrease;
+            MinDamage *= DebuffDuration / BaseDebuffDuration;
+            MaxDamage = MinDamage;
+            DebuffTicks = BaseDebuffTicks + (int)(stats.SWPDurationIncrease / 3f);
           
             ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
@@ -242,7 +241,7 @@ namespace Rawr.ShadowPriest {
                     + stats.PriestDPS_T10_2pc;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
                 // Apparently made SPriests too good.
-                //    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
+                //    DebuffDuration /= (1f + stats.SpellHaste);
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
@@ -278,12 +277,10 @@ namespace Rawr.ShadowPriest {
             MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * modifiers;
 
-            if (stats.PriestDPS_T9_2pc > 0)
-            {
-                DebuffDuration = BaseDebuffDuration + stats.PriestDPS_T9_2pc;
-                MinDamage *= DebuffDuration / BaseDebuffDuration;
-            }
+            DebuffDuration = BaseDebuffDuration + stats.PriestDPS_T9_2pc;
+            DebuffTicks = BaseDebuffTicks + (int)(stats.PriestDPS_T9_2pc / 3f);
 
+            MinDamage *= DebuffDuration / BaseDebuffDuration;
             MaxDamage = MinDamage;
 
             ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
@@ -296,7 +293,7 @@ namespace Rawr.ShadowPriest {
                     + character.PriestTalents.MindMelt * 0.03f
                     + stats.PriestDPS_T10_2pc;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
-                DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
+                DebuffDuration /= (1f + stats.SpellHaste);
             }
 
             Range = (int)Math.Round(BaseRange * (1f + character.PriestTalents.ShadowReach * 0.1f));
@@ -579,6 +576,9 @@ namespace Rawr.ShadowPriest {
                 (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * modifiers;
 
+            DebuffDuration = BaseDebuffDuration;
+            DebuffTicks = BaseDebuffTicks;
+
             ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
                 * (1f - character.PriestTalents.MentalAgility * 0.1f / 3f));
@@ -589,7 +589,7 @@ namespace Rawr.ShadowPriest {
                     + character.PriestTalents.MindMelt * 0.03f
                     + stats.PriestDPS_T10_2pc;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
-                DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
+                DebuffDuration /= (1f + stats.SpellHaste);
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
