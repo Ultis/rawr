@@ -34,7 +34,8 @@ namespace Rawr.Retribution
     public enum DamageType
     {
         Physical = 0,
-        Holy
+        Holy,
+        Magic
     }
 
     public enum MobType

@@ -1027,6 +1027,10 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrikeHit, new Stats() { Strength = int.Parse(match.Groups["amount"].Value) }, 15f, 0f, 1f, 5));
             }
+            else if ((match = new Regex("Steals (?<amount1>\\d\\d*) to (?<amount2>\\d\\d*) life from target enemy\\.").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ShadowDamage = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f }, 0f, 0f, 0.15f));
+            }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
                 stats.ConsecrationSpellPower = 141f;

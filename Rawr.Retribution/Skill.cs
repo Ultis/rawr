@@ -116,7 +116,7 @@ namespace Rawr.Retribution
                 damage *= (1f + Stats.BonusHolyDamageMultiplier);
             }
             damage *= 1f + Stats.BonusDamageMultiplier;
-            damage *= 1f + .03f * Talents.Vengeance;
+            if (DamageType != DamageType.Magic) damage *= 1f + .03f * Talents.Vengeance;
             if (UsesWeapon) damage *= 1f + .02f * Talents.TwoHandedWeaponSpecialization;
             damage *= (1f + .01f * Talents.Crusade);
             if (CalcOpts.Mob != MobType.Other) damage *= (1f + .01f * Talents.Crusade);
@@ -441,7 +441,7 @@ namespace Rawr.Retribution
         private float amount;
 
         public MagicDamage(CombatStats combats, float amount)
-            : base(combats, AbilityType.Spell, DamageType.Holy, false, false)
+            : base(combats, AbilityType.Spell, DamageType.Magic, false, false)
         {
             this.amount = amount;
         }
