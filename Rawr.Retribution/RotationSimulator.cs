@@ -19,7 +19,7 @@ namespace Rawr.Retribution
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = 100000;
+            sol.FightLength = rot.T10_2pc ? 1000000 : 10000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
 

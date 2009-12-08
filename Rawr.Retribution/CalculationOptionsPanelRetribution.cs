@@ -15,6 +15,9 @@ namespace Rawr.Retribution
         public CalculationOptionsPanelRetribution()
         {
             InitializeComponent();
+#if DEBUG
+            butClearRotate.Visible = true;
+#endif
         }
 
         private bool loading;
