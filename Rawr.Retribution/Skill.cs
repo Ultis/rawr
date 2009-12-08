@@ -149,7 +149,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (Combats.WeaponDamage * .19f + Stats.SpellPower * .13f + Stats.AttackPower * .08f)
-                * (1f + .05f * Talents.TheArtOfWar + (Talents.GlyphOfJudgement ? 0.1f : 0f));
+                * (1f + .05f * Talents.TheArtOfWar + (Talents.GlyphOfJudgement ? 0.1f : 0f + Stats.JudgementMultiplier));
         }
 
         public override float AbilityCritChance()
@@ -167,7 +167,8 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (1f + Stats.SpellPower * .32f + Stats.AttackPower * .2f)
-                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure + (Talents.GlyphOfJudgement ? 0.1f : 0f));
+                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure
+                + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -191,7 +192,8 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * (1f + 0.1f * AverageStackSize)
-                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure + (Talents.GlyphOfJudgement ? 0.1f : 0f));
+                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure
+                + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -308,7 +310,12 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.WeaponDamage * .36f;
+            return (Combats.WeaponDamage * .36f) * (1f + Stats.SealMultiplier);
+        }
+
+        public override float Targets()
+        {
+            return (float)Math.Min(3f, Combats.CalcOpts.Targets);
         }
 
     }
@@ -323,7 +330,8 @@ namespace Rawr.Retribution
             return Combats.BaseWeaponSpeed * (0.022f * Stats.AttackPower + 0.044f * Stats.SpellPower) * (1f
                 + .03f * Talents.SealsOfThePure
                 + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f)
-                + Stats.BonusSealOfRighteousnessDamageMultiplier);
+                + Stats.BonusSealOfRighteousnessDamageMultiplier)
+                + Stats.SealMultiplier;
         }
 
         public override float AbilityCritChance() { return -1f; }
@@ -346,7 +354,8 @@ namespace Rawr.Retribution
         {
             return AverageStackSize * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f * (1f
                 + .03f * Talents.SealsOfThePure
-                + Stats.BonusSealOfVengeanceDamageMultiplier);
+                + Stats.BonusSealOfVengeanceDamageMultiplier
+                + Stats.SealMultiplier);
         }
 
         public override float AbilityCritChance() { return -1f; }
@@ -369,7 +378,8 @@ namespace Rawr.Retribution
         {
             return (Combats.WeaponDamage * 0.066f * AverageStackSize) * (1f
                 + Talents.SealsOfThePure * .03f
-                + Stats.BonusSealOfVengeanceDamageMultiplier);
+                + Stats.BonusSealOfVengeanceDamageMultiplier
+                + Stats.SealMultiplier);
         }
 
         public override float ChanceToLand() { return 1f; }

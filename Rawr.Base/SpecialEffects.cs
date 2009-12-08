@@ -1023,6 +1023,10 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrikeHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f));
             }
+            else if ((match = new Regex("Your Crusader Strike ability grants (?<amount>\\d\\d*) Strength for 15 sec\\. ((nbsp;)| )?Stacks up to 5 times\\.").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrikeHit, new Stats() { Strength = int.Parse(match.Groups["amount"].Value) }, 15f, 0f, 1f, 5));
+            }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
                 stats.ConsecrationSpellPower = 141f;

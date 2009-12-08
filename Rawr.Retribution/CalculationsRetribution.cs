@@ -661,6 +661,7 @@ namespace Rawr.Retribution
                 stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier +  stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
+                stats.SealMultiplier + stats.JudgementMultiplier + stats.DivineStormRefresh +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             return wantedStats;
         }
@@ -715,6 +716,9 @@ namespace Rawr.Retribution
                 CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier,
                 JudgementCrit = stats.JudgementCrit,
                 RighteousVengeanceCanCrit = stats.RighteousVengeanceCanCrit,
+                SealMultiplier = stats.SealMultiplier,
+                JudgementMultiplier = stats.JudgementMultiplier,
+                DivineStormRefresh = stats.DivineStormRefresh
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -740,14 +744,14 @@ namespace Rawr.Retribution
         public override bool HasRelevantStats(Stats stats)
         {
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
-                stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit +
+                stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.DivineStormRefresh +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
-                stats.HammerOfWrathMultiplier + stats.Bloodlust) > 0;
+                stats.HammerOfWrathMultiplier + stats.Bloodlust + stats.SealMultiplier + stats.JudgementMultiplier) > 0;
             bool maybeStats = (stats.Agility + stats.Strength + stats.ExpertiseRating + stats.PhysicalHit +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;

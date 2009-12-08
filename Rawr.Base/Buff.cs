@@ -3349,6 +3349,35 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 10 | Lightsworn
+            #region Battlegear
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lightsworn Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DivineStormRefresh = .4f
+                },
+                SetName = "Lightsworn Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Lightsworn Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    SealMultiplier = .1f,
+                    JudgementMultiplier = .1f
+                },
+                SetName = "Lightsworn Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            #endregion
             #region Plate
             defaultBuffs.Add(new Buff()
             {

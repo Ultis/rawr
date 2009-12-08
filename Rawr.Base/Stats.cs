@@ -305,6 +305,9 @@ namespace Rawr {
         ConsecrationSpellPower,
         JudgementCDReduction,
         JudgementCrit,
+        JudgementMultiplier,
+        SealMultiplier,
+        DivineStormRefresh,
         #endregion
         #region Added by Rawr.ProtPaladin
         BonusShieldOfRighteousnessDamage,
@@ -2510,6 +2513,36 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Retribution
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Seal Damage")]
+        [Category("Retribution")]
+        [Percentage]
+        public float SealMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SealMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SealMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Judgement Damage")]
+        [Category("Retribution")]
+        [Percentage]
+        public float JudgementMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% DS CD Reset on Melee")]
+        [Category("Retribution")]
+        [Percentage]
+        public float DivineStormRefresh
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormRefresh]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormRefresh] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Crusader Strike Damage")]
         [Category("Retribution")]
         public float CrusaderStrikeDamage
@@ -2617,6 +2650,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% Judgement Crit")]
         [Category("Retribution")]
+        [Percentage]
         public float JudgementCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.JudgementCrit]; }
