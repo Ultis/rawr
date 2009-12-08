@@ -123479,7 +123479,41 @@
     <DisplayId>64573</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_misc_noose_01</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ObliterateHit</Trigger>
+          <Stats>
+            <Strength>73</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>ScourgeStrikeHit</Trigger>
+          <Stats>
+            <Strength>73</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>DeathStrikeHit</Trigger>
+          <Stats>
+            <Strength>73</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>3</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Sigil</Type>
     <Faction>Neutral</Faction>
