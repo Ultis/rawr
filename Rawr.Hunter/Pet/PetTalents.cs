@@ -459,45 +459,51 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
 
     public static class PetTalentsBase {
         /// <summary>Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.</summary>
-        public readonly static PetTalentData BloodOfTheRhino = new PetTalentData(1, "Blood Of The Rhino", 2, new string[] {
+        public readonly static PetTalentData BloodOfTheRhino = new PetTalentData(0, "Blood Of The Rhino", 2, new string[] {
             @"Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.",
             @"Increases your pet's total Stamina by 2% and increases all healing effects on your pet by 20%.",
             @"Increases your pet's total Stamina by 4% and increases all healing effects on your pet by 40%." }, "spell_shadow_lifedrain");
         /// <summary>Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.</summary>
-        public readonly static PetTalentData Bloodthirsty = new PetTalentData(2, "Bloodthirsty", 2, new string[] {
+        public readonly static PetTalentData Bloodthirsty = new PetTalentData(1, "Bloodthirsty", 2, new string[] {
             @"Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.",
             @"Your pet's attacks have a 10% chance to increase its happiness by 5% and heal 5% of its total health.",
             @"Your pet's attacks have a 20% chance to increase its happiness by 5% and heal 5% of its total health." }, "ability_druid_primaltenacity");
         /// <summary>Increases your pet's movement speed by 30%.</summary>
-        public readonly static PetTalentData BoarsSpeed = new PetTalentData(3, "Boar's Speed", 1, new string[] {
+        public readonly static PetTalentData BoarsSpeed = new PetTalentData(2, "Boar's Speed", 1, new string[] {
             @"Increases your pet's movement speed by 30%.",
             @"Increases your pet's movement speed by 30%." }, "ability_hunter_pet_boar");
         /// <summary>Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec.</summary>
-        public readonly static PetTalentData Bullheaded = new PetTalentData(4, "Bullheaded", 1, new string[] {
+        public readonly static PetTalentData Bullheaded = new PetTalentData(3, "Bullheaded", 1, new string[] {
             @"Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec.",
             @"Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec." }, "ability_warrior_bullrush");
         /// <summary>Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.</summary>
-        public readonly static PetTalentData CallOfTheWild = new PetTalentData(5, "Call Of The Wild", 1, new string[] {
+        public readonly static PetTalentData CallOfTheWild = new PetTalentData(4, "Call Of The Wild", 1, new string[] {
             @"Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.",
             @"Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown." }, "ability_druid_kingofthejungle");
         /// <summary>Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures.</summary>
-        public readonly static PetTalentData CarrionFeeder = new PetTalentData(6, "Carrion Feeder", 1, new string[] {
+        public readonly static PetTalentData CarrionFeeder = new PetTalentData(5, "Carrion Feeder", 1, new string[] {
             @"Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures.",
             @"Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures." }, "ability_racial_cannibalize");
         /// <summary>Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack.</summary>
-        public readonly static PetTalentData ChargeSwoop = new PetTalentData(7, "Charge/Swoop", 1, new string[] {
+        public readonly static PetTalentData ChargeSwoop = new PetTalentData(6, "Charge/Swoop", 1, new string[] {
             @"Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack.",
             @"Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack." }, "ability_hunter_pet_bear");
         /// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
-        public readonly static PetTalentData CobraReflexes = new PetTalentData(8, "Cobra Reflexes", 2, new string[] {
+        public readonly static PetTalentData CobraReflexes = new PetTalentData(7, "Cobra Reflexes", 2, new string[] {
             @"Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.",
             @"Increases your pet's attack speed by 15%. Your pet will hit faster but each hit will do less damage.",
             @"Increases your pet's attack speed by 30%. Your pet will hit faster but each hit will do less damage." }, "spell_nature_guardianward");
         /// <summary>When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to eb critically hit.</summary>
-        public readonly static PetTalentData Cornered = new PetTalentData(9, "Cornered", 2, new string[] {
+        public readonly static PetTalentData Cornered = new PetTalentData(8, "Cornered", 2, new string[] {
             @"When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to be critically hit.",
             @"When at less than 35% health, your pet does 25% more damage and has a 30% reduced chance to be critically hit.",
             @"When at less than 35% health, your pet does 50% more damage and has a 60% reduced chance to be critically hit." }, "ability_hunter_survivalinstincts");
+        /// <summary>Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.</summary>
+        public readonly static PetTalentData CullingTheHerd = new PetTalentData(9, "Culling The Herd", 3, new string[] {
+            @"Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
+            @"Increases pet and hunter damage by 1% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
+            @"Increases pet and hunter damage by 2% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
+            @"Increases pet and hunter damage by 3% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack." }, "inv_misc_monsterhorn_06");
         /// <summary>Increases your pet's movement speed by 80% for 16 sec.</summary>
         public readonly static PetTalentData DiveDash = new PetTalentData(10, "Dive/Dash", 1, new string[] {
             @"Increases your pet's movement speed by 80% for 16 sec.",
@@ -626,12 +632,6 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         public readonly static PetTalentData WolverineBite = new PetTalentData(36, "Wolverine Bite", 2, new string[] {
             @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.",
             @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried." }, "ability_druid_lacerate");
-        /// <summary>Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.</summary>
-        public readonly static PetTalentData CullingTheHerd = new PetTalentData(37, "Culling The Herd", 3, new string[] {
-            @"Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
-            @"Increases pet and hunter damage by 1% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
-            @"Increases pet and hunter damage by 2% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
-            @"Increases pet and hunter damage by 3% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack." }, "inv_misc_monsterhorn_06");
     }
 
     public class PetTalentTree {
