@@ -578,13 +578,7 @@ namespace Rawr.Mage
             Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
-            int extraScorches = 1;
-            if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
-            {
-                averageScorchesNeeded = 1;
-                extraScorches = 0;
-            }
+            int extraScorches = 0;
 
             // proportion of time casting non-scorch spells has to be less than gap := (30 - (averageScorchesNeeded + extraScorches)) / (30 - extraScorches)
             // 0 HS charge:
@@ -739,13 +733,7 @@ namespace Rawr.Mage
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
-            int extraScorches = 1;
-            if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
-            {
-                averageScorchesNeeded = 1;
-                extraScorches = 0;
-            }
+            int extraScorches = 0;
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float C, H, averageCastTime;
@@ -967,13 +955,7 @@ namespace Rawr.Mage
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
-            int extraScorches = 1;
-            if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
-            {
-                averageScorchesNeeded = 1;
-                extraScorches = 0;
-            }
+            int extraScorches = 0;
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -1125,13 +1107,7 @@ namespace Rawr.Mage
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
-            int extraScorches = 1;
-            if (Sc.HitRate >= 1.0) extraScorches = 0;
-            if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
-            {
-                averageScorchesNeeded = 1;
-                extraScorches = 0;
-            }
+            int extraScorches = 0;
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -1214,13 +1190,7 @@ namespace Rawr.Mage
             {
                 ProvidesScorch = true;
                 int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
-                int extraScorches = 1;
-                if (Sc.HitRate >= 1.0) extraScorches = 0;
-                if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
-                {
-                    averageScorchesNeeded = 1;
-                    extraScorches = 0;
-                }
+                int extraScorches = 0;
                 double timeOnScorch = 30;
                 int fbCount = 0;
 
@@ -1266,12 +1236,7 @@ namespace Rawr.Mage
             else
             {
                 int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
-                int extraScorches = 1;
-                if (castingState.MageTalents.GlyphOfImprovedScorch || castingState.CalculationOptions.Mode33)
-                {
-                    averageScorchesNeeded = 1;
-                    extraScorches = 0;
-                }
+                int extraScorches = 0;
                 double timeOnScorch = 30;
                 int fbCount = 0;
                 float blastCooldown = 0;

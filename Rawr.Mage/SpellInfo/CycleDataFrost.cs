@@ -323,7 +323,7 @@ namespace Rawr.Mage
             BF = 0.05f * castingState.MageTalents.BrainFreeze;
             FOF = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            deepFreeze = castingState.CalculationOptions.Mode33 && useDeepFreeze;
+            deepFreeze = useDeepFreeze;
 
             GenerateStateDescription();
         }
@@ -573,7 +573,7 @@ z = actual count on Fingers of Frost
             BF = 0.05f * castingState.MageTalents.BrainFreeze;
             FOF = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            deepFreeze = castingState.CalculationOptions.Mode33 && useDeepFreeze;
+            deepFreeze = useDeepFreeze;
 
             GenerateStateDescription();
         }

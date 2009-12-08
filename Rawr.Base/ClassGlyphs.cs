@@ -39,7 +39,7 @@ namespace Rawr
         public bool GlyphOfFrostbolt { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
         [GlyphData(3, "Glyph of Ice Armor", true, @"Your Ice Armor and Frost Armor spells grant an additional 50% armor and resistance.")]
         public bool GlyphOfIceArmor { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
-        [GlyphData(4, "Glyph of Improved Scorch", true, @"The Improved Scorch talent now generates 3 applications of the Improved Scorch effect each time Scorch is cast.")]
+        [GlyphData(4, "Glyph of Improved Scorch", true, @"Increases the damage of your Scorch spell by 20%.")]
         public bool GlyphOfImprovedScorch { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
         [GlyphData(5, "Glyph of Mage Armor", true, @"Your Mage Armor spell grants an additional 20% mana regeneration while casting.")]
         public bool GlyphOfMageArmor { get { return _glyphData[5]; } set { _glyphData[5] = value; } }

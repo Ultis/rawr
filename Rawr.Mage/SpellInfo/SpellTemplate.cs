@@ -32,7 +32,6 @@ namespace Rawr.Mage
         public float CastProcs;
         public float NukeProcs;
         public float HitRate;
-        public float AoeDamageCap;
 
         public float RealResistance;
         public float PartialResistFactor;

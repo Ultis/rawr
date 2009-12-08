@@ -349,7 +349,7 @@ namespace Rawr.Mage
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
-            if (calculations.CalculationOptions.Mode33 && calculations.MageTalents.GlyphOfImprovedScorch)
+            if (calculations.MageTalents.GlyphOfImprovedScorch)
             {
                 BaseSpellModifier *= 1.2f;
             }
@@ -390,7 +390,6 @@ namespace Rawr.Mage
             : base("Flamestrike", false, false, true, 30, 3, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 1, 1, 8f)
         {
             Calculate(calculations);
-            AoeDamageCap = 37500;
             DotTickInterval = 2;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
@@ -978,7 +977,6 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             Cooldown *= (1 - 0.07f * calculations.MageTalents.IceFloes + (calculations.MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
-            AoeDamageCap = 37500;
             int ImprovedConeOfCold = calculations.MageTalents.ImprovedConeOfCold;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             BaseSpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
@@ -1444,7 +1442,6 @@ namespace Rawr.Mage
             if (calculations.MageTalents.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
-            AoeDamageCap = 37500;
         }
     }
 
@@ -1454,17 +1451,17 @@ namespace Rawr.Mage
         static BlastWaveTemplate()
         {
             // spell data for Blast Wave is not level adjusted except for level 70 and 80, adjust if the needed data is found
-            SpellData[0] = new SpellData() { Cost = (int)(0.28 * BaseMana[70]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
-            SpellData[1] = new SpellData() { Cost = (int)(0.28 * BaseMana[71]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
-            SpellData[2] = new SpellData() { Cost = (int)(0.28 * BaseMana[72]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
-            SpellData[3] = new SpellData() { Cost = (int)(0.28 * BaseMana[73]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
-            SpellData[4] = new SpellData() { Cost = (int)(0.28 * BaseMana[74]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
-            SpellData[5] = new SpellData() { Cost = (int)(0.28 * BaseMana[75]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
-            SpellData[6] = new SpellData() { Cost = (int)(0.28 * BaseMana[76]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
-            SpellData[7] = new SpellData() { Cost = (int)(0.28 * BaseMana[77]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
-            SpellData[8] = new SpellData() { Cost = (int)(0.28 * BaseMana[78]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
-            SpellData[9] = new SpellData() { Cost = (int)(0.28 * BaseMana[79]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
-            SpellData[10] = new SpellData() { Cost = (int)(0.28 * BaseMana[80]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellData[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[70]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[71]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[72]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[73]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[74]), MinDamage = 616, MaxDamage = 724, SpellDamageCoefficient = 0.1929f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[75]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
+            SpellData[6] = new SpellData() { Cost = (int)(0.07 * BaseMana[76]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
+            SpellData[7] = new SpellData() { Cost = (int)(0.07 * BaseMana[77]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
+            SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
+            SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
+            SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1475,7 +1472,6 @@ namespace Rawr.Mage
             : base("Blast Wave", false, true, true, 0, 0, 30, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            AoeDamageCap = 37500;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
@@ -1487,17 +1483,17 @@ namespace Rawr.Mage
         static DragonsBreathTemplate()
         {
             // spell data for Dragon's Breath is not level adjusted except for level 70 and 80, adjust if the needed data is found
-            SpellData[0] = new SpellData() { Cost = (int)(0.31 * BaseMana[70]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
-            SpellData[1] = new SpellData() { Cost = (int)(0.31 * BaseMana[71]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
-            SpellData[2] = new SpellData() { Cost = (int)(0.31 * BaseMana[72]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
-            SpellData[3] = new SpellData() { Cost = (int)(0.31 * BaseMana[73]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
-            SpellData[4] = new SpellData() { Cost = (int)(0.31 * BaseMana[74]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
-            SpellData[5] = new SpellData() { Cost = (int)(0.31 * BaseMana[75]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
-            SpellData[6] = new SpellData() { Cost = (int)(0.31 * BaseMana[76]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
-            SpellData[7] = new SpellData() { Cost = (int)(0.31 * BaseMana[77]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
-            SpellData[8] = new SpellData() { Cost = (int)(0.31 * BaseMana[78]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
-            SpellData[9] = new SpellData() { Cost = (int)(0.31 * BaseMana[79]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
-            SpellData[10] = new SpellData() { Cost = (int)(0.31 * BaseMana[80]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellData[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[70]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[71]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[72]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[73]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[74]), MinDamage = 680, MaxDamage = 790, SpellDamageCoefficient = 0.1929f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[75]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
+            SpellData[6] = new SpellData() { Cost = (int)(0.07 * BaseMana[76]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
+            SpellData[7] = new SpellData() { Cost = (int)(0.07 * BaseMana[77]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
+            SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
+            SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
+            SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1508,7 +1504,6 @@ namespace Rawr.Mage
             : base("Dragon's Breath", false, true, true, 0, 0, 20, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
             Calculate(calculations);
-            AoeDamageCap = 37500;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
     }
@@ -1546,7 +1541,6 @@ namespace Rawr.Mage
                 BaseCritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
                 //CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }
-            AoeDamageCap = 200000;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
     }

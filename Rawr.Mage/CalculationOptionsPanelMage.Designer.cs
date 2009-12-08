@@ -3240,6 +3240,7 @@
             this.label107.TabIndex = 212;
             this.label107.Text = "Patch 3.3: *";
             this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.");
+            this.label107.Visible = false;
             // 
             // checkBoxMode33
             // 
@@ -3250,6 +3251,7 @@
             this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMode33.TabIndex = 211;
             this.checkBoxMode33.UseVisualStyleBackColor = true;
+            this.checkBoxMode33.Visible = false;
             // 
             // label85
             // 
