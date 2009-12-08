@@ -15,7 +15,7 @@ namespace Rawr.Retribution
             public int GetHashCode(RotationParameters obj)
             {
                 int ret = (obj.T7_4pc ? 512 : 0) + (obj.GlyphConsecrate ? 1024 : 0) + int.Parse((obj.TimeUnder20 * 100).ToString()) * 2048
-                     + int.Parse((obj.Wait * 100).ToString()) * 4096 + int.Parse((obj.Delay * 100).ToString()) * 8192;
+                     + int.Parse((obj.Wait * 100).ToString()) * 4096 + int.Parse((obj.Delay * 100).ToString()) * 8192 + (obj.T10_2pc ? 16384 : 0);
 
                 for (int i = 0; i < obj.Priorities.Length; i++)
                 {
@@ -28,14 +28,16 @@ namespace Rawr.Retribution
         }
 
         public readonly bool T7_4pc;
+        public readonly bool T10_2pc;
         public readonly int ImpJudgements;
         public readonly bool GlyphConsecrate;
         public readonly Ability[] Priorities;
         public readonly float TimeUnder20;
         public readonly float Wait;
         public readonly float Delay;
+        public readonly float AttackSpeed;
 
-        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate)
+        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate, bool T10_2pc, float AttackSpeed)
         {
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
@@ -44,6 +46,8 @@ namespace Rawr.Retribution
             this.Wait = (float)Math.Round(Wait, 2);
             this.Delay = (float)Math.Round(Delay, 2);
             this.ImpJudgements = ImpJudgements;
+            this.T10_2pc = T10_2pc;
+            this.AttackSpeed = (float)Math.Round(AttackSpeed, 2);
         }
 
         public bool Equals(RotationParameters other)
@@ -54,6 +58,8 @@ namespace Rawr.Retribution
                 if (Priorities[i] != other.Priorities[i]) { return false; }
             }
             return (T7_4pc == other.T7_4pc)
+                && (T10_2pc == other.T10_2pc)
+                && (AttackSpeed == other.AttackSpeed)
                 && (GlyphConsecrate == other.GlyphConsecrate)
                 && (TimeUnder20 == other.TimeUnder20)
                 && (Delay == other.Delay)

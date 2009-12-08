@@ -83,6 +83,8 @@
             this.nudConsEff = new System.Windows.Forms.NumericUpDown();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label31 = new System.Windows.Forms.Label();
+            this.nudTargetSwitch = new System.Windows.Forms.NumericUpDown();
             this.label29 = new System.Windows.Forms.Label();
             this.nudHoR = new System.Windows.Forms.NumericUpDown();
             this.label30 = new System.Windows.Forms.Label();
@@ -112,8 +114,7 @@
             this.label28 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.label31 = new System.Windows.Forms.Label();
-            this.nudTargetSwitch = new System.Windows.Forms.NumericUpDown();
+            this.butClearRotate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
@@ -136,6 +137,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudConsEff)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoR)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -145,7 +147,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMobType
@@ -1004,6 +1005,34 @@
             this.tabPage1.Text = "Fight Parameters";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(51, 291);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(85, 13);
+            this.label31.TabIndex = 50;
+            this.label31.Text = "Target switches:";
+            // 
+            // nudTargetSwitch
+            // 
+            this.nudTargetSwitch.DecimalPlaces = 1;
+            this.nudTargetSwitch.Location = new System.Drawing.Point(146, 289);
+            this.nudTargetSwitch.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.nudTargetSwitch.Name = "nudTargetSwitch";
+            this.nudTargetSwitch.Size = new System.Drawing.Size(60, 20);
+            this.nudTargetSwitch.TabIndex = 51;
+            this.nudTargetSwitch.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.nudTargetSwitch.ValueChanged += new System.EventHandler(this.nudTargetSwitch_ValueChanged);
+            // 
             // label29
             // 
             this.label29.AutoSize = true;
@@ -1382,39 +1411,24 @@
             0,
             0});
             // 
-            // label31
+            // butClearRotate
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(51, 291);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(85, 13);
-            this.label31.TabIndex = 50;
-            this.label31.Text = "Target switches:";
-            // 
-            // nudTargetSwitch
-            // 
-            this.nudTargetSwitch.DecimalPlaces = 1;
-            this.nudTargetSwitch.Location = new System.Drawing.Point(146, 289);
-            this.nudTargetSwitch.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.nudTargetSwitch.Name = "nudTargetSwitch";
-            this.nudTargetSwitch.Size = new System.Drawing.Size(60, 20);
-            this.nudTargetSwitch.TabIndex = 51;
-            this.nudTargetSwitch.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.nudTargetSwitch.ValueChanged += new System.EventHandler(this.nudTargetSwitch_ValueChanged);
+            this.butClearRotate.AutoSize = true;
+            this.butClearRotate.Location = new System.Drawing.Point(9, 362);
+            this.butClearRotate.Name = "butClearRotate";
+            this.butClearRotate.Size = new System.Drawing.Size(89, 23);
+            this.butClearRotate.TabIndex = 46;
+            this.butClearRotate.Text = "Clear Rotations";
+            this.butClearRotate.UseVisualStyleBackColor = true;
+            this.butClearRotate.Visible = false;
+            this.butClearRotate.Click += new System.EventHandler(this.butClearRotate_Click);
             // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.butClearRotate);
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelRetribution";
             this.Size = new System.Drawing.Size(300, 447);
@@ -1441,6 +1455,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoR)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
@@ -1451,8 +1466,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1543,6 +1558,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown7;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.NumericUpDown nudTargetSwitch;
+        private System.Windows.Forms.Button butClearRotate;
 
     }
 }

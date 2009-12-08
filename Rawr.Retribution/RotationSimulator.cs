@@ -8,13 +8,18 @@ namespace Rawr.Retribution
     {
         private static Dictionary<RotationParameters, RotationSolution> savedSolutions = new Dictionary<RotationParameters, RotationSolution>(new RotationParameters.RotationComparer());
 
+        public static void ClearCache()
+        {
+            savedSolutions.Clear();
+        }
+
         public static RotationSolution SimulateRotation(RotationParameters rot)
         {
             if (savedSolutions.ContainsKey(rot)) return savedSolutions[rot];
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = 10000;
+            sol.FightLength = 100000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
 
@@ -30,7 +35,8 @@ namespace Rawr.Retribution
             abilities[(int)Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
 
             bool gcdUsed;
-            float minNext, tryUse;
+            float minNext, tryUse, timeElapsed = 0;
+            Random rand = new Random();
 
             while (currentTime < sol.FightLength)
             {
@@ -40,8 +46,16 @@ namespace Rawr.Retribution
                     tryUse = abilities[(int)ability].UseAbility(currentTime);
                     if (tryUse > 0)
                     {
+                        timeElapsed = tryUse - currentTime;
                         currentTime = tryUse;
                         gcdUsed = true;
+                        if (rot.T10_2pc)
+                        {
+                            if (ability == Ability.CrusaderStrike || ability == Ability.Judgement)
+                            {
+                                if (rand.NextDouble() < 0.4) abilities[(int)Ability.DivineStorm].ResetCD();
+                            }
+                        }
                         break;
                     }
                 }
@@ -52,7 +66,12 @@ namespace Rawr.Retribution
                     {
                         if (abilities[(int)ab].NextUse < minNext) minNext = abilities[(int)ab].NextUse;
                     }
+                    timeElapsed = minNext - currentTime;
                     currentTime = minNext;
+                }
+                if (rot.T10_2pc)
+                {
+                    if (rand.NextDouble() < (0.4 * timeElapsed / rot.AttackSpeed)) abilities[(int)Ability.DivineStorm].ResetCD();
                 }
             }
 

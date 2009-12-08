@@ -23,6 +23,11 @@ namespace Rawr.Retribution
         public float NextUse { get; set; }
         public int Uses { get; set; }
 
+        public void ResetCD()
+        {
+            NextUse = LastUse;
+        }
+
         public float UseAbility(float currentTime)
         {
             if (NextUse <= currentTime + Wait)

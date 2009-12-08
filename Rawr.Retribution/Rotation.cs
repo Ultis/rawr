@@ -180,9 +180,11 @@ namespace Rawr.Retribution
                     combats.CalcOpts.TimeUnder20,
                     combats.CalcOpts.Wait,
                     combats.CalcOpts.Delay,
-                    combats.Stats.JudgementCDReduction > 0 ? true : false,
+                    combats.Stats.JudgementCDReduction > 0,
                     combats.Talents.ImprovedJudgements,
-                    combats.Talents.GlyphOfConsecration)
+                    combats.Talents.GlyphOfConsecration,
+                    combats.Stats.DivineStormRefresh != 0,
+                    combats.AttackSpeed)
             );
         }
 

@@ -480,6 +480,12 @@ namespace Rawr.Retribution
             }
         }
 
+        private void butClearRotate_Click(object sender, EventArgs e)
+        {
+            RotationSimulator.ClearCache();
+            Character.OnCalculationsInvalidated();
+        }
+
     }
 
 }
