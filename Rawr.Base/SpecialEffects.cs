@@ -1819,12 +1819,12 @@ namespace Rawr {
                 // For 20 seconds, direct healing adds a stack of 58 +healing for 10 seconds
                 // Stacks 5 times, 2 minute cd
                 // Direct heals: Nourish (1.5) HT (3) Regrowth (2)
-                // Assumption: every 2 seconds, a direct healing spell is cast
-                // (1+2+3+4)+11*5 = 70 stacks over the total duration of 30 seconds
-                //  70 stacks/ 15 casts = 4.67 stacks
+                // Assumption: every 2 seconds, a direct healing spell is cast, so after 5 casts, full effect
+                // That would mean: 10 seconds ramping up, then 20 seconds having the effect (assuming the stack is refreshed)
+                // Average stack of 4 (24/30 * 5)
                 // But remember that the spellpower will increase for others in the raid too!
-                stats.BonusHealingReceived = 58 * 5;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusHealingReceived = 58 * 4.67f }, 30, 120));
+                // stats.BonusHealingReceived = 58 * 4;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusHealingReceived = 58 * 4f }, 30, 120));
             }
             else if (line.StartsWith("Your heals each cost "))
             {
