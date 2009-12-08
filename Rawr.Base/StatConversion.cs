@@ -708,7 +708,8 @@ namespace Rawr
                     modifiedAvoid += ((GetDodgeFromAgility((stats.Agility - stats.BaseAgility), character.Class) +
                                     GetDodgeFromRating(stats.DodgeRating)) * 100f);
                     modifiedAvoid = DRMath(CAP_DODGE_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
-                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    // Don't run off the bottom if we have negative dodge
+                    finalAvoid = Math.Max(baseAvoid + modifiedAvoid, 0);
                     finalAvoid = Math.Min(finalAvoid, CAP_DODGE[iClass]);
                     break;
                 case HitResult.Parry:
