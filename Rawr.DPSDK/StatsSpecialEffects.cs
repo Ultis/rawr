@@ -24,10 +24,10 @@ namespace Rawr.DPSDK
             Rotation rotation = calcOpts.rotation;
             if (effect.Trigger == Trigger.Use)
             {
-                statsAverage += effect.GetAverageStats();
+                effect.AccumulateAverageStats(statsAverage);
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage += this.getSpecialEffects(calcOpts, e) * (effect.Duration / effect.Cooldown);
+                    statsAverage.Accumulate(this.getSpecialEffects(calcOpts, e), (effect.Duration / effect.Cooldown));
                 }
             }
             else
@@ -98,7 +98,7 @@ namespace Rawr.DPSDK
                 }
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage += this.getSpecialEffects(calcOpts, e);
+                    statsAverage.Accumulate(this.getSpecialEffects(calcOpts, e));
                 }
                 if (effect.MaxStack > 1)
                 {
@@ -112,11 +112,11 @@ namespace Rawr.DPSDK
                     {
                         timeToMax = 2 * buffDuration;
                     }
-                    statsAverage += effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration)));
+                    statsAverage.Accumulate(effect.Stats, effect.GetAverageStackSize(trigger, chance, unhastedAttackSpeed, buffDuration));
                 }
                 else
                 {
-                    statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
+                    effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
                 }
             }
         
