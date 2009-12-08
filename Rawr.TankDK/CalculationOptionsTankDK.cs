@@ -14,12 +14,12 @@ namespace Rawr.TankDK
         // No one will ever tank in anything other than Frost.
         //		public enum Presence { Blood, Frost, Unholy }
         #region Options
-        private int _TargetLevel;
+        private int _TargetLevel = 83;
         public int TargetLevel
         {
             get 
             {
-                if (_TargetLevel == null || _TargetLevel < 80 || _TargetLevel > 83)
+                if ( _TargetLevel < 80 || _TargetLevel > 83)
                 {
                     _TargetLevel = 83;
                 }
@@ -27,12 +27,12 @@ namespace Rawr.TankDK
             }
             set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
         }
-        private float _ThreatWeight;
+        private float _ThreatWeight = 1;
         public float ThreatWeight
         {
             get 
             {
-                if (null == _ThreatWeight || _ThreatWeight < 0)
+                if ( _ThreatWeight < 0)
                 {
                     _ThreatWeight = 1f;
                 }
@@ -40,12 +40,12 @@ namespace Rawr.TankDK
             }
             set { _ThreatWeight = value; OnPropertyChanged("ThreatWeight"); }
         }
-        private float _SurvivalWeight;
+        private float _SurvivalWeight = 1;
         public float SurvivalWeight
         {
             get 
             {
-                if (null == _SurvivalWeight || _SurvivalWeight < 0)
+                if ( _SurvivalWeight < 0)
                 {
                     _SurvivalWeight = 1f;
                 }
@@ -53,12 +53,12 @@ namespace Rawr.TankDK
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
-        private uint _IncomingDamage;
+        private uint _IncomingDamage = 10000u;
         public uint IncomingDamage
         {
             get 
             {
-                if (null == _IncomingDamage || _IncomingDamage <= 0)
+                if ( _IncomingDamage <= 0)
                 {
                     _IncomingDamage = 10000u;
                 }
@@ -66,12 +66,12 @@ namespace Rawr.TankDK
             }
             set { _IncomingDamage = value; OnPropertyChanged("IncomingDamage"); }
         }
-        private float _PercentIncomingFromMagic;
+        private float _PercentIncomingFromMagic = 0;
 		public float PercentIncomingFromMagic
         {
             get 
             {
-                if (null == _PercentIncomingFromMagic || _PercentIncomingFromMagic < 0)
+                if ( _PercentIncomingFromMagic < 0)
                 {
                     _PercentIncomingFromMagic = .0f;
                 }
@@ -79,12 +79,12 @@ namespace Rawr.TankDK
             }
             set { _PercentIncomingFromMagic = value; OnPropertyChanged("PercentIncomingFromMagic"); }
         }
-		private float _BossAttackSpeed;
+		private float _BossAttackSpeed = 2.5f;
 		public float BossAttackSpeed
         {
             get 
             {
-                if (null == _BossAttackSpeed || _BossAttackSpeed < 1f)
+                if ( _BossAttackSpeed < 1f)
                 {
                     _BossAttackSpeed = 2.5f;
                 }
@@ -93,12 +93,12 @@ namespace Rawr.TankDK
             set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
         }
 
-        private float _BossArmor;
+        private float _BossArmor = StatConversion.NPC_ARMOR[83 - 80];
         public float BossArmor 
         {
             get 
             {
-                if (null == _BossArmor)
+                if (_BossArmor < 0)
                 {
                     _BossArmor = StatConversion.NPC_ARMOR[83 - 80];
                 }
@@ -108,12 +108,12 @@ namespace Rawr.TankDK
         }
 		public bool Bloodlust = false;
 
-        private float _fightLength;
+        private float _fightLength = 10;
         public float FightLength
         {
             get 
             {
-                if (null == _fightLength || _fightLength < 1f)
+                if ( _fightLength < 1f)
                 {
                     _fightLength = 10f;
                 }
@@ -122,12 +122,12 @@ namespace Rawr.TankDK
             set { _fightLength = value; OnPropertyChanged("FightLength"); }
         }
 
-        private uint _uNumberTargets;
+        private uint _uNumberTargets = 1;
         public uint uNumberTargets
         {
             get 
             {
-                if (null == _uNumberTargets || _uNumberTargets < 1)
+                if ( _uNumberTargets < 1)
                 {
                     _uNumberTargets = 1;
                 }
@@ -147,6 +147,34 @@ namespace Rawr.TankDK
                 return _cType; 
             }
             set { _cType = value; OnPropertyChanged("cType"); }
+        }
+
+        private bool _m_bExperimental;
+        public bool bExperimental
+        {
+            get
+            {
+                if (_m_bExperimental == null)
+                {
+                    _m_bExperimental = false;
+                }
+                return _m_bExperimental;
+            }
+            set { _m_bExperimental = value; OnPropertyChanged("Experimental"); }
+        }
+
+        private bool _m_AdditiveMitigation;
+        public bool AdditiveMitigation
+        {
+            get
+            {
+                if (_m_AdditiveMitigation == null)
+                {
+                    _m_AdditiveMitigation = false;
+                }
+                return _m_AdditiveMitigation;
+            }
+            set { _m_AdditiveMitigation = value; OnPropertyChanged("AdditiveMitigation"); }
         }
         #endregion
 

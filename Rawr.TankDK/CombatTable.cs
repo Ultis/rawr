@@ -418,11 +418,11 @@ namespace Rawr.TankDK
 
             #region Mitigation
             {
-                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+                float targetArmor = calcOpts.BossArmor;
+                float totalArP = stats.ArmorPenetration;
 
-                mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
-
+                mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, 0f, 0f);
+                mitigation = Math.Max(0, mitigation);
 //                calcs.EnemyMitigation = 1f - mitigation;
 //                calcs.EffectiveArmor = mitigation;
             }

@@ -151,5 +151,14 @@ namespace Rawr.TankDK {
             graph.SetupGraph(Character, statsList, 1000, explanatoryText, null);
             graph.Show();
         }
+
+        private void cb_AdditiveMitigation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.AdditiveMitigation = cb_AdditiveMitigation.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 }

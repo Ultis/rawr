@@ -343,6 +343,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
         {
+            bool bEnableExperimental = false;
+
             cacheChar = character;
             #region Setup what we need and validate.
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
@@ -554,7 +556,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // 5% + Level difference crit chance.
             // Level difference is already factored in above.
-            fChanceToGetCrit = Math.Max(0.0f, (.05f - fChanceToGetCrit));
+            float fBaseCritChance = .05f;
+            // Be sure that we don't have a negative chance to get crit.
+            fChanceToGetCrit = Math.Max(0.0f, (fBaseCritChance - fChanceToGetCrit));
+            float fPercentCritMitigation = 1f - (fChanceToGetCrit / fBaseCritChance);
 
             // refresh Combat table w/ the new stats.
             ct = new CombatTable(character, calcs, stats, opts);
@@ -592,13 +597,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Everything else is really mitigating damage based on RNG.
 
             // The health bonus from Frost presence is now include in the character by default.
-            float hp = stats.Health;
-            float fPhysicalSurvival = hp;
-            float fMagicalSurvival = hp;
+            float fPhysicalSurvival = stats.Health;
+            float fMagicalSurvival = stats.Health;
 
             // Physical damage:
             // So need the percent that is NOT from magic.
-            fPhysicalSurvival = hp / (1f - ArmorDamageReduction);
+            fPhysicalSurvival = (stats.Health / (1 - ArmorDamageReduction)) * (1 - opts.PercentIncomingFromMagic);
 
             // Magical damage:
             // if there is a max resistance, then it's likely they are stacking for that resistance.  So factor in that Max resistance.
@@ -607,9 +611,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fMaxResist = Math.Max(fMaxResist, stats.NatureResistance);
             fMaxResist = Math.Max(fMaxResist, stats.ShadowResistance);
 
-            fMagicalSurvival = hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f));
+            float fMagicDR = StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f);
+            fMagicalSurvival = (stats.Health / (1 - fMagicDR)) * (opts.PercentIncomingFromMagic);
 
-            float fEffectiveHealth = (fPhysicalSurvival * (1f - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
+            float fEffectiveHealth = fPhysicalSurvival + fMagicalSurvival;
             // EffHealth is used further down for Burst/Reaction Times.
             calcs.Survival = fEffectiveHealth;
             calcs.SurvivalWeight = opts.SurvivalWeight;
@@ -638,142 +643,331 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             calcs.ThreatWeight = opts.ThreatWeight;
             #endregion
 
-            #region ***** Mitigation Rating *****
-            float fFightDuration = opts.FightLength;
-            if (fFightDuration == 0f) 
-            { 
-                opts.FightLength = fFightDuration = 10f;
-            }
-            float fNumRotations = 0f;
-            float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
-            float fIncPhysicalDamage = (opts.IncomingDamage - fIncMagicalDamage);
-            // How much damage per shot normal shot?
-            float fPerShotPhysical = fIncPhysicalDamage;
-            // How many shots over the length of the fight?
-            float fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + .02f * character.DeathKnightTalents.ImprovedIcyTouch);
-            // Factor in attack speed negative haste caused by talents.
-
-            float fTotalBossAttacksPerFight = (fFightDuration * 60f) / fBossAverageAttackSpeed;
-            // Integrate Expertise values to prevent additional physical damage coming in:
-            // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
-            // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
-            // Figure out how many shots there are.  Right now, just calculating white damage.
-            // How fast is a hasted shot? up to 40% faster.
-            // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
-            float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
-            float fShotsParried = 0f;
-            float fBossShotCountPerRot = 0f;
-            if (fRotDuration > 0) {
-                fNumRotations = (fFightDuration * 60f) / fRotDuration;
-                // How many shots does the boss take over a given rotation period.
-                fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
-                float fCharacterShotCount = 0f;
-                if (character.MainHand != null && ct.MH.hastedSpeed > 0f) 
-                { 
-                    fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed); 
-                }
-                if (character.OffHand  != null && ct.OH.hastedSpeed > 0f) 
-                { 
-                    fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed); 
-                }
-                fCharacterShotCount += ct.totalParryableAbilities;
-                // The number of shots taken * the chance to be parried.
-                // Ensure that this value doesn't go over 100%
-                fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
-                // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
-                float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
-                float fTimeNormal = fRotDuration - fTimeHasted;
-                // Update the shot count w/ the new # of normal shots + the number of hasted shots.
-                fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
-                // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
-                fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
-                fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
-            }
-
-            // Mark of blood
-            // Cast on the enemy
-            // buff that lasts 20 secs or 20 hits
-            // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
-            // 3 Min CD.
-            if (character.DeathKnightTalents.MarkOfBlood > 0)
+            #region ***** Experimental Mitigation Rating *****
+            if (opts.bExperimental)
             {
-                // Now that we have the Avg. Boss Attack speed, let's figure how many attacks in 20 secs.
-                float AttacksFor20 = Math.Min(20f, 20f / fBossAverageAttackSpeed);
-                float MOBhealing = stats.Health * .04f * (AttacksFor20 * fChanceToGetHit); // how many attacks get through avoidance.
-                stats.Healed += MOBhealing; // Fire it off every time we can and at least once per fight.
-            }
+                float fIncDPS = opts.IncomingDamage / opts.BossAttackSpeed;
+                float fTotalMitigation = 0f;
 
-            #region Anti-Magic Shell
-            // Anti-Magic Shell. ////////////////////////////////////////////////////////
-            // Talent: MagicSuppression increases AMS by 8/16/25% per point.
-            // Glyph: GlyphofAntiMagicShell increases AMS by 2 sec.
-            // AMS has a 45 sec CD.
-            float amsUptime = (5f + (character.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f)) / 45f;
-            // AMS reduces damage taken by 75% up to a max of 50% health.
-            float amsReduction = 0.75f * (1f + character.DeathKnightTalents.MagicSuppression * 0.08f + (character.DeathKnightTalents.MagicSuppression == 3 ? 0.01f : 0f));
-            float amsReductionMax = stats.Health * 0.5f;
-            // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
-            // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
-            float amsDRvalue = (Math.Min(amsReductionMax, fIncMagicalDamage * amsReduction) * amsUptime);
-            #endregion 
+                #region ** Crit Mitigation **
+                // Crit mitigation:
+                // Crit mitigation works for Magical as well as Physical damage so take care of that first.
+                float fCritMultiplier = 1;
+                float fCritDPS = fIncDPS * fCritMultiplier;
+                float fCritMitigation = (fCritDPS * fPercentCritMitigation);
+                // Add in the value of crit mitigation.
+                fTotalMitigation += fCritMitigation;
+                // The max damage at this point needs to include crit.
+                float fMaxIncDPS = fIncDPS + fCritDPS - fCritMitigation;
+                #endregion
 
-            // For any physical only damage reductions. 
-            // Adjust the damage by chance of crit getting through
-            fPerShotPhysical += (fPerShotPhysical * fChanceToGetCrit) * 2f;
-            // Factor in armor Damage Reduction
-            fPerShotPhysical *= (1f - ArmorDamageReduction);
+                float fIncPhyDPS = fMaxIncDPS * (1 - opts.PercentIncomingFromMagic);
+                float fIncMagDPS = fMaxIncDPS * opts.PercentIncomingFromMagic;
 
-            // Four T8 : AMS grants 10% damage reductions.
-            stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptime); 
+                #region ** Parry Haste **
 
-            // Factor in the AMS damage reduction value 
-            fIncMagicalDamage -= amsDRvalue;
-            fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.SpellDamageTakenMultiplier);
-
-            fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.DamageTakenMultiplier);
-            fPerShotPhysical = StatConversion.ApplyMultiplier(fPerShotPhysical, stats.DamageTakenMultiplier);
-
-            // Since IncMagical was MagicalDPS - now distribute the damage over the whole fight.
-            fIncMagicalDamage = ((fIncMagicalDamage * fChanceToGetCrit) * 2f) * (fFightDuration * 60f);
-
-            // There's still a matter of a muting of the importance of getting Crit Immune give the above functions.
-            // We have a problem where the tank could get gibbed if the mitigation fails, and the boss crits.
-            if (fChanceToGetCrit > 0)
-            {
-                // This means that the likelihood of getting gibbed is assured.
-                if ((fTotalBossAttacksPerFight * fChanceToGetCrit) > 1)
+                float fFightDuration = opts.FightLength;
+                if (fFightDuration == 0f)
                 {
-//                    fIncPhysicalDamage *= 2f;
+                    opts.FightLength = fFightDuration = 10f;
                 }
+                float fNumRotations = 0f;
+
+                // How much damage per shot normal shot?
+                float fPerShotPhysical = fIncPhyDPS * opts.BossAttackSpeed;
+                // Does the boss have parry haste?
+                bool bParryHaste = true;
+                // How many shots over the length of the fight?
+                // Factor in attack speed negative haste caused by talents.
+                float fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + (.02f * character.DeathKnightTalents.ImprovedIcyTouch));
+
+                float fTotalBossAttacksPerFight = (fFightDuration * 60f) / fBossAverageAttackSpeed;
+                // Integrate Expertise values to prevent additional physical damage coming in:
+                // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
+                // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
+                // Figure out how many shots there are.  Right now, just calculating white damage.
+                // How fast is a hasted shot? up to 40% faster.
+                // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
+                float fBossParryHastedSpeed = fBossAverageAttackSpeed;
+                if (bParryHaste)
+                {
+                    fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
+                }
+                float fShotsParried = 0f;
+                float fBossShotCountPerRot = 0f;
+                if (fRotDuration > 0)
+                {
+                    fNumRotations = (fFightDuration * 60f) / fRotDuration;
+                    // How many shots does the boss take over a given rotation period.
+                    fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
+                    float fCharacterShotCount = 0f;
+                    if (character.MainHand != null && ct.MH.hastedSpeed > 0f)
+                    {
+                        fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
+                    }
+                    if (character.OffHand != null && ct.OH.hastedSpeed > 0f)
+                    {
+                        fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
+                    }
+                    fCharacterShotCount += ct.totalParryableAbilities;
+                    // The number of shots taken * the chance to be parried.
+                    // Ensure that this value doesn't go over 100%
+                    fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
+                    // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
+                    float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+                    float fTimeNormal = fRotDuration - fTimeHasted;
+                    // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+                    fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
+                    // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
+                    fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
+                    fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
+                }
+
+                #endregion
+
+                #region ** Mark of Blood **
+                // Mark of blood
+                // Cast on the enemy
+                // buff that lasts 20 secs or 20 hits
+                // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
+                // 3 Min CD.
+                if (character.DeathKnightTalents.MarkOfBlood > 0)
+                {
+                    // Now that we have the Avg. Boss Attack speed, let's figure how many attacks in 20 secs.
+                    float AttacksFor20 = Math.Min(20f, 20f / fBossAverageAttackSpeed);
+                    float MOBhealing = stats.Health * .04f * (AttacksFor20 * fChanceToGetHit); // how many attacks get through avoidance.
+                    float MoB_HPS = (MOBhealing * Math.Max(1f, fFightDuration / 3)) / (fFightDuration * 60); // Fire it off every time we can and at least once per fight.
+                    stats.Healed += MoB_HPS;
+                }
+                #endregion
+
+                #region ** Avoidance Mitigation **
+                // Let's see how much damage was avoided.
+                // Get the raw per-swing Reaction & Burst Time
+                float fAvoidanceTotal = 1 - fChanceToGetHit;
+                // Raise the total mitgation by that amount.
+                fTotalMitigation += fIncPhyDPS * Math.Min(1f, fAvoidanceTotal);
+
+                if (opts.AdditiveMitigation)
+                {
+                    // Lets' remove the Damage that was avoided.
+                    fIncPhyDPS -= fIncPhyDPS * Math.Min(1f, fAvoidanceTotal);
+                }
+                #endregion
+
+                #region ** Anti-Magic Shell **
+                // Anti-Magic Shell. ////////////////////////////////////////////////////////
+                // Talent: MagicSuppression increases AMS by 8/16/25% per point.
+                // Glyph: GlyphofAntiMagicShell increases AMS by 2 sec.
+                // AMS has a 45 sec CD.
+                float amsUptimePct = (5f + (character.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f)) / 45f;
+                // AMS reduces damage taken by 75% up to a max of 50% health.
+                float amsReduction = 0.75f * (1f + character.DeathKnightTalents.MagicSuppression * 0.08f + (character.DeathKnightTalents.MagicSuppression == 3 ? 0.01f : 0f));
+                float amsReductionMax = stats.Health * 0.5f;
+                // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
+                // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
+                float amsDRvalue = (Math.Min(amsReductionMax, (fIncMagDPS * fBossAverageAttackSpeed) * amsReduction) * amsUptimePct);
+                amsDRvalue = amsDRvalue / fBossAverageAttackSpeed;
+                // Raise the TotalMitigation by that amount.
+                fTotalMitigation += amsDRvalue;
+                if (opts.AdditiveMitigation)
+                {
+                    // lower the Magical DPS by the AMSDRValue
+                    fIncMagDPS -= amsDRvalue;
+                }
+                #endregion
+
+                #region ** Armor Damage Mitigation **
+                // For any physical only damage reductions. 
+                // Factor in armor Damage Reduction
+                fTotalMitigation += fIncPhyDPS * ArmorDamageReduction;
+                if (opts.AdditiveMitigation)
+                {
+                    fIncPhyDPS -= fIncPhyDPS * ArmorDamageReduction;
+                }
+                #endregion
+
+                // Four T8 : AMS grants 10% damage reduction.
+                stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptimePct);
+
+                #region ** Damage Taken Mitigation **
+                // Note: With SpellDamageTakenMultiplier
+                // Negative values are GOOD for mitigation.
+                fTotalMitigation -= fIncMagDPS * stats.SpellDamageTakenMultiplier;
+                fIncMagDPS = StatConversion.ApplyMultiplier(fIncMagDPS, stats.SpellDamageTakenMultiplier);
+                fTotalMitigation -= (fIncMagDPS * stats.DamageTakenMultiplier);
+                fIncMagDPS = StatConversion.ApplyMultiplier(fIncMagDPS, stats.DamageTakenMultiplier);
+                fTotalMitigation -= fIncPhyDPS * stats.DamageTakenMultiplier;
+                fIncPhyDPS = StatConversion.ApplyMultiplier(fIncPhyDPS, stats.DamageTakenMultiplier);
+                #endregion
+
+                // Let's make sure we don't go into negative damage here.
+                fIncMagDPS = Math.Max(0f, fIncMagDPS);
+                fIncPhyDPS = Math.Max(0f, fIncPhyDPS);
+
+                #region ** Burst/Reaction Time **
+                // The next 2 returns are in swing count.
+                float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
+                float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, (fMaxIncDPS * (1 - opts.PercentIncomingFromMagic) * fBossAverageAttackSpeed));
+
+                // Get how long that actually will be on Average.
+                calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
+                calcs.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
+
+                // Total damage avoided between bursts.
+                //            float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
+                //            float fBurstDPS = fBurstDamage / fBossAverageAttackSpeed;
+                //            float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
+                #endregion
+
+                // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
+                fTotalMitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+
+                calcs.Mitigation = fTotalMitigation;
             }
+            #endregion
+            else
+            #region ***** Legacy Mitigation Rating *****
+            {
+                float fFightDuration = opts.FightLength;
+                if (fFightDuration == 0f)
+                {
+                    opts.FightLength = fFightDuration = 10f;
+                }
+                float fNumRotations = 0f;
+                float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
+                float fIncPhysicalDamage = (opts.IncomingDamage - fIncMagicalDamage);
+                // How much damage per shot normal shot?
+                float fPerShotPhysical = fIncPhysicalDamage;
+                // How many shots over the length of the fight?
+                float fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + .02f * character.DeathKnightTalents.ImprovedIcyTouch);
+                // Factor in attack speed negative haste caused by talents.
 
-            // Let's make sure we don't go into negative damage here.
-            fIncMagicalDamage = Math.Max(0f, fIncMagicalDamage);
-            fPerShotPhysical = Math.Max(0f, fPerShotPhysical);
+                float fTotalBossAttacksPerFight = (fFightDuration * 60f) / fBossAverageAttackSpeed;
+                // Integrate Expertise values to prevent additional physical damage coming in:
+                // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
+                // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
+                // Figure out how many shots there are.  Right now, just calculating white damage.
+                // How fast is a hasted shot? up to 40% faster.
+                // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
+                float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
+                float fShotsParried = 0f;
+                float fBossShotCountPerRot = 0f;
+                if (fRotDuration > 0)
+                {
+                    fNumRotations = (fFightDuration * 60f) / fRotDuration;
+                    // How many shots does the boss take over a given rotation period.
+                    fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
+                    float fCharacterShotCount = 0f;
+                    if (character.MainHand != null && ct.MH.hastedSpeed > 0f)
+                    {
+                        fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
 
 
-            // Get the raw per-swing Reaction & Burst Time
-            float fAvoidanceTotal = 1 - fChanceToGetHit;    
 
-            // The next 2 returns are in swing count.
-            float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
-            float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, fIncPhysicalDamage);
+                    }
+                    if (character.OffHand != null && ct.OH.hastedSpeed > 0f)
+                    {
+                        fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
+                    }
+                    fCharacterShotCount += ct.totalParryableAbilities;
+                    // The number of shots taken * the chance to be parried.
+                    // Ensure that this value doesn't go over 100%
+                    fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
+                    // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
+                    float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+                    float fTimeNormal = fRotDuration - fTimeHasted;
+                    // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+                    fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
+                    // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
+                    fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
+                    fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
+                }
 
-            // Get how long that actually will be on Average.
-            calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
-            calcs.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
+                // Mark of blood
+                // Cast on the enemy
+                // buff that lasts 20 secs or 20 hits
+                // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
+                // 3 Min CD.
+                if (character.DeathKnightTalents.MarkOfBlood > 0)
+                {
+                    // Now that we have the Avg. Boss Attack speed, let's figure how many attacks in 20 secs.
+                    float AttacksFor20 = Math.Min(20f, 20f / fBossAverageAttackSpeed);
+                    float MOBhealing = stats.Health * .04f * (AttacksFor20 * fChanceToGetHit); // how many attacks get through avoidance.
+                    stats.Healed += MOBhealing; // Fire it off every time we can and at least once per fight.
+                }
 
-            //calcs.Mitigation = (opts.IncomingDamage * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
-            //calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
+                #region Anti-Magic Shell
+                // Anti-Magic Shell. ////////////////////////////////////////////////////////
+                // Talent: MagicSuppression increases AMS by 8/16/25% per point.
+                // Glyph: GlyphofAntiMagicShell increases AMS by 2 sec.
+                // AMS has a 45 sec CD.
+                float amsUptime = (5f + (character.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f)) / 45f;
+                // AMS reduces damage taken by 75% up to a max of 50% health.
+                float amsReduction = 0.75f * (1f + character.DeathKnightTalents.MagicSuppression * 0.08f + (character.DeathKnightTalents.MagicSuppression == 3 ? 0.01f : 0f));
+                float amsReductionMax = stats.Health * 0.5f;
+                // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
+                // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
+                float amsDRvalue = (Math.Min(amsReductionMax, fIncMagicalDamage * amsReduction) * amsUptime);
+                #endregion
 
-            // Total damage avoided between bursts.
-            float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
-            float fBurstDPS = fBurstDamage / fBossAverageAttackSpeed;
-            float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
+                // For any physical only damage reductions. 
+                // Adjust the damage by chance of crit getting through
+                fPerShotPhysical += (fPerShotPhysical * fChanceToGetCrit) * 2f;
+                // Factor in armor Damage Reduction
+                fPerShotPhysical *= (1f - ArmorDamageReduction);
 
-            // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
-            calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * (fIncPhysicalDamage - fPerShotPhysical);
-            calcs.Mitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+                // Four T8 : AMS grants 10% damage reductions.
+                stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptime);
+
+                // Factor in the AMS damage reduction value 
+                fIncMagicalDamage -= amsDRvalue;
+                fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.SpellDamageTakenMultiplier);
+
+                fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.DamageTakenMultiplier);
+                fPerShotPhysical = StatConversion.ApplyMultiplier(fPerShotPhysical, stats.DamageTakenMultiplier);
+
+                // Since IncMagical was MagicalDPS - now distribute the damage over the whole fight.
+                fIncMagicalDamage = ((fIncMagicalDamage * fChanceToGetCrit) * 2f) * (fFightDuration * 60f);
+
+                // There's still a matter of a muting of the importance of getting Crit Immune give the above functions.
+                // We have a problem where the tank could get gibbed if the mitigation fails, and the boss crits.
+                if (fChanceToGetCrit > 0)
+                {
+                    // This means that the likelihood of getting gibbed is assured.
+                    if ((fTotalBossAttacksPerFight * fChanceToGetCrit) > 1)
+                    {
+                        //                    fIncPhysicalDamage *= 2f;
+                    }
+                }
+
+                // Let's make sure we don't go into negative damage here.
+                fIncMagicalDamage = Math.Max(0f, fIncMagicalDamage);
+                fPerShotPhysical = Math.Max(0f, fPerShotPhysical);
+
+                // Get the raw per-swing Reaction & Burst Time
+                float fAvoidanceTotal = 1 - fChanceToGetHit;
+
+                // The next 2 returns are in swing count.
+                float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
+                float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, fIncPhysicalDamage);
+
+                // Get how long that actually will be on Average.
+                calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
+                calcs.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
+
+                //calcs.Mitigation = (opts.IncomingDamage * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
+                //calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
+
+                // Total damage avoided between bursts.
+                float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
+                float fBurstDPS = fBurstDamage / fBossAverageAttackSpeed;
+                float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
+
+                // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
+                calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * (fIncPhysicalDamage - fPerShotPhysical);
+                calcs.Mitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+            }
             #endregion
 
             #region Key Data Validation
@@ -2000,12 +2194,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         }
 
         /// <summary>
-        /// Get the Survival rating of the current character.
+        /// Get the effective health of the current character for a particular damage school.
         /// </summary>
         /// <returns>The value of the survival SubPoint.</returns>
-        private float GetSurvivalRating()
+        private float GetEffectiveHealth(float fHealth, float fDR)
         {
-            return 0f;
+            // TotalSurvival == sum(Survival for each school)
+            // Survival = (Health / (1 - DR)) * % damage inc from that school
+            return (fHealth / (1-fDR));
         }
 
         /// <summary>

@@ -52,6 +52,7 @@
             this.comboChartType = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.btnStatsGraph = new System.Windows.Forms.Button();
+            this.cb_AdditiveMitigation = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
@@ -157,7 +158,7 @@
             0});
             this.numIncomingDamage.Location = new System.Drawing.Point(150, 122);
             this.numIncomingDamage.Maximum = new decimal(new int[] {
-            100000,
+            500000,
             0,
             0,
             0});
@@ -397,7 +398,7 @@
             // 
             // btnStatsGraph
             // 
-            this.btnStatsGraph.Location = new System.Drawing.Point(64, 406);
+            this.btnStatsGraph.Location = new System.Drawing.Point(64, 443);
             this.btnStatsGraph.Name = "btnStatsGraph";
             this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
             this.btnStatsGraph.TabIndex = 62;
@@ -405,8 +406,22 @@
             this.btnStatsGraph.UseVisualStyleBackColor = true;
             this.btnStatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click_1);
             // 
+            // cb_AdditiveMitigation
+            // 
+            this.cb_AdditiveMitigation.AutoSize = true;
+            this.cb_AdditiveMitigation.Enabled = false;
+            this.cb_AdditiveMitigation.Location = new System.Drawing.Point(6, 399);
+            this.cb_AdditiveMitigation.Name = "cb_AdditiveMitigation";
+            this.cb_AdditiveMitigation.Size = new System.Drawing.Size(118, 17);
+            this.cb_AdditiveMitigation.TabIndex = 63;
+            this.cb_AdditiveMitigation.Text = "Additive Mitigation?";
+            this.cb_AdditiveMitigation.UseVisualStyleBackColor = true;
+            this.cb_AdditiveMitigation.Visible = false;
+            this.cb_AdditiveMitigation.CheckedChanged += new System.EventHandler(this.cb_AdditiveMitigation_CheckedChanged);
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.cb_AdditiveMitigation);
             this.Controls.Add(this.btnStatsGraph);
             this.Controls.Add(this.comboChartType);
             this.Controls.Add(this.label8);
@@ -469,5 +484,6 @@
         private System.Windows.Forms.ComboBox comboChartType;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnStatsGraph;
+        private System.Windows.Forms.CheckBox cb_AdditiveMitigation;
     }
 }
