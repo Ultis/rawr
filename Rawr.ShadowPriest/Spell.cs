@@ -59,7 +59,7 @@ namespace Rawr.ShadowPriest {
             }
         }
 
-        public static readonly List<string> ShadowSpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Devouring Plague", "Mind Blast", "Shadow Word: Pain", "Mind Flay", "Shadow Word: Death" };
+        public static readonly List<string> ShadowSpellList = new List<string>() { "Vampiric Touch", "Devouring Plague", "Mind Blast", "Shadow Word: Pain", "Mind Flay", "Shadow Word: Death" };
         public static readonly List<string> HolySpellList = new List<string>() { "Penance", "Holy Fire", "Devouring Plague", "Shadow Word: Pain", "Mind Blast", "Shadow Word: Death", "Smite" };
 
         public string Name { get; protected set; }
@@ -239,7 +239,7 @@ namespace Rawr.ShadowPriest {
             if (character.PriestTalents.Shadowform > 0) {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
-                //if (Ptr)  // Apparently made SPriests too good.
+                // Apparently made SPriests too good.
                 //    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
             }
 
@@ -292,8 +292,7 @@ namespace Rawr.ShadowPriest {
             if (character.PriestTalents.Shadowform > 0) {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
-                if (Ptr)
-                    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
+                DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
             }
 
             Range = (int)Math.Round(BaseRange * (1f + character.PriestTalents.ShadowReach * 0.1f));
@@ -408,7 +407,7 @@ namespace Rawr.ShadowPriest {
         public MindFlay(Stats stats, Character character, bool ptr)
             //: base("Mind Flay", stats, character, SpellRankTable, 9, 3f, 1.5f, 0, 3f / 3.5f, 20, 0f, Color.FromArgb(255, 173, 216, 230))
             // Testing shows MF to be about 0.771
-            : base("Mind Flay", stats, character, SpellRankTable, 9, 3f, 1.5f, 0, 0.771f, 20, 0f, Color.FromArgb(255, 173, 216, 230), ptr)
+            : base("Mind Flay", stats, character, SpellRankTable, 9, 3f, 1.5f, 0, 0.771f, 30, 0f, Color.FromArgb(255, 173, 216, 230), ptr)
         {
             Calculate(stats, character);
             BaseDebuffTicks = DebuffTicks = (int)(BaseDebuffDuration);
@@ -427,7 +426,7 @@ namespace Rawr.ShadowPriest {
                     + talents.FocusedPower * 0.02f)     // FIXME: Doublecheck
                 * (1f + ((talents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1f + character.PriestTalents.TwistedFaith * 0.02f
-                    + (character.PriestTalents.GlyphofShadowWordPain ? 0.1f : 0.0f))
+                    + (character.PriestTalents.GlyphofMindFlay ? 0.1f : 0.0f))
                 * (1f + talents.Shadowform * 0.15f);
 
             // Coefficient penalty for snare effect.
@@ -584,8 +583,7 @@ namespace Rawr.ShadowPriest {
             {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
-                if (Ptr)
-                    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
+                DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
@@ -619,13 +617,13 @@ namespace Rawr.ShadowPriest {
                 = (1f + character.PriestTalents.TwinDisciplines * 0.01f
                     + character.PriestTalents.Darkness * 0.02f
                     + character.PriestTalents.FocusedPower * 0.02f      // FIXME: Doublecheck
-                    + character.PriestTalents.ImprovedDevouringPlague * 0.05f)
-                * (1f + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0f))
+                    + character.PriestTalents.ImprovedDevouringPlague * 0.1f)
+                * (1f + ((character.PriestTalents.ShadowWeaving > 0) ? 0.05f : 0f))
                 * (1f + character.PriestTalents.Shadowform * 0.15f);
 
             MinDamage = MaxDamage = (BaseMinDamage +
                 (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
-                * (character.PriestTalents.ImprovedDevouringPlague * (Ptr ? 0.1f : 0.05f))
+                * (character.PriestTalents.ImprovedDevouringPlague * 0.1f)
                 * modifiers
                 * (1f + stats.DevouringPlagueBonusDamage);
 

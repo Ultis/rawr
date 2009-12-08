@@ -344,6 +344,7 @@
             this.cbPtr.TabIndex = 61;
             this.cbPtr.Text = "PTR (3.3)";
             this.cbPtr.UseVisualStyleBackColor = true;
+            this.cbPtr.Visible = false;
             this.cbPtr.CheckedChanged += new System.EventHandler(this.cbPtr_CheckedChanged);
             // 
             // CalculationOptionsPanelShadowPriest

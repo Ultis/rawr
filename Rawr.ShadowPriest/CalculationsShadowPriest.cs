@@ -242,12 +242,12 @@ namespace Rawr.ShadowPriest
 						_subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "Haste Rating Gain":
-						_subPointNameColors.Add(string.Format("DPS-Burst"), Color.FromArgb(255, 255, 0, 0));
-						_subPointNameColors.Add(string.Format("DPS-Sustained"), Color.FromArgb(255, 0, 0, 255));
+						_subPointNameColors.Add(string.Format("DPS"), Color.FromArgb(255, 255, 0, 0));
+//						_subPointNameColors.Add(string.Format("DPS-Sustained"), Color.FromArgb(255, 0, 0, 255));
                         break;
                     default:
-						_subPointNameColors.Add("DPS-Burst", Color.FromArgb(255, 255, 0, 0));
-						_subPointNameColors.Add("DPS-Sustained", Color.FromArgb(255, 0, 0, 255));
+						_subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+//						_subPointNameColors.Add("DPS-Sustained", Color.FromArgb(255, 0, 0, 255));
 						_subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
                         break;
                 }
@@ -279,7 +279,7 @@ namespace Rawr.ShadowPriest
                     "Simulation:Rotation",
                     "Simulation:Castlist",
                     "Simulation:DPS",
-                    "Simulation:SustainDPS",
+//                    "Simulation:SustainDPS",
                     "Shadow:Vampiric Touch",
                     "Shadow:SW Pain",
                     "Shadow:Devouring Plague",
@@ -288,7 +288,6 @@ namespace Rawr.ShadowPriest
                     "Shadow:Mind Blast",
                     "Shadow:Mind Flay",
                     "Shadow:Shadowfiend",
-                    "Shadow:Vampiric Embrace",
                     "Holy:PW Shield",
                     "Holy:Smite",
                     "Holy:Holy Fire",
@@ -452,7 +451,7 @@ namespace Rawr.ShadowPriest
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = string.Format("{0} Haste Rating", x);
                         comparison.SubPoints[0] = hrnew.DpsPoints - hrbase.DpsPoints;
-                        comparison.SubPoints[1] = hrnew.SustainPoints - hrbase.SustainPoints;
+//                        comparison.SubPoints[1] = hrnew.SustainPoints - hrbase.SustainPoints;
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
@@ -473,55 +472,55 @@ namespace Rawr.ShadowPriest
                         new ComparisonCalculationShadowPriest() { Name = "1 Intellect",
                             OverallPoints = (calcsIntellect.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsIntellect.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsIntellect.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsIntellect.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsIntellect.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Spirit",
                             OverallPoints = (calcsSpirit.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsSpirit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsSpirit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsSpirit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsSpirit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 MP5",
                             OverallPoints = (calcsMP5.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsMP5.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsMP5.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsMP5.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsMP5.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Spell Power",
                             OverallPoints = (calcsSpellPower.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsSpellPower.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsSpellPower.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsSpellPower.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsSpellPower.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Haste",
                             OverallPoints = (calcsHaste.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsHaste.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsHaste.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsHaste.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsHaste.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Crit",
                             OverallPoints = (calcsCrit.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsCrit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsCrit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Hit",
                             OverallPoints = (calcsHit.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsHit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsHit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsHit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsHit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Stamina",
                             OverallPoints = (calcsSta.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsSta.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsSta.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsSta.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsSta.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         },
                         new ComparisonCalculationShadowPriest() { Name = "1 Resilience",
                             OverallPoints = (calcsRes.OverallPoints - calcsBase.OverallPoints) / 50,
                             DpsPoints = (calcsRes.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsRes.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+//                            SustainPoints = (calcsRes.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             SurvivalPoints = (calcsRes.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         }};
                 default:

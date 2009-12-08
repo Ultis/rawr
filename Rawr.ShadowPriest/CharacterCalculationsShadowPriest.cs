@@ -40,7 +40,7 @@ namespace Rawr.ShadowPriest
             set { }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -53,16 +53,16 @@ namespace Rawr.ShadowPriest
             set { _subPoints[0] = value; }
         }
 
-        public float SustainPoints
+/*        public float SustainPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
-        }
+        }*/
 
         public float SurvivalPoints
         {
-            get { return _subPoints[2]; }
-            set { _subPoints[2] = value; }
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
         }
 
         public SolverBase GetSolver(Character character, Stats stats)
@@ -215,7 +215,7 @@ namespace Rawr.ShadowPriest
             else
                 dictValues.Add("Castlist", "Empty");
             dictValues.Add("DPS", string.Format("{0}*Damage Pr Second", solver.DPS.ToString("0")));
-            dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
+            //dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
             
             dictValues.Add("SW Pain", new ShadowWordPain(BasicStats, character, Ptr).ToString());
             DevouringPlague dp = new DevouringPlague(BasicStats, character, Ptr);
@@ -227,14 +227,6 @@ namespace Rawr.ShadowPriest
             dictValues.Add("SW Death", new ShadowWordDeath(BasicStats, character, Ptr).ToString());
             dictValues.Add("Mind Blast", new MindBlast(BasicStats, character, Ptr).ToString());
             dictValues.Add("PW Shield", new PowerWordShield(BasicStats, character, Ptr).ToString());
-
-            if (!Ptr)
-            {
-                if (character.PriestTalents.VampiricEmbrace > 0)
-                    dictValues.Add("Vampiric Embrace", new VampiricEmbrace(BasicStats, character, Ptr).ToString());
-                else
-                    dictValues.Add("Vampiric Embrace", "- *No required talents");
-            }
 
             if (character.PriestTalents.VampiricTouch > 0)
                 dictValues.Add("Vampiric Touch", new VampiricTouch(BasicStats, character, Ptr).ToString());

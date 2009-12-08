@@ -141,7 +141,7 @@ namespace Rawr.ShadowPriest
             // Glyph of Shadow
             if (character.PriestTalents.GlyphofShadow)
                 seGlyphofShadow = new SpecialEffect(Trigger.SpellHit,
-                                    new Stats { SpellDamageFromSpiritPercentage = 0.1f },
+                                    new Stats { SpellDamageFromSpiritPercentage = 0.3f },
                                     10f, 0f);
 
             PlayerStats = playerStats;      
@@ -1024,7 +1024,7 @@ namespace Rawr.ShadowPriest
             if (seGlyphofShadow != null)
             {
                 float uptime = seGlyphofShadow.GetAverageUptime(1f / CritsPerSecond, 1f);
-                simStats.SpellPower += simStats.Spirit * (CalculationOptions.PTR ? 0.3f : seGlyphofShadow.Stats.SpellDamageFromSpiritPercentage) * uptime;
+                simStats.SpellPower += simStats.Spirit * seGlyphofShadow.Stats.SpellDamageFromSpiritPercentage * uptime;
                 if (bVerbal)
                     Rotation += string.Format("\r\nGlyph of Shadow Uptime: {0}%", (uptime * 100f).ToString("0.0"));
             }
@@ -1265,6 +1265,15 @@ namespace Rawr.ShadowPriest
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
                 regen += tmpregen;
             }
+            if (character.PriestTalents.GlyphofShadowWordPain)
+            {
+                tmpregen = BaseStats.GetBaseStats(character).Mana * 0.01f / (SWP.DebuffDuration / SWP.DebuffTicks);
+                if (tmpregen > 0)
+                {
+                    ManaSources.Add(new ManaSource("Glyph of SWP", tmpregen));
+                    regen += tmpregen;
+                }
+            }
             foreach (SpecialEffect se in simStats.SpecialEffects())
             {
                 if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
@@ -1335,7 +1344,7 @@ namespace Rawr.ShadowPriest
             }
 
             DPS *= (1f - StatConversion.GetAverageResistance(character.Level, character.Level + CalculationOptions.TargetLevel, 0, 0)); // Level based Partial resists.
-            SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
+            //SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
 
             SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
         }
@@ -1448,9 +1457,10 @@ namespace Rawr.ShadowPriest
 
             SpellPriority = SSInfo[0].Solver.SpellPriority;
             Rotation = SSInfo[0].Solver.Rotation;
+            ManaSources = SSInfo[0].Solver.ManaSources;
 
-            calculatedStats.DpsPoints = DPS;
-            calculatedStats.SustainPoints = SustainDPS;
+            calculatedStats.DpsPoints = SustainDPS;
+//            calculatedStats.SustainPoints = SustainDPS;
 
             // Lets just say that 15% of resilience scales all health by 150%.
             float Resilience = (float)Math.Min(15f, StatConversion.GetCritReductionFromResilience(PlayerStats.Resilience) * 100f) / 15f;
@@ -1638,8 +1648,8 @@ namespace Rawr.ShadowPriest
 
             SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
 
-            calculatedStats.DpsPoints = DPS;
-            calculatedStats.SustainPoints = SustainDPS;
+            calculatedStats.DpsPoints = SustainDPS;
+//            calculatedStats.SustainPoints = SustainDPS;
             // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
             // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)

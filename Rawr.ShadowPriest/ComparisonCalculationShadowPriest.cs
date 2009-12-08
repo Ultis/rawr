@@ -49,7 +49,7 @@ namespace Rawr.ShadowPriest
 			}
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints
         {
             get 
@@ -74,16 +74,16 @@ namespace Rawr.ShadowPriest
             set { _subPoints[0] = (value < 0f)?0f:value; }
         }
 
-        public float SustainPoints
+/*        public float SustainPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = (value < 0f)?0f:value; }
-        }
+        }*/
 
         public float SurvivalPoints
         {
-            get { return _subPoints[2]; }
-            set { _subPoints[2] = (value < 0f)?0f:value; }
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = (value < 0f)?0f:value; }
         }
         
         private Item _item = null;
