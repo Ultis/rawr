@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace Rawr.Hunter {
     public class ShotPriority {
+        #region Variables
         public ShotData[] priorities = new ShotData[10];
 
         public CalculationOptionsHunter CalcOpts;
@@ -24,6 +25,7 @@ namespace Rawr.Hunter {
 
         public float DPS = 0f;
         public float MPS = 0f;
+        #endregion
 
         public ShotPriority(CalculationOptionsHunter options) { this.CalcOpts = options; }
 

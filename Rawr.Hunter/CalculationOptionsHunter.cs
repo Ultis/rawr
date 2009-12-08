@@ -51,7 +51,8 @@ namespace Rawr.Hunter
         private string _petTalents;
         public string petTalents {
             get {
-                if (String.IsNullOrEmpty(_petTalents) && _PetTalents != null) { _petTalents = _PetTalents.ToString(); }
+                if ( String.IsNullOrEmpty(_petTalents) && _PetTalents != null) { _petTalents = _PetTalents.ToString(); }
+                //if (!String.IsNullOrEmpty(_petTalents) && _petTalents.Length != 37) { _petTalents = "0000000000000000000000000000000000000"; }
                 return _petTalents;
             }
             set { _petTalents = value; }

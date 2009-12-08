@@ -35,7 +35,6 @@ namespace Rawr.Hunter
             initTalentValues(CB_CunningBoarsSpeed, 1);
             initTalentValues(CB_CunningMobility, 2);
             initTalentValues(CB_CunningSpikedCollar, 3);
-            initTalentValues(CB_CunningAvoidance, 3); // Gone in 3.3
             initTalentValues(CB_CunningCullingTheHerd, 3); // Add in 3.3
             initTalentValues(CB_CunningLionhearted, 2);
             initTalentValues(CB_CunningCarrionFeeder, 1);
@@ -50,7 +49,6 @@ namespace Rawr.Hunter
             initTalentValues(CB_CunningWildHunt, 2);
             initTalentValues(CB_CunningRoarOfSacrifice, 1);
             // Ferocity
-            initTalentValues(CB_FerocityAvoidance, 3); // Gone in 3.3, replace with CullingTheHerd
             initTalentValues(CB_FerocityCullingTheHerd, 3); // Add in 3.3
             initTalentValues(CB_FerocityBloodthirsty, 2);
             initTalentValues(CB_FerocityBoarsSpeed, 1);
@@ -71,7 +69,6 @@ namespace Rawr.Hunter
             initTalentValues(CB_FerocitySpikedCollar, 3);
             initTalentValues(CB_FerocityWildHunt, 2);
             // Tenacity
-            initTalentValues(CB_TenacityAvoidance, 3); // Gone in 3.3, replace with CullingTheHerd
             initTalentValues(CB_TenacityCullingTheHerd, 3); // Add in 3.3
             initTalentValues(CB_TenacityBloodOfTheRhino, 2);
             initTalentValues(CB_TenacityBoarsSpeed, 1);
@@ -580,7 +577,6 @@ namespace Rawr.Hunter
                 LB_CunningMobility.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.SpikedCollar.ID;
                 LB_CunningSpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Avoidance.ID;  LB_CunningAvoidance.Image = pt.TalentTree[currentId].TheIcon;// Gone in 3.3
                 currentId = pt.CullingTheHerd.ID;  LB_CunningCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
                 currentId = pt.Lionhearted.ID;  LB_CunningLionHearted.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.CarrionFeeder.ID;  LB_CunningCarrionFeeder.Image = pt.TalentTree[currentId].TheIcon;
@@ -604,7 +600,6 @@ namespace Rawr.Hunter
                 currentId = pt.SpikedCollar.ID;  LB_FerocitySpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.ImprovedCower.ID;  LB_FerocityImprovedCower.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.Bloodthirsty.ID;  LB_FerocityBloodthirsty.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Avoidance.ID;  LB_FerocityAvoidance.Image = pt.TalentTree[currentId].TheIcon;// Gone in 3.3
                 currentId = pt.CullingTheHerd.ID;  LB_FerocityCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
                 currentId = pt.Lionhearted.ID;  LB_FerocityLionHearted.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.GreatResistance.ID;  LB_FerocityGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
@@ -624,7 +619,6 @@ namespace Rawr.Hunter
                 currentId = pt.SpikedCollar.ID;  LB_TenacitySpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.BloodOfTheRhino.ID;  LB_TenacityBloodOfTheRhino.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.PetBarding.ID;  LB_TenacityPetBarding.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Avoidance.ID;  LB_TenacityAvoidance.Image = pt.TalentTree[currentId].TheIcon;// Gone in 3.3
                 currentId = pt.CullingTheHerd.ID;  LB_TenacityCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
                 currentId = pt.Lionhearted.ID;  LB_TenacityLionHearted.Image = pt.TalentTree[currentId].TheIcon;
                 currentId = pt.GuardDog.ID;  LB_TenacityGuardDog.Image = pt.TalentTree[currentId].TheIcon;
@@ -743,7 +737,6 @@ namespace Rawr.Hunter
                     currentId = pt.BoarsSpeed.ID; pt.TalentTree[currentId].Value = CB_CunningBoarsSpeed.SelectedIndex; LB_CunningBoarsSpeed.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.Mobility.ID; pt.TalentTree[currentId].Value = CB_CunningMobility.SelectedIndex; LB_CunningMobility.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.SpikedCollar.ID; pt.TalentTree[currentId].Value = CB_CunningSpikedCollar.SelectedIndex; LB_CunningSpikedCollar.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
-                    currentId = pt.Avoidance.ID; pt.TalentTree[currentId].Value = CB_CunningAvoidance.SelectedIndex; LB_CunningAvoidance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Gone in 3.3
                     currentId = pt.CullingTheHerd.ID; pt.TalentTree[currentId].Value = CB_CunningCullingTheHerd.SelectedIndex; LB_CunningCullingTheHerd.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Add in 3.3
                     currentId = pt.Lionhearted.ID; pt.TalentTree[currentId].Value = CB_CunningLionhearted.SelectedIndex; LB_CunningLionHearted.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.CarrionFeeder.ID; pt.TalentTree[currentId].Value = CB_CunningCarrionFeeder.SelectedIndex; LB_CunningCarrionFeeder.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
@@ -769,7 +762,6 @@ namespace Rawr.Hunter
                     currentId = pt.SpikedCollar.ID; pt.TalentTree[currentId].Value = CB_FerocitySpikedCollar.SelectedIndex; LB_FerocitySpikedCollar.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.ImprovedCower.ID; pt.TalentTree[currentId].Value = CB_FerocityImprovedCower.SelectedIndex; LB_FerocityImprovedCower.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.Bloodthirsty.ID; pt.TalentTree[currentId].Value = CB_FerocityBloodthirsty.SelectedIndex; LB_FerocityBloodthirsty.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
-                    currentId = pt.Avoidance.ID; pt.TalentTree[currentId].Value = CB_FerocityAvoidance.SelectedIndex; LB_FerocityAvoidance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Gone in 3.3
                     currentId = pt.CullingTheHerd.ID; pt.TalentTree[currentId].Value = CB_FerocityCullingTheHerd.SelectedIndex; LB_FerocityCullingTheHerd.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Add in 3.3
                     currentId = pt.Lionhearted.ID; pt.TalentTree[currentId].Value = CB_FerocityLionhearted.SelectedIndex; LB_FerocityLionHearted.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.GreatResistance.ID; pt.TalentTree[currentId].Value = CB_FerocityGreatResistance.SelectedIndex; LB_FerocityGreatResistance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
@@ -791,7 +783,6 @@ namespace Rawr.Hunter
                     currentId = pt.SpikedCollar.ID; pt.TalentTree[currentId].Value = CB_TenacitySpikedCollar.SelectedIndex; LB_TenacitySpikedCollar.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.BloodOfTheRhino.ID; pt.TalentTree[currentId].Value = CB_TenacityBloodOfTheRhino.SelectedIndex; LB_TenacityBloodOfTheRhino.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.PetBarding.ID; pt.TalentTree[currentId].Value = CB_TenacityPetBarding.SelectedIndex; LB_TenacityPetBarding.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
-                    currentId = pt.Avoidance.ID; pt.TalentTree[currentId].Value = CB_TenacityAvoidance.SelectedIndex; LB_TenacityAvoidance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Gone in 3.3
                     currentId = pt.CullingTheHerd.ID; pt.TalentTree[currentId].Value = CB_TenacityCullingTheHerd.SelectedIndex; LB_TenacityCullingTheHerd.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Add in 3.3
                     currentId = pt.Lionhearted.ID; pt.TalentTree[currentId].Value = CB_TenacityLionhearted.SelectedIndex; LB_TenacityLionHearted.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
                     currentId = pt.GuardDog.ID; pt.TalentTree[currentId].Value = CB_TenacityGuardDog.SelectedIndex; LB_TenacityGuardDog.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
@@ -826,7 +817,6 @@ namespace Rawr.Hunter
             {
                 PetFamilyTree tree = getPetFamilyTree();
                 // Cunning
-                CB_CunningAvoidance.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.Avoidance.Value : 0; line++; // Gone in 3.3, replace with CullingTheHerd
                 CB_CunningCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++; // Add in 3.3
                 CB_CunningBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.BoarsSpeed.Value : 0; line++;
                 CB_CunningBullheaded.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.Bullheaded.Value : 0; line++;
@@ -848,7 +838,6 @@ namespace Rawr.Hunter
                 CB_CunningWildHunt.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.WildHunt.Value : 0; line++;
                 CB_CunningWolverineBite.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.WolverineBite.Value : 0; line++;
                 // Ferocity
-                CB_FerocityAvoidance.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.Avoidance.Value : 0; line++; // Gone in 3.3, replace with CullingTheHerd
                 CB_FerocityCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++;  // Add in 3.3
                 CB_FerocityBloodthirsty.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.Bloodthirsty.Value : 0; line++;
                 CB_FerocityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.BoarsSpeed.Value : 0; line++;
@@ -869,7 +858,6 @@ namespace Rawr.Hunter
                 CB_FerocitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.SpikedCollar.Value : 0; line++;
                 CB_FerocityWildHunt.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.WildHunt.Value : 0; line++;
                 // Tenacity Tree
-                CB_TenacityAvoidance.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.Avoidance.Value : 0; line++;  // Gone in 3.3, replace with CullingTheHerd
                 CB_TenacityCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++;  // Add in 3.3
                 CB_TenacityBloodOfTheRhino.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.BloodOfTheRhino.Value : 0; line++;
                 CB_TenacityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.BoarsSpeed.Value : 0; line++;

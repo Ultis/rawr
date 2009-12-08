@@ -7,6 +7,7 @@ namespace Rawr.Hunter
 {   
     public class PetCalculations
     {
+        #region Variables
         Character character;
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter CalcOpts;
@@ -29,6 +30,7 @@ namespace Rawr.Hunter
         private float PetChanceToMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[83 - 80];
         private float PetChanceToSpellMiss = StatConversion.GetSpellMiss(83 - 80, false);
         private float PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[83 - 80];
+        #endregion
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options,
             Stats stats,Stats statsHunterBuffs, Stats statsPetBuffs, Stats statsGear)
@@ -50,11 +52,11 @@ namespace Rawr.Hunter
             // and source information.
 
             // base stats for a level 80 pet
-            petStats.Agility = 113;
-            petStats.Strength = 331;
-            petStats.Stamina = 361;
-            petStats.Intellect = 65;
-            petStats.Spirit = 10;
+            petStats.Agility   = 113;
+            petStats.Strength  = 331;
+            petStats.Stamina   = 361;
+            petStats.Intellect =  65;
+            petStats.Spirit    =  10;
 
             statsPetBuffs.Stamina  += statsPetBuffs.PetStamina;
             statsPetBuffs.Strength += statsPetBuffs.PetStrength;
@@ -68,8 +70,6 @@ namespace Rawr.Hunter
             int levelDifference = CalcOpts.TargetLevel - character.Level;
 
             #region Focus Regen
-
-            // 31-10-2009 Drizz: Region updated to align with spreadsheet v92b
             float focusRegenBasePer4 = 20f;
             float focusRegenBestialDiscipline = focusRegenBasePer4 * 0.5f * character.HunterTalents.BestialDiscipline;            
 
@@ -79,9 +79,7 @@ namespace Rawr.Hunter
 
             float focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat)/4f;
 
-            // owl's focus
             float owlsFocusEffect = (CalcOpts.PetTalents.OwlsFocus.Value > 0) ? owlsFocusEffect = 1f / (1f / (CalcOpts.PetTalents.OwlsFocus.Value * 0.15f) + 1f) : 0f;
-
             #endregion
             #region Special Abilities Priority Rotation
 
@@ -298,17 +296,15 @@ namespace Rawr.Hunter
                 armorDebuffAcidSpit = 0;
             }
 
-            calculatedStats.petArmorDebuffs = 0 - (1 - armorDebuffSporeCloud) * (1 - armorDebuffAcidSpit) * (1 - armorDebuffSting) + 1;
+            calculatedStats.petArmorDebuffs = 0f - (1f - armorDebuffSporeCloud) * (1f - armorDebuffAcidSpit) * (1f - armorDebuffSting) + 1;
 
             #endregion
             #region Hunter Effects
             // Ferocious Inspiraion
             // (Same as above)
             calculatedStats.ferociousInspirationDamageAdjust = 1;
-            if (character.HunterTalents.FerociousInspiration > 0)
-            {
-                if (CalcOpts.PetFamily != PetFamily.None)
-                {
+            if (character.HunterTalents.FerociousInspiration > 0) {
+                if (CalcOpts.PetFamily != PetFamily.None) {
                     float ferociousInspirationSpecialsEffect = priorityRotation.petSpecialFrequency == 0 ? 0 : 10f / priorityRotation.petSpecialFrequency;
                     float ferociousInspirationUptime = 1f - (float)Math.Pow(1f - calculatedStats.petCritTotalSpecials, (10f / attackSpeedEffective) + ferociousInspirationSpecialsEffect);
                     float ferociousInspirationEffect = 0.01f * character.HunterTalents.FerociousInspiration;
@@ -320,8 +316,7 @@ namespace Rawr.Hunter
             // Roar of Recovery
             calculatedStats.manaRegenRoarOfRecovery = 0;
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
-            if (roarOfRecoveryFreq > 0)
-            {
+            if (roarOfRecoveryFreq > 0) {
                 float roarOfRecoveryUseCount = (float)Math.Ceiling(CalcOpts.Duration / roarOfRecoveryFreq);
                 float roarOfRecoveryManaRestored = calculatedStats.BasicStats.Mana * 0.3f * roarOfRecoveryUseCount; // E129
                 calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / CalcOpts.Duration : 0;
@@ -330,13 +325,12 @@ namespace Rawr.Hunter
             //Invigoration
             //calculatedStats.manaRegenInvigoration = 0;
             float invigorationProcChance = character.HunterTalents.Invigoration * 0.5f; // C32
-            if (invigorationProcChance > 0)
-            {
+            if (invigorationProcChance > 0) {
                 float invigorationProcFreq = (priorityRotation.petSpecialFrequency / calculatedStats.petCritTotalSpecials) / invigorationProcChance; //C35
                 float invigorationEffect = character.HunterTalents.Invigoration > 0 ? 0.01f : 0;
-                float invigorationManaGainedPercent = invigorationProcFreq > 0 ? 60 / invigorationProcFreq * invigorationEffect : 0; // C36
-                float invigorationManaPerMinute = invigorationProcFreq > 0 ? 60 / invigorationProcFreq * invigorationEffect * calculatedStats.BasicStats.Mana : 0; // C37
-                calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60;
+                float invigorationManaGainedPercent = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect : 0; // C36
+                float invigorationManaPerMinute = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect * calculatedStats.BasicStats.Mana : 0; // C37
+                calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60f;
             }
             #endregion
 

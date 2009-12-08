@@ -975,7 +975,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float levelDifF = (float)levelDifI;
 
             // shot basics
-            #region August 2009 Priority Rotation Setup
+            #region Priority Rotation Setup
 
             calculatedStats.priorityRotation = new ShotPriority(calcOpts);
 
@@ -1044,8 +1044,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.volley.Duration = -1f;
             }
 
-            if (calculatedStats.priorityRotation.containsShot(Shots.Readiness))
-            {
+            if (calculatedStats.priorityRotation.containsShot(Shots.Readiness)) {
                 calculatedStats.rapidFire.Cd = 157.5f - (30f * talents.RapidKilling);
             } else {
                 calculatedStats.rapidFire.Cd = (5 - talents.RapidKilling) * 60f;
@@ -1673,13 +1672,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // pet - part 2
             #region Pet DPS Calculations
-
             calculatedStats.pet.calculateDPS();
-
             #endregion
 
             // shot damage calcs
-            #region August 2009 AutoShot
+            #region AutoShot
 
             // scope damage only applies to autoshot, so is not added to the normalized damage
             float rangedAmmoDamage           = rangedAmmoDPS * rangedWeaponSpeed;
@@ -2099,7 +2096,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.immolationTrap.Damage = immolationTrapDamagePerTick * immolationTrapTicks;
             #endregion
-            #region August 2009 Explosive Trap
+            #region Explosive Trap
             float explosiveTrapDamage = (((0.1f * RAP) + 523f) + ((0.1f * RAP) + 671f)) / 2f + 900f;
             float explosiveTrapDamageAdjust = (1f - targetDebuffsFire)
                                             * partialResistDamageAdjust
@@ -2125,55 +2122,46 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.explosiveTrap.Damage = explosiveTrapDamagePerTick * explosiveTrapTicks;
             }
             #endregion
-            #region August 2009 Freezing Trap
+            #region Freezing Trap
             calculatedStats.freezingTrap.Damage = 0f;
             #endregion
-            #region August 2009 Frost Trap
+            #region Frost Trap
             calculatedStats.frostTrap.Damage = 0f;
             #endregion
-            #region August 2009 Rapid Fire
+            #region Rapid Fire
             calculatedStats.rapidFire.Damage = 0;
             #endregion
-            #region October 2009 Piercing Shots
-            //Drizz: Added for PiercingShots
-
-            calculatedStats.PiercingShotsDPS = 0;
-            calculatedStats.PiercingShotsDPSSteadyShot = 0;
-            calculatedStats.PiercingShotsDPSAimedShot = 0;
+            #region Piercing Shots
+            calculatedStats.PiercingShotsDPS            = 0;
+            calculatedStats.PiercingShotsDPSSteadyShot  = 0;
+            calculatedStats.PiercingShotsDPSAimedShot   = 0;
             calculatedStats.PiercingShotsDPSChimeraShot = 0;
 
-            if (character.HunterTalents.PiercingShots > 0)
-            {
-                double piercingShotsDamageDone = character.HunterTalents.PiercingShots * 0.1;
-                double piercingShotsMangleOnTarget = targetDebuffBleed;
-                double piercingShotsTotalModifier = piercingShotsDamageDone * piercingShotsMangleOnTarget;
-                double piercingShotsSteadyShotFrequency = calculatedStats.steadyShot.Freq;
-                double piercingShotsSteadyShotDamageAdded = steadyShotPiercingShots;
+            if (talents.PiercingShots > 0) {
+                float piercingShotsDamageDone             = talents.PiercingShots * 0.1f;
+                float piercingShotsMangleOnTarget         = targetDebuffBleed;
+                float piercingShotsTotalModifier          = piercingShotsDamageDone * piercingShotsMangleOnTarget;
+                float piercingShotsSteadyShotFrequency    = calculatedStats.steadyShot.Freq;
+                float piercingShotsSteadyShotDamageAdded  = steadyShotPiercingShots;
 
-                double piercingShotsAimedShotFrequency = calculatedStats.aimedShot.Freq;
-                double piercingShotsAimedShotDamageAdded = aimedShotPiercingShots;
-                double piercingShotsChimeraShotFrequency = calculatedStats.chimeraShot.Freq;
-                double piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
+                float piercingShotsAimedShotFrequency     = calculatedStats.aimedShot.Freq;
+                float piercingShotsAimedShotDamageAdded   = aimedShotPiercingShots;
+                float piercingShotsChimeraShotFrequency   = calculatedStats.chimeraShot.Freq;
+                float piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
 
                 if (piercingShotsSteadyShotFrequency > 0) {
-                    //calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
                     calculatedStats.PiercingShotsDPS += piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
                 }
                 if (piercingShotsAimedShotFrequency > 0) {
-                    //calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
                     calculatedStats.PiercingShotsDPS += piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
                 }
                 if (piercingShotsChimeraShotFrequency > 0) {
-                    //calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
                     calculatedStats.PiercingShotsDPS += piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
                 }
 
-                // **************************************************************************
-                // 29-10-2009 Drizz: The below is used to make easier comparisons to the spreadsheet.
-                calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded;
-                calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded;
+                calculatedStats.PiercingShotsDPSSteadyShot  = piercingShotsSteadyShotDamageAdded;
+                calculatedStats.PiercingShotsDPSAimedShot   = piercingShotsAimedShotDamageAdded;
                 calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded;
-                //***************************************************************************
             }
             #endregion
 
@@ -2240,6 +2228,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
             if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
             HunterTalents talents = character.HunterTalents;
+            PetTalentTree petTalents = calcOpts.PetTalents;
+            int levelDif = calcOpts.TargetLevel - character.Level;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
 			statsRace.PhysicalCrit += (character.Ranged != null && 
@@ -2248,9 +2238,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				0.01f : 0.00f;
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsOptionsPanel = new Stats()
-            {
-                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
+            Stats statsOptionsPanel = new Stats() {
+                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif],
                 PhysicalHaste = 0.15f, // This is from what Bags used to give that got rolled into the class
             };
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
@@ -2266,12 +2255,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.priorityRotation.priorities[8] = getShotByIndex(calcOpts.PriorityIndex9, calculatedStats);
             calculatedStats.priorityRotation.priorities[9] = getShotByIndex(calcOpts.PriorityIndex10, calculatedStats);
             calculatedStats.priorityRotation.validateShots(talents);
-            {
-                if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
-                    statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                        new Stats() { RangedHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
-                        15f, (5 - talents.RapidKilling) * 60f));
-                }
+            if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
+                statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                    new Stats() { RangedHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
+                    15f, (5 - talents.RapidKilling) * 60f));
             }
             Stats statsTalents = new Stats()
             {
@@ -2309,8 +2296,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (calcOpts.selectedAspect == Aspect.Hawk || (calcOpts.selectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                 statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
             }
-            if (calcOpts.PetTalents.CallOfTheWild.Value > 0)
-            {
+            if (petTalents.CallOfTheWild.Value > 0) {
                 SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusAttackPowerMultiplier = 0.10f, },
                     20f, 5f * 60f);
@@ -2334,9 +2320,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     10f, cooldown);
                 statsTalents.AddSpecialEffect(WrathBeastWithin);
             }
-            if (calcOpts.PTRMode && calcOpts.PetTalents.CullingTheHerd.Value > 0)
-            {
-                float val1 = calcOpts.PetTalents.CullingTheHerd.Value * 0.01f;
+            if (petTalents.CullingTheHerd.Value > 0) {
+                float val1 = petTalents.CullingTheHerd.Value * 0.01f;
                 SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
                     new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
                     10f, 0f);
@@ -2446,8 +2431,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             statsTotal.Health = (float)(healthSubTotal * healthTaurenAdjust);*/
 
             float attemptedAtksInterval = 1f, petattemptedAtksInterval = 1f;
-            float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - statsTotal.PhysicalHit);
-            float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(calcOpts.TargetLevel - character.Level, false) - statsTotal.SpellHit);
+            float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
+            float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
             float hitRate = (1f - ChanceToMiss);
             float critRate = statsTotal.PhysicalCrit;
             float bleedHitInterval = 1f;
@@ -2586,7 +2571,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 		#endregion //overrides
 
         #region Private Functions
-
         public static float CalcEffectiveDamage(float damageNormal, float missChance, float critChance, float critAdjust, float damageAdjust) {
             /* OLD CODE
              * 

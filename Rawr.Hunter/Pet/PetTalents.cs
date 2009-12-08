@@ -421,9 +421,9 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             get { return _value; }
             set {
                 _value = value;
-#if !RAWR3 && !SILVERLIGHT
+                #if !RAWR3 && !SILVERLIGHT
                 UpdateIcon();
-#endif
+                #endif
             }
         }
 
@@ -458,12 +458,6 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
     }
 
     public static class PetTalentsBase {
-        /// <summary>Reduces the damage your pet takes from area of effect attacks by [25*Pts]%.</summary>
-        public readonly static PetTalentData Avoidance = new PetTalentData(0, "Avoidance", 3, new string[] {
-            @"Reduces the damage your pet takes from area of effect attacks by [25*Pts]%.",
-            @"Reduces the damage your pet takes from area of effect attacks by 25%.",
-            @"Reduces the damage your pet takes from area of effect attacks by 50%.",
-            @"Reduces the damage your pet takes from area of effect attacks by 75%." }, "ability_hunter_catlikereflexes");
         /// <summary>Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.</summary>
         public readonly static PetTalentData BloodOfTheRhino = new PetTalentData(1, "Blood Of The Rhino", 2, new string[] {
             @"Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.",
@@ -640,8 +634,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             @"Increases pet and hunter damage by 3% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack." }, "inv_misc_monsterhorn_06");
     }
 
-    public class PetTalentTree
-    {
+    public class PetTalentTree {
         public PetTalentTree() {
             Initialize();
             MakeTree();
@@ -653,15 +646,14 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             if (String.IsNullOrEmpty(source)) { return; }
             int index = 0;
             try {
-                foreach (char pt in source.ToCharArray())
-                {
-                    TalentTree[index].Value = int.Parse(pt.ToString());
+                foreach (char pt in source.ToCharArray()) {
+                    TalentTree[index].Value = Math.Min(TalentTree[index].Max, int.Parse(pt.ToString()));
                     index++;
                 }
-            }
-            catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error rebuilding the pet talents from file",
-                    ex.Message, "PetTalentTree(source)", "Source: " + source, ex.StackTrace);
+            } catch (Exception /*ex*/) {
+                /* We don't care that it's wrong
+                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error rebuilding the pet talents from file",
+                    ex.Message, "PetTalentTree(source)", "Source: " + source, ex.StackTrace);*/
             }
         }
         [XmlIgnore]
@@ -675,7 +667,6 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             if (TalentTree == null || TalentTree.Count == 0)
             {
                 TalentTree = new List<PetTalent>() {
-                    Avoidance,
                     BloodOfTheRhino,
                     Bloodthirsty,
                     BoarsSpeed,
@@ -685,6 +676,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
                     ChargeSwoop,
                     CobraReflexes,
                     Cornered,
+                    CullingTheHerd,
                     DiveDash,
                     FeedingFrenzy,
                     GraceOfTheMantis,
@@ -712,129 +704,124 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
                     Thunderstomp,
                     WildHunt,
                     WolverineBite,
-                    CullingTheHerd,
                 };
             }
         }
         #region Talents
-        [XmlIgnore]
-        /// <summary>Reduces the damage your pet takes from area of effect attacks by [25*Pts]%.</summary>
-        public PetTalent Avoidance;
-        [XmlIgnore]
         /// <summary>Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent BloodOfTheRhino;
-        [XmlIgnore]
         /// <summary>Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.</summary>
+        [XmlIgnore]
         public PetTalent Bloodthirsty;
-        [XmlIgnore]
         /// <summary>Increases your pet's movement speed by 30%.</summary>
+        [XmlIgnore]
         public PetTalent BoarsSpeed;
-        [XmlIgnore]
         /// <summary>Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec.</summary>
+        [XmlIgnore]
         public PetTalent Bullheaded;
-        [XmlIgnore]
         /// <summary>Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.</summary>
+        [XmlIgnore]
         public PetTalent CallOfTheWild;
-        [XmlIgnore]
         /// <summary>Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures.</summary>
+        [XmlIgnore]
         public PetTalent CarrionFeeder;
-        [XmlIgnore]
         /// <summary>Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack.</summary>
+        [XmlIgnore]
         public PetTalent ChargeSwoop;
-        [XmlIgnore]
         /// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
+        [XmlIgnore]
         public PetTalent CobraReflexes;
-        [XmlIgnore]
         /// <summary>When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to eb critically hit.</summary>
+        [XmlIgnore]
         public PetTalent Cornered;
-        [XmlIgnore]
         /// <summary>Increases your pet's movement speed by 80% for 16 sec.</summary>
+        [XmlIgnore]
         public PetTalent DiveDash;
-        [XmlIgnore]
         /// <summary>Your pet does [8*Pts]% additional damage to targets with les than 35% health.</summary>
+        [XmlIgnore]
         public PetTalent FeedingFrenzy;
-        [XmlIgnore]
         /// <summary>Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent GraceOfTheMantis;
-        [XmlIgnore]
         /// <summary>Your pet takes [5*Pts]% less damage from Arcane, Fire, Frost, Nature and Shadow magic.</summary>
+        [XmlIgnore]
         public PetTalent GreatResistance;
-        [XmlIgnore]
         /// <summary>Increases your pet's total Stamina by [4*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent GreatStamina;
-        [XmlIgnore]
         /// <summary>Your pet's Growl generates [10*Pts]% additional threat and 10% of it's total happiness.</summary>
+        [XmlIgnore]
         public PetTalent GuardDog;
-        [XmlIgnore]
         /// <summary>When your pet dies, it will miraculously return to life with full health.</summary>
+        [XmlIgnore]
         public PetTalent HeartOfThePhoenix;
-        [XmlIgnore]
         /// <summary>Your pet's Cower also decreases damage taken by [10*Pts]% for the next 10 sec.</summary>
+        [XmlIgnore]
         public PetTalent ImprovedCower;
-        [XmlIgnore]
         /// <summary>Your pet runs at high speed towards a group member, intercepting the next melee or ranged attack made against them.</summary>
+        [XmlIgnore]
         public PetTalent Intervene;
-        [XmlIgnore]
         /// <summary>Your pet temporarily gains 30% of it's maximum health for 20 sec. After the effect expires, the health is lost.</summary>
+        [XmlIgnore]
         public PetTalent LastStand;
-        [XmlIgnore]
         /// <summary>Your pet heals itself for 100% of its total health over 5 sec while channeling.</summary>
+        [XmlIgnore]
         public PetTalent LickYourWounds;
-        [XmlIgnore]
         /// <summary>Reduces the duration of all Stun and Fear effects used against your pet by [15*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent Lionhearted;
-        [XmlIgnore]
         /// <summary>Reduces the cooldown on your pet's Dive/Dash ability by [8*Pts] sec.</summary>
+        [XmlIgnore]
         public PetTalent Mobility;
-        [XmlIgnore]
         /// <summary>Increases your pet's armor by [5*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent NaturalArmor;
-        [XmlIgnore]
         /// <summary>Your pet has a [15*Pts]% chance after using an ability that the next ability will cost no Focus if used within 8 sec.</summary>
+        [XmlIgnore]
         public PetTalent OwlsFocus;
-        [XmlIgnore]
         /// <summary>Increases your pet's armor by [5*Pts]% and chance to Dodge by [1*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent PetBarding;
-        [XmlIgnore]
         /// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc.</summary>
+        [XmlIgnore]
         public PetTalent Rabid;
-        [XmlIgnore]
         /// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>
+        [XmlIgnore]
         public PetTalent RoarOfRecovery;
-        [XmlIgnore]
         /// <summary>Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec.</summary>
+        [XmlIgnore]
         public PetTalent RoarOfSacrifice;
-        [XmlIgnore]
         /// <summary>Your pet does an additional [3*Pts]% damage with all attacks.</summary>
+        [XmlIgnore]
         public PetTalent SharkAttack;
-        [XmlIgnore]
         /// <summary>Your pet's Growl also heals it for [1*Pts]% of its total health.</summary>
+        [XmlIgnore]
         public PetTalent Silverback;
-        [XmlIgnore]
         /// <summary>Increases the critical strike chance of your pet by [3*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent SpidersBite;
-        [XmlIgnore]
         /// <summary>Your pet does an additional [3*Pts]% damage with all attacks.</summary>
+        [XmlIgnore]
         public PetTalent SpikedCollar;
-        [XmlIgnore]
         /// <summary>Your pet taunts the target to attack it for 3 sec.</summary>
+        [XmlIgnore]
         public PetTalent Taunt;
-        [XmlIgnore]
         /// <summary>Shakes the ground with thundering force, doing 3 to 5 Nature damage to all enemeies within 8 yards. This ability causes a moderate amount of additional threat.</summary>
+        [XmlIgnore]
         public PetTalent Thunderstomp;
-        [XmlIgnore]
         /// <summary>Increases the contribution your pet gets from your Stamina by [20*Pts]% and attack power by [15*Pts]%.</summary>
+        [XmlIgnore]
         public PetTalent WildHunt;
-        [XmlIgnore]
         /// <summary>A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.</summary>
-        public PetTalent WolverineBite;
         [XmlIgnore]
+        public PetTalent WolverineBite;
         /// <summary>Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.</summary>
+        [XmlIgnore]
         public PetTalent CullingTheHerd;
         #endregion
         /// <summary>Initializes the Abilities</summary>
         public void Initialize() {
-            Avoidance = new PetTalent(PetTalentsBase.Avoidance, 0);
             BloodOfTheRhino = new PetTalent(PetTalentsBase.BloodOfTheRhino, 0);
             Bloodthirsty = new PetTalent(PetTalentsBase.Bloodthirsty, 0);
             BoarsSpeed = new PetTalent(PetTalentsBase.BoarsSpeed, 0);
@@ -889,7 +876,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             Bloodthirsty.Value = 0;
             BloodOfTheRhino.Value = 0;
             PetBarding.Value = 0;
-            Avoidance.Value = 0; CullingTheHerd.Value = 0;
+            CullingTheHerd.Value = 0;
             Lionhearted.Value = 0;
             CarrionFeeder.Value = 0;
             GuardDog.Value = 0;

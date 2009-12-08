@@ -44,7 +44,6 @@
             this.LB_TenacityBloodOfTheRhino = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_TenacityBoarsSpeed = new System.Windows.Forms.ComboBox();
             this.CB_TenacityPetBarding = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityAvoidance = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.LB_TenacityLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_TenacityGuardDog = new System.Windows.Forms.ComboBox();
             this.CB_TenacityTaunt = new System.Windows.Forms.ComboBox();
@@ -62,7 +61,6 @@
             this.LB_TenacityBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_TenacityLionhearted = new System.Windows.Forms.ComboBox();
             this.LB_TenacityThunderstomp = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityAvoidance = new System.Windows.Forms.ComboBox();
             this.LB_TenacityGuardDog = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_TenacityRoarOfSacrifice = new System.Windows.Forms.ComboBox();
             this.LB_TenacityIntervene = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -103,8 +101,6 @@
             this.CB_CunningSpikedCollar = new System.Windows.Forms.ComboBox();
             this.LB_CunningOwlsFocus = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_CunningOwlsFocus = new System.Windows.Forms.ComboBox();
-            this.LB_CunningAvoidance = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningAvoidance = new System.Windows.Forms.ComboBox();
             this.LB_CunningCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_CunningCullingTheHerd = new System.Windows.Forms.ComboBox();
             this.LB_CunningLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -144,8 +140,6 @@
             this.LB_FerocityGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_FerocityChargeSwoop = new System.Windows.Forms.ComboBox();
             this.LB_FerocityChargeSwoop = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocityAvoidance = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityAvoidance = new System.Windows.Forms.ComboBox();
             this.CB_FerocityCullingTheHerd = new System.Windows.Forms.ComboBox();
             this.LB_FerocityCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.LB_FerocitySharkAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -336,7 +330,6 @@
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityBloodOfTheRhino, 2, 3);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityBoarsSpeed, 1, 4);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityPetBarding, 3, 4);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityAvoidance, 0, 6);
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityLionHearted, 2, 6);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityGuardDog, 1, 7);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityTaunt, 1, 13);
@@ -354,7 +347,6 @@
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityBoarsSpeed, 1, 3);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityLionhearted, 2, 7);
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityThunderstomp, 3, 6);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityAvoidance, 0, 7);
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityGuardDog, 1, 6);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityRoarOfSacrifice, 2, 13);
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityIntervene, 3, 12);
@@ -367,8 +359,8 @@
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatResistance, 3, 9);
             this.TLP_Tenacity.Controls.Add(this.CB_TenacityGraceOfTheMantis, 2, 10);
             this.TLP_Tenacity.Controls.Add(this.LB_TenacityGraceOfTheMantis, 2, 9);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCullingTheHerd, 0, 9);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCullingTheHerd, 0, 10);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCullingTheHerd, 0, 6);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCullingTheHerd, 0, 7);
             this.TLP_Tenacity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TLP_Tenacity.Location = new System.Drawing.Point(3, 16);
             this.TLP_Tenacity.Name = "TLP_Tenacity";
@@ -521,21 +513,6 @@
             this.CB_TenacityPetBarding.Size = new System.Drawing.Size(67, 21);
             this.CB_TenacityPetBarding.TabIndex = 15;
             this.CB_TenacityPetBarding.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityAvoidance
-            // 
-            this.LB_TenacityAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityAvoidance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityAvoidance.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityAvoidance.ImageList = this.TalentImageList;
-            this.LB_TenacityAvoidance.Location = new System.Drawing.Point(3, 147);
-            this.LB_TenacityAvoidance.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityAvoidance.Name = "LB_TenacityAvoidance";
-            this.LB_TenacityAvoidance.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityAvoidance.TabIndex = 16;
-            this.LB_TenacityAvoidance.Text = "Avoidance (3.2)";
-            this.LB_TenacityAvoidance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityAvoidance.ToolTipText = null;
             // 
             // LB_TenacityLionHearted
             // 
@@ -765,18 +742,6 @@
             this.LB_TenacityThunderstomp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LB_TenacityThunderstomp.ToolTipText = null;
             // 
-            // CB_TenacityAvoidance
-            // 
-            this.CB_TenacityAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityAvoidance.FormattingEnabled = true;
-            this.CB_TenacityAvoidance.Location = new System.Drawing.Point(0, 190);
-            this.CB_TenacityAvoidance.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityAvoidance.Name = "CB_TenacityAvoidance";
-            this.CB_TenacityAvoidance.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityAvoidance.TabIndex = 17;
-            this.CB_TenacityAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
             // LB_TenacityGuardDog
             // 
             this.LB_TenacityGuardDog.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -945,7 +910,7 @@
             this.LB_TenacityCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LB_TenacityCullingTheHerd.ForeColor = System.Drawing.Color.White;
             this.LB_TenacityCullingTheHerd.ImageList = this.TalentImageList;
-            this.LB_TenacityCullingTheHerd.Location = new System.Drawing.Point(3, 219);
+            this.LB_TenacityCullingTheHerd.Location = new System.Drawing.Point(3, 147);
             this.LB_TenacityCullingTheHerd.Margin = new System.Windows.Forms.Padding(3);
             this.LB_TenacityCullingTheHerd.Name = "LB_TenacityCullingTheHerd";
             this.LB_TenacityCullingTheHerd.Size = new System.Drawing.Size(59, 40);
@@ -964,7 +929,7 @@
             "1",
             "2",
             "3"});
-            this.CB_TenacityCullingTheHerd.Location = new System.Drawing.Point(0, 262);
+            this.CB_TenacityCullingTheHerd.Location = new System.Drawing.Point(0, 190);
             this.CB_TenacityCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
             this.CB_TenacityCullingTheHerd.Name = "CB_TenacityCullingTheHerd";
             this.CB_TenacityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
@@ -1017,10 +982,8 @@
             this.TLP_Cunning.Controls.Add(this.CB_CunningSpikedCollar, 3, 4);
             this.TLP_Cunning.Controls.Add(this.LB_CunningOwlsFocus, 2, 3);
             this.TLP_Cunning.Controls.Add(this.CB_CunningOwlsFocus, 2, 4);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningAvoidance, 0, 6);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningAvoidance, 0, 7);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningCullingTheHerd, 0, 9);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningCullingTheHerd, 0, 10);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCullingTheHerd, 0, 6);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningCullingTheHerd, 0, 7);
             this.TLP_Cunning.Controls.Add(this.LB_CunningLionHearted, 1, 6);
             this.TLP_Cunning.Controls.Add(this.CB_CunningLionhearted, 1, 7);
             this.TLP_Cunning.Controls.Add(this.LB_CunningCarrionFeeder, 2, 6);
@@ -1396,34 +1359,6 @@
             this.CB_CunningOwlsFocus.TabIndex = 13;
             this.CB_CunningOwlsFocus.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
-            // LB_CunningAvoidance
-            // 
-            this.LB_CunningAvoidance.AutoSize = true;
-            this.LB_CunningAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningAvoidance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningAvoidance.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningAvoidance.ImageList = this.TalentImageList;
-            this.LB_CunningAvoidance.Location = new System.Drawing.Point(3, 146);
-            this.LB_CunningAvoidance.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningAvoidance.Name = "LB_CunningAvoidance";
-            this.LB_CunningAvoidance.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningAvoidance.TabIndex = 16;
-            this.LB_CunningAvoidance.Text = "Avoidance (3.2)";
-            this.LB_CunningAvoidance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningAvoidance.ToolTipText = null;
-            // 
-            // CB_CunningAvoidance
-            // 
-            this.CB_CunningAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningAvoidance.FormattingEnabled = true;
-            this.CB_CunningAvoidance.Location = new System.Drawing.Point(0, 190);
-            this.CB_CunningAvoidance.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningAvoidance.Name = "CB_CunningAvoidance";
-            this.CB_CunningAvoidance.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningAvoidance.TabIndex = 17;
-            this.CB_CunningAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
             // LB_CunningCullingTheHerd
             // 
             this.LB_CunningCullingTheHerd.AutoSize = true;
@@ -1431,7 +1366,7 @@
             this.LB_CunningCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.LB_CunningCullingTheHerd.ForeColor = System.Drawing.Color.White;
             this.LB_CunningCullingTheHerd.ImageList = this.TalentImageList;
-            this.LB_CunningCullingTheHerd.Location = new System.Drawing.Point(3, 218);
+            this.LB_CunningCullingTheHerd.Location = new System.Drawing.Point(3, 146);
             this.LB_CunningCullingTheHerd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LB_CunningCullingTheHerd.Name = "LB_CunningCullingTheHerd";
             this.LB_CunningCullingTheHerd.Size = new System.Drawing.Size(59, 42);
@@ -1450,7 +1385,7 @@
             "1",
             "2",
             "3"});
-            this.CB_CunningCullingTheHerd.Location = new System.Drawing.Point(0, 262);
+            this.CB_CunningCullingTheHerd.Location = new System.Drawing.Point(0, 190);
             this.CB_CunningCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
             this.CB_CunningCullingTheHerd.Name = "CB_CunningCullingTheHerd";
             this.CB_CunningCullingTheHerd.Size = new System.Drawing.Size(65, 21);
@@ -1696,10 +1631,8 @@
             this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatResistance, 3, 9);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityChargeSwoop, 3, 7);
             this.TLP_Ferocity.Controls.Add(this.LB_FerocityChargeSwoop, 3, 6);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityAvoidance, 0, 6);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityAvoidance, 0, 7);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCullingTheHerd, 0, 10);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCullingTheHerd, 0, 9);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCullingTheHerd, 0, 7);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCullingTheHerd, 0, 6);
             this.TLP_Ferocity.Controls.Add(this.LB_FerocitySharkAttack, 0, 15);
             this.TLP_Ferocity.Controls.Add(this.CB_FerocityRabid, 0, 13);
             this.TLP_Ferocity.Controls.Add(this.LB_FerocityRabid, 0, 12);
@@ -2036,34 +1969,6 @@
             this.LB_FerocityChargeSwoop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LB_FerocityChargeSwoop.ToolTipText = null;
             // 
-            // LB_FerocityAvoidance
-            // 
-            this.LB_FerocityAvoidance.AutoSize = true;
-            this.LB_FerocityAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityAvoidance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityAvoidance.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityAvoidance.ImageList = this.TalentImageList;
-            this.LB_FerocityAvoidance.Location = new System.Drawing.Point(3, 146);
-            this.LB_FerocityAvoidance.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityAvoidance.Name = "LB_FerocityAvoidance";
-            this.LB_FerocityAvoidance.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityAvoidance.TabIndex = 16;
-            this.LB_FerocityAvoidance.Text = "Avoidance (3.2)";
-            this.LB_FerocityAvoidance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityAvoidance.ToolTipText = null;
-            // 
-            // CB_FerocityAvoidance
-            // 
-            this.CB_FerocityAvoidance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityAvoidance.FormattingEnabled = true;
-            this.CB_FerocityAvoidance.Location = new System.Drawing.Point(0, 190);
-            this.CB_FerocityAvoidance.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityAvoidance.Name = "CB_FerocityAvoidance";
-            this.CB_FerocityAvoidance.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityAvoidance.TabIndex = 17;
-            this.CB_FerocityAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
             // CB_FerocityCullingTheHerd
             // 
             this.CB_FerocityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2074,7 +1979,7 @@
             "1",
             "2",
             "3"});
-            this.CB_FerocityCullingTheHerd.Location = new System.Drawing.Point(0, 262);
+            this.CB_FerocityCullingTheHerd.Location = new System.Drawing.Point(0, 190);
             this.CB_FerocityCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
             this.CB_FerocityCullingTheHerd.Name = "CB_FerocityCullingTheHerd";
             this.CB_FerocityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
@@ -2088,7 +1993,7 @@
             this.LB_FerocityCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.LB_FerocityCullingTheHerd.ForeColor = System.Drawing.Color.White;
             this.LB_FerocityCullingTheHerd.ImageList = this.TalentImageList;
-            this.LB_FerocityCullingTheHerd.Location = new System.Drawing.Point(3, 218);
+            this.LB_FerocityCullingTheHerd.Location = new System.Drawing.Point(3, 146);
             this.LB_FerocityCullingTheHerd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LB_FerocityCullingTheHerd.Name = "LB_FerocityCullingTheHerd";
             this.LB_FerocityCullingTheHerd.Size = new System.Drawing.Size(59, 42);
@@ -2760,6 +2665,7 @@
             // CK_PTRMode
             // 
             this.CK_PTRMode.AutoSize = true;
+            this.CK_PTRMode.Enabled = false;
             this.CK_PTRMode.Location = new System.Drawing.Point(18, 65);
             this.CK_PTRMode.Name = "CK_PTRMode";
             this.CK_PTRMode.Size = new System.Drawing.Size(85, 17);
@@ -3308,7 +3214,7 @@
             this.TB_Rotation.Name = "TB_Rotation";
             this.TB_Rotation.ReadOnly = true;
             this.TB_Rotation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TB_Rotation.Size = new System.Drawing.Size(930, 466);
+            this.TB_Rotation.Size = new System.Drawing.Size(280, 484);
             this.TB_Rotation.TabIndex = 1;
             this.TB_Rotation.WordWrap = false;
             this.TB_Rotation.TextChanged += new System.EventHandler(this.TB_Rotation_TextChanged);
@@ -3320,7 +3226,7 @@
             this.GB_Rotation_Shots.Controls.Add(this.TB_Shots);
             this.GB_Rotation_Shots.Location = new System.Drawing.Point(6, 35);
             this.GB_Rotation_Shots.Name = "GB_Rotation_Shots";
-            this.GB_Rotation_Shots.Size = new System.Drawing.Size(930, 143);
+            this.GB_Rotation_Shots.Size = new System.Drawing.Size(280, 143);
             this.GB_Rotation_Shots.TabIndex = 2;
             this.GB_Rotation_Shots.TabStop = false;
             this.GB_Rotation_Shots.Text = "Shots";
@@ -3334,7 +3240,7 @@
             this.TB_Shots.Name = "TB_Shots";
             this.TB_Shots.ReadOnly = true;
             this.TB_Shots.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TB_Shots.Size = new System.Drawing.Size(924, 124);
+            this.TB_Shots.Size = new System.Drawing.Size(274, 124);
             this.TB_Shots.TabIndex = 0;
             this.TB_Shots.WordWrap = false;
             this.TB_Shots.TextChanged += new System.EventHandler(this.TB_Shots_TextChanged);
@@ -3422,8 +3328,6 @@
         private Rawr.CustomControls.ExtendedToolTipLabel LB_CunningCarrionFeeder;
         private System.Windows.Forms.ComboBox CB_CunningLionhearted;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_CunningLionHearted;
-        private System.Windows.Forms.ComboBox CB_CunningAvoidance;
-        private Rawr.CustomControls.ExtendedToolTipLabel LB_CunningAvoidance;
         private System.Windows.Forms.ComboBox CB_CunningSpikedCollar;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_CunningSpikedCollar;
         private System.Windows.Forms.ComboBox CB_CunningMobility;
@@ -3480,8 +3384,6 @@
         private Rawr.CustomControls.ExtendedToolTipLabel LB_FerocityChargeSwoop;
         private System.Windows.Forms.ComboBox CB_FerocityLionhearted;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_FerocityLionHearted;
-        private System.Windows.Forms.ComboBox CB_FerocityAvoidance;
-        private Rawr.CustomControls.ExtendedToolTipLabel LB_FerocityAvoidance;
         private System.Windows.Forms.ComboBox CB_FerocityBoarsSpeed;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_FerocityBoarsSpeed;
         private System.Windows.Forms.ComboBox CB_FerocitySpikedCollar;
@@ -3520,8 +3422,6 @@
         private Rawr.CustomControls.ExtendedToolTipLabel LB_TenacityLionHearted;
         private System.Windows.Forms.ComboBox CB_TenacityGuardDog;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_TenacityGuardDog;
-        private System.Windows.Forms.ComboBox CB_TenacityAvoidance;
-        private Rawr.CustomControls.ExtendedToolTipLabel LB_TenacityAvoidance;
         private System.Windows.Forms.ComboBox CB_TenacityPetBarding;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_TenacityPetBarding;
         private System.Windows.Forms.ComboBox CB_TenacityBloodOfTheRhino;

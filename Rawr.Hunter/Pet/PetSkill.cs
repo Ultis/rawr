@@ -113,7 +113,6 @@ namespace Rawr.Hunter
 
         public void AddSkill(PetAttacks skillType)
         {
-
             // don't add non-skills to the rotation
             if (skillType == PetAttacks.None) return;
 
