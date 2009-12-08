@@ -31,12 +31,15 @@ namespace Rawr.Mage
         Ward
     }
 
-    public struct SolutionVariable
+    public class SolutionVariable
     {
         public int Segment;
         public CastingState State;
         public Cycle Cycle;
         public VariableType Type;
+        public double Dps;
+        public double Mps;
+        public double Tps;
 
         public bool IsZeroTime
         {
@@ -115,7 +118,6 @@ namespace Rawr.Mage
         public int MaxManaPotion;
         public int MaxManaGem;
         public double MaxEvocation;
-        public double EvocationTps;
         public double ManaGemTps;
         public double ManaPotionTps;
         public double ManaGemValue;

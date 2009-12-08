@@ -30,6 +30,8 @@ namespace Rawr.Mage.SequenceReconstruction
             this.Group = group;
             this.index = index;
             this.variableType = Calculations.SolutionVariable[index].Type;
+            mps = Calculations.SolutionVariable[index].Mps;
+            tps = Calculations.SolutionVariable[index].Tps;
             this.Duration = duration;
             this.cycle = Calculations.SolutionVariable[index].Cycle;
             this.castingState = Calculations.SolutionVariable[index].State;
@@ -39,21 +41,11 @@ namespace Rawr.Mage.SequenceReconstruction
             minTime = 0.0;
             maxTime = Calculations.CalculationOptions.FightDuration;
 
-            if (variableType == VariableType.IdleRegen)
-            {
-                mps = -(Calculations.BaseState.ManaRegen * (1.0 - Calculations.CalculationOptions.Fragmentation) + Calculations.BaseState.ManaRegen5SR * Calculations.CalculationOptions.Fragmentation);
-                tps = 0.0;
-            }
-            else if (variableType == VariableType.Wand)
+            if (variableType == VariableType.Wand)
             {
                 cycle = Calculations.Wand;
                 mps = cycle.ManaPerSecond;
                 tps = cycle.ThreatPerSecond;
-            }
-            else if (variableType == VariableType.Evocation)
-            {
-                mps = 0.0;
-                tps = Calculations.EvocationTps;
             }
             else if (variableType == VariableType.ManaGem)
             {
@@ -81,11 +73,6 @@ namespace Rawr.Mage.SequenceReconstruction
                 mps = -Calculations.BaseState.ManaRegenDrinking;
                 tps = 0.0;
                 minTime = maxTime;
-            }
-            else if (variableType == VariableType.Spell)
-            {
-                mps = cycle.ManaPerSecond;
-                tps = cycle.ThreatPerSecond;
             }
         }
 

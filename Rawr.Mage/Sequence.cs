@@ -467,7 +467,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     // make sure item is low mps and can be moved back
                     //if ((sequence[k].SuperGroup.Mps <= 0 || (!extraMode && sequence[k].SuperGroup.Mps <= maxMps)) && MinTime(k, j) <= tjj + jT) break;
                     // the only thing really required to have mana drop is for mps to be lower than at jj
-                    if (sequence[k].SuperGroup != sequence[jj].SuperGroup && sequence[k].SuperGroup.Mps < sequence[jj].Mps - eps) break;
+                    if (sequence[k].SuperGroup != sequence[jj].SuperGroup && sequence[k].SuperGroup.Mps < sequence[jj].Mps - eps && (MinTime(k, j) + eps < sequence[k].Timestamp)) break;
                     // everything we skip will have to be pushed so make sure there is space
                     maxPush = Math.Min(maxPush, sequence[k].MaxTime - tkk);
                     tkk += sequence[k].Duration;
@@ -1046,6 +1046,12 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.VariableType == VariableType.EvocationIVHero) list.Add(item);
             }
             if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIVHero, SequenceItem.Calculations.EvocationCooldown, Calculations.EffectCooldown[(int)StandardEffect.Evocation]);
+            list.Clear();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.VariableType == VariableType.Evocation) list.Add(item);
+            }
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.EvocationDuration, SequenceItem.Calculations.EvocationCooldown, Calculations.EffectCooldown[(int)StandardEffect.Evocation]);
         }
 
         public void GroupIcyVeins()
@@ -2629,6 +2635,11 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].Index == sequence[i + 1].Index && (sequence[i].Group.Count == 0 || compactGroups))
                 {
                     sequence[i].Duration += sequence[i + 1].Duration;
+                    if (sequence[i].Group.Count == 0)
+                    {
+                        // when merging noncooldowns make sure to correct the max time
+                        sequence[i].SetTimeConstraint(sequence[i].MinTime, sequence[i].MaxTime - sequence[i + 1].Duration);
+                    }
                     sequence.RemoveAt(i + 1);
                     i--;
                 }
@@ -2666,7 +2677,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double time = 0;
             double nextGem = 0;
             double nextPot = 0;
-            double nextEvo = 0;
+            //double nextEvo = 0;
             double maxTps = 50000.0;
             //double evocationFactor = 1.0;
             if (SequenceItem.Calculations.CalculationOptions.TpsLimit > 0.0)
@@ -2748,7 +2759,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         targetTime = nextEvo;
                     }
                 }*/
-                if (potTime > 0 && (nextPot <= nextGem || gemTime <= 0 || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0/* || evoTime <= 0*/))
+                if (potTime > 0 && (nextPot <= nextGem || gemTime <= 0 || nextPot == 0) /*&& (nextPot <= nextEvo || nextPot == 0 || evoTime <= 0)*/)
                 {
                     if (nextPot <= time)
                     {
@@ -2760,7 +2771,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         minMps = ((1 + BaseStats.BonusManaPotion) * potMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
-                else if (gemTime > 0 && (nextGem <= nextEvo || nextGem == 0/* || evoTime <= 0*/))
+                else if (gemTime > 0 /*&& (nextGem <= nextEvo || nextGem == 0 || evoTime <= 0)*/)
                 {
                     if (nextGem <= time)
                     {
