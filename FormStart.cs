@@ -18,14 +18,16 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.28.0
- - Teir 10 set bonus added for most classes.
- - Rawr.Hunter: Many bug fixes and calculation changes.
- - Rawr.TankDK: Reworked tanking rotation calculations, Mark of Blood is now propery valued. Heart strike now does the proper threat on its 2nd target.
- - Rawr.DPSWarr: Bladestorm now uses the correct amount of whirlwinds. Arms rotation refactored
- - Rawr.Enhance: Many conditions added to the optimizer. Hit no longer reduces glancing blows (thus fixing hit being over valued). Fire nova modeling added for 3.3.
- - Rawr.Cat: Very high crit values no longer do funny things to the combat table. 
- - Rawr.RestoSham: Mana restore effects (from procs/trinkets) now work correctly. ";
+			labelVersionHistory.Text = @"v2.3.0.0
+ - Most actively developed models should be updated for WoW Patch 3.3. We'll be releasing new versions of Rawr frequently in the next few days, to provide updates and bug fixes, as much as we can.
+ - Rawr.Enhance: Fix for several issues with haste affecting ability GCDs it shouldn't. 
+ - Rawr.DPSWarr: Several fixes for T10 set bonuses. Fix for broken Imp Slam.
+ - Rawr.Tree: Updated with new Glyph, new GotEM, and a couple trinket effects. Overhauled rotation model.
+ - Rawr.Hunter: Fix for broken Expose Weakness. Improvements to pet scaling.
+ - Rawr.Mage: Fixes and improvements for sequence reconstruction. Some support for 2T10 in cycle analyzer for frost. Currently it's only feasible for manual comparisons, not for automated optimum search.
+ - Rawr.TankDK: Updated for 3.3 changes.
+ - Rawr.SPriest: Updated for 3.3 changes.
+ - Rawr.HolyPriest: Updated for 3.3 changes.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
