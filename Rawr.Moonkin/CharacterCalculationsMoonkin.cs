@@ -65,14 +65,18 @@ namespace Rawr.Moonkin
 
             StringBuilder sb = new StringBuilder("*");
             float rotationDamage = SelectedRotation.RotationData.DPS * SelectedRotation.Duration;
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Starfire", 100 * SelectedRotation.Solver.Starfire.DamagePerHit * SelectedRotation.StarfireCount / rotationDamage,
-                SelectedRotation.Solver.Starfire.DamagePerHit * SelectedRotation.StarfireCount));
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Moonfire", 100 * (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts / rotationDamage,
-                (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts));
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Insect Swarm", 100 * SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks) / rotationDamage,
-                SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks)));
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Wrath", 100 * SelectedRotation.Solver.Wrath.DamagePerHit * SelectedRotation.WrathCount / rotationDamage,
-                SelectedRotation.Solver.Wrath.DamagePerHit * SelectedRotation.WrathCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starfire", 100 * SelectedRotation.Solver.Starfire.DamagePerHit * SelectedRotation.StarfireCount / rotationDamage,
+                SelectedRotation.Solver.Starfire.DamagePerHit * SelectedRotation.StarfireCount, 
+                SelectedRotation.StarfireCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Moonfire", 100 * (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts / rotationDamage,
+                (SelectedRotation.Solver.Moonfire.DamagePerHit + SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts, 
+                SelectedRotation.MoonfireCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Insect Swarm", 100 * SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks) / rotationDamage,
+                SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks), 
+                SelectedRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Wrath", 100 * SelectedRotation.Solver.Wrath.DamagePerHit * SelectedRotation.WrathCount / rotationDamage,
+                SelectedRotation.Solver.Wrath.DamagePerHit * SelectedRotation.WrathCount, 
+                SelectedRotation.WrathCount));
 
             retVal.Add("Selected Spell Breakdown", sb.ToString());
             retVal.Add("Burst Rotation", BurstDPSRotation.Name);
@@ -82,14 +86,18 @@ namespace Rawr.Moonkin
 
             sb = new StringBuilder("*");
             rotationDamage = BurstDPSRotation.RotationData.DPS * BurstDPSRotation.Duration;
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Starfire", 100 * BurstDPSRotation.Solver.Starfire.DamagePerHit * BurstDPSRotation.StarfireCount / rotationDamage,
-                BurstDPSRotation.Solver.Starfire.DamagePerHit * BurstDPSRotation.StarfireCount));
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Moonfire", 100 * (BurstDPSRotation.Solver.Moonfire.DamagePerHit + BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts / rotationDamage,
-                (BurstDPSRotation.Solver.Moonfire.DamagePerHit + BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) * BurstDPSRotation.MoonfireCasts));
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Insect Swarm", 100 * BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (BurstDPSRotation.InsectSwarmTicks / BurstDPSRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks) / rotationDamage,
-                BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (BurstDPSRotation.InsectSwarmTicks / BurstDPSRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks)));
-            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage", "Wrath", 100 * BurstDPSRotation.Solver.Wrath.DamagePerHit * BurstDPSRotation.WrathCount / rotationDamage,
-                BurstDPSRotation.Solver.Wrath.DamagePerHit * BurstDPSRotation.WrathCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starfire", 100 * BurstDPSRotation.Solver.Starfire.DamagePerHit * BurstDPSRotation.StarfireCount / rotationDamage,
+                BurstDPSRotation.Solver.Starfire.DamagePerHit * BurstDPSRotation.StarfireCount,
+                BurstDPSRotation.StarfireCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Moonfire", 100 * (BurstDPSRotation.Solver.Moonfire.DamagePerHit + BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) * SelectedRotation.MoonfireCasts / rotationDamage,
+                (BurstDPSRotation.Solver.Moonfire.DamagePerHit + BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) * BurstDPSRotation.MoonfireCasts,
+                BurstDPSRotation.MoonfireCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Insect Swarm", 100 * BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (BurstDPSRotation.InsectSwarmTicks / BurstDPSRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks) / rotationDamage,
+                BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit * (BurstDPSRotation.InsectSwarmTicks / BurstDPSRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks),
+                BurstDPSRotation.InsectSwarmTicks / SelectedRotation.Solver.InsectSwarm.DotEffect.NumberOfTicks));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Wrath", 100 * BurstDPSRotation.Solver.Wrath.DamagePerHit * BurstDPSRotation.WrathCount / rotationDamage,
+                BurstDPSRotation.Solver.Wrath.DamagePerHit * BurstDPSRotation.WrathCount, 
+                BurstDPSRotation.WrathCount));
 
             retVal.Add("Burst Spell Breakdown", sb.ToString());
             retVal.Add("Starfire", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} s w/NG\n{3:F2} avg hit\n{4:F0} avg mana",
