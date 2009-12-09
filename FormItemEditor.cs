@@ -89,7 +89,6 @@ namespace Rawr
 				//itemButtonGem2.DataBindings.Clear();
 				//itemButtonGem3.DataBindings.Clear();
 
-
 				if (selectedItem != null)
 				{
                     _loadingItem = true;
@@ -135,13 +134,20 @@ namespace Rawr
                     }
                     else
                     {
+                        // this doesn't always trigger a index changed event, so can't rely on this to set the binding for numeric up down
                         comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.DisplayName(socketBonuses.Current.Key).Trim());
+                        
                         numericUpDownBonus1.Value = (decimal)socketBonuses.Current.Value;
 
+                        // do we really need to write value here?
                         for (int i = 0; i < numericUpDownBonus1.DataBindings.Count; i++)
                         {
                             numericUpDownBonus1.DataBindings[i].WriteValue();
                         }
+
+                        // adding this because otherwise there were problems with data binding the up down when starting from item context menu
+                        numericUpDownBonus1.DataBindings.Clear();
+                        numericUpDownBonus1.DataBindings.Add("Value", selectedItem.SocketBonus, socketBonuses.Current.Key.Name);
 
 /*
  // if there is ever more than one socket
@@ -223,8 +229,6 @@ namespace Rawr
 			textBoxFilter.Text = initialSelection.Name;
 			_loadingItem = false;
 			LoadItems();
-			SelectItem(initialSelection, true);
-
 
 			comboBoxBonus1.Tag = numericUpDownBonus1;
 			comboBoxBonus1.Items.Add("None");
@@ -240,6 +244,8 @@ namespace Rawr
 					   comboBoxBonus2.Items.Add("None");
 					   comboBoxBonus2.Items.AddRange(Stats.StatNames);
 		   */
+
+            ListViewItem lvi = SelectItem(initialSelection, true);
 
 			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);
@@ -588,32 +594,39 @@ namespace Rawr
 			newLvi.EnsureVisible();*/
 		}
 
-		internal void SelectItem(Item item, bool force) 
+        internal ListViewItem SelectItem(Item item, bool force) 
 		{
 			bool found = false;
-			foreach (ListViewItem lvi in listViewItems.Items)
-				if (lvi.Tag == item)
-				{
-					lvi.Selected = true;
-					lvi.EnsureVisible();
-					found = true;
-				}
+            foreach (ListViewItem lvi in listViewItems.Items)
+            {
+                if (lvi.Tag == item)
+                {
+                    lvi.Selected = true;
+                    lvi.EnsureVisible();
+                    found = true;
+                    return lvi;
+                }
+            }
 			if (!found && force)
 			{
 				string filter = textBoxFilter.Text;
 				textBoxFilter.Text = "";
-				foreach (ListViewItem lvi in listViewItems.Items)
-					if (lvi.Tag == item)
-					{
-						lvi.Selected = true;
-						lvi.EnsureVisible();
-						found = true;
-					}
+                foreach (ListViewItem lvi in listViewItems.Items)
+                {
+                    if (lvi.Tag == item)
+                    {
+                        lvi.Selected = true;
+                        lvi.EnsureVisible();
+                        found = true;
+                        return lvi;
+                    }
+                }
                 if (!found)
                 {
                     textBoxFilter.Text = filter;
                 }
 			}
+            return null;
 		}
 
 		private void textBoxFilter_TextChanged(object sender, EventArgs e)
