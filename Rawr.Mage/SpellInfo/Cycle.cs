@@ -1134,9 +1134,12 @@ namespace Rawr.Mage
             int size = StateList.Count + 1;
 
             ArraySet arraySet = ArrayPool.RequestArraySet(size, size);
-            LU M = new LU(size, arraySet);
+            try
+            {
 
-            StateWeight = new double[size];
+                LU M = new LU(size, arraySet);
+
+                StateWeight = new double[size];
 
 #if SILVERLIGHT
             M.BeginSafe();
@@ -1166,89 +1169,93 @@ namespace Rawr.Mage
 
             M.EndUnsafe();            
 #else
-            fixed (double* U = arraySet.LU_U, x = StateWeight)
-            fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
-            fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
-            {
-                M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                fixed (double* U = arraySet.LU_U, x = StateWeight)
+                fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
+                fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
+                {
+                    M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
 
-                Array.Clear(arraySet.LU_U, 0, size * size);
+                    Array.Clear(arraySet.LU_U, 0, size * size);
 
-                //U[i * rows + j]
+                    //U[i * rows + j]
+
+                    foreach (CycleState state in StateList)
+                    {
+                        foreach (CycleStateTransition transition in state.Transitions)
+                        {
+                            U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
+                        }
+                        U[state.Index * size + state.Index] -= 1.0;
+                    }
+
+                    for (int i = 0; i < size - 1; i++)
+                    {
+                        U[(size - 1) * size + i] = 1;
+                    }
+
+                    x[size - 1] = 1;
+
+                    M.Decompose();
+                    M.FSolve(x);
+
+                    M.EndUnsafe();
+                }
+#endif
+
+                SpellWeight = new Dictionary<Spell, double>();
+                CycleWeight = new Dictionary<Cycle, double>();
 
                 foreach (CycleState state in StateList)
                 {
-                    foreach (CycleStateTransition transition in state.Transitions)
+                    double stateWeight = StateWeight[state.Index];
+                    if (stateWeight > 0)
                     {
-                        U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
-                    }
-                    U[state.Index * size + state.Index] -= 1.0;
-                }
-
-                for (int i = 0; i < size - 1; i++)
-                {
-                    U[(size - 1) * size + i] = 1;
-                }
-
-                x[size - 1] = 1;
-
-                M.Decompose();
-                M.FSolve(x);
-
-                M.EndUnsafe();
-            }
-#endif
-
-            SpellWeight = new Dictionary<Spell, double>();
-            CycleWeight = new Dictionary<Cycle, double>();
-
-            foreach (CycleState state in StateList)
-            {
-                double stateWeight = StateWeight[state.Index];
-                if (stateWeight > 0)
-                {
-                    foreach (CycleStateTransition transition in state.Transitions)
-                    {
-                        float transitionProbability = transition.TransitionProbability;
-                        if (transitionProbability > 0)
+                        foreach (CycleStateTransition transition in state.Transitions)
                         {
-                            if (transition.Spell != null)
+                            float transitionProbability = transition.TransitionProbability;
+                            if (transitionProbability > 0)
                             {
-                                double weight;
-                                SpellWeight.TryGetValue(transition.Spell, out weight);
-                                SpellWeight[transition.Spell] = weight + stateWeight * transitionProbability;
-                            }
-                            if (transition.Cycle != null)
-                            {
-                                double weight;
-                                CycleWeight.TryGetValue(transition.Cycle, out weight);
-                                CycleWeight[transition.Cycle] = weight + stateWeight * transitionProbability;
-                            }
-                            if (transition.Pause > 0)
-                            {
-                                AddPause(transition.Pause, (float)(stateWeight * transitionProbability));
+                                if (transition.Spell != null)
+                                {
+                                    double weight;
+                                    SpellWeight.TryGetValue(transition.Spell, out weight);
+                                    SpellWeight[transition.Spell] = weight + stateWeight * transitionProbability;
+                                }
+                                if (transition.Cycle != null)
+                                {
+                                    double weight;
+                                    CycleWeight.TryGetValue(transition.Cycle, out weight);
+                                    CycleWeight[transition.Cycle] = weight + stateWeight * transitionProbability;
+                                }
+                                if (transition.Pause > 0)
+                                {
+                                    AddPause(transition.Pause, (float)(stateWeight * transitionProbability));
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            StringBuilder sb = new StringBuilder();
-            foreach (KeyValuePair<Spell, double> kvp in SpellWeight)
-            {
-                AddSpell(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
-                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Label ?? kvp.Key.SpellId.ToString(), 100.0 * kvp.Value);
-            }
-            foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
-            {
-                AddCycle(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
-                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.CycleId, 100.0 * kvp.Value);
-            }
+                StringBuilder sb = new StringBuilder();
+                foreach (KeyValuePair<Spell, double> kvp in SpellWeight)
+                {
+                    AddSpell(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
+                    if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Label ?? kvp.Key.SpellId.ToString(), 100.0 * kvp.Value);
+                }
+                foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
+                {
+                    AddCycle(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
+                    if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.CycleId, 100.0 * kvp.Value);
+                }
 
-            Calculate();
-           
-            SpellDistribution = sb.ToString();
-            ArrayPool.ReleaseArraySet(arraySet);
+                Calculate();
+
+                SpellDistribution = sb.ToString();
+            }
+            finally
+            {
+                ArrayPool.ReleaseArraySet(arraySet);
+            }
         }
     }
 

@@ -215,17 +215,26 @@ namespace Rawr.Mage
 
         public void RecreateLUArrays()
         {
-            LU_U = new double[LUsizeMax * LUsizeMax];
-            LUetaMax = Math.Max(LUsizeMax + 100, 2 * LUsizeMax);
-            LU_P = new int[LUsizeMax];
-            LU_Q = new int[LUsizeMax];
-            //_L = new double[etaMax * size];
-            LU_LJ = new int[LUetaMax];
-            LUsparseL = new double[LUetaMax * LUsizeMax];
-            LUsparseLI = new int[LUetaMax * LUsizeMax];
-            LUsparseLstart = new int[LUetaMax];
-            LUcolumn = new double[LUsizeMax];
-            LUcolumn2 = new double[LUsizeMax];
+            try
+            {
+                LU_U = new double[LUsizeMax * LUsizeMax];
+                LUetaMax = Math.Max(LUsizeMax + 100, 2 * LUsizeMax);
+                LU_P = new int[LUsizeMax];
+                LU_Q = new int[LUsizeMax];
+                //_L = new double[etaMax * size];
+                LU_LJ = new int[LUetaMax];
+                LUsparseL = new double[LUetaMax * LUsizeMax];
+                LUsparseLI = new int[LUetaMax * LUsizeMax];
+                LUsparseLstart = new int[LUetaMax];
+                LUcolumn = new double[LUsizeMax];
+                LUcolumn2 = new double[LUsizeMax];
+            }
+            catch (OutOfMemoryException ex)
+            {
+                LUsizeMax = 0;
+                LUetaMax = 0;
+                throw ex;
+            }
         }
 
         public void RecreateLPArrays()
