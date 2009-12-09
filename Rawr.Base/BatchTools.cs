@@ -865,37 +865,41 @@ namespace Rawr
                             {
                                 foreach (string s in character.Character.AvailableItems)
                                 {
+                                    ItemInstance newItem = null;
                                     if (s.IndexOf('.') < 0)
                                     {
-                                        item = item.Clone();
-                                        item.Id = int.Parse(s);
-                                        if (item.Item.SocketColor1 == ItemSlot.None) item.Gem1 = null;
-                                        if (item.Item.SocketColor2 == ItemSlot.None) item.Gem2 = null;
-                                        if (item.Item.SocketColor3 == ItemSlot.None) item.Gem3 = null;
+                                        if (!s.StartsWith("-"))
+                                        {
+                                            newItem = item.Clone();
+                                            newItem.Id = int.Parse(s);
+                                            if (newItem.Item.SocketColor1 == ItemSlot.None) newItem.Gem1 = null;
+                                            if (newItem.Item.SocketColor2 == ItemSlot.None) newItem.Gem2 = null;
+                                            if (newItem.Item.SocketColor3 == ItemSlot.None) newItem.Gem3 = null;
+                                        }
                                     }
                                     else
                                     {
                                         string[] slist = s.Split('.');
                                         if (slist[1] == "*")
                                         {
-                                            item = item.Clone();
-                                            item.Id = int.Parse(slist[0]);
-                                            if (item.Item.SocketColor1 == ItemSlot.None) item.Gem1 = null;
-                                            if (item.Item.SocketColor2 == ItemSlot.None) item.Gem2 = null;
-                                            if (item.Item.SocketColor3 == ItemSlot.None) item.Gem3 = null;
+                                            newItem = item.Clone();
+                                            newItem.Id = int.Parse(slist[0]);
+                                            if (newItem.Item.SocketColor1 == ItemSlot.None) newItem.Gem1 = null;
+                                            if (newItem.Item.SocketColor2 == ItemSlot.None) newItem.Gem2 = null;
+                                            if (newItem.Item.SocketColor3 == ItemSlot.None) newItem.Gem3 = null;
                                         }
                                         else
                                         {
-                                            item = item.Clone();
-                                            item.Id = int.Parse(slist[0]);
-                                            item.Gem1Id = int.Parse(slist[1]);
-                                            item.Gem2Id = int.Parse(slist[2]);
-                                            item.Gem3Id = int.Parse(slist[3]);
+                                            newItem = item.Clone();
+                                            newItem.Id = int.Parse(slist[0]);
+                                            newItem.Gem1Id = int.Parse(slist[1]);
+                                            newItem.Gem2Id = int.Parse(slist[2]);
+                                            newItem.Gem3Id = int.Parse(slist[3]);
                                         }
                                     }
-                                    if (item != null && item.Item.FitsInSlot((CharacterSlot)slot, character.Character))
+                                    if (newItem != null && newItem.Item.FitsInSlot((CharacterSlot)slot, character.Character))
                                     {
-                                        character.Character[(CharacterSlot)slot] = item;
+                                        character.Character[(CharacterSlot)slot] = newItem;
                                         string se = s.Substring(s.LastIndexOf('.') + 1);
                                         if (se != "*")
                                         {

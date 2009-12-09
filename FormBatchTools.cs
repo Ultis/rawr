@@ -59,8 +59,15 @@ namespace Rawr
 
         void batchTools_StatusUpdated(object sender, EventArgs e)
         {
-            statusLabel.Text = batchTools.Status;
-            statusProgressBar.Value = batchTools.Progress;
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)delegate { batchTools_StatusUpdated(sender, e); });
+            }
+            else
+            {
+                statusLabel.Text = batchTools.Status;
+                statusProgressBar.Value = batchTools.Progress;
+            }
         }
 
         void batchTools_OperationCompleted(object sender, EventArgs e)
