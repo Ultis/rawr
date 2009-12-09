@@ -723,14 +723,14 @@ namespace Rawr.Optimizer
                     state.Requirements, state.Thoroughness, state.InjectCharacter, out injected, out error);
                 if (optimizedCharacter != null)
                 {
-                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false));
+                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false), state.CalculationToOptimize, state.Requirements);
                 }
                 else
                 {
                     if (error == null) error = new NullReferenceException();
                 }
                 currentCharacterValue = GetOptimizationValue(state.Character,
-                    model.GetCharacterCalculations(state.Character, null, false, optimizeTalents, false));
+                    model.GetCharacterCalculations(state.Character, null, false, optimizeTalents, false), state.CalculationToOptimize, state.Requirements);
             }
             catch (Exception ex)
             {
@@ -753,13 +753,13 @@ namespace Rawr.Optimizer
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
                 if (optimizedCharacter != null)
                 {
-                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false));
+                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false), calculationToOptimize, requirements);
                 }
                 else
                 {
                     if (error == null) error = new NullReferenceException();
                 }
-                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character, null, false, optimizeTalents, false));
+                currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character, null, false, optimizeTalents, false), calculationToOptimize, requirements);
             }
             catch (Exception ex)
             {
@@ -1065,7 +1065,7 @@ namespace Rawr.Optimizer
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetOptimizationValue(_character, baseCalculations);
+                float baseValue = GetOptimizationValue(_character, baseCalculations, calculationToOptimize, requirements);
                 Dictionary<int, Item> itemById = new Dictionary<int, Item>();
                 foreach (Item item in items)
                 {
@@ -1218,7 +1218,7 @@ namespace Rawr.Optimizer
 
                 CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetOptimizationValue(_character, baseCalculations);
+                float baseValue = GetOptimizationValue(_character, baseCalculations, calculationToOptimize, requirements);
 
                 OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, optimizeFood, optimizeElixirs, optimizeTalents);
                 OptimizerCharacter __character;
@@ -1510,6 +1510,12 @@ namespace Rawr.Optimizer
         {
             float ignore;
             return GetCalculationsValue(character, valuation, character.CalculationToOptimize, character.OptimizationRequirements, out ignore);
+        }
+
+        public static float GetOptimizationValue(Character character, CharacterCalculationsBase valuation, string calculation, List<OptimizationRequirement> requirements)
+        {
+            float ignore;
+            return GetCalculationsValue(character, valuation, calculation, requirements, out ignore);
         }
 
         protected override float GetOptimizationValue(OptimizerCharacter individual, CharacterCalculationsBase valuation)

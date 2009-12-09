@@ -584,6 +584,11 @@ namespace Rawr
             Properties.Optimizer.Default.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             Properties.Optimizer.Default.Save();
 
+            SaveOptimizationParameters();
+        }
+
+        private void SaveOptimizationParameters()
+        {
             _character.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
             foreach (Control ctrl in groupBoxRequirements.Controls)
