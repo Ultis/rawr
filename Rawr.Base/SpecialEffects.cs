@@ -214,12 +214,16 @@ namespace Rawr {
             }
         }
 
-		public static void ProcessEquipLine(string line, Stats stats, bool isArmory) {
+		public static void ProcessEquipLine(string line, Stats stats, bool isArmory, int ilvl) {
             Match match;
 			if (line.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))
 			{
 				//stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
 			}
+            else if ((match = new Regex(@"Chance on melee or ranged critical strike to increase your armor penetration rating by 678 for 10 sec(s?).").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { ArmorPenetrationRating = 678f }, 10f, 45, 0.1f));
+            }
 			else if ((match = new Regex(@"Chance on melee or ranged critical strike to increase your armor penetration rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { ArmorPenetrationRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45, 0.15f));
@@ -267,15 +271,10 @@ namespace Rawr {
             {
                 // Fury of the Five Flights
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 16f }, 10f, 0f, 1f, 20));
-                //stats.AttackPower += 320; //Fury of the Five Flights = 320ap
             }
-            else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times."))
+            else if ((match = Regex.Match(line, @"Each time you deal melee or ranged damage to an opponent, you gain (?<amount>\d+) attack power for the next 10 sec\., stacking up to 20 times\.")).Success)
             {
-                // Darkmoon Card: Crusade
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 6f }, 10f, 0f, 1f, 20));
-                //stats.AttackPower += 120;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 8f }, 10f, 0f, 1f, 10));
-                //stats.SpellPower += 80;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f, 1f, 20));
             }
             else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times.")).Success)
             {
@@ -1258,12 +1257,16 @@ namespace Rawr {
             else if (line == "Each time you deal melee or ranged damage to an opponent, you gain 17 attack power for the next 10 sec, stacking up to 20 times.")
             {
                 // Herkuml War Token
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 17f }, 10f, 0f, 1f, 20));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 17f }, 10f, 0f, 1f, 20));
             }
             else if ((match = Regex.Match(line, @"Each time you are struck by a melee attack, you have a 60% chance to gain (?<stamina>\d+) stamina for the next 10 sec, stacking up to 10 times\.")).Success)
             {
                 // Unidentifiable Organ
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Stamina = int.Parse(match.Groups["stamina"].Value) }, 10.0f, 0.0f, 0.6f, 10));
+            }
+            else if (line == "Your attacks have a chance to awaken the powers of the races of Northrend, temporarily transforming you and increasing your combat capabilities for 30 sec.")
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DeathbringerProc = ilvl == 277 ? 700 : 600 }, 30f, 90f, 0.15f));
             }
             #endregion
             else

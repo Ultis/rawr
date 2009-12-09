@@ -526,6 +526,7 @@ namespace Rawr {
         ShieldFromHealed,
         RighteousVengeanceCanCrit,
         FlameShockDoTCanCrit,
+        DeathbringerProc,
         NUM_NonStackingStat // This should always be the last entry.
     }
 
@@ -2158,6 +2159,14 @@ namespace Rawr {
         {
             get { return _rawNoStackData[(int)NonStackingStat.ShieldFromHealed]; }
             set { _rawNoStackData[(int)NonStackingStat.ShieldFromHealed] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        public float DeathbringerProc
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.DeathbringerProc]; }
+            set { _rawNoStackData[(int)NonStackingStat.DeathbringerProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

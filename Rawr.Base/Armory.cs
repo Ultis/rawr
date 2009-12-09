@@ -548,7 +548,7 @@ namespace Rawr
 
 					//parse Use/Equip lines
 					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, id);
-					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true);
+					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true, itemLevel);
 				}
 
 				XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");

@@ -503,6 +503,10 @@ namespace Rawr.Retribution
 
                 if (stats.Strength > stats.Agility)  stats.Strength += stats.HighestStat + stats.Paragon;
                 else stats.Agility += stats.HighestStat + stats.Paragon;
+
+                stats.Strength += stats.DeathbringerProc / 3f;
+                stats.HasteRating += stats.DeathbringerProc / 3f;
+                stats.CritRating += stats.DeathbringerProc / 3f;
                 
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
 
@@ -659,7 +663,7 @@ namespace Rawr.Retribution
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.Paragon +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
-                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
+                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + stats.DeathbringerProc +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier +  stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.SealMultiplier + stats.JudgementMultiplier + stats.DivineStormRefresh +
@@ -719,7 +723,8 @@ namespace Rawr.Retribution
                 RighteousVengeanceCanCrit = stats.RighteousVengeanceCanCrit,
                 SealMultiplier = stats.SealMultiplier,
                 JudgementMultiplier = stats.JudgementMultiplier,
-                DivineStormRefresh = stats.DivineStormRefresh
+                DivineStormRefresh = stats.DivineStormRefresh,
+                DeathbringerProc = stats.DeathbringerProc
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -736,7 +741,7 @@ namespace Rawr.Retribution
             {
                 Stats stats = effect.Stats;
                 return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating
-                    + stats.ArmorPenetrationRating + stats.Paragon + stats.HasteRating
+                    + stats.ArmorPenetrationRating + stats.Paragon + stats.HasteRating + stats.DeathbringerProc
                     + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
             }
             return false;
@@ -747,7 +752,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.DivineStormRefresh +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon + stats.DeathbringerProc +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
