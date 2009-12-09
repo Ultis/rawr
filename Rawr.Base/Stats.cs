@@ -173,6 +173,7 @@ namespace Rawr {
         BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
         SpellReflectChance,
+        MoteOfAnger,
         #region Added by Rawr.HolyPriest
         PriestInnerFire,
         RenewDurationIncrease,
@@ -2299,6 +2300,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusMaxRunicPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusMaxRunicPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        [DisplayName("% Weapon Swing")]
+        [Percentage]
+        public float MoteOfAnger
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MoteOfAnger]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MoteOfAnger] = value; }
         }
 
         #endregion

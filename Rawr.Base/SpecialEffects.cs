@@ -1266,7 +1266,18 @@ namespace Rawr {
             }
             else if (line == "Your attacks have a chance to awaken the powers of the races of Northrend, temporarily transforming you and increasing your combat capabilities for 30 sec.")
             {
+                // Deathbringer's Will
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DeathbringerProc = ilvl == 277 ? 700 : 600 }, 30f, 90f, 0.15f));
+            }
+            else if ((match = Regex.Match(line, @"When you deal damage you have a chance to gain (?<amount>\d+) attack power for 15 sec\.")).Success)
+            {
+                // Whispering Fanged Skull
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 15f, 45f, 0.35f));
+            }
+            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you a Mote of Anger\. (nbsp;| )When you reach (?<amount>\d+) Motes of Anger, they will release, causing you to instantly attack for 50% weapon damage with one of your melee weapons\.")).Success)
+            {
+                // Tiny Abomination Jar
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { MoteOfAnger = 0.5f }, 0f, 0f, 0.35f, int.Parse(match.Groups["amount"].Value)));
             }
             #endregion
             else
