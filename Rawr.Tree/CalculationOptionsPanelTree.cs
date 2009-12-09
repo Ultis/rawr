@@ -42,10 +42,10 @@ namespace Rawr.Tree {
 
             lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
             trkTimeInFSR.Value = calcOpts.FSRRatio;
-            trkFightLength.Value = calcOpts.FightDuration / 15;
-            int m = trkFightLength.Value / 4;
+            trkFightLength.Value = calcOpts.FightDuration / 5;
+            int m = trkFightLength.Value / 12;
             int s = calcOpts.FightDuration - 60 * m;
-            lblFightLength.Text = "Fight duration: " + m + ":" + s;
+            lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
             tkReplenishment.Value = calcOpts.ReplenishmentUptime;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
@@ -54,9 +54,9 @@ namespace Rawr.Tree {
             tbAvgRegrowths.Value = calcOpts.AverageRegrowths;
             tbAvgLifeblooms.Value = calcOpts.AverageLifebloom;
             tbAvgLifebloomStacks.Value = calcOpts.AverageLifebloomStack;
-            lblAvgRejuv.Text = "Average number of Rejuvenations: " + (float)tbAvgRejuv.Value / 4.0f;
-            lblAvgRegrowths.Text = "Average number of Regrowths: " + (float)tbAvgRegrowths.Value / 4.0f;
-            lblAvgLifeblooms.Text = "Average number of Lifeblooms: " + (float)tbAvgLifeblooms.Value;
+            lblAvgRejuv.Text = "Rejuvenations casting: " + (float)tbAvgRejuv.Value + "%.";
+            lblAvgRegrowths.Text = "Regrowths casting: " + (float)tbAvgRegrowths.Value + "%.";
+            lblAvgLifeblooms.Text = "Lifebloom casting: " + (float)tbAvgLifeblooms.Value + "%.";
             lblAvgLifebloomStacks.Text = "Average number of Lifebloom Stacks: " + (float)tbAvgLifebloomStacks.Value;
             cbLifebloomStackType.SelectedIndex = calcOpts.LifebloomStackType;
             cbPrimarySpell.SelectedIndex = calcOpts.PrimaryHeal;
@@ -100,10 +100,10 @@ namespace Rawr.Tree {
         private void trkFightLength_Scroll(object sender, EventArgs e) {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.FightDuration = trkFightLength.Value * 15;
-            int m = trkFightLength.Value / 4;
+            calcOpts.FightDuration = trkFightLength.Value * 5;
+            int m = trkFightLength.Value / 12;
             int s = calcOpts.FightDuration - 60 * m;
-            lblFightLength.Text = "Fight duration: "+m+":"+s;
+            lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
             Character.OnCalculationsInvalidated();
         }
         private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e) {
@@ -183,7 +183,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageRejuv = tbAvgRejuv.Value;
-            lblAvgRejuv.Text = "Average number of Rejuvenations: " + (float)tbAvgRejuv.Value / 4.0f;
+            lblAvgRejuv.Text = "Rejuvenations casting: " + (float)tbAvgRejuv.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -192,7 +192,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageRegrowths = tbAvgRegrowths.Value;
-            lblAvgRegrowths.Text = "Average number of Regrowths: " + (float)tbAvgRegrowths.Value / 4.0f;
+            lblAvgRegrowths.Text = "Regrowths casting: " + (float)tbAvgRegrowths.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -201,7 +201,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageLifebloom = tbAvgLifeblooms.Value;
-            lblAvgLifeblooms.Text = "Average number of Lifeblooms: " + (float)tbAvgLifeblooms.Value;
+            lblAvgLifeblooms.Text = "Lifebloom casting: " + (float)tbAvgLifeblooms.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 

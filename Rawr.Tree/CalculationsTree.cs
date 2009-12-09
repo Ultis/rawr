@@ -51,12 +51,12 @@ namespace Rawr.Tree {
     public enum LifeBloomType { Slow = 0, Fast, Rolling };
 
     public class RotationSettings {
-        public float averageRejuvs, averageRegrowth, averageLifebloomStacks, averageLifeblooms;
+        public float RejuvFraction, RegrowthFraction, averageLifebloomStacks, LifebloomFraction;
         public float nourish0, nourish1, nourish2, nourish3, nourish4;
         public LifeBloomType lifeBloomType;
         public SpellList primaryHeal;
         public HealTargetTypes healTarget;
-        public int SwiftmendPerMin, WildGrowthPerMinute;
+        public int SwiftmendPerMin, WildGrowthPerMin;
         public float livingSeedEfficiency;
     }
 
@@ -392,12 +392,22 @@ applied and result is scaled down by 100)",
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTree(); }
         private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, out float Healing) {
+            Healing = 0;
             #region New_SpecialEffect_Handling
             Stats resultNew = new Stats();
             foreach (Rawr.SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use) {
-                    resultNew += effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration);   // 0 cooldown, 100% chance to use
-                } else if (effect.Trigger == Trigger.SpellCast ) {
+                    Stats s = effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration); // 0 cooldown, 100% chance to use
+                    resultNew += s;
+
+                    float _h;
+                    Stats s2 = getTrinketStats(character, s, effect.Duration, CastInterval, HealInterval, CritsRatio, RejuvInterval, out _h);
+                    Healing += _h;
+
+                    s2 *= effect.Duration / effect.Cooldown;
+                    resultNew += s2;
+                }
+                else if (effect.Trigger == Trigger.SpellCast) {
                     resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
                 } else if (effect.Trigger == Trigger.HealingSpellCast) {
                     // Same as SpellCast, but split to allow easier placement of breakpoints
@@ -431,9 +441,8 @@ applied and result is scaled down by 100)",
                 ShieldFromHealed = resultNew.ShieldFromHealed,                
             };
         }
-        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings) {
-            float primaryFrac;
-
+        protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings)
+        {
             #region Setup Spells
             Spell regrowth = new Regrowth(calculatedStats, stats, false);
             Spell regrowthAgain = new Regrowth(calculatedStats, stats, true);
@@ -441,7 +450,7 @@ applied and result is scaled down by 100)",
             Spell lifebloomSlowStack = new Lifebloom(calculatedStats, stats, 3, false);
             Spell lifebloomFastStack = new Lifebloom(calculatedStats, stats, 3, true);
             Spell lifebloomRollingStack = new LifebloomStack(calculatedStats, stats);
-            
+
             Spell rejuvenate = new Rejuvenation(calculatedStats, stats);
             Spell[] nourish = new Nourish[5];
             nourish[0] = new Nourish(calculatedStats, stats, 0);
@@ -460,11 +469,11 @@ applied and result is scaled down by 100)",
 
             #region WildGrowthPerMinute
             // If talent isn't chosen disregard WildGrowth
-            float WildGrowthPerMinute = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? rotSettings.WildGrowthPerMinute : 0;
+            float WildGrowthPerMinute = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? rotSettings.WildGrowthPerMin : 0;
 
             float wgCastTime = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? wildGrowth.CastTime / 60f * WildGrowthPerMinute : 0;
             float wgMPS = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? wildGrowth.ManaCost / 60f * WildGrowthPerMinute : 0;
-            float wgHPS = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? 
+            float wgHPS = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ?
                 wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * WildGrowthPerMinute : 0;  // Assume no overhealing
 
             castsPerMinute += WildGrowthPerMinute;
@@ -474,65 +483,117 @@ applied and result is scaled down by 100)",
             #region Maintained Hots
             float hotsHPS = 0;
             float trueHotsHPS = 0;
-            float hotsCastTime = 0;
+            float hotsCastFrac = 0;
             float hotsMPS = 0;
             float hotsCastsPerMinute = 0;
             float hotsCritsPerMinute = 0;
             float hotsHealsPerMinute = 0;
-            if (rotSettings.averageRejuvs > 0) {
-                hotsHPS += rotSettings.averageRejuvs * (rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration));
-                trueHotsHPS += rotSettings.averageRejuvs * (rejuvenate.HPSHoT + (rejuvenate.HPS / rejuvenate.Duration));
-                hotsMPS += rotSettings.averageRejuvs * rejuvenate.ManaCost / rejuvenate.Duration;
-                hotsCastTime += rotSettings.averageRejuvs * rejuvenate.CastTime / rejuvenate.Duration;
-                hotsCastsPerMinute += rotSettings.averageRejuvs * 60f / rejuvenate.Duration;
-                hotsHealsPerMinute += rotSettings.averageRejuvs * 60f / rejuvenate.PeriodicTickTime; 
-                rejuvTicksPerMinute += rotSettings.averageRejuvs * 60f / rejuvenate.PeriodicTickTime;
+            if (rotSettings.RejuvFraction > 0)
+            {
+                float RejuvPerSec = rotSettings.RejuvFraction / rejuvenate.CastTime;
+                float RejuvPerMin = RejuvPerSec * 60f;
+                float Activity = RejuvPerSec * rejuvenate.Duration;
+
+                hotsHPS += Activity * rejuvenate.HPSHoT + RejuvPerSec * rejuvenate.AverageHealingwithCrit;
+                trueHotsHPS += Activity * rejuvenate.HPSHoT + RejuvPerSec * rejuvenate.AverageHealingwithCrit;
+                hotsMPS += RejuvPerSec * rejuvenate.ManaCost;
+                hotsCastFrac += rotSettings.RejuvFraction;
+                hotsCastsPerMinute += RejuvPerMin;
+                hotsHealsPerMinute += RejuvPerMin * rejuvenate.PeriodicTicks;
+                rejuvTicksPerMinute += RejuvPerMin * rejuvenate.PeriodicTicks;
             }
-            if (rotSettings.averageRegrowth > 0) {
-                hotsHPS += rotSettings.averageRegrowth * (regrowth.HPSHoT + regrowth.HPS / regrowth.Duration);
-                trueHotsHPS += rotSettings.averageRegrowth * regrowth.HPSHoT;
-                hotsMPS += rotSettings.averageRegrowth * regrowth.ManaCost / regrowth.Duration;
-                hotsCastTime += rotSettings.averageRegrowth * regrowth.CastTime / regrowth.Duration;
-                hotsCastsPerMinute += rotSettings.averageRegrowth * 60f / regrowth.Duration;
-                hotsCritsPerMinute += rotSettings.averageRegrowth * 60f / regrowth.Duration * regrowth.CritPercent / 100f;
-                hotsHealsPerMinute += rotSettings.averageRegrowth * 60f / regrowth.Duration; // direct component
-                hotsHealsPerMinute += rotSettings.averageRegrowth * 20f; // hot component
+            if (rotSettings.RegrowthFraction > 0)
+            {
+                float RegrowthPerSec = rotSettings.RegrowthFraction / rejuvenate.CastTime;
+                float RegrowthPerMin = RegrowthPerSec * 60f;
+                float Activity = RegrowthPerSec * regrowth.Duration;
+
+                hotsHPS += Activity * regrowth.HPSHoT + RegrowthPerSec * regrowth.AverageHealingwithCrit;
+                trueHotsHPS += Activity * regrowth.HPSHoT;
+                hotsMPS += RegrowthPerSec * regrowth.ManaCost;
+                hotsCastFrac += RegrowthPerSec * regrowth.CastTime;
+                hotsCastsPerMinute += RegrowthPerMin;
+                hotsHealsPerMinute += RegrowthPerMin * (1f + regrowth.PeriodicTicks); // hot + dh component
+                hotsCritsPerMinute += RegrowthPerMin * regrowth.CritPercent / 100f;
             }
-            if (rotSettings.averageLifeblooms > 0) {
-                hotsHPS += rotSettings.averageLifeblooms * (lifebloom.HPSHoT + lifebloom.AverageHealingwithCrit / lifebloom.Duration);
-                trueHotsHPS += rotSettings.averageLifeblooms * lifebloom.HPSHoT;
-                hotsMPS += rotSettings.averageLifeblooms * lifebloom.ManaCost / lifebloom.Duration;
-                hotsCastTime += rotSettings.averageLifeblooms * lifebloom.CastTime / lifebloom.Duration;
-                hotsCastsPerMinute += rotSettings.averageLifeblooms * 60f / lifebloom.Duration;
-                hotsHealsPerMinute += rotSettings.averageLifeblooms * 60f; // hot component
-                hotsCritsPerMinute += rotSettings.averageLifeblooms * 60f / lifebloom.Duration * lifebloom.CritPercent / 100f;  // Bloom crits
+            if (rotSettings.LifebloomFraction > 0)
+            {
+                float LifebloomPerSec = rotSettings.LifebloomFraction / lifebloom.CastTime;
+                float LifebloomPerMin = LifebloomPerSec * 60f;
+                float Activity = LifebloomPerSec * lifebloom.Duration;
+
+                hotsHPS += Activity * lifebloom.HPSHoT + LifebloomPerSec * lifebloom.AverageHealingwithCrit;
+                trueHotsHPS += Activity * lifebloom.HPSHoT;
+                hotsMPS += LifebloomPerSec * lifebloom.ManaCost;
+                hotsCastFrac += LifebloomPerSec * lifebloom.CastTime;
+                hotsCastsPerMinute += LifebloomPerMin;
+                hotsHealsPerMinute += LifebloomPerMin * (1f + lifebloom.PeriodicTicks); // hot component + direct component
+                hotsCritsPerMinute += LifebloomPerMin * lifebloom.CritPercent / 100f;  // Bloom crits
             }
-            if (rotSettings.averageLifebloomStacks > 0) {
+            if (rotSettings.averageLifebloomStacks > 0)
+            {
                 Spell spell;
                 float duration;
+                int multiplier = 1;
                 switch (rotSettings.lifeBloomType)
                 {
                     case LifeBloomType.Slow:
                         spell = lifebloomSlowStack;
                         duration = spell.Duration + 1f; // need a second before reapplying
+                        multiplier = 3;
                         break;
                     case LifeBloomType.Fast:
                         spell = lifebloomFastStack;
                         duration = spell.Duration + 1f; // need a second before reapplying
+                        multiplier = 3;
                         break;
                     default:
                         spell = lifebloomRollingStack;
                         duration = spell.Duration;
                         break;
                 }
-                hotsHPS += rotSettings.averageLifebloomStacks * (spell.HPSHoT * spell.Duration + spell.AverageHealingwithCrit) / duration;
-                trueHotsHPS += rotSettings.averageLifebloomStacks * spell.HPSHoT * spell.Duration / duration;
-                hotsMPS += rotSettings.averageLifeblooms * spell.ManaCost / duration;
-                hotsCastTime += rotSettings.averageLifeblooms * spell.CastTime / duration;
-                hotsCastsPerMinute += rotSettings.averageLifeblooms * 60f / duration;
-                hotsHealsPerMinute += rotSettings.averageLifeblooms * 60f; // hot component
-                hotsCritsPerMinute += rotSettings.averageLifeblooms * 60f / duration * spell.CritPercent / 100f;  // Bloom crits
+                float CastsPerMin = multiplier * rotSettings.averageLifebloomStacks * 60f / duration;
+                float CastsPerSec = multiplier * CastsPerMin / 60f;
+                float CastFraction = CastsPerSec * spell.CastTime;
+                float Activity = rotSettings.averageLifebloomStacks * spell.Duration / duration;
+                // Check boundaries
+                if (hotsCastFrac > (1f - CastFraction))
+                {
+                    float Factor = (1f - CastFraction) / hotsCastFrac;
+                    hotsHPS *= Factor;
+                    trueHotsHPS *= Factor;
+                    hotsMPS *= Factor;
+                    hotsCastFrac *= Factor;
+                    hotsCastsPerMinute *= Factor;
+                    hotsHealsPerMinute *= Factor;
+                    hotsCritsPerMinute *= Factor;
+                }
+                hotsHPS += Activity * spell.HPSHoT + CastsPerSec * spell.AverageHealingwithCrit / multiplier;
+                trueHotsHPS += Activity * spell.HPSHoT;
+                hotsMPS += CastsPerSec * spell.ManaCost;
+                hotsCastFrac += CastFraction;
+                hotsCastsPerMinute += CastsPerMin;
+                hotsHealsPerMinute += Activity * 60f / spell.PeriodicTickTime + CastsPerMin / multiplier;
+                hotsCritsPerMinute += CastsPerMin / multiplier * spell.CritPercent / 100f;  // Bloom crits
             }
+            else
+            {
+                // Check boundaries
+                if (hotsCastFrac > 1f)
+                {
+                    float Factor = 1f / hotsCastFrac;
+                    hotsHPS *= Factor;
+                    trueHotsHPS *= Factor;
+                    hotsMPS *= Factor;
+                    hotsCastFrac *= Factor;
+                    hotsCastsPerMinute *= Factor;
+                    hotsHealsPerMinute *= Factor;
+                    hotsCritsPerMinute *= Factor;
+                }
+            }
+            castsPerMinute += hotsCastsPerMinute;
+            healsPerMinute += hotsHealsPerMinute;
+            critsPerMinute += hotsCritsPerMinute;
             #endregion
 
             #region Swiftmend
@@ -540,9 +601,9 @@ applied and result is scaled down by 100)",
             float swiftHPS = 0.0f;
             float swiftMPS = 0.0f;
             float swiftCastTime = 0.0f;
-            if ((rotSettings.averageRejuvs > 0 || rotSettings.averageRegrowth > 0) && (rotSettings.SwiftmendPerMin > 0) && (calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0))
+            if ((rotSettings.RejuvFraction > 0 || rotSettings.RegrowthFraction > 0) && (rotSettings.SwiftmendPerMin > 0) && (calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0))
             {
-                swift = new Swiftmend(calculatedStats, stats, rotSettings.averageRejuvs>0?rejuvenate:null, rotSettings.averageRegrowth>0?regrowth:null);
+                swift = new Swiftmend(calculatedStats, stats, rotSettings.RejuvFraction > 0 ? rejuvenate : null, rotSettings.RegrowthFraction > 0 ? regrowth : null);
 
                 swiftCastTime = swift.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
                 swiftHPS = swift.TotalAverageHealing * rotSettings.SwiftmendPerMin / 60.0f;
@@ -559,13 +620,13 @@ applied and result is scaled down by 100)",
                 #endregion
                 #region Replace HoTs if refreshed
                 // Extra MPS if HoTs refreshed              // Use only one of these 2 sections
-                hotsMPS      += swift.rejuvUseChance    * swift.rejuvTicksLost    / rejuvenate.PeriodicTicks * rejuvenate.ManaCost             * rotSettings.SwiftmendPerMin / 60.0f;
-                hotsMPS      += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks   * regrowth.ManaCost               * rotSettings.SwiftmendPerMin / 60.0f;
+                hotsMPS += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
+                hotsMPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
                 // Replacing Regrowths gives extra direct heals
-                hotsHPS      += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks   * regrowth.AverageHealingwithCrit * rotSettings.SwiftmendPerMin / 60.0f; 
+                hotsHPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.AverageHealingwithCrit * rotSettings.SwiftmendPerMin / 60.0f;
                 // Replacing HoTs take extra time
-                hotsCastTime += swift.rejuvUseChance    * swift.rejuvTicksLost    / rejuvenate.PeriodicTicks * rejuvenate.CastTime             * rotSettings.SwiftmendPerMin / 60.0f;
-                hotsCastTime += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks   * regrowth.CastTime               * rotSettings.SwiftmendPerMin / 60.0f;
+                hotsCastFrac += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
+                hotsCastFrac += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
                 #endregion
 
             }
@@ -575,7 +636,7 @@ applied and result is scaled down by 100)",
             float spiritRegen = StatConversion.GetSpiritRegenSec(stats.Intellect, stats.Spirit); // CalculateManaRegen(stats.Intellect, stats.Spirit);
 
             spiritRegen *= 5.0f;    // Change to MP5, since GetSpiritRegenSec works per sec 
-            
+
             float replenishment = stats.Mana * stats.ManaRestoreFromMaxManaPerSecond * 5.0f * (calcOpts.ReplenishmentUptime / 100f); // Use the buff values (they are /sec, multiply by 5 to get to mp5)
             float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegen * stats.SpellCombatManaRegeneration;
             float ManaRegenOutFSR = stats.Mp5 + replenishment + spiritRegen;
@@ -594,10 +655,11 @@ applied and result is scaled down by 100)",
             #endregion
 
             #region Innervates
-            float numInnervates = (float) Math.Ceiling(calcOpts.FightDuration / 180f);      // 3 min CD, for 3:15 fight durations, will give unrealistic value of 2 innervates, not practical, since one will over-mana 
+            float numInnervates = (float)Math.Ceiling(calcOpts.FightDuration / 180f);      // 3 min CD, for 3:15 fight durations, will give unrealistic value of 2 innervates, not practical, since one will over-mana 
             float manaFromEachInnervate = 2.25f * calcOpts.Innervates;       // Use self innervate?
 
-            if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate) {
+            if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate)
+            {
                 manaFromEachInnervate += 0.45f;
             }
 
@@ -613,7 +675,7 @@ applied and result is scaled down by 100)",
             extraMana += manaFromInnervates;
             #endregion
 
-            #region Primary Heal
+            #region Select Primary Heal
             Spell primaryHeal;
             switch (rotSettings.primaryHeal)
             {
@@ -631,77 +693,69 @@ applied and result is scaled down by 100)",
                     primaryHeal = healingTouch;
                     break;
             }
-            #endregion
 
-            #region Determine if Mana or GCD limited
-            if (primaryHeal is Nourish) {
+            if (primaryHeal is Nourish)
+            {
                 nourish[0].calculateNewNaturesGrace(nourish[0].CritPercent / 100f);
                 nourish[1].calculateNewNaturesGrace(nourish[1].CritPercent / 100f);
                 nourish[2].calculateNewNaturesGrace(nourish[2].CritPercent / 100f);
                 nourish[3].calculateNewNaturesGrace(nourish[3].CritPercent / 100f);
                 nourish[4].calculateNewNaturesGrace(nourish[4].CritPercent / 100f);
-            } else {
-                primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
-            }
-
-            float tpsHealing = 1f - (hotsCastTime + wgCastTime + swiftCastTime);
-            float MaxPrimaryFraction = 1.0f;
-
-            if (tpsHealing > (calcOpts.IdleCastTimePercent/100.0f))
-            {
-                // Reduce available time to keep enough idle time
-                MaxPrimaryFraction = (tpsHealing - (calcOpts.IdleCastTimePercent / 100.0f) )/ tpsHealing;
             }
             else
-            {   // User wanted more idle time than available after tank HoTs, just set primary heal to 0
-                MaxPrimaryFraction = 0.0f;
+            {
+                primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
+            }
+            #endregion
+
+            #region Determine Primary Heal Fraction and Limits
+            float MaxPrimaryFraction = 1f - (hotsCastFrac + wgCastTime + swiftCastTime);
+            float ActualPrimaryFraction = MaxPrimaryFraction;
+
+            if (MaxPrimaryFraction > (calcOpts.IdleCastTimePercent / 100.0f))
+            {
+                // Reduce available time to keep enough idle time
+                ActualPrimaryFraction = MaxPrimaryFraction - (calcOpts.IdleCastTimePercent / 100.0f);
+            }
+            else
+            {   // User wanted more idle time than available after HoTs, just set primary heal to 0
+                ActualPrimaryFraction = 0.0f;
             }
 
             // Determine if Mana or GCD limited
-            float effectiveManaBurnTankHots = hotsMPS + wgMPS + swiftMPS - manaRegen / 5f;
-            float manaAvailForPrimaryHeal = (extraMana + stats.Mana) - effectiveManaBurnTankHots * calcOpts.FightDuration;
-            float primaryHealMpsAvail = manaAvailForPrimaryHeal / calcOpts.FightDuration;
-            float mpsHealing = tpsHealing * MaxPrimaryFraction * primaryHeal.ManaCost / primaryHeal.CastTime;
+            float effectiveManaBurnHots = hotsMPS + wgMPS + swiftMPS - manaRegen / 5f;
+            float primaryHealMps = ActualPrimaryFraction * primaryHeal.ManaCost / primaryHeal.CastTime;
+
+            // Old code
+            float manaAfterHots = (extraMana + stats.Mana) - effectiveManaBurnHots * calcOpts.FightDuration;
+            float primaryHealMpsAvailable = manaAfterHots / calcOpts.FightDuration;
 
             float unusedMana = 0f;
             float unusedCastTimeFrac = 0f;
 
-            if (primaryHealMpsAvail < 0) {
-                // Not enough mana to keep hots up
+            if (primaryHealMpsAvailable < 0)
+            {
+                // Not enough mana to keep hots up, so don't bother with primary heal
                 // Mana limited
-                primaryFrac = 0f;
-
-                // Need to calculate how much tank healing is penalised/reduced in order to not over value this setup
-                float reduceFactor = (effectiveManaBurnTankHots / (effectiveManaBurnTankHots - primaryHealMpsAvail));
-
-                // Try reducing everything equally as the simplest approach
-                hotsHPS *= reduceFactor;
-                trueHotsHPS *= reduceFactor;
-                hotsMPS *= reduceFactor;
-                hotsCastTime *= reduceFactor;
-                hotsCastsPerMinute *= reduceFactor;
-                hotsCritsPerMinute *= reduceFactor;
-                hotsHealsPerMinute *= reduceFactor;
-                castsPerMinute += reduceFactor;
-                critsPerMinute += reduceFactor;
-                healsPerMinute += reduceFactor;
-                rejuvTicksPerMinute *= reduceFactor;
-            } else if (primaryHealMpsAvail > mpsHealing) {
-                // GCD/Idle Time limited
-                unusedMana = (primaryHealMpsAvail - mpsHealing) * calcOpts.FightDuration;
-                primaryFrac = MaxPrimaryFraction;
-            } else {
-                // Mana limited
-                primaryFrac = primaryHealMpsAvail / mpsHealing * MaxPrimaryFraction;
+                // ActualPrimaryFraction = 0f;
             }
-            unusedCastTimeFrac = tpsHealing * (1.0f - primaryFrac);
+            else if (primaryHealMpsAvailable > primaryHealMps)
+            {
+                // GCD/Idle Time limited
+                unusedMana = (primaryHealMpsAvailable - primaryHealMps) * calcOpts.FightDuration;
+            }
+            else
+            {
+                // Mana limited
+                // ActualPrimaryFraction *= primaryHealMpsAvail / primaryHealMps;
+            }
+            unusedCastTimeFrac = MaxPrimaryFraction - ActualPrimaryFraction;
             #endregion
 
-            #region Primary Heal
-            float tpsHeal100 = tpsHealing;
-            tpsHealing *= primaryFrac;
             float hpsHealing = 0;
             float hpsHeal100 = 0;
+
+            #region Primary Heal hps and hps100
             // Wildebees: 20090221 : Changed check to be based on raidHealing, instead of just handling lifebloom and rejuv differently
             if (primaryHeal is Nourish)
             {
@@ -712,8 +766,9 @@ applied and result is scaled down by 100)",
                         rotSettings.nourish2 * nourish[2].HPS +
                         rotSettings.nourish3 * nourish[3].HPS +
                         rotSettings.nourish4 * nourish[4].HPS;
-                    hpsHealing = tpsHealing * _hps;      // For single target healing, don't receive the full HoT effect
-                    hpsHeal100 = tpsHeal100 * _hps;
+                    hpsHealing = ActualPrimaryFraction * _hps;
+                    // For single target healing, don't receive the full HoT effect
+                    hpsHeal100 = MaxPrimaryFraction * _hps;
                 }
                 else
                 {
@@ -722,61 +777,211 @@ applied and result is scaled down by 100)",
                         rotSettings.nourish2 * nourish[2].HPCT +
                         rotSettings.nourish3 * nourish[3].HPCT +
                         rotSettings.nourish4 * nourish[4].HPCT;
-                    hpsHealing = tpsHealing * _hpct;     // fraction of time casting primaryHeal multiplied
-                    //   by total healing by primaryHeal/cast time
-                    // This assumes full HoT duration is effective on raid
-                    //   members. 
-                    hpsHeal100 = tpsHeal100 * _hpct;
+                    hpsHealing = ActualPrimaryFraction * _hpct;
+                    // fraction of time casting primaryHeal multiplied by total healing by primaryHeal/cast time
+                    // This assumes full HoT duration is effective on raid members. 
+                    hpsHeal100 = MaxPrimaryFraction * _hpct;
                 }
             }
             else
             {
                 if (rotSettings.healTarget == HealTargetTypes.RaidHealing)
                 {
-                    hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
-                    //   by total healing by primaryHeal/cast time
-                    // This assumes full HoT duration is effective on raid
-                    //   members. 
-                    hpsHeal100 = tpsHeal100 * primaryHeal.HPCT;
+                    hpsHealing = ActualPrimaryFraction * primaryHeal.HPCT;
+                    // fraction of time casting primaryHeal multiplied by total healing by primaryHeal/cast time
+                    // This assumes full HoT duration is effective on raid members. 
+                    hpsHeal100 = MaxPrimaryFraction * primaryHeal.HPCT;
                 }
                 else
                 {
-                    hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
-                    hpsHeal100 = tpsHeal100 * primaryHeal.HPS;
+                    hpsHealing = ActualPrimaryFraction * primaryHeal.HPS;
+                    // For single target healing, don't receive the full HoT effect
+                    hpsHeal100 = MaxPrimaryFraction * primaryHeal.HPS;
                 }
             }
-            mpsHealing = tpsHealing * primaryHeal.ManaCost / primaryHeal.CastTime;
-            castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
-            critsPerMinute += 60f * tpsHealing / primaryHeal.CastTime * primaryHeal.CritPercent / 100f;
-            float primaryCPM = 60f * tpsHealing / primaryHeal.CastTime;
+            primaryHealMps = ActualPrimaryFraction * primaryHeal.ManaCost / primaryHeal.CastTime;
+            castsPerMinute += 60f * ActualPrimaryFraction / primaryHeal.CastTime;
+            critsPerMinute += 60f * ActualPrimaryFraction / primaryHeal.CastTime * primaryHeal.CritPercent / 100f;
+            float primaryCPM = 60f * ActualPrimaryFraction / primaryHeal.CastTime;
             healsPerMinute += primaryCPM; // direct component
             if (primaryHeal is Regrowth || primaryHeal is Rejuvenation) { healsPerMinute += primaryCPM * primaryHeal.PeriodicTicks; } // hot component
             if (primaryHeal is Rejuvenation) { rejuvTicksPerMinute += primaryCPM * primaryHeal.PeriodicTicks; }
             #endregion
 
             #region Calculate total healing in the fight
-            float mps = hotsMPS + mpsHealing + wgMPS + swiftMPS;
+            float mps = hotsMPS + primaryHealMps + wgMPS + swiftMPS;
             float hps = hotsHPS + hpsHealing + wgHPS + swiftHPS;
             float TotalTime = calcOpts.FightDuration;
             float TimeToOOM = TotalTime;
-            float EffectiveManaBurn = hotsMPS + mpsHealing + wgMPS + swiftMPS - manaRegen / 5f;
-            if (EffectiveManaBurn > 0f) {
+            float EffectiveManaBurn = effectiveManaBurnHots + primaryHealMps;
+            if (EffectiveManaBurn > 0f)
+            {
                 TimeToOOM = Math.Min((extraMana + stats.Mana) / EffectiveManaBurn, TotalTime);
             }
 
             float TotalMod = 1f;
-            if (TotalTime > TimeToOOM + 1.0f) {
-                // Should only happen if running OOM from tank HoTs and even attempts to scale back there wasn't enough
+            if (TotalTime > TimeToOOM)
+            {
                 float TimeToRegenAll = 5f * stats.Mana / ManaRegenOutFSR;
                 float TimeToBurnAll = stats.Mana / EffectiveManaBurn;
-                //CvRFraction = (stats.Mana / EffectiveManaBurn) / TotalCycle;
-                TotalMod = 1f - (TotalTime - TimeToOOM) / (TimeToRegenAll + TimeToBurnAll);
-                hps *= TotalMod; // Penalise hps
+                float FractionAfterOOM = TimeToBurnAll / (TimeToRegenAll + TimeToBurnAll);
+                float TimeAfterOOM = TotalTime - TimeToOOM;
+                TotalMod = (1.0f * TimeToOOM + FractionAfterOOM * TimeAfterOOM) / TotalTime;
             }
             #endregion
 
-            #region Convert to be ready for points
-            float MaxHPS = hotsHPS + hpsHeal100 + wgHPS + swiftHPS;
+            #region Calculate Burst Healing
+            float MaxHPS = 0;
+            {
+                float swift1HPS = 0f;
+                float swift2HPS = 0f;
+                float swift3HPS = 0f;
+                float swift1Fraction = 0f;
+                float swift2Fraction = 0f;
+                float swift3Fraction = 0f;
+
+                if (calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0)
+                {
+                    Swiftmend swift1 = new Swiftmend(calculatedStats, stats, rejuvenate, regrowth);
+                    Swiftmend swift2 = new Swiftmend(calculatedStats, stats, rejuvenate, null);
+                    Swiftmend swift3 = new Swiftmend(calculatedStats, stats, null, regrowth);
+
+                    swift1Fraction = swift1.CastTime / 15.0f;
+                    swift1HPS = swift1.TotalAverageHealing / 15.0f;
+                    swift2Fraction = swift2.CastTime / 15.0f;
+                    swift2HPS = swift2.TotalAverageHealing / 15.0f;
+                    swift3Fraction = swift3.CastTime / 15.0f;
+                    swift3HPS = swift3.TotalAverageHealing / 15.0f;
+                    if (!calculatedStats.LocalCharacter.DruidTalents.GlyphOfSwiftmend)
+                    {
+                        swift1HPS += swift1.regrowthUseChance * regrowth.AverageHealingwithCrit / 15f;
+                        swift1Fraction += swift1.rejuvUseChance * rejuvenate.CastTime / 15f;
+                        swift1Fraction += swift1.regrowthUseChance * regrowth.CastTime / 15f;
+
+                        swift2Fraction += rejuvenate.CastTime / 15f;
+
+                        swift3HPS += regrowth.AverageHealingwithCrit / 15f;
+                        swift3Fraction += regrowth.CastTime / 15f;
+                    }
+                }
+
+                float RejuvFraction = rejuvenate.CastTime / rejuvenate.Duration;
+                float RegrowthFraction = regrowth.CastTime / regrowth.Duration;
+                float LifebloomFraction = lifebloomRollingStack.CastTime / lifebloomRollingStack.Duration;
+
+                // RJ + N1 
+                float RjN1_HPS = rejuvenate.HPSHoT + (1f - RejuvFraction) * nourish[1].HPS;
+                // RJ + LB + N2 
+                float RjLbN2_HPS = rejuvenate.HPSHoT + lifebloomRollingStack.HPSHoT + (1f - RejuvFraction - LifebloomFraction) * nourish[2].HPS;
+                // RJ + RG + LB + N3 
+                float RjRgLbN3_HPS = rejuvenate.HPSHoT + regrowth.HPSHoT + regrowth.HPS + lifebloomRollingStack.HPSHoT + (1f - RejuvFraction - RegrowthFraction - LifebloomFraction) * nourish[3].HPS;
+                // RJ + RG 
+                float RjRg_HPS = rejuvenate.HPSHoT + (1f - RejuvFraction) * regrowthAgain.HPS;
+                // RJ + LB + RG
+                float RjLbRg_HPS = rejuvenate.HPSHoT + lifebloomRollingStack.HPSHoT + (1f - RejuvFraction - LifebloomFraction) * regrowthAgain.HPS;
+                // RG
+                float Rg_HPS = regrowthAgain.HPS;
+                // RG + N1
+                float RgN1_HPS = regrowth.HPSHoT + (1f - RegrowthFraction) * nourish[1].HPS;
+                // N0
+                float N0_HPS = nourish[0].HPS;
+
+                // Apply swiftmend
+                bool forceSwiftmend = true;
+
+                // RJ + N1 S
+                float RjN1_S_HPS = swift2HPS + rejuvenate.HPSHoT + (1f - RejuvFraction - swift2Fraction) * nourish[1].HPS;
+                // RJ + LB + N2 S
+                float RjLbN2_S_HPS = swift2HPS + rejuvenate.HPSHoT + lifebloomRollingStack.HPSHoT + (1f - RejuvFraction - LifebloomFraction - swift2Fraction) * nourish[2].HPS;
+                // RJ + RG + LB + N3 S
+                float RjRgLbN3_S_HPS = swift1HPS + rejuvenate.HPSHoT + regrowth.HPSHoT + regrowth.HPS + lifebloomRollingStack.HPSHoT + (1f - RejuvFraction - RegrowthFraction - LifebloomFraction - swift1Fraction) * nourish[3].HPS;
+                // RJ + RG S
+                float RjRg_S_HPS = swift1HPS + rejuvenate.HPSHoT + (1f - RejuvFraction - swift1Fraction) * regrowthAgain.HPS;
+                // RJ + LB + RG S
+                float RjLbRg_S_HPS = swift1HPS + rejuvenate.HPSHoT + lifebloomRollingStack.HPSHoT + (1f - RejuvFraction - LifebloomFraction - swift1Fraction) * regrowthAgain.HPS;
+                // RG S
+                float Rg_S_HPS = swift3HPS + (1f - swift3Fraction) * regrowthAgain.HPS;
+                // RG + N1 S
+                float RgN1_S_HPS = swift3HPS + regrowth.HPSHoT + (1f - RegrowthFraction - swift3Fraction) * nourish[1].HPS;
+
+                String selection;
+                MaxHPS = 0;
+                if (RjN1_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = RjN1_HPS;
+                    selection = "RjN*";
+                }
+                if (RjLbN2_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = RjLbN2_HPS;
+                    selection = "RjLbN*";
+                }
+                if (RjRgLbN3_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = RjRgLbN3_HPS;
+                    selection = "RjRgLbN*";
+                }
+                if (RjRg_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = RjRg_HPS;
+                    selection = "RjRgN*";
+                }
+                if (RjLbRg_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = RjLbRg_HPS;
+                    selection = "RjLbRg*";
+                }
+                if (Rg_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = Rg_HPS;
+                    selection = "Rg*";
+                }
+                if (RgN1_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = RgN1_HPS;
+                    selection = "RgN*";
+                }
+                if (N0_HPS > MaxHPS && !forceSwiftmend)
+                {
+                    MaxHPS = N0_HPS;
+                    selection = "N*";
+                }
+                if (RjN1_S_HPS > MaxHPS)
+                {
+                    MaxHPS = RjN1_S_HPS;
+                    selection = "RjN*+S";
+                }
+                if (RjLbN2_S_HPS > MaxHPS)
+                {
+                    MaxHPS = RjLbN2_S_HPS;
+                    selection = "RjLbN*+S";
+                }
+                if (RjRgLbN3_S_HPS > MaxHPS)
+                {
+                    MaxHPS = RjRgLbN3_S_HPS;
+                    selection = "RjRgLbN*+S";
+                }
+                if (RjRg_S_HPS > MaxHPS)
+                {
+                    MaxHPS = RjRg_S_HPS;
+                    selection = "RjRgN*+S";
+                }
+                if (RjLbRg_S_HPS > MaxHPS)
+                {
+                    MaxHPS = RjLbRg_S_HPS;
+                    selection = "RjLbRg*+S";
+                }
+                if (Rg_S_HPS > MaxHPS)
+                {
+                    MaxHPS = Rg_S_HPS;
+                    selection = "Rg*+S";
+                }
+                if (RgN1_S_HPS > MaxHPS)
+                {
+                    MaxHPS = RgN1_S_HPS;
+                    selection = "RgN*+S";
+                }
+            }
             #endregion
 
             #region Apply bonus from Val'anyr
@@ -791,7 +996,8 @@ applied and result is scaled down by 100)",
             }
             #endregion
 
-            return new Rotation() {
+            return new Rotation()
+            {
                 HPS = hps,
                 MaxHPS = MaxHPS,
                 MPS = mps,
@@ -800,11 +1006,11 @@ applied and result is scaled down by 100)",
                 HPSFromTrueHots = trueHotsHPS,
                 HPSFromWildGrowth = wgHPS,
                 HPSFromSwiftmend = swiftHPS,
-                MPSFromPrimary = mpsHealing,
+                MPSFromPrimary = primaryHealMps,
                 MPSFromHots = hotsMPS,
                 MPSFromWildGrowth = wgMPS,
                 MPSFromSwiftmend = swiftMPS,
-                HotsFraction = hotsCastTime,
+                HotsFraction = hotsCastFrac,
                 CastsPerMinute = castsPerMinute,
                 CritsPerMinute = critsPerMinute,
                 HealsPerMinute = healsPerMinute,
@@ -815,14 +1021,14 @@ applied and result is scaled down by 100)",
                 ManaFromInnervates = manaFromInnervates / calcOpts.FightDuration * 5.0f,
                 ManaFromSpirit = spiritRegen,
                 ManaFromMP5 = stats.Mp5,
-                ManaFromPotions = extraManaFromPot, 
+                ManaFromPotions = extraManaFromPot,
                 TimeToOOM = TimeToOOM,
                 TotalTime = TotalTime,
                 TotalHealing = TimeToOOM * hps * TotalMod,
                 TotalCastsPerMinute = castsPerMinute * TotalMod,
                 TotalCritsPerMinute = critsPerMinute * TotalMod,
                 TotalHealsPerMinute = healsPerMinute * TotalMod,
-                RejuvenationHealsPerMinute = rejuvTicksPerMinute,
+                RejuvenationHealsPerMinute = rejuvTicksPerMinute * TotalMod,
                 ReplenishRegen = replenishment,
                 UnusedMana = unusedMana,
                 UnusedCastTimeFrac = unusedCastTimeFrac,
@@ -832,10 +1038,10 @@ applied and result is scaled down by 100)",
         protected RotationSettings predefinedRotation(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
             RotationSettings settings = new RotationSettings();
 
-            settings.averageRejuvs = (float)calcOpts.AverageRejuv / 4.0f;
-            settings.averageLifeblooms = (float)calcOpts.AverageLifebloom;
+            settings.RejuvFraction = (float)calcOpts.AverageRejuv / 100.0f;
+            settings.LifebloomFraction = (float)calcOpts.AverageLifebloom / 100.0f;
             settings.averageLifebloomStacks = (float)calcOpts.AverageLifebloomStack;
-            settings.averageRegrowth = (float)calcOpts.AverageRegrowths / 4.0f;
+            settings.RegrowthFraction = (float)calcOpts.AverageRegrowths / 100.0f;
             switch (calcOpts.LifebloomStackType)
             {
                 case 0:
@@ -874,7 +1080,7 @@ applied and result is scaled down by 100)",
             settings.healTarget = HealTargetTypes.RaidHealing;
 
             settings.SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
-            settings.WildGrowthPerMinute = calcOpts.WildGrowthPerMinute;
+            settings.WildGrowthPerMin = calcOpts.WildGrowthPerMinute;
             settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
             return settings;
         }
@@ -1093,21 +1299,23 @@ applied and result is scaled down by 100)",
             return s;
         }
         public bool HasRelevantSpecialEffectStats(Stats stats) {
+            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
+                    || effect.Trigger == Trigger.RejuvenationTick  // Idol of Flaring Growth
+                    )
+                {
+                    if (HasRelevantSpecialEffectStats(effect.Stats)) return true;
+                }
+            }
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
                    + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus + stats.HealingOmenProc
                    + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
         public override bool HasRelevantStats(Stats stats) {
-            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit 
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
-                    || effect.Trigger == Trigger.RejuvenationTick  // Idol of Flaring Growth
-                    )
-                {
-                    return HasRelevantSpecialEffectStats(effect.Stats);
-                }
-            }
+            if (HasRelevantSpecialEffectStats(stats)) return true;
 
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
