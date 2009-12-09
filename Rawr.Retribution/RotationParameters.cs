@@ -8,22 +8,10 @@ namespace Rawr.Retribution
     {
         public class RotationComparer : IEqualityComparer<RotationParameters>
         {
-            private readonly int[] encode = { 1, 2, 3, 4, 5, 6 };
 
             public bool Equals(RotationParameters one, RotationParameters two) { return one.Equals(two); }
 
-            public int GetHashCode(RotationParameters obj)
-            {
-                int ret = (obj.T7_4pc ? 512 : 0) + (obj.GlyphConsecrate ? 1024 : 0) + int.Parse((obj.TimeUnder20 * 100).ToString()) * 2048
-                     + int.Parse((obj.Wait * 100).ToString()) * 4096 + int.Parse((obj.Delay * 100).ToString()) * 8192 + (obj.T10_2pc ? 16384 : 0);
-
-                for (int i = 0; i < obj.Priorities.Length; i++)
-                {
-                    ret += (int)obj.Priorities[i] * (4 ^ i);
-                }
-
-                return ret;
-            }
+            public int GetHashCode(RotationParameters obj) { return obj.GetHashCode(); }
 
         }
 
@@ -50,21 +38,37 @@ namespace Rawr.Retribution
             this.AttackSpeed = (float)Math.Round(AttackSpeed, 2);
         }
 
-        public bool Equals(RotationParameters other)
+        public override bool Equals(Object obj)
         {
+            RotationParameters other = obj as RotationParameters;
+            if (other == null) return false;
             if (Priorities.Length != other.Priorities.Length) return false;
             for (int i = 0; i < Priorities.Length; i++)
             {
                 if (Priorities[i] != other.Priorities[i]) { return false; }
             }
             return (T7_4pc == other.T7_4pc)
-                && (T10_2pc == other.T10_2pc)
-                && (AttackSpeed == other.AttackSpeed)
+                && ((T10_2pc == other.T10_2pc)
+                && (!T10_2pc || AttackSpeed == other.AttackSpeed))
                 && (GlyphConsecrate == other.GlyphConsecrate)
                 && (TimeUnder20 == other.TimeUnder20)
                 && (Delay == other.Delay)
                 && (Wait == other.Wait)
                 && (ImpJudgements == other.ImpJudgements);
+        }
+
+        public override int GetHashCode()
+        {
+            int ret = (T7_4pc ? 512 : 0) + (GlyphConsecrate ? 1024 : 0) + int.Parse((TimeUnder20 * 100).ToString()) * 2048
+                 + int.Parse((Wait * 100).ToString()) * 4096 + int.Parse((Delay * 100).ToString())
+                 * 8192 + (T10_2pc ? (int)(16384 * AttackSpeed) : 0);
+
+            for (int i = 0; i < Priorities.Length; i++)
+            {
+                ret += (int)Priorities[i] * (4 ^ i);
+            }
+
+            return ret;
         }
 
         public static string ShortAbilityString(Ability ability)

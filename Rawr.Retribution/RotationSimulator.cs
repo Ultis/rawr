@@ -19,7 +19,7 @@ namespace Rawr.Retribution
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = rot.T10_2pc ? 1000000 : 10000;
+            sol.FightLength = rot.T10_2pc ? 500000 : 10000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
 
@@ -36,7 +36,7 @@ namespace Rawr.Retribution
 
             bool gcdUsed;
             float minNext, tryUse, timeElapsed = 0;
-            Random rand = new Random();
+            Random rand = new Random(6021987);
 
             while (currentTime < sol.FightLength)
             {
