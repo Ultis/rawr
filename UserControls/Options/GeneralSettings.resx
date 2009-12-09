@@ -145,13 +145,13 @@
     <value>3, 118</value>
   </data>
   <data name="CK_HideEnchantsBasedOnProfs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>201, 17</value>
+    <value>183, 17</value>
   </data>
   <data name="CK_HideEnchantsBasedOnProfs.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
   </data>
   <data name="CK_HideEnchantsBasedOnProfs.Text" xml:space="preserve">
-    <value>Hide Enchants Based on Professions</value>
+    <value>Enforce Profession Requirements</value>
   </data>
   <data name="&gt;&gt;CK_HideEnchantsBasedOnProfs.Name" xml:space="preserve">
     <value>CK_HideEnchantsBasedOnProfs</value>
