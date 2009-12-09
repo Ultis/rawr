@@ -423,6 +423,13 @@ namespace Rawr
                 Group = "Damage (%)",
                 Stats = { BonusDamageMultiplier = 0.03f }
             });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Arcane Empowerment",
+                Source = "Arcane Mage",
+                Group = "Damage (%)",
+                Stats = { BonusDamageMultiplier = 0.03f }
+            });
             #endregion
 
             #region Damage Reduction (%)
