@@ -1909,23 +1909,36 @@ namespace Rawr
 			{
 				ToString(); //Breakpoint Here
 
-				List<int> ids = new List<int>();
-				System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://www.wowhead.com/?latest-additions");
-				Stream responseStream = request.GetResponse().GetResponseStream();
-				StreamReader reader = new StreamReader(responseStream);
-				string items32 = reader.ReadToEnd();
+				string[] urls = new string[] {
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel25&fl[boss]=all&fl[difficulty]=heroic&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel25&fl[boss]=all&fl[difficulty]=normal&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel10&fl[boss]=all&fl[difficulty]=heroic&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel10&fl[boss]=all&fl[difficulty]=normal&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=forgeofsouls&fl[boss]=all&fl[difficulty]=all&searchType=items",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=pitofsaron&fl[boss]=all&fl[difficulty]=all&searchType=items",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=hallsofreflection&fl[boss]=all&fl[difficulty]=all&searchType=items",
+					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=emblemoffrost&fl[type]=all&fl[rrt]=all&fl[rqrMin]=&fl[rqrMax]=&fl[usbleBy]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none"};
 
-				while (items32.Contains("/?item="))
+				foreach (string url in urls)
 				{
-					items32 = items32.Substring(items32.IndexOf("/?item=") + "/?item=".Length);
-					ids.Add(int.Parse(items32.Substring(0, items32.IndexOf("\""))));
-				}
+					List<int> ids = new List<int>();
+					System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(url);
+					Stream responseStream = request.GetResponse().GetResponseStream();
+					StreamReader reader = new StreamReader(responseStream);
+					string items32 = reader.ReadToEnd();
 
-				foreach (int id in ids)
-				{	
-					Item item = Wowhead.GetItem(id);
-					if (item != null)
-						ItemCache.AddItem(item);
+					while (items32.Contains("?i="))
+					{
+						items32 = items32.Substring(items32.IndexOf("?i=") + "?i=".Length);
+						ids.Add(int.Parse(items32.Substring(0, items32.IndexOf("\""))));
+					}
+
+					foreach (int id in ids)
+					{
+						Item item = Armory.GetItem(id);
+						if (item != null)
+							ItemCache.AddItem(item);
+					}
 				}
 
 				ItemCache.OnItemsChanged();

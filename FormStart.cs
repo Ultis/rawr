@@ -18,16 +18,17 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.0.0
- - Most actively developed models should be updated for WoW Patch 3.3. We'll be releasing new versions of Rawr frequently in the next few days, to provide updates and bug fixes, as much as we can.
- - Rawr.Enhance: Fix for several issues with haste affecting ability GCDs it shouldn't. 
- - Rawr.DPSWarr: Several fixes for T10 set bonuses. Fix for broken Imp Slam.
- - Rawr.Tree: Updated with new Glyph, new GotEM, and a couple trinket effects. Overhauled rotation model.
- - Rawr.Hunter: Fix for broken Expose Weakness. Improvements to pet scaling.
- - Rawr.Mage: Fixes and improvements for sequence reconstruction. Some support for 2T10 in cycle analyzer for frost. Currently it's only feasible for manual comparisons, not for automated optimum search.
- - Rawr.TankDK: Updated for 3.3 changes.
- - Rawr.SPriest: Updated for 3.3 changes.
- - Rawr.HolyPriest: Updated for 3.3 changes.";
+			labelVersionHistory.Text = @"v2.3.1.0
+ - Many 3.3 trinkets now have their effects modeled correctly.
+ - Filters have been updated to include new 3.3 gear.
+ - Hymn of Hope and Mana Tide totem are now selectable buffs.  
+ - Your dodge is now floored at 0% even with the Chill of the Throne debuff active.  
+ - Additional Teir 10 set bonus effects for many modules implemented.
+ - Rawr.TankdDK: Rune of the Nerubian Carapace is now avalible for selection.
+ - Rawr.Mage: Improved handeling of Frost DPS Cycles.
+ - Rawr.Moonkin: New stat panel! This should show more information, in a more helpful manner.
+ - Rawr.Tree: Rotation calculations redone, should be more accurate now.
+ - Rawr.Hunter: Hit will now properly effect your pet's chance to be dodged. Mana calculations for Aspect of the Viper fixed, you should see a DPS drop if you would run OOM and are not set to use Viper. Pet talents should now look and feel like the normal talent pane.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
