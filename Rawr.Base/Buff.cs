@@ -2810,7 +2810,7 @@ namespace Rawr
             });
             #endregion
             #endregion
-            #region Tier 10 | Lasherweave's
+            #region Tier 10 | Lasherweave
             #region Battlegear
             defaultBuffs.Add(buff = new Buff()
             {
@@ -2840,7 +2840,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
-                SetName = "Lasherweave's Regalia",
+                SetName = "Lasherweave Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
@@ -2851,7 +2851,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonkinT10CritDot = 0.07f },
-                SetName = "Lasherweave's Regalia",
+                SetName = "Lasherweave Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
