@@ -141,7 +141,7 @@ namespace Rawr.ShadowPriest {
 
         public virtual void Calculate(Stats stats, Character character) { }
 
-        public void RecalcHaste(Stats stats, float addedHasteRating)
+        public virtual void RecalcHaste(Stats stats, float addedHasteRating)
         {
             float newHaste = 1f + stats.SpellHaste;
             if (addedHasteRating > 0f)
@@ -413,6 +413,20 @@ namespace Rawr.ShadowPriest {
             Calculate(stats, character);
             BaseDebuffTicks = DebuffTicks = (int)(BaseDebuffDuration);
         }
+
+        public override void RecalcHaste(Stats stats, float addedHasteRating)
+        {
+            float newHaste = 1f + stats.SpellHaste;
+            if (addedHasteRating > 0f)
+            {
+                newHaste /= (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+                newHaste *= (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating + addedHasteRating));
+            }
+            if (CastTime > 0f)
+                CastTime = (float)Math.Max(1f, (BaseCastTime - stats.PriestDPS_T10_4pc) / newHaste);
+            GlobalCooldown = (float)Math.Max(1f, 1.5f / newHaste);
+        }
+        
         public override void Calculate(Stats stats, Character character) {
             PriestTalents talents = character.PriestTalents;
 
@@ -446,7 +460,7 @@ namespace Rawr.ShadowPriest {
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + talents.ShadowPower * 0.2f) + 1f;
 
-            CastTime = (float)Math.Max(1f, BaseCastTime - stats.PriestDPS_T10_4pc / (1 + stats.SpellHaste));
+            CastTime = (float)Math.Max(1f, (BaseCastTime - stats.PriestDPS_T10_4pc) / (1 + stats.SpellHaste));
             Range = (int)Math.Round(BaseRange * (1f + talents.ShadowReach * 0.1f));
         }
         public override string ToString() {
