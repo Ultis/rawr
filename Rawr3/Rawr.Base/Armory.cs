@@ -309,7 +309,7 @@ namespace Rawr
 
                     //parse Use/Equip lines
                     if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, Id);
-                    if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true);
+                    if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true, itemLevel);
                 }
 
                 List<XElement> socketNodes = new List<XElement>(Tooltip.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket"));
