@@ -5,6 +5,7 @@ using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
+using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
@@ -683,12 +684,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             get {
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
+                        "Pet Talents",
                         "Spammed Shots DPS",
                         "Spammed Shots MPS",
                         "Rotation DPS",
                         "Rotation MPS",
                         "Shot Damage per Mana",
-                        "Item Budget"
+                        "Item Budget",
                     };
                 }
                 return _customChartNames;
@@ -700,8 +702,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             switch (chartName)
             {
+                case "Pet Talents":
+                    _subPointNameColors = _subPointNameColorsDPS;
+                    return GetPetTalentChart(character, calculations);
                 case "Spammed Shots DPS":
-
+                    _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
                         comparisonFromShotSpammedDPS(calculations.aimedShot),
                         comparisonFromShotSpammedDPS(calculations.arcaneShot),
@@ -749,7 +754,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     };
 
                 case "Rotation DPS":
-
+                    _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
                         comparisonFromShotRotationDPS(calculations.aimedShot),
                         comparisonFromShotRotationDPS(calculations.arcaneShot),
@@ -845,6 +850,54 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return new ComparisonCalculationBase[0];
 
         }
+        private ComparisonCalculationHunter[] GetPetTalentChart(Character character, CharacterCalculationsHunter calcs)
+        {
+            List<ComparisonCalculationHunter> talentCalculations = new List<ComparisonCalculationHunter>();
+            Character baseChar = character.Clone(); CalculationOptionsHunter baseCalcOpts = baseChar.CalculationOptions as CalculationOptionsHunter;
+            Character newChar = character.Clone(); CalculationOptionsHunter newCalcOpts = newChar.CalculationOptions as CalculationOptionsHunter;
+            CharacterCalculationsHunter currentCalc;
+            CharacterCalculationsHunter newCalc;
+            ComparisonCalculationHunter compare;
+            currentCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
+            foreach (PetTalent pi in baseCalcOpts.PetTalents.TalentTree)
+            {
+                int Index = pi.ID;
+                int orig = 0;
+                PetTalent talentData = pi;
+                orig = pi.Value; // baseChar.CurrentTalents.Data[talentData.Index];
+                //if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)) {
+                if (talentData.Max == pi.Value) {
+                    //newChar.CurrentTalents.Data[talentData.Index]--;
+                    newCalcOpts.PetTalents.TalentTree[Index].Value--;
+                    newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                    compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.Max == orig);
+                } else {
+                    //newChar.CurrentTalents.Data[talentData.Index]++;
+                    newCalcOpts.PetTalents.TalentTree[Index].Value++;
+                    newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                    compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.Max == orig);
+                }
+                string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, talentData.Max);
+                if (orig == 0) {
+                    // We originally didn't have it, so first rank is next rank
+                    text += "Next Rank:\r\n";
+                    text += talentData.Desc[0];
+                } else if (orig >= talentData.Max) {
+                    // We originally were at max, so there isn't a next rank, just show the capped one
+                    text += talentData.Desc[talentData.Max - 1];
+                } else {
+                    // We aren't at 0 or MaxPoints originally, so it's just a point in between
+                    text += talentData.Desc[orig - 1];
+                    text += "\r\n\r\nNext Rank:\r\n";
+                    text += talentData.Desc[orig];
+                }
+                compare.Description = text;
+                compare.Item = null;
+                talentCalculations.Add(compare);
+                newCalcOpts.PetTalents.TalentTree[Index].Value = orig;
+            }
+            return talentCalculations.ToArray();
+        }
         private ComparisonCalculationHunter comparisonFromShotSpammedDPS(ShotData shot)
         {
             ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();
@@ -857,7 +910,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             comp.OverallPoints = dps;
             return comp;
         }
-
         private ComparisonCalculationHunter comparisonFromShotSpammedMPS(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -870,7 +922,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             comp.OverallPoints = mps;
             return comp;
         }
-
         private ComparisonCalculationHunter comparisonFromShotRotationDPS(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -879,7 +930,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             comp.OverallPoints = (float)shot.DPS;
             return comp;
         }
-
         private ComparisonCalculationHunter comparisonFromShotRotationMPS(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -888,7 +938,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             comp.OverallPoints = (float)shot.MPS;
             return comp;
         }
-
         private ComparisonCalculationHunter comparisonFromShotDPM(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -900,7 +949,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             comp.OverallPoints = dpm;
             return comp;
         }
-
         private ComparisonCalculationHunter comparisonFromStat(Character character, CharacterCalculationsHunter calcBase, Stats stats, string label)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -914,7 +962,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             return comp;
         }
-
         private ComparisonCalculationHunter comparisonFromDouble(string label, float value)
         {
             return new ComparisonCalculationHunter()
@@ -924,7 +971,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 OverallPoints = (float)value,
             };
         }
-
         private ComparisonCalculationHunter comparisonFromDoubles(string label, float value1, float value2)
         {
             return new ComparisonCalculationHunter()
@@ -2557,6 +2603,30 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 		#endregion //overrides
 
         #region Private Functions
+        private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
+        {
+            if (index ==  1) return calculatedStats.aimedShot;
+            if (index ==  2) return calculatedStats.arcaneShot;
+            if (index ==  3) return calculatedStats.multiShot;
+            if (index ==  4) return calculatedStats.serpentSting;
+            if (index ==  5) return calculatedStats.scorpidSting;
+            if (index ==  6) return calculatedStats.viperSting;
+            if (index ==  7) return calculatedStats.silencingShot;
+            if (index ==  8) return calculatedStats.steadyShot;
+            if (index ==  9) return calculatedStats.killShot;
+            if (index == 10) return calculatedStats.explosiveShot;
+            if (index == 11) return calculatedStats.blackArrow;
+            if (index == 12) return calculatedStats.immolationTrap;
+            if (index == 13) return calculatedStats.explosiveTrap;
+            if (index == 14) return calculatedStats.freezingTrap;
+            if (index == 15) return calculatedStats.frostTrap;
+            if (index == 16) return calculatedStats.volley;
+            if (index == 17) return calculatedStats.chimeraShot;
+            if (index == 18) return calculatedStats.rapidFire;
+            if (index == 19) return calculatedStats.readiness;
+            if (index == 20) return calculatedStats.beastialWrath;
+            return null;
+        }
         public static float CalcEffectiveDamage(float damageNormal, float missChance, float critChance, float critAdjust, float damageAdjust) {
             /* OLD CODE
              * 
@@ -2590,32 +2660,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             return dmg;
         }
-
-        private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
-        {
-            if (index ==  1) return calculatedStats.aimedShot;
-            if (index ==  2) return calculatedStats.arcaneShot;
-            if (index ==  3) return calculatedStats.multiShot;
-            if (index ==  4) return calculatedStats.serpentSting;
-            if (index ==  5) return calculatedStats.scorpidSting;
-            if (index ==  6) return calculatedStats.viperSting;
-            if (index ==  7) return calculatedStats.silencingShot;
-            if (index ==  8) return calculatedStats.steadyShot;
-            if (index ==  9) return calculatedStats.killShot;
-            if (index == 10) return calculatedStats.explosiveShot;
-            if (index == 11) return calculatedStats.blackArrow;
-            if (index == 12) return calculatedStats.immolationTrap;
-            if (index == 13) return calculatedStats.explosiveTrap;
-            if (index == 14) return calculatedStats.freezingTrap;
-            if (index == 15) return calculatedStats.frostTrap;
-            if (index == 16) return calculatedStats.volley;
-            if (index == 17) return calculatedStats.chimeraShot;
-            if (index == 18) return calculatedStats.rapidFire;
-            if (index == 19) return calculatedStats.readiness;
-            if (index == 20) return calculatedStats.beastialWrath;
-            return null;
-        }
-
         public float GetArmorDamageReduction(Character Char, Stats StatS, CalculationOptionsHunter CalcOpts) {
             float armorReduction;
             float arpenBuffs = 0.0f;
