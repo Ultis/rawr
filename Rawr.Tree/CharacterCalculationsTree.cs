@@ -23,7 +23,7 @@ namespace Rawr.Tree {
             set { subPoints[2] = value; }
         } 
         public override float OverallPoints { get; set; }
-        public Rotation Simulation;
+        public RotationResult Simulation;
         public Character LocalCharacter { get; set; }
         public float haste { get; set; }
         float spellhaste { get; set; }
@@ -81,7 +81,7 @@ namespace Rawr.Tree {
             dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
 
             bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
-            dictValues.Add("Effective MP5", Math.Round(Simulation.ManaPer5In5SR).ToString() + "*" + Math.Round(Simulation.ManaFromSpirit*BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Simulation.ManaFromSpirit).ToString() + " while not Casting)\n" + Math.Round(Simulation.ManaFromMP5).ToString() + " From MP5 gear\n" + Math.Round(Simulation.ReplenishRegen).ToString() + " From Replenishment\n("  + Math.Round(Simulation.ManaPer5Out5SR).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Simulation.ManaFromInnervates).ToString() + " (" + Math.Round(Simulation.ManaFromEachInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Simulation.ManaFromPotions / Simulation.TotalTime * 5.0f).ToString() + " (" + Math.Round(Simulation.ManaFromPotions).ToString() + " extra mana from Potion)\n");
+            dictValues.Add("Effective MP5", Math.Round(Simulation.MPSInFSR * 5f).ToString() + "*" + Math.Round(Simulation.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Simulation.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Simulation.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Simulation.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Simulation.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Simulation.InnervateMana).ToString() + " (" + Math.Round(Simulation.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Simulation.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Simulation.PotionMana).ToString() + " extra mana from Potion)\n");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
 
             doHasteCalcs();
@@ -94,7 +94,7 @@ namespace Rawr.Tree {
             dictValues.Add("Lifebloom Global CD", Math.Round(spell.CastTime, 2) + " sec*" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until Lifebloom (GotEM) gcd cap");
 
             dictValues.Add("Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
-
+            /*
             if (Simulation.TotalTime - Simulation.TimeToOOM > 1.0) {
                 dictValues.Add("Result", "OOM from tank HoTs");
                 dictValues.Add("Time until OOM", Math.Round(Simulation.TimeToOOM,1).ToString() + " sec*" + "Keeping HoTs on the tank(s) will cause you to go OOM");
@@ -219,7 +219,7 @@ namespace Rawr.Tree {
             dictValues.Add("SM Both HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Both Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
             dictValues.Add("SM Both Regrowth Lost Ticks", Math.Round(swift.regrowthTicksLost, 2).ToString());
-
+            */
             return dictValues;
         }
         public override float GetOptimizableCalculationValue(string calculation) {
@@ -227,7 +227,7 @@ namespace Rawr.Tree {
 
             switch (calculation) {
                 case "Mana": return BasicStats.Mana;
-                case "MP5": return Simulation.ManaPer5In5SR;
+                case "MP5": return Simulation.MPSInFSR;
                 case "Spell Haste Percentage": return (spellhaste -1.0f) * 100.0f;
                 case "Haste Percentage": return (haste - 1.0f) * 100.0f;
                 case "Combined Haste Percentage": return (spellhaste * haste - 1.0f) * 100.0f;
