@@ -833,14 +833,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     };
 
                 case "Item Budget":
-
+                    _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] { 
                         comparisonFromStat(character, calculations, new Stats() { Intellect = 10f }, "10 Intellect"),
                         comparisonFromStat(character, calculations, new Stats() { Agility = 10f }, "10 Agility"),
                         comparisonFromStat(character, calculations, new Stats() { Mp5 = 4f }, "4 MP5"),
                         comparisonFromStat(character, calculations, new Stats() { CritRating = 10f }, "10 Crit Rating"),
                         comparisonFromStat(character, calculations, new Stats() { HitRating = 10f }, "10 Hit Rating"),
-                        comparisonFromStat(character, calculations, new Stats() { ArmorPenetrationRating = 10f }, "1.4 Armor Penetration Rating"),
+                        comparisonFromStat(character, calculations, new Stats() { ArmorPenetrationRating = 10f }, "10 Armor Penetration Rating"),
                         comparisonFromStat(character, calculations, new Stats() { AttackPower = 20f }, "20 Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { RangedAttackPower = 25f }, "25 Ranged Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { HasteRating = 10f }, "10 Haste Rating"),
@@ -864,15 +864,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 int Index = pi.ID;
                 int orig = 0;
                 PetTalent talentData = pi;
-                orig = pi.Value; // baseChar.CurrentTalents.Data[talentData.Index];
-                //if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)) {
+                orig = pi.Value;
                 if (talentData.Max == pi.Value) {
-                    //newChar.CurrentTalents.Data[talentData.Index]--;
                     newCalcOpts.PetTalents.TalentTree[Index].Value--;
                     newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                     compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.Max == orig);
                 } else {
-                    //newChar.CurrentTalents.Data[talentData.Index]++;
                     newCalcOpts.PetTalents.TalentTree[Index].Value++;
                     newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                     compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.Max == orig);
@@ -884,12 +881,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     text += talentData.Desc[0];
                 } else if (orig >= talentData.Max) {
                     // We originally were at max, so there isn't a next rank, just show the capped one
-                    text += talentData.Desc[talentData.Max - 1];
+                    text += talentData.Desc[talentData.Max];
                 } else {
                     // We aren't at 0 or MaxPoints originally, so it's just a point in between
-                    text += talentData.Desc[orig - 1];
-                    text += "\r\n\r\nNext Rank:\r\n";
                     text += talentData.Desc[orig];
+                    text += "\r\n\r\nNext Rank:\r\n";
+                    text += talentData.Desc[orig+1];
                 }
                 compare.Description = text;
                 compare.Item = null;
