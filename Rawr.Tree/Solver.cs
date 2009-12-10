@@ -134,21 +134,22 @@ namespace Rawr.Tree
         private float lifebloomStackDuration = 0;
 
         public float LifebloomStacks = 0f;
+
         public float LifebloomStackCF { get { return LifebloomStacks <= 0 ? 0 : 
-            lifebloomStackMultiplier * LifebloomStacks / lifebloomStackDuration; } }
+            lifebloomStackSpell.CastTime * LifebloomStacks / lifebloomStackDuration; } }
         public float LifebloomStackCPS { get { return LifebloomStacks <= 0 ? 0 : 
-            LifebloomStackCF / lifebloomStackSpell.castTime; } }
+            lifebloomStackMultiplier * LifebloomStackCF / lifebloomStackSpell.castTime; } }
         public float LifebloomStackCPM { get { return LifebloomStacks <= 0 ? 0 : 
-            60f * LifebloomStackCF / lifebloomStackSpell.castTime; } }
+            60f * LifebloomStackCPS; } }
+
         public float LifebloomStackAvg { get { return LifebloomStacks <= 0 ? 0 : 
-            LifebloomStackCPS * lifebloomStackSpell.Duration; } }
+            LifebloomStackCPS / lifebloomStackMultiplier * lifebloomStackSpell.Duration; } }
         public float LifebloomStackHPS { get { return LifebloomStacks <= 0 ? 0 : 
             LifebloomStackAvg * lifebloomStackSpell.HPSHoT + LifebloomStackCPS * lifebloomStackSpell.AverageHealingwithCrit / lifebloomStackMultiplier; } }
         public float LifebloomStackMPS { get { return LifebloomStacks <= 0 ? 0 : 
             LifebloomStackCPS * lifebloom.ManaCost; } }
-        public float LifebloomStackHealsPerMinute { get { return LifebloomStacks <= 0 ? 0 :
-            (lifebloomStackType == LifeBloomType.Rolling ? 0 : LifebloomStackCPM / lifebloomStackMultiplier) + 
-            LifebloomStackAvg * 60f / lifebloomStackSpell.PeriodicTickTime; } }
+        public float LifebloomStackHealsPerMinute { get { return LifebloomStacks <= 0 ? 0 : 
+            LifebloomStackCPM / lifebloomStackMultiplier * (1f + lifebloomStackSpell.PeriodicTicks); } }
         public float LifebloomStackCritsPerMinute { get { return LifebloomStacks <= 0 || lifebloomStackType == LifeBloomType.Rolling ? 0 :
             LifebloomStackCPM / lifebloomStackMultiplier * lifebloomStackSpell.CritPercent / 100f; } }
         #endregion
@@ -329,23 +330,16 @@ namespace Rawr.Tree
         {
             RotationResult rot = new RotationResult(calculatedStats, stats);
 
+            rot.TotalTime = calcOpts.FightDuration;
+
             #region Maintained Hots
             rot.RejuvCF = rotSettings.RejuvFraction;
             rot.RegrowthCF = rotSettings.RegrowthFraction;
             rot.LifebloomCF = rotSettings.LifebloomFraction;
             rot.LifebloomStackType = rotSettings.lifeBloomType;
             rot.LifebloomStacks = rotSettings.averageLifebloomStacks;
-                
-            // Check boundaries
-            if (rot.HotsCF > 1f)
-            {
-                float Factor = (1f - rot.LifebloomStackCF) / (rot.HotsCF - rot.LifebloomStackCF);
-                rot.RejuvCF *= Factor;
-                rot.RegrowthCF *= Factor;
-                rot.LifebloomCF *= Factor;
-            }
             #endregion
-
+                
             #region Wild Growth
             // If talent isn't chosen disregard WildGrowth
             rot.WildGrowthCPM = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? rotSettings.WildGrowthPerMin : 0;
@@ -473,8 +467,18 @@ namespace Rawr.Tree
             }
             #endregion
 
-            rot.TotalTime = calcOpts.FightDuration;
+            #region Correct cast fractions and calculate primary spell cast fraction
+            if (rot.MaxPrimaryCF < 0f)
+            {
+                float Static = rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
+                float Factor = (1f - Static) / (1f - rot.MaxPrimaryCF - Static);
+                rot.RejuvCF *= Factor;
+                rot.RegrowthCF *= Factor;
+                rot.LifebloomCF *= Factor;
+            }
+
             rot.PrimaryCF = Math.Max(0f, rot.MaxPrimaryCF - calcOpts.IdleCastTimePercent / 100f);
+            #endregion
 
             if (stats.ShieldFromHealed > 0) rot.ValAnyrShield = stats.ShieldFromHealed;
 
