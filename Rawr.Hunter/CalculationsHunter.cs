@@ -283,6 +283,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
                 ManaRestore = stats.ManaRestore,
@@ -311,6 +312,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
 
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
@@ -388,6 +390,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.BonusArmorMultiplier +
                 stats.BonusBleedDamageMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
+                stats.BonusManaMultiplier +
                 // Set Bonuses
                 stats.BonusHunter_T7_4P_ViperSpeed +
                 stats.BonusHunter_T8_2P_SerpDmg +
@@ -1241,7 +1244,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                           * (1f - statsBuffs.ArmorPenetration); // Buffs!G77
 
             float targetDebuffsMP5JudgmentOfWisdom = 0;
-            if (statsBuffs.ManaRestoreFromBaseManaPPM > 0)
+            if (stats.ManaRestoreFromBaseManaPPM > 0)
             {
                 // Note: we ignore the value stored in Buff.cs and calculate it as the spreadsheet
                 // does, using shots per second and a derived 50% proc chance.                
@@ -1271,13 +1274,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // mana consumption
             #region August 2009 Mana Adjustments
-
             float efficiencyManaAdjust = 1f - (talents.Efficiency * 0.03f);
-
             float thrillOfTheHuntManaAdjust = 1f - (calculatedStats.priorityRotation.critsCompositeSum * 0.4f * (talents.ThrillOfTheHunt / 3f));
-
             float masterMarksmanManaAdjust = 1f - (talents.MasterMarksman * 0.05f);
-
             float glyphOfArcaneShotManaAdjust = 1f;
             if (calculatedStats.priorityRotation.containsShot(Shots.SerpentSting)
                 || calculatedStats.priorityRotation.containsShot(Shots.ScorpidSting))
@@ -1285,9 +1284,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 glyphOfArcaneShotManaAdjust = talents.GlyphOfArcaneShot ? 0.8f : 1f;
             }
 
+            #region Improved Steady Shot
             float resourcefullnessManaAdjust = 1f - talents.Resourcefulness * 0.2f;
-
-            // Improved Steady Shot
 
             float ISSAimedShotManaAdjust = 1f;
             float ISSArcaneShotManaAdjust = 1f;
@@ -1342,7 +1340,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             float resourcefulnessManaAdjust = 1f - (talents.Resourcefulness * 0.2f);
-
+            #endregion
             #endregion
             #region August 2009 Shot Mana Usage
 
@@ -1372,16 +1370,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Mana Regen
-
-            float mp5FromBuffs = statsItems.Mp5 + statsBuffs.Mp5;
-            calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5f;
-
-            //29-10-2009 Drizz: TODO Probably missing T7 Viper bonus
-
+            // Mp5
+            calculatedStats.manaRegenGearBuffs = stats.Mp5 / 5f; // Convert to per sec
+            
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenConstantViper = 0;
-            if (calcOpts.selectedAspect == Aspect.Viper)
-            {
+            if (calcOpts.selectedAspect == Aspect.Viper) {
                 float viperGlyphAdjust  = talents.GlyphOfAspectOfTheViper ? 1.1f : 1;
                 float viperRegenShots   = calculatedStats.BasicStats.Mana * rangedWeaponSpeed / 100f * totalShotsPerSecond * viperGlyphAdjust;
                 float viperRegenPassive = calculatedStats.BasicStats.Mana * 0.04f / 3f;
@@ -1389,20 +1383,21 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             // Rapid Recuperation
+            // You gain (2*Pts)% of your mana every 3 sec while under the effect
+            // of Rapid Fire, and you gain 2% of your mana every 2 sec for
+            // 6 sec when you gain Rapid Killing.
             calculatedStats.manaRegenRapidRecuperation = 0;
             if (calculatedStats.rapidFire.Freq > 0) {
-                float rapidRecuperationManaGain = 0.02f * talents.RapidRecuperation * calculatedStats.BasicStats.Mana * 5f;
+                float rapidRecuperationManaGain = (((0.02f * talents.RapidRecuperation) * calculatedStats.BasicStats.Mana) / 3f) * 15f;
                 calculatedStats.manaRegenRapidRecuperation = rapidRecuperationManaGain / calculatedStats.rapidFire.Freq;
             }
 
             // Chimera shot refreshing Viper
             calculatedStats.manaRegenChimeraViperProc = 0;
-            if (calculatedStats.priorityRotation.chimeraRefreshesViper)
-            {
-                if (calculatedStats.chimeraShot.Freq > 0)
-                {
+            if (calculatedStats.priorityRotation.chimeraRefreshesViper) {
+                if (calculatedStats.chimeraShot.Freq > 0) {
                     //29-10-2009 Drizz: Comment, 3092 is fetched from the Viper Sting Table on the SpellValues sheet (v92b). The 0.6 comes from ChimeraShotEffect.
-                    calculatedStats.manaRegenChimeraViperProc = 0.6f * 3092 / calculatedStats.chimeraShot.Freq;
+                    calculatedStats.manaRegenChimeraViperProc = 0.6f * 3092f / calculatedStats.chimeraShot.Freq;
                 }
             }
 
@@ -1411,23 +1406,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float huntingPartyArcaneFreq = calculatedStats.arcaneShot.Freq;
             float huntingPartyArcaneCrit = calculatedStats.arcaneShot.CritChance;
-            float huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1 - (float)Math.Pow(1 - huntingPartyArcaneCrit * huntingPartyProc, 15 / huntingPartyArcaneFreq) : 0;
+            float huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1f - (float)Math.Pow(1 - huntingPartyArcaneCrit * huntingPartyProc, 15f / huntingPartyArcaneFreq) : 0;
 
             float huntingPartyExplosiveFreq = calculatedStats.explosiveShot.Freq; // spreadsheet divides by 3, but doesn't use that value?
             float huntingPartyExplosiveCrit = calculatedStats.explosiveShot.CritChance;
-            float huntingPartyExplosiveUptime = huntingPartyExplosiveFreq > 0 ? 1 - (float)Math.Pow(1 - huntingPartyExplosiveCrit * huntingPartyProc, 15 / huntingPartyExplosiveFreq) : 0;
+            float huntingPartyExplosiveUptime = huntingPartyExplosiveFreq > 0 ? 1f - (float)Math.Pow(1f - huntingPartyExplosiveCrit * huntingPartyProc, 15f / huntingPartyExplosiveFreq) : 0;
 
             float huntingPartySteadyFreq = calculatedStats.steadyShot.Freq;
             float huntingPartySteadyCrit = calculatedStats.steadyShot.CritChance;
-            float huntingPartySteadyUptime = huntingPartySteadyFreq > 0 ? 1 - (float)Math.Pow(1 - huntingPartySteadyCrit * huntingPartyProc, 15 / huntingPartySteadyFreq) : 0;
+            float huntingPartySteadyUptime = huntingPartySteadyFreq > 0 ? 1f - (float)Math.Pow(1f - huntingPartySteadyCrit * huntingPartyProc, 15f / huntingPartySteadyFreq) : 0;
 
-            float huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1 - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
-            float huntingPartyUptime = huntingPartyCumulativeUptime + ((1 - huntingPartyCumulativeUptime) * huntingPartySteadyUptime);
+            float huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1f - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
+            float huntingPartyUptime = huntingPartyCumulativeUptime + ((1f - huntingPartyCumulativeUptime) * huntingPartySteadyUptime);
 
             calculatedStats.manaRegenHuntingParty = 0.002f * calculatedStats.BasicStats.Mana * huntingPartyUptime;
 
             // If we've got a replenishment buff up, use that instead of our own Hunting Party
-            float manaRegenReplenishment = statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana;
+            float manaRegenReplenishment = stats.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana;
             if (manaRegenReplenishment > 0) {
                 calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
             }
@@ -1484,7 +1479,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0f ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
 
             float viperTimeNeededToLastFight = 0f;
-            if (calculatedStats.manaTimeToOOM >= 0f && calculatedStats.manaTimeToOOM < calcOpts.Duration && calculatedStats.manaRegenViper > 0f)
+            if (calculatedStats.manaTimeToOOM >= 0f
+                && calculatedStats.manaTimeToOOM < calcOpts.Duration
+                && calculatedStats.manaRegenViper > 0f)
             {
                 viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
             }
@@ -1492,16 +1489,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float aspectUptimeHawk = 0f;
 
             float aspectUptimeViper = 0f;
-            if (calculatedStats.manaTimeToOOM >= 0 && calcOpts.aspectUsage != AspectUsage.AlwaysOn)
-            {
-                if (calcOpts.aspectUsage == AspectUsage.ViperRegen)
-                {
+            if (calculatedStats.manaTimeToOOM >= 0 && calcOpts.aspectUsage != AspectUsage.AlwaysOn) {
+                if (calcOpts.aspectUsage == AspectUsage.ViperRegen) {
                     aspectUptimeViper = calculatedStats.manaTimeToFull / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
-                }
-                else
-                {
-                    if (viperTimeNeededToLastFight > 0f)
-                    {
+                } else {
+                    if (viperTimeNeededToLastFight > 0f) {
                         aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.Duration;
                     }
                 }
@@ -1509,8 +1501,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? calculatedStats.beastialWrath.Cd / calculatedStats.beastialWrath.Freq : 0;
 
-            switch (calcOpts.selectedAspect)
-            {
+            switch (calcOpts.selectedAspect) {
                 case Aspect.Viper:
                     aspectUptimeViper = calcOpts.useBeastDuringBeastialWrath ? 1f - aspectUptimeBeast : 1f;
                     break;
@@ -1525,7 +1516,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     break;
             }
 
-
             // we now know aspect uptimes - calculate bonuses and penalties
 
             float viperDamageEffect = talents.AspectMastery > 0 ? 0.4f : 0.5f;
@@ -1534,7 +1524,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.1f;
             float beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
 
-            float tier7ViperDamageAdjust = 1.0f + (character.ActiveBuffsContains("Cryptstalker Battlegear 4 Piece Bonus") ? 0.2f * aspectUptimeViper : 0);
+            float tier7ViperDamageAdjust = 1.0f + stats.BonusHunter_T7_4P_ViperSpeed * aspectUptimeViper;
 
             calculatedStats.aspectUptimeHawk = aspectUptimeHawk;
             calculatedStats.aspectUptimeBeast = aspectUptimeBeast;
@@ -2476,6 +2466,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             statsTotal += statsProcs;
 
+            statsTotal.Mana = (float)Math.Floor((1f + statsTotal.BonusManaMultiplier) * statsTotal.Mana);
+
             return statsTotal;
         }
 
@@ -2516,6 +2508,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         }
                         statsProcs += _stats;
                         break;
+                    case Trigger.MeleeHit: // Pets Only
                     case Trigger.RangedHit:
                     case Trigger.PhysicalHit:
                         if (attemptedAtkInterval > 0f) {
@@ -2523,7 +2516,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                             statsProcs += add;
                         }
                         break;
-                    case Trigger.MeleeCrit:
+                    case Trigger.MeleeCrit: // Pets Only
                     case Trigger.RangedCrit:
                     case Trigger.PhysicalCrit:
                         if (attemptedAtkInterval > 0f) {

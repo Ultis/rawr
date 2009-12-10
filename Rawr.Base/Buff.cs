@@ -653,6 +653,68 @@ namespace Rawr
             });
             #endregion
 
+            #region Burst Mana Regeneration
+            defaultBuffs.Add(buff = new Buff
+            {
+                Name = "Hymn of Hope",
+                Source = "Holy Priest",
+                Group = "Burst Mana Regeneration",
+                Stats = new Stats() { },
+                Improvements = {
+                    new Buff {
+                        Name = "Glyphed Hymn of Hope",
+                        Source = "Holy Priest",
+                        Stats = new Stats() { },
+                    }
+				},
+                ConflictingBuffs = new List<string>() { }, // preventing this group from conflicting with itself
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                new Stats(){// 3% every 2 sec and 20% Bonus Mana for 8 sec
+                    ManaRestoreFromMaxManaPerSecond = (0.03f / 2f),
+                    BonusManaMultiplier = 0.20f
+                },
+                8f, 6 * 60)
+            );
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                new Stats()
+                {// Glyph adds 2 sec to the Duration
+                    ManaRestoreFromMaxManaPerSecond = (0.03f / 2f),
+                    BonusManaMultiplier = 0.20f
+                },
+                2f, 6 * 60)
+            );
+
+            defaultBuffs.Add(buff = new Buff {
+                Name = "Mana Tide Totem",
+                Source = "Resto Shaman",
+                Group = "Burst Mana Regeneration",
+                Stats = new Stats() { },
+                Improvements = {
+                    new Buff {
+                        Name = "Glyphed Mana Tide Totem",
+                        Source = "Resto Shaman",
+                        Stats = new Stats() { },
+                    }
+				},
+                ConflictingBuffs = new List<string>() { }, // preventing this group from conflicting with itself
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                new Stats()
+                {// 6% Mana every 3 sec for 8 sec
+                    ManaRestoreFromMaxManaPerSecond = (0.06f / 3f),
+                },
+                12f, 5 * 60)
+            );
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                new Stats()
+                {// Glyph adds 1% sec to the Restoration
+                    ManaRestoreFromMaxManaPerSecond = (0.01f / 2f),
+                },
+                12f, 5 * 60)
+            );
+            #endregion
+
             #region Spell Critical Strike Chance
             defaultBuffs.Add(new Buff
             {

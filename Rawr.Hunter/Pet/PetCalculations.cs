@@ -132,7 +132,7 @@ namespace Rawr.Hunter
             // If not, Pet is proportionately lower based on Hunter's Hit
             // Expertise itself doesn't factor in at all
             PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[levelDifference]
-                                * (1f - (calculatedStats.BasicStats.PhysicalHit / StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]));
+                                * Math.Min(1f,(calculatedStats.BasicStats.PhysicalHit / StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]));
             calculatedStats.petTargetDodge = PetChanceToBeDodged;
             #endregion
             #region Crit Chance

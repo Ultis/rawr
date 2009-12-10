@@ -171,7 +171,8 @@ namespace Rawr.UI
                          + "|Spell Critical Strike Taken|Physical Vulnerability"
                          + "|Special Mobs|Intellect|Replenishment|Mana Regeneration"
                          + "|Ranged Attack Power|Mana Restore|Spell Damage Taken"
-                         + "|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken";
+                         + "|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken"
+                         + "|Burst Mana Regeneration";
                 }
                 default:                         { return buffGroup; }
             }
