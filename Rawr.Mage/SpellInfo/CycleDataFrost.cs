@@ -215,8 +215,12 @@ namespace Rawr.Mage
             float fof4 = fof3 * fof;
             float bf2 = bf * bf;
             float bf3 = bf2 * bf;
-            // very crude initial guess
-            float X = Math.Min(1, (FrB.CastTime * (1 / fof + 1) + ILS.CastTime) / DFS.Cooldown);
+
+            // shatters until deep freeze ~ Poisson
+            // share of shatters that are deep freeze = sum_i=0..inf Pi / sum_i=0..inf (i+1)*Pi = 1 / (1 + mean)
+
+            // crude initial guess
+            float X = 1.0f - 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (FrB.CastTime * (1 / fof + 1) + ILS.CastTime));
 
             float S00 = (((bf - 1) * fof3 + (2 - bf) * fof2 - fof) * X + (bf2 - 2 * bf + 1) * fof3 + (-bf2 + 4 * bf - 3) * fof2 + (3 - 2 * bf) * fof - 1);
             float S01 = -(((bf2 - bf) * fof4 + (3 * bf - 2 * bf2) * fof3 + (bf2 - 3 * bf) * fof2 + bf * fof) * X + (bf3 - 2 * bf2 + bf) * fof4 + (-2 * bf3 + 6 * bf2 - 4 * bf) * fof3 + (bf3 - 6 * bf2 + 6 * bf) * fof2 + (2 * bf2 - 4 * bf) * fof + bf);
@@ -235,14 +239,32 @@ namespace Rawr.Mage
             KILS = X * S10 / div;
             KDFS = (1 - X) * (S10 + S11) / div;
 
+            float hasteFactor = 1.0f;
+
+            float T = KFrB * FrB.CastTime + KFB * FB.CastTime + KFrBS * FrBS.CastTime + KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+            float T0 = KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+            float T1 = KFBS * FBS.CastTime + KFB * FB.CastTime;
+
+            if (castingState.BaseStats.Mage2T10 > 0)
+            {
+                // we'll make a lot of assumptions here and just assume that 2T10 haste is uniformly distributed over all
+                // spells and doesn't have an impact on state space
+                // also ignore the possible refresh of 2T10
+                // each proc gives 12% haste for 5 sec
+                // we have on average one proc every T/T1 * FB.CastTime
+                // we have some feedback loop here, speeding up the cycle increases the rate of procs
+                // hastedShare = (5-FB.CastTimeAverage) / (T/T1 * FB.CastTimeAverage)
+                // hastedCastShare = (5-FB.CastTimeAverage) / (T/T1 * FB.CastTime) * 1.12
+                // average haste = 1 / (1-hastedCastShare*0.12/1.12)
+                // TODO this is all a bunch of voodoo, redo the math when you're thinking straight
+                hasteFactor = 1.0f / (1.0f - (5 - FB.CastTime) / (T / T1 * FB.CastTime) * 0.12f);
+            }
+
             if (fof > 0) // nothing new here if we don't have fof
             {
-                float T = KFrB * FrB.CastTime + KFB * FB.CastTime + KFrBS * FrBS.CastTime + KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
-                float T0 = KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
-
                 // better estimate for percentage of shatter combos that are deep freeze
                 // TODO better probabilistic model for DF percentage
-                X = Math.Min(1, (DFS.CastTime * T / T0) / DFS.Cooldown);
+                X = 1.0f - 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime / hasteFactor) / (DFS.CastTime / hasteFactor * T / T0));
 
                 // recalculate shares based on revised estimate
                 S00 = (((bf - 1) * fof3 + (2 - bf) * fof2 - fof) * X + (bf2 - 2 * bf + 1) * fof3 + (-bf2 + 4 * bf - 3) * fof2 + (3 - 2 * bf) * fof - 1);
@@ -269,6 +291,7 @@ namespace Rawr.Mage
             cycle.AddSpell(needsDisplayCalculations, FBS, KFBS);
             cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
             cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
+            cycle.CastTime /= hasteFactor; // ignores latency effects, but it'll have to do for now
             cycle.Calculate();
             return cycle;
         }
