@@ -71,6 +71,9 @@
     <Compile Include="..\..\Rawr.Tree\ComparisonCalculationTree.cs">
       <Link>ComparisonCalculationTree.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Tree\Solver.cs">
+      <Link>Solver.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Tree\Spell.cs">
       <Link>Spell.cs</Link>
     </Compile>
