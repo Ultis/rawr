@@ -682,6 +682,9 @@ namespace Rawr.Mage
                 case CycleId.FrBFBIL:
                     c = FrBFBIL.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.FrBDFFBIL:
+                    c = FrBDFFBIL.GetCycle(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.FrBILFB:
                     c = FrBILFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;

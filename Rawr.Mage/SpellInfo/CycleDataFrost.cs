@@ -136,6 +136,144 @@ namespace Rawr.Mage
         }
     }
 
+    public static class FrBDFFBIL
+    {
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Spell FrB, FrBS, FB, FBS, ILS, DFS;
+            float KFrB, KFrBS, KFB, KFBS, KILS, KDFS;
+            cycle.Name = "FrBDFFBIL";
+
+            //float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+
+            // S00: FOF0, BF0
+            // FrB => S21    fof * bf
+            //        S20    fof * (1-bf)
+            //        S01    (1-fof) * bf
+            //        S00    (1-fof)*(1-bf)
+
+            // S01: FOF0, BF1
+            // FrB => S22    fof
+            //        S02    (1-fof)
+
+            // S02: FOF0, BF2
+            // FB => S00    1
+
+            // S10: FOF1, BF0
+            // FrBS-ILS => S12    X*fof * bf
+            //             S10    X*fof * (1-bf)
+            //             S02    X*(1-fof) * bf
+            //             S00    X*(1-fof)*(1-bf)
+            // FrBS-DFS => S12    (1-X)*fof*bf
+            //             S10    (1-X)*fof * (1-bf)
+            //             S02    (1-X)*(1-fof) * bf
+            //             S00    (1-X)*(1-fof)*(1-bf)
+
+            // S11: FOF1, BF1
+            // FrBS-FBS => S10    X*fof
+            //             S00    X*(1-fof)
+            // FrBS-DFS => S12    (1-X)*fof
+            //             S02    (1-X)*(1-fof)
+
+            // S12 = S11
+
+            // S20: FOF0, BF0
+            // FrBS => S21    fof * bf
+            //         S20    fof * (1-bf)
+            //         S11    (1-fof) * bf
+            //         S10    (1-fof)*(1-bf)
+
+            // S21: FOF0, BF1
+            // FrBS => S22    fof
+            //         S12    (1-fof)
+
+            // S22 = S21
+
+            // S00 = (1-fof)*(1-bf) * S00 + S02 + (1-fof)*(1-bf) * S10 + X*(1-fof) * S11
+            // S01 = (1-fof) * bf * S00
+            // S02 = (1-fof) * S01 + (1-fof) * bf * S10 + (1-X)*(1-fof) * S11
+            // S10 = fof * (1-bf) * S10 + X*fof * S11 + (1-fof)*(1-bf) * S20
+            // S11 = fof * bf * S10 + (1-X)*fof * S11 + (1-fof) * bf * S20 + (1-fof) * S21
+            // S20 = fof * (1-bf) * S00 + fof * (1-bf) * S20
+            // S21 = fof * bf * S00 + fof * S01 + fof * bf * S20 + fof * S21
+            // S00 + S01 + S02 + S10 + S11 + S20 + S21 = 1
+
+            // solved symbolically
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
+            FB = castingState.GetSpell(SpellId.FireballBF);
+            FBS = castingState.FrozenState.GetSpell(SpellId.FireballBF);
+            ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
+            DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+
+            float bf = 0.05f * castingState.MageTalents.BrainFreeze;
+            float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
+            float fof2 = fof * fof;
+            float fof3 = fof2 * fof;
+            float fof4 = fof3 * fof;
+            float bf2 = bf * bf;
+            float bf3 = bf2 * bf;
+            // very crude initial guess
+            float X = Math.Min(1, (FrB.CastTime * (1 / fof + 1) + ILS.CastTime) / DFS.Cooldown);
+
+            float S00 = (((bf - 1) * fof3 + (2 - bf) * fof2 - fof) * X + (bf2 - 2 * bf + 1) * fof3 + (-bf2 + 4 * bf - 3) * fof2 + (3 - 2 * bf) * fof - 1);
+            float S01 = -(((bf2 - bf) * fof4 + (3 * bf - 2 * bf2) * fof3 + (bf2 - 3 * bf) * fof2 + bf * fof) * X + (bf3 - 2 * bf2 + bf) * fof4 + (-2 * bf3 + 6 * bf2 - 4 * bf) * fof3 + (bf3 - 6 * bf2 + 6 * bf) * fof2 + (2 * bf2 - 4 * bf) * fof + bf);
+            float S02 = (((bf2 - bf) * fof4 + (4 * bf - 3 * bf2) * fof3 + (3 * bf2 - 5 * bf) * fof2 + (2 * bf - bf2) * fof) * X + (-bf3 + 2 * bf2 - bf) * fof3 + (2 * bf3 - 3 * bf2 + bf) * fof2 + (-bf3 + bf2 + bf) * fof - bf);
+            float S10 = (((bf2 - bf) * fof4 + (-bf2 + bf + 1) * fof3 + (-bf - 1) * fof2) * X + (-bf2 + 2 * bf - 1) * fof3 + (2 * bf2 - 4 * bf + 2) * fof2 + (-bf2 + 2 * bf - 1) * fof);
+            float S11 = ((bf3 - 2 * bf2 + bf) * fof4 + (-bf3 + 4 * bf2 - 3 * bf) * fof3 + (5 * bf - 4 * bf2) * fof2 + (bf2 - 3 * bf) * fof);
+            float S20 = -(((bf - 1) * fof3 + (1 - bf) * fof2) * X + (bf2 - 2 * bf + 1) * fof3 + (-bf2 + 3 * bf - 2) * fof2 + (1 - bf) * fof);
+            float S21 = (((bf2 - bf) * fof4 + (2 * bf - bf2) * fof3 - 2 * bf * fof2) * X + (bf3 - 2 * bf2 + bf) * fof4 + (-bf3 + 4 * bf2 - 3 * bf) * fof3 + (4 * bf - 3 * bf2) * fof2 - 2 * bf * fof);
+
+            float div = S00 + S01 + S02 + S10 + S11 + S20 + S21;            
+
+            KFrB = (S00 + S01) / div;
+            KFB = S02 / div;
+            KFrBS = (S10 + S11 + S20 + S21) / div;
+            KFBS = X * S11 / div;
+            KILS = X * S10 / div;
+            KDFS = (1 - X) * (S10 + S11) / div;
+
+            if (fof > 0) // nothing new here if we don't have fof
+            {
+                float T = KFrB * FrB.CastTime + KFB * FB.CastTime + KFrBS * FrBS.CastTime + KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+                float T0 = KFBS * FBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+
+                // better estimate for percentage of shatter combos that are deep freeze
+                // TODO better probabilistic model for DF percentage
+                X = Math.Min(1, (DFS.CastTime * T / T0) / DFS.Cooldown);
+
+                // recalculate shares based on revised estimate
+                S00 = (((bf - 1) * fof3 + (2 - bf) * fof2 - fof) * X + (bf2 - 2 * bf + 1) * fof3 + (-bf2 + 4 * bf - 3) * fof2 + (3 - 2 * bf) * fof - 1);
+                S01 = -(((bf2 - bf) * fof4 + (3 * bf - 2 * bf2) * fof3 + (bf2 - 3 * bf) * fof2 + bf * fof) * X + (bf3 - 2 * bf2 + bf) * fof4 + (-2 * bf3 + 6 * bf2 - 4 * bf) * fof3 + (bf3 - 6 * bf2 + 6 * bf) * fof2 + (2 * bf2 - 4 * bf) * fof + bf);
+                S02 = (((bf2 - bf) * fof4 + (4 * bf - 3 * bf2) * fof3 + (3 * bf2 - 5 * bf) * fof2 + (2 * bf - bf2) * fof) * X + (-bf3 + 2 * bf2 - bf) * fof3 + (2 * bf3 - 3 * bf2 + bf) * fof2 + (-bf3 + bf2 + bf) * fof - bf);
+                S10 = (((bf2 - bf) * fof4 + (-bf2 + bf + 1) * fof3 + (-bf - 1) * fof2) * X + (-bf2 + 2 * bf - 1) * fof3 + (2 * bf2 - 4 * bf + 2) * fof2 + (-bf2 + 2 * bf - 1) * fof);
+                S11 = ((bf3 - 2 * bf2 + bf) * fof4 + (-bf3 + 4 * bf2 - 3 * bf) * fof3 + (5 * bf - 4 * bf2) * fof2 + (bf2 - 3 * bf) * fof);
+                S20 = -(((bf - 1) * fof3 + (1 - bf) * fof2) * X + (bf2 - 2 * bf + 1) * fof3 + (-bf2 + 3 * bf - 2) * fof2 + (1 - bf) * fof);
+                S21 = (((bf2 - bf) * fof4 + (2 * bf - bf2) * fof3 - 2 * bf * fof2) * X + (bf3 - 2 * bf2 + bf) * fof4 + (-bf3 + 4 * bf2 - 3 * bf) * fof3 + (4 * bf - 3 * bf2) * fof2 - 2 * bf * fof);
+
+                div = S00 + S01 + S02 + S10 + S11 + S20 + S21;
+
+                KFrB = (S00 + S01) / div;
+                KFB = S02 / div;
+                KFrBS = (S10 + S11 + S20 + S21) / div;
+                KFBS = X * S11 / div;
+                KILS = X * S10 / div;
+                KDFS = (1 - X) * (S10 + S11) / div;
+            }
+
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FB, KFB);
+            cycle.AddSpell(needsDisplayCalculations, FrBS, KFrBS);
+            cycle.AddSpell(needsDisplayCalculations, FBS, KFBS);
+            cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
     public static class FrBILFB
     {
         public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
