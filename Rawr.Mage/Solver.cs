@@ -1584,7 +1584,7 @@ namespace Rawr.Mage
 
         // rawStats is only valid for calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0, otherwise it is the same as baseStats
 #if SILVERLIGHT
-        private void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, List<int> stateIndexList, out List<double> tpsList)
+        private void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, List<int> stateIndexList)
 #else
         private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, List<int> stateIndexList)
 #endif
