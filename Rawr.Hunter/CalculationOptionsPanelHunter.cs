@@ -166,7 +166,7 @@ namespace Rawr.Hunter
                 if (CalcOpts.selectedAspect == Aspect.Monkey) CB_Aspect.SelectedIndex = 4;
                 if (CalcOpts.selectedAspect == Aspect.Dragonhawk) CB_Aspect.SelectedIndex = 5;
 
-                if (CalcOpts.aspectUsage == AspectUsage.AlwaysOn) CB_AspectUsage.SelectedIndex = 0;
+                if (CalcOpts.aspectUsage == AspectUsage.None) CB_AspectUsage.SelectedIndex = 0;
                 if (CalcOpts.aspectUsage == AspectUsage.ViperToOOM) CB_AspectUsage.SelectedIndex = 1;
                 if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
 
@@ -273,7 +273,7 @@ namespace Rawr.Hunter
         }
         private void cmbAspectUsage_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.aspectUsage = AspectUsage.AlwaysOn;
+            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.aspectUsage = AspectUsage.None;
             if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.aspectUsage = AspectUsage.ViperToOOM;
             if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.aspectUsage = AspectUsage.ViperRegen;
             Character.OnCalculationsInvalidated();

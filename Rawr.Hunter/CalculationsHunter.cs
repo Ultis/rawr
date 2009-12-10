@@ -120,14 +120,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Mana:Time to Full",
                         "Mana:Viper Damage Penalty",
                         "Mana:Viper Uptime",
+                        "Mana:No Mana Damage Penalty",
 
                         "Hunter DPS:Autoshot DPS",
                         "Hunter DPS:Priority Rotation DPS",
                         "Hunter DPS:Wild Quiver DPS",
-                        "Hunter DPS:Proc DPS",
                         "Hunter DPS:Kill Shot low HP gain",
                         "Hunter DPS:Aspect Loss",
-                        // 29-10-2009 Drizz: Adding to display the piercing shot effect in stats
                         "Hunter DPS:Piercing Shots DPS",
 
 				        "Combined DPS:Hunter DPS",
@@ -771,7 +770,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationDPS(calculations.chimeraShot),
                         comparisonFromDoubles("Autoshot", calculations.AutoshotDPS, 0),
                         comparisonFromDoubles("WildQuiver", calculations.WildQuiverDPS, 0),
-                        comparisonFromDoubles("OnProc", calculations.OnProcDPS, 0),
                         comparisonFromDoubles("KillShotSub20", calculations.killShotSub20FinalGain, 0),
                         comparisonFromDoubles("AspectBeastLoss", calculations.aspectBeastLostDPS, 0),
                         comparisonFromDoubles("PetAutoAttack", 0, calculations.petWhiteDPS),
@@ -1447,9 +1445,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Aspect Usage
-
             float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
-
             float glpyhOfAspectOfTheViperBonus = talents.GlyphOfAspectOfTheViper ? 1.1f : 1f;
 
             // 021109 - Drizz: Comment
@@ -1472,13 +1468,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaUsageTotal = calculatedStats.manaUsageRotation
                                            + calculatedStats.manaUsageKillCommand;
 
-            calculatedStats.manaChangeDuringViper = calculatedStats.manaRegenViper + calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
+            calculatedStats.manaChangeDuringViper  = calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal + calculatedStats.manaRegenViper;
             calculatedStats.manaChangeDuringNormal = calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
 
-            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper > 0f ? calculatedStats.BasicStats.Mana / calculatedStats.manaChangeDuringViper : -1;
-            calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0f ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
+            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper  > 0f ? calculatedStats.BasicStats.Mana /       calculatedStats.manaChangeDuringViper   : -1f;
+            calculatedStats.manaTimeToOOM  = calculatedStats.manaChangeDuringNormal < 0f ? calculatedStats.BasicStats.Mana / (0f - calculatedStats.manaChangeDuringNormal) : -1f;
 
-            float viperTimeNeededToLastFight = 0f;
+            float PercTimeNoDPSforNoMana     = 0f,
+                  viperTimeNeededToLastFight = 0f,
+                  aspectUptimeHawk           = 0f,
+                  aspectUptimeViper          = 0f;
+
             if (calculatedStats.manaTimeToOOM >= 0f
                 && calculatedStats.manaTimeToOOM < calcOpts.Duration
                 && calculatedStats.manaRegenViper > 0f)
@@ -1486,18 +1486,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
             }
 
-            float aspectUptimeHawk = 0f;
-
-            float aspectUptimeViper = 0f;
-            if (calculatedStats.manaTimeToOOM >= 0 && calcOpts.aspectUsage != AspectUsage.AlwaysOn) {
-                if (calcOpts.aspectUsage == AspectUsage.ViperRegen) {
+            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.Duration) {
+                if      (calcOpts.aspectUsage == AspectUsage.ViperRegen) {
                     aspectUptimeViper = calculatedStats.manaTimeToFull / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
-                } else {
-                    if (viperTimeNeededToLastFight > 0f) {
-                        aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.Duration;
-                    }
+                }else if(calcOpts.aspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f) {
+                    aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.Duration;
+                }else if(calcOpts.aspectUsage == AspectUsage.None) {
+                    PercTimeNoDPSforNoMana = (calcOpts.Duration - calculatedStats.manaTimeToOOM) / calcOpts.Duration;
                 }
-            }
+            } 
 
             float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? calculatedStats.beastialWrath.Cd / calculatedStats.beastialWrath.Freq : 0;
 
@@ -1507,7 +1504,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     break;
 
                 case Aspect.Beast:
-                    aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.AlwaysOn) ? 1f : 1f - aspectUptimeViper;
+                    aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
                     break;
 
                 case Aspect.Hawk:
@@ -1518,19 +1515,20 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // we now know aspect uptimes - calculate bonuses and penalties
 
-            float viperDamageEffect = talents.AspectMastery > 0 ? 0.4f : 0.5f;
+            float viperDamageEffect  = talents.AspectMastery > 0 ? 0.40f : 0.50f;
             float viperDamagePenalty = aspectUptimeViper * viperDamageEffect;
 
-            float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.1f;
-            float beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
+            float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.10f;
+            float beastAPBonus       = aspectUptimeBeast * beastStaticAPBonus;
 
             float tier7ViperDamageAdjust = 1.0f + stats.BonusHunter_T7_4P_ViperSpeed * aspectUptimeViper;
 
-            calculatedStats.aspectUptimeHawk = aspectUptimeHawk;
-            calculatedStats.aspectUptimeBeast = aspectUptimeBeast;
-            calculatedStats.aspectUptimeViper = aspectUptimeViper;
-            calculatedStats.aspectViperPenalty = viperDamagePenalty;
-            calculatedStats.aspectBonusAPBeast = beastAPBonus;
+            calculatedStats.aspectUptimeHawk      = aspectUptimeHawk;
+            calculatedStats.aspectUptimeBeast     = aspectUptimeBeast;
+            calculatedStats.aspectUptimeViper     = aspectUptimeViper;
+            calculatedStats.aspectViperPenalty    = viperDamagePenalty;
+            calculatedStats.aspectBonusAPBeast    = beastAPBonus;
+            calculatedStats.NoManaDPSDownTimePerc = PercTimeNoDPSforNoMana;
 
             #endregion
 
@@ -1699,7 +1697,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float hunterAutoDPS = autoShotsPerSecond
                                 * autoShotDamageReal
-                                * (1f - viperDamagePenalty)
+                                * (1f - calculatedStats.aspectViperPenalty)
                                 * tier7ViperDamageAdjust;
 
             calculatedStats.aspectBeastLostDPS = /*(0f - QSBaseFrequencyIncrease) * */ (1f - aspectUptimeHawk) * hunterAutoDPS;
@@ -1726,7 +1724,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                               );
 
                 //29-10-2009 Drizz: Added the ViperUpTIme penalty
-                calculatedStats.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency) * (1f - viperDamagePenalty);
+                calculatedStats.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency) * (1f - calculatedStats.aspectViperPenalty);
             }
 
             #endregion
@@ -1734,7 +1732,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // base = shot_base + gear_weapon_damage + normalized_ammo_dps + (RAP * 0.1)
             //        + (rangedWeaponDamage / ranged_weapon_speed * 2.8)
-            float steadyShotDamageNormal = 252
+            float steadyShotDamageNormal = 252f
                         + statsItems.WeaponDamage
                         + rangedAmmoDamageNormalized
                         + (RAP * 0.1f)
@@ -1766,14 +1764,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             steadyShotDamageReal *= ArmorDamageReduction;
 
             calculatedStats.steadyShot.Damage = steadyShotDamageReal;
-            // ****************************************************************************
 
-            //29-10-2009 Drizz: Added for PiercingShots
             float steadyShotAvgNonCritDamage = steadyShotDamageNormal * steadyShotDamageAdjust * ArmorDamageReduction;
             float steadyShotAvgCritDamage = steadyShotAvgNonCritDamage * (1f + steadyShotCritAdjust);
-            //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
+            //021109 Drizz: Have to add the Mangle/Trauma buff effect.
             float steadyShotPiercingShots = (1f + targetDebuffBleed)
-                                          * (character.HunterTalents.PiercingShots * 0.1f)
+                                          * (talents.PiercingShots * 0.1f)
                                           * steadyShotCritChance * steadyShotAvgCritDamage;
 
             //Drizz: Add the piercingShots effect
@@ -2155,11 +2151,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             #endregion
 
-            #region August 2009 On-Proc DPS
-            calculatedStats.OnProcDPS *= (1f - viperDamagePenalty);
-            #endregion
             #region August 2009 Shot Rotation
-            calculatedStats.priorityRotation.viperDamagePenalty = viperDamagePenalty;
+            calculatedStats.priorityRotation.viperDamagePenalty = calculatedStats.aspectViperPenalty;
+            calculatedStats.priorityRotation.NoManaPenalty = PercTimeNoDPSforNoMana;
             calculatedStats.priorityRotation.calculateRotationDPS();
             calculatedStats.CustomDPS = calculatedStats.priorityRotation.DPS;
             #endregion
@@ -2177,11 +2171,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float oldKillShotDPS = calculatedStats.killShot.DPS;
             float newKillShotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.Damage / killShotPossibleFreq : 0f;
-            newKillShotDPS *= (1f - viperDamagePenalty);
+            newKillShotDPS *= (1f - calculatedStats.aspectViperPenalty);
 
             float oldSteadyShotDPS = calculatedStats.steadyShot.DPS;
             float newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.Damage / steadyShotNewFreq : 0f;
-            newSteadyShotDPS *= (1f - viperDamagePenalty);
+            newSteadyShotDPS *= (1f - calculatedStats.aspectViperPenalty);
 
             float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
 
@@ -2203,7 +2197,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS
                                                     + calculatedStats.WildQuiverDPS
                                                     + calculatedStats.CustomDPS
-                                                    + calculatedStats.OnProcDPS
                                                     + calculatedStats.killShotSub20FinalGain
                                                     + calculatedStats.aspectBeastLostDPS);
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints

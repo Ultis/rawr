@@ -16,6 +16,7 @@ namespace Rawr.Hunter {
         public float LALArcaneFrequency = 0f;
         public bool useKillShot = false; // TODO
         public float viperDamagePenalty = 0f;
+        public float NoManaPenalty = 0f;
 
         public float specialShotsPerSecond = 0f;
         public float critSpecialShotsPerSecond = 0f;

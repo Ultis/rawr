@@ -169,7 +169,7 @@ namespace Rawr.Hunter
 
     public enum AspectUsage
     {
-        AlwaysOn,
+        None,
         ViperToOOM,
         ViperRegen
     }

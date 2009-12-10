@@ -1517,7 +1517,10 @@ Unleashing this Seal's energy will judge an enemy, instantly causing 3 to 4 Holy
 @"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",}, "ability_mount_jungletiger")]
         public int Pathfinding { get { return _data[6]; } set { _data[6] = value; } }
         /// <summary>
-        /// Aspect of the Viper - Reduces the damage penalty by 10%. Aspect of the Monkey - Reduces the damage done to you while active by 5%. Aspect of the Hawk - Increases the attack power bonus by 30%. Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.
+        /// <para>Aspect of the Viper - Reduces the damage penalty by 10%.</para>
+        /// <para>Aspect of the Monkey - Reduces the damage done to you while active by 5%.</para>
+        /// <para>Aspect of the Hawk - Increases the attack power bonus by 30%.</para>
+        /// <para>Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.</para>
         /// </summary>
         [TalentData(7, "Aspect Mastery", 1, 0, 2, 3, -1, new string[] {
 @"Aspect of the Viper - Reduces the damage penalty by 10%.
@@ -1874,7 +1877,10 @@ Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Ha
 @"Increases your damage done by your shots and the damage done by your pet's special abilities by 5% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 10%.",}, "ability_hunter_assassinate")]
         public int MarkedForDeath { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect: Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting. Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting. Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.
+        /// <para>You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:</para>
+        /// <para>Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.</para>
+        /// <para>Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.</para>
+        /// <para>Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.</para>
         /// </summary>
         [TalentData(52, "Chimera Shot", 1, 1, 2, 11, -1, new string[] {
 @"You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:
@@ -1927,7 +1933,9 @@ Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occ
 @"When your Frost Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 4 sec.",}, "spell_nature_stranglevines")]
         public int Entrapment { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
-        /// Frost Trap and Freezing Trap - Increases the duration by [10 * Pts]%. Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10 * Pts]%. Snake Trap - Increases the number of snakes summoned by [2 * Pts]
+        /// <para>Frost Trap and Freezing Trap - Increases the duration by [10 * Pts]%.</para>
+        /// <para>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10 * Pts]%.</para>
+        /// <para>Snake Trap - Increases the number of snakes summoned by [2 * Pts]</para>
         /// </summary>
         [TalentData(58, "Trap Mastery", 3, 2, 3, 2, -1, new string[] {
 @"Frost Trap and Freezing Trap - Increases the duration by 10%.
@@ -6753,7 +6761,11 @@ Clears the effect of Fear and makes you immune to Fear for the duration.",}, "ab
 @"Each of the Druid's damage, healing spells and auto attacks has a chance of causing the caster to enter a Clearcasting state.  The Clearcasting state reduces the Mana, Rage or Energy cost of your next damage, healing spell or offensive ability by 100%.",}, "spell_nature_crystalball")]
         public int OmenOfClarity { get { return _data[65]; } set { _data[65] = value; } }
         /// <summary>
-        /// Grants an effect which lasts while the Druid is within the respective shapeshift form. Bear Form - Increases physical damage by [2 * Pts]%. Cat Form - Increases critical strike chance by [2 * Pts]%. Moonkin Form - Increases spell damage by [2 * Pts]%. Tree of Life Form - Increases healing by [2 * Pts]%.
+        /// <para>Grants an effect which lasts while the Druid is within the respective shapeshift form.</para>
+        /// <para>Bear Form - Increases physical damage by [2 * Pts]%.</para>
+        /// <para>Cat Form - Increases critical strike chance by [2 * Pts]%.</para>
+        /// <para>Moonkin Form - Increases spell damage by [2 * Pts]%.</para>
+        /// <para>Tree of Life Form - Increases healing by [2 * Pts]%.</para>
         /// </summary>
         [TalentData(66, "Master Shapeshifter", 2, 2, 3, 3, 63, new string[] {
 @"Grants an effect which lasts while the Druid is within the respective shapeshift form.

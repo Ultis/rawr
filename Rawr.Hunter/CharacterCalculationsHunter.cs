@@ -205,12 +205,8 @@ namespace Rawr.Hunter
         public float aspectBeastLostDPS { get; set; }
         public float aspectViperPenalty { get; set; }
         public float aspectBonusAPBeast { get; set; }
+        public float NoManaDPSDownTimePerc { get; set; }
         #endregion
-
-        #region Final Hunter DPS stats
-        public float OnProcDPS { get; set; }
-        #endregion
-
 
         public float BaseAttackSpeed
 		{
@@ -445,12 +441,12 @@ namespace Rawr.Hunter
             dictValues.Add("Time to Full", manaTimeToFull.ToString("F2"));
             dictValues.Add("Viper Damage Penalty", aspectViperPenalty.ToString("P2"));
             dictValues.Add("Viper Uptime", aspectUptimeViper.ToString("P2"));
+            dictValues.Add("No Mana Damage Penalty", NoManaDPSDownTimePerc.ToString("P2"));
 
             // Hunter DPS
             dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
             dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
             dictValues.Add("Wild Quiver DPS", WildQuiverDPS.ToString("F2"));
-            dictValues.Add("Proc DPS", OnProcDPS.ToString("F2"));
             dictValues.Add("Kill Shot low HP gain", killShotSub20FinalGain.ToString("F2")+"*"+
                             "Kill Shot freq: "+killShot.Freq.ToString("F2")+" -> "+killShot.start_freq.ToString("F2")+"\n"+
                             "Steady Shot freq: "+steadyShot.Freq.ToString("F2")+" -> "+killShotSub20NewSteadyFreq.ToString("F2")+"\n"+

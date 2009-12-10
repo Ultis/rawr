@@ -263,8 +263,9 @@ namespace Rawr.Hunter
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) {
                 // immune to AspectOfViper
             } else {
-                DPS *= 1 - Priority.viperDamagePenalty;
+                DPS *= (1f - Priority.viperDamagePenalty);
             }
+            DPS *= (1f - Priority.NoManaPenalty);
 
             //Debug.WriteLine("DPS is " + dps);
 
