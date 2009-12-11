@@ -35,6 +35,8 @@
             this.lblSurvMulti = new System.Windows.Forms.Label();
             this.tbSurvMulti = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbSingleTargetRotation = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.tbSustained = new System.Windows.Forms.TrackBar();
             this.lblSustained = new System.Windows.Forms.Label();
             this.lblSingleTargetMax = new System.Windows.Forms.Label();
@@ -88,8 +90,6 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.cbSingleTargetRotation = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -188,6 +188,44 @@
             this.groupBox2.TabIndex = 41;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Healing targets";
+            // 
+            // cbSingleTargetRotation
+            // 
+            this.cbSingleTargetRotation.BackColor = System.Drawing.SystemColors.Window;
+            this.cbSingleTargetRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSingleTargetRotation.FormattingEnabled = true;
+            this.cbSingleTargetRotation.Items.AddRange(new object[] {
+            "Auto",
+            "Auto, force Swiftmend",
+            "Rj + N*",
+            "Rj + Lb + N*",
+            "Rj + Rg + Lb + N*",
+            "Rj + Rg*",
+            "Rj + Lb + Rg*",
+            "Rg*",
+            "Rg N*",
+            "N*",
+            "Rj + N* + Swiftmend",
+            "Rj + Lb + N* + Swiftmend",
+            "Rj + Rg + Lb + N* + Swiftmend",
+            "Rj + Rg* + Swiftmend",
+            "Rj + Lb + Rg* + Swiftmend",
+            "Rg* + Swiftmend",
+            "Rg N* + Swiftmend"});
+            this.cbSingleTargetRotation.Location = new System.Drawing.Point(10, 139);
+            this.cbSingleTargetRotation.Name = "cbSingleTargetRotation";
+            this.cbSingleTargetRotation.Size = new System.Drawing.Size(258, 21);
+            this.cbSingleTargetRotation.TabIndex = 44;
+            this.cbSingleTargetRotation.SelectedIndexChanged += new System.EventHandler(this.cbSingleTargetRotation_SelectedIndexChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 119);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(204, 13);
+            this.label9.TabIndex = 43;
+            this.label9.Text = "Single Target Maximum Healing Spell Mix:";
             // 
             // tbSustained
             // 
@@ -790,44 +828,6 @@
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbModuleNotes.Size = new System.Drawing.Size(283, 513);
             this.tbModuleNotes.TabIndex = 0;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 119);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(204, 13);
-            this.label9.TabIndex = 43;
-            this.label9.Text = "Single Target Maximum Healing Spell Mix:";
-            // 
-            // cbSingleTargetRotation
-            // 
-            this.cbSingleTargetRotation.BackColor = System.Drawing.SystemColors.Window;
-            this.cbSingleTargetRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSingleTargetRotation.FormattingEnabled = true;
-            this.cbSingleTargetRotation.Items.AddRange(new object[] {
-            "Auto",
-            "Auto, force Swiftmend",
-            "Rj + N*",
-            "Rj + Lb + N*",
-            "Rj + Rg + Lb + N*",
-            "Rj + Rg*",
-            "Rj + Lb + Rg*",
-            "Rg*",
-            "Rg N*",
-            "N*",
-            "Rj + N* + Swiftmend",
-            "Rj + Lb + N* + Swiftmend",
-            "Rj + Rg + Lb + N* + Swiftmend",
-            "Rj + Rg* + Swiftmend",
-            "Rj + Lb + Rg* + Swiftmend",
-            "Rg* + Swiftmend",
-            "Rg N* + Swiftmend"});
-            this.cbSingleTargetRotation.Location = new System.Drawing.Point(10, 139);
-            this.cbSingleTargetRotation.Name = "cbSingleTargetRotation";
-            this.cbSingleTargetRotation.Size = new System.Drawing.Size(258, 21);
-            this.cbSingleTargetRotation.TabIndex = 44;
-            this.cbSingleTargetRotation.SelectedIndexChanged += new System.EventHandler(this.cbSingleTargetRotation_SelectedIndexChanged);
             // 
             // CalculationOptionsPanelTree
             // 

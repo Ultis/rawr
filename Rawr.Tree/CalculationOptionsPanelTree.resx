@@ -121,6 +121,6 @@
     <value>Use the following slider to indicate which percentage of Living Seed is usually effective healing. (This slider is available because you cannot plan Living Seed; overhealing on other spells is not relevant for the model)</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>Indicate the casting time percentage you spent casting a certain spell. If it doesn't fit, the model will automatically reduce all three spells by the same amount. If there is no casting time available after Lifebloom stacks, Wild Growth and Swiftmend, no HoTs will be cast and Swiftmend will be removed.</value>
+    <value>Indicate the casting time percentage you spend casting a certain spell. If it doesn't fit, the model will automatically reduce all three spells by the same amount. If there is no casting time available after Lifebloom stacks, Wild Growth and Swiftmend, no HoTs will be cast and Swiftmend will be removed.</value>
   </data>
 </root>
