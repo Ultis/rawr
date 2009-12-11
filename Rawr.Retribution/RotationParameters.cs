@@ -16,18 +16,17 @@ namespace Rawr.Retribution
         }
 
         public bool T7_4pc;
-        public bool T10_2pc;
         public int ImpJudgements;
         public bool GlyphConsecrate;
         public Ability[] Priorities;
         public float TimeUnder20;
         public float Wait;
         public float Delay;
-        public float AttackSpeed;
+        public float T10_Speed;
 
         public RotationParameters() { }
 
-        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate, bool T10_2pc, float AttackSpeed)
+        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate, float T10_Speed)
         {
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
@@ -36,8 +35,7 @@ namespace Rawr.Retribution
             this.Wait = (float)Math.Round(Wait, 2);
             this.Delay = (float)Math.Round(Delay, 2);
             this.ImpJudgements = ImpJudgements;
-            this.T10_2pc = T10_2pc;
-            this.AttackSpeed = (float)Math.Round(AttackSpeed, 2);
+            this.T10_Speed = (float)Math.Round(T10_Speed, 2);
         }
 
         public override bool Equals(Object obj)
@@ -50,8 +48,7 @@ namespace Rawr.Retribution
                 if (Priorities[i] != other.Priorities[i]) { return false; }
             }
             return (T7_4pc == other.T7_4pc)
-                && ((T10_2pc == other.T10_2pc)
-                && (!T10_2pc || AttackSpeed == other.AttackSpeed))
+                && (T10_Speed == other.T10_Speed)
                 && (GlyphConsecrate == other.GlyphConsecrate)
                 && (TimeUnder20 == other.TimeUnder20)
                 && (Delay == other.Delay)
@@ -63,7 +60,7 @@ namespace Rawr.Retribution
         {
             int ret = (T7_4pc ? 512 : 0) + (GlyphConsecrate ? 1024 : 0) + int.Parse((TimeUnder20 * 100).ToString()) * 2048
                  + int.Parse((Wait * 100).ToString()) * 4096 + int.Parse((Delay * 100).ToString())
-                 * 8192 + (T10_2pc ? (int)(16384 * AttackSpeed) : 0);
+                 * 8192 + (int)(16384 * T10_Speed);
 
             for (int i = 0; i < Priorities.Length; i++)
             {

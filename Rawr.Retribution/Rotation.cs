@@ -183,16 +183,7 @@ namespace Rawr.Retribution
 
         public Simulator(CombatStats combats, int rotation) : base(combats)
         {
-            Solution = RotationSimulator.SimulateRotation(
-                new RotationParameters(combats.CalcOpts.Rotations[rotation],
-                    combats.CalcOpts.TimeUnder20,
-                    combats.CalcOpts.Wait,
-                    combats.CalcOpts.Delay,
-                    combats.Stats.JudgementCDReduction > 0,
-                    combats.Talents.ImprovedJudgements,
-                    combats.Talents.GlyphOfConsecration,
-                    combats.Stats.DivineStormRefresh != 0,
-                    combats.AttackSpeed));
+            Solution = RotationSimulator.SimulateRotation(Parameters(combats.CalcOpts.Rotations[rotation]));
         }
 
         public Simulator(CombatStats combats)
@@ -239,8 +230,7 @@ namespace Rawr.Retribution
                         Combats.Stats.JudgementCDReduction > 0,
                         Combats.Talents.ImprovedJudgements,
                         Combats.Talents.GlyphOfConsecration,
-                        Combats.Stats.DivineStormRefresh != 0,
-                        Combats.AttackSpeed);
+                        Combats.Stats.DivineStormRefresh > 0 ? Combats.AttackSpeed : 0f);
         }
 
         public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)

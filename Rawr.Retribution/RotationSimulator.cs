@@ -44,14 +44,18 @@ namespace Rawr.Retribution
                 using (TextReader reader = new StreamReader(path, Encoding.UTF8))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
+#if !DEBUG
                     try
                     {
+#endif
                         sols = (SerializableDictionary<RotationParameters, RotationSolution>)serializer.Deserialize(reader);
+#if !DEBUG
                     }
                     catch (InvalidOperationException e)
                     {
                         MessageBox.Show(":(");
                     }
+#endif
                 }
             }
 #endif
@@ -90,7 +94,7 @@ namespace Rawr.Retribution
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = rot.T10_2pc ? 2000000 : 10000;
+            sol.FightLength = rot.T10_Speed > 0 ? 2000000 : 10000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
 
@@ -120,7 +124,7 @@ namespace Rawr.Retribution
                         timeElapsed = tryUse - currentTime;
                         currentTime = tryUse;
                         gcdUsed = true;
-                        if (rot.T10_2pc)
+                        if (rot.T10_Speed > 0)
                         {
                             if (ability == Ability.CrusaderStrike || ability == Ability.Judgement)
                             {
@@ -140,9 +144,9 @@ namespace Rawr.Retribution
                     timeElapsed = minNext - currentTime;
                     currentTime = minNext;
                 }
-                if (rot.T10_2pc)
+                if (rot.T10_Speed > 0)
                 {
-                    if (rand.NextDouble() < (0.4 * timeElapsed / rot.AttackSpeed)) abilities[(int)Ability.DivineStorm].ResetCD();
+                    if (rand.NextDouble() < (0.4 * timeElapsed / rot.T10_Speed)) abilities[(int)Ability.DivineStorm].ResetCD();
                 }
             }
 
