@@ -2047,6 +2047,10 @@ namespace Rawr {
                 // Living Ice Crystals
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = 2710 }, 0f, 60f));
             }
+            else if ((match = new Regex(@"Grants (?<amount>\d\d*) haste rating for 20 sec.").Match(line)).Success) {
+                // Ephemeral Snowflake
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, 20f, 120f));
+            }
         }
 
         public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown) { return EvalRegex(statName, amount, duration, ability, cooldown, 1f); }
