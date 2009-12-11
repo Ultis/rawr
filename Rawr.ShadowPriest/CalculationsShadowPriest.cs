@@ -715,7 +715,6 @@ namespace Rawr.ShadowPriest
                 CritRating = stats.CritRating,
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
-                SpellCritOnTarget = stats.SpellCritOnTarget,
                 HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
                 SpellHaste = stats.SpellHaste,
