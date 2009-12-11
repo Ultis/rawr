@@ -131,7 +131,7 @@ namespace Rawr.DPSDK
 
                 spellCrits = 0f;
                 spellCrits += StatConversion.GetSpellCritFromRating(stats.CritRating);
-                spellCrits += stats.SpellCrit;
+                spellCrits += stats.SpellCrit + stats.SpellCritOnTarget;
                 spellCrits += .01f * (float)(talents.DarkConviction + talents.EbonPlaguebringer);
                 calcs.SpellCritChance = spellCrits;
 

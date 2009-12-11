@@ -1862,6 +1862,7 @@ namespace Rawr.DPSDK
                 
                 SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellHaste = stats.SpellHaste,
 
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -1996,7 +1997,7 @@ namespace Rawr.DPSDK
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.ShadowDamage +
                 stats.CritMeleeRating + stats.BonusShadowDamageMultiplier + stats.SpellHaste
                 + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
-                + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
+                + stats.PhysicalHit + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
                 + stats.BonusBloodStrikeDamage + stats.BonusDeathCoilDamage + stats.BonusDeathStrikeDamage + stats.BonusFrostStrikeDamage
                 + stats.BonusHeartStrikeDamage + stats.BonusIcyTouchDamage + stats.BonusObliterateDamage + stats.BonusScourgeStrikeDamage
                 + stats.BonusDeathCoilCrit + stats.BonusDeathStrikeCrit + stats.BonusFrostStrikeCrit + stats.BonusObliterateCrit

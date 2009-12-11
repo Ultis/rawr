@@ -421,7 +421,7 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             calcs.BasicStats = stats;
 
-            calcs.SpellCrit = 0.0185f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
+            calcs.SpellCrit = 0.0185f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
             calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
             calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
 
@@ -926,6 +926,7 @@ namespace Rawr.Moonkin
                 ManaRestoreFromBaseManaPPM  = stats.ManaRestoreFromBaseManaPPM,
                 SpellHaste = stats.SpellHaste,
                 SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellHit = stats.SpellHit,
                 ArmorPenetration = stats.ArmorPenetration,
                 EclipseBonus = stats.EclipseBonus,
@@ -1023,7 +1024,7 @@ namespace Rawr.Moonkin
             }
 
             return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health
-                + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.HasteRating + stats.SpellHaste
+                + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellPower + stats.HasteRating + stats.SpellHaste
                 + stats.HitRating + stats.SpellHit + stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier
                 + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
                 + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier

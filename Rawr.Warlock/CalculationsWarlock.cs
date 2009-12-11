@@ -509,6 +509,7 @@ namespace Rawr.Warlock
             statsTotal.SpellCrit   += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             statsTotal.SpellCrit   += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellCrit   += statsTotal.BonusCritChance;
+            statsTotal.SpellCrit   += statsTotal.SpellCritOnTarget;
 
             //Haste rating - the MasterConjuror talent improves the spellstone
             statsTotal.HasteRating += statsTotal.WarlockSpellstoneHasteRating * (1f + (talents.MasterConjuror * 1.5f));
@@ -555,6 +556,7 @@ namespace Rawr.Warlock
                 SpellFireDamageRating = stats.SpellFireDamageRating,
                 SpellCritRating = stats.SpellCritRating,
                 CritRating = stats.CritRating,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellCrit = stats.SpellCrit,
                 SpellHitRating = stats.SpellHitRating,
                 HitRating = stats.HitRating,

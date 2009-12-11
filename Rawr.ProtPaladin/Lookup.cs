@@ -148,7 +148,7 @@ namespace Rawr.ProtPaladin
         /// <param name="stats"></param>
         /// <returns></returns>
         public static float SpellCritChance(Character character, Stats stats, int targetLevel) {
-            float spellCrit = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating,CharacterClass.Paladin) + StatConversion.GetSpellCritFromIntellect(stats.Intellect,CharacterClass.Paladin) + stats.SpellCrit);
+            float spellCrit = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin) + stats.SpellCrit + stats.SpellCritOnTarget);
 
             return spellCrit * SpellHitChance(character, stats, targetLevel);
         }

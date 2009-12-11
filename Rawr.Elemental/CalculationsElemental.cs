@@ -354,6 +354,7 @@ namespace Rawr.Elemental
 
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
+            statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
             // Flametongue weapon assumed
@@ -383,6 +384,7 @@ namespace Rawr.Elemental
                 Mana = stats.Mana,
                 Spirit= stats.Spirit,
                 SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellHit = stats.SpellHit,
                 SpellHaste = stats.SpellHaste,
                 SpellPower = stats.SpellPower,
@@ -462,6 +464,7 @@ namespace Rawr.Elemental
                 stats.Mana +
                 stats.Spirit +
                 stats.SpellCrit +
+                stats.SpellCritOnTarget +
                 stats.SpellHit +
                 stats.SpellHaste +
                 stats.SpellPower +

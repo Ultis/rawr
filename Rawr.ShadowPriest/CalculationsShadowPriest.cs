@@ -581,7 +581,7 @@ namespace Rawr.ShadowPriest
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating) + statsTotal.SpellCritOnTarget;
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
             statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);
@@ -714,6 +714,8 @@ namespace Rawr.ShadowPriest
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
                 CritRating = stats.CritRating,
                 SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
                 SpellHaste = stats.SpellHaste,
@@ -805,7 +807,7 @@ namespace Rawr.ShadowPriest
             bool Yes = (
                 stats.Intellect + stats.Mana + stats.Spirit + stats.Mp5 + stats.SpellPower
                 + stats.SpellShadowDamageRating + stats.CritRating
-                + stats.SpellCrit + stats.HitRating + stats.SpellHit
+                + stats.SpellCrit + stats.HitRating + stats.SpellHit + stats.SpellCritOnTarget
                 + stats.SpellHaste + stats.HasteRating
 
                 + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage

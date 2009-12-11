@@ -1201,7 +1201,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit
                                         + StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight)
                                         + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
-            statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
+            statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit + statsTotal.SpellCritOnTarget
                                         + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusSpellCritMultiplier);
 
             statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.DeathKnight);

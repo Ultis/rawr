@@ -244,8 +244,8 @@ namespace Rawr.Enhance
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
             if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
-        
-            float spellCritModifier = _stats.SpellCrit + ftBonusCrit;
+
+            float spellCritModifier = _stats.SpellCrit + _stats.SpellCritOnTarget + ftBonusCrit;
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
             chanceSpellMiss = Math.Max(0f, SPELL_MISS - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - SPELL_MISS);

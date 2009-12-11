@@ -38,7 +38,7 @@ namespace Rawr.Rogue {
             // Contain it between 0% and 100%
             return (float)Math.Max(0f,Math.Min(1f,crit));
         }
-        public float ProbPoisonCrit { get { return _stats.SpellCrit + SpellCritFromCritRating; } }
+        public float ProbPoisonCrit { get { return _stats.SpellCrit + _stats.SpellCritOnTarget + SpellCritFromCritRating; } }
         #endregion
 
         #region Expertise and Dodge

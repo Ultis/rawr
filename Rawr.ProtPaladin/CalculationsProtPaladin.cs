@@ -623,7 +623,7 @@ focus on Survival Points.",
                                        + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80];
             float chanceCritSpell = StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
-                                       + stats.SpellCrit
+                                       + stats.SpellCrit + stats.SpellCritOnTarget
                                        - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
             float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
             float chanceHitSpell = 1.0f - chanceMissSpell;
@@ -1174,6 +1174,7 @@ focus on Survival Points.",
                 CritRating = stats.CritRating,
                 PhysicalCrit = stats.PhysicalCrit,
                 SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 HitRating = stats.HitRating,
                 PhysicalHit = stats.PhysicalHit,
                 SpellHit = stats.SpellHit,
@@ -1261,6 +1262,7 @@ focus on Survival Points.",
                 stats.CritRating +
                 stats.PhysicalCrit +
                 stats.SpellCrit +
+                stats.SpellCritOnTarget +
                 stats.HasteRating +
                 stats.PhysicalHaste +
                 stats.SpellHaste +

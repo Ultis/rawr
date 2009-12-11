@@ -669,6 +669,7 @@ namespace Rawr.Rogue {
                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                SpellHit = stats.SpellHit,
                SpellCrit = stats.SpellCrit,
+               SpellCritOnTarget = stats.SpellCritOnTarget,
                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier
            };
 
@@ -745,6 +746,7 @@ namespace Rawr.Rogue {
                     stats.BonusPhysicalDamageMultiplier +
                     stats.SpellHit +
                     stats.SpellCrit +
+                    stats.SpellCritOnTarget +
                     stats.BonusNatureDamageMultiplier
                 ) != 0;
 

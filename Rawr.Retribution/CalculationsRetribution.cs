@@ -531,7 +531,7 @@ namespace Rawr.Retribution
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit = stats.PhysicalCrit + stats.CritRating / 4590.598679f +
                 stats.Agility / 5208.333333f + talentCrit - (targetLevel == 83 ? 0.048f : 0f);
-            stats.SpellCrit = stats.SpellCrit + stats.CritRating / 4590.598679f + stats.Intellect / 16666.66709f +
+            stats.SpellCrit = stats.SpellCrit + stats.SpellCritOnTarget + stats.CritRating / 4590.598679f + stats.Intellect / 16666.66709f +
                 talentCrit - (targetLevel == 83 ? 0.03f : 0f);
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + stats.HasteRating * 1.3f / 3278.998947f) * (1f + stats.Bloodlust) - 1f;
@@ -661,7 +661,7 @@ namespace Rawr.Retribution
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.Paragon +
-                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
+                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
                 stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + stats.DeathbringerProc +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier +  stats.BonusSealOfVengeanceDamageMultiplier +
@@ -688,6 +688,7 @@ namespace Rawr.Retribution
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
@@ -755,8 +756,8 @@ namespace Rawr.Retribution
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon + stats.DeathbringerProc +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
-                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
-                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
+                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier + 
+                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
                 stats.HammerOfWrathMultiplier + stats.Bloodlust + stats.SealMultiplier + stats.JudgementMultiplier) > 0;
             bool maybeStats = (stats.Agility + stats.Strength + stats.ExpertiseRating + stats.PhysicalHit +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +

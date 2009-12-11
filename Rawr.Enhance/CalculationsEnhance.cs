@@ -915,6 +915,7 @@ namespace Rawr.Enhance
                     SpellHit = stats.SpellHit,
                     SpellHaste = stats.SpellHaste,
                     SpellCrit = stats.SpellCrit,
+                    SpellCritOnTarget = stats.SpellCritOnTarget,
                     Mp5 = stats.Mp5,
                     ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                     ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM
@@ -999,8 +1000,8 @@ namespace Rawr.Enhance
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
-                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
-                stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
+                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon +
+                stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.Enhance4T8 + stats.Enhance4T7 + stats.BonusWFAttackPower + 
                 stats.Enhance2T9 + stats.Enhance4T9 + +stats.Enhance2T10 + stats.Enhance4T10 + 
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +

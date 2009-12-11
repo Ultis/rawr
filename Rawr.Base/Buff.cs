@@ -1214,21 +1214,21 @@ namespace Rawr
                 Name = "Heart of the Crusader",
                 Source = "Ret Paladin",
                 Group = "Critical Strike Chance Taken",
-                Stats = { PhysicalCrit = 0.03f, SpellCrit = 0.03f }
+                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Master Poisoner",
                 Source = "Assasin Rogue",
                 Group = "Critical Strike Chance Taken",
-                Stats = { PhysicalCrit = 0.03f, SpellCrit = 0.03f }
+                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Totem of Wrath",
                 Source = "Elem Shaman",
                 Group = "Critical Strike Chance Taken",
-                Stats = { PhysicalCrit = 0.03f, SpellCrit = 0.03f }
+                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f }
             });
             #endregion
 
@@ -1282,21 +1282,21 @@ namespace Rawr
                 Name = "Winter's Chill",
                 Source = "Frost Mage",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCrit = 0.05f }
+                Stats = { SpellCritOnTarget = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Scorch",
                 Source = "Fire Mage",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCrit = 0.05f }
+                Stats = { SpellCritOnTarget = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Shadow Bolt",
                 Source = "Warlock",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCrit = 0.05f }
+                Stats = { SpellCritOnTarget = 0.05f }
             });
             #endregion
 

@@ -115,6 +115,7 @@ namespace Rawr {
         SpellArcaneDamageRating,
         SpellCombatManaRegeneration,
         SpellCrit,
+        SpellCritOnTarget,
         SpellCritRating,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
@@ -1238,6 +1239,15 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellCrit] = value; }
+        }
+        [Percentage]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Spell Crit on target")]
+        [Category("Combat Values")]
+        public float SpellCritOnTarget
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellCritOnTarget]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellCritOnTarget] = value; }
         }
         [Percentage]
         [System.ComponentModel.DefaultValueAttribute(0f)]
