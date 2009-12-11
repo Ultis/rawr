@@ -639,6 +639,8 @@ applied and result is scaled down by 100)",
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
                 NourishCritBonus = stats.NourishCritBonus,              // T9 (2) Bonus
                 RejuvenationCrit = stats.RejuvenationCrit,              // T9 (4) Bonus
+                WildGrowthLessReduction = stats.WildGrowthLessReduction, // T10 (2) Bonus
+                RejuvJumpChance = stats.RejuvJumpChance, // T10 (4) Bonus
                 NourishSpellpower = stats.NourishSpellpower,
                 SpellsManaReduction = stats.SpellsManaReduction,
                 HealingOmenProc = stats.HealingOmenProc,
@@ -699,6 +701,7 @@ applied and result is scaled down by 100)",
                 stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
                 //stats.ManacostReduceWithin15OnHealingCast +
                 stats.HealingOmenProc + stats.SwiftmendBonus + stats.NourishCritBonus + stats.RejuvenationCrit +
+                stats.RejuvJumpChance + stats.WildGrowthLessReduction +
                 stats.Armor + stats.Stamina + stats.ManaRestoreFromMaxManaPerSecond
                 > 0)
                 return true;

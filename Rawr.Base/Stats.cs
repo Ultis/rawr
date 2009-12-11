@@ -222,6 +222,8 @@ namespace Rawr {
         SwiftmendBonus,
         NourishCritBonus,
         RejuvenationCrit,
+        WildGrowthLessReduction,
+        RejuvJumpChance,
         #endregion
         #region Added by Rawr.Enhance
         BonusSSDamage,
@@ -3109,6 +3111,26 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.RejuvenationCrit] = value; }
+        }
+
+        // Tier 10 2 Set Bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Wild Growth Reduction over Time Reduction")]
+        [Category("Tree")]
+        public float WildGrowthLessReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WildGrowthLessReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WildGrowthLessReduction] = value; }
+        }
+
+        // Tier 10 4 Set Bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Rejuvenation jump chance")]
+        [Category("Tree")]
+        public float RejuvJumpChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RejuvJumpChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RejuvJumpChance] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

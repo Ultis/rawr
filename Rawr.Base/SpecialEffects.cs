@@ -806,6 +806,18 @@ namespace Rawr {
                 // Not yet sure about cooldown and proc chance
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 0.7f));
             }
+            else if ((match = Regex.Match(line, @"The periodic healing from your Rejuvenation spell grants (?<spellPower>\d+) spell power for (?<duration>\d+) sec.  Stacks up to (?<stacks>\d+) times.")).Success)
+            {
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
+                // Idol of the Black Willow
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
+            else if ((match = Regex.Match(line, @"The periodic healing from your Rejuvenation spell grants (?<spellPower>\d+) spell power for (?<duration>\d+) sec. nbsp;Stacks up to (?<stacks>\d+) times.")).Success)
+            {
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
+                // Idol of the Black Willow
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
             else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
             {
                 line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);

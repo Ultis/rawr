@@ -363,6 +363,18 @@ namespace Rawr.Tree {
             //Should set  critPercent = critHoTPercent;   to allow instantTick to also be crittable, but cannot have 4 piece setbonus simultanuously
             #endregion
 
+            #region Tier 10 (4) SetBonus
+            if (calculatedStats.RejuvJumpChance > 0)
+            {
+                // chanceOncePerRejuv = (float)(1f - Math.Pow(1f - calculatedStats.RejuvJumpChance, periodicTicks));
+                float chance = periodicTicks * calculatedStats.RejuvJumpChance;
+                float factor = 1f; // assume it doesn't consume existing buff, if it does then factor = 0.5f
+                // assume it will jump multiple times
+                periodicTicks *= (1f + factor * chance + factor * chance * chance + factor * chance * chance * chance);
+                //only one jump: periodicTicks *= (1f + factor * chance);
+            }
+            #endregion
+
             #region Glyph of Rapid Rejuvenation
             if (calcs.LocalCharacter.DruidTalents.GlyphOfRapidRejuvenation)
             {
@@ -553,14 +565,14 @@ namespace Rawr.Tree {
         }
     }
     public class WildGrowth : Spell {
-        float[][] tickRanks = new float[][] { 
+        /*float[][] tickRanks = new float[][] { 
              new float[] {176f, 157f, 140f, 123f, 105f, 88f, 70f}, //mostly observation
-             //quessed..
+             //guessed..
              new float[] {295f, 263f, 234f, 206f, 176f, 147f, 117f} //Rank 4
-        };
+        };*/
         public int maxTargets;
         /// <summary>returns the Tick of WG, Ranks: 0 = Rank 2, 1 = Rank 4, valid index - 0 to 6</summary>
-        public float getTick(int rank, int index) { return healingBonus * coefHoT + tickRanks[rank][index];  }
+        //public float getTick(int rank, int index) { return healingBonus * coefHoT + tickRanks[rank][index];  }
         public WildGrowth(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
@@ -576,6 +588,18 @@ namespace Rawr.Tree {
             periodicTicks    =   7f;
             periodicTickTime =   1f;
             maxTargets       =   5;
+            #endregion
+
+            #region T10 (2) SetBonus
+            if (calculatedStats.WildGrowthLessReduction > 0)
+            {
+                float healing = 0f;
+                for (int i = 0; i < 7; i++)
+                {
+                    healing += 293f - 29f * (1f - calculatedStats.WildGrowthLessReduction) * i;
+                }
+                periodicTick = healing / 7;
+            }
             #endregion
 
             // Seems to apply before talents
@@ -606,10 +630,10 @@ namespace Rawr.Tree {
                 (1f + 0.02f * druidTalents.MasterShapeshifter);
 
             periodicTick *= basecoef;
-            for (int i = 0; i < 7; i++) { 
+            /*for (int i = 0; i < 7; i++) { 
                 tickRanks[0][i] *= basecoef;
                 tickRanks[1][i] *= basecoef;
-            }
+            }*/
         }
     }
     public class Nourish : Spell {
