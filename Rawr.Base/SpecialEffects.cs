@@ -2062,7 +2062,7 @@ namespace Rawr {
                 // Ephemeral Snowflake
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, 20f, 120f));
             }
-            else if ((match = new Regex(@"Restores (?<amount>\\d*) mana.").Match(line)).Success)
+            else if ((match = new Regex(@"Restores (?<amount>\d+) mana.").Match(line)).Success)
             {
                 // Sliver of Pure Ice
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = (float)int.Parse(match.Groups["amount"].Value) }, 0f, 120f));
