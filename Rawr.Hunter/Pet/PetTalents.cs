@@ -581,10 +581,10 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             @"Increases your pet's armor by [5*Pts]% and chance to Dodge by [1*Pts]%.",
             @"Increases your pet's armor by 5% and chance to Dodge by 1%.",
             @"Increases your pet's armor by 10% and chance to Dodge by 2%." }, "inv_helmet_94");
-        /// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc.</summary>
+        /// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec.</summary>
         public readonly static PetTalentData Rabid = new PetTalentData(26, "Rabid", 1, new string[] {
-            @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc.",
-            @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc." }, "ability_druid_berserk");
+            @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec.",
+            @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec." }, "ability_druid_berserk");
         /// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>
         public readonly static PetTalentData RoarOfRecovery = new PetTalentData(27, "Roar Of Recovery", 2, new string[] {
             @"Your pet's inspiring roar restores 30% of your total mana over 9 sec.",

@@ -20,32 +20,17 @@ namespace Rawr.Hunter
             set { _desc = value; }
         }
 
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         private float _overallPoints = 0f;
-        public override float OverallPoints
-        {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
-        }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
-        public override float[] SubPoints
-        {
-            get { return _subPoints; }
-            set { _subPoints = value; }
-        }
+        public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
 
-		public float HunterDpsPoints
-		{
-			get { return _subPoints[0]; }
-			set { _subPoints[0] = value; }
-		}
+		public float HunterDPSPoints  { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
+		public float PetDPSPoints     { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
+        public float HunterSurvPoints { get { return _subPoints[2]; } set { _subPoints[2] = value; } }
+        public float PetSurvPoints    { get { return _subPoints[3]; } set { _subPoints[3] = value; } }
 
-		public float PetDpsPoints
-		{
-			get { return _subPoints[1]; }
-			set { _subPoints[1] = value; }
-
-		}
+        public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
 
         private Item _item = null;
         public override Item Item
@@ -66,6 +51,12 @@ namespace Rawr.Hunter
         {
             get { return _equipped; }
             set { _equipped = value; }
+        }
+
+        public override string ToString() {
+            return string.Format("{0}: ({1}O {2}HD {3}PD {4}HS {5}PS)",
+                Name, Math.Round(OverallPoints), Math.Round(HunterDPSPoints ), Math.Round(PetDPSPoints ),
+                                                 Math.Round(HunterSurvPoints), Math.Round(PetSurvPoints));
         }
     }
 }

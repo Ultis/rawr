@@ -20,6 +20,8 @@ namespace Rawr.Hunter
         public bool  CanCrit = false;
         public float CritChance = 0f;
 
+        public CombatTable AttackTable;
+
         public bool DoesntDoDamage = false;
 
         public bool FailReason_SteadyBefore       = false; // used in tooltip display
@@ -57,11 +59,14 @@ namespace Rawr.Hunter
         public float CritsRatio = 0f;
         public float CritsComposite = 0f;
 
-        public ShotData(Shots aType, bool doesntdodamage, bool aCritProcs, bool aGcd) {
+        public ShotData(Shots aType, bool doesntdodamage, bool aCritProcs, bool aGcd
+            //,Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter opts
+            ) {
             DoesntDoDamage = doesntdodamage;
             Type = aType;
             CanCrit = aCritProcs;
             TriggersGCD = aGcd;
+            //AttackTable = new AttackTable(character, stats, cf, opts, false, false);
         }
 
         public void Dump(string label)

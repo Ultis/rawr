@@ -2900,7 +2900,7 @@ namespace Rawr
             #region Tier 7 | Cryptstalker
             defaultBuffs.Add(new Buff()
             {
-                Name = "Cryptstalker Battlegear 2 Piece Bonus",
+                Name = "Cryptstalker Battlegear (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Cryptstalker Battlegear",
@@ -2910,7 +2910,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Cryptstalker Battlegear 4 Piece Bonus",
+                Name = "Cryptstalker Battlegear (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Cryptstalker Battlegear",
@@ -2922,7 +2922,7 @@ namespace Rawr
             #region Tier 8 | Scourgestalker
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgestalker Battlegear 2 Piece Bonus",
+                Name = "Scourgestalker Battlegear (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Scourgestalker Battlegear",
@@ -2932,7 +2932,7 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Scourgestalker Battlegear 4 Piece Bonus",
+                Name = "Scourgestalker Battlegear (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Scourgestalker Battlegear",
@@ -2947,7 +2947,7 @@ namespace Rawr
             #region Tier 9 | Windrunner's
             defaultBuffs.Add(new Buff()
             {
-                Name = "Windrunner's Battlegear 2 Piece Bonus",
+                Name = "Windrunner's Battlegear (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Windrunner's Battlegear",
@@ -2955,21 +2955,24 @@ namespace Rawr
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Windrunner's Battlegear 4 Piece Bonus",
+                Name = "Windrunner's Battlegear (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Windrunner's Battlegear",
-                Stats = { BonusHunter_T9_4P_SteadyShotPetAPProc = 1 },
+                Stats = new Stats() { },// { BonusHunter_T9_4P_SteadyShotPetAPProc = 1 },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.RangedHit,
+                new Stats() { PetAttackPower = 600f, },
+                15f, 45f, 0.35f));
             #endregion
             #region Tier 10 | Ahn'Kahar Blood Hunter's
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Ahn'Kahar Blood Hunter's Battlegear 2 Piece Bonus",
+                Name = "Ahn'Kahar Blood Hunter's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Ahn'Kahar Blood Hunter's Battlegear",
@@ -2983,7 +2986,7 @@ namespace Rawr
             ));
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Ahn'Kahar Blood Hunter's Battlegear 4 Piece Bonus",
+                Name = "Ahn'Kahar Blood Hunter's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Ahn'Kahar Blood Hunter's Battlegear",

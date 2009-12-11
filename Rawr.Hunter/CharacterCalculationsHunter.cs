@@ -8,7 +8,7 @@ namespace Rawr.Hunter
     public class CharacterCalculationsHunter : CharacterCalculationsBase
     {
 		private float _overallPoints = 0f;
-		private float[] _subPoints = new float[] { 0f,0f };
+		private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
 		private Stats _basicStats;
 		private float _baseAttackSpeed;
         private float _autoshotDPS;
@@ -280,8 +280,19 @@ namespace Rawr.Hunter
 		{
 			get { return _subPoints[1]; }
 			set { _subPoints[1] = value; }
-
 		}
+
+        public float HunterSurvPoints
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
+        }
+
+        public float PetSurvPoints
+        {
+            get { return _subPoints[3]; }
+            set { _subPoints[3] = value; }
+        }
 
 		public Stats BasicStats
 		{
@@ -362,8 +373,8 @@ namespace Rawr.Hunter
                             hasteFromRapidFire, hasteFromProcs));
             dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 			
-            // Pet Stats						
-            dictValues.Add("Pet Attack Power", pet.petStats.AttackPower.ToString("F0") + "*includes:\n" +
+            // Pet Stats
+            dictValues.Add("Pet Attack Power", pet.PetStats.AttackPower.ToString("F0") + "*includes:\n" +
                             petAPFromStrength.ToString("F2") + " from strength\n" +
                             petAPFromHunterVsWild.ToString("F2") + " from Hunter vs Wild\n" +
                             petAPFromTier9.ToString("F2") + " from Tier 9 4-piece bonus\n" +
@@ -375,6 +386,7 @@ namespace Rawr.Hunter
                             petAPFromAnimalHandler.ToString("P2") + " from Animal Handler\n" +
                             petAPFromAspectOfTheBeast.ToString("P2") + " from Aspect of the Beast");
             dictValues.Add("Pet Hit Percentage", petHitTotal.ToString("P2"));
+            dictValues.Add("Pet Dodge Percentage", petTargetDodge.ToString("P2"));
             dictValues.Add("Pet Melee Crit Percentage", petCritTotalMelee.ToString("P2") + "*includes:\n" +
                             petCritFromBase.ToString("P2") + " from base\n" +
                             petCritFromAgility.ToString("P2") + " from agility\n" +

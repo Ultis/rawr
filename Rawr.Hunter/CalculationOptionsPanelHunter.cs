@@ -130,6 +130,8 @@ namespace Rawr.Hunter
                 CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
                 CK_HidePvPGear.Checked = CalcOpts.HideBadItems_PvP; CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
 
+                NUD_SurvScale.Value = (decimal)CalcOpts.SurvScale;
+
                 CK_PTRMode.Checked = CalcOpts.PTRMode;
 
                 PetBuffs.character = Character;
@@ -322,6 +324,11 @@ namespace Rawr.Hunter
             if (isLoading) return;
             CalcOpts.MultipleTargets = CK_MultipleTargets.Checked;
             NUD_MultiTargsUptime.Enabled = CalcOpts.MultipleTargets;
+            Character.OnCalculationsInvalidated();
+        }
+        private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
+            if (isLoading) return;
+            CalcOpts.SurvScale = (float)NUD_SurvScale.Value;
             Character.OnCalculationsInvalidated();
         }
         #endregion

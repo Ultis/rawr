@@ -234,12 +234,14 @@
             this.CB_PetPrio_02 = new System.Windows.Forms.ComboBox();
             this.CB_PetPrio_01 = new System.Windows.Forms.ComboBox();
             this.Page_04_PetBuffs = new System.Windows.Forms.TabPage();
-            this.PetBuffs = new Rawr.Hunter.PetBuffSelector();
             this.Page_05_Details = new System.Windows.Forms.TabPage();
             this.TB_Rotation = new System.Windows.Forms.TextBox();
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
             this.BT_Calculate = new System.Windows.Forms.Button();
+            this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
+            this.LB_SurvScale = new System.Windows.Forms.Label();
+            this.PetBuffs = new Rawr.Hunter.PetBuffSelector();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
@@ -269,6 +271,7 @@
             this.Page_04_PetBuffs.SuspendLayout();
             this.Page_05_Details.SuspendLayout();
             this.GB_Rotation_Shots.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).BeginInit();
             this.SuspendLayout();
             // 
             // Page_03_PetTalents
@@ -2652,6 +2655,8 @@
             // 
             // GB_Misc
             // 
+            this.GB_Misc.Controls.Add(this.NUD_SurvScale);
+            this.GB_Misc.Controls.Add(this.LB_SurvScale);
             this.GB_Misc.Controls.Add(this.CK_PTRMode);
             this.GB_Misc.Controls.Add(this.CK_HideSplGear);
             this.GB_Misc.Controls.Add(this.CK_HidePvPGear);
@@ -3179,17 +3184,6 @@
             this.Page_04_PetBuffs.Text = "Pet Buffs";
             this.Page_04_PetBuffs.UseVisualStyleBackColor = true;
             // 
-            // PetBuffs
-            // 
-            this.PetBuffs.AutoScroll = true;
-            this.PetBuffs.character = null;
-            this.PetBuffs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PetBuffs.Location = new System.Drawing.Point(3, 3);
-            this.PetBuffs.Name = "PetBuffs";
-            this.PetBuffs.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.PetBuffs.Size = new System.Drawing.Size(286, 668);
-            this.PetBuffs.TabIndex = 0;
-            // 
             // Page_05_Details
             // 
             this.Page_05_Details.Controls.Add(this.TB_Rotation);
@@ -3255,6 +3249,54 @@
             this.BT_Calculate.UseVisualStyleBackColor = true;
             this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
             // 
+            // NUD_SurvScale
+            // 
+            this.NUD_SurvScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_SurvScale.DecimalPlaces = 1;
+            this.NUD_SurvScale.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.NUD_SurvScale.Location = new System.Drawing.Point(134, 39);
+            this.NUD_SurvScale.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.NUD_SurvScale.Name = "NUD_SurvScale";
+            this.NUD_SurvScale.Size = new System.Drawing.Size(94, 20);
+            this.NUD_SurvScale.TabIndex = 4;
+            this.NUD_SurvScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_SurvScale.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NUD_SurvScale.ValueChanged += new System.EventHandler(this.NUD_SurvScale_ValueChanged);
+            // 
+            // LB_SurvScale
+            // 
+            this.LB_SurvScale.BackColor = System.Drawing.Color.Transparent;
+            this.LB_SurvScale.Location = new System.Drawing.Point(131, 16);
+            this.LB_SurvScale.Name = "LB_SurvScale";
+            this.LB_SurvScale.Size = new System.Drawing.Size(97, 20);
+            this.LB_SurvScale.TabIndex = 3;
+            this.LB_SurvScale.Text = "Survivability Scale:";
+            this.LB_SurvScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // PetBuffs
+            // 
+            this.PetBuffs.AutoScroll = true;
+            this.PetBuffs.character = null;
+            this.PetBuffs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PetBuffs.Location = new System.Drawing.Point(3, 3);
+            this.PetBuffs.Name = "PetBuffs";
+            this.PetBuffs.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.PetBuffs.Size = new System.Drawing.Size(286, 668);
+            this.PetBuffs.TabIndex = 0;
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3302,6 +3344,7 @@
             this.Page_05_Details.PerformLayout();
             this.GB_Rotation_Shots.ResumeLayout(false);
             this.GB_Rotation_Shots.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3518,5 +3561,7 @@
         private System.Windows.Forms.NumericUpDown NUD_MultiTargsUptime;
         private System.Windows.Forms.CheckBox CK_MultipleTargets;
         private Rawr.Hunter.PetBuffSelector PetBuffs;
+        private System.Windows.Forms.NumericUpDown NUD_SurvScale;
+        private System.Windows.Forms.Label LB_SurvScale;
     }
 }

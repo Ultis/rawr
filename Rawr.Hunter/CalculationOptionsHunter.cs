@@ -244,6 +244,12 @@ namespace Rawr.Hunter
         public int LALShotsReplaced = 2; // not editable
         public float LALProcChance = 2; // not editable
 
+        private float _SurvScale;
+        public float SurvScale {
+            get { return _SurvScale; }
+            set { _SurvScale = value; OnPropertyChanged("SurvScale"); }
+        }
+
         private bool _PTRMode = false;
         public bool PTRMode {
             get { return _PTRMode; }

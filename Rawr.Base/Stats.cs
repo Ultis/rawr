@@ -20,6 +20,7 @@ namespace Rawr {
         AshtongueTrinketProc,
         AttackPower,
         BonusAttackPower,
+        PetAttackPower,
         AttackPowerDemons,
         AverageAgility,
         AverageArmor,
@@ -481,6 +482,7 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Hunter
         BonusRangedAttackPowerMultiplier,
+        BonusPetAttackPowerMultiplier,
         BonusPetDamageMultiplier,
         BonusHunter_T7_4P_ViperSpeed,
         BonusHunter_T8_2P_SerpDmg,
@@ -767,6 +769,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusAttackPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusAttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        public float PetAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PetAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PetAttackPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2896,6 +2906,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Hunter")]
+        [CommonStat]
+        public float BonusPetAttackPowerMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetAttackPowerMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetAttackPowerMultiplier] = value; }
         }
         #endregion
         #region Set Bonuses

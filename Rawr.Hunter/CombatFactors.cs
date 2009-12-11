@@ -322,40 +322,6 @@ namespace Rawr.Hunter {
         }
     }
 
-    /*public class DefendTable : CombatTable {
-        protected override void Calculate() {
-            float tableSize = 0f;
-            float tempVal = 0f;
-
-            // Miss
-            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Miss, calcOpts.TargetLevel);
-            Miss = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-            tableSize += Miss;
-            // Dodge
-            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Dodge, calcOpts.TargetLevel);
-            Dodge = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-            tableSize += Dodge;
-            // Parry
-            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Parry, calcOpts.TargetLevel);
-            Parry = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-            tableSize += Parry;
-            // Block
-            if (combatFactors.OH != null && combatFactors.OH.Type == ItemType.Shield) {
-                tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Block, calcOpts.TargetLevel);
-                Block = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-                tableSize += Block;
-            }
-            // Critical Hit
-            Crit = Math.Max(0f, Math.Min(1f - tableSize, combatFactors.NPC_CritChance()));
-            tableSize += Crit;
-            // Normal Hit
-            Hit = Math.Max(0f, 1f - tableSize);
-
-            base.Calculate();
-        }
-
-        public DefendTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter co) { Initialize(character, stats, cf, co, null, true, useSpellHit, false); }
-    }*/
     public class NullCombatTable : CombatTable
     {
         public NullCombatTable()
@@ -378,17 +344,17 @@ namespace Rawr.Hunter {
             tableSize += Miss;
             // Dodge
             if (isWhite || Abil.CanBeDodged) {
-                Dodge = Math.Min(1f - tableSize, combatFactors._c_rwdodge);
+                Dodge = 0f; //Math.Min(1f - tableSize, combatFactors._c_rwdodge);
                 tableSize += Dodge;
             } else { Dodge = 0f; }
             // Parry
             if (isWhite || Abil.CanBeParried) {
-                Parry = Math.Min(1f - tableSize, combatFactors._c_rwparry);
+                Parry = 0f; // Math.Min(1f - tableSize, combatFactors._c_rwparry);
                 tableSize += Parry;
             } else { Parry = 0f; }
             // Block
             if (isWhite || Abil.CanBeBlocked) {
-                Block = Math.Min(1f - tableSize, combatFactors._c_rwblock);
+                Block = 0f; // Math.Min(1f - tableSize, combatFactors._c_rwblock);
                 tableSize += Block;
             } else { Block = 0f; }
             // Glancing Blow

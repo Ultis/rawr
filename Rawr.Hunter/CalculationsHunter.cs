@@ -19,38 +19,93 @@ namespace Rawr.Hunter {
 
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
-				////Relevant Gem IDs for Hunters
-				//Red
-				int[] delicate = { 41434, 39997, 40112, 42143 };
-				//Purple
-				int[] shifting = { 41460, 40023, 40130 };
-				//Green
-                int[] vivid = { 41481, 40088, 40166 };
-				//Yellow
-                int[] rigid = { 41447, 40014, 40125, 42156 };
-				//Orange
-                int[] glinting = { 41491, 40044, 40148 };
-				//Meta
-				int relentless = 41398;
+                // == Relevant Gem IDs for Hunters ==
+                #region Red
+                int[] deli = { 41434, 39997, 40112, 42143 }; // Agi
+                int[] brit = { 39906, 39999, 40114, 36766 }; // AP
+                int[] frac = { 39909, 40002, 40117, 42153 }; // ArP
+                #endregion
+                #region Purple
+                int[] shif = { 41460, 40023, 40130, 40130 }; // Agi  /Stam
+                int[] bala = { 41450, 40029, 40136, 40136 }; // AP   /Stam
+                int[] puis = { 41456, 40033, 40140, 40140 }; // ArP  /Stam
+                int[] infd = { 41454, 40030, 40137, 40137 }; // AP   /Mp5
+                int[] tenu = { 41462, 40024, 40131, 40131 }; // Agi  /Mp5
+                #endregion
+                #region Blue
+                int[] lust = { 41440, 40010, 40121, 42146 }; // Mp5
+                #endregion
+                #region Green
+                int[] vivd = { 41481, 40088, 40166, 40166 }; // Hit  /Stam
+                int[] jagd = { 41468, 40086, 40165, 40165 }; // Crit /Stam
+                int[] forc = { 41466, 40091, 40169, 40169 }; // Haste/Stam
+                int[] dazl = { 41463, 40094, 40175, 40175 }; // Int  /Mp5
+                int[] lmbt = { 41469, 40100, 40177, 40177 }; // Hit  /Mp5
+                int[] sndr = { 41477, 40096, 40176, 40176 }; // Crit /Mp5
+                int[] enrg = { 41465, 40105, 40179, 40179 }; // Haste/Mp5
+                #endregion
+                #region Yellow
+                int[] rigd = { 41447, 40014, 40125, 42156 }; // Hit
+                int[] smth = { 41448, 40013, 40124, 42149 }; // Crit
+                int[] quik = { 41446, 40017, 40128, 42150 }; // Haste
+                #endregion
+                #region Orange
+                int[] glnt = { 41491, 40044, 40148, 40148 }; // Agi  /Hit
+                int[] ddly = { 41484, 40043, 40147, 40147 }; // Agi  /Crit
+                int[] deft = { 41485, 40046, 40150, 40150 }; // Agi  /Haste
+                int[] prst = { 41496, 40053, 40157, 40157 }; // AP   /Hit
+                int[] wckd = { 41429, 40052, 40156, 40156 }; // AP   /Crit
+                int[] strk = { 41501, 40055, 40159, 40159 }; // AP   /Haste
+                #endregion
+                #region Meta
+                int relentless = 41398; // 21 Agi  3% Crit DMG
+                int chaotic    = 41285; // 21 Crit 3% Crit DMG
+                int[] metas = { relentless, chaotic };
+                #endregion
 
-				return new List<GemmingTemplate>()
-				{
-					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon",             RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless }, //Max Agi
-					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon",             RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless }, //Agi/Hit
-					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon",             RedId = glinting[0], YellowId = rigid[0]   , BlueId = vivid[0]   , PrismaticId = rigid[0]   , MetaId = relentless }, //Hit
-						
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare",                 RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless }, //Max Agi
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare",                 RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless }, //Agi/Hit
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare",                 RedId = glinting[1], YellowId = rigid[1]   , BlueId = vivid[1]   , PrismaticId = rigid[1]   , MetaId = relentless }, //Hit
-						
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless }, //Max Agi
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless }, //Agi/Hit
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, RedId = glinting[2], YellowId = rigid[2]   , BlueId = vivid[2]   , PrismaticId = rigid[2]   , MetaId = relentless }, //Hit
-						
-					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler",              RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless }, //Max Agi
-					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler",              RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless }, //Agi/Hit
-					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler",              RedId = rigid[3]   , YellowId = rigid[2]   , BlueId = rigid[3]   , PrismaticId = rigid[2]   , MetaId = relentless }, //Hit
-				};
+                string[] groups = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" }; List<GemmingTemplate> templates = new List<GemmingTemplate>(); int i = 0; string m = "Hunter"; 
+                foreach (string s in groups) {
+                    bool e = s == "Epic";
+                    for(int j=0;j<metas.Length;j++){
+templates.AddRange(new List<GemmingTemplate>(){
+#region Purity
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=deli[i],BlueId=deli[i],PrismaticId=deli[i],MetaId=metas[j]},//Max Agi
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=brit[i],BlueId=brit[i],PrismaticId=brit[i],MetaId=metas[j]},//Max AP
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=frac[i],BlueId=frac[i],PrismaticId=frac[i],MetaId=metas[j]},//Max ArP
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=smth[i],YellowId=smth[i],BlueId=smth[i],PrismaticId=smth[i],MetaId=metas[j]},//Max Crit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=quik[i],YellowId=quik[i],BlueId=quik[i],PrismaticId=quik[i],MetaId=metas[j]},//Max Haste
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=lust[i],YellowId=lust[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Max Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=rigd[i],YellowId=rigd[i],BlueId=rigd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Max Hit
+#endregion
+#region Consider Socket Bonuses/Meta Activation
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=ddly[i],BlueId=shif[i],PrismaticId=deli[i],MetaId=metas[j]},//Agi
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=bala[i],PrismaticId=brit[i],MetaId=metas[j]},//AP
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=ddly[i],BlueId=puis[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=smth[i],BlueId=jagd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=quik[i],BlueId=forc[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=glnt[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Hit
+#endregion
+#region Consider Hit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=glnt[i],MetaId=metas[j]},//Agi  /Hit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=prst[i],MetaId=metas[j]},//AP   /Hit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP  /Hit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit /Hit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste/Hit
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=rigd[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Mp5  /Hit
+#endregion
+#region Consider Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//Agi  /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=infd[i],PrismaticId=lust[i],MetaId=metas[j]},//AP   /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//ArP  /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=smth[i],BlueId=sndr[i],PrismaticId=lust[i],MetaId=metas[j]},//Crit /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=quik[i],BlueId=enrg[i],PrismaticId=lust[i],MetaId=metas[j]},//Haste/Mp5
+#endregion
+});
+                    }
+                    i++;
+                }
+
+                return templates;
             }
         }
 
@@ -85,6 +140,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                         "Pet Stats:Pet Attack Power",
 				        "Pet Stats:Pet Hit Percentage",
+                        "Pet Stats:Pet Dodge Percentage",
 				        "Pet Stats:Pet Melee Crit Percentage",
 				        "Pet Stats:Pet Specials Crit Percentage",
 				        "Pet Stats:Pet White DPS",
@@ -164,17 +220,22 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         private Dictionary<string, Color> _subPointNameColorsDPM = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
-                if (_subPointNameColors == null) {
+                if (_subPointNameColorsDPS == null) {
                     _subPointNameColorsDPS = new Dictionary<string, Color>();
                     _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(255, 0, 128, 255));
                     _subPointNameColorsDPS.Add("Pet DPS", Color.FromArgb(255, 255, 100, 0));
-
+                    _subPointNameColorsDPS.Add("Hunter Survivability", Color.FromArgb(255, 64, 128, 32));
+                    _subPointNameColorsDPS.Add("Pet Survivability", Color.FromArgb(255, 29, 131, 87));
+                }
+                if (_subPointNameColorsMPS == null) {
                     _subPointNameColorsMPS = new Dictionary<string, Color>();
                     _subPointNameColorsMPS.Add("MPS", Color.FromArgb(255, 0, 0, 255));
-
+                }
+                if (_subPointNameColorsDPM == null) {
                     _subPointNameColorsDPM = new Dictionary<string, Color>();
                     _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(255, 0, 0, 255));
-
+                }
+                if (_subPointNameColors == null) {
                     _subPointNameColors = _subPointNameColorsDPS;
                 }
                 return _subPointNameColors;
@@ -253,10 +314,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				Mana = stats.Mana,
 				Mp5 = stats.Mp5,
                 Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
                 // Ratings
 				AttackPower = stats.AttackPower,
 				RangedAttackPower = stats.RangedAttackPower,
-				PhysicalCrit = stats.PhysicalCrit,
+                PetAttackPower = stats.PetAttackPower,
+                PhysicalCrit = stats.PhysicalCrit,
 				CritRating = stats.CritRating,
 				RangedCritRating = stats.RangedCritRating,
 				PhysicalHit = stats.PhysicalHit,
@@ -287,7 +350,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
                 ManaRestore = stats.ManaRestore,
+
+                // Survivability
                 HealthRestore = stats.HealthRestore,
+                Dodge = stats.Dodge,
+                DodgeRating = stats.DodgeRating,
+                Parry = stats.Parry,
+                ParryRating = stats.ParryRating,
 
                 // Set Bonuses
                 BonusHunter_PvP_4pc = stats.BonusHunter_PvP_4pc,
@@ -302,6 +371,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
 				BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 				BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
+                BonusPetAttackPowerMultiplier = stats.BonusPetAttackPowerMultiplier,
 
 				BonusManaPotion = stats.BonusManaPotion,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
@@ -331,6 +401,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                      effect.Trigger == Trigger.DoTTick ||
                      effect.Trigger == Trigger.DamageDone ||
                      effect.Trigger == Trigger.DamageTaken ||
+                     // Hunter Specific
+                     effect.Trigger == Trigger.RangedHit ||
+                     effect.Trigger == Trigger.RangedCrit ||
                      effect.Trigger == Trigger.SteadyShotHit ||
                      effect.Trigger == Trigger.PetClawBiteSmackCrit ||
                      effect.Trigger == Trigger.HunterAutoShotHit ||
@@ -353,7 +426,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Base Stats
                 stats.Agility +
                 stats.Strength +
-                stats.AttackPower + stats.RangedAttackPower +
+                stats.AttackPower + stats.RangedAttackPower + stats.PetAttackPower +
                 stats.Intellect +
                 // Ratings
                 stats.Mp5 +
@@ -380,6 +453,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.BonusAgilityMultiplier +
                 stats.BonusAttackPowerMultiplier +
                 stats.BonusRangedAttackPowerMultiplier +
+                stats.BonusPetAttackPowerMultiplier +
                 stats.BonusCritMultiplier +
                 stats.BonusIntellectMultiplier +
                 stats.BonusPetDamageMultiplier +
@@ -402,11 +476,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.BonusManaPotion +
                 stats.BonusPetCritChance +
                 // Special Damage Type Effectors
-                stats.FireDamage + stats.BonusFireDamageMultiplier +
+                stats.FireDamage   + stats.BonusFireDamageMultiplier +
                 stats.ArcaneDamage + stats.BonusArcaneDamageMultiplier +
                 stats.ShadowDamage + stats.BonusShadowDamageMultiplier +
-                stats.FrostDamage + stats.BonusFrostDamageMultiplier +
-                stats.HolyDamage + stats.BonusHolyDamageMultiplier +
+                stats.FrostDamage  + stats.BonusFrostDamageMultiplier +
+                stats.HolyDamage   + stats.BonusHolyDamageMultiplier +
                 stats.NatureDamage + stats.BonusNatureDamageMultiplier
             ) != 0;
 
@@ -418,6 +492,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     || e.Trigger == Trigger.PhysicalHit
                     || e.Trigger == Trigger.Use
                     || e.Trigger == Trigger.DamageTaken
+                    // Hunter Specific
+                    || e.Trigger == Trigger.RangedHit
+                    || e.Trigger == Trigger.RangedCrit
                     || e.Trigger == Trigger.SteadyShotHit
                     || e.Trigger == Trigger.PetClawBiteSmackCrit
                     || e.Trigger == Trigger.HunterAutoShotHit
@@ -553,9 +630,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Greater Blessing of Might & Battle Shout
 		    if (buff.Stats.AttackPower != 0) return true;
+            if (buff.Stats.PetAttackPower != 0) return true;
 
             // True Shot Aura (not you) & Abo. Might & Unl. Rage
 		    if (buff.Stats.BonusAttackPowerMultiplier != 0) return true;
+            if (buff.Stats.BonusPetAttackPowerMultiplier != 0) return true;
 
             // Leader of the Pack/Rampage
 		    if (buff.Stats.PhysicalCrit != 0) return true;
@@ -726,9 +805,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedDPS(calculations.volley),
                         comparisonFromShotSpammedDPS(calculations.chimeraShot),
                     };
-
                 case "Spammed Shots MPS":
-
                     _subPointNameColors = _subPointNameColorsMPS;
                     return new ComparisonCalculationBase[] {
                         comparisonFromShotSpammedMPS(calculations.aimedShot),
@@ -752,7 +829,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedMPS(calculations.readiness),
                         comparisonFromShotSpammedMPS(calculations.beastialWrath),
                     };
-
                 case "Rotation DPS":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
@@ -781,9 +857,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
                         comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
                     };
-
                 case "Rotation MPS":
-
                     _subPointNameColors = _subPointNameColorsMPS;
                     return new ComparisonCalculationBase[] {
                         comparisonFromShotRotationMPS(calculations.aimedShot),
@@ -808,9 +882,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationMPS(calculations.beastialWrath),
                         comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
                     };
-
                 case "Shot Damage per Mana":
-
                     _subPointNameColors = _subPointNameColorsDPM;
                     return new ComparisonCalculationBase[] {
                         comparisonFromShotDPM(calculations.aimedShot),
@@ -831,7 +903,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotDPM(calculations.volley),
                         comparisonFromShotDPM(calculations.chimeraShot),
                     };
-
                 case "Item Budget":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] { 
@@ -848,7 +919,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             return new ComparisonCalculationBase[0];
-
         }
         private ComparisonCalculationHunter[] GetPetTalentChart(Character character, CharacterCalculationsHunter calcs)
         {
@@ -903,7 +973,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float dps = shotWait > 0 ? (float)(shot.Damage / shotWait) : 0;
 
             comp.Name = Enum.GetName(typeof(Shots), shot.Type);
-            comp.HunterDpsPoints = dps;
+            comp.HunterDPSPoints = dps;
             comp.OverallPoints = dps;
             return comp;
         }
@@ -953,8 +1023,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             CharacterCalculationsHunter calcStat = GetCharacterCalculations(character, new Item() { Stats = stats }) as CharacterCalculationsHunter;
 
             comp.Name = label;
-            comp.HunterDpsPoints = calcStat.HunterDpsPoints - calcBase.HunterDpsPoints;
-            comp.PetDpsPoints = calcStat.PetDpsPoints - calcBase.PetDpsPoints;
+            comp.HunterDPSPoints = calcStat.HunterDpsPoints - calcBase.HunterDpsPoints;
+            comp.PetDPSPoints = calcStat.PetDpsPoints - calcBase.PetDpsPoints;
             comp.OverallPoints = calcStat.OverallPoints - calcBase.OverallPoints;
 
             return comp;
@@ -1004,8 +1074,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.BasicStats = stats;
             calculatedStats.BaseHealth = statsRace.Health;
 
-            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, stats,
-                                        statsBuffs, GetBuffsStats(calcOpts.petActiveBuffs), statsItems);
+            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, stats, GetBuffsStats(calcOpts.petActiveBuffs));
             
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
                                              && character.Ranged.Item.Type != ItemType.Gun
@@ -1177,7 +1246,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Hits
             #region Hit vs Miss Chance
-            float ChanceToMiss = (float)Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - stats.PhysicalHit);
+            float ChanceToMiss = (float)Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDifI] - stats.PhysicalHit);
             #endregion
             #region August 2009 Shots Per Second
             float baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1f / autoShotSpeed : 0;
@@ -1275,7 +1344,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // since kill command effects mana usage.
             float baseMana = statsRace.Mana;
             calculatedStats.baseMana = statsRace.Mana;
-            calculatedStats.pet.calculateTimings();
+            calculatedStats.pet.GenPetStats();
             #endregion
 
             // target debuffs
@@ -1830,8 +1899,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float serpentStingCriticalHitDamage;
             // 29-10-2009 Drizz: The name in the buff have not switched from Battlegear (i.e. the name is of the Horde buff)
             // if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
-            if (character.ActiveBuffsContains("Windrunner's Battlegear 2 Piece Bonus"))
-            {
+            if (stats.BonusHunter_T9_2P_SerpCanCrit > 0) {
                 // Drizz : aligned with v92b
                 serpentStingInterimBonus = 0.5f + 0.5f * mortalShotsCritDamage + 0.5f;
                 serpentStingCriticalHitDamage = serpentStingInterimBonus * (1f + (1f + 0.5f) * (metaGemCritDamage - 1f) / 2f + (1f + 0.5f) * (metaGemCritDamage - 1) / 2);
@@ -2237,13 +2305,43 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
 
+            float Health2SurvHunter = (stats.Health) / 100f;
+            Health2SurvHunter += (stats.HealthRestore) / 1000f;
+            float Health2SurvPet = (calculatedStats.pet.PetStats.Health) / 100f; // Pets dont get pots
+            float DmgTakenMods2SurvHunter = (1f - stats.DamageTakenMultiplier) * 100f;
+            float DmgTakenMods2SurvPet = (1f - calculatedStats.pet.PetStats.DamageTakenMultiplier) * 100f;
+            float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
+            float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
+            float AvoidanceHunter = stats.Dodge + stats.Parry;
+            float AvoidancePet = calculatedStats.pet.PetStats.Dodge + calculatedStats.pet.PetStats.Parry;// should be pet stats
+            float Armor2SurvHunter = (stats.Armor) / 100f;
+            float Armor2SurvPet = (calculatedStats.pet.PetStats.Armor) / 100f;
+
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS
                                                     + calculatedStats.WildQuiverDPS
                                                     + calculatedStats.CustomDPS
                                                     + calculatedStats.killShotSub20FinalGain
                                                     + calculatedStats.aspectBeastLostDPS);
+            calculatedStats.HunterSurvPoints = calcOpts.SurvScale *
+                                               (0 // TotalHPSOnHunter
+                                                + Health2SurvHunter
+                                                + DmgTakenMods2SurvHunter
+                                                + BossAttackPower2Surv
+                                                + BossAttackSpeedMods2Surv
+                                                + AvoidanceHunter
+                                                + Armor2SurvHunter);
+            calculatedStats.PetSurvPoints = calcOpts.SurvScale *
+                                            (0 // TotalHPSOnPet
+                                             + Health2SurvPet
+                                             + DmgTakenMods2SurvPet
+                                             + BossAttackPower2Surv
+                                             + BossAttackSpeedMods2Surv
+                                             + AvoidancePet
+                                             + Armor2SurvPet);
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints
-                                          + calculatedStats.PetDpsPoints;
+                                          + calculatedStats.PetDpsPoints
+                                          + calculatedStats.HunterSurvPoints
+                                          + calculatedStats.PetSurvPoints;
 
             return calculatedStats;
         }
@@ -2303,6 +2401,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
                 BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
                 BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
+                Dodge = talents.CatlikeReflexes * 0.01f,
+                Parry = talents.Deflection * 0.01f,
+                BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
             };
             if (talents.MasterTactician > 0) {
                 SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
@@ -2324,7 +2425,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             if (petTalents.CallOfTheWild.Value > 0) {
                 SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusAttackPowerMultiplier = 0.10f, },
+                    new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.10f, },
                     20f, 5f * 60f);
                 statsTalents.AddSpecialEffect(callofthewild);
             }
@@ -2405,7 +2506,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
             float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
             float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
-            float apFromSTR    = (1f + totalBAPM) * (statsTotal.Strength);
+            float apFromSTR    = 0f;//(1f + totalBAPM) * (statsTotal.Strength);
             float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
             float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
             float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
@@ -2437,24 +2538,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                        - 1f;
 
             // Hit
-            statsTotal.HitRating += statsTotal.RangedHitRating;
-            statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating);
-            statsTotal.SpellHit += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.SpellHitRating);
+            statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.RangedHitRating);
+            statsTotal.SpellHit    += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.SpellHitRating);
 
             // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
             // (20-(20/15)) = 18.66666
             // spreadsheet uses 18.7, so we will too :)
             statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
-
-            /*// The first 20 Stam = 20 Health, while each subsequent Stam = 10 Health, so Health = (Stam-18)*10
-            // (20-(20/10)) = 18
-            float healthFromBase = statsRace.Health;
-            float healthFromStamina = (statsTotal.Stamina - 18) * 10;
-            float healthFromGearBuffs = statsGearEnchantsBuffs.Health;
-            float healthFromTalents = (healthFromBase + healthFromStamina + healthFromGearBuffs) * (character.HunterTalents.EnduranceTraining * 0.01);
-            float healthSubTotal = healthFromBase + healthFromStamina + healthFromGearBuffs + healthFromTalents;
-            float healthTaurenAdjust = character.Race == CharacterRace.Tauren ? 1.05 : 1;
-            statsTotal.Health = (float)(healthSubTotal * healthTaurenAdjust);*/
 
             float attemptedAtksInterval = 1f, petattemptedAtksInterval = 1f;
             float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
@@ -2464,8 +2554,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float bleedHitInterval = 1f;
             float dmgDoneInterval = 1f;
 
-            statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval, hitRate, critRate,
-                                    bleedHitInterval, dmgDoneInterval, statsTotal, null);
+            statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval,
+                            hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, null);
 
             // Base Stats
             statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
@@ -2545,6 +2635,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         statsProcs += _stats;
                         break;
                     case Trigger.MeleeHit: // Pets Only
+                        if (petattemptedAtksInterval > 0f) {
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval, hitRate, speed, fightDuration);
+                            statsProcs += add;
+                        }
+                        break;
                     case Trigger.RangedHit:
                     case Trigger.PhysicalHit:
                         if (attemptedAtkInterval > 0f) {
@@ -2553,6 +2648,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         }
                         break;
                     case Trigger.MeleeCrit: // Pets Only
+                        if (petattemptedAtksInterval > 0f) {
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval, critRate, speed, fightDuration);
+                            statsProcs += add;
+                        }
+                        break;
                     case Trigger.RangedCrit:
                     case Trigger.PhysicalCrit:
                         if (attemptedAtkInterval > 0f) {
@@ -2574,7 +2674,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         break;
                     case Trigger.SteadyShotHit:
                         if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval * 0.1f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval * 3f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
@@ -2585,10 +2685,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         }
                         break;
                     case Trigger.SerpentWyvernStingsDoDamage:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval * 0.05f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            statsProcs += add;
-                        }
+                        //if (attemptedAtkInterval > 0f) {
+                            Stats addme = effect.GetAverageStats(3, 1f, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            statsProcs += addme;
+                        //}
                         break;
                 }
                 effect.Stats.ArmorPenetrationRating = oldArp;
