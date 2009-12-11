@@ -1301,6 +1301,11 @@ namespace Rawr {
                 // Purified Lunar Dust
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, 0.1f));
             }
+            else if ((match = new Regex(@"Each time your spells heal a target you have a chance to cause another nearby friendly target to be instantly healed for 5550 to 6450.").Match(line)).Success)
+            {
+                // Althor's Abacus
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 5550f+(6450f-5550f)/2f }, 0f, 45f, 0.3f));
+            }
             #endregion
             else
             {
