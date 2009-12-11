@@ -1185,6 +1185,10 @@ applied and result is scaled down by 100)",
         public override bool HasRelevantStats(Stats stats) {
             if (HasRelevantSpecialEffectStats(stats)) return true;
 
+            // Remove crit taken
+            if (stats.SpellCrit == stats.PhysicalCrit) return false;
+            // Unfortunately we cannot distinguish between +5% spell crit from moonkin and +5% from winter's chill etc :(
+
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier

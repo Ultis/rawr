@@ -1291,6 +1291,12 @@ namespace Rawr {
                 // Tiny Abomination Jar
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { MoteOfAnger = 0.5f }, 0f, 0f, 0.35f, int.Parse(match.Groups["amount"].Value)));
             }
+            else if ((match = Regex.Match(line, @"You gain (?<mana>\d+) mana each time you heal a target with one of your spells.")).Success)
+            {
+                // Epheremal Snowflake - assume iCD of 0.25 sec.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ManaRestore = int.Parse(match.Groups["mana"].Value) }, 0f, 0.25f, 1f));
+            }
+
             #endregion
             else
             {
