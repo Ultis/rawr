@@ -1265,28 +1265,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Crits
             #region August 2009 Crit Chance
-            calculatedStats.critBase = -0.0153f;
             calculatedStats.critFromAgi = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
-            calculatedStats.critFromRating = StatConversion.GetCritFromRating(calculatedStats.BasicStats.CritRating, character.Class);
-            calculatedStats.critFromRacial = 0;
-            if (character.Ranged != null &&
-                ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
-                (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow)))
-            {
-                calculatedStats.critFromRacial = 0.01f;
-            }
-
-            // Simple talents
-            calculatedStats.critFromLethalShots = talents.LethalShots * 0.01f;
-            calculatedStats.critFromKillerInstincts = talents.KillerInstinct * 0.01f;
-            calculatedStats.critFromMasterMarksman = talents.MasterMarksman * 0.01f;
-
-            // Crit Depression
-            float critdepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifI];
-            calculatedStats.critFromDepression = 0f - critdepression;
+            calculatedStats.critFromRating = StatConversion.GetCritFromRating(stats.CritRating, character.Class);
 
             calculatedStats.critRateOverall = stats.PhysicalCrit;
-
             #endregion
             #region August 2009 Bonus Crit Chance
             //Improved Barrage
@@ -1609,7 +1591,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath && calculatedStats.beastialWrath.Freq > 0
-                ? calculatedStats.beastialWrath.Cd / calculatedStats.beastialWrath.Freq : 0;
+                ? (calculatedStats.beastialWrath.Duration * (calcOpts.Duration / calculatedStats.beastialWrath.Cd)) / calcOpts.Duration : 0;
 
             switch (calcOpts.selectedAspect) {
                 case Aspect.Viper:
@@ -1670,7 +1652,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Damage Adjustments
 
             //Partial Resists
-            float averageResist = (calcOpts.TargetLevel - character.Level) * 0.02f;
+            float averageResist = (levelDifF) * 0.02f;
             float resist10 = 5.0f * averageResist;
             float resist20 = 2.5f * averageResist;
             float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
@@ -1728,16 +1710,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float barrageDamageAdjust = 1f + 0.04f * talents.Barrage;
 
             //Sniper Training
-            float sniperTrainingDamageAdjust = 1 + 0.02f * talents.SniperTraining;
+            float sniperTrainingDamageAdjust = 1f + 0.02f * talents.SniperTraining;
 
             //Improve Stings
-            float improvedStingsDamageAdjust = 1 + 0.1f * talents.ImprovedStings;
+            float improvedStingsDamageAdjust = 1f + 0.1f * talents.ImprovedStings;
 
             //TrapMastery
-            float trapMasteryDamageAdjust = 1 + 0.1f * talents.TrapMastery;
+            float trapMasteryDamageAdjust = 1f + 0.1f * talents.TrapMastery;
 
             // T.N.T.
-            float TNTDamageAdjust = 1 + 0.02f * talents.TNT;
+            float TNTDamageAdjust = 1f + 0.02f * talents.TNT;
 
             // These intermediates group the two common sets of adjustments
             float talentDamageAdjust = focusedFireDamageAdjust
@@ -2115,9 +2097,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float volleyDamageNormal = 353f + RAP * 0.0837f; // * AvgNumTargets
             float volleyDamageAdjust = talentDamageAdjust
                                      * partialResistDamageAdjust
+                                     * barrageDamageAdjust
                                      * BonusDamageAdjust;
             float numvolleyTicks = 6f;
-            float volleyDamageReal = volleyDamageNormal * numvolleyTicks;
+            float volleyDamageReal = volleyDamageNormal * volleyDamageAdjust * numvolleyTicks;
 
             // TODO: Add possibility to crit
             // TODO: Enforce channelled aspect of this ability,
@@ -2126,7 +2109,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.volley.Damage = volleyDamageReal;
             #endregion
             #region August 2009 Black Arrow
-
             float blackArrowDamageNormal = 2765f + (RAP * 0.1f);
 
             // this is a long list...
@@ -2141,7 +2123,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
 
             calculatedStats.blackArrow.Damage = blackArrowDamage;
-
             #endregion
             #region August 2009 Kill Shot
             // ****************************************************************************
@@ -2317,6 +2298,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float AvoidancePet = calculatedStats.pet.PetStats.Dodge + calculatedStats.pet.PetStats.Parry;// should be pet stats
             float Armor2SurvHunter = (stats.Armor) / 100f;
             float Armor2SurvPet = (calculatedStats.pet.PetStats.Armor) / 100f;
+            //float spiritbondcoeff = (talents.SpiritBond * 0.01f * (calcOpts.Duration / 10f));
+            float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
+            float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
 
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS
                                                     + calculatedStats.WildQuiverDPS
@@ -2329,16 +2313,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 + DmgTakenMods2SurvHunter
                                                 + BossAttackPower2Surv
                                                 + BossAttackSpeedMods2Surv
-                                                + AvoidanceHunter
-                                                + Armor2SurvHunter);
+                                                + AvoidanceHunter * 100f
+                                                + Armor2SurvHunter
+                                                + HealsPerSecHunter);
             calculatedStats.PetSurvPoints = calcOpts.SurvScale *
                                             (0 // TotalHPSOnPet
                                              + Health2SurvPet
                                              + DmgTakenMods2SurvPet
                                              + BossAttackPower2Surv
                                              + BossAttackSpeedMods2Surv
-                                             + AvoidancePet
-                                             + Armor2SurvPet);
+                                             + AvoidancePet * 100f
+                                             + Armor2SurvPet
+                                             + HealsPerSecPet);
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints
                                           + calculatedStats.PetDpsPoints
                                           + calculatedStats.HunterSurvPoints
@@ -2388,10 +2374,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             Stats statsTalents = new Stats()
             {
                 PhysicalHit = (talents.FocusedAim * 0.01f),
-                PhysicalCrit = (1f + 0.01f * talents.LethalShots)
-                             * (1f + 0.01f * talents.MasterMarksman)
-                             * (1f + 0.01f * talents.KillerInstinct)
-                             - 1f,
+                PhysicalCrit = (0.01f * talents.LethalShots)
+                             + (0.01f * talents.MasterMarksman)
+                             + (0.01f * talents.KillerInstinct),
                 BonusAgilityMultiplier = (1f + 0.02f * talents.CombatExperience)
                                        * (1f + 0.03f * talents.LightningReflexes)
                                        * (1f + 0.01f * talents.HuntingParty)
@@ -2405,6 +2390,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 Dodge = talents.CatlikeReflexes * 0.01f,
                 Parry = talents.Deflection * 0.01f,
                 BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
+                DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
             };
             if (talents.MasterTactician > 0) {
                 SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
@@ -2511,7 +2497,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
             float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
             float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
-            float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower);
+            float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
+                                                     + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
             statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
             statsTotal.RangedAttackPower = statsTotal.AttackPower;
 
@@ -2565,6 +2552,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             statsProcs.Agility  = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
             statsProcs.Agility += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
             statsProcs.Agility += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
+            statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
             statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
 
             // Armor

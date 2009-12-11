@@ -398,6 +398,7 @@ namespace Rawr.Hunter
             #endregion
 
             #region Handle Special Effects
+            CalculateTimings();
             WhAtkTable = new PetAttackTable(character, petStatsTotal, CalcOpts, avoidChances, false, false);
             YwAtkTable = new PetAttackTable(character, petStatsTotal, CalcOpts, avoidChances, PetAttacks.Claw, false, false);
 
@@ -454,11 +455,13 @@ namespace Rawr.Hunter
                                         //* (1f + StatConversion.GetPhysicalHasteFromRating(petStatsProcs.HasteRating, character.Class))
                                         - 1f;
             #endregion
-            float hastebefore = petStatsTotal.PhysicalHaste;
+            //float hastebefore = petStatsTotal.PhysicalHaste;
             petStatsTotal.Accumulate(petStatsProcs);
-            petStatsTotal.PhysicalHaste = (1f + hastebefore)
+            /*petStatsTotal.PhysicalHaste = (1f + hastebefore)
                                         * (1f + petStatsProcs.PhysicalHaste)
-                                        - 1f;
+                                        - 1f;*/
+            GenPetFullAttackSpeed(petStatsTotal);
+            CalculateTimings();
             #endregion
 
             PetStats = petStatsTotal;

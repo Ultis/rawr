@@ -2102,7 +2102,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Fires a Black Arrow at the target, increasing all damage done by you to the target by 6% and dealing 786 Shadow damage over 15 sec. Black Arrow shares a cooldown with Trap spells.",}, "spell_shadow_painspike")]
         public int BlackArrow { get { return _data[77]; } set { _data[77] = value; } }
         /// <summary>
-        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and while standing still for [2 * Pts] sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 6% for 15 sec.
+        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and while standing still for [2 * Pts] sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by [2*Pts]% for 15 sec.
         /// </summary>
         [TalentData(78, "Sniper Training", 3, 2, 4, 9, -1, new string[] {
 @"Increases the critical strike chance of your Kill Shot ability by 5%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 2% for 15 sec.",
