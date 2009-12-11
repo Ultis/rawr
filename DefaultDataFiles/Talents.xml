@@ -360,4 +360,20 @@
     <Tree2>17</Tree2>
     <Tree3>0</Tree3>
   </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Tree</Name>
+    <Class>Druid</Class>
+    <Spec>0532003100000000000000000000000000000000000000000000000000230033312031502531053213051.0000000000000000001000101</Spec>
+    <Tree1>14</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>57</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Feral Hybrid</Name>
+    <Class>Druid</Class>
+    <Spec>0000000000000000000000000000503202132322010353120330313511203500010000000000000000000.0110100000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>60</Tree2>
+    <Tree3>11</Tree3>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>
