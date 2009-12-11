@@ -258,6 +258,20 @@ namespace Rawr.Mage
                 // average haste = 1 / (1-hastedCastShare*0.12/1.12)
                 // TODO this is all a bunch of voodoo, redo the math when you're thinking straight
                 hasteFactor = 1.0f / (1.0f - (5 - FB.CastTime) / (T / T1 * FB.CastTime) * 0.12f);
+
+                // alternative model based on reduction to single state space and expanding for haste
+                // probability of being hasted = 1 - (1-p)^(N-1)
+                // where
+                // K := (KFrB + KFB + KFrBS + KFBS + KILS + KDFS)
+                // p = probability of haste generating spell = (KFBS + KFB) / K
+                // N = average number of spells affected by haste = (haste duration - average cast time of haste generating spell) / (average cast time of hasted spells)
+                //   = (5 - T1 / 1.12 / K) / (T / 1.12 / K)
+                //   = (5 * 1.12 * K - T1) / T
+                // hasteFactor = 1 / (((1-p)^(N-1)) * 1 + (1 - (1-p)^(N-1)) * 1/1.12)
+                //             = 1.12 / (((1-p)^(N-1)) * 0.12 + 1)
+                //             = 1.12 / (1 + 0.12 * (1 - (KFBS + KFB) / K)^((5 * 1.12 * K - T1) / T - 1))
+                //float K = KFrB + KFB + KFrBS + KFBS + KILS + KDFS;
+                //hasteFactor = 1.12f / (1.0f + 0.12f * (float)Math.Pow(1.0f - ((KFBS + KFB) / K), ((5.0f * 1.12f * K - T1) / T - 1.0f)));
             }
 
             if (fof > 0) // nothing new here if we don't have fof
