@@ -113,6 +113,7 @@
     <Compile Include="CalculationsHunter.cs" />
     <Compile Include="CharacterCalculationsHunter.cs" />
     <Compile Include="CombatFactors.cs" />
+    <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
     <Compile Include="Pet\ItemIcons.cs" />

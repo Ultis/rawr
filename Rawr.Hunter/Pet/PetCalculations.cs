@@ -93,7 +93,7 @@ namespace Rawr.Hunter
 
         public Stats GetSpecialEffectsStats(Character Char,
             float attemptedAtkInterval, float atkspeed,
-            float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
+            float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval, float ClawBiteSmackInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             Stats statsProcs = new Stats();
@@ -109,7 +109,7 @@ namespace Rawr.Hunter
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                             Stats _stats2 = GetSpecialEffectsStats(Char,
                                 attemptedAtkInterval, atkspeed,
-                                hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
+                                hitRate, critRate, bleedHitInterval, dmgDoneInterval, ClawBiteSmackInterval, statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
                             _stats = effect.GetAverageStats(0f, 1f, atkspeed, fightDuration);
@@ -162,10 +162,21 @@ namespace Rawr.Hunter
             return compositeSpeed;
         }
 
+        private PetAttackTable _whAtkTable;
+        public PetAttackTable WhAtkTable {
+            get { return _whAtkTable; }
+            set { _whAtkTable = value; }
+        }
+        private PetAttackTable _ywAtkTable;
+        public PetAttackTable YwAtkTable {
+            get { return _ywAtkTable; }
+            set { _ywAtkTable = value; }
+        }
+
         public void GenPetStats()
         {
             // Initial Variables
-            int levelDifference = CalcOpts.TargetLevel - character.Level;
+            int levelDiff = CalcOpts.TargetLevel - character.Level;
             Stats petStatsBase = BasePetStats;
             #region From Hunter
             Stats petStatsFromHunter = new Stats() {
@@ -246,7 +257,7 @@ namespace Rawr.Hunter
             #endregion
             #region From Options
             Stats petStatsOptionsPanel = new Stats() {
-                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference],
+                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDiff],
                 BonusStaminaMultiplier = 0.05f,
                 BonusDamageMultiplier = CalcOpts.PetHappinessLevel == PetHappiness.Happy ? 1.25f : CalcOpts.PetHappinessLevel == PetHappiness.Content ? 1f : 0.75f,
             };
@@ -329,23 +340,23 @@ namespace Rawr.Hunter
 
             #region Hit/Dodge Chances
             // This is tied directly to the Hunter's chance to miss
-            PetChanceToMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference] - HunterStats.PhysicalHit);
-            PetChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDifference, false) - HunterStats.SpellHit);
+            PetChanceToMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[levelDiff] - HunterStats.PhysicalHit);
+            PetChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDiff, false) - HunterStats.SpellHit);
 
             calculatedStats.petHitTotal = HunterStats.PhysicalHit;
             calculatedStats.petHitSpellTotal = HunterStats.SpellHit;
 
-            PetStats.PhysicalHit = HunterStats.PhysicalHit;
-            PetStats.SpellHit = HunterStats.SpellHit;
+            petStatsTotal.PhysicalHit = HunterStats.PhysicalHit;
+            petStatsTotal.SpellHit = HunterStats.SpellHit;
 
             // If the Hunter is Hit Capped, the pet is also Exp Capped
             // If not, Pet is proportionately lower based on Hunter's Hit
             // Expertise itself doesn't factor in at all
-            PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[levelDifference]
-                                * Math.Min(1f, (PetChanceToMiss / StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]));
-            /*PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[levelDifference]
-                                * Math.Min(1f, (HunterStats.PhysicalHit / StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]));*/
+            PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[levelDiff]
+                                * Math.Min(1f, (PetChanceToMiss / StatConversion.YELLOW_MISS_CHANCE_CAP[levelDiff]));
             calculatedStats.petTargetDodge = PetChanceToBeDodged;
+
+            float[] avoidChances = { PetChanceToMiss, PetChanceToSpellMiss, PetChanceToBeDodged };
             #endregion
 
             #region Crit Chance
@@ -387,14 +398,30 @@ namespace Rawr.Hunter
             #endregion
 
             #region Handle Special Effects
-            float attemptedAtksInterval = GenPetFullAttackSpeed(petStatsTotal);
-            float hitRate = (1f - PetChanceToMiss - PetChanceToBeDodged);
+            WhAtkTable = new PetAttackTable(character, petStatsTotal, CalcOpts, avoidChances, false, false);
+            YwAtkTable = new PetAttackTable(character, petStatsTotal, CalcOpts, avoidChances, PetAttacks.Claw, false, false);
+
+            float AllAttemptedAtksInterval = GenPetFullAttackSpeed(petStatsTotal);
+            float WhtAttemptedAtksInterval = PetAttackSpeed(petStatsTotal);
+            float YlwAttemptedAtksInterval = AllAttemptedAtksInterval - WhtAttemptedAtksInterval;
+
+            float hitRate  = (WhAtkTable.AnyLand * WhtAttemptedAtksInterval)
+                           * (YwAtkTable.AnyLand * YlwAttemptedAtksInterval)
+                           ;// (1f - PetChanceToMiss - PetChanceToBeDodged);
             float critRate = petStatsTotal.PhysicalCrit;
-            float bleedHitInterval = 1f;
+
+            float bleedHitInterval = 0f;
+            float rakefreq = priorityRotation.getSkillFrequency(PetAttacks.Rake ); if (rakefreq > 0) { bleedHitInterval      += rakefreq; }
+
             float dmgDoneInterval = 1f;
 
-            petStatsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, PetAttackSpeed(petStatsTotal), hitRate, critRate,
-                                    bleedHitInterval, dmgDoneInterval, petStatsTotal, null);
+            float clawbitesmackinterval = 0f;
+            float clawfreq = priorityRotation.getSkillFrequency(PetAttacks.Claw ); if (clawfreq > 0) { clawbitesmackinterval += clawfreq; }
+            float bitefreq = priorityRotation.getSkillFrequency(PetAttacks.Bite ); if (bitefreq > 0) { clawbitesmackinterval += bitefreq; }
+            float smakfreq = priorityRotation.getSkillFrequency(PetAttacks.Smack); if (smakfreq > 0) { clawbitesmackinterval += smakfreq; }
+
+            petStatsProcs += GetSpecialEffectsStats(character, AllAttemptedAtksInterval, WhtAttemptedAtksInterval, hitRate, critRate,
+                                    bleedHitInterval, dmgDoneInterval, clawbitesmackinterval, petStatsTotal, null);
 
             #region Stat Results of Special Effects
             // Base Stats
@@ -510,8 +537,7 @@ namespace Rawr.Hunter
 
             float armorDebuffSting = 0;
             float stingFrequency = priorityRotation.getSkillFrequency(PetAttacks.Sting);
-            if (stingFrequency > 0)
-            {
+            if (stingFrequency > 0) {
                 float stingUseFreq = priorityRotation.getSkillFrequency(PetAttacks.Sting);
                 float stingDuration = 20;
                 float stingUptime = stingDuration > stingUseFreq ? 1 : stingDuration / stingUseFreq;
@@ -520,13 +546,11 @@ namespace Rawr.Hunter
             }
 
             // these local buffs can be overridden
-            if (character.ActiveBuffsConflictingBuffContains("Sting"))
-            {
+            if (character.ActiveBuffsConflictingBuffContains("Sting")) {
                 armorDebuffSporeCloud = 0;
                 armorDebuffSting = 0;
             }
-            if (character.ActiveBuffsConflictingBuffContains("Acid Spit"))
-            {
+            if (character.ActiveBuffsConflictingBuffContains("Acid Spit")) {
                 armorDebuffAcidSpit = 0;
             }
 
@@ -552,16 +576,16 @@ namespace Rawr.Hunter
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0) {
                 float roarOfRecoveryUseCount = (float)Math.Ceiling(CalcOpts.Duration / roarOfRecoveryFreq);
-                float roarOfRecoveryManaRestored = calculatedStats.BasicStats.Mana * 0.3f * roarOfRecoveryUseCount; // E129
+                float roarOfRecoveryManaRestored = HunterStats.Mana * 0.30f * roarOfRecoveryUseCount; // E129
                 calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / CalcOpts.Duration : 0;
             }
 
             //Invigoration
             //calculatedStats.manaRegenInvigoration = 0;
-            float invigorationProcChance = character.HunterTalents.Invigoration * 0.5f; // C32
+            float invigorationProcChance = Talents.Invigoration * 0.50f; // C32
             if (invigorationProcChance > 0) {
                 float invigorationProcFreq = (priorityRotation.petSpecialFrequency / calculatedStats.petCritTotalSpecials) / invigorationProcChance; //C35
-                float invigorationEffect = character.HunterTalents.Invigoration > 0 ? 0.01f : 0;
+                float invigorationEffect = Talents.Invigoration > 0 ? 0.01f : 0;
                 float invigorationManaGainedPercent = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect : 0; // C36
                 float invigorationManaPerMinute = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect * calculatedStats.BasicStats.Mana : 0; // C37
                 calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60f;
@@ -960,7 +984,6 @@ namespace Rawr.Hunter
 
             #endregion
 
-         
             calculatedStats.petSpecialDPS = priorityRotation.dps;
 
             calculatedStats.PetDpsPoints = (float)(calculatedStats.petWhiteDPS 

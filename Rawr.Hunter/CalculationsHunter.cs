@@ -2512,6 +2512,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
             float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower);
             statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
+            statsTotal.RangedAttackPower = statsTotal.AttackPower;
 
             // Spell Power
             float totalBSPM    = statsTotal.BonusSpellPowerMultiplier;
@@ -2579,6 +2580,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
             float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
             statsProcs.AttackPower = (float)Math.Floor(apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
+            statsProcs.RangedAttackPower = statsProcs.AttackPower;
 
             // Crit
             statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
@@ -2590,7 +2592,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
                                      - 1f;
 
-            statsTotal += statsProcs;
+            // Add it back into the fold
+            statsTotal.Accumulate(statsProcs);
 
             statsTotal.Mana = (float)Math.Floor((1f + statsTotal.BonusManaMultiplier) * statsTotal.Mana);
 

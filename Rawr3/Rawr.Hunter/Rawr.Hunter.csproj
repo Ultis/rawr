@@ -68,6 +68,9 @@
     <Compile Include="..\..\Rawr.Hunter\CombatFactors.cs">
       <Link>CombatFactors.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Hunter\CombatTable.cs">
+      <Link>CombatTable.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Hunter\ComparisonCalculationHunter.cs">
       <Link>ComparisonCalculationHunter.cs</Link>
     </Compile>
