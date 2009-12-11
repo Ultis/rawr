@@ -7903,15 +7903,15 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>52576</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>racial_troll_berserk</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BonusHealingReceived>270.860016</BonusHealingReceived>
+            <BonusHealingReceived>232</BonusHealingReceived>
           </Stats>
           <Duration>30</Duration>
           <Cooldown>120</Cooldown>
@@ -7921,7 +7921,6 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
       <Spirit>73</Spirit>
-      <BonusHealingReceived>290</BonusHealingReceived>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -91470,10 +91469,35 @@
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
-    <DisplayId>48009</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_rune_11</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>HealingSpellCast</Trigger>
+                <Stats>
+                  <SpellPower>66</SpellPower>
+                </Stats>
+                <Duration>20</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>8</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Mp5>57</Mp5>
     </Stats>
     <Quality>Epic</Quality>
@@ -94688,10 +94712,35 @@
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
-    <DisplayId>48009</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_rune_11</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>HealingSpellCast</Trigger>
+                <Stats>
+                  <SpellPower>66</SpellPower>
+                </Stats>
+                <Duration>20</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>8</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Mp5>57</Mp5>
     </Stats>
     <Quality>Epic</Quality>
@@ -96348,10 +96397,35 @@
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
-    <DisplayId>48009</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_rune_11</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>HealingSpellCast</Trigger>
+                <Stats>
+                  <SpellPower>74</SpellPower>
+                </Stats>
+                <Duration>20</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>8</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Mp5>63</Mp5>
     </Stats>
     <Quality>Epic</Quality>
@@ -98194,10 +98268,35 @@
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
-    <DisplayId>48009</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_rune_11</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>HealingSpellCast</Trigger>
+                <Stats>
+                  <SpellPower>74</SpellPower>
+                </Stats>
+                <Duration>20</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>8</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Mp5>63</Mp5>
     </Stats>
     <Quality>Epic</Quality>
@@ -122849,6 +122948,32 @@
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_datacrystal09</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>SpellCrit</Trigger>
+                <Stats>
+                  <CritRating>-184</CritRating>
+                </Stats>
+                <Duration>INF</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>5</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+            <CritRating>920</CritRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>180</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>111</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
@@ -122865,7 +122990,31 @@
     <DisplayId>0</DisplayId>
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelcrafting_empyreansapphire_01</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellHit</Trigger>
+          <Stats>
+            <ManaRestore>11</ManaRestore>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0.25</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <HasteRating>464</HasteRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
@@ -124120,6 +124269,19 @@
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_trinket_05</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <ManaRestore>1625</ManaRestore>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>158</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
@@ -124265,6 +124427,19 @@
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_trinket_05</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <ManaRestore>1830</ManaRestore>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>178</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
@@ -124461,6 +124636,19 @@
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_ammo_gunpowder_05</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <Mp5>304</Mp5>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>153</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
@@ -124478,6 +124666,19 @@
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_trinket_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellHit</Trigger>
+          <Stats>
+            <Healed>6000</Healed>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.3</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>179</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
@@ -124597,6 +124798,19 @@
     <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_trinket_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellHit</Trigger>
+          <Stats>
+            <Healed>6789</Healed>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.3</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <SpellPower>201</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
