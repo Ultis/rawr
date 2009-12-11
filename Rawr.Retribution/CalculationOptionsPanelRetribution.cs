@@ -15,9 +15,6 @@ namespace Rawr.Retribution
         public CalculationOptionsPanelRetribution()
         {
             InitializeComponent();
-#if DEBUG
-            butClearRotate.Visible = true;
-#endif
         }
 
         private bool loading;
@@ -67,7 +64,11 @@ namespace Rawr.Retribution
             nudExo20.Value = (decimal)calcOpts.ExoCD20;
             nudHoW20.Value = (decimal)calcOpts.HoWCD20;
 
-            UpdatePriority(calcOpts);
+            if (calcOpts.Rotations.Count == 0) calcOpts.Rotations.Add(RotationParameters.DefaultRotation());
+            butDelRotation.Enabled = calcOpts.Rotations.Count > 1;
+            buildRotationCombo();
+            cmbRotations.SelectedIndex = 0;
+            showRotation(0);
 
             if (calcOpts.SimulateRotation) radRotSim.Checked = true;
             else radEffectiveCD.Checked = true;
@@ -96,80 +97,6 @@ namespace Rawr.Retribution
             }
         }
 
-        private void UpdatePriority(CalculationOptionsRetribution calcOpts)
-        {
-            bool wasLoading = loading;
-            loading = true;
-
-            listUnlimitedPriority.Items.Clear();
-            listUnlimitedPriority.Items.AddRange(new string[] { RotationParameters.AbilityString(calcOpts.Order[0]), RotationParameters.AbilityString(calcOpts.Order[1]),
-                 RotationParameters.AbilityString(calcOpts.Order[2]), RotationParameters.AbilityString(calcOpts.Order[3]),
-                  RotationParameters.AbilityString(calcOpts.Order[4]), RotationParameters.AbilityString(calcOpts.Order[5])});
-
-            for (int i = 0; i < 6; i++) listUnlimitedPriority.SetItemChecked(i, calcOpts.Selected[i]);
-
-            loading = wasLoading;
-        }
-
-        private void butUnlimitedUp_Click(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                int sel = listUnlimitedPriority.SelectedIndex;
-                if (sel > 0 && sel <= 5)
-                {
-                    Ability temp1 = calcOpts.Order[sel - 1];
-                    calcOpts.Order[sel - 1] = calcOpts.Order[sel];
-                    calcOpts.Order[sel] = temp1;
-
-                    bool temp2 = calcOpts.Selected[sel - 1];
-                    calcOpts.Selected[sel - 1] = calcOpts.Selected[sel];
-                    calcOpts.Selected[sel] = temp2;
-
-                    UpdatePriority(calcOpts);
-                    listUnlimitedPriority.SelectedIndex = sel - 1;
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-
-        private void butUnlimitedDown_Click(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                int sel = listUnlimitedPriority.SelectedIndex;
-                if (sel >= 0 && sel < 5)
-                {
-                    Ability temp1 = calcOpts.Order[sel + 1];
-                    calcOpts.Order[sel + 1] = calcOpts.Order[sel];
-                    calcOpts.Order[sel] = temp1;
-
-                    bool temp2 = calcOpts.Selected[sel + 1];
-                    calcOpts.Selected[sel + 1] = calcOpts.Selected[sel];
-                    calcOpts.Selected[sel] = temp2;
-
-                    UpdatePriority(calcOpts);
-                    listUnlimitedPriority.SelectedIndex = sel + 1;
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-
-        private void listUnlimitedPriority_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                
-                if (e.NewValue == CheckState.Unchecked) calcOpts.Selected[e.Index] = false;
-                else calcOpts.Selected[e.Index] = true;
-
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void nudDelay_ValueChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -184,11 +111,11 @@ namespace Rawr.Retribution
         {
             if (rot)
             {
-                listUnlimitedPriority.Enabled = true;
+                listRotation.Enabled = true;
                 lblDelay.Enabled = true;
                 lblWait.Enabled = true;
-                butUnlimitedDown.Enabled = true;
-                butUnlimitedUp.Enabled = true;
+                butRotationDown.Enabled = true;
+                butRotationUp.Enabled = true;
                 nudDelay.Enabled = true;
                 nudWait.Enabled = true;
                 nudJudge.Enabled = false;
@@ -213,11 +140,11 @@ namespace Rawr.Retribution
             }
             else
             {
-                listUnlimitedPriority.Enabled = false;
+                listRotation.Enabled = false;
                 lblDelay.Enabled = false;
                 lblWait.Enabled = false;
-                butUnlimitedDown.Enabled = false;
-                butUnlimitedUp.Enabled = false;
+                butRotationDown.Enabled = false;
+                butRotationUp.Enabled = false;
                 nudDelay.Enabled = false;
                 nudWait.Enabled = false;
                 nudJudge.Enabled = true;
@@ -242,6 +169,7 @@ namespace Rawr.Retribution
             }
         }
 
+        #region Effective Cooldowns
         private void radRotSim_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -372,6 +300,7 @@ namespace Rawr.Retribution
                 Character.OnCalculationsInvalidated();
             }
         }
+        #endregion
 
         private void nudWait_ValueChanged(object sender, EventArgs e)
         {
@@ -483,9 +412,98 @@ namespace Rawr.Retribution
             }
         }
 
-        private void butClearRotate_Click(object sender, EventArgs e)
+        private void butNewRotation_Click(object sender, EventArgs e)
         {
-            RotationSimulator.ClearCache();
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.Rotations.Add((Ability[])calcOpts.Rotations[cmbRotations.SelectedIndex].Clone());
+            buildRotationCombo();
+            cmbRotations.SelectedIndex = calcOpts.Rotations.Count - 1;
+            butDelRotation.Enabled = calcOpts.Rotations.Count > 1;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void buildRotationCombo()
+        {
+            bool wasLoading = loading;
+            loading = true;
+            int oldIndex = cmbRotations.SelectedIndex;
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            List<string> rotationList = new List<string>(calcOpts.Rotations.Count);
+            foreach (Ability[] rotation in calcOpts.Rotations)
+            {
+                rotationList.Add(RotationParameters.RotationString(rotation));
+            }
+            cmbRotations.DataSource = rotationList;
+            cmbRotations.SelectedIndex = oldIndex;
+            loading = wasLoading;
+        }
+
+        private void showRotation(int number)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            List<string> abilityList = new List<string>(6);
+            foreach (Ability ability in calcOpts.Rotations[number])
+            {
+                abilityList.Add(RotationParameters.AbilityString(ability));
+            }
+            listRotation.Items.Clear();
+            listRotation.Items.AddRange(abilityList.ToArray());
+        }
+
+        private void butRotationUp_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            int selected = listRotation.SelectedIndex;
+            if (selected > 0 && selected < 6)
+            {
+                Ability[] rotation = calcOpts.Rotations[cmbRotations.SelectedIndex];
+
+                Ability tempAbility = rotation[selected - 1];
+                rotation[selected - 1] = rotation[selected];
+                rotation[selected] = tempAbility;
+
+                showRotation(cmbRotations.SelectedIndex);
+                buildRotationCombo();
+                listRotation.SelectedIndex = selected - 1;
+
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void butRotationDown_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            int selected = listRotation.SelectedIndex;
+            if (selected >= 0 && selected < 5)
+            {
+                Ability[] rotation = calcOpts.Rotations[cmbRotations.SelectedIndex];
+
+                Ability tempAbility = rotation[selected + 1];
+                rotation[selected + 1] = rotation[selected];
+                rotation[selected] = tempAbility;
+
+                showRotation(cmbRotations.SelectedIndex);
+                buildRotationCombo();
+                listRotation.SelectedIndex = selected + 1;
+
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cmbRotations_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading) showRotation(cmbRotations.SelectedIndex);
+        }
+
+        private void butDelRotation_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+
+            calcOpts.Rotations.RemoveAt(cmbRotations.SelectedIndex);
+            cmbRotations.SelectedIndex = 0;
+            buildRotationCombo();
+            butDelRotation.Enabled = calcOpts.Rotations.Count > 1;
+
             Character.OnCalculationsInvalidated();
         }
 

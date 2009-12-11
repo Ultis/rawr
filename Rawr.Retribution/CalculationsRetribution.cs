@@ -139,6 +139,8 @@ namespace Rawr.Retribution
             character.ActiveBuffsAdd(("Curse of the Elements"));
             character.ActiveBuffsAdd(("Misery"));
             character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Blessing of Kings (Str/Sta Bonus)"));
             character.ActiveBuffsAdd(("Flask of Endless Rage"));
             character.ActiveBuffsAdd(("Fish Feast"));
         }
@@ -266,6 +268,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Hammer of Wrath",
                         "DPS Breakdown:Hand of Reckoning",
                         "DPS Breakdown:Other*From trinket procs",
+                        "Rotation Info:Chosen Rotation",
                         "Rotation Info:Average SoV Stack",
                         "Rotation Info:SoV Overtake*How long you need to dps a target for SoV to do more DPS then SoR",
                         "Rotation Info:Crusader Strike CD",
@@ -288,7 +291,7 @@ namespace Rawr.Retribution
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] { "Seals", "Weapon Speed" };
+                    _customChartNames = new string[] { "Seals", "Weapon Speed", "Rotations" };
                 }
                 return _customChartNames;
             }
@@ -572,6 +575,27 @@ namespace Rawr.Retribution
                 Vengeance.Item = null;
 
                 return new ComparisonCalculationBase[] { Command, Righteousness, Vengeance };
+            }
+            if (chartName == "Rotations")
+            {
+                List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                Character baseChar = character.Clone();
+                CalculationOptionsRetribution baseOpts = ((CalculationOptionsRetribution)character.CalculationOptions).Clone();
+                baseChar.CalculationOptions = baseOpts;
+
+                int selected = ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character)).RotationIndex;
+
+                for (int i = 0; i < baseOpts.Rotations.Count; i++)
+                {
+                    baseOpts.ForceRotation = i;
+                    ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
+                        Calculations.GetCharacterCalculations(baseChar),
+                        RotationParameters.RotationString(baseOpts.Rotations[i]), i == selected);
+                    compare.Item = null;
+                    comparisons.Add(compare);
+                }
+
+                return comparisons.ToArray();
             }
             if (chartName == "Weapon Speed")
             {

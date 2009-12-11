@@ -15,15 +15,17 @@ namespace Rawr.Retribution
 
         }
 
-        public readonly bool T7_4pc;
-        public readonly bool T10_2pc;
-        public readonly int ImpJudgements;
-        public readonly bool GlyphConsecrate;
-        public readonly Ability[] Priorities;
-        public readonly float TimeUnder20;
-        public readonly float Wait;
-        public readonly float Delay;
-        public readonly float AttackSpeed;
+        public bool T7_4pc;
+        public bool T10_2pc;
+        public int ImpJudgements;
+        public bool GlyphConsecrate;
+        public Ability[] Priorities;
+        public float TimeUnder20;
+        public float Wait;
+        public float Delay;
+        public float AttackSpeed;
+
+        public RotationParameters() { }
 
         public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate, bool T10_2pc, float AttackSpeed)
         {
@@ -82,6 +84,28 @@ namespace Rawr.Retribution
             return "?";
         }
 
+        public static string RotationString(Ability[] rotation)
+        {
+            string s = "";
+            for (int i = 0; i < rotation.Length; i++)
+            {
+                s += RotationParameters.ShortAbilityString(rotation[i]);
+                if (i + 1 < rotation.Length) s += " > ";
+            }
+            return s;
+        }
+
+        public static string ShortRotationString(Ability[] rotation)
+        {
+            string s = "";
+            for (int i = 0; i < rotation.Length; i++)
+            {
+                s += RotationParameters.ShortAbilityString(rotation[i]);
+                if (i + 1 < rotation.Length) s += "-";
+            }
+            return s;
+        }
+
         public static string AbilityString(Ability ability)
         {
             if (ability == Ability.Consecration) return "Consecration";
@@ -91,6 +115,12 @@ namespace Rawr.Retribution
             if (ability == Ability.Exorcism) return "Exorcism";
             if (ability == Ability.HammerOfWrath) return "Hammer of Wrath";
             return "?";
+        }
+
+        public static Ability[] DefaultRotation()
+        {
+            return new Ability[] { Ability.CrusaderStrike, Ability.HammerOfWrath, Ability.Judgement,
+                Ability.Consecration, Ability.DivineStorm, Ability.Exorcism };
         }
 
         public override string ToString()

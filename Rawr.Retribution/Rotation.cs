@@ -96,6 +96,13 @@ namespace Rawr.Retribution
                 calc.OtherDPS;
         }
 
+        public float DPS()
+        {
+            return White.WhiteDPS() + SealDPS(Seal, SealDot)+ JudgementDPS(Judge) + DivineStormDPS(DS)
+                + CrusaderStrikeDPS(CS) + ConsecrationDPS(Cons) + ExorcismDPS(Exo) + HammerOfWrathDPS(HoW)
+                + HandOfReckoningDPS(HoR);
+        }
+
         public float SealProcsPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfVengeance))
@@ -171,12 +178,13 @@ namespace Rawr.Retribution
     public class Simulator : Rotation
     {
         public RotationSolution Solution { get; set; }
+        public Ability[] Rotation { get; set; }
+        public int RotationIndex { get; set; }
 
-        public Simulator(CombatStats combats)
-            : base(combats)
+        public Simulator(CombatStats combats, int rotation) : base(combats)
         {
             Solution = RotationSimulator.SimulateRotation(
-                new RotationParameters(combats.CalcOpts.Priorities,
+                new RotationParameters(combats.CalcOpts.Rotations[rotation],
                     combats.CalcOpts.TimeUnder20,
                     combats.CalcOpts.Wait,
                     combats.CalcOpts.Delay,
@@ -184,11 +192,63 @@ namespace Rawr.Retribution
                     combats.Talents.ImprovedJudgements,
                     combats.Talents.GlyphOfConsecration,
                     combats.Stats.DivineStormRefresh != 0,
-                    combats.AttackSpeed)
-            );
+                    combats.AttackSpeed));
         }
 
-        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc) { calc.Rotation = Solution; }
+        public Simulator(CombatStats combats)
+            : base(combats)
+        {
+            Rotation = null;
+            RotationIndex = -1;
+
+            RotationSolution maxSolution = null;
+            float maxDPS = 0, currentDPS;
+
+            if (combats.CalcOpts.ForceRotation >= 0)
+            {
+                Solution = RotationSimulator.SimulateRotation(Parameters(combats.CalcOpts.Rotations[combats.CalcOpts.ForceRotation]));
+            }
+            else if (combats.CalcOpts.Rotations.Count > 0)
+            {
+                for (int i = 0; i < combats.CalcOpts.Rotations.Count; i++)
+                {
+                    Solution = RotationSimulator.SimulateRotation(Parameters(combats.CalcOpts.Rotations[i]));
+                    currentDPS = DPS();
+                    if (currentDPS > maxDPS)
+                    {
+                        maxDPS = currentDPS;
+                        maxSolution = Solution;
+                        Rotation = combats.CalcOpts.Rotations[i];
+                        RotationIndex = i;
+                    }
+                }
+                Solution = maxSolution;
+            }
+            else
+            {
+                Solution = RotationSimulator.SimulateRotation(Parameters(RotationParameters.DefaultRotation()));
+            }
+        }
+
+        private RotationParameters Parameters(Ability[] rotation)
+        {
+            return new RotationParameters(rotation,
+                        Combats.CalcOpts.TimeUnder20,
+                        Combats.CalcOpts.Wait,
+                        Combats.CalcOpts.Delay,
+                        Combats.Stats.JudgementCDReduction > 0,
+                        Combats.Talents.ImprovedJudgements,
+                        Combats.Talents.GlyphOfConsecration,
+                        Combats.Stats.DivineStormRefresh != 0,
+                        Combats.AttackSpeed);
+        }
+
+        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
+        {
+            calc.Solution = Solution;
+            calc.Rotation = Rotation;
+            calc.RotationIndex = RotationIndex;
+        }
 
         public override float JudgementDPS(Skill judge) { return judge.AverageDamage() * Solution.Judgement / Solution.FightLength; }
 
@@ -245,13 +305,16 @@ namespace Rawr.Retribution
 
         public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
         {
-            calc.Rotation = new RotationSolution();
-            calc.Rotation.JudgementCD = _calcOpts.JudgeCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.JudgeCD20 * _calcOpts.TimeUnder20;
-            calc.Rotation.CrusaderStrikeCD = _calcOpts.CSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.CSCD20 * _calcOpts.TimeUnder20;
-            calc.Rotation.DivineStormCD = _calcOpts.DSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.DSCD20 * _calcOpts.TimeUnder20;
-            calc.Rotation.ConsecrationCD = _calcOpts.ConsCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ConsCD20 * _calcOpts.TimeUnder20;
-            calc.Rotation.ExorcismCD = _calcOpts.ExoCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ExoCD20 * _calcOpts.TimeUnder20;
-            calc.Rotation.HammerOfWrathCD = _calcOpts.HoWCD20;
+            calc.Solution = new RotationSolution();
+            calc.Solution.JudgementCD = _calcOpts.JudgeCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.JudgeCD20 * _calcOpts.TimeUnder20;
+            calc.Solution.CrusaderStrikeCD = _calcOpts.CSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.CSCD20 * _calcOpts.TimeUnder20;
+            calc.Solution.DivineStormCD = _calcOpts.DSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.DSCD20 * _calcOpts.TimeUnder20;
+            calc.Solution.ConsecrationCD = _calcOpts.ConsCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ConsCD20 * _calcOpts.TimeUnder20;
+            calc.Solution.ExorcismCD = _calcOpts.ExoCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ExoCD20 * _calcOpts.TimeUnder20;
+            calc.Solution.HammerOfWrathCD = _calcOpts.HoWCD20;
+
+            calc.Rotation = null;
+            calc.RotationIndex = -1;
         }
 
         public override float JudgementDPS(Skill judge)

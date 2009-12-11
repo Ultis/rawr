@@ -12,7 +12,9 @@ namespace Rawr.Retribution
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
         public float DPSPoints { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
 
-        public RotationSolution Rotation { get; set; }
+        public RotationSolution Solution { get; set; }
+        public Ability[] Rotation { get; set; }
+        public int RotationIndex { get; set; }
 
         public float WhiteDPS { get; set; }
         public float SealDPS { get; set; }
@@ -74,13 +76,14 @@ namespace Rawr.Retribution
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
 
             dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
+            dictValues["Chosen Rotation"] = Rotation == null ? "n/a" : RotationParameters.ShortRotationString(Rotation);
             dictValues["SoV Overtake"] = string.Format("{0} sec", SoVOvertake.ToString("N2"));
-            dictValues["Crusader Strike CD"] = Rotation.CrusaderStrikeCD.ToString("N2");
-            dictValues["Judgement CD"] = Rotation.JudgementCD.ToString("N2");
-            dictValues["Consecration CD"] = Rotation.ConsecrationCD.ToString("N2");
-            dictValues["Exorcism CD"] = Rotation.ExorcismCD.ToString("N2");
-            dictValues["Divine Storm CD"] = Rotation.DivineStormCD.ToString("N2");
-            dictValues["Hammer of Wrath CD"] = Rotation.HammerOfWrathCD.ToString("N2");
+            dictValues["Crusader Strike CD"] = Solution.CrusaderStrikeCD.ToString("N2");
+            dictValues["Judgement CD"] = Solution.JudgementCD.ToString("N2");
+            dictValues["Consecration CD"] = Solution.ConsecrationCD.ToString("N2");
+            dictValues["Exorcism CD"] = Solution.ExorcismCD.ToString("N2");
+            dictValues["Divine Storm CD"] = Solution.DivineStormCD.ToString("N2");
+            dictValues["Hammer of Wrath CD"] = Solution.HammerOfWrathCD.ToString("N2");
 
             return dictValues;
         }

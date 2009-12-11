@@ -1,12 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+#if RAWR3
+
+#else
+using System.Xml;
+using System.IO;
+using System.Windows.Forms;
+using System.Xml.Serialization;
+#endif
 
 namespace Rawr.Retribution
 {
     static class RotationSimulator
     {
-        private static Dictionary<RotationParameters, RotationSolution> savedSolutions = new Dictionary<RotationParameters, RotationSolution>(new RotationParameters.RotationComparer());
+        private static SerializableDictionary<RotationParameters, RotationSolution> savedSolutions = null;
+        private static SerializableDictionary<RotationParameters, RotationSolution> SavedSolutions
+        {
+            get
+            {
+                if (savedSolutions == null) savedSolutions = LoadDictionary();
+                return savedSolutions;
+            }
+        }
+
+#if !RAWR3
+        private static string SaveFilePath()
+        {
+            return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
+                "Data" + System.IO.Path.DirectorySeparatorChar + "RetRotations.xml");
+        }
+#endif
+
+        private static SerializableDictionary<RotationParameters, RotationSolution> LoadDictionary()
+        {
+            SerializableDictionary<RotationParameters, RotationSolution> sols = null;
+#if RAWR3
+
+#else
+            string path = SaveFilePath();
+            if (File.Exists(path))
+            {
+                using (TextReader reader = new StreamReader(path, Encoding.UTF8))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
+                    try
+                    {
+                        sols = (SerializableDictionary<RotationParameters, RotationSolution>)serializer.Deserialize(reader);
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        MessageBox.Show(":(");
+                    }
+                }
+            }
+#endif
+            if (sols == null) sols = new SerializableDictionary<RotationParameters, RotationSolution>();
+            return sols;
+        }
+
+        private static void SaveDictionary(SerializableDictionary<RotationParameters, RotationSolution> sols)
+        {
+#if RAWR3
+ 
+#else
+            lock (sols)
+            {
+                using (TextWriter writer = new StreamWriter(SaveFilePath(), false, Encoding.UTF8))
+                {
+                    try
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
+                        serializer.Serialize(writer, sols);
+                    }
+                    catch (InvalidOperationException) { }
+                }
+            }
+#endif
+        }
 
         public static void ClearCache()
         {
@@ -15,11 +86,11 @@ namespace Rawr.Retribution
 
         public static RotationSolution SimulateRotation(RotationParameters rot)
         {
-            if (savedSolutions.ContainsKey(rot)) return savedSolutions[rot];
+            if (SavedSolutions.ContainsKey(rot)) return SavedSolutions[rot];
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = rot.T10_2pc ? 500000 : 10000;
+            sol.FightLength = rot.T10_2pc ? 2000000 : 10000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
 
@@ -93,7 +164,8 @@ namespace Rawr.Retribution
             sol.HammerOfWrath = abilities[(int)Ability.HammerOfWrath].Uses;
             sol.HammerOfWrathCD = abilities[(int)Ability.HammerOfWrath].EffectiveCooldown();
 
-            savedSolutions[rot] = sol;
+            SavedSolutions[rot] = sol;
+            SaveDictionary(SavedSolutions);
 
             return sol;
         }

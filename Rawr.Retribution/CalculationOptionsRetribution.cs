@@ -35,6 +35,7 @@ namespace Rawr.Retribution
             targetSwitches = 0f;
 
             simulateRotation = true;
+            forceRotation = -1;
 
             judgeCD = 7.1f;
             cSCD = 7.1f;
@@ -48,6 +49,8 @@ namespace Rawr.Retribution
             consCD20 = 12.5f;
             exoCD20 = 25f;
             hoWCD20 = 6.4f;
+
+            rotations = new List<Ability[]>();
         }
 
         private int targetLevel;
@@ -170,6 +173,14 @@ namespace Rawr.Retribution
             set { simulateRotation = value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
         }
 
+        private int forceRotation;
+        [XmlIgnore]
+        public int ForceRotation
+        {
+            get { return forceRotation; }
+            set { forceRotation = value; }
+        }
+
         [XmlIgnore]
         public bool EffectiveCD
         {
@@ -177,46 +188,25 @@ namespace Rawr.Retribution
             set { SimulateRotation = !value; }
         }
 
-        private Ability[] order = { Ability.CrusaderStrike, Ability.HammerOfWrath, Ability.Judgement,
-                                                   Ability.DivineStorm, Ability.Consecration, Ability.Exorcism };
+        [XmlIgnore]
         public Ability[] Order
         {
-            get { _cache = null; return order; }
-            set { _cache = null; order = value; }
+            get { return rotations.Count > 0 ? rotations[0] : null; }
+            set { rotations[0] = value; }
         }
-
-        private bool[] selected = { true, true, true, true, true, true };
-        public bool[] Selected
-        {
-            get { _cache = null; return selected; }
-            set { _cache = null; selected = value; }
-        }
-
-        private Ability[] _cache = null;
 
         [XmlIgnore]
-        public Ability[] Priorities
+        public bool[] Selected
         {
-            get
-            {
-                if (_cache == null)
-                {
-                    int count = 0;
-                    foreach (bool b in selected) { if (b) count++; }
-                    _cache = new Ability[count];
+            get { return null; }
+            set { ; }
+        }
 
-                    int sel = 0;
-                    for (int i = 0; i < order.Length; i++)
-                    {
-                        if (selected[i])
-                        {
-                            _cache[sel] = order[i];
-                            sel++;
-                        }
-                    }
-                }
-                return _cache;
-            }
+        private List<Ability[]> rotations;
+        public List<Ability[]> Rotations
+        {
+            get { return rotations; }
+            set { rotations = value; OnPropertyChanged("Rotations"); }
         }
 
         private float judgeCD;
@@ -329,8 +319,7 @@ namespace Rawr.Retribution
             clone.ExoCD20 = ExoCD20;
             clone.HoWCD20 = HoWCD20;
 
-            clone.order = (Ability[])order.Clone();
-            clone.selected = (bool[])selected.Clone();
+            clone.Rotations = new List<Ability[]>(Rotations);
 
             return clone;
         }

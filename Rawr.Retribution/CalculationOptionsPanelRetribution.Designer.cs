@@ -57,9 +57,8 @@
             this.radRotSim = new System.Windows.Forms.RadioButton();
             this.nudDelay = new System.Windows.Forms.NumericUpDown();
             this.lblDelay = new System.Windows.Forms.Label();
-            this.listUnlimitedPriority = new System.Windows.Forms.CheckedListBox();
-            this.butUnlimitedDown = new System.Windows.Forms.Button();
-            this.butUnlimitedUp = new System.Windows.Forms.Button();
+            this.butRotationDown = new System.Windows.Forms.Button();
+            this.butRotationUp = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
@@ -91,6 +90,10 @@
             this.chkBloodlust = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.listRotation = new System.Windows.Forms.ListBox();
+            this.butDelRotation = new System.Windows.Forms.Button();
+            this.butNewRotation = new System.Windows.Forms.Button();
+            this.cmbRotations = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -114,7 +117,6 @@
             this.label28 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.butClearRotate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
@@ -186,7 +188,7 @@
             // lblWait
             // 
             this.lblWait.AutoSize = true;
-            this.lblWait.Location = new System.Drawing.Point(167, 87);
+            this.lblWait.Location = new System.Drawing.Point(119, 152);
             this.lblWait.Name = "lblWait";
             this.lblWait.Size = new System.Drawing.Size(36, 13);
             this.lblWait.TabIndex = 21;
@@ -201,7 +203,7 @@
             0,
             0,
             131072});
-            this.nudWait.Location = new System.Drawing.Point(170, 103);
+            this.nudWait.Location = new System.Drawing.Point(161, 150);
             this.nudWait.Maximum = new decimal(new int[] {
             1,
             0,
@@ -220,7 +222,7 @@
             0,
             0,
             65536});
-            this.nudHoW20.Location = new System.Drawing.Point(163, 296);
+            this.nudHoW20.Location = new System.Drawing.Point(164, 349);
             this.nudHoW20.Maximum = new decimal(new int[] {
             30,
             0,
@@ -249,7 +251,7 @@
             0,
             0,
             65536});
-            this.nudExo20.Location = new System.Drawing.Point(163, 270);
+            this.nudExo20.Location = new System.Drawing.Point(164, 323);
             this.nudExo20.Maximum = new decimal(new int[] {
             30,
             0,
@@ -278,7 +280,7 @@
             0,
             0,
             65536});
-            this.nudExo.Location = new System.Drawing.Point(105, 270);
+            this.nudExo.Location = new System.Drawing.Point(106, 323);
             this.nudExo.Maximum = new decimal(new int[] {
             30,
             0,
@@ -307,7 +309,7 @@
             0,
             0,
             65536});
-            this.nudCons20.Location = new System.Drawing.Point(163, 244);
+            this.nudCons20.Location = new System.Drawing.Point(164, 297);
             this.nudCons20.Maximum = new decimal(new int[] {
             30,
             0,
@@ -336,7 +338,7 @@
             0,
             0,
             65536});
-            this.nudCons.Location = new System.Drawing.Point(105, 244);
+            this.nudCons.Location = new System.Drawing.Point(106, 297);
             this.nudCons.Maximum = new decimal(new int[] {
             30,
             0,
@@ -365,7 +367,7 @@
             0,
             0,
             65536});
-            this.nudDS20.Location = new System.Drawing.Point(163, 218);
+            this.nudDS20.Location = new System.Drawing.Point(164, 271);
             this.nudDS20.Maximum = new decimal(new int[] {
             30,
             0,
@@ -394,7 +396,7 @@
             0,
             0,
             65536});
-            this.nudDS.Location = new System.Drawing.Point(105, 218);
+            this.nudDS.Location = new System.Drawing.Point(106, 271);
             this.nudDS.Maximum = new decimal(new int[] {
             30,
             0,
@@ -423,7 +425,7 @@
             0,
             0,
             65536});
-            this.nudCS20.Location = new System.Drawing.Point(163, 192);
+            this.nudCS20.Location = new System.Drawing.Point(164, 245);
             this.nudCS20.Maximum = new decimal(new int[] {
             30,
             0,
@@ -452,7 +454,7 @@
             0,
             0,
             65536});
-            this.nudCS.Location = new System.Drawing.Point(105, 192);
+            this.nudCS.Location = new System.Drawing.Point(106, 245);
             this.nudCS.Maximum = new decimal(new int[] {
             30,
             0,
@@ -481,7 +483,7 @@
             0,
             0,
             65536});
-            this.nudJudge20.Location = new System.Drawing.Point(163, 168);
+            this.nudJudge20.Location = new System.Drawing.Point(164, 221);
             this.nudJudge20.Maximum = new decimal(new int[] {
             30,
             0,
@@ -510,7 +512,7 @@
             0,
             0,
             65536});
-            this.nudJudge.Location = new System.Drawing.Point(105, 168);
+            this.nudJudge.Location = new System.Drawing.Point(106, 221);
             this.nudJudge.Maximum = new decimal(new int[] {
             30,
             0,
@@ -533,7 +535,7 @@
             // 
             // lblPost20
             // 
-            this.lblPost20.Location = new System.Drawing.Point(163, 149);
+            this.lblPost20.Location = new System.Drawing.Point(164, 202);
             this.lblPost20.Name = "lblPost20";
             this.lblPost20.Size = new System.Drawing.Size(51, 13);
             this.lblPost20.TabIndex = 46;
@@ -541,7 +543,7 @@
             // 
             // lblPre20
             // 
-            this.lblPre20.Location = new System.Drawing.Point(105, 149);
+            this.lblPre20.Location = new System.Drawing.Point(106, 202);
             this.lblPre20.Name = "lblPre20";
             this.lblPre20.Size = new System.Drawing.Size(51, 13);
             this.lblPre20.TabIndex = 45;
@@ -550,7 +552,7 @@
             // lblExo
             // 
             this.lblExo.AutoSize = true;
-            this.lblExo.Location = new System.Drawing.Point(5, 272);
+            this.lblExo.Location = new System.Drawing.Point(6, 325);
             this.lblExo.Name = "lblExo";
             this.lblExo.Size = new System.Drawing.Size(49, 13);
             this.lblExo.TabIndex = 44;
@@ -559,7 +561,7 @@
             // lblCons
             // 
             this.lblCons.AutoSize = true;
-            this.lblCons.Location = new System.Drawing.Point(5, 246);
+            this.lblCons.Location = new System.Drawing.Point(6, 299);
             this.lblCons.Name = "lblCons";
             this.lblCons.Size = new System.Drawing.Size(69, 13);
             this.lblCons.TabIndex = 43;
@@ -568,7 +570,7 @@
             // lblHoW
             // 
             this.lblHoW.AutoSize = true;
-            this.lblHoW.Location = new System.Drawing.Point(5, 298);
+            this.lblHoW.Location = new System.Drawing.Point(6, 351);
             this.lblHoW.Name = "lblHoW";
             this.lblHoW.Size = new System.Drawing.Size(90, 13);
             this.lblHoW.TabIndex = 42;
@@ -577,7 +579,7 @@
             // lblDS
             // 
             this.lblDS.AutoSize = true;
-            this.lblDS.Location = new System.Drawing.Point(5, 220);
+            this.lblDS.Location = new System.Drawing.Point(6, 273);
             this.lblDS.Name = "lblDS";
             this.lblDS.Size = new System.Drawing.Size(67, 13);
             this.lblDS.TabIndex = 41;
@@ -586,7 +588,7 @@
             // lblCS
             // 
             this.lblCS.AutoSize = true;
-            this.lblCS.Location = new System.Drawing.Point(5, 194);
+            this.lblCS.Location = new System.Drawing.Point(6, 247);
             this.lblCS.Name = "lblCS";
             this.lblCS.Size = new System.Drawing.Size(79, 13);
             this.lblCS.TabIndex = 40;
@@ -595,7 +597,7 @@
             // lblJudge
             // 
             this.lblJudge.AutoSize = true;
-            this.lblJudge.Location = new System.Drawing.Point(5, 168);
+            this.lblJudge.Location = new System.Drawing.Point(6, 221);
             this.lblJudge.Name = "lblJudge";
             this.lblJudge.Size = new System.Drawing.Size(59, 13);
             this.lblJudge.TabIndex = 39;
@@ -604,17 +606,17 @@
             // radEffectiveCD
             // 
             this.radEffectiveCD.AutoSize = true;
-            this.radEffectiveCD.Location = new System.Drawing.Point(5, 129);
+            this.radEffectiveCD.Location = new System.Drawing.Point(6, 182);
             this.radEffectiveCD.Name = "radEffectiveCD";
             this.radEffectiveCD.Size = new System.Drawing.Size(122, 17);
             this.radEffectiveCD.TabIndex = 37;
-            this.radEffectiveCD.TabStop = true;
             this.radEffectiveCD.Text = "Effective Cooldowns";
             this.radEffectiveCD.UseVisualStyleBackColor = true;
             // 
             // radRotSim
             // 
             this.radRotSim.AutoSize = true;
+            this.radRotSim.Checked = true;
             this.radRotSim.Location = new System.Drawing.Point(6, 6);
             this.radRotSim.Name = "radRotSim";
             this.radRotSim.Size = new System.Drawing.Size(97, 17);
@@ -632,7 +634,7 @@
             0,
             0,
             131072});
-            this.nudDelay.Location = new System.Drawing.Point(170, 64);
+            this.nudDelay.Location = new System.Drawing.Point(55, 150);
             this.nudDelay.Maximum = new decimal(new int[] {
             1,
             0,
@@ -646,48 +648,32 @@
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(167, 48);
+            this.lblDelay.Location = new System.Drawing.Point(8, 152);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(41, 13);
             this.lblDelay.TabIndex = 19;
             this.lblDelay.Text = "Delay*:";
             this.labelsTooltip.SetToolTip(this.lblDelay, "Amount of time inbetween each ability use due to lag.");
             // 
-            // listUnlimitedPriority
+            // butRotationDown
             // 
-            this.listUnlimitedPriority.FormattingEnabled = true;
-            this.listUnlimitedPriority.Items.AddRange(new object[] {
-            "Judgement",
-            "Hammer of Wrath",
-            "Crusader Strike",
-            "Divine Storm",
-            "Consecration",
-            "Exorcism"});
-            this.listUnlimitedPriority.Location = new System.Drawing.Point(5, 29);
-            this.listUnlimitedPriority.Name = "listUnlimitedPriority";
-            this.listUnlimitedPriority.Size = new System.Drawing.Size(120, 94);
-            this.listUnlimitedPriority.TabIndex = 16;
-            this.listUnlimitedPriority.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listUnlimitedPriority_ItemCheck);
+            this.butRotationDown.Location = new System.Drawing.Point(186, 85);
+            this.butRotationDown.Name = "butRotationDown";
+            this.butRotationDown.Size = new System.Drawing.Size(23, 23);
+            this.butRotationDown.TabIndex = 18;
+            this.butRotationDown.Text = "-";
+            this.butRotationDown.UseVisualStyleBackColor = true;
+            this.butRotationDown.Click += new System.EventHandler(this.butRotationDown_Click);
             // 
-            // butUnlimitedDown
+            // butRotationUp
             // 
-            this.butUnlimitedDown.Location = new System.Drawing.Point(131, 58);
-            this.butUnlimitedDown.Name = "butUnlimitedDown";
-            this.butUnlimitedDown.Size = new System.Drawing.Size(23, 23);
-            this.butUnlimitedDown.TabIndex = 18;
-            this.butUnlimitedDown.Text = "-";
-            this.butUnlimitedDown.UseVisualStyleBackColor = true;
-            this.butUnlimitedDown.Click += new System.EventHandler(this.butUnlimitedDown_Click);
-            // 
-            // butUnlimitedUp
-            // 
-            this.butUnlimitedUp.Location = new System.Drawing.Point(131, 29);
-            this.butUnlimitedUp.Name = "butUnlimitedUp";
-            this.butUnlimitedUp.Size = new System.Drawing.Size(23, 23);
-            this.butUnlimitedUp.TabIndex = 17;
-            this.butUnlimitedUp.Text = "+";
-            this.butUnlimitedUp.UseVisualStyleBackColor = true;
-            this.butUnlimitedUp.Click += new System.EventHandler(this.butUnlimitedUp_Click);
+            this.butRotationUp.Location = new System.Drawing.Point(186, 56);
+            this.butRotationUp.Name = "butRotationUp";
+            this.butRotationUp.Size = new System.Drawing.Size(23, 23);
+            this.butRotationUp.TabIndex = 17;
+            this.butRotationUp.Text = "+";
+            this.butRotationUp.UseVisualStyleBackColor = true;
+            this.butRotationUp.Click += new System.EventHandler(this.butRotationUp_Click);
             // 
             // label11
             // 
@@ -963,7 +949,7 @@
             this.tabControl1.Location = new System.Drawing.Point(9, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(288, 353);
+            this.tabControl1.Size = new System.Drawing.Size(288, 410);
             this.tabControl1.TabIndex = 45;
             // 
             // tabPage1
@@ -1000,7 +986,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(280, 327);
+            this.tabPage1.Size = new System.Drawing.Size(280, 384);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fight Parameters";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1087,14 +1073,17 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.listRotation);
+            this.tabPage2.Controls.Add(this.butDelRotation);
+            this.tabPage2.Controls.Add(this.butNewRotation);
+            this.tabPage2.Controls.Add(this.cmbRotations);
             this.tabPage2.Controls.Add(this.lblWait);
             this.tabPage2.Controls.Add(this.radRotSim);
             this.tabPage2.Controls.Add(this.nudWait);
-            this.tabPage2.Controls.Add(this.butUnlimitedUp);
+            this.tabPage2.Controls.Add(this.butRotationUp);
             this.tabPage2.Controls.Add(this.nudHoW20);
-            this.tabPage2.Controls.Add(this.butUnlimitedDown);
+            this.tabPage2.Controls.Add(this.butRotationDown);
             this.tabPage2.Controls.Add(this.nudExo20);
-            this.tabPage2.Controls.Add(this.listUnlimitedPriority);
             this.tabPage2.Controls.Add(this.nudExo);
             this.tabPage2.Controls.Add(this.lblDelay);
             this.tabPage2.Controls.Add(this.nudCons20);
@@ -1118,10 +1107,55 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(280, 327);
+            this.tabPage2.Size = new System.Drawing.Size(280, 384);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Rotation";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // listRotation
+            // 
+            this.listRotation.FormattingEnabled = true;
+            this.listRotation.Items.AddRange(new object[] {
+            "Judgement",
+            "Crusader Strike",
+            "Divine Storm",
+            "Consecration",
+            "Exorcism",
+            "Hammer of Wrath"});
+            this.listRotation.Location = new System.Drawing.Point(6, 56);
+            this.listRotation.Name = "listRotation";
+            this.listRotation.Size = new System.Drawing.Size(174, 82);
+            this.listRotation.TabIndex = 62;
+            // 
+            // butDelRotation
+            // 
+            this.butDelRotation.Location = new System.Drawing.Point(215, 56);
+            this.butDelRotation.Name = "butDelRotation";
+            this.butDelRotation.Size = new System.Drawing.Size(59, 21);
+            this.butDelRotation.TabIndex = 61;
+            this.butDelRotation.Text = "Delete";
+            this.butDelRotation.UseVisualStyleBackColor = true;
+            this.butDelRotation.Click += new System.EventHandler(this.butDelRotation_Click);
+            // 
+            // butNewRotation
+            // 
+            this.butNewRotation.Location = new System.Drawing.Point(215, 29);
+            this.butNewRotation.Name = "butNewRotation";
+            this.butNewRotation.Size = new System.Drawing.Size(59, 21);
+            this.butNewRotation.TabIndex = 60;
+            this.butNewRotation.Text = "New";
+            this.butNewRotation.UseVisualStyleBackColor = true;
+            this.butNewRotation.Click += new System.EventHandler(this.butNewRotation_Click);
+            // 
+            // cmbRotations
+            // 
+            this.cmbRotations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRotations.FormattingEnabled = true;
+            this.cmbRotations.Location = new System.Drawing.Point(6, 29);
+            this.cmbRotations.Name = "cmbRotations";
+            this.cmbRotations.Size = new System.Drawing.Size(203, 21);
+            this.cmbRotations.TabIndex = 59;
+            this.cmbRotations.SelectedIndexChanged += new System.EventHandler(this.cmbRotations_SelectedIndexChanged);
             // 
             // label15
             // 
@@ -1411,24 +1445,11 @@
             0,
             0});
             // 
-            // butClearRotate
-            // 
-            this.butClearRotate.AutoSize = true;
-            this.butClearRotate.Location = new System.Drawing.Point(9, 362);
-            this.butClearRotate.Name = "butClearRotate";
-            this.butClearRotate.Size = new System.Drawing.Size(89, 23);
-            this.butClearRotate.TabIndex = 46;
-            this.butClearRotate.Text = "Clear Rotations";
-            this.butClearRotate.UseVisualStyleBackColor = true;
-            this.butClearRotate.Visible = false;
-            this.butClearRotate.Click += new System.EventHandler(this.butClearRotate_Click);
-            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.butClearRotate);
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelRetribution";
             this.Size = new System.Drawing.Size(300, 447);
@@ -1467,7 +1488,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -1479,9 +1499,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown cmbLength;
-        private System.Windows.Forms.Button butUnlimitedDown;
-        private System.Windows.Forms.Button butUnlimitedUp;
-        private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
+        private System.Windows.Forms.Button butRotationDown;
+        private System.Windows.Forms.Button butRotationUp;
         private System.Windows.Forms.NumericUpDown nudDelay;
         private System.Windows.Forms.Label lblDelay;
         private System.Windows.Forms.RadioButton radEffectiveCD;
@@ -1558,7 +1577,10 @@
         private System.Windows.Forms.NumericUpDown numericUpDown7;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.NumericUpDown nudTargetSwitch;
-        private System.Windows.Forms.Button butClearRotate;
+        private System.Windows.Forms.Button butNewRotation;
+        private System.Windows.Forms.ComboBox cmbRotations;
+        private System.Windows.Forms.Button butDelRotation;
+        private System.Windows.Forms.ListBox listRotation;
 
     }
 }
