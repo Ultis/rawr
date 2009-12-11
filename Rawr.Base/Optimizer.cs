@@ -344,6 +344,11 @@ namespace Rawr.Optimizer
 
         public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents)
         {
+            InitializeItemCache(character, availableItems, overrideRegem, overrideReenchant, templateGemsEnabled, model, optimizeFood, optimizeElixirs, mixology, talentSpecs, mutateTalents, false);
+        }
+
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents, bool positiveCostItemsAvailable)
+        {
             _character = character;
             Model = model;
 
@@ -429,7 +434,7 @@ namespace Rawr.Optimizer
                 slotCount = characterSlots;
             }
 
-            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant);
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, positiveCostItemsAvailable);
         }
 
         public CalculationsBase Model
@@ -1322,7 +1327,12 @@ namespace Rawr.Optimizer
 
         private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant)
         {
-            PopulateAvailableIds(new AvailableItemGenerator(availableItems, GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, templateGemsEnabled, overrideRegem, overrideReenchant, true, _character, model));
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, false);
+        }
+
+        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool positiveCostItemsAvailable)
+        {
+            PopulateAvailableIds(new AvailableItemGenerator(availableItems, GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, templateGemsEnabled, overrideRegem, overrideReenchant, true, positiveCostItemsAvailable, _character, model));
         }
 
         private void PopulateAvailableIds(AvailableItemGenerator itemGenerator)
@@ -1697,6 +1707,10 @@ namespace Rawr.Optimizer
             {
                 return calcs.OverallPoints;
             }
+            else if (calculation == "[Cost]")
+            {
+                return GetNonAvailableItemCost(character);
+            }
             else if (calculation.StartsWith("[SubPoint "))
             {
                 return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
@@ -1713,6 +1727,27 @@ namespace Rawr.Optimizer
             {
                 return calcs.GetOptimizableCalculationValue(calculation);
             }
+        }
+
+        private static float GetNonAvailableItemCost(Character character)
+        {
+            float cost = 0.0f;
+            for (int slot = 0; slot < characterSlots; slot++)
+            {
+                ItemInstance itemInstance = character._item[slot];
+                if (itemInstance != null)
+                {
+                    Item item = itemInstance.Item;
+                    if (item != null)
+                    {
+                        if (item.AvailabilityInformation.PositiveCostItem)
+                        {
+                            cost += item.Cost;
+                        }
+                    }
+                }
+            }
+            return cost;
         }
 
         protected override OptimizerCharacter PostProcess(OptimizerCharacter bestIndividual)

@@ -52,6 +52,11 @@ namespace Rawr
 		public static void Save() { _instance.Save(); }
 		public static void Load() { _instance.Load(); }
 #endif
+
+        public static void SaveItemCost(TextWriter writer) { _instance.SaveItemCost(writer); }
+        public static void LoadItemCost(TextReader reader) { _instance.LoadItemCost(reader); }
+        public static void ResetItemCost() { _instance.ResetItemCost(); }
+        public static void LoadTokenItemCost(string token) { _instance.LoadTokenItemCost(token); }
 	}
 
 	public class ItemCacheInstance
@@ -237,6 +242,79 @@ namespace Rawr
             cachedRelevantItems = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
+
+        // load/save of item cost data
+        public void LoadItemCost(TextReader reader)
+        {
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<int, float>));
+                SerializableDictionary<int, float> data = (SerializableDictionary<int, float>)serializer.Deserialize(reader);
+                reader.Close();
+
+                // reset all costs to 0, cost files only store nonzero cost items
+                foreach (Item item in AllItems)
+                {
+                    item.Cost = 0.0f;
+                }
+
+                foreach (var kvp in data)
+                {
+                    Item item;
+                    if (Items.TryGetValue(kvp.Key, out item))
+                    {
+                        item.Cost = kvp.Value;
+                    }
+                }
+                // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
+                if (ItemsChanged != null) ItemsChanged(null, null);
+            }
+            catch { }
+        }
+
+        public void SaveItemCost(TextWriter writer)
+        {
+            SerializableDictionary<int, float> data = new SerializableDictionary<int, float>();
+            foreach (Item item in AllItems)
+            {
+                if (item.Cost > 0.0f)
+                {
+                    data.Add(item.Id, item.Cost);
+                }
+            }
+            XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<int, float>));
+            serializer.Serialize(writer, data);
+            writer.Close();
+        }
+
+        public void ResetItemCost()
+        {
+            foreach (Item item in AllItems)
+            {
+                item.Cost = 0.0f;
+            }
+            // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
+            if (ItemsChanged != null) ItemsChanged(null, null);
+        }
+
+        public void LoadTokenItemCost(string token)
+        {
+            foreach (Item item in AllItems)
+            {
+                item.Cost = 0.0f; 
+                if (item.LocationInfo.Source == ItemSource.Vendor)
+                {
+                    VendorItem vendor = item.LocationInfo as VendorItem;
+                    if (vendor.Token == token)
+                    {
+                        item.Cost = vendor.Count;
+                    }
+                }
+            }
+            // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
+            if (ItemsChanged != null) ItemsChanged(null, null);
+        }
+
 #if RAWR3
         public void Save(TextWriter writer)
         {

@@ -91,6 +91,13 @@ namespace Rawr
 			}
 		}
 
+        /// <summary>
+        /// Cost of acquiring the item, saved separately from item cache
+        /// to allow for separate costs (i.e. badges, dkp, gold, etc.)
+        /// </summary>
+        [XmlIgnore]
+        public float Cost { get; set; }
+
         [XmlIgnore]
         public DateTime LastChange { get; set; }
 

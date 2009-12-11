@@ -1401,8 +1401,12 @@ namespace Rawr
 					break;
 
 				case "Direct Upgrades":
-					itemComparison1.LoadAvailableGear(_calculatedStats);
+					itemComparison1.LoadAvailableGear(_calculatedStats, false);
 					break;
+
+                case "Direct Upgrades / Cost":
+                    itemComparison1.LoadAvailableGear(_calculatedStats, true);
+                    break;
 
 				case "Talent Specs":
 					itemComparison1.LoadTalentSpecs(talentPicker1);
@@ -2503,6 +2507,43 @@ namespace Rawr
         private void disableAllBuffsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             buffSelector1.DisableAllBuffs();
+        }
+
+        private void resetItemCostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemCache.ResetItemCost();
+        }
+
+        private void loadItemCostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".cost.xml";
+            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                ItemCache.LoadItemCost(new StreamReader(dialog.FileName));
+            }
+            dialog.Dispose();
+        }
+
+        private void saveItemCostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.DefaultExt = ".cost.xml";
+            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                this.Cursor = Cursors.WaitCursor;
+                ItemCache.SaveItemCost(new StreamWriter(dialog.FileName));
+                this.Cursor = Cursors.Default;
+            }
+            dialog.Dispose();
+        }
+
+        private void loadEmblemOfFrostItemCostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Frost");
         }
     }
 }

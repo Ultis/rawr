@@ -194,7 +194,12 @@ namespace Rawr
             }
         }
 
-        public void LoadAvailableGear(CharacterCalculationsBase currentCalculations)
+        /// <summary>
+        /// Direct Upgrades
+        /// </summary>
+        /// <param name="currentCalculations"></param>
+        /// <param name="divideByCost">When true it only includes items with positive cost and shows upgrade value / cost</param>
+        public void LoadAvailableGear(CharacterCalculationsBase currentCalculations, bool divideByCost)
         {
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
             SortedList<ItemSlot, CharacterSlot> slotMap = new SortedList<ItemSlot, CharacterSlot>();
@@ -292,26 +297,36 @@ namespace Rawr
 
                                     }
 
-                                    ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, slot);
-									//bool include = false;
-									//for (int i = 0; i < itemCalc.SubPoints.Length; i++)
-									//{
-									//    itemCalc.SubPoints[i] -= slotCalc.SubPoints[i];
-									//    include |= itemCalc.SubPoints[i] > 0;
-									//}
-									//itemCalc.OverallPoints -= slotCalc.OverallPoints;
-									//if ( itemCalc.OverallPoints > 0)
-									//{
-									//    itemCalculations.Add(itemCalc);
-									//}
+                                    if (!divideByCost || item.Item.Cost > 0.0f)
+                                    {
+                                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, slot);
+                                        //bool include = false;
+                                        //for (int i = 0; i < itemCalc.SubPoints.Length; i++)
+                                        //{
+                                        //    itemCalc.SubPoints[i] -= slotCalc.SubPoints[i];
+                                        //    include |= itemCalc.SubPoints[i] > 0;
+                                        //}
+                                        //itemCalc.OverallPoints -= slotCalc.OverallPoints;
+                                        //if ( itemCalc.OverallPoints > 0)
+                                        //{
+                                        //    itemCalculations.Add(itemCalc);
+                                        //}
 
-									float difference = itemCalc.OverallPoints - slotCalc.OverallPoints;
-                                    if (difference > 0)
-									{
-										itemCalc.SubPoints = new float[itemCalc.SubPoints.Length];
-										itemCalc.OverallPoints = difference;
-										itemCalculations.Add(itemCalc);
-									}
+                                        float difference = itemCalc.OverallPoints - slotCalc.OverallPoints;
+                                        if (difference > 0)
+                                        {
+                                            itemCalc.SubPoints = new float[itemCalc.SubPoints.Length];
+                                            if (divideByCost)
+                                            {
+                                                itemCalc.OverallPoints = difference / item.Item.Cost;
+                                            }
+                                            else
+                                            {
+                                                itemCalc.OverallPoints = difference;
+                                            }
+                                            itemCalculations.Add(itemCalc);
+                                        }
+                                    }
 
                                     items[item.GemmedId] = item;
                                 }

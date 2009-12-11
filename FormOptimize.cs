@@ -122,6 +122,10 @@ namespace Rawr
                                     {
                                         reqComboBox.SelectedItem = "Talent";
                                     }
+                                    else if (calculationString.StartsWith("[Cost]"))
+                                    {
+                                        reqComboBox.SelectedItem = "Cost";
+                                    }
                                     else
                                     {
                                         if (Array.IndexOf(Calculations.OptimizableCalculationLabels, calculationString) >= 0)
@@ -193,6 +197,7 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
 			string _calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
+            bool costRequirement = false;
 			foreach (Control ctrl in groupBoxRequirements.Controls)
 			{
 				ctrl.Enabled = false;
@@ -204,13 +209,17 @@ namespace Rawr
                     requirement.LessThan = (panel.Controls["comboBoxRequirementGreaterLessThan"] as ComboBox).SelectedIndex == 1;
                     requirement.Value = (float)((panel.Controls["numericUpDownRequirementValue"] as NumericUpDown).Value);
 					requirements.Add(requirement);
+                    if (requirement.Calculation == "[Cost]")
+                    {
+                        costRequirement = true;
+                    }
 				}
 			}
 
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs(), checkBoxMutateTalents.Checked);
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs(), checkBoxMutateTalents.Checked, costRequirement);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -249,6 +258,8 @@ namespace Rawr
 				return string.Format("[SubPoint {0}]", comboBox.SelectedIndex - 1);
             else if (comboBox.Text == "Talent")
                 return string.Format("[Talent {0}]", comboBoxTalent.SelectedIndex);
+            else if (comboBox.Text == "Cost")
+                return "[Cost]";
 			else
 				return comboBox.Text;
 		}
@@ -482,6 +493,7 @@ namespace Rawr
 				comboBoxRequirementCalculation.Items.Add(subPoint + " Rating");
             comboBoxRequirementCalculation.Items.AddRange(Calculations.OptimizableCalculationLabels);
             comboBoxRequirementCalculation.Items.Add("Talent");
+            comboBoxRequirementCalculation.Items.Add("Cost");
 
             comboBoxRequirementTalent.Items.AddRange(talentList);
 			

@@ -19,6 +19,7 @@ namespace Rawr.Optimizer
         public Dictionary<string, DirectUpgradeEntry> MatchingMap;
         public Dictionary<string, DirectUpgradeEntry> NonMatchingMap;
         public List<Enchant> GenerativeEnchants;
+        public bool PositiveCostItem;
     }
 
     public class DirectUpgradeEntry
@@ -685,9 +686,11 @@ namespace Rawr.Optimizer
 			}
 		}
 
-		public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, new Character[] { character }, new CalculationsBase[] { model }) { }
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, false, new Character[] { character }, new CalculationsBase[] { model }) { }
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character[] characters, CalculationsBase[] models) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, false, characters, models) { }
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, bool positiveCostItemsAvailable, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, positiveCostItemsAvailable, new Character[] { character }, new CalculationsBase[] { model }) { }
 
-		public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character[] characters, CalculationsBase[] models)
+		public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, bool positiveCostItemsAvailable, Character[] characters, CalculationsBase[] models)
 		{
 			this.availableItems = availableItems;
 			if (templateGemsEnabled)
@@ -730,7 +733,7 @@ namespace Rawr.Optimizer
 			try
 			{
 				Item.OptimizerManagedVolatiliy = true;
-				PopulateAvailableIds();
+				PopulateAvailableIds(positiveCostItemsAvailable);
 			}
 			finally
 			{
@@ -820,7 +823,7 @@ namespace Rawr.Optimizer
 			}
 		}
 
-		private void PopulateAvailableIds()
+		private void PopulateAvailableIds(bool positiveCostItemsAvailable)
 		{
 			foreach (Item citem in ItemCache.Items.Values)
 			{
@@ -922,6 +925,23 @@ namespace Rawr.Optimizer
 					slotDirectUpgrades[i].Add(new List<DirectUpgradeEntry>()); // add a list for all singles
 				}
 			}
+            if (positiveCostItemsAvailable)
+            {
+                // add items that have positive cost and are not available yet in any form
+                foreach (Item citem in ItemCache.Items.Values)
+                {
+                    if (citem.Cost > 0.0f)
+                    {
+                        string key = citem.Id.ToString();
+                        if (!gemmedIdMap.ContainsKey(key))
+                        {
+                            var map = new Dictionary<string, bool>();
+                            gemmedIdMap[key] = map;
+                            map["C" + key + ".*.*.*.*"] = true;
+                        }
+                    }
+                }
+            }
 			foreach (KeyValuePair<string, Dictionary<string, bool>> keyMap in gemmedIdMap)
 			{
 				int itemId = int.Parse(keyMap.Key);
@@ -954,9 +974,14 @@ namespace Rawr.Optimizer
 					possibleGemmedItems = new List<ItemInstance>();
 					foreach (string gid in gemmedIds)
 					{
-                        string[] idTokens = gid.Split('.');
+                        if (gid.StartsWith("C"))
+                        {
+                            item.AvailabilityInformation.PositiveCostItem = true;
+                        }
+                        string ggid = gid.TrimStart('C');
+                        string[] idTokens = ggid.Split('.');
                         bool blueDiamond = (idTokens.Length > 1 && idTokens[1] != "*");
-						foreach (ItemInstance gemmedItem in GetPossibleGemmedItemsForItem(item, gid, item.AvailabilityInformation))
+						foreach (ItemInstance gemmedItem in GetPossibleGemmedItemsForItem(item, ggid, item.AvailabilityInformation))
 						{
                             if (item.AvailabilityInformation.DefaultItemInstance == null && blueDiamond)
                             {

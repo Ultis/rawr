@@ -70,6 +70,7 @@ namespace Rawr
                 textBoxItemLevel.DataBindings.Clear();
                 textBoxIcon.DataBindings.Clear();
                 textBoxNote.DataBindings.Clear();
+                textBoxCost.DataBindings.Clear();
 
 				numericUpDownId.DataBindings.Clear();
 				numericUpDownMin.DataBindings.Clear();
@@ -96,7 +97,8 @@ namespace Rawr
                     textBoxItemLevel.DataBindings.Add("Text", selectedItem, "ItemLevel");
                     textBoxSetName.DataBindings.Add("Text", selectedItem, "SetName");
                     textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
-					numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");
+                    textBoxCost.DataBindings.Add("Text", selectedItem, "Cost");
+                    numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");
 					numericUpDownMin.DataBindings.Add("Value", selectedItem, "MinDamage");
 					numericUpDownMax.DataBindings.Add("Value", selectedItem, "MaxDamage");
 					numericUpDownSpeed.DataBindings.Add("Value", selectedItem, "Speed");

@@ -172,6 +172,10 @@ namespace Rawr.Mage.SequenceReconstruction
             int lastHigh = i;
             double tLastHigh = t;
             double overflowMana = startMana - Mana; // for overflow calculations assume there are no mana consumables placed after start time yet, if we skipped a super group since startTime then we have to adjust starting mana
+            if (overflowMana > BaseStats.Mana)
+            {
+                overflowMana = BaseStats.Mana; // can't have more mana than max
+            }
             double overflowLimit = BaseStats.Mana; // was maxMana before, but I think when we have splittable group we can insert just enough to not go over (I did not think this through too much, so if something is fishy look into this)
             SequenceGroup lastSuper = null;
             for (j = i; j < sequence.Count; j++)
