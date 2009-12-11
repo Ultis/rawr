@@ -284,6 +284,7 @@ namespace Rawr.DPSDK
                 _secondaryDamage = Damage * calcOpts.rotation.AvgDiseaseMult * .25d;
                 double SSCritDmgMult = 1d + .15d * talents.ViciousStrikes + stats.BonusCritMultiplier;
                 SSCritDmgMult = 1d + ((combatTable.physCrits + .03d * (talents.ViciousStrikes + talents.Subversion) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
+                SSCritDmgMult = 1d;
                 _secondaryDamage *= SSCritDmgMult;
                 _secondaryDamage *= SecondaryDamageMod;
                 return _secondaryDamage;
