@@ -23,7 +23,8 @@ namespace Rawr.Tree {
             set { subPoints[2] = value; }
         } 
         public override float OverallPoints { get; set; }
-        public RotationResult Simulation;
+        public RotationResult Sustained;
+        public SingleTargetBurstResult[] SingleTarget;
         public Character LocalCharacter { get; set; }
         public float haste { get; set; }
         float spellhaste { get; set; }
@@ -81,7 +82,7 @@ namespace Rawr.Tree {
             dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
 
             bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
-            dictValues.Add("Effective MP5", Math.Round(Simulation.MPSInFSR * 5f).ToString() + "*" + Math.Round(Simulation.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Simulation.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Simulation.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Simulation.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Simulation.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Simulation.InnervateMana).ToString() + " (" + Math.Round(Simulation.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Simulation.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Simulation.PotionMana).ToString() + " extra mana from Potion)\n");
+            dictValues.Add("Effective MP5", Math.Round(Sustained.MPSInFSR * 5f).ToString() + "*" + Math.Round(Sustained.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Sustained.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Sustained.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Sustained.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Sustained.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Sustained.InnervateMana).ToString() + " (" + Math.Round(Sustained.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Sustained.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Sustained.PotionMana).ToString() + " extra mana from Potion)\n");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
 
             doHasteCalcs();
@@ -227,7 +228,7 @@ namespace Rawr.Tree {
 
             switch (calculation) {
                 case "Mana": return BasicStats.Mana;
-                case "MP5": return Simulation.MPSInFSR;
+                case "MP5": return Sustained.MPSInFSR;
                 case "Spell Haste Percentage": return (spellhaste -1.0f) * 100.0f;
                 case "Haste Percentage": return (haste - 1.0f) * 100.0f;
                 case "Combined Haste Percentage": return (spellhaste * haste - 1.0f) * 100.0f;

@@ -13,9 +13,6 @@ namespace Rawr.Tree {
                 "Notes on trinkets:\r\n"+
                 "Some trinkets are hard to model. They can be much better if you use them in a smart way...\r\n"+
                 "\r\n" +
-                "Trinket notes:\r\n" +
-                "Talisman of Troll Divinity (keep in mind that it also helps other healers so it is probably worth more)\r\n" +
-                "\r\n"+
                 "HealBurst is the maximum HPS of your current primary heal plus any selected hots.\r\n"+
                 "HealSustained is the HPS from your current rotation for the entire fight.\r\n" +
                 "Survival is scaled based on the physical damage you can take based on your health and armor.\r\n";
@@ -32,10 +29,10 @@ namespace Rawr.Tree {
                 calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
             }
 
-            tbBSRatio.Value = calcOpts.BSRatio;
-            int burst = 100 - tbBSRatio.Value;
-            int sust = tbBSRatio.Value;
-            lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
+            tbSingleTargetMax.Value = calcOpts.SingleTarget / 100;
+            lblSingleTargetMax.Text = "Single Target Max Healing Target: " + calcOpts.SingleTarget + " hps";
+            tbSustained.Value = calcOpts.SustainedTarget / 100;
+            lblSustained.Text = "Sustained Healing Target: " + calcOpts.SustainedTarget + " hps";
 
             tbSurvMulti.Value = calcOpts.SurvValuePer100;
             lblSurvMulti.Text = calcOpts.SurvValuePer100.ToString() + " points per 100 survival (effective) health";
@@ -54,10 +51,10 @@ namespace Rawr.Tree {
             tbAvgRegrowths.Value = calcOpts.AverageRegrowths;
             tbAvgLifeblooms.Value = calcOpts.AverageLifebloom;
             tbAvgLifebloomStacks.Value = calcOpts.AverageLifebloomStack;
-            lblAvgRejuv.Text = "Rejuvenations casting: " + (float)tbAvgRejuv.Value + "%.";
-            lblAvgRegrowths.Text = "Regrowths casting: " + (float)tbAvgRegrowths.Value + "%.";
-            lblAvgLifeblooms.Text = "Lifebloom casting: " + (float)tbAvgLifeblooms.Value + "%.";
-            lblAvgLifebloomStacks.Text = "Average number of Lifebloom Stacks: " + (float)tbAvgLifebloomStacks.Value;
+            lblAvgRejuv.Text = "Rejuvenation casting time: " + (float)tbAvgRejuv.Value + "%.";
+            lblAvgRegrowths.Text = "Regrowth casting time: " + (float)tbAvgRegrowths.Value + "%.";
+            lblAvgLifeblooms.Text = "Lifebloom casting time: " + (float)tbAvgLifeblooms.Value + "%.";
+            lblAvgLifebloomStacks.Text = "Number of Lifebloom stacks: " + (float)tbAvgLifebloomStacks.Value;
             cbLifebloomStackType.SelectedIndex = calcOpts.LifebloomStackType;
             cbPrimarySpell.SelectedIndex = calcOpts.PrimaryHeal;
             tbNourish1.Value = calcOpts.Nourish1;
@@ -69,7 +66,7 @@ namespace Rawr.Tree {
             tbNourish4.Value = calcOpts.Nourish4;
             lblNourish4.Text = "Nourish on 4 hots: " + tbNourish4.Value + "%.";
             tbLivingSeed.Value = calcOpts.LivingSeedEfficiency;
-            lblLivingSeed.Text = "Living Seed average: " + (float)tbLivingSeed.Value + "%.";
+            lblLivingSeed.Text = "Living Seed effectiveness: " + (float)tbLivingSeed.Value + "%.";
 
             tbWildGrowth.Value = calcOpts.WildGrowthPerMinute;
             lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
@@ -77,10 +74,12 @@ namespace Rawr.Tree {
             cbInnervate.Checked = calcOpts.Innervates > 0;
 
             tbSwiftmendPerMin.Value = calcOpts.SwiftmendPerMinute;
-            lblSwiftMend.Text = "Swiftmends per Minute: " + tbSwiftmendPerMin.Value;
+            lblSwiftMend.Text = "Swiftmend casts per minute: " + tbSwiftmendPerMin.Value;
 
             tbIdlePercentage.Value = calcOpts.IdleCastTimePercent;
-            lblIdleFraction.Text = "Idle percentage: " + tbIdlePercentage.Value;
+            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value;
+
+            cbSingleTargetRotation.SelectedIndex = calcOpts.SingleTargetRotation;
 
             loading = false;
         }
@@ -126,15 +125,6 @@ namespace Rawr.Tree {
             lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
             Character.OnCalculationsInvalidated();
         }
-        private void tbBSRatio_Scroll(object sender, EventArgs e) {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.BSRatio = tbBSRatio.Value;
-            int burst = 100 - tbBSRatio.Value;
-            int sust = tbBSRatio.Value;
-            lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
-            Character.OnCalculationsInvalidated();
-        }
         private void tbSurvMulti_Scroll(object sender, EventArgs e) {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
@@ -159,7 +149,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.SwiftmendPerMinute = tbSwiftmendPerMin.Value;
-            lblSwiftMend.Text = "Swiftmends per minute: " + tbSwiftmendPerMin.Value;
+            lblSwiftMend.Text = "Swiftmend casts per minute: " + tbSwiftmendPerMin.Value;
             Character.OnCalculationsInvalidated();
         }
         private void tbIdlePercentage_Scroll(object sender, EventArgs e)
@@ -167,7 +157,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.IdleCastTimePercent = tbIdlePercentage.Value;
-            lblIdleFraction.Text = "Idle percentage: " + tbIdlePercentage.Value;
+            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value;
             Character.OnCalculationsInvalidated();
         }
         private void cbApplyMore_CheckedChanged(object sender, EventArgs e)
@@ -183,7 +173,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageRejuv = tbAvgRejuv.Value;
-            lblAvgRejuv.Text = "Rejuvenations casting: " + (float)tbAvgRejuv.Value + "%.";
+            lblAvgRejuv.Text = "Rejuvenation casting time: " + (float)tbAvgRejuv.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -192,7 +182,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageRegrowths = tbAvgRegrowths.Value;
-            lblAvgRegrowths.Text = "Regrowths casting: " + (float)tbAvgRegrowths.Value + "%.";
+            lblAvgRegrowths.Text = "Regrowth casting time: " + (float)tbAvgRegrowths.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -201,7 +191,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageLifebloom = tbAvgLifeblooms.Value;
-            lblAvgLifeblooms.Text = "Lifebloom casting: " + (float)tbAvgLifeblooms.Value + "%.";
+            lblAvgLifeblooms.Text = "Lifebloom casting time: " + (float)tbAvgLifeblooms.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -210,7 +200,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.AverageLifebloomStack = tbAvgLifebloomStacks.Value;
-            lblAvgLifebloomStacks.Text = "Average number of Lifebloom Stacks: " + (float)tbAvgLifebloomStacks.Value;
+            lblAvgLifebloomStacks.Text = "Number of Lifebloom stacks: " + (float)tbAvgLifebloomStacks.Value;
             Character.OnCalculationsInvalidated();
         }
 
@@ -311,7 +301,33 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.LivingSeedEfficiency = tbLivingSeed.Value;
-            lblLivingSeed.Text = "Living Seed average: " + (float)tbLivingSeed.Value + "%.";
+            lblLivingSeed.Text = "Living Seed effectiveness: " + (float)tbLivingSeed.Value + "%.";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbSingleTargetMax_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.SingleTarget = tbSingleTargetMax.Value * 100;
+            lblSingleTargetMax.Text = "Single Target Max Healing Target: " + calcOpts.SingleTarget + " hps";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbSustained_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.SustainedTarget = tbSustained.Value * 100;
+            lblSustained.Text = "Sustained Healing Target: " + calcOpts.SustainedTarget + " hps";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbSingleTargetRotation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.SingleTargetRotation = cbSingleTargetRotation.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
 

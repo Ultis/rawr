@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
 namespace Rawr.Tree {
 
@@ -125,39 +130,64 @@ namespace Rawr.Tree {
             list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = sparkling, YellowId = sparkling, BlueId = sparkling, PrismaticId = sparkling, MetaId = meta, Enabled = enabled });
             list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = brilliant, BlueId = sparkling, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
-#if RAWR3
-        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-#endif
-#if RAWR3
-        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
         {
-            get
+            if (_relevantGlyphs == null)
             {
-                if (_subPointNameColors == null)
-                {
-                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
-                    _subPointNameColors.Add("HealBurst", System.Windows.Media.Colors.Red);
-                    _subPointNameColors.Add("HealSustained", System.Windows.Media.Colors.Blue);
-                    _subPointNameColors.Add("Survival", System.Windows.Media.Colors.Green);
-                }
-                return _subPointNameColors;
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Healing Touch");
+                _relevantGlyphs.Add("Glyph of Innervate");
+                _relevantGlyphs.Add("Glyph of Lifebloom");
+                _relevantGlyphs.Add("Glyph of Nourish");
+                _relevantGlyphs.Add("Glyph of Rebirth");
+                _relevantGlyphs.Add("Glyph of Regrowth");
+                _relevantGlyphs.Add("Glyph of Rejuvenation");
+                _relevantGlyphs.Add("Glyph of Swiftmend");
+                _relevantGlyphs.Add("Glyph of Wild Growth");
+                _relevantGlyphs.Add("Glyph of Rapid Rejuvenation");
             }
+            return _relevantGlyphs;
         }
-#else
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors {
+        
+        private Dictionary<string, Color> _subPointNameColors = null;
+        private Dictionary<string, Color> _subPointNameColorsRating = null;
+        private Dictionary<string, Color> _subPointNameColorsMPS = null;
+        private Dictionary<string, Color> _subPointNameColorsHPS = null;
+        private Dictionary<string, Color> _subPointNameColorsHPCT = null;
+        private Dictionary<string, Color> _subPointNameColorsHPM = null;
+
+        public CalculationsTree()
+        {
+            _subPointNameColorsRating = new Dictionary<string, Color>();
+            _subPointNameColorsRating.Add("HealBurst", Color.FromArgb(255, 255, 0, 0));
+            _subPointNameColorsRating.Add("HealSustained", Color.FromArgb(255, 0, 0, 255));
+            _subPointNameColorsRating.Add("Survival", Color.FromArgb(255, 0, 128, 0));
+
+            _subPointNameColorsMPS = new Dictionary<string, Color>();
+            _subPointNameColorsMPS.Add("Mana per second", Color.FromArgb(128, 0, 0, 255));
+
+            _subPointNameColorsHPS = new Dictionary<string, Color>();
+            _subPointNameColorsHPS.Add("Healing per second", Color.FromArgb(128, 0, 255, 0));
+
+            _subPointNameColorsHPCT = new Dictionary<string, Color>();
+            _subPointNameColorsHPCT.Add("Healing per cast time", Color.FromArgb(128, 0, 255, 0));
+
+            _subPointNameColorsHPM = new Dictionary<string, Color>();
+            _subPointNameColorsHPM.Add("Healing per mana", Color.FromArgb(128, 0, 255, 255));
+
+            _subPointNameColors = _subPointNameColorsRating;
+        }
+
+        public override Dictionary<string, Color> SubPointNameColors {
             get {
-                if (_subPointNameColors == null) {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("HealBurst", System.Drawing.Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("HealSustained", System.Drawing.Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 128, 0));
-                }
-                return _subPointNameColors;
+                Dictionary<string, Color> ret = _subPointNameColors;
+                _subPointNameColors = _subPointNameColorsRating;
+                return ret;
             }
         }
-#endif
+
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels {
             get {
@@ -184,7 +214,7 @@ applied and result is scaled down by 100)",
                         "Basic Stats:Lifebloom Global CD",
                         "Basic Stats:Armor",
 
-                        "Simulation:Result",
+                        /*"Simulation:Result",
                         "Simulation:Time until OOM",
                         "Simulation:Unused Mana Remaining",
                         "Simulation:Unused cast time percentage",
@@ -264,7 +294,7 @@ applied and result is scaled down by 100)",
                         "Swiftmend:SM Both Heal",
                         "Swiftmend:SM Both HPM",
                         "Swiftmend:SM Both Rejuv Lost Ticks",
-                        "Swiftmend:SM Both Regrowth Lost Ticks",
+                        "Swiftmend:SM Both Regrowth Lost Ticks",*/
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -275,7 +305,13 @@ applied and result is scaled down by 100)",
             get {
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
-					    "Spell rotations"
+                        "Single target spell mixes",
+                        "Healing per spell (single target)",
+					    "Mana sources (sustained)",
+                        "Mana usage per spell (sustained)",
+                        "Healing per spell (sustained)",
+                        "HPCT per spell",
+                        "HPM per spell",
 					};
                 }
                 return _customChartNames;
@@ -481,13 +517,13 @@ applied and result is scaled down by 100)",
                 // New run
                 rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);  
             }
-            calculationResult.Simulation = rot;
+            calculationResult.Sustained = rot;
             calculationResult.BasicStats = stats;     // Replace BasicStats to get Spirit while casting included
             #endregion
 
-            SingleTargetBurstResult burst = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, SingleTargetBurstRotations.AutoSelect);
+            calculationResult.SingleTarget = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
 
-            calculationResult.BurstPoints = burst.HPS;
+            calculationResult.BurstPoints = calculationResult.SingleTarget[0].HPS;
             calculationResult.SustainedPoints = rot.TotalHealing / rot.TotalTime + ExtraHPS;
 
             #region Survival Points
@@ -495,21 +531,8 @@ applied and result is scaled down by 100)",
             calculationResult.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
             #endregion
 
-            /*// Penalty
-            if (rot.TimeToOOM < rot.TotalTime) {
-                float frac = rot.TimeToOOM / rot.TotalTime;
-                float mod = (float)Math.Pow(frac, 1 + 0.05f ) / frac;
-                calculatedStats.SustainedPoints *= mod;
-                //if (calcOpts.PenalizeEverything)
-                {
-                    calculatedStats.BurstPoints *= mod;
-                }
-            }*/
-
-            // ADJUST POINT VALUE (BURST SUSTAINED RATIO)
-            float bsRatio = .01f * calcOpts.BSRatio;
-            calculationResult.BurstPoints *= (1f-bsRatio) * 2;
-            calculationResult.SustainedPoints *= bsRatio * 2;
+            calculationResult.BurstPoints = 10000f * ((float)1f - calcOpts.SingleTarget / calculationResult.BurstPoints);
+            calculationResult.SustainedPoints = 10000f * (1f - (float)calcOpts.SustainedTarget / calculationResult.SustainedPoints);
 
             calculationResult.OverallPoints = calculationResult.BurstPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
 
@@ -596,8 +619,482 @@ applied and result is scaled down by 100)",
 
             return statsTotal;
         }
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
-            return new ComparisonCalculationBase[0]; 
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+
+            CalculationOptionsTree calculationOptions = character.CalculationOptions as CalculationOptionsTree;
+            DruidTalents talents = character.DruidTalents;
+            CharacterCalculationsTree calculationResult = GetCharacterCalculations(character) as CharacterCalculationsTree;
+
+            switch (chartName)
+            {
+                case "Mana sources (sustained)":
+                    _subPointNameColors = _subPointNameColorsMPS;
+                    ComparisonCalculationTree gear = new ComparisonCalculationTree()
+                    {
+                        Name = "Gear",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.GearMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.GearMPS }
+                    };
+                    comparisonList.Add(gear);
+                    ComparisonCalculationTree spiritIC = new ComparisonCalculationTree()
+                    {
+                        Name = "Spirit in combat",
+                        Equipped = false,
+                        OverallPoints = (1f - calculationResult.Sustained.OutOfCombatFraction) * calculationResult.Sustained.SpiritMPS * calculationResult.Sustained.SpiritInCombatFraction,
+                        SubPoints = new float[] { (1f - calculationResult.Sustained.OutOfCombatFraction) * calculationResult.Sustained.SpiritMPS * calculationResult.Sustained.SpiritInCombatFraction }
+                    };
+                    comparisonList.Add(spiritIC);
+                    ComparisonCalculationTree spiritOOC = new ComparisonCalculationTree()
+                    {
+                        Name = "Spirit out combat",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.OutOfCombatFraction * calculationResult.Sustained.SpiritMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.OutOfCombatFraction * calculationResult.Sustained.SpiritMPS }
+                    };
+                    comparisonList.Add(spiritOOC);
+                    ComparisonCalculationTree replenishment = new ComparisonCalculationTree()
+                    {
+                        Name = "Replenishment",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.ReplenishmentMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.ReplenishmentMPS }
+                    };
+                    comparisonList.Add(replenishment);
+                    ComparisonCalculationTree pots = new ComparisonCalculationTree()
+                    {
+                        Name = "Potions",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.PotionMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.PotionMPS }
+                    };
+                    comparisonList.Add(pots);
+                    ComparisonCalculationTree innervates = new ComparisonCalculationTree()
+                    {
+                        Name = "Innervates",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.InnervateMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.InnervateMPS }
+                    };
+                    comparisonList.Add(innervates);
+                    
+                    return comparisonList.ToArray();
+                case "Mana usage per spell (sustained)":
+                    {
+                        _subPointNameColors = _subPointNameColorsMPS;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RejuvMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.RejuvMPS }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RegrowthMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.RegrowthMPS }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomMPS }
+                        };
+                        comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomStackMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackMPS }
+                        };
+                        comparisonList.Add(lifebloomStack);
+                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.WildGrowthMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.WildGrowthMPS }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                        {
+                            Name = "Swiftmend",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.SwiftmendMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendMPS }
+                        };
+                        comparisonList.Add(swiftmend);
+                        ComparisonCalculationTree primary = new ComparisonCalculationTree()
+                        {
+                            Name = "Primary Spell",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.PrimaryMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.PrimaryMPS }
+                        };
+                        comparisonList.Add(primary);
+                    }
+                    return comparisonList.ToArray();
+                case "Healing per spell (sustained)":
+                    {
+                        _subPointNameColors = _subPointNameColorsHPS;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RejuvHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.RejuvHPS }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RegrowthHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.RegrowthHPS }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomHPS }
+                        };
+                        comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomStackHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackHPS }
+                        };
+                        comparisonList.Add(lifebloomStack);
+                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.WildGrowthHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.WildGrowthHPS }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                        {
+                            Name = "Swiftmend",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.SwiftmendHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendHPS }
+                        };
+                        comparisonList.Add(swiftmend);
+                        ComparisonCalculationTree primary = new ComparisonCalculationTree()
+                        {
+                            Name = "Primary Spell",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.PrimaryHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.PrimaryHPS }
+                        };
+                        comparisonList.Add(primary);
+                    }
+                    return comparisonList.ToArray();
+                case "HPCT per spell":
+                    {
+                        _subPointNameColors = _subPointNameColorsHPCT;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.rejuvenate.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.rejuvenate.HPCT }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.regrowth.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.regrowth.HPCT }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloom.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloom.HPCT }
+                        };
+                        comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Rolling Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomRollingStack.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomRollingStack.HPCT }
+                        };
+                        comparisonList.Add(lifebloomRollingStack);
+                        ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Slow Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomSlowStack.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomSlowStack.HPCT }
+                        };
+                        comparisonList.Add(lifebloomSlowStack);
+                        ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Fast Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomFastStack.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomFastStack.HPCT }
+                        };
+                        comparisonList.Add(lifebloomFastStack);
+                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.wildGrowth.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPCT }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        if (calculationResult.Sustained.swiftmend != null)
+                        {
+                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                            {
+                                Name = "Swiftmend",
+                                Equipped = false,
+                                OverallPoints = calculationResult.Sustained.swiftmend.HPCT,
+                                SubPoints = new float[] { calculationResult.Sustained.swiftmend.HPCT }
+                            };
+                            comparisonList.Add(swiftmend);
+                        }
+                        ComparisonCalculationTree nourish0 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (0)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[0].HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[0].HPCT }
+                        };
+                        comparisonList.Add(nourish0);
+                        ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (1)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[1].HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[1].HPCT }
+                        };
+                        comparisonList.Add(nourish1);
+                        ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (2)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[2].HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[2].HPCT }
+                        };
+                        comparisonList.Add(nourish2);
+                        ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (3)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[3].HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[3].HPCT }
+                        };
+                        comparisonList.Add(nourish3);
+                        ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (4)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[4].HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[4].HPCT }
+                        };
+                        comparisonList.Add(nourish4);
+                    }
+                    return comparisonList.ToArray();
+                case "HPM per spell":
+                    {
+                        _subPointNameColors = _subPointNameColorsHPM;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.rejuvenate.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.rejuvenate.HPM }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.regrowth.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.regrowth.HPM }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloom.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloom.HPM }
+                        };
+                        comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Rolling Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomRollingStack.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomRollingStack.HPM }
+                        };
+                        comparisonList.Add(lifebloomRollingStack);
+                        ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Slow Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomSlowStack.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomSlowStack.HPM }
+                        };
+                        comparisonList.Add(lifebloomSlowStack);
+                        ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Fast Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomFastStack.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomFastStack.HPM }
+                        };
+                        comparisonList.Add(lifebloomFastStack);
+                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.wildGrowth.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPM }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        if (calculationResult.Sustained.swiftmend != null)
+                        {
+                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                            {
+                                Name = "Swiftmend",
+                                Equipped = false,
+                                OverallPoints = calculationResult.Sustained.swiftmend.HPM,
+                                SubPoints = new float[] { calculationResult.Sustained.swiftmend.HPM }
+                            };
+                            comparisonList.Add(swiftmend);
+                        }
+                        ComparisonCalculationTree nourish0 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (0)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[0].HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[0].HPM }
+                        };
+                        comparisonList.Add(nourish0);
+                        ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (1)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[1].HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[1].HPM }
+                        };
+                        comparisonList.Add(nourish1);
+                        ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (2)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[2].HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[2].HPM }
+                        };
+                        comparisonList.Add(nourish2);
+                        ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (3)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[3].HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[3].HPM }
+                        };
+                        comparisonList.Add(nourish3);
+                        ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (4)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[4].HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[4].HPM }
+                        };
+                        comparisonList.Add(nourish4);
+                    }
+                    return comparisonList.ToArray();
+                case "Healing per spell (single target)":
+                    {
+                        _subPointNameColors = _subPointNameColorsHPS;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.SingleTarget[0].rejuvContribution,
+                            SubPoints = new float[] { calculationResult.SingleTarget[0].rejuvContribution }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.SingleTarget[0].regrowthContribution,
+                            SubPoints = new float[] { calculationResult.SingleTarget[0].regrowthContribution }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.SingleTarget[0].lifebloomContribution,
+                            SubPoints = new float[] { calculationResult.SingleTarget[0].lifebloomContribution }
+                        };
+                        comparisonList.Add(lifebloomStack);
+                        if (calculationResult.Sustained.swiftmend != null)
+                        {
+                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                            {
+                                Name = "Swiftmend",
+                                Equipped = false,
+                                OverallPoints = calculationResult.SingleTarget[0].swiftmendContribution,
+                                SubPoints = new float[] { calculationResult.SingleTarget[0].swiftmendContribution }
+                            };
+                            comparisonList.Add(swiftmend);
+                        }
+                        ComparisonCalculationTree primary = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish",
+                            Equipped = false,
+                            OverallPoints = calculationResult.SingleTarget[0].nourishContribution,
+                            SubPoints = new float[] { calculationResult.SingleTarget[0].nourishContribution }
+                        };
+                        comparisonList.Add(primary);
+                    }
+                    return comparisonList.ToArray();
+                case "Single target spell mixes":
+                    {
+                        _subPointNameColors = _subPointNameColorsHPS;
+                        for (int i = 2; i < 17; i++)
+                        {
+
+                            ComparisonCalculationTree spell = new ComparisonCalculationTree()
+                            {
+                                Name = Solver.SingleTargetRotationToText(calculationResult.SingleTarget[i].rotation),
+                                Equipped = false,
+                                OverallPoints = calculationResult.SingleTarget[i].HPS,
+                                SubPoints = new float[] { calculationResult.SingleTarget[i].HPS }
+                            };
+                            comparisonList.Add(spell);
+                        }
+                    }
+                    return comparisonList.ToArray();
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
         }
         public override Stats GetRelevantStats(Stats stats) {
             //return SpecialEffects.GetRelevantStats(stats) + new Stats()

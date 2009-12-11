@@ -4,12 +4,6 @@ using System.Text;
 
 namespace Rawr.Tree
 {
-    public class HealingResult
-    {
-        public RotationResult rotation;
-        public SingleTargetBurstResult burst;
-    }
-
     public class RotationResult
     {
         public RotationResult(CharacterCalculationsTree calculatedStats, Stats stats)
@@ -127,37 +121,48 @@ namespace Rawr.Tree
                         lifebloomStackMultiplier = 1;
                         break;
                 }
+                lifebloomStackCF = -1f;
             }
         }
         private Spell lifebloomStackSpell = null;
         private int lifebloomStackMultiplier = 0;
         private float lifebloomStackDuration = 0;
 
-        public float LifebloomStacks = 0f;
+        private float lifebloomStacks;
+        public float LifebloomStacks { get { return lifebloomStacks; } set { lifebloomStacks = value; lifebloomStackCF = -1f; } }
 
-        public float LifebloomStackCF { get { return LifebloomStacks <= 0 ? 0 : 
-            lifebloomStackSpell.CastTime * LifebloomStacks / lifebloomStackDuration; } }
-        public float LifebloomStackCPS { get { return LifebloomStacks <= 0 ? 0 : 
+        private float lifebloomStackCF = -1f;
+        public float LifebloomStackCF
+        {
+            get
+            {
+                if (LifebloomStacks <= 0) return 0;
+                if (lifebloomStackCF != -1f) return lifebloomStackCF;
+                return lifebloomStackSpell.CastTime * LifebloomStacks / lifebloomStackDuration;
+            }
+            set { lifebloomStackCF = value; }
+        }
+        public float LifebloomStackCPS { get { return LifebloomStackCF <= 0 ? 0 : 
             lifebloomStackMultiplier * LifebloomStackCF / lifebloomStackSpell.castTime; } }
-        public float LifebloomStackCPM { get { return LifebloomStacks <= 0 ? 0 : 
+        public float LifebloomStackCPM { get { return LifebloomStackCF <= 0 ? 0 : 
             60f * LifebloomStackCPS; } }
 
-        public float LifebloomStackAvg { get { return LifebloomStacks <= 0 ? 0 : 
+        public float LifebloomStackAvg { get { return LifebloomStackCF <= 0 ? 0 : 
             LifebloomStackCPS / lifebloomStackMultiplier * lifebloomStackSpell.Duration; } }
-        public float LifebloomStackHPS { get { return LifebloomStacks <= 0 ? 0 : 
+        public float LifebloomStackHPS { get { return LifebloomStackCF <= 0 ? 0 : 
             LifebloomStackAvg * lifebloomStackSpell.HPSHoT + LifebloomStackCPS * lifebloomStackSpell.AverageHealingwithCrit / lifebloomStackMultiplier; } }
-        public float LifebloomStackMPS { get { return LifebloomStacks <= 0 ? 0 : 
+        public float LifebloomStackMPS { get { return LifebloomStackCF <= 0 ? 0 : 
             LifebloomStackCPS * lifebloom.ManaCost; } }
-        public float LifebloomStackHealsPerMinute { get { return LifebloomStacks <= 0 ? 0 : 
+        public float LifebloomStackHealsPerMinute { get { return LifebloomStackCF <= 0 ? 0 : 
             LifebloomStackCPM / lifebloomStackMultiplier * (1f + lifebloomStackSpell.PeriodicTicks); } }
-        public float LifebloomStackCritsPerMinute { get { return LifebloomStacks <= 0 || lifebloomStackType == LifeBloomType.Rolling ? 0 :
+        public float LifebloomStackCritsPerMinute { get { return LifebloomStackCF <= 0 || lifebloomStackType == LifeBloomType.Rolling ? 0 :
             LifebloomStackCPM / lifebloomStackMultiplier * lifebloomStackSpell.CritPercent / 100f; } }
         #endregion
 
         #region Wild Growth
-        public float WildGrowthCF { get { return WildGrowthCPS * wildGrowth.CastTime; } }
-        public float WildGrowthCPS { get { return WildGrowthCPM / 60f; } }
-        public float WildGrowthCPM = 0f;
+        public float WildGrowthCF = 0f;
+        public float WildGrowthCPS { get { return WildGrowthCF * wildGrowth.CastTime; } }
+        public float WildGrowthCPM { get { return 60f * WildGrowthCPS; } set { WildGrowthCF = value / (60f * wildGrowth.CastTime); } }
         public float WildGrowthAvg { get { return WildGrowthCPS * wildGrowth.Duration; } }
         public float WildGrowthHPS { get { return WildGrowthAvg * wildGrowth.maxTargets * wildGrowth.PeriodicTick; } }
         public float WildGrowthMPS { get { return WildGrowthCPS * wildGrowth.ManaCost; } }
@@ -468,13 +473,39 @@ namespace Rawr.Tree
             #endregion
 
             #region Correct cast fractions and calculate primary spell cast fraction
+            // Priority:
+            // 1. Lifebloom stack
+            // 2. Wild growth and Swiftmend (Swiftmend cannot be reduced, only enabled/disabled)
+            // 3. Hots
+            // 4. Idle time
+            // 5. Primary spell
+
+            // First, try to reduce Hots
             if (rot.MaxPrimaryCF < 0f)
             {
                 float Static = rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
-                float Factor = (1f - Static) / (1f - rot.MaxPrimaryCF - Static);
+                float Factor = Math.Max(0f, (1f - Static) / (1f - rot.MaxPrimaryCF - Static));
                 rot.RejuvCF *= Factor;
                 rot.RegrowthCF *= Factor;
                 rot.LifebloomCF *= Factor;
+                if (rot.RejuvCPM + rot.RegrowthCPM < rot.SwiftmendCPM) rot.SwiftmendCPM = 0f;
+            }
+
+            // Next, try to reduce wild growth and swiftmend
+            if (rot.MaxPrimaryCF < 0f)
+            {
+                rot.SwiftmendCPM = 0;
+                float Static = rot.LifebloomStackCF;
+                float Factor = Math.Min(1f, Math.Max(0f, (1f - Static) / (1f - rot.MaxPrimaryCF - Static)));
+                // Rejuv/Regrowth/Lifebloom are already 0 at this point
+                rot.WildGrowthCF *= Factor;
+            }
+
+            // Finally, try to reduce lifebloom stacks
+            if (rot.MaxPrimaryCF < 0f)
+            {
+                rot.LifebloomStackCF = 1f;
+                // Now, rot.MaxPrimaryCF *must* be 1f exactly.
             }
 
             rot.PrimaryCF = Math.Max(0f, rot.MaxPrimaryCF - calcOpts.IdleCastTimePercent / 100f);
@@ -526,7 +557,49 @@ namespace Rawr.Tree
             }
         }
 
-        public static SingleTargetBurstResult CalculateSingleTargetBurst(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, SingleTargetBurstRotations rotation)
+        public static SingleTargetBurstRotations SingleTargetIndexToRotation(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                default:
+                    return SingleTargetBurstRotations.AutoSelect;
+                case 1:
+                    return SingleTargetBurstRotations.AutoSelectForceSwiftmend;
+                case 2:
+                    return SingleTargetBurstRotations.RjN;
+                case 3:
+                    return SingleTargetBurstRotations.RjLbN;
+                case 4:
+                    return SingleTargetBurstRotations.RjRgLbN;
+                case 5:
+                    return SingleTargetBurstRotations.RjRg;
+                case 6:
+                    return SingleTargetBurstRotations.RjLbRg;
+                case 7:
+                    return SingleTargetBurstRotations.Rg;
+                case 8:
+                    return SingleTargetBurstRotations.RgN;
+                case 9:
+                    return SingleTargetBurstRotations.N;
+                case 10:
+                    return SingleTargetBurstRotations.RjN_s;
+                case 11:
+                    return SingleTargetBurstRotations.RjLbN_s;
+                case 12:
+                    return SingleTargetBurstRotations.RjRgLbN_s;
+                case 13:
+                    return SingleTargetBurstRotations.RjRg_s;
+                case 14:
+                    return SingleTargetBurstRotations.RjLbRg_s;
+                case 15:
+                    return SingleTargetBurstRotations.Rg_s;
+                case 16:
+                    return SingleTargetBurstRotations.RgN_s;
+            }
+        }
+
+        public static SingleTargetBurstResult[] CalculateSingleTargetBurst(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, SingleTargetBurstRotations rotation)
         {
             #region Setup Spells
             Spell regrowth = new Regrowth(calculatedStats, stats, false);
@@ -592,8 +665,8 @@ namespace Rawr.Tree
             SingleTargetBurstResult RjLbN2 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN, 
                 rejuvenate.HPSHoT, 0, lifebloomRollingStack.HPSHoT, 0, (1f - RejuvFraction - LifebloomFraction) * nourish[2].HPS);
             // RJ + RG + LB + N3 
-            SingleTargetBurstResult RjRgLbN3 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN, 
-                rejuvenate.HPSHoT, regrowth.HPSHoT + regrowth.HPS, lifebloomRollingStack.HPSHoT, 0, 
+            SingleTargetBurstResult RjRgLbN3 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN,
+                rejuvenate.HPSHoT, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, lifebloomRollingStack.HPSHoT, 0, 
                 (1f - RejuvFraction - RegrowthFraction - LifebloomFraction) * nourish[3].HPS);
             // RJ + RG 
             SingleTargetBurstResult RjRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg, 
@@ -605,14 +678,11 @@ namespace Rawr.Tree
             SingleTargetBurstResult Rg = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg, 
                 0, regrowthAgain.HPS, 0, 0, 0);
             // RG + N1
-            SingleTargetBurstResult RgN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN, 
-                0, regrowth.HPSHoT, 0, 0, (1f - RegrowthFraction) * nourish[1].HPS);
+            SingleTargetBurstResult RgN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN,
+                0, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, 0, 0, (1f - RegrowthFraction) * nourish[1].HPS);
             // N0
             SingleTargetBurstResult N0 = new SingleTargetBurstResult(SingleTargetBurstRotations.N, 
                 0, 0, 0, 0, nourish[0].HPS);
-
-            // Apply swiftmend
-            bool forceSwiftmend = rotation == SingleTargetBurstRotations.AutoSelectForceSwiftmend;
 
             // RJ + N1 S
             SingleTargetBurstResult RjN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN_s, 
@@ -622,8 +692,8 @@ namespace Rawr.Tree
                 rejuvenate.HPSHoT, 0, lifebloomRollingStack.HPSHoT, swift2HPS, 
                 (1f - RejuvFraction - LifebloomFraction - swift2Fraction) * nourish[2].HPS);
             // RJ + RG + LB + N3 S
-            SingleTargetBurstResult RjRgLbN3S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN_s, 
-                rejuvenate.HPSHoT, regrowth.HPSHoT + regrowth.HPS, lifebloomRollingStack.HPSHoT, swift1HPS, 
+            SingleTargetBurstResult RjRgLbN3S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN_s,
+                rejuvenate.HPSHoT, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, lifebloomRollingStack.HPSHoT, swift1HPS, 
                 (1f - RejuvFraction - RegrowthFraction - LifebloomFraction - swift1Fraction) * nourish[3].HPS);
             // RJ + RG S
             SingleTargetBurstResult RjRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg_s, 
@@ -636,25 +706,86 @@ namespace Rawr.Tree
             SingleTargetBurstResult RgS = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg_s, 
                 0, (1f - swift3Fraction) * regrowthAgain.HPS, 0, swift3HPS, 0);
             // RG + N1 S
-            SingleTargetBurstResult RgN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN_s, 
-                0, regrowth.HPSHoT, 0, swift3HPS, (1f - RegrowthFraction - swift3Fraction) * nourish[1].HPS);
+            SingleTargetBurstResult RgN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN_s,
+                0, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, 0, swift3HPS, (1f - RegrowthFraction - swift3Fraction) * nourish[1].HPS);
 
             SingleTargetBurstResult result = new SingleTargetBurstResult(SingleTargetBurstRotations.AutoSelect, 0, 0, 0, 0, 0);
-            if (RjN1.HPS > result.HPS && !forceSwiftmend) result = RjN1;
-            if (RjLbN2.HPS > result.HPS && !forceSwiftmend) result = RjLbN2;
-            if (RjRgLbN3.HPS > result.HPS && !forceSwiftmend) result = RjRgLbN3;
-            if (RjRg.HPS > result.HPS && !forceSwiftmend) result = RjRg;
-            if (RjLbRg.HPS > result.HPS && !forceSwiftmend) result = RjLbRg;
-            if (Rg.HPS > result.HPS && !forceSwiftmend) result = Rg;
-            if (N0.HPS > result.HPS && !forceSwiftmend) result = N0;
 
-            if (RjN1S.HPS > result.HPS) result = RjN1S;
-            if (RjLbN2S.HPS > result.HPS) result = RjLbN2S;
-            if (RjRgLbN3S.HPS > result.HPS) result = RjRgLbN3S;
-            if (RjRgS.HPS > result.HPS) result = RjRgS;
-            if (RjLbRgS.HPS > result.HPS) result = RjLbRgS;
-            if (RgS.HPS > result.HPS) result = RgS;
-            if (RgN1S.HPS > result.HPS) result = RgN1S;
+            if (rotation == SingleTargetBurstRotations.AutoSelect ||
+                rotation == SingleTargetBurstRotations.AutoSelectForceSwiftmend)
+            {
+                if (rotation != SingleTargetBurstRotations.AutoSelectForceSwiftmend)
+                {
+                    if (RjN1.HPS > result.HPS) result = RjN1;
+                    if (RjLbN2.HPS > result.HPS) result = RjLbN2;
+                    if (RjRgLbN3.HPS > result.HPS) result = RjRgLbN3;
+                    if (RjRg.HPS > result.HPS) result = RjRg;
+                    if (RjLbRg.HPS > result.HPS) result = RjLbRg;
+                    if (Rg.HPS > result.HPS) result = Rg;
+                    if (N0.HPS > result.HPS) result = N0;
+                }
+
+                if (RjN1S.HPS > result.HPS) result = RjN1S;
+                if (RjLbN2S.HPS > result.HPS) result = RjLbN2S;
+                if (RjRgLbN3S.HPS > result.HPS) result = RjRgLbN3S;
+                if (RjRgS.HPS > result.HPS) result = RjRgS;
+                if (RjLbRgS.HPS > result.HPS) result = RjLbRgS;
+                if (RgS.HPS > result.HPS) result = RgS;
+                if (RgN1S.HPS > result.HPS) result = RgN1S;
+            }
+            else
+            {
+                switch (rotation)
+                {
+                    case SingleTargetBurstRotations.RjN:
+                        result = RjN1;
+                        break;
+                    case SingleTargetBurstRotations.RjLbN:
+                        result = RjLbN2;
+                        break;
+                    case SingleTargetBurstRotations.RjRgLbN:
+                        result = RjRgLbN3;
+                        break;
+                    case SingleTargetBurstRotations.RjRg:
+                        result = RjRg;
+                        break;
+                    case SingleTargetBurstRotations.RjLbRg:
+                        result = RjLbRg;
+                        break;
+                    case SingleTargetBurstRotations.Rg:
+                        result = Rg;
+                        break;
+                    case SingleTargetBurstRotations.RgN:
+                        result = RgN1;
+                        break;
+                    case SingleTargetBurstRotations.N:
+                        result = N0;
+                        break;
+                    case SingleTargetBurstRotations.RjN_s:
+                        result = RjN1S;
+                        break;
+                    case SingleTargetBurstRotations.RjLbN_s:
+                        result = RjLbN2S;
+                        break;
+                    case SingleTargetBurstRotations.RjRgLbN_s:
+                        result = RjRgLbN3S;
+                        break;
+                    case SingleTargetBurstRotations.RjRg_s:
+                        result = RjRgS;
+                        break;
+                    case SingleTargetBurstRotations.RjLbRg_s:
+                        result = RjLbRgS;
+                        break;
+                    case SingleTargetBurstRotations.Rg_s:
+                        result = RgS;
+                        break;
+                    case SingleTargetBurstRotations.RgN_s:
+                        result = RgN1S;
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             #region Apply bonus from Val'anyr
             if (stats.ShieldFromHealed > 0)
@@ -667,7 +798,26 @@ namespace Rawr.Tree
             }
             #endregion
 
-            return result;
+            List<SingleTargetBurstResult> rots = new List<SingleTargetBurstResult>();
+            rots.Add(result);
+            rots.Add(result);
+            rots.Add(RjN1);
+            rots.Add(RjLbN2);
+            rots.Add(RjRgLbN3);
+            rots.Add(RjRg);
+            rots.Add(RjLbRg);
+            rots.Add(Rg);
+            rots.Add(RgN1);
+            rots.Add(N0);
+            rots.Add(RjN1S);
+            rots.Add(RjLbN2S);
+            rots.Add(RjRgLbN3S);
+            rots.Add(RjRgS);
+            rots.Add(RjLbRgS);
+            rots.Add(RgS);
+            rots.Add(RgN1S);
+
+            return rots.ToArray();
         }
     }
 

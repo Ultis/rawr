@@ -22,7 +22,9 @@ namespace Rawr.Tree {
                 }
                 return _manaPotionsDesc;}
         }
-        private int bSRatio; // goes from 0 to 100
+        //private int bSRatio; // goes from 0 to 100
+        private int singleTarget;
+        private int sustainedTarget;
         private int survValuePer100; // 100 Survival Points = 1 HPS (Survival Points = Health / (1-ArmorDamage Reduction)
         private int fightDuration; // In seconds
         private int manaPot;
@@ -37,23 +39,26 @@ namespace Rawr.Tree {
         private int lifebloomStackType;
         private int nourish1, nourish2, nourish3, nourish4;
         private int livingSeedEfficiency;
+        private int singleTargetRotation;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
-            BSRatio = 50; // goes from 0 to 100
             SurvValuePer100 = 1; // 100 Survival Points = 1 HPS (Survival Points = Health / (1-ArmorDamage Reduction)
+
+            singleTarget = 9000;
+            sustainedTarget = 8500;
             
             FightDuration = 240; // 4 Minutes
             ManaPot = 4; // best pot
             FSRRatio = 100;
-            ReplenishmentUptime = 70;
+            ReplenishmentUptime = 90;
             Innervates = 1;
 
             IdleCastTimePercent = 0;
 
-            AverageRejuv = 20;
+            AverageRejuv = 40;
             AverageRegrowths = 0;
-            AverageLifebloom = 2;
+            AverageLifebloom = 20;
             AverageLifebloomStack = 0;
             PrimaryHeal = 0;
             LifebloomStackType = 2;
@@ -64,6 +69,8 @@ namespace Rawr.Tree {
             WildGrowthPerMinute = 2;
             SwiftmendPerMinute = 2;
             livingSeedEfficiency = 50;
+
+            singleTargetRotation = 0;
         }
         public string GetXml() {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));
@@ -72,9 +79,10 @@ namespace Rawr.Tree {
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
-        public int BSRatio             { get { return bSRatio;             } set { bSRatio             = value; OnPropertyChanged("BSRatio"             ); } }
-        public int SurvValuePer100     { get { return survValuePer100;     } set { survValuePer100     = value; OnPropertyChanged("SurvValuePer100"     ); } }
-        public int FightDuration       { get { return fightDuration;       } set { fightDuration       = value; OnPropertyChanged("FightDuration"       ); } }
+        public int SingleTarget { get { return singleTarget; } set { singleTarget = value; OnPropertyChanged("SingleTarget"); } }
+        public int SustainedTarget { get { return sustainedTarget; } set { sustainedTarget = value; OnPropertyChanged("SustainedTarget"); } }
+        public int SurvValuePer100 { get { return survValuePer100; } set { survValuePer100 = value; OnPropertyChanged("SurvValuePer100"); } }
+        public int FightDuration { get { return fightDuration; } set { fightDuration = value; OnPropertyChanged("FightDuration"); } }
         public int ManaPot             { get { return manaPot;             } set { manaPot             = value; OnPropertyChanged("ManaPot"             ); } }
         public int FSRRatio            { get { return fSRRatio;            } set { fSRRatio            = value; OnPropertyChanged("FSRRatio"            ); } }
         public int ReplenishmentUptime { get { return replenishmentUptime; } set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime" ); } }
@@ -89,6 +97,8 @@ namespace Rawr.Tree {
         public int AverageLifebloomStack { get { return avgLifebloomStack; } set { avgLifebloomStack = value; OnPropertyChanged("AverageLifebloomStack"); } }
         public int PrimaryHeal { get { return primaryHeal; } set { primaryHeal = value; OnPropertyChanged("PrimaryHeal"); } }
         public int LifebloomStackType { get { return lifebloomStackType; } set { lifebloomStackType = value; OnPropertyChanged("LifebloomStackType"); } }
+
+        public int SingleTargetRotation { get { return singleTargetRotation; } set { singleTargetRotation = value; OnPropertyChanged("SingleTargetRotation"); } }
 
         public int Nourish1 { get { return nourish1; } set { nourish1 = value; OnPropertyChanged("Nourish1"); } }
         public int Nourish2 { get { return nourish2; } set { nourish2 = value; OnPropertyChanged("Nourish2"); } }
