@@ -387,7 +387,7 @@ namespace Rawr.Mage
         }
 
         public FlamestrikeTemplate(CharacterCalculationsMage calculations)
-            : base("Flamestrike", false, false, true, 30, 3, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 1, 1, 8f)
+            : base("Flamestrike", false, false, true, 30, 2, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 1, 1, 8f)
         {
             Calculate(calculations);
             DotTickInterval = 2;
