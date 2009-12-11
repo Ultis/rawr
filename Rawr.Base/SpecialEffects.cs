@@ -2051,6 +2051,11 @@ namespace Rawr {
                 // Ephemeral Snowflake
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, 20f, 120f));
             }
+            else if (line.StartsWith("Restores 1625 mana"))
+            {
+                // Sliver of Pure Ice
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = 1625 }, 0f, 120f));
+            }
         }
 
         public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown) { return EvalRegex(statName, amount, duration, ability, cooldown, 1f); }
