@@ -1271,6 +1271,56 @@ namespace Rawr
             }
         }
 
+        /// <summary>
+        /// Computes the average crit rate in given duration for special effect that has a static crit bonus and on each crit adds additional
+        /// stacking bonus up to maxStack stacks. All parameters are in crit rate (you have to convert the values if the actual effect works
+        /// based on crit rating).
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="duration">Duration of the special effect.</param>
+        /// <param name="hitRate">Hit rate if crit success depends on hitting (two-roll model).</param>
+        /// <param name="baseCritRate">Base crit rate without the special effect.</param>
+        /// <param name="bonusCritRate">Static crit rate bonus of the special effect.</param>
+        /// <param name="stackCritRate">How much crit rate the bonus changes on each succesful crit.</param>
+        /// <param name="maxStack">Maximum number of stacks.</param>
+        /// <returns>Average crit rate of the special effect in given duration.</returns>
+        public static float GetAverageStackingCritRate(float triggerInterval, float duration, float hitRate, float baseCritRate, float bonusCritRate, float stackCritRate, int maxStack)
+        {
+            // Si,j = chance that at step i we are at j stacks
+            // Si,j = Si-1,j * (1 - (C + B + j*c)) + Si-1,j-1 * (C + B + (j-1)*c)
+            // average crit bonus = sum_i sum_j Si,j * (B + j*c) / N
+            if (maxStack <= 0)
+            {
+                return Math.Min(1.0f, baseCritRate + bonusCritRate) - baseCritRate;
+            }
+
+            float[] C = new float[maxStack + 1];
+            float[] B = new float[maxStack + 1];
+            float[] S = new float[maxStack + 1];
+            S[0] = 1.0f;
+            for (int j = 0; j <= maxStack; j++)
+            {
+                C[j] = hitRate * Math.Min(1.0f, baseCritRate + bonusCritRate + j * stackCritRate); // chance that crit happens at j stacks
+                B[j] = Math.Min(1.0f, baseCritRate + bonusCritRate + j * stackCritRate) - baseCritRate; // crit value of special effect at j stacks
+            }
+            int N = (int)(duration / triggerInterval);
+            float average = 0.0f;
+            for (int i = 0; i < N; i++)
+            {
+                average += S[maxStack] * B[maxStack];
+                S[maxStack] += S[maxStack - 1] * C[maxStack - 1];
+                for (int j = maxStack - 1; j > 0; j--)
+                {
+                    average += S[j] * B[j];
+                    S[j] = S[j] * (1.0f - C[j]) + S[j - 1] * C[j - 1];
+                }
+                average += S[0] * B[0];
+                S[0] -= S[0] * C[0]; // S[0] = S[0] * (1.0f - C[0])
+            }
+            return average / N;
+        }
+
+
         public bool UsesPPM()
         {
             return Chance < 0;

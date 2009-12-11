@@ -331,7 +331,7 @@ namespace Rawr.Mage
                 if (effect.SpecialEffect != null && (effects & effect.Mask) == effect.Mask)
                 {
                     StateSpellPower += effect.SpecialEffect.Stats.SpellPower;
-                    SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;
+                    SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;                    
                 }
             }
 

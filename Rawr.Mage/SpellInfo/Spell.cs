@@ -510,6 +510,28 @@ namespace Rawr.Mage
             float channelReduction;
             CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
+            // add crit rate for on use stacking crit effects (would be better if it was computed
+            // on cycle level, but right now the architecture doesn't allow that too well)
+            // we'd actually need some iterations of this as cast time can depend on crit etc, just ignore that for now
+            foreach (EffectCooldown effectCooldown in castingState.Calculations.ItemBasedEffectCooldowns)
+            {
+                if (castingState.EffectsActive(effectCooldown.Mask))
+                {
+                    foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
+                    {
+                        if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit))
+                        {
+                            if (effect.Stats.CritRating < 0 && effectCooldown.SpecialEffect.Stats.CritRating > 0)
+                            {
+                                float critScale = castingState.CalculationOptions.LevelScalingFactor / 1400f;
+                                CritRate += SpecialEffect.GetAverageStackingCritRate(CastTime, effectCooldown.SpecialEffect.Duration, HitRate, CritRate, effectCooldown.SpecialEffect.Stats.CritRating * critScale, effect.Stats.CritRating * critScale, effect.MaxStack);
+                                if (CritRate > 1.0f) CritRate = 1.0f;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (DotTickInterval > 0)
             {
                 if (spammedDot)

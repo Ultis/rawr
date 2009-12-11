@@ -926,6 +926,14 @@ namespace Rawr.Mage
                         break;
                     }
                 }
+                if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCrit || e.Trigger == Trigger.SpellCrit))
+                {
+                    if (e.Stats.CritRating < 0 && effect.Stats.CritRating > 0)
+                    {
+                        hasStackingEffect = true;
+                        break;
+                    }
+                }
             }
             if (hasStackingEffect)
             {
