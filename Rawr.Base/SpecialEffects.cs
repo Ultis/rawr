@@ -1296,7 +1296,11 @@ namespace Rawr {
                 // Epheremal Snowflake - assume iCD of 0.25 sec.
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ManaRestore = int.Parse(match.Groups["mana"].Value) }, 0f, 0.25f, 1f));
             }
-
+            else if ((match = new Regex(@"Your spell casts have a chance to grant (?<amount>\d\d*) mana per 5 sec for 15 sec.").Match(line)).Success)
+            {
+                // Purified Lunar Dust
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, 0.1f));
+            }
             #endregion
             else
             {
@@ -2055,6 +2059,14 @@ namespace Rawr {
             {
                 // Sliver of Pure Ice
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = 1625 }, 0f, 120f));
+            }
+            else if ((match = Regex.Match(line, @"Every time one of your non-periodic spells deals a critical strike, the bonus is reduced by 184 critical strike rating.")).Success)
+            {
+                // Nevermelting Ice Crystal - Yes when armory is fixed this needs update
+                Stats childEffect = new Stats();
+                childEffect.CritRating = 920f;
+                childEffect.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { CritRating =-184f }, float.PositiveInfinity, 0f, 1f, 5));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, childEffect, 20f, 180f, 1f));
             }
         }
 
