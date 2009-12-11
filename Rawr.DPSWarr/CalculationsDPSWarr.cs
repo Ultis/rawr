@@ -1344,7 +1344,11 @@ These numbers to do not include racial bonuses.",
             float attempted = rotation.AttemptedAtksOverDur;
             float land = rotation.LandedAtksOverDur;
             float crit = rotation.CriticalAtksOverDur;
-            float dwbleed = (character.WarriorTalents.DeepWounds > 0) ? fightDuration : 0f;
+
+
+            float dwbleed = 0;
+            if (character.WarriorTalents.DeepWounds > 0) dwbleed = fightDuration * (float)Math.Floor(fightDuration / crit) / (fightDuration / crit);
+
             float bleed = dwbleed + fightDuration * (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
             
             float bleedHitInterval = fightDuration / bleed;
