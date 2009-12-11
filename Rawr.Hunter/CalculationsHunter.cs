@@ -1169,7 +1169,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.readiness.Cd = 180;
 
-            calculatedStats.beastialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
+            calculatedStats.beastialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
             calculatedStats.beastialWrath.Duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
 
             // We can calculate the rough frequencies now
@@ -1606,9 +1606,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 }else if(calcOpts.aspectUsage == AspectUsage.None) {
                     PercTimeNoDPSforNoMana = (calcOpts.Duration - calculatedStats.manaTimeToOOM) / calcOpts.Duration;
                 }
-            } 
+            }
 
-            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath ? calculatedStats.beastialWrath.Cd / calculatedStats.beastialWrath.Freq : 0;
+            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath && calculatedStats.beastialWrath.Freq > 0
+                ? calculatedStats.beastialWrath.Cd / calculatedStats.beastialWrath.Freq : 0;
 
             switch (calcOpts.selectedAspect) {
                 case Aspect.Viper:
@@ -2439,7 +2440,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 && calculatedStats.priorityRotation.containsShot(Shots.BeastialWrath)
                 && talents.BestialWrath > 0)
             {
-                float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.1f);
+                float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
                 float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
                 float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
                 SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
