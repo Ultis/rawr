@@ -666,8 +666,8 @@ namespace Rawr.Mage
                         case CharacterRace.Gnome:
                         default:
                             statsRaceStrength = 31f;
-                            statsRaceAgility = 46f;
-                            statsRaceStamina = 58f;
+                            statsRaceAgility = 45f;
+                            statsRaceStamina = 59f;
                             statsRaceIntellect = 184f;
                             statsRaceSpirit = 174f;
                             break;
