@@ -65781,7 +65781,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
+        <Heroic>true</Heroic>
         <Area>Icecrown Citadel (10)</Area>
         <Container>Gunship Armory</Container>
         <MinLevel>0</MinLevel>

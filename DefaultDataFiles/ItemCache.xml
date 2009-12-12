@@ -23931,7 +23931,6 @@
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <ExtraSpiritWhileCasting>180</ExtraSpiritWhileCasting>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -124295,10 +124294,23 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>43609</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_misc_spyglass_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <SpellPower>18</SpellPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>10</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <CritRating>131</CritRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -124406,10 +124418,23 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>43609</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_misc_spyglass_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <SpellPower>20</SpellPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>10</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <CritRating>152</CritRating>
     </Stats>
     <Quality>Epic</Quality>
