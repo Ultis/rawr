@@ -6919,11 +6919,11 @@ The act of shapeshifting frees the caster of Polymorph and Movement Impairing ef
         /// Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by [4 * Pts]%.
         /// </summary>
         [TalentData(83, "Gift of the Earthmother", 5, 2, 3, 10, -1, new string[] {
-@"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 4%.",
-@"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 8%.",
-@"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 12%.",
-@"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 16%.",
-@"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 20%.",}, "ability_druid_manatree")]
+@"Increases your total spell haste by 2% and reduces the base cooldown of your Lifebloom spell by 2%.",
+@"Increases your total spell haste by 4% and reduces the base cooldown of your Lifebloom spell by 4%.",
+@"Increases your total spell haste by 6% and reduces the base cooldown of your Lifebloom spell by 6%.",
+@"Increases your total spell haste by 8% and reduces the base cooldown of your Lifebloom spell by 8%.",
+@"Increases your total spell haste by 10% and reduces the base cooldown of your Lifebloom spell by 10%.",}, "ability_druid_manatree")]
         public int GiftOfTheEarthmother { get { return _data[83]; } set { _data[83] = value; } }
         /// <summary>
         /// Heals up to 5 friendly party or raid members within 15 yards of the target for 686 over 7 sec. The amount healed is applied quickly at first, and slows down as the Wild Growth reaches its full duration.
