@@ -138,7 +138,7 @@ namespace Rawr.Tree {
         
         protected virtual void applyHaste() {
             gcd = gcdBeforeHaste / (speed * NGspeed);
-            //if (gcd < 1f) { gcd = 1f; }
+            if (gcd < 1f) { gcd = 1f; }
             castTime = (float)Math.Round(castTimeBeforeHaste / (speed * NGspeed), 4);
             //if (castTime < 1f) { castTime = 1f; }
         }
