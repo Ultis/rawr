@@ -227,7 +227,8 @@ namespace Rawr.Mage.SequenceReconstruction
                             projectTime += kd;
                         }
                         // don't care if idle regen is placed at start if we have threat limitations
-                        if (!(maxTps < 5000.0 && kitem.VariableType == VariableType.IdleRegen && kitem.Segment == 0) && projectMana - BaseStats.Mana > overflowBuffer)
+                        // don't mark as problem if we were overflowed already, can't fix that
+                        if (!(maxTps < 5000.0 && kitem.VariableType == VariableType.IdleRegen && kitem.Segment == 0) && (projectMana - BaseStats.Mana > overflowBuffer) && (overflowMana <= overflowBuffer + eps))
                         {
                             sequence[j].SuperGroup.UnavailableForMinManaCorrections = true;
                             overflowBuffer = projectMana - BaseStats.Mana;

@@ -1300,6 +1300,7 @@ namespace Rawr
                 case "4273": return "Ulduar";
                 case "4723": return "Trial of the Champion";
                 case "4722": return "Trial of the Crusader";
+                case "4812": return "Icecrown Citadel";
                 default: return "Unknown - " + zoneId;
     			}
             }

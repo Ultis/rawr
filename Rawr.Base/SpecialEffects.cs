@@ -276,6 +276,11 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f, 1f, 20));
             }
+            else if ((match = Regex.Match(line, @"Each time you deal spell damage to an opponent, you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times\.")).Success)
+            {
+                // Muradin's Spyglass and similar
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["maxStack"].Value)));
+            }
             else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times.")).Success)
             {
                 // Illustration of the Dragon Soul and similar
