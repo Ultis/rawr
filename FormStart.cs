@@ -18,17 +18,19 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.1.0
- - Many 3.3 trinkets now have their effects modeled correctly.
- - Filters have been updated to include new 3.3 gear.
- - Hymn of Hope and Mana Tide totem are now selectable buffs.  
- - Your dodge is now floored at 0% even with the Chill of the Throne debuff active.  
- - Additional Teir 10 set bonus effects for many modules implemented.
- - Rawr.TankdDK: Rune of the Nerubian Carapace is now avalible for selection.
- - Rawr.Mage: Improved handeling of Frost DPS Cycles.
- - Rawr.Moonkin: New stat panel! This should show more information, in a more helpful manner.
- - Rawr.Tree: Rotation calculations redone, should be more accurate now.
- - Rawr.Hunter: Hit will now properly effect your pet's chance to be dodged. Mana calculations for Aspect of the Viper fixed, you should see a DPS drop if you would run OOM and are not set to use Viper. Pet talents should now look and feel like the normal talent pane.";
+			labelVersionHistory.Text = @"v2.3.2.0
+ - Added several new talent presets.
+ - Implemented several new trinkets.
+ - Added a new Gear Planning Option. It allows you to assign an arbitrary cost to each item, and use the Optimizer to find the best upgrade set per cost, or within a cost threshold. There's also a new version of the Direct Upgrades chart, rated by Upgrade per Cost. See the discussion thread on our forums for further details.
+ - Rawr.Tree: Further major changes to rotations. Keep the feedback coming, please! Fix for Lifebloom stacks being bugged. Support for T10 set bonuses, and the new idol. Added custom charts, more stat information.
+ - Rawr.SPriest: Fix for Mind Flay and 4T10.
+ - Rawr.Moonkin: Fix for the T10 set bonuses not applying.
+ - Rawr.Mage: Further improvements to Frost cycles; should be very close to accurate now (possibly underestimating 2T10). Adjusted Flamestrike cast time, and implemented 2T10 in FBLBPyro. Improved sequence reconstruction.
+ - Rawr.Hunter: Improved support for several trinkets. Added Survivability rating (can adjust the weight on the options tab)! Added display of pet attacks being dodged. Significantly improved pet stat calculations. Fixes and improvements for several other damage calculations.
+ - Rawr.DPSDK: Scourge Strike calculations updated to reflect the hotfix.
+ - Rawr.Retribution: You can now definte multiple rotation priorities and the calculations will try each of them and use the highest DPS rotation. A new graph will show all of the defined rotations.
+ - Rawr.DPSWarr: Fix for DW tick frequency. 
+ - Rawr.Enhance: Implemented Deathbringer's Will, and added support for procs on DoT ticks.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
