@@ -505,9 +505,86 @@ applied and result is scaled down by 100)",
             }
             #endregion
 
-
             return resultNew;
         }
+
+        private void HandleSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval)
+        {
+            List<SpecialEffect> effects = new List<SpecialEffect>();
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                effects.Add(effect);
+            }
+
+            AccumulateSpecialEffects(character, stats, FightDuration, CastInterval, HealInterval, CritsRatio, RejuvInterval, effects, 1f);
+
+            // Clear special effects
+            for (int i = 0; i < stats._rawSpecialEffectDataSize; i++) stats._rawSpecialEffectData[i] = null;
+            stats._rawSpecialEffectDataSize = 0;
+        }
+
+        protected float AccumulateAverageStats(SpecialEffect effect, Stats stats, float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, float weight)
+        {
+            float w;
+            if (effect.MaxStack > 1)
+            {
+                w = weight * effect.GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else if (effect.Duration == 0f)
+            {
+                w = weight * effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else
+            {
+                w = weight * effect.GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            stats.Accumulate(effect.Stats, w);
+            return w;
+        }        
+
+        protected void AccumulateSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, List<SpecialEffect> effects, float weight) 
+        {
+            foreach (SpecialEffect effect in effects) {
+                effect.Stats.GenerateSparseData();
+
+                if (effect.Trigger == Trigger.Use)
+                {
+                    float w = AccumulateAverageStats(effect, stats, 0f, 1f, 2f, FightDuration, weight);
+                    if (effect.Stats._rawSpecialEffectDataSize >= 1)
+                    {
+                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
+                        for (int i = 0; i < effect.Stats._rawSpecialEffectDataSize; i++)
+                        {
+                            nestedEffect.Add(effect.Stats._rawSpecialEffectData[i]);
+                        }
+                        AccumulateSpecialEffects(character, stats, FightDuration, CastInterval, HealInterval, CritsRatio, RejuvInterval, nestedEffect, w);
+                    }
+                }
+                else if (effect.Trigger == Trigger.SpellCast)
+                {
+                    AccumulateAverageStats(effect, stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
+                }
+                else if (effect.Trigger == Trigger.HealingSpellCast)
+                {
+                    // Same as SpellCast, but split to allow easier placement of breakpoints
+                    AccumulateAverageStats(effect, stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
+                }
+                else if (effect.Trigger == Trigger.HealingSpellHit)
+                {
+                    // Heal interval measures time between HoTs as well, direct heals are a different interval
+                    AccumulateAverageStats(effect, stats, HealInterval, 1.0f, CastInterval, FightDuration, weight);
+                }
+                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
+                {
+                    AccumulateAverageStats(effect, stats, CastInterval, CritsRatio, CastInterval, FightDuration, weight);
+                }
+                else if (effect.Trigger == Trigger.RejuvenationTick)
+                {
+                    AccumulateAverageStats(effect, stats, RejuvInterval, 1.0f, RejuvInterval, FightDuration, weight);
+                }
+            }
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             cacheChar = character;
@@ -532,15 +609,21 @@ applied and result is scaled down by 100)",
                     rot.TotalTime, 60f / rot.TotalCastsPerMinute,
                     60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
                     60 / rot.RejuvenationHealsPerMinute);*/
-                Stats procs = calculateSpecialEffects(character, stats,
+                /*Stats procs = calculateSpecialEffects(character, stats,
                     rot.TotalTime, 60f / rot.CastsPerMinute,
                     60f / rot.HealsPerMinute, rot.CritsPerMinute / rot.CastsPerMinute,
-                    60 / rot.RejuvenationHealsPerMinute, 1f, false);
+                    60 / rot.RejuvenationHealsPerMinute, 1f, false);*/
 
-                ExtraHealing = procs.Healed;
+                stats = GetCharacterStats(character, additionalItem);
+                HandleSpecialEffects(character, stats,
+                    rot.TotalTime, 60f / rot.CastsPerMinute,
+                    60f / rot.HealsPerMinute, rot.CritsPerMinute / rot.CastsPerMinute,
+                    60 / rot.RejuvenationHealsPerMinute);
+
+                ExtraHealing = stats.Healed;
 
                 // Create a new stats instance that uses the proc effects
-                stats = GetCharacterStats(character, additionalItem, procs);
+                // stats = GetCharacterStats(character, additionalItem, procs);
 
                 // New run
                 rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);  
