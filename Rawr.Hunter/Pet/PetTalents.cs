@@ -192,11 +192,11 @@ public int Cornered { get { return _data[9]; } set { _data[9] = value; } }
 @"Increases your pet's movement speed by 80% for 16 sec.",
 @"Increases your pet's movement speed by 80% for 16 sec." }, "ability_rogue_ambush")]
 public int DiveDash { get { return _data[10]; } set { _data[10] = value; } }
-/// <summary>Your pet does [8*Pts]% additional damage to targets with les than 35% health.</summary>
+/// <summary>Your pet does [8*Pts]% additional damage to targets with less than 35% health.</summary>
 [PetTalentData(11, "Feeding Frenzy", 2, 0, 1, 1, -1, new string[] {
-@"Your pet does [8*Pts]% additional damage to targets with les than 35% health.",
-@"Your pet does 8% additional damage to targets with les than 35% health.",
-@"Your pet does 16% additional damage to targets with les than 35% health." }, "ability_rogue_ambush")]
+@"Your pet does [8*Pts]% additional damage to targets with less than 35% health.",
+@"Your pet does 8% additional damage to targets with less than 35% health.",
+@"Your pet does 16% additional damage to targets with less than 35% health." }, "ability_rogue_ambush")]
 public int FeedingFrenzy { get { return _data[11]; } set { _data[11] = value; } }
 /// <summary>Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.</summary>
 [PetTalentData(12, "Grace Of The Mantis", 2, 0, 1, 1, -1, new string[] {
@@ -508,11 +508,11 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         public readonly static PetTalentData DiveDash = new PetTalentData(10, "Dive/Dash", 1, new string[] {
             @"Increases your pet's movement speed by 80% for 16 sec.",
             @"Increases your pet's movement speed by 80% for 16 sec." }, "spell_shadow_burningspirit");
-        /// <summary>Your pet does [8*Pts]% additional damage to targets with les than 35% health.</summary>
+        /// <summary>Your pet does [8*Pts]% additional damage to targets with less than 35% health.</summary>
         public readonly static PetTalentData FeedingFrenzy = new PetTalentData(11, "Feeding Frenzy", 2, new string[] {
-            @"Your pet does [8*Pts]% additional damage to targets with les than 35% health.",
-            @"Your pet does 8% additional damage to targets with les than 35% health.",
-            @"Your pet does 16% additional damage to targets with les than 35% health." }, "inv_misc_fish_48");
+            @"Your pet does [8*Pts]% additional damage to targets with less than 35% health.",
+            @"Your pet does 8% additional damage to targets with less than 35% health.",
+            @"Your pet does 16% additional damage to targets with less than 35% health." }, "inv_misc_fish_48");
         /// <summary>Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.</summary>
         public readonly static PetTalentData GraceOfTheMantis = new PetTalentData(12, "Grace Of The Mantis", 2, new string[] {
             @"Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.",
@@ -738,7 +738,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>Increases your pet's movement speed by 80% for 16 sec.</summary>
         [XmlIgnore]
         public PetTalent DiveDash;
-        /// <summary>Your pet does [8*Pts]% additional damage to targets with les than 35% health.</summary>
+        /// <summary>Your pet does [8*Pts]% additional damage to targets with less than 35% health.</summary>
         [XmlIgnore]
         public PetTalent FeedingFrenzy;
         /// <summary>Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.</summary>
@@ -783,7 +783,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>Increases your pet's armor by [5*Pts]% and chance to Dodge by [1*Pts]%.</summary>
         [XmlIgnore]
         public PetTalent PetBarding;
-        /// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc.</summary>
+        /// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec.</summary>
         [XmlIgnore]
         public PetTalent Rabid;
         /// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>

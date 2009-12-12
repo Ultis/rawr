@@ -67,6 +67,19 @@ namespace Rawr.Hunter
             if (alwaysHit) CalculateAlwaysHit();
             else Calculate();            
         }
+
+        public override string ToString() {
+            return string.Format("Land: {0:0.00%} "
+                               + "Not Land: {1:0.00%} "
+                               + "Miss: {2:0.00%} "
+                               + "Dodge: {3:0.00%} "
+                               + "Parry: {4:0.00%} "
+                               + "Glance: {5:0.00%} "
+                               + "Crit: {6:0.00%} "
+                               + "Hit: {7:0.00%}",
+                               AnyLand,AnyNotLand,
+                               Miss,Dodge,Parry,Glance,Crit,Hit);
+        }
     }
 
     public class NullCombatTable : CombatTable
@@ -195,7 +208,7 @@ namespace Rawr.Hunter
             Hit*/
             // Start a calc            
             if (alwaysHit) CalculateAlwaysHit();
-            else Calculate();
+            else Calculate(avoidChances);
         }
 
         public PetAttackTable(Character character, Stats stats, CalculationOptionsHunter co,

@@ -22,8 +22,6 @@ namespace Rawr.Hunter
         private List<float> freqs = new List<float>();
 
         // things we save earlier for later DPS calcs
-        private float attackSpeedEffective;
-        private float compositeSpeed;
         private float killCommandCooldown;
         private float critSpecialsAdjust;
 
@@ -93,7 +91,7 @@ namespace Rawr.Hunter
 
         public Stats GetSpecialEffectsStats(Character Char,
             float attemptedAtkInterval, float atkspeed,
-            float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval, float ClawBiteSmackInterval,
+            float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval, float ClawBiteSmackInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             Stats statsProcs = new Stats();
@@ -109,24 +107,24 @@ namespace Rawr.Hunter
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                             Stats _stats2 = GetSpecialEffectsStats(Char,
                                 attemptedAtkInterval, atkspeed,
-                                hitRate, critRate, bleedHitInterval, dmgDoneInterval, ClawBiteSmackInterval, statsTotal, _stats);
+                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, ClawBiteSmackInterval, statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
                             _stats = effect.GetAverageStats(0f, 1f, atkspeed, fightDuration);
                         }
                         statsProcs += _stats;
                         break;
-                    case Trigger.MeleeHit: // Pets Only
+                    case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
                         if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, hitRate, atkspeed, fightDuration);
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval, hitRates[0], atkspeed, fightDuration);
                             statsProcs += add;
                         }
                         break;
-                    case Trigger.MeleeCrit: // Pets Only
+                    case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
                         if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRate, atkspeed, fightDuration);
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRates[0], atkspeed, fightDuration);
                             statsProcs += add;
                         }
                         break;
@@ -138,7 +136,7 @@ namespace Rawr.Hunter
                         break;
                     case Trigger.PetClawBiteSmackCrit:
                         if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRate, atkspeed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRates[1], atkspeed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
@@ -147,20 +145,37 @@ namespace Rawr.Hunter
             return statsProcs;
         }
 
-        public float PetAttackSpeed(Stats currentStats) {
+        #region Speeds and Intervals
+        private float attackSpeedEffective = 2f;
+        private float compositeSpeed = 2f;
+        public float PetClawBiteSmackInterval = 0f;
+        protected float PetAttackSpeed(Stats currentStats) {
             float attackSpeedBase = CalcOpts.PetFamily == PetFamily.None ? 0.0f : 2.0f;
             float attackSpeedAdjust = (1f + currentStats.PhysicalHaste);
             float attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
 
             return attackSpeedAdjusted;
         }
-
-        public float GenPetFullAttackSpeed(Stats currentStats) {
+        protected float GenPetFullAttackSpeed(Stats currentStats) {
             attackSpeedEffective = PetAttackSpeed(currentStats);
             CalculateTimings();
-            compositeSpeed = 1f / (1f / attackSpeedEffective + (priorityRotation.petSpecialFrequency > 0 ? 1f / priorityRotation.petSpecialFrequency : 0)); // PetCompSpeed
+            float petSpecialFreq = (priorityRotation.petSpecialFrequency > 0 ? priorityRotation.petSpecialFrequency : 0);
+            compositeSpeed = 1f / (1f / attackSpeedEffective + (petSpecialFreq > 0 ? 1f / petSpecialFreq : 0));
             return compositeSpeed;
         }
+        public float PetWhiteInterval {
+            get { return PetAttackSpeed(PetStats); }
+        }
+        public float PetYellowInterval {
+            get {
+                CalculateTimings();
+                return (priorityRotation.petSpecialFrequency > 0 ? priorityRotation.petSpecialFrequency : 0);
+            }
+        }
+        public float PetCompInterval {
+            get { return GenPetFullAttackSpeed(PetStats); }
+        }
+        #endregion
 
         private PetAttackTable _whAtkTable;
         public PetAttackTable WhAtkTable {
@@ -224,7 +239,9 @@ namespace Rawr.Hunter
                               - 1f,
                 PhysicalCrit = PetTalents.SpidersBite.Value * 0.03f
                              + Talents.Ferocity * 0.02f,
-                BaseArmorMultiplier = PetTalents.NaturalArmor.Value * 0.05f,
+                BaseArmorMultiplier = (1f + PetTalents.NaturalArmor.Value * 0.05f)
+                                    * (1f + PetTalents.PetBarding.Value   * 0.05f)
+                                    - 1f,
                 ArcaneResistance = PetTalents.GreatResistance.Value * 0.05f,
                 FireResistance   = PetTalents.GreatResistance.Value * 0.05f,
                 NatureResistance = PetTalents.GreatResistance.Value * 0.05f,
@@ -232,15 +249,15 @@ namespace Rawr.Hunter
                 FrostResistance  = PetTalents.GreatResistance.Value * 0.05f,
                 FearDurReduc = PetTalents.Lionhearted.Value * 0.15f,
                 StunDurReduc = PetTalents.Lionhearted.Value * 0.15f,
-                Dodge = Talents.CatlikeReflexes * 0.03f,
+                Dodge = Talents.CatlikeReflexes * 0.03f + PetTalents.PetBarding.Value * 0.01f,
                 BonusDamageMultiplier = (1f + Talents.UnleashedFury * 0.03f)
                                       * (1f + PetTalents.SpikedCollar.Value * 0.03f)
                                       * (1f + Talents.KindredSpirits * 0.04f)
                                       * (1f + PetTalents.SharkAttack.Value * 0.03f)
                                       - 1f,
             };
+            float LongevityCdAdjust = 1f - Talents.Longevity * 0.10f;
             if (PetTalents.Rabid.Value > 0) {
-                float LongevityCdAdjust = 1f - Talents.Longevity * 0.1f;
                 float rabidCooldown = 45f * LongevityCdAdjust;
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats() { }, 20f, rabidCooldown);
                 SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit,
@@ -253,6 +270,12 @@ namespace Rawr.Hunter
                     new Stats() { PhysicalHaste = 0.30f, },
                     8f, 1f, Talents.Frenzy * 0.20f);
                 petStatsTalents.AddSpecialEffect(frenzy);
+            }
+            if (PetTalents.LastStand.Value > 0) {
+                SpecialEffect laststand = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusHealthMultiplier = 0.30f, },
+                    20f, (1f * 60f) * LongevityCdAdjust);
+                petStatsTalents.AddSpecialEffect(laststand);
             }
             #endregion
             #region From Options
@@ -341,7 +364,7 @@ namespace Rawr.Hunter
             #region Hit/Dodge Chances
             // This is tied directly to the Hunter's chance to miss
             PetChanceToMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[levelDiff] - HunterStats.PhysicalHit);
-            PetChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDiff, false) - HunterStats.SpellHit);
+            PetChanceToSpellMiss = -1f * Math.Min(0f, StatConversion.GetSpellMiss(levelDiff, false) - HunterStats.SpellHit);
 
             calculatedStats.petHitTotal = HunterStats.PhysicalHit;
             calculatedStats.petHitSpellTotal = HunterStats.SpellHit;
@@ -406,22 +429,24 @@ namespace Rawr.Hunter
             float WhtAttemptedAtksInterval = PetAttackSpeed(petStatsTotal);
             float YlwAttemptedAtksInterval = AllAttemptedAtksInterval - WhtAttemptedAtksInterval;
 
-            float hitRate  = (WhAtkTable.AnyLand * WhtAttemptedAtksInterval)
-                           * (YwAtkTable.AnyLand * YlwAttemptedAtksInterval)
-                           ;// (1f - PetChanceToMiss - PetChanceToBeDodged);
-            float critRate = petStatsTotal.PhysicalCrit;
+            float[] hitRates  = {WhAtkTable.AnyLand, // Whites
+                                 YwAtkTable.AnyLand}; // Yellows
+                                // (1f - PetChanceToMiss - PetChanceToBeDodged);
+            float[] critRates = { WhAtkTable.Crit, // Whites
+                                  YwAtkTable.Crit + calculatedStats.petCritFromCobraStrikes}; // Yellows
 
             float bleedHitInterval = 0f;
             float rakefreq = priorityRotation.getSkillFrequency(PetAttacks.Rake ); if (rakefreq > 0) { bleedHitInterval      += rakefreq; }
 
-            float dmgDoneInterval = 1f;
+            float dmgDoneInterval = 1f; // Need to Fix this
 
             float clawbitesmackinterval = 0f;
             float clawfreq = priorityRotation.getSkillFrequency(PetAttacks.Claw ); if (clawfreq > 0) { clawbitesmackinterval += clawfreq; }
             float bitefreq = priorityRotation.getSkillFrequency(PetAttacks.Bite ); if (bitefreq > 0) { clawbitesmackinterval += bitefreq; }
             float smakfreq = priorityRotation.getSkillFrequency(PetAttacks.Smack); if (smakfreq > 0) { clawbitesmackinterval += smakfreq; }
+            PetClawBiteSmackInterval = clawbitesmackinterval;
 
-            petStatsProcs += GetSpecialEffectsStats(character, AllAttemptedAtksInterval, WhtAttemptedAtksInterval, hitRate, critRate,
+            petStatsProcs += GetSpecialEffectsStats(character, AllAttemptedAtksInterval, WhtAttemptedAtksInterval, hitRates, critRates,
                                     bleedHitInterval, dmgDoneInterval, clawbitesmackinterval, petStatsTotal, null);
 
             #region Stat Results of Special Effects
@@ -430,6 +455,7 @@ namespace Rawr.Hunter
             petStatsProcs.Strength = (float)Math.Floor(petStatsProcs.Strength * (1f + totalBSTRM) * (1f + petStatsProcs.BonusStrengthMultiplier));
             petStatsProcs.Agility  = (float)Math.Floor(petStatsProcs.Agility  * (1f + totalBAGIM) * (1f + petStatsProcs.BonusAgilityMultiplier));
             petStatsProcs.Health  += (float)Math.Floor(petStatsProcs.Stamina  * 10f);
+            petStatsProcs.Health  += (float)Math.Floor((petStatsProcs.Health + petStatsTotal.Health) * petStatsProcs.BonusHealthMultiplier);
 
             // Armor
             petStatsProcs.Armor = (float)Math.Floor(petStatsProcs.Armor * (1f + petStatsTotal.BaseArmorMultiplier + petStatsProcs.BaseArmorMultiplier));
@@ -443,7 +469,8 @@ namespace Rawr.Hunter
             float totalBAPMProcs    = (1f + totalBAPM) * (1f + petStatsProcs.BonusAttackPowerMultiplier) - 1f;
             float apFromSTRProcs    = (1f + totalBAPMProcs) * (petStatsProcs.Strength * 2f);
             float apBonusOtherProcs = (1f + totalBAPMProcs) * (petStatsProcs.AttackPower + petStatsProcs.PetAttackPower);
-            petStatsProcs.AttackPower = (float)Math.Floor(apFromSTRProcs + apBonusOtherProcs);
+            float apBonusFromBasetoNewMulti = (petStatsProcs.BonusAttackPowerMultiplier) * (petStatsTotal.AttackPower);
+            petStatsProcs.AttackPower = (float)Math.Floor(apFromSTRProcs + apBonusOtherProcs + apBonusFromBasetoNewMulti);
 
             // Crit
             petStatsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(petStatsProcs.Agility, CharacterClass.Warrior);
@@ -462,6 +489,11 @@ namespace Rawr.Hunter
                                         - 1f;*/
             GenPetFullAttackSpeed(petStatsTotal);
             CalculateTimings();
+            clawbitesmackinterval = 0f;
+            clawfreq = priorityRotation.getSkillFrequency(PetAttacks.Claw); if (clawfreq > 0) { clawbitesmackinterval += clawfreq; }
+            bitefreq = priorityRotation.getSkillFrequency(PetAttacks.Bite); if (bitefreq > 0) { clawbitesmackinterval += bitefreq; }
+            smakfreq = priorityRotation.getSkillFrequency(PetAttacks.Smack); if (smakfreq > 0) { clawbitesmackinterval += smakfreq; }
+            PetClawBiteSmackInterval = clawbitesmackinterval;
             #endregion
 
             PetStats = petStatsTotal;
@@ -590,7 +622,7 @@ namespace Rawr.Hunter
                 float invigorationProcFreq = (priorityRotation.petSpecialFrequency / calculatedStats.petCritTotalSpecials) / invigorationProcChance; //C35
                 float invigorationEffect = Talents.Invigoration > 0 ? 0.01f : 0;
                 float invigorationManaGainedPercent = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect : 0; // C36
-                float invigorationManaPerMinute = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect * calculatedStats.BasicStats.Mana : 0; // C37
+                float invigorationManaPerMinute = invigorationProcFreq > 0 ? 60f / invigorationProcFreq * invigorationEffect * HunterStats.Mana : 0; // C37
                 calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60f;
             }
             #endregion
@@ -720,7 +752,7 @@ namespace Rawr.Hunter
             if (PetTalents.FeedingFrenzy.Value > 0) {
                 float feedingFrenzyTimeSpent = CalcOpts.timeSpentSub20 + CalcOpts.timeSpent35To20;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / CalcOpts.Duration : 0;
-                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * CalcOpts.PetTalents.FeedingFrenzy.Value * 0.08f;
+                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy.Value * 0.08f;
             }
 
             // Glancing Blows
@@ -833,39 +865,27 @@ namespace Rawr.Hunter
             calculatedStats.petWhiteDPS = whiteDPS;
             #endregion
             #region Priority Rotation
-
-            // loop over each skill, figuriung out the damage value
-
-            foreach (PetSkillInstance S in priorityRotation.skills)
-            {
+            // loop over each skill, figuring out the damage value
+            foreach (PetSkillInstance S in priorityRotation.skills) {
                 S.damage = 0;
 
                 #region Skill Groups
-
-                if (S.skillData.type == PetSkillType.FocusDump)
-                {
+                if (S.skillData.type == PetSkillType.FocusDump) {
                     float focusDumpDamageAverage = ((118f + 168f) / 2f) + damageBonusMeleeFromAP;
                     S.damage = focusDumpDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
                 }
-
-                if (S.skillData.type == PetSkillType.SpecialMelee)
-                {
+                if (S.skillData.type == PetSkillType.SpecialMelee) {
                     float meleeDamageAverage = S.skillData.average + damageBonusMeleeFromAP;
                     S.damage = meleeDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
                 }
-
-                if (S.skillData.type == PetSkillType.SpecialSpell)
-                {
+                if (S.skillData.type == PetSkillType.SpecialSpell) {
                     float spellDamageAverage = S.skillData.average + damageBonusSpellsFromAP;
                     S.damage = spellDamageAverage * critSpecialsAdjust * fullResistDamageAdjust * partialResistDamageAdjust 
                                 * damageAdjustMagic * calculatedStats.targetDebuffsNature;
                 }
-
                 #endregion
                 #region Unique Skills
-
-                if (S.skillType == PetAttacks.Rake)
-                {
+                if (S.skillType == PetAttacks.Rake) {
                     float rakeDamageFromAP = PetStats.AttackPower * 0.0175f;
                     float rakeAverageDamage = ((47  + 67) / 2) + rakeDamageFromAP;
                     float rakeAverageDamageDot = ((19 + 25) / 2) + rakeDamageFromAP;
@@ -875,18 +895,12 @@ namespace Rawr.Hunter
                     float rakeDots = S.frequency > 9 ? 3 : 2;
 
                     S.damage = rakeInitialHitDamage + rakeDotDamage * rakeDots;
-                }
-
-                if (S.skillType == PetAttacks.FireBreath)
-                {
+                }else if(S.skillType == PetAttacks.FireBreath) {
                     float fireBreathDamageAverage = ((43 + 57) / 2) + damageBonusSpellsFromAP;
                     float fireBreathDamageInitial = fireBreathDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust * damageAdjustMagic;
                     float fireBreathDamageDot = 50 + damageBonusSpellsFromAP;
                     S.damage = fireBreathDamageInitial + fireBreathDamageDot;
-                }
-
-                if (S.skillType == PetAttacks.SavageRend)
-                {
+                }else if (S.skillType == PetAttacks.SavageRend) {
                     float savageRendAverageHitDamage = ((59 + 83) / 2) + damageBonusMeleeFromAP;
                     float savageRendAverageBleedDamage = ((21 + 27) / 2) + damageBonusMeleeFromAP;
                     
@@ -894,38 +908,26 @@ namespace Rawr.Hunter
                     float savageRendBleedDamage = savageRendAverageBleedDamage * damageAdjustDots * damageAdjustMangle;
 
                     S.damage = savageRendHitDamage + 3 * savageRendBleedDamage;
-                }
-
-                if (S.skillType == PetAttacks.ScorpidPoison)
-                {
+                }else if (S.skillType == PetAttacks.ScorpidPoison) {
                     float scorpidPoisionDamageAverage = ((100 + 130) / 2) + damageBonusSpellsFromAP;
                     float scorpidPoisionDamageNormal = scorpidPoisionDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust
                                                         * damageAdjustMagic * calculatedStats.targetDebuffsNature;
                     float scorpidPoisionDamageTick = scorpidPoisionDamageNormal / 5;
                     float scorpidPoisionTicks = (float)Math.Floor(S.cooldown / 2f);
                     S.damage = scorpidPoisionDamageTick * scorpidPoisionTicks;
-                }
-
-                if (S.skillType == PetAttacks.PoisonSpit)
-                {
+                }else if (S.skillType == PetAttacks.PoisonSpit) {
                     float poisonSpitDamageAverage = ((104 + 136) / 2) + damageBonusSpellsFromAP;
                     float poisonSpitDamageNormal = poisonSpitDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust 
                                                     * damageAdjustMagic * calculatedStats.targetDebuffsNature;
                     float poisonSpitDamageTick = poisonSpitDamageNormal / 3;
                     float poisonSpitTicks = S.cooldown >= 9 ? 3 : 2;
                     S.damage = poisonSpitDamageTick * poisonSpitTicks;
-                }
-
-                if (S.skillType == PetAttacks.VenomWebSpray)
-                {
+                }else if (S.skillType == PetAttacks.VenomWebSpray) {
                     float venomWebSprayDamageAverage = ((46 + 68) / 2) + damageBonusSpellsFromAP;
                     float venomWebSprayDamageNormal = venomWebSprayDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust
                                                         * damageAdjustMagic * calculatedStats.targetDebuffsNature;
                     S.damage = venomWebSprayDamageNormal * 4;
-                }
-
-                if (S.skillType == PetAttacks.SpiritStrike)
-                {
+                }else if (S.skillType == PetAttacks.SpiritStrike) {
                     float spiritStrikeAdjust = fullResistDamageAdjust * partialResistDamageAdjust * damageAdjustMagic
                                                      * calculatedStats.targetDebuffsNature;
 
@@ -936,21 +938,14 @@ namespace Rawr.Hunter
                     float spiritStrikeDotDamageNormal = spiritStrikeDotDamageAverage * spiritStrikeAdjust;
 
                     S.damage = spiritStrikeInitialDamageNormal + spiritStrikeDotDamageNormal;
-                }
-
-                if (S.skillType == PetAttacks.SporeCloud)
-                {
+                }else if (S.skillType == PetAttacks.SporeCloud) {
                     float spellDamageAverage = S.skillData.average + damageBonusSpellsFromAP;
                     S.damage = spellDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust
                                     * damageAdjustMagic * calculatedStats.targetDebuffsNature;
-                }
-
-                if (S.skillType == PetAttacks.AcidSpit)
-                {
+                }else if (S.skillType == PetAttacks.AcidSpit) {
                     float acidSpitAverage = S.skillData.average + damageBonusSpellsFromAP;
                     S.damage = acidSpitAverage * (calculatedStats.petCritTotalSpecials * 1.5f + 1) * fullResistDamageAdjust * partialResistDamageAdjust * damageAdjustMagic * calculatedStats.targetDebuffsNature;
                 }
-
                 #endregion
 
                 S.CalculateDPS();

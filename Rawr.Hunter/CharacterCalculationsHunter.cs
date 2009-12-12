@@ -407,9 +407,6 @@ namespace Rawr.Hunter
             dictValues.Add("Aimed Shot", aimedShot.GenTooltip());
             dictValues.Add("Arcane Shot", arcaneShot.GenTooltip());
             dictValues.Add("Multi Shot", multiShot.GenTooltip());
-            dictValues.Add("Serpent Sting", serpentSting.GenTooltip());
-            dictValues.Add("Scorpid Sting", scorpidSting.GenTooltip());
-            dictValues.Add("Viper Sting", viperSting.GenTooltip());
             dictValues.Add("Silencing Shot", silencingShot.GenTooltip());
             dictValues.Add("Steady Shot", steadyShot.GenTooltip());
             dictValues.Add("Kill Shot", killShot.GenTooltip());
@@ -417,9 +414,15 @@ namespace Rawr.Hunter
             dictValues.Add("Black Arrow", blackArrow.GenTooltip());
             dictValues.Add("Volley", volley.GenTooltip());
             dictValues.Add("Chimera Shot", chimeraShot.GenTooltip());
-            dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
-            dictValues.Add("Readiness", readiness.GenTooltip());
-            dictValues.Add("Beastial Wrath", beastialWrath.GenTooltip());
+            
+            //dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
+            //dictValues.Add("Readiness", readiness.GenTooltip());
+            //dictValues.Add("Beastial Wrath", beastialWrath.GenTooltip());
+
+            // Sting Stats
+            dictValues.Add("Serpent Sting", serpentSting.GenTooltip());
+            dictValues.Add("Scorpid Sting", scorpidSting.GenTooltip());
+            dictValues.Add("Viper Sting", viperSting.GenTooltip());
 
             // Trap Stats
             dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());

@@ -150,9 +150,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				        "Shot Stats:Aimed Shot",
 				        "Shot Stats:Arcane Shot",
 				        "Shot Stats:Multi Shot",
-				        "Shot Stats:Serpent Sting",
-				        "Shot Stats:Scorpid Sting",
-				        "Shot Stats:Viper Sting",
                         "Shot Stats:Silencing Shot",
                         "Shot Stats:Steady Shot",
                         "Shot Stats:Kill Shot",
@@ -160,9 +157,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				        "Shot Stats:Black Arrow",
                         "Shot Stats:Volley",
                         "Shot Stats:Chimera Shot",
-                        "Shot Stats:Rapid Fire",
-                        "Shot Stats:Readiness",
-                        "Shot Stats:Beastial Wrath",
+
+                        //"Shot Stats:Rapid Fire",
+                        //"Shot Stats:Readiness",
+                        //"Shot Stats:Beastial Wrath",
+
+				        "Sting Stats:Serpent Sting",
+				        "Sting Stats:Scorpid Sting",
+				        "Sting Stats:Viper Sting",
 
                         "Trap Stats:Immolation Trap",
                         "Trap Stats:Explosive Trap",
@@ -1367,7 +1369,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // mana consumption
             #region August 2009 Mana Adjustments
             float efficiencyManaAdjust = 1f - (talents.Efficiency * 0.03f);
-            float thrillOfTheHuntManaAdjust = 1f - (calculatedStats.priorityRotation.critsCompositeSum * 0.4f * (talents.ThrillOfTheHunt / 3f));
+            float thrillOfTheHuntManaAdjust = 1f - (calculatedStats.priorityRotation.critsCompositeSum * 0.40f * (talents.ThrillOfTheHunt / 3f));
             float masterMarksmanManaAdjust = 1f - (talents.MasterMarksman * 0.05f);
             float glyphOfArcaneShotManaAdjust = 1f;
             if (calculatedStats.priorityRotation.containsShot(Shots.SerpentSting)
@@ -1535,8 +1537,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.manaRegenHuntingParty +
                 calculatedStats.manaRegenTargetDebuffs +
                 calculatedStats.manaRegenFromPots;
-
-
             #endregion
             #region August 2009 Aspect Usage
             float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
@@ -2289,7 +2289,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float Health2SurvHunter = (stats.Health) / 100f;
             Health2SurvHunter += (stats.HealthRestore) / 1000f;
-            float Health2SurvPet = (calculatedStats.pet.PetStats.Health) / 100f; // Pets dont get pots
+            float Health2SurvPet = (calculatedStats.pet.PetStats.Health) / 100f;
+            Health2SurvPet += (calculatedStats.pet.PetStats.HealthRestore) / 1000f;
             float DmgTakenMods2SurvHunter = (1f - stats.DamageTakenMultiplier) * 100f;
             float DmgTakenMods2SurvPet = (1f - calculatedStats.pet.PetStats.DamageTakenMultiplier) * 100f;
             float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
@@ -2335,263 +2336,305 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
-            CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
-            if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
-            HunterTalents talents = character.HunterTalents;
-            PetTalentTree petTalents = calcOpts.PetTalents;
-            int levelDif = calcOpts.TargetLevel - character.Level;
+            try {
+                cacheChar = character;
+                CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
+                if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
+                HunterTalents talents = character.HunterTalents;
+                PetTalentTree petTalents = calcOpts.PetTalents;
+                int levelDif = calcOpts.TargetLevel - character.Level;
 
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
-			statsRace.PhysicalCrit += (character.Ranged != null && 
-				((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
-				(character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
-				0.01f : 0.00f;
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsOptionsPanel = new Stats() {
-                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif],
-                PhysicalHaste = 0.15f, // This is from what Bags used to give that got rolled into the class
-            };
-            CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
-            calculatedStats.priorityRotation = new ShotPriority(calcOpts);
-            calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
-            calculatedStats.priorityRotation.priorities[1] = getShotByIndex(calcOpts.PriorityIndex2, calculatedStats);
-            calculatedStats.priorityRotation.priorities[2] = getShotByIndex(calcOpts.PriorityIndex3, calculatedStats);
-            calculatedStats.priorityRotation.priorities[3] = getShotByIndex(calcOpts.PriorityIndex4, calculatedStats);
-            calculatedStats.priorityRotation.priorities[4] = getShotByIndex(calcOpts.PriorityIndex5, calculatedStats);
-            calculatedStats.priorityRotation.priorities[5] = getShotByIndex(calcOpts.PriorityIndex6, calculatedStats);
-            calculatedStats.priorityRotation.priorities[6] = getShotByIndex(calcOpts.PriorityIndex7, calculatedStats);
-            calculatedStats.priorityRotation.priorities[7] = getShotByIndex(calcOpts.PriorityIndex8, calculatedStats);
-            calculatedStats.priorityRotation.priorities[8] = getShotByIndex(calcOpts.PriorityIndex9, calculatedStats);
-            calculatedStats.priorityRotation.priorities[9] = getShotByIndex(calcOpts.PriorityIndex10, calculatedStats);
-            calculatedStats.priorityRotation.validateShots(talents);
-            if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
-                statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                    new Stats() { RangedHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
-                    15f, (5 - talents.RapidKilling) * 60f));
+                #region From Race
+                Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
+			    statsRace.PhysicalCrit += (character.Ranged != null && 
+				    ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
+				    (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
+				    0.01f : 0.00f;
+                #endregion
+                #region From Gear/Buffs
+                Stats statsBuffs = GetBuffsStats(character, calcOpts);
+                Stats statsItems = GetItemStats(character, additionalItem);
+                #endregion
+                #region From Options
+                Stats statsOptionsPanel = new Stats() {
+                    PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif],
+                    PhysicalHaste = 0.15f, // This is from what Bags used to give that got rolled into the class
+                };
+                CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
+                calculatedStats.priorityRotation = new ShotPriority(calcOpts);
+                calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
+                calculatedStats.priorityRotation.priorities[1] = getShotByIndex(calcOpts.PriorityIndex2, calculatedStats);
+                calculatedStats.priorityRotation.priorities[2] = getShotByIndex(calcOpts.PriorityIndex3, calculatedStats);
+                calculatedStats.priorityRotation.priorities[3] = getShotByIndex(calcOpts.PriorityIndex4, calculatedStats);
+                calculatedStats.priorityRotation.priorities[4] = getShotByIndex(calcOpts.PriorityIndex5, calculatedStats);
+                calculatedStats.priorityRotation.priorities[5] = getShotByIndex(calcOpts.PriorityIndex6, calculatedStats);
+                calculatedStats.priorityRotation.priorities[6] = getShotByIndex(calcOpts.PriorityIndex7, calculatedStats);
+                calculatedStats.priorityRotation.priorities[7] = getShotByIndex(calcOpts.PriorityIndex8, calculatedStats);
+                calculatedStats.priorityRotation.priorities[8] = getShotByIndex(calcOpts.PriorityIndex9, calculatedStats);
+                calculatedStats.priorityRotation.priorities[9] = getShotByIndex(calcOpts.PriorityIndex10, calculatedStats);
+                calculatedStats.priorityRotation.validateShots(talents);
+                if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
+                    statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                        new Stats() { RangedHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
+                        15f, (5 - talents.RapidKilling) * 60f));
+                }
+                #endregion
+                #region From Talents
+                Stats statsTalents = new Stats()
+                {
+                    PhysicalHit = (talents.FocusedAim * 0.01f),
+                    PhysicalCrit = (0.01f * talents.LethalShots)
+                                 + (0.01f * talents.MasterMarksman)
+                                 + (0.01f * talents.KillerInstinct),
+                    BonusAgilityMultiplier = (1f + 0.02f * talents.CombatExperience)
+                                           * (1f + 0.03f * talents.LightningReflexes)
+                                           * (1f + 0.01f * talents.HuntingParty)
+                                           - 1f,
+                    BonusIntellectMultiplier = 0.02f * talents.CombatExperience,
+                    BonusStaminaMultiplier = 0.02f * talents.Survivalist,
+                    BaseArmorMultiplier = (talents.ThickHide / 3f) * 0.10f,
+                    PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
+                    BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
+                    BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
+                    Dodge = talents.CatlikeReflexes * 0.01f,
+                    Parry = talents.Deflection * 0.01f,
+                    BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
+                    DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
+                };
+                if (talents.MasterTactician > 0) {
+                    SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
+                        new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
+                    statsTalents.AddSpecialEffect(mt);
+                }
+                if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
+                    && talents.ImprovedAspectOfTheHawk > 0)
+                {
+                    float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
+                    if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
+                    SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
+                        new Stats() { RangedHaste = quickShotsEffect, },
+                        12f, 0f, 0.10f);
+                    statsTalents.AddSpecialEffect(QuickShots);
+                }
+                if (calcOpts.selectedAspect == Aspect.Hawk || (calcOpts.selectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
+                    statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
+                }
+                if (petTalents.CallOfTheWild.Value > 0) {
+                    SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
+                        new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.10f, },
+                        20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
+                    statsTalents.AddSpecialEffect(callofthewild);
+                }
+                if (calcOpts.PetFamily == PetFamily.Wolf) {
+                    SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use,
+                        new Stats() { AttackPower = 320f, },
+                        20f, 40f);
+                    statsTalents.AddSpecialEffect(FuriousHowl);
+                }
+                if (calcOpts.PetFamily != PetFamily.None
+                    && calculatedStats.priorityRotation.containsShot(Shots.BeastialWrath)
+                    && talents.BestialWrath > 0)
+                {
+                    float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
+                    float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
+                    float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
+                    SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
+                        new Stats() { BonusPetDamageMultiplier = 0.50f, BonusDamageMultiplier = val1, ManaCostPerc = val2 },
+                        10f, cooldown);
+                    statsTalents.AddSpecialEffect(WrathBeastWithin);
+                }
+                if (petTalents.CullingTheHerd.Value > 0) {
+                    float val1 = petTalents.CullingTheHerd.Value * 0.01f;
+                    SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
+                        new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
+                        10f, 0f);
+                    statsTalents.AddSpecialEffect(CullingTheHerd);
+                }
+                #endregion
+
+                // Totals
+                Stats statsGearEnchantsBuffs = new Stats();
+                statsGearEnchantsBuffs.Accumulate(statsItems);
+                statsGearEnchantsBuffs.Accumulate(statsBuffs);
+                Stats statsTotal = new Stats();
+                statsTotal.Accumulate(statsRace);
+                statsTotal.Accumulate(statsItems);
+                statsTotal.Accumulate(statsBuffs);
+                statsTotal.Accumulate(statsTalents);
+                statsTotal.Accumulate(statsOptionsPanel);
+                Stats statsProcs = new Stats();
+
+                #region Stamina & Health
+                float totalBSTAM = statsTotal.BonusStaminaMultiplier;
+                float staBase    = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
+                float staBonus   = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
+                statsTotal.Stamina = staBase + staBonus;
+
+                // Health
+                statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+                statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
+                #endregion
+                #region Strength
+                float totalBSTRM = statsTotal.BonusStrengthMultiplier;
+                float strBase    = (float)Math.Floor((1f + totalBSTRM) * statsRace.Strength);
+                float strBonus   = (float)Math.Floor((1f + totalBSTRM) * statsGearEnchantsBuffs.Strength);
+                statsTotal.Strength = strBase + strBonus;
+                #endregion
+                #region  Agility
+                float totalBAGIM = statsTotal.BonusAgilityMultiplier;
+                float agiBase    = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
+                float agiBonus   = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
+                float agiFromAvg = (float)Math.Floor((1f + totalBAGIM) * statsTotal.AverageAgility); // ??
+                statsTotal.Agility = agiBase + agiBonus + agiFromAvg;
+
+                if (talents.ExposeWeakness > 0) {
+                    SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.RangedCrit,
+                        new Stats() { AttackPower = statsTotal.Agility * 0.25f },
+                        7f, 0f, (1f / 3f * talents.ExposeWeakness));
+                    statsTotal.AddSpecialEffect(ExposeWeakness);
+                }
+                #endregion
+                #region  Intellect
+                float totalBINTM = statsTotal.BonusIntellectMultiplier;
+                float intBase    = (float)Math.Floor((1f + totalBINTM) * statsRace.Intellect);
+                float intBonus   = (float)Math.Floor((1f + totalBINTM) * statsGearEnchantsBuffs.Intellect);
+                statsTotal.Intellect = intBase + intBonus;
+                #endregion
+                #region Armor
+                statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
+                statsTotal.BonusArmor += statsTotal.Agility * 2f;
+                statsTotal.BonusArmor = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+                statsTotal.Armor += statsTotal.BonusArmor;
+                #endregion
+                #region Attack Power
+                statsTotal.BonusAttackPowerMultiplier *= (1f + statsTotal.BonusRangedAttackPowerMultiplier);
+                float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
+                float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
+                float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
+                float apFromSTR    = 0f;//(1f + totalBAPM) * (statsTotal.Strength);
+                float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
+                float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
+                float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
+                float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
+                                                         + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
+                statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
+                statsTotal.RangedAttackPower = statsTotal.AttackPower;
+                #endregion
+                #region Spell Power
+                float totalBSPM    = statsTotal.BonusSpellPowerMultiplier;
+                float spBase       = (1f + totalBSPM) * (statsRace.SpellPower);
+                float spBonusOther = (1f + totalBSPM) * (statsGearEnchantsBuffs.SpellPower);
+                statsTotal.SpellPower = (float)Math.Floor(spBase + spBonusOther);
+                #endregion
+                #region Crit
+                statsTotal.CritRating += statsTotal.RangedCritRating;
+                statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
+                                         + -0.0153f
+                                         + StatConversion.GetCritFromRating(statsTotal.CritRating, character.Class);
+                #endregion
+                #region Haste
+                statsTotal.HasteRating += statsTotal.RangedHasteRating;
+                float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, character.Class);
+                statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
+                                           (1f + statsItems.PhysicalHaste) *
+                                           (1f + statsBuffs.PhysicalHaste) *
+                                           (1f + statsTalents.PhysicalHaste) *
+                                           (1f + statsOptionsPanel.PhysicalHaste) *
+                                           (1f + statsTotal.RangedHaste) *
+                                           (1f + ratingHasteBonus)
+                                           - 1f;
+                #endregion
+                #region Hit
+                statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.RangedHitRating);
+                statsTotal.SpellHit    += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.SpellHitRating);
+                #endregion
+                #region Mana
+                // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
+                // (20-(20/15)) = 18.66666
+                // spreadsheet uses 18.7, so we will too :)
+                statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
+                #endregion
+
+                #region Handle Special Effects
+                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, statsTotal, GetBuffsStats(calcOpts.petActiveBuffs));
+                calculatedStats.pet.GenPetStats();
+                float[] attemptedAtksInterval = { 
+                    1f, // All
+                    1f, // White
+                    1f, // Yellow
+                    1f, // AutoShot
+                    1f  // SteadyShot
+                };
+                float[] petattemptedAtksInterval = {
+                    calculatedStats.pet.PetCompInterval, // All
+                    calculatedStats.pet.PetWhiteInterval, // White
+                    calculatedStats.pet.PetYellowInterval, // Yellow
+                    calculatedStats.pet.PetClawBiteSmackInterval // ClawBiteSmack
+                };
+                float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
+                float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
+                float[] hitRates  = { (1f - ChanceToMiss), calculatedStats.pet.WhAtkTable.AnyLand };
+                float[] critRates = { statsTotal.PhysicalCrit, calculatedStats.pet.WhAtkTable.Crit };
+                float bleedHitInterval = 1f;
+                float dmgDoneInterval = 1f;
+
+                statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval,
+                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, null);
+
+                #region Handle Results of Special Effects
+                // Base Stats
+                statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
+                statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
+                statsProcs.Agility  = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
+                statsProcs.Agility += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
+                statsProcs.Agility += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
+                statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
+                statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
+
+                // Armor
+                statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier));
+                statsProcs.BonusArmor += statsProcs.Agility * 2f;
+                statsProcs.BonusArmor = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+                statsProcs.Armor += statsProcs.BonusArmor;
+                statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
+
+                // Attack Power
+                statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
+                float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
+                float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility);
+                float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
+                float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
+                statsProcs.AttackPower = (float)Math.Floor(apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
+                statsProcs.RangedAttackPower = statsProcs.AttackPower;
+
+                // Crit
+                statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
+                statsProcs.PhysicalCrit += StatConversion.GetCritFromRating(statsProcs.CritRating + statsProcs.RangedCritRating, character.Class);
+
+                // Haste
+                statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
+                                         * (1f + statsProcs.RangedHaste)
+                                         * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
+                                         - 1f;
+                #endregion
+                // Add it back into the fold
+                statsTotal.Accumulate(statsProcs);
+                #endregion
+
+                statsTotal.Mana = (float)Math.Floor((1f + statsTotal.BonusManaMultiplier) * statsTotal.Mana);
+                return statsTotal;
+            } catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error Generating Character Stats",
+                    ex.Message, "GetCharacterStats(...)", "No Additional Info",ex.StackTrace);
+                eb.Show();
+                return new Stats();
             }
-            Stats statsTalents = new Stats()
-            {
-                PhysicalHit = (talents.FocusedAim * 0.01f),
-                PhysicalCrit = (0.01f * talents.LethalShots)
-                             + (0.01f * talents.MasterMarksman)
-                             + (0.01f * talents.KillerInstinct),
-                BonusAgilityMultiplier = (1f + 0.02f * talents.CombatExperience)
-                                       * (1f + 0.03f * talents.LightningReflexes)
-                                       * (1f + 0.01f * talents.HuntingParty)
-                                       - 1f,
-                BonusIntellectMultiplier = 0.02f * talents.CombatExperience,
-                BonusStaminaMultiplier = 0.02f * talents.Survivalist,
-                BaseArmorMultiplier = (talents.ThickHide / 3f) * 0.10f,
-                PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
-                BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
-                BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
-                Dodge = talents.CatlikeReflexes * 0.01f,
-                Parry = talents.Deflection * 0.01f,
-                BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
-                DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
-            };
-            if (talents.MasterTactician > 0) {
-                SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
-                    new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
-                statsTalents.AddSpecialEffect(mt);
-            }
-            if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
-                && talents.ImprovedAspectOfTheHawk > 0)
-            {
-                float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
-                if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
-                SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
-                    new Stats() { RangedHaste = quickShotsEffect, },
-                    12f, 0f, 0.10f);
-                statsTalents.AddSpecialEffect(QuickShots);
-            }
-            if (calcOpts.selectedAspect == Aspect.Hawk || (calcOpts.selectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
-                statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
-            }
-            if (petTalents.CallOfTheWild.Value > 0) {
-                SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.10f, },
-                    20f, 5f * 60f);
-                statsTalents.AddSpecialEffect(callofthewild);
-            }
-            if (calcOpts.PetFamily == PetFamily.Wolf) {
-                SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use,
-                    new Stats() { AttackPower = 320f, },
-                    20f, 40f);
-                statsTalents.AddSpecialEffect(FuriousHowl);
-            }
-            if (calcOpts.PetFamily != PetFamily.None
-                && calculatedStats.priorityRotation.containsShot(Shots.BeastialWrath)
-                && talents.BestialWrath > 0)
-            {
-                float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
-                float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
-                float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
-                SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusPetDamageMultiplier = 0.50f, BonusDamageMultiplier = val1, ManaCostPerc = val2 },
-                    10f, cooldown);
-                statsTalents.AddSpecialEffect(WrathBeastWithin);
-            }
-            if (petTalents.CullingTheHerd.Value > 0) {
-                float val1 = petTalents.CullingTheHerd.Value * 0.01f;
-                SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
-                    new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
-                    10f, 0f);
-                statsTalents.AddSpecialEffect(CullingTheHerd);
-            }
-
-            Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
-            Stats statsProcs = new Stats();
-
-            // Stamina
-            float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-            float staBase    = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
-            float staBonus   = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
-            statsTotal.Stamina = staBase + staBonus;
-
-            // Health
-            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-            statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
-
-            // Strength
-            float totalBSTRM = statsTotal.BonusStrengthMultiplier;
-            float strBase    = (float)Math.Floor((1f + totalBSTRM) * statsRace.Strength);
-            float strBonus   = (float)Math.Floor((1f + totalBSTRM) * statsGearEnchantsBuffs.Strength);
-            statsTotal.Strength = strBase + strBonus;
-
-            // Agility
-            float totalBAGIM = statsTotal.BonusAgilityMultiplier;
-            float agiBase    = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
-            float agiBonus   = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
-            float agiFromAvg = (float)Math.Floor((1f + totalBAGIM) * statsTotal.AverageAgility); // ??
-            statsTotal.Agility = agiBase + agiBonus + agiFromAvg;
-
-            if (talents.ExposeWeakness > 0) {
-                SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.RangedCrit,
-                    new Stats() { AttackPower = statsTotal.Agility * 0.25f },
-                    7f, 0f, (1f / 3f * talents.ExposeWeakness));
-                statsTotal.AddSpecialEffect(ExposeWeakness);
-            }
-
-            // Intellect
-            float totalBINTM = statsTotal.BonusIntellectMultiplier;
-            float intBase    = (float)Math.Floor((1f + totalBINTM) * statsRace.Intellect);
-            float intBonus   = (float)Math.Floor((1f + totalBINTM) * statsGearEnchantsBuffs.Intellect);
-            statsTotal.Intellect = intBase + intBonus;
-
-            // Armor
-            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
-            statsTotal.BonusArmor += statsTotal.Agility * 2f;
-            statsTotal.BonusArmor = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.Armor += statsTotal.BonusArmor;
-
-            // Attack Power
-            statsTotal.BonusAttackPowerMultiplier *= (1f + statsTotal.BonusRangedAttackPowerMultiplier);
-            float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
-            float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
-            float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
-            float apFromSTR    = 0f;//(1f + totalBAPM) * (statsTotal.Strength);
-            float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
-            float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
-            float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
-            float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
-                                                     + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
-            statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
-            statsTotal.RangedAttackPower = statsTotal.AttackPower;
-
-            // Spell Power
-            float totalBSPM    = statsTotal.BonusSpellPowerMultiplier;
-            float spBase       = (1f + totalBSPM) * (statsRace.SpellPower);
-            float spBonusOther = (1f + totalBSPM) * (statsGearEnchantsBuffs.SpellPower);
-            statsTotal.SpellPower = (float)Math.Floor(spBase + spBonusOther);
-
-            // Crit
-            statsTotal.CritRating += statsTotal.RangedCritRating;
-            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
-                                     + -0.0153f
-                                     + StatConversion.GetCritFromRating(statsTotal.CritRating, character.Class);
-
-            // Haste
-            statsTotal.HasteRating += statsTotal.RangedHasteRating;
-            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, character.Class);
-            statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
-                                       (1f + statsItems.PhysicalHaste) *
-                                       (1f + statsBuffs.PhysicalHaste) *
-                                       (1f + statsTalents.PhysicalHaste) *
-                                       (1f + statsOptionsPanel.PhysicalHaste) *
-                                       (1f + statsTotal.RangedHaste) *
-                                       (1f + ratingHasteBonus)
-                                       - 1f;
-
-            // Hit
-            statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.RangedHitRating);
-            statsTotal.SpellHit    += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.SpellHitRating);
-
-            // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
-            // (20-(20/15)) = 18.66666
-            // spreadsheet uses 18.7, so we will too :)
-            statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
-
-            float attemptedAtksInterval = 1f, petattemptedAtksInterval = 1f;
-            float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
-            float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
-            float hitRate = (1f - ChanceToMiss);
-            float critRate = statsTotal.PhysicalCrit;
-            float bleedHitInterval = 1f;
-            float dmgDoneInterval = 1f;
-
-            statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval,
-                            hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, null);
-
-            // Base Stats
-            statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
-            statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
-            statsProcs.Agility  = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
-            statsProcs.Agility += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
-            statsProcs.Agility += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
-            statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
-            statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
-
-            // Armor
-            statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier));
-            statsProcs.BonusArmor += statsProcs.Agility * 2f;
-            statsProcs.BonusArmor = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
-            statsProcs.Armor += statsProcs.BonusArmor;
-            statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
-
-            // Attack Power
-            statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
-            float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
-            float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility);
-            float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
-            float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
-            statsProcs.AttackPower = (float)Math.Floor(apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
-            statsProcs.RangedAttackPower = statsProcs.AttackPower;
-
-            // Crit
-            statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
-            statsProcs.PhysicalCrit += StatConversion.GetCritFromRating(statsProcs.CritRating + statsProcs.RangedCritRating, character.Class);
-
-            // Haste
-            statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
-                                     * (1f + statsProcs.RangedHaste)
-                                     * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
-                                     - 1f;
-
-            // Add it back into the fold
-            statsTotal.Accumulate(statsProcs);
-
-            statsTotal.Mana = (float)Math.Floor((1f + statsTotal.BonusManaMultiplier) * statsTotal.Mana);
-
-            return statsTotal;
         }
 
         private Stats GetSpecialEffectsStats(Character Char,
-            float attemptedAtkInterval, float petattemptedAtksInterval,
-            float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
+            float[] attemptedAtkInterval, float[] petattemptedAtksInterval,
+            float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             cacheChar = Char;
@@ -2619,7 +2662,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                             Stats _stats2 = GetSpecialEffectsStats(Char,
                                 attemptedAtkInterval, petattemptedAtksInterval,
-                                hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
+                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
                             _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
@@ -2627,28 +2670,28 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         statsProcs += _stats;
                         break;
                     case Trigger.MeleeHit: // Pets Only
-                        if (petattemptedAtksInterval > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval, hitRate, speed, fightDuration);
+                        if (petattemptedAtksInterval[0] > 0f) {
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[0], hitRates[1], speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
                     case Trigger.RangedHit:
                     case Trigger.PhysicalHit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, hitRate, speed, fightDuration);
+                        if (attemptedAtkInterval[0] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval[0], hitRates[0], speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
                     case Trigger.MeleeCrit: // Pets Only
-                        if (petattemptedAtksInterval > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval, critRate, speed, fightDuration);
+                        if (petattemptedAtksInterval[0] > 0f) {
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[0], critRates[1], speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
                     case Trigger.RangedCrit:
                     case Trigger.PhysicalCrit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRate, speed, fightDuration);
+                        if (attemptedAtkInterval[0] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval[0], critRates[0], speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
@@ -2659,20 +2702,20 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         if (dmgDoneInterval > 0f) { statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, speed, fightDuration); }
                         break;
                     case Trigger.HunterAutoShotHit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(speed, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (attemptedAtkInterval[3] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval[3], hitRates[0], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
                     case Trigger.SteadyShotHit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval * 3f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (attemptedAtkInterval[4] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval[4], hitRates[0], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
                     case Trigger.PetClawBiteSmackCrit:
-                        if (petattemptedAtksInterval > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval, critRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (petattemptedAtksInterval[3] > 0f) {
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[3], critRates[1], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;

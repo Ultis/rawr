@@ -262,33 +262,23 @@ namespace Rawr.Hunter
         public float frequency = 0; // S (and F)
         public float kc_dps = 0; // T       
 
-        public void CalculateTimings(PetSkillInstance PrevSkill)
-        {
+        public void CalculateTimings(PetSkillInstance PrevSkill) {
             possible_freq = cooldown - (cooldown % PetGCD) + ((cooldown % PetGCD) > 0 ? PetGCD : 0);
 
             gcd_left = 1;
-            if (PrevSkill != null)
-            {
-                gcd_left = PrevSkill.gcd_left - PrevSkill.gcd_used;
-            }
+            if (PrevSkill != null) { gcd_left = PrevSkill.gcd_left - PrevSkill.gcd_used; }
 
             gcd_needed = cooldown >= 30 ? 0 : possible_freq > 0 ? PetGCD / possible_freq : 0;
             
             gcd_used = 1 - (gcd_left - gcd_needed);
-            if (PrevSkill != null)
-            {
-                gcd_used = gcd_left > gcd_needed ? gcd_needed : gcd_left;
-            }
+            if (PrevSkill != null) { gcd_used = gcd_left > gcd_needed ? gcd_needed : gcd_left; }
 
             temp_frequency = gcd_used > 0 ? PetGCD / gcd_used : cooldown >= 30 ? cooldown : 0;
 
             fps_needed = (1 - priorityRotation.owlsFocus) * (temp_frequency > 0 ? focus / temp_frequency : 0);
 
             fps_available = priorityRotation.fpsGained;
-            if (PrevSkill != null)
-            {
-                fps_available = PrevSkill.fps_available - PrevSkill.fps_needed;
-            }
+            if (PrevSkill != null) { fps_available = PrevSkill.fps_available - PrevSkill.fps_needed; }
 
             frequency = 0;
             if (fps_available > 0) frequency = temp_frequency * (fps_needed / fps_available);
@@ -297,8 +287,7 @@ namespace Rawr.Hunter
             crittable_freq = can_crit ? frequency : 0;
         }
 
-        public void CalculateDPS()
-        {
+        public void CalculateDPS() {
             dps = frequency > 0 ? damage / frequency : 0;
             kc_dps = can_crit ? dps : 0;
         }
