@@ -90,12 +90,13 @@ namespace Rawr.Hunter
         }
 
         public Stats GetSpecialEffectsStats(Character Char,
-            float attemptedAtkInterval, float atkspeed,
-            float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval, float ClawBiteSmackInterval,
+            float[] attemptedAtkIntervals, 
+            float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             Stats statsProcs = new Stats();
             float fightDuration = CalcOpts.Duration;
+            float atkspeed = attemptedAtkIntervals[1];
             
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects()))
             {
@@ -106,8 +107,8 @@ namespace Rawr.Hunter
                             float uptime = effect.GetAverageUptime(0f, 1f, atkspeed, fightDuration);
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                             Stats _stats2 = GetSpecialEffectsStats(Char,
-                                attemptedAtkInterval, atkspeed,
-                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, ClawBiteSmackInterval, statsTotal, _stats);
+                                attemptedAtkIntervals,
+                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
                             _stats = effect.GetAverageStats(0f, 1f, atkspeed, fightDuration);
@@ -116,15 +117,15 @@ namespace Rawr.Hunter
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, hitRates[0], atkspeed, fightDuration);
+                        if (attemptedAtkIntervals[0] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkIntervals[0], hitRates[0], atkspeed, fightDuration);
                             statsProcs += add;
                         }
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRates[0], atkspeed, fightDuration);
+                        if (attemptedAtkIntervals[0] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkIntervals[0], critRates[0], atkspeed, fightDuration);
                             statsProcs += add;
                         }
                         break;
@@ -135,8 +136,8 @@ namespace Rawr.Hunter
                         if (dmgDoneInterval > 0f) { statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, atkspeed, fightDuration); }
                         break;
                     case Trigger.PetClawBiteSmackCrit:
-                        if (attemptedAtkInterval > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval, critRates[1], atkspeed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (attemptedAtkIntervals[3] > 0f) {
+                            Stats add = effect.GetAverageStats(attemptedAtkIntervals[3], critRates[1], atkspeed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;
@@ -429,11 +430,10 @@ namespace Rawr.Hunter
             float WhtAttemptedAtksInterval = PetAttackSpeed(petStatsTotal);
             float YlwAttemptedAtksInterval = AllAttemptedAtksInterval - WhtAttemptedAtksInterval;
 
-            float[] hitRates  = {WhAtkTable.AnyLand, // Whites
-                                 YwAtkTable.AnyLand}; // Yellows
-                                // (1f - PetChanceToMiss - PetChanceToBeDodged);
+            float[] hitRates  = { WhAtkTable.AnyLand,   // Whites
+                                  YwAtkTable.AnyLand }; // Yellows
             float[] critRates = { WhAtkTable.Crit, // Whites
-                                  YwAtkTable.Crit + calculatedStats.petCritFromCobraStrikes}; // Yellows
+                                  YwAtkTable.Crit + calculatedStats.petCritFromCobraStrikes }; // Yellows
 
             float bleedHitInterval = 0f;
             float rakefreq = priorityRotation.getSkillFrequency(PetAttacks.Rake ); if (rakefreq > 0) { bleedHitInterval      += rakefreq; }
@@ -446,8 +446,15 @@ namespace Rawr.Hunter
             float smakfreq = priorityRotation.getSkillFrequency(PetAttacks.Smack); if (smakfreq > 0) { clawbitesmackinterval += smakfreq; }
             PetClawBiteSmackInterval = clawbitesmackinterval;
 
-            petStatsProcs += GetSpecialEffectsStats(character, AllAttemptedAtksInterval, WhtAttemptedAtksInterval, hitRates, critRates,
-                                    bleedHitInterval, dmgDoneInterval, clawbitesmackinterval, petStatsTotal, null);
+            float[] AttemptedAtkIntervals = {
+                AllAttemptedAtksInterval, // All
+                WhtAttemptedAtksInterval, // Whites
+                YlwAttemptedAtksInterval, // Yellows
+                PetClawBiteSmackInterval, // ClawBiteSmack
+            };
+
+            petStatsProcs += GetSpecialEffectsStats(character, AttemptedAtkIntervals, hitRates, critRates,
+                                    bleedHitInterval, dmgDoneInterval, petStatsTotal, null);
 
             #region Stat Results of Special Effects
             // Base Stats

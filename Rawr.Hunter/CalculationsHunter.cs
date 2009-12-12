@@ -1550,7 +1550,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.manaRegenViper = calculatedStats.BasicStats.Mana * (float)Math.Round(rangedWeaponSpeed, 1) / 100f * shotsPerSecondWithoutHawk
                                         * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
-                                        + calculatedStats.BasicStats.Mana * 0.04f / 3f;
+                                        + stats.Mana * 0.04f / 3f;
 
             //float beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
@@ -1565,8 +1565,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaChangeDuringViper  = calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal + calculatedStats.manaRegenViper;
             calculatedStats.manaChangeDuringNormal = calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
 
-            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper  > 0f ? calculatedStats.BasicStats.Mana /       calculatedStats.manaChangeDuringViper   : -1f;
-            calculatedStats.manaTimeToOOM  = calculatedStats.manaChangeDuringNormal < 0f ? calculatedStats.BasicStats.Mana / (0f - calculatedStats.manaChangeDuringNormal) : -1f;
+            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper  > 0f ? stats.Mana /       calculatedStats.manaChangeDuringViper   : -1f;
+            calculatedStats.manaTimeToOOM  = calculatedStats.manaChangeDuringNormal < 0f ? stats.Mana / (0f - calculatedStats.manaChangeDuringNormal) : -1f;
 
             float PercTimeNoDPSforNoMana     = 0f,
                   viperTimeNeededToLastFight = 0f,
@@ -1597,11 +1597,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 case Aspect.Viper:
                     aspectUptimeViper = calcOpts.useBeastDuringBeastialWrath ? 1f - aspectUptimeBeast : 1f;
                     break;
-
                 case Aspect.Beast:
                     aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
                     break;
-
                 case Aspect.Hawk:
                 case Aspect.Dragonhawk:
                     aspectUptimeHawk = 1f - aspectUptimeViper - aspectUptimeBeast;
@@ -1609,7 +1607,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             // we now know aspect uptimes - calculate bonuses and penalties
-
             float viperDamageEffect  = talents.AspectMastery > 0 ? 0.40f : 0.50f;
             float viperDamagePenalty = aspectUptimeViper * viperDamageEffect;
 
@@ -1624,7 +1621,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.aspectViperPenalty    = viperDamagePenalty;
             calculatedStats.aspectBonusAPBeast    = beastAPBonus;
             calculatedStats.NoManaDPSDownTimePerc = PercTimeNoDPSforNoMana;
-
             #endregion
 
             // damage
@@ -1632,7 +1628,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.apFromBase = character.Level * 2f - 20f;
             calculatedStats.apFromAGI  = stats.Agility;
             calculatedStats.apFromSTR  = stats.Strength;
-            calculatedStats.apFromGear = calculatedStats.BasicStats.AttackPower
+            calculatedStats.apFromGear = stats.AttackPower
                                        - calculatedStats.apFromBase
                                        - calculatedStats.apFromAGI
                                        - calculatedStats.apFromSTR;
@@ -1650,29 +1646,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.damageReductionFromArmor = (1f - ArmorDamageReduction);
             #endregion
             #region August 2009 Damage Adjustments
-
-            //Partial Resists
+            // Partial Resists
             float averageResist = (levelDifF) * 0.02f;
             float resist10 = 5.0f * averageResist;
             float resist20 = 2.5f * averageResist;
             float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
 
-            //Beast Within
-            /*float beastWithinDamageAdjust = 1f;
-            if (calculatedStats.beastialWrath.freq > 0) {
-                beastWithinDamageAdjust = 1f + (0.1f * beastialWrathUptime);
-            }*/
-
-            //Focused Fire
+            // Focused Fire
             float focusedFireDamageAdjust = 1f + 0.01f * talents.FocusedFire;
 
-            //Sanc. Retribution Aura
-            //float sancRetributionAuraDamageAdjust = 1f + statsBuffs.BonusDamageMultiplier;
-
-            //Black Arrow Damage Multiplier
+            // Black Arrow Damage Multiplier
             float blackArrowUptime = 0;
-            if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow))
-            {
+            if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow)) {
                 SpecialEffect blackarrow = new SpecialEffect(Trigger.Use,new Stats(),
                                             calculatedStats.blackArrow.Duration, calculatedStats.blackArrow.Freq);
                 blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.Duration);
@@ -1680,42 +1665,42 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float blackArrowAuraDamageAdjust = 1f + (0.06f * blackArrowUptime);
             float blackArrowSelfDamageAdjust = 1f + (RAP / 225000f);
 
-            //Noxious Stings
+            // Noxious Stings
             float noxiousStingsSerpentUptime = 0;
-            if (calculatedStats.serpentSting.Freq > 0) noxiousStingsSerpentUptime = calculatedStats.serpentSting.Duration / calculatedStats.serpentSting.Freq;
-            if (calculatedStats.priorityRotation.chimeraRefreshesSerpent) noxiousStingsSerpentUptime = 1;
+            if (calculatedStats.serpentSting.Freq > 0) { noxiousStingsSerpentUptime = calculatedStats.serpentSting.Duration / calculatedStats.serpentSting.Freq; }
+            if (calculatedStats.priorityRotation.chimeraRefreshesSerpent) { noxiousStingsSerpentUptime = 1; }
             float noxiousStingsDamageAdjust = 1f + (0.01f * talents.NoxiousStings * noxiousStingsSerpentUptime);
             float noxiousStingsSerpentDamageAdjust = 1f + (0.01f * talents.NoxiousStings);
 
-            //Ferocious Inspiration (calculated by pet model)
+            // Ferocious Inspiration (calculated by pet model)
             float ferociousInspirationDamageAdjust = calculatedStats.ferociousInspirationDamageAdjust;
             float ferociousInspirationArcaneDamageAdjust = 1f + (0.03f * talents.FerociousInspiration);
 
-            //Improved Tracking
+            // Improved Tracking
             float improvedTrackingDamageAdjust = 1f + 0.01f * talents.ImprovedTracking;
 
-            //Ranged Weapon Specialization
+            // Ranged Weapon Specialization
             float rangedWeaponSpecializationDamageAdjust = 1;
             if (talents.RangedWeaponSpecialization == 1) rangedWeaponSpecializationDamageAdjust = 1.01f;
             if (talents.RangedWeaponSpecialization == 2) rangedWeaponSpecializationDamageAdjust = 1.03f;
             if (talents.RangedWeaponSpecialization == 3) rangedWeaponSpecializationDamageAdjust = 1.05f;
 
-            //Marked For Death (assume hunter's mark is on target)
+            // Marked For Death (assume hunter's mark is on target)
             float markedForDeathDamageAdjust = 1f + 0.01f * talents.MarkedForDeath;
 
-            //DamageTakenDebuffs
+            // DamageTakenDebuffs
             float targetPhysicalDebuffsDamageAdjust = (1f + statsBuffs.BonusPhysicalDamageMultiplier);
 
-            //Barrage
+            // Barrage
             float barrageDamageAdjust = 1f + 0.04f * talents.Barrage;
 
-            //Sniper Training
+            // Sniper Training
             float sniperTrainingDamageAdjust = 1f + 0.02f * talents.SniperTraining;
 
-            //Improve Stings
+            // Improve Stings
             float improvedStingsDamageAdjust = 1f + 0.1f * talents.ImprovedStings;
 
-            //TrapMastery
+            // Trap Mastery
             float trapMasteryDamageAdjust = 1f + 0.1f * talents.TrapMastery;
 
             // T.N.T.
@@ -1760,7 +1745,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // shot damage calcs
             #region AutoShot
-
             // scope damage only applies to autoshot, so is not added to the normalized damage
             float rangedAmmoDamage           = rangedAmmoDPS * rangedWeaponSpeed;
             float rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8f;
@@ -1770,13 +1754,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float autoShotDamage = rangedWeaponDamage
                                  + rangedAmmoDamage
-                                 + statsItems.WeaponDamage
+                                 + stats.WeaponDamage
                                  + damageFromRAP
-                                 + calculatedStats.BasicStats.ScopeDamage;
+                                 + stats.ScopeDamage;
             float autoShotDamageNormalized = rangedWeaponDamage
                                            + rangedAmmoDamageNormalized
-                                           + statsItems.WeaponDamage
-                                           + damageFromRAPNormalized;
+                                           + stats.WeaponDamage
+                                           + damageFromRAPNormalized
+                                           + stats.ScopeDamage;
 
             float autoShotDamageAdjust = talentDamageAdjust
                                        * targetPhysicalDebuffsDamageAdjust
@@ -1795,10 +1780,22 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                 * (1f - calculatedStats.aspectViperPenalty)
                                 * tier7ViperDamageAdjust;
 
-            calculatedStats.aspectBeastLostDPS = /*(0f - QSBaseFrequencyIncrease) * */ (1f - aspectUptimeHawk) * hunterAutoDPS;
+            float QSBaseFrequencyIncrease = 0f;
+            if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
+                && talents.ImprovedAspectOfTheHawk > 0)
+            {
+                float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
+                if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
+                SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
+                    new Stats() { RangedHaste = quickShotsEffect, },
+                    12f, 0f, 0.10f);
+                                                                    // Need to Fix Interval
+                QSBaseFrequencyIncrease = QuickShots.GetAverageStats(rangedWeaponSpeed, (1f - stats.PhysicalHit), rangedWeaponSpeed, calcOpts.Duration).RangedHaste;
+            }
+
+            calculatedStats.aspectBeastLostDPS = (0f - QSBaseFrequencyIncrease) * (1f - calculatedStats.aspectUptimeHawk) * hunterAutoDPS;
 
             calculatedStats.AutoshotDPS = hunterAutoDPS;
-
             #endregion
             #region August 2009 Wild Quiver
 
@@ -2287,6 +2284,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
 
+            #region Survivability
             float Health2SurvHunter = (stats.Health) / 100f;
             Health2SurvHunter += (stats.HealthRestore) / 1000f;
             float Health2SurvPet = (calculatedStats.pet.PetStats.Health) / 100f;
@@ -2302,6 +2300,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //float spiritbondcoeff = (talents.SpiritBond * 0.01f * (calcOpts.Duration / 10f));
             float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
             float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
+            #endregion
 
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS
                                                     + calculatedStats.WildQuiverDPS
