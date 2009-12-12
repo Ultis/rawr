@@ -5,16 +5,14 @@ using System.Diagnostics;
 
 namespace Rawr.Hunter
 {
-    public class PetSkill
-    {
+    public class PetSkill {
         public bool can_crit;
         public float cooldown;
         public int focus;
         public PetSkillType type;
         public float average;
 
-        public PetSkill(bool can_crit, float cooldown, int focus, PetSkillType type)
-        {
+        public PetSkill(bool can_crit, float cooldown, int focus, PetSkillType type) {
             this.can_crit = can_crit;
             this.cooldown = cooldown;
             this.focus = focus;
@@ -22,8 +20,7 @@ namespace Rawr.Hunter
             this.average = 0;
         }
 
-        public PetSkill(bool can_crit, float cooldown, int focus, PetSkillType type, int min, int max)
-        {
+        public PetSkill(bool can_crit, float cooldown, int focus, PetSkillType type, int min, int max) {
             this.can_crit = can_crit;
             this.cooldown = cooldown;
             this.focus = focus;
@@ -117,8 +114,7 @@ namespace Rawr.Hunter
             if (skillType == PetAttacks.None) return;
 
             // check that this skill is not already in the rotation
-            foreach (PetSkillInstance S in skills)
-            {
+            foreach (PetSkillInstance S in skills) {
                 if (S.skillType == skillType) return;
             }
 
@@ -187,13 +183,10 @@ namespace Rawr.Hunter
         public float petSpecialFrequency = 0;
         public float kc_dps = 0;
 
-        public void calculateDPS()
-        {
+        public void calculateDPS() {
             dps = 0;
             kc_dps = 0;
-
-            foreach (PetSkillInstance S in skills)
-            {
+            foreach (PetSkillInstance S in skills) {
                 dps += S.dps;
                 kc_dps += S.kc_dps;
             }
@@ -223,7 +216,6 @@ namespace Rawr.Hunter
             }
             return 0;
         }
-
     }
 
     // This class is used for building the priority list.
@@ -269,13 +261,13 @@ namespace Rawr.Hunter
             if (PrevSkill != null) { gcd_left = PrevSkill.gcd_left - PrevSkill.gcd_used; }
 
             gcd_needed = cooldown >= 30 ? 0 : possible_freq > 0 ? PetGCD / possible_freq : 0;
-            
-            gcd_used = 1 - (gcd_left - gcd_needed);
+
+            gcd_used = 1f - (gcd_left - gcd_needed);
             if (PrevSkill != null) { gcd_used = gcd_left > gcd_needed ? gcd_needed : gcd_left; }
 
             temp_frequency = gcd_used > 0 ? PetGCD / gcd_used : cooldown >= 30 ? cooldown : 0;
 
-            fps_needed = (1 - priorityRotation.owlsFocus) * (temp_frequency > 0 ? focus / temp_frequency : 0);
+            fps_needed = (1f - priorityRotation.owlsFocus) * (temp_frequency > 0 ? focus / temp_frequency : 0);
 
             fps_available = priorityRotation.fpsGained;
             if (PrevSkill != null) { fps_available = PrevSkill.fps_available - PrevSkill.fps_needed; }
@@ -292,7 +284,7 @@ namespace Rawr.Hunter
             kc_dps = can_crit ? dps : 0;
         }
     }
-       
+
     public class PetSkillStack
     {
         public float time_to_reach = 0;

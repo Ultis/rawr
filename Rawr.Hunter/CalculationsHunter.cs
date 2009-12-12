@@ -2541,13 +2541,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
                     out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                     out rotationTest);
-                
+
                 float[] attemptedAtksInterval = { 
                     1f / totalShotsPerSecond,      // All
                     1f / autoShotsPerSecond,       // White
                     1f / specialShotsPerSecond,    // Yellow
                     1f / autoShotsPerSecond,       // AutoShot
-                    calculatedStats.steadyShot.Cd  // SteadyShot
+                    calculatedStats.steadyShot.Cd, // SteadyShot
+                    (calculatedStats.serpentSting.Freq > 0 ? 3f : 0f) // SerpentWyvernStings do damage
                 };
                 float[] petattemptedAtksInterval = {
                     calculatedStats.pet.PetCompInterval, // All
@@ -2705,10 +2706,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         }
                         break;
                     case Trigger.SerpentWyvernStingsDoDamage:
-                        //if (attemptedAtkInterval > 0f) {
-                            Stats addme = effect.GetAverageStats(3, 1f, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (attemptedAtkInterval[5] > 0f) {
+                            Stats addme = effect.GetAverageStats(attemptedAtkInterval[5], 1f, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += addme;
-                        //}
+                        }
                         break;
                 }
                 effect.Stats.ArmorPenetrationRating = oldArp;

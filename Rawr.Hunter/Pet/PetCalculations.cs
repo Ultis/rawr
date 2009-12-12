@@ -69,7 +69,10 @@ namespace Rawr.Hunter
 
             float focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat) / 4f;
 
-            float owlsFocusEffect = (CalcOpts.PetTalents.OwlsFocus.Value > 0) ? owlsFocusEffect = 1f / (1f / (PetTalents.OwlsFocus.Value * 0.15f) + 1f) : 0f;
+            float owlsFocusEffect = 0f;
+            if (PetTalents.OwlsFocus.Value > 0) {
+                owlsFocusEffect = 1f / (1f / (PetTalents.OwlsFocus.Value * 0.15f) + 1f);
+            }
             #endregion
 
             if (priorityRotation == null) {
@@ -957,11 +960,8 @@ namespace Rawr.Hunter
 
                 S.CalculateDPS();
             }
-
             // now add everything up...
-
             priorityRotation.calculateDPS();
-
             #endregion
             #region Kill Command
 
