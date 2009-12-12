@@ -452,54 +452,7 @@ namespace Rawr.Retribution
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-
-                    float trigger = 0f; float procChance = 1f;
-                    if (effect.Trigger == Trigger.MeleeCrit)
-                    {
-                        trigger = 1f / rot.GetMeleeCritsPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.MeleeHit)
-                    {
-                        trigger = 1f / rot.GetMeleeAttacksPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.PhysicalCrit)
-                    {
-                        trigger = 1f / rot.GetPhysicalCritsPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
-                    {
-                        trigger = 1f / rot.GetPhysicalAttacksPerSec();
-                    }
-                    else if (effect.Trigger == Trigger.CrusaderStrikeHit)
-                    {
-                        trigger = rot.GetCrusaderStrikeCD();
-                        procChance = rot.CS.ChanceToLand();
-                    }
-                    else if (effect.Trigger == Trigger.JudgementHit)
-                    {
-                        trigger = rot.GetJudgementCD();
-                        procChance = rot.Judge.ChanceToLand();
-                    }
-                    else if (effect.Trigger == Trigger.SealOfVengeanceTick)
-                    {
-                        if (calcOpts.Seal == SealOf.Vengeance)
-                        {
-                            trigger = 3f;
-                            procChance = 1f;
-                        }
-                        else continue;
-                    }
-                    else if (effect.Trigger == Trigger.Use)
-                    {
-                        trigger = 0f;
-                        procChance = 1f;
-                    }
-                    else continue;
-                    if (effect.MaxStack > 1) statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance,
-                        combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset);
-                    else statsAverage += effect.GetAverageStats(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
-
-                    float chance = effect.GetAverageUptime(trigger, procChance, combats.BaseWeaponSpeed, fightLength);
+                    statsAverage.Accumulate(ProcessSpecialEffect(effect, rot, calcOpts.Seal, combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset));
                 }
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
@@ -516,6 +469,72 @@ namespace Rawr.Retribution
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
             }
             return stats;
+        }
+
+        private Stats ProcessSpecialEffect(SpecialEffect effect, Rotation rot, SealOf seal, float baseWeaponSpeed, float fightLength, int stackTrinketReset)
+        {
+            float trigger = 0f; float procChance = 1f;
+            if (effect.Trigger == Trigger.MeleeCrit)
+            {
+                trigger = 1f / rot.GetMeleeCritsPerSec();
+            }
+            else if (effect.Trigger == Trigger.MeleeHit)
+            {
+                trigger = 1f / rot.GetMeleeAttacksPerSec();
+            }
+            else if (effect.Trigger == Trigger.PhysicalCrit)
+            {
+                trigger = 1f / rot.GetPhysicalCritsPerSec();
+            }
+            else if (effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
+            {
+                trigger = 1f / rot.GetPhysicalAttacksPerSec();
+            }
+            else if (effect.Trigger == Trigger.CrusaderStrikeHit)
+            {
+                trigger = rot.GetCrusaderStrikeCD();
+                procChance = rot.CS.ChanceToLand();
+            }
+            else if (effect.Trigger == Trigger.JudgementHit)
+            {
+                trigger = rot.GetJudgementCD();
+                procChance = rot.Judge.ChanceToLand();
+            }
+            else if (effect.Trigger == Trigger.SealOfVengeanceTick)
+            {
+                if (seal == SealOf.Vengeance)
+                {
+                    trigger = 3f;
+                    procChance = 1f;
+                }
+                else new Stats();
+            }
+            else if (effect.Trigger == Trigger.Use)
+            {
+                trigger = 0f;
+                procChance = 1f;
+            }
+            else new Stats();
+
+            if (effect.MaxStack > 1)
+            {
+                if (effect.Stats.MoteOfAnger > 0)
+                {
+                    return new Stats() { MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(trigger, procChance, baseWeaponSpeed, fightLength) / effect.MaxStack };
+                }
+                else
+                {
+                    Stats tempStats = null;
+                    foreach (SpecialEffect subeffect in effect.Stats.SpecialEffects())
+                    {
+                        tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration, 0);
+                    }
+
+                    if (tempStats != null) return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                    else return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                }
+            }
+            else return effect.GetAverageStats(trigger, procChance, baseWeaponSpeed, fightLength);
         }
 
         private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel)
@@ -682,7 +701,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust + stats.MoteOfAnger +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.Paragon +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
@@ -749,7 +768,8 @@ namespace Rawr.Retribution
                 SealMultiplier = stats.SealMultiplier,
                 JudgementMultiplier = stats.JudgementMultiplier,
                 DivineStormRefresh = stats.DivineStormRefresh,
-                DeathbringerProc = stats.DeathbringerProc
+                DeathbringerProc = stats.DeathbringerProc,
+                MoteOfAnger = stats.MoteOfAnger
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -765,7 +785,11 @@ namespace Rawr.Retribution
                 || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit)
             {
                 Stats stats = effect.Stats;
-                return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating
+                foreach (SpecialEffect subeffect in stats.SpecialEffects())
+                {
+                    if (HasRelevantSpecialEffect(subeffect)) return true;
+                }
+                return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.MoteOfAnger
                     + stats.ArmorPenetrationRating + stats.Paragon + stats.HasteRating + stats.DeathbringerProc
                     + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
             }
@@ -774,7 +798,7 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
+            bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration + stats.MoteOfAnger +
                 stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.DivineStormRefresh +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon + stats.DeathbringerProc +

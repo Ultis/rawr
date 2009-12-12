@@ -407,7 +407,7 @@ namespace Rawr.Retribution
 
         public float WhiteDPS()
         {
-            return AverageDamage() / Combats.AttackSpeed;
+            return AverageDamage() / Combats.AttackSpeed + Stats.MoteOfAnger * AverageDamage();
         }
 
     }
