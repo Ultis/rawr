@@ -956,7 +956,8 @@ namespace Rawr.Enhance
                     trigger == Trigger.ShamanShock ||
                     trigger == Trigger.ShamanStormStrike ||
                     trigger == Trigger.ShamanShamanisticRage ||
-                    trigger == Trigger.ShamanFlameShockDoTTick);
+                    trigger == Trigger.ShamanFlameShockDoTTick ||
+                    trigger == Trigger.DoTTick);
         }
 
         public override bool IsBuffRelevant(Buff buff)

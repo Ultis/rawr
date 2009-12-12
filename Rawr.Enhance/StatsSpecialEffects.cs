@@ -162,6 +162,7 @@ namespace Rawr.Enhance
                     chance = 1f;
                     break;
                 case Trigger.ShamanFlameShockDoTTick:
+                case Trigger.DoTTick:
                     trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.FlameShock);
                     chance = 1f;
                     break;
