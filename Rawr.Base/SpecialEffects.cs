@@ -362,11 +362,6 @@ namespace Rawr {
                 if (moonkinline.Contains(" ")) moonkinline = moonkinline.Substring(0, moonkinline.IndexOf(" "));
                 stats.IdolCritRating += (float)int.Parse(moonkinline);
                 // Tree of Life form
-                treeline = treeline.Substring("Increases the healing spell power granted by the Tree of Life form aura by ".Length);
-                if (treeline.Contains(",")) treeline = treeline.Substring(0, treeline.IndexOf(","));
-                if (treeline.Contains(".")) treeline = treeline.Substring(0, treeline.IndexOf("."));
-                if (treeline.Contains(" ")) treeline = treeline.Substring(0, treeline.IndexOf(" "));
-                stats.TreeOfLifeAura += (float)int.Parse(treeline);
             }
             else if (line.StartsWith("Your Mangle ability also increases your attack power by "))
             {
@@ -765,73 +760,56 @@ namespace Rawr {
                 float duration = float.Parse(durationLine, System.Globalization.CultureInfo.InvariantCulture);
                 stats.AddSpecialEffect(new SpecialEffect() { Chance = 0.7f, Cooldown = 0f, Duration = duration, Trigger = Trigger.MoonfireTick, Stats = new Stats() { CritRating = critRating }, MaxStack = 1 });
             }
-            else if (line.StartsWith("Increases the final healing value of your Lifebloom by "))
-            {
-                line = line.Substring("Increases the final healing value of your Lifebloom by ".Length);
-                line = line.Replace(".", "");
-                stats.LifebloomFinalHealBonus += (float)int.Parse(line);
-            }
             else if (line.StartsWith("Reduces the mana cost of Rejuvenation by "))
             {
+                // Idol of Awakening
                 line = line.Substring("Reduces the mana cost of Rejuvenation by ".Length);
                 line = line.Replace(".", "");
                 stats.ReduceRejuvenationCost += (float)int.Parse(line);
             }
-            else if (line.StartsWith("Reduces the mana cost of Regrowth by "))
-            {
-                line = line.Substring("Reduces the mana cost of Regrowth by ".Length);
-                line = line.Replace(".", "");
-                stats.ReduceRegrowthCost += (float)int.Parse(line);
-            }
-            else if (line.StartsWith("Gain up to 25 mana each time you cast Healing Touch."))
-            {
-                stats.ReduceHealingTouchCost += 25;
-            }
             else if (line.StartsWith("Increases the periodic healing of Rejuvenation by "))
             {
+                // Idol of Pure Thoughts
                 line = line.Substring("Increases the periodic healing of Rejuvenation by ".Length);
                 line = line.Replace(".", "");
                 stats.RejuvenationHealBonus += (float)int.Parse(line);
             }
-            else if (line.StartsWith("Increases spell power of Rejuvenation by "))
-            {
-                line = line.Substring("Increases spell power of Rejuvenation by ".Length);
-                line = line.Replace(".", "");
-                stats.RejuvenationSpellpower += (float)int.Parse(line);
-            }
             else if ((match = Regex.Match(line, @"Each time your Rejuvenation spell deals periodic healing, you have a chance to gain (?<spellPower>\d+) spell power for (?<duration>\d+) sec.")).Success)
             {
-                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Idol of Flaring Growth
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Not yet sure about cooldown and proc chance
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 0.7f));
             }
             else if ((match = Regex.Match(line, @"The periodic healing from your Rejuvenation spell grants (?<spellPower>\d+) spell power for (?<duration>\d+) sec.  Stacks up to (?<stacks>\d+) times.")).Success)
             {
-                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Idol of the Black Willow
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
             else if ((match = Regex.Match(line, @"The periodic healing from your Rejuvenation spell grants (?<spellPower>\d+) spell power for (?<duration>\d+) sec. nbsp;Stacks up to (?<stacks>\d+) times.")).Success)
             {
-                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Idol of the Black Willow
+                int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
             else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
             {
+                // Idol of Lush Mosh
                 line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);
                 line = line.Replace(".", "");
                 stats.LifebloomTickHealBonus += (float)int.Parse(line);
             }
             else if (line.StartsWith("Increases the amount healed by Healing Touch by "))
             {
+                // Idol of Health
                 line = line.Substring("Increases the amount healed by Healing Touch by ".Length);
                 line = line.Replace(".", "");
                 stats.HealingTouchFinalHealBonus += (float)int.Parse(line);
             }
             else if (line.StartsWith("Increases the spell power of your Nourish by "))
             {
+                // Idol of the Flourishing Life
                 line = line.Substring("Increases the spell power of your Nourish by ".Length);
                 line = line.Replace(".", "");
                 stats.NourishSpellpower += (float)int.Parse(line);
@@ -894,15 +872,12 @@ namespace Rawr {
                     stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
                 }
             }
-            else if (line.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
-            {
-                stats.ManacostReduceWithin15OnHealingCast += 450;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HealingOmenProc = 450 }, 0, 0, 0.02f));
-            }
             else if (line.StartsWith("Your healing spells have a chance to make your next heal cast within 15 sec cost 800 less mana."))
             {
                 // Soul Preserver
-                stats.ManacostReduceWithin15OnHealingCast += 800;
+                // This is how RestoSham does it:
+                stats.ManacostReduceWithin15OnHealingCast += 800; 
+                // And that is how Tree does it:
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HealingOmenProc = 800 }, 0, 0, 0.02f));
             }
             else if ((match = Regex.Match(line, @"Your damaging and healing spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec.")).Success)
@@ -940,7 +915,6 @@ namespace Rawr {
             else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
             {
                 // Majestic Dragon Figurine
-                stats.ExtraSpiritWhileCasting += 180;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 18.0f }, 10f, 0f, 1.0f, 10));
             }
             else if (line.StartsWith("Your spells have a chance to increase your haste rating by 505 for 10 secs."))
@@ -1933,7 +1907,7 @@ namespace Rawr {
                 // That would mean: 10 seconds ramping up, then 20 seconds having the effect (assuming the stack is refreshed)
                 // Average stack of 4 (24/30 * 5)
                 // But remember that the spellpower will increase for others in the raid too!
-                // stats.BonusHealingReceived = 58 * 4;
+                // stats.BonusHealingReceived = 58 * 4;                
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusHealingReceived = 58 * 4f }, 30, 120));
             }
             else if (line.StartsWith("Your heals each cost "))

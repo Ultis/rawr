@@ -77,11 +77,9 @@ namespace Rawr.Tree {
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            float spi_from_trinkets = (BasicStats.SpiritFor20SecOnUse2Min / 6f);
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString() + (spi_from_trinkets > 0 || BasicStats.ExtraSpiritWhileCasting > 0 ? "*" + Math.Round(spi_from_trinkets, 2).ToString() + " Spirit from trinkets\n" + Math.Round(BasicStats.ExtraSpiritWhileCasting,2).ToString() + " Spirit while casting" : ""));
-            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
+            dictValues.Add("Healing", (BasicStats.SpellPower).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
 
-            bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
             dictValues.Add("Effective MP5", Math.Round(Sustained.MPSInFSR * 5f).ToString() + "*" + Math.Round(Sustained.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Sustained.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Sustained.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Sustained.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Sustained.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Sustained.InnervateMana).ToString() + " (" + Math.Round(Sustained.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Sustained.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Sustained.PotionMana).ToString() + " extra mana from Potion)\n");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
 

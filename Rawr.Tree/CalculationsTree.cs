@@ -311,6 +311,7 @@ applied and result is scaled down by 100)",
                         "Mana usage per spell (sustained)",
                         "Healing per spell (sustained)",
                         "HPCT per spell",
+                        "HPS per spell",
                         "HPM per spell",
 					};
                 }
@@ -352,8 +353,6 @@ applied and result is scaled down by 100)",
         public override List<ItemType> RelevantItemTypes {
             get {
                 if (_relevantItemTypes == null) {
-                    // I don't know of a fist weapon or two hand mace with healing stats, so...
-                    // I don't know either .. but i know there are a few with spell power
                     _relevantItemTypes = new List<ItemType>(new ItemType[]{
                         ItemType.None,
                         ItemType.Cloth,
@@ -372,7 +371,7 @@ applied and result is scaled down by 100)",
         public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTree(); }
-        protected RotationSettings predefinedRotation(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
+        protected RotationSettings getRotationFromCalculationOptions(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
             RotationSettings settings = new RotationSettings();
 
             settings.RejuvFraction = (float)calcOpts.AverageRejuv / 100.0f;
@@ -421,70 +420,93 @@ applied and result is scaled down by 100)",
             settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
             return settings;
         }
-        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, out float Healing)
+        private static Stats getAverageStats(Rawr.SpecialEffect effect, float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, out float weight, out float stacksAtEnd)
         {
-            Healing = 0;
+            Stats s = effect.GetAverageStats(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            
+            if (effect.MaxStack > 1)
+            {
+                // Will the stacks drop when the effect is stopped? If not, the average stack size must be increased somehow
+                // E.G. Duration = X, and secondary has Duration = Y
+                // Then average stacksize total will be average accumulation with fight lenght X
+                // plus the amount of stacks that are at the end times Y
+                
+                weight = effect.GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+                stacksAtEnd = Math.Min(effect.MaxStack, weight*2);
+            }
+            else if (effect.Duration == 0f)
+            {
+                weight = effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+                stacksAtEnd = 0;
+            }
+            else
+            {
+                // Same story here - usually our secondary won't have a duration now, but it might still be possible, a stack that keeps getting refreshed...
+                weight = effect.GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+                stacksAtEnd = 1f;
+            }
+
+            return s;
+        }
+
+        private static Stats calculateSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, float weight, bool overflow)
+        {
             #region New_SpecialEffect_Handling
             Stats resultNew = new Stats();
             foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
             {
+                Stats s = null;
+                float averageStacks = 1f, stacksEnd = 0f;
                 if (effect.Trigger == Trigger.Use)
                 {
-                    Stats s = effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration); // 0 cooldown, 100% chance to use
-                    resultNew += s;
-
-                    float _h;
-                    Stats s2 = getTrinketStats(character, s, effect.Duration, CastInterval, HealInterval, CritsRatio, RejuvInterval, out _h);
-                    Healing += _h;
-
-                    s2 *= effect.Duration / effect.Cooldown;
-                    resultNew += s2;
+                    s = getAverageStats(effect, 0.0f, 1.0f, 2.0f, FightDuration, out averageStacks, out stacksEnd); // 0 cooldown, 100% chance to use
                 }
                 else if (effect.Trigger == Trigger.SpellCast)
                 {
-                    resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
+                    s = getAverageStats(effect, CastInterval, 1.0f, CastInterval, FightDuration, out averageStacks, out stacksEnd);
                 }
                 else if (effect.Trigger == Trigger.HealingSpellCast)
                 {
                     // Same as SpellCast, but split to allow easier placement of breakpoints
-                    resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
+                    s = getAverageStats(effect, CastInterval, 1.0f, CastInterval, FightDuration, out averageStacks, out stacksEnd);
                 }
                 else if (effect.Trigger == Trigger.HealingSpellHit)
                 {
                     // Heal interval measures time between HoTs as well, direct heals are a different interval
-                    resultNew += effect.GetAverageStats(HealInterval, 1.0f, CastInterval, FightDuration);
+                    s = getAverageStats(effect, HealInterval, 1.0f, CastInterval, FightDuration, out averageStacks, out stacksEnd);
                 }
                 else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
                 {
-                    resultNew += effect.GetAverageStats(CastInterval, CritsRatio, CastInterval, FightDuration);
+                    s = getAverageStats(effect, CastInterval, CritsRatio, CastInterval, FightDuration, out averageStacks, out stacksEnd);
                 }
                 else if (effect.Trigger == Trigger.RejuvenationTick)
                 {
-                    resultNew += effect.GetAverageStats(RejuvInterval, 1.0f, RejuvInterval, FightDuration);
+                    s = getAverageStats(effect, RejuvInterval, 1.0f, RejuvInterval, FightDuration, out averageStacks, out stacksEnd);
                 }
                 else
                 {
                     // Trigger isn't relevant. Physical Hit, Damage Spell etc.
                 }
+                if (s != null) {
+                    float weightForThisEffect = weight;
+                    if (overflow && !float.IsInfinity(effect.Duration)) // todo : this assumes a stack does not drop off when its parent is terminated
+                    {
+                        // Apparently we're allowed to overflow...
+                        // this calculation basically assumes there was a hitting trigger right at the end, so assume full duration of average stacks...
+                        weightForThisEffect *= (averageStacks * FightDuration + stacksEnd * effect.Duration) / (averageStacks * FightDuration);
+                    }
+
+                    s += calculateSpecialEffects(character, s, effect.Duration, CastInterval, HealInterval, CritsRatio, RejuvInterval, averageStacks, stacksEnd>=1f?true:false);
+                    // Clear special effects
+                    for (int i=0;i<s._rawSpecialEffectDataSize;i++) s._rawSpecialEffectData[i] = null;
+                    s._rawSpecialEffectDataSize = 0;
+                    resultNew += s * weightForThisEffect;
+                }
             }
             #endregion
 
-            float extraSpellPower = (resultNew.Spirit * character.DruidTalents.ImprovedTreeOfLife * 0.05f);
 
-            Healing = resultNew.Healed;
-            return new Stats()
-            {
-                Spirit = resultNew.Spirit,
-                HasteRating = resultNew.HasteRating,
-                SpellPower = resultNew.SpellPower + extraSpellPower,
-                CritRating = resultNew.CritRating,
-                Mp5 = resultNew.Mp5 + (resultNew.ManaRestore * 5.0f),
-                SpellCombatManaRegeneration = resultNew.SpellCombatManaRegeneration,
-                BonusHealingReceived = resultNew.BonusHealingReceived,
-                SpellsManaReduction = resultNew.SpellsManaReduction,
-                HighestStat = resultNew.HighestStat,
-                ShieldFromHealed = resultNew.ShieldFromHealed,
-            };
+            return resultNew;
         }
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -497,19 +519,25 @@ applied and result is scaled down by 100)",
 
             #region Rotations
             Stats stats = calculationResult.BasicStats;
-            float ExtraHPS = 0f;
-            RotationSettings settings = predefinedRotation(stats, calcOpts, calculationResult);
+            float ExtraHealing = 0f;
+            RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calculationResult);
 
             // Initial run
             RotationResult rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
 
-            int nPasses = 3, k;
+            int nPasses = 4, k;
             for (k = 0; k < nPasses; k++) {
-                Stats procs = getTrinketStats(character, stats,
+                /*
+                Stats procs = calculateSpecialEffects(character, stats,
                     rot.TotalTime, 60f / rot.TotalCastsPerMinute,
                     60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
-                    60 / rot.RejuvenationHealsPerMinute, 
-                    out ExtraHPS);
+                    60 / rot.RejuvenationHealsPerMinute);*/
+                Stats procs = calculateSpecialEffects(character, stats,
+                    rot.TotalTime, 60f / rot.CastsPerMinute,
+                    60f / rot.HealsPerMinute, rot.CritsPerMinute / rot.CastsPerMinute,
+                    60 / rot.RejuvenationHealsPerMinute, 1f, false);
+
+                ExtraHealing = procs.Healed;
 
                 // Create a new stats instance that uses the proc effects
                 stats = GetCharacterStats(character, additionalItem, procs);
@@ -524,7 +552,7 @@ applied and result is scaled down by 100)",
             calculationResult.SingleTarget = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
 
             calculationResult.BurstPoints = calculationResult.SingleTarget[0].HPS;
-            calculationResult.SustainedPoints = rot.TotalHealing / rot.TotalTime + ExtraHPS;
+            calculationResult.SustainedPoints = (rot.TotalHealing + ExtraHealing) / rot.TotalTime;
 
             #region Survival Points
             float DamageReduction = StatConversion.GetArmorDamageReduction(83, stats.Armor, 0, 0, 0);
@@ -536,7 +564,6 @@ applied and result is scaled down by 100)",
 
             calculationResult.OverallPoints = calculationResult.BurstPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
 
-            //calcOpts.calculatedStats = calculatedStats;
             return calculationResult;
         }
         public override Stats GetCharacterStats(Character character, Item additionalItem) { return GetCharacterStats(character, additionalItem, new Stats()); }
@@ -549,54 +576,38 @@ applied and result is scaled down by 100)",
             TreeConstants.BaseMana = statsRace.Mana; // Setup TreeConstant
 
             Stats statsTalents = new Stats() {
-                BonusAgilityMultiplier   = 0.01f * talents.SurvivalOfTheFittest * 2f,
-                BonusIntellectMultiplier = 0.01f * talents.SurvivalOfTheFittest * 2f,
-                BonusSpiritMultiplier    = 0.01f * talents.SurvivalOfTheFittest * 2f,
-                BonusStaminaMultiplier   = 0.01f * talents.SurvivalOfTheFittest * 2f,
-                BonusStrengthMultiplier  = 0.01f * talents.SurvivalOfTheFittest * 2f,
+                BonusAgilityMultiplier   = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+                BonusIntellectMultiplier = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) * (1f + 0.04f * talents.HeartOfTheWild) - 1f,
+                BonusSpiritMultiplier    = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) * (1f + 0.05f * talents.LivingSpirit) - 1f,
+                BonusStaminaMultiplier   = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+                BonusStrengthMultiplier  = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+                BonusArmorMultiplier     = 0.80f * talents.ImprovedTreeOfLife,
                 SpellHaste               = ((1f + 0.01f * talents.CelestialFocus) * (1f + 0.02f * talents.GiftOfTheEarthmother)) - 1f,
+                SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
+                SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f,
             };
+
+            statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, talents.NaturesGrace * 1f / 3f, 1));
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents + statsProcs;
 
             statsTotal.Agility   = (float)Math.Floor(statsTotal.Agility   * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Agility   = (float)Math.Floor(statsTotal.Agility   * (1f + 0.01f * talents.ImprovedMarkOfTheWild));
             statsTotal.Stamina   = (float)Math.Floor(statsTotal.Stamina   * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina   = (float)Math.Floor(statsTotal.Stamina   * (1f + 0.01f * talents.ImprovedMarkOfTheWild));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1f + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Intellect = (float)Math.Round(statsTotal.Intellect * (1f + 0.04f * talents.HeartOfTheWild));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1f + 0.01f * talents.ImprovedMarkOfTheWild));
             statsTotal.Spirit    = (float)Math.Floor(statsTotal.Spirit    * (1f + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Spirit    = (float)Math.Floor(statsTotal.Spirit    * (1f + 0.05f * talents.LivingSpirit));
-            statsTotal.Spirit    = (float)Math.Floor(statsTotal.Spirit    * (1f + 0.01f * talents.ImprovedMarkOfTheWild));
-            statsTotal.Armor     = (float)Math.Floor(statsTotal.Armor     * (1f + 0.80f * talents.ImprovedTreeOfLife));
-
-            // Removed, since proc effects added by GetCharacterCalculations
-            //statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
-            statsTotal.ExtraSpiritWhileCasting = 0f;
+            statsTotal.Armor     = (float)Math.Floor(statsTotal.Armor     * (1f + statsTotal.BonusArmorMultiplier));
 
             if (statsTotal.HighestStat > 0) {
-                // Highest stat in combat
-                if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect) {
-                    // spirit proc (Greatness)
-                    float extraSpi = statsTotal.HighestStat;
-                    extraSpi *= 1f + statsTotal.BonusSpiritMultiplier;
-                    extraSpi *= 1f + character.DruidTalents.LivingSpirit * 0.05f;
-                    extraSpi *= 1f + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
-                    statsTotal.Spirit += (float)Math.Floor(extraSpi);
-                }else{
-                    // int proc (Greatness)
-                    float extraInt = statsTotal.HighestStat;
-                    extraInt *= 1f + statsTotal.BonusIntellectMultiplier;
-                    extraInt *= 1f + character.DruidTalents.HeartOfTheWild * 0.04f;
-                    extraInt *= 1f + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
-                    statsTotal.Intellect += (float)Math.Floor(extraInt);
+                if (statsTotal.Spirit > statsTotal.Intellect) {
+                    statsTotal.Spirit += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusSpiritMultiplier));
+                } else {
+                    statsTotal.Intellect += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusIntellectMultiplier));
                 }
             }
 
-            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.Intellect * talents.LunarGuidance * 0.04); //LunarGuidance, 4% per Point
+            // Add spellpower from spirit, intellect and... agility :)
             statsTotal.SpellPower = (float)Math.Round( statsTotal.SpellPower
                                                     + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)
                                                     + (statsTotal.Intellect * talents.LunarGuidance * 0.04)
@@ -612,10 +623,6 @@ applied and result is scaled down by 100)",
                                                     + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                                                     + (statsTotal.SpellCrit)
                                                     + 0.01f * talents.NaturalPerfection) * 100f, 2);
-            statsTotal.SpellCombatManaRegeneration += 0.5f / 3f * talents.Intensity;
-
-            // SpellPower (actually healing only, but we have no damaging spells, so np)
-            statsTotal.SpellPower += ((statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting) * talents.ImprovedTreeOfLife * 0.05f);
 
             return statsTotal;
         }
@@ -633,12 +640,20 @@ applied and result is scaled down by 100)",
                     _subPointNameColors = _subPointNameColorsMPS;
                     ComparisonCalculationTree gear = new ComparisonCalculationTree()
                     {
-                        Name = "Gear",
+                        Name = "MP5 from gear and procs",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.GearMPS,
                         SubPoints = new float[] { calculationResult.Sustained.GearMPS }
                     };
                     comparisonList.Add(gear);
+                    ComparisonCalculationTree procs = new ComparisonCalculationTree()
+                    {
+                        Name = "Mana from procs",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.ProcsMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.ProcsMPS }
+                    };
+                    comparisonList.Add(procs);
                     ComparisonCalculationTree spiritIC = new ComparisonCalculationTree()
                     {
                         Name = "Spirit in combat",
@@ -761,6 +776,22 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.RegrowthHPS }
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree regrowthDH = new ComparisonCalculationTree()
+                        { // RegrowthAvg * regrowth.HPSHoT + RegrowthCPS * regrowth.AverageHealingwithCrit
+                            Name = "Regrowth (DH)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RegrowthCPS * calculationResult.Sustained.regrowth.AverageHealingwithCrit,
+                            SubPoints = new float[] { calculationResult.Sustained.RegrowthCPS * calculationResult.Sustained.regrowth.AverageHealingwithCrit }
+                        };
+                        comparisonList.Add(regrowthDH);
+                        ComparisonCalculationTree regrowthHoT = new ComparisonCalculationTree()
+                        { 
+                            Name = "Regrowth (HoT)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RegrowthAvg * calculationResult.Sustained.regrowth.HPSHoT,
+                            SubPoints = new float[] { calculationResult.Sustained.RegrowthAvg * calculationResult.Sustained.regrowth.HPSHoT }
+                        };
+                        comparisonList.Add(regrowthHoT);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
@@ -769,6 +800,22 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.LifebloomHPS }
                         };
                         comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomDH = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom (Bloom)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomCPS * calculationResult.Sustained.lifebloom.AverageHealingwithCrit,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomCPS * calculationResult.Sustained.lifebloom.AverageHealingwithCrit }
+                        };
+                        comparisonList.Add(lifebloomDH);
+                        ComparisonCalculationTree lifebloomHoT = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom (HoT)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomAvg * calculationResult.Sustained.lifebloom.HPSHoT,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomAvg * calculationResult.Sustained.lifebloom.HPSHoT }
+                        };
+                        comparisonList.Add(lifebloomHoT);
                         ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom Stack",
@@ -777,6 +824,22 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.LifebloomStackHPS }
                         };
                         comparisonList.Add(lifebloomStack);
+                        ComparisonCalculationTree lifebloomStackDH = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Stack (Bloom)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomStackHPS_DH,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackHPS_DH }
+                        };
+                        comparisonList.Add(lifebloomStackDH);
+                        ComparisonCalculationTree lifebloomStackHOT = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Stack (HoT)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomStackHPS_HOT,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackHPS_HOT }
+                        };
+                        comparisonList.Add(lifebloomStackHOT);
                         ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
                         {
                             Name = "Wild Growth",
@@ -911,6 +974,118 @@ applied and result is scaled down by 100)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.nourish[4].HPCT,
                             SubPoints = new float[] { calculationResult.Sustained.nourish[4].HPCT }
+                        };
+                        comparisonList.Add(nourish4);
+                    }
+                    return comparisonList.ToArray();
+                case "HPS per spell":
+                    {
+                        _subPointNameColors = _subPointNameColorsHPS;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.rejuvenate.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.rejuvenate.HPCTD }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.regrowth.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.regrowth.HPCTD }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloom.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloom.HPCTD }
+                        };
+                        comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Rolling Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomRollingStack.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomRollingStack.HPCTD }
+                        };
+                        comparisonList.Add(lifebloomRollingStack);
+                        ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Slow Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomSlowStack.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomSlowStack.HPCTD }
+                        };
+                        comparisonList.Add(lifebloomSlowStack);
+                        ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Fast Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.lifebloomFastStack.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.lifebloomFastStack.HPCTD }
+                        };
+                        comparisonList.Add(lifebloomFastStack);
+                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.wildGrowth.HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPCTD }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        if (calculationResult.Sustained.swiftmend != null)
+                        {
+                            ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                            {
+                                Name = "Swiftmend",
+                                Equipped = false,
+                                OverallPoints = calculationResult.Sustained.swiftmend.HPCTD,
+                                SubPoints = new float[] { calculationResult.Sustained.swiftmend.HPCTD }
+                            };
+                            comparisonList.Add(swiftmend);
+                        }
+                        ComparisonCalculationTree nourish0 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (0)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[0].HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[0].HPCTD }
+                        };
+                        comparisonList.Add(nourish0);
+                        ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (1)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[1].HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[1].HPCTD }
+                        };
+                        comparisonList.Add(nourish1);
+                        ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (2)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[2].HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[2].HPCTD }
+                        };
+                        comparisonList.Add(nourish2);
+                        ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (3)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[3].HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[3].HPCTD }
+                        };
+                        comparisonList.Add(nourish3);
+                        ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish (4)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.nourish[4].HPCTD,
+                            SubPoints = new float[] { calculationResult.Sustained.nourish[4].HPCTD }
                         };
                         comparisonList.Add(nourish4);
                     }
@@ -1097,7 +1272,6 @@ applied and result is scaled down by 100)",
             }
         }
         public override Stats GetRelevantStats(Stats stats) {
-            //return SpecialEffects.GetRelevantStats(stats) + new Stats()
             Stats s = new Stats() {
                 #region Base Stats
                 //Stamina = stats.Stamina,
@@ -1118,31 +1292,23 @@ applied and result is scaled down by 100)",
                 #region Trinkets
                 BonusManaPotion = stats.BonusManaPotion,
                 HighestStat = stats.HighestStat,
+                SpellsManaReduction = stats.SpellsManaReduction,
+                HealingOmenProc = stats.HealingOmenProc, 
                 #endregion
                 #region Idols and Sets
-                TreeOfLifeAura = stats.TreeOfLifeAura,
-                ReduceRegrowthCost = stats.ReduceRegrowthCost,
-                ReduceRejuvenationCost = stats.ReduceRejuvenationCost, //Idol of Budding Life (-36)
-                RejuvenationHealBonus = stats.RejuvenationHealBonus,
-                RejuvenationSpellpower = stats.RejuvenationSpellpower,
-                LifebloomTickHealBonus = stats.LifebloomTickHealBonus,
-                LifebloomFinalHealBonus = stats.LifebloomFinalHealBonus,
-                ReduceHealingTouchCost = stats.ReduceHealingTouchCost, //Refered to Idol of Longevity, which grant 25mana on HT cast?
-                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, //HealingTouchHealBonus?
-                RegrowthExtraTicks = stats.RegrowthExtraTicks, //T5 (2) Bonus
-                BonusHealingTouchMultiplier = stats.BonusHealingTouchMultiplier,  //T6 (4) Bonus
                 LifebloomCostReduction = stats.LifebloomCostReduction,  //T7 (2) Bonus
                 NourishBonusPerHoT = stats.NourishBonusPerHoT,          //T7 (4) Bonus
+                SwiftmendBonus = stats.SwiftmendBonus,                   //T8 (2) Bonus
                 RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
                 NourishCritBonus = stats.NourishCritBonus,              // T9 (2) Bonus
                 RejuvenationCrit = stats.RejuvenationCrit,              // T9 (4) Bonus
                 WildGrowthLessReduction = stats.WildGrowthLessReduction, // T10 (2) Bonus
-                RejuvJumpChance = stats.RejuvJumpChance, // T10 (4) Bonus
-                NourishSpellpower = stats.NourishSpellpower,
-                SpellsManaReduction = stats.SpellsManaReduction,
-                HealingOmenProc = stats.HealingOmenProc,
-                //ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
-                SwiftmendBonus = stats.SwiftmendBonus,
+                RejuvJumpChance = stats.RejuvJumpChance,                 // T10 (4) Bonus
+                NourishSpellpower = stats.NourishSpellpower, // Idol of the Flourishing Life
+                RejuvenationHealBonus = stats.RejuvenationHealBonus, // Idol of Pure Thoughts (lvl74)
+                ReduceRejuvenationCost = stats.ReduceRejuvenationCost, // Idol of Awakening (lvl80) 
+                LifebloomTickHealBonus = stats.LifebloomTickHealBonus, // Idol of Lush Mosh
+                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, // Idol of Health                 
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1179,40 +1345,36 @@ applied and result is scaled down by 100)",
                 }
             }
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
-                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus + stats.HealingOmenProc
+                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.HealingOmenProc
                    + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
         public override bool HasRelevantStats(Stats stats) {
             if (HasRelevantSpecialEffectStats(stats)) return true;
 
-            // Remove crit taken
-            if (stats.SpellCrit == stats.PhysicalCrit) return false;
-            // Unfortunately we cannot distinguish between +5% spell crit from moonkin and +5% from winter's chill etc :(
-
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
-                + stats.BonusManaPotion + stats.ExtraSpiritWhileCasting
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
-                //+ stats.GreatnessProc 
-                + stats.HighestStat + stats.TreeOfLifeAura + stats.ReduceRegrowthCost
-                + stats.ReduceRejuvenationCost + stats.RejuvenationSpellpower + stats.RejuvenationHealBonus 
-                + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
-                + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT +
-                stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
-                //stats.ManacostReduceWithin15OnHealingCast +
-                stats.HealingOmenProc + stats.SwiftmendBonus + stats.NourishCritBonus + stats.RejuvenationCrit +
-                stats.RejuvJumpChance + stats.WildGrowthLessReduction +
-                stats.Armor + stats.Stamina + stats.ManaRestoreFromMaxManaPerSecond
+                + stats.Armor + stats.Stamina + stats.ManaRestoreFromMaxManaPerSecond
+                + stats.SpellCombatManaRegeneration // Bangle of nerfed - might be useful in future
+                #region Trinkets
+                + stats.HighestStat + stats.BonusManaPotion + stats.SpellsManaReduction + stats.HealingOmenProc
+                #endregion
+                #region Idols and Sets
+                + stats.LifebloomCostReduction + stats.NourishBonusPerHoT // T7
+                + stats.SwiftmendBonus + stats.RejuvenationInstantTick // T8
+                + stats.NourishCritBonus + stats.RejuvenationCrit // T9
+                + stats.WildGrowthLessReduction + stats.RejuvJumpChance // T10
+                + stats.NourishSpellpower // Idol of the Flourishing Life
+                + stats.RejuvenationHealBonus // Idol of Pure Thoughts (lvl74)
+                + stats.ReduceRejuvenationCost // Idol of Awakening (lvl80) 
+                + stats.LifebloomTickHealBonus // Idol of Lush Mosh
+                + stats.HealingTouchFinalHealBonus // Idol of Health       
+                #endregion
                 > 0)
                 return true;
 
-            //if (stats.Strength + stats.Agility + stats.AttackPower > 0){ return false; }
-
-            //Not sure why this was in here  
-            //if (stats.SpellCombatManaRegeneration == 0.3f){ return false; }
-
-            return (stats.SpellCombatManaRegeneration + stats.Intellect > 0);
+            return false;
         }
         public Stats GetBuffsStats(Character character, CalculationOptionsTree calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();

@@ -43,7 +43,6 @@ namespace Rawr {
         BonusShredDamage,
         BonusStreadyShotCrit,
         BossAttackPower,
-        ExtraSpiritWhileCasting,
         CatFormStrength,
         ClearcastOnBleedChance,
         PhysicalCrit,
@@ -143,17 +142,6 @@ namespace Rawr {
         WindfuryAPBonus,
         WrathDmg,
         DruidAshtongueTrinket,
-        RegrowthExtraTicks,
-        LifebloomFinalHealBonus,
-        BonusHealingTouchMultiplier,
-        TreeOfLifeAura,
-        ReduceRejuvenationCost,
-        ReduceRegrowthCost,
-        ReduceHealingTouchCost,
-        RejuvenationHealBonus,
-        RejuvenationSpellpower,
-        LifebloomTickHealBonus,
-        HealingTouchFinalHealBonus,
         SpiritFor20SecOnUse2Min,
         ManacostReduceWithin15OnHealingCast,
         SpellPower,
@@ -217,15 +205,19 @@ namespace Rawr {
         Mage4T10,
         #endregion
         #region Added by Rawr.Tree
-        LifebloomCostReduction,
-        NourishBonusPerHoT,
-        NourishSpellpower,
-        RejuvenationInstantTick,
-        SwiftmendBonus,
-        NourishCritBonus,
-        RejuvenationCrit,
-        WildGrowthLessReduction,
-        RejuvJumpChance,
+        LifebloomCostReduction, // T7 (2)
+        NourishBonusPerHoT, // T7 (4)
+        SwiftmendBonus, // T8 (2)
+        RejuvenationInstantTick, // T8 (4)
+        NourishCritBonus, // T9 (2)
+        RejuvenationCrit, // T9 (4)
+        WildGrowthLessReduction, // T10 (2)
+        RejuvJumpChance, // T10 (4)
+        NourishSpellpower, // Idol of the Flourishing Life
+        RejuvenationHealBonus, // Idol of Pure Thoughts (lvl74)
+        ReduceRejuvenationCost, // Idol of Awakening (lvl80) 
+        LifebloomTickHealBonus, // Idol of Lush Mosh
+        HealingTouchFinalHealBonus, // Idol of Health 
         #endregion
         #region Added by Rawr.Enhance
         BonusSSDamage,
@@ -2860,15 +2852,6 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.Warlock4T7]; }
             set { _rawAdditiveData[(int)AdditiveStat.Warlock4T7] = value; }
         }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spirit while casting")]
-        [Category("Equipment Effects")]
-        public float ExtraSpiritWhileCasting
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting] = value; }
-        }
         #endregion
         #region Added by Rawr.Hunter
         #region Common Stats
@@ -3023,88 +3006,27 @@ namespace Rawr {
         #endregion
         #endregion
         #region Added by Rawr.Tree
-        // Tree 2-piece T5
+        // Tier 7 (2)
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Lifebloom cost reduction")]
         [Category("Tree")]
-        public float RegrowthExtraTicks
+        public float LifebloomCostReduction
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.RegrowthExtraTicks]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RegrowthExtraTicks] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.LifebloomCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LifebloomCostReduction] = value; }
         }
 
-        // Tree PvP Idols and 4-piece T5
+        // Tier 7 (4)
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Nourish bonus per HoT")]
         [Category("Tree")]
-        [DisplayName("Lifebloom Final Heal")]
-        public float LifebloomFinalHealBonus
+        public float NourishBonusPerHoT
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.LifebloomFinalHealBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LifebloomFinalHealBonus] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT]; }
+            set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
         }
 
-        // Tree 4-piece T6
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Tree")]
-        public float BonusHealingTouchMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingTouchMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusHealingTouchMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Tree of Life Aura")]
-        [Category("Tree")]
-        public float TreeOfLifeAura
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TreeOfLifeAura]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TreeOfLifeAura] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Reduced Rejuvenation Mana Cost")]
-        [Category("Tree")]
-        public float ReduceRejuvenationCost
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ReduceRejuvenationCost]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ReduceRejuvenationCost] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Reduced Regrowth Mana Cost")]
-        [Category("Tree")]
-        public float ReduceRegrowthCost
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ReduceRegrowthCost]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ReduceRegrowthCost] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Reduced Healing Touch Mana Cost")]
-        [Category("Tree")]
-        public float ReduceHealingTouchCost
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ReduceHealingTouchCost]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ReduceHealingTouchCost] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healing by Rejuvenation")]
-        [Category("Tree")]
-        public float RejuvenationHealBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell power of Rejuvenation")]
-        [Category("Tree")]
-        public float RejuvenationSpellpower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationSpellpower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationSpellpower] = value; }
-        }
-
-        // Tier 8 Set bonus
+        // Tier 8 2 Set bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Healing by Swiftmend")]
         [Category("Tree")]
@@ -3114,6 +3036,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.SwiftmendBonus] = value; }
         }
 
+        // Tier 8 4 Set bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Instant Tick by Rejuvenation")]
         [Category("Tree")]
@@ -3163,6 +3086,27 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.RejuvJumpChance] = value; }
         }
 
+        // Idol of Pure Thoughts (WotLK blue)
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing by Rejuvenation")]
+        [Category("Tree")]
+        public float RejuvenationHealBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus] = value; }
+        }
+
+        // Idol of Awakening (WotLK purple)
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Reduced Rejuvenation Mana Cost")]
+        [Category("Tree")]
+        public float ReduceRejuvenationCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ReduceRejuvenationCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ReduceRejuvenationCost] = value; }
+        }
+
+        // Idol of Lush Mosh (WotLK)
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healing by Lifebloom Ticks")]
         [Category("Tree")]
@@ -3172,6 +3116,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.LifebloomTickHealBonus] = value; }
         }
 
+        // Idol of Health (WotLK)
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healing Touch Final Heal")]
         [Category("Tree")]
@@ -3180,24 +3125,8 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.HealingTouchFinalHealBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.HealingTouchFinalHealBonus] = value; }
         }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Lifebloom cost reduction")]
-        [Category("Tree")]
-        public float LifebloomCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LifebloomCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LifebloomCostReduction] = value; }
-        }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Nourish bonus per HoT")]
-        [Category("Tree")]
-        public float NourishBonusPerHoT
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT]; }
-            set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
-        }
-
+        // Idol of the Flourishing Life (WotLK)
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Nourish spell power")]
         [Category("Tree")]

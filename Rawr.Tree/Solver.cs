@@ -33,6 +33,7 @@ namespace Rawr.Tree
             Mana = stats.Mana;
             GearMPS = stats.Mp5 / 5f;
             SpiritInCombatFraction = stats.SpellCombatManaRegeneration;
+            ProcsMPS = stats.ManaRestore;
             #endregion
         }
 
@@ -108,24 +109,20 @@ namespace Rawr.Tree
                     case LifeBloomType.Slow:
                         lifebloomStackSpell = lifebloomSlowStack;
                         lifebloomStackDuration = lifebloomStackSpell.Duration + 1f; // need a second before reapplying
-                        lifebloomStackMultiplier = 3;
                         break;
                     case LifeBloomType.Fast:
                         lifebloomStackSpell = lifebloomFastStack;
                         lifebloomStackDuration = lifebloomStackSpell.Duration + 1f; // need a second before reapplying
-                        lifebloomStackMultiplier = 3;
                         break;
                     default:
                         lifebloomStackSpell = lifebloomRollingStack;
                         lifebloomStackDuration = lifebloomStackSpell.Duration;
-                        lifebloomStackMultiplier = 1;
                         break;
                 }
                 lifebloomStackCF = -1f;
             }
         }
         private Spell lifebloomStackSpell = null;
-        private int lifebloomStackMultiplier = 0;
         private float lifebloomStackDuration = 0;
 
         private float lifebloomStacks;
@@ -143,20 +140,25 @@ namespace Rawr.Tree
             set { lifebloomStackCF = value; }
         }
         public float LifebloomStackCPS { get { return LifebloomStackCF <= 0 ? 0 : 
-            lifebloomStackMultiplier * LifebloomStackCF / lifebloomStackSpell.castTime; } }
+            lifebloomStackSpell.NumberOfCasts * LifebloomStackCF / lifebloomStackSpell.CastTime; } }
         public float LifebloomStackCPM { get { return LifebloomStackCF <= 0 ? 0 : 
             60f * LifebloomStackCPS; } }
-
         public float LifebloomStackAvg { get { return LifebloomStackCF <= 0 ? 0 : 
-            LifebloomStackCPS / lifebloomStackMultiplier * lifebloomStackSpell.Duration; } }
-        public float LifebloomStackHPS { get { return LifebloomStackCF <= 0 ? 0 : 
-            LifebloomStackAvg * lifebloomStackSpell.HPSHoT + LifebloomStackCPS * lifebloomStackSpell.AverageHealingwithCrit / lifebloomStackMultiplier; } }
+            LifebloomStackCPS / lifebloomStackSpell.NumberOfCasts * lifebloomStackSpell.Duration; } }
+        public float LifebloomStackBPS { get { return LifebloomStackCF <= 0 ? 0 :
+            lifebloomStackType == LifeBloomType.Rolling ? 0 : LifebloomStackCPS / lifebloomStackSpell.NumberOfCasts; } }
+        public float LifebloomStackHPS { get { return LifebloomStackCF <= 0 ? 0 :
+            LifebloomStackAvg * lifebloomStackSpell.HPSHoT + LifebloomStackBPS * lifebloomStackSpell.AverageHealingwithCrit; } }
         public float LifebloomStackMPS { get { return LifebloomStackCF <= 0 ? 0 : 
             LifebloomStackCPS * lifebloom.ManaCost; } }
         public float LifebloomStackHealsPerMinute { get { return LifebloomStackCF <= 0 ? 0 : 
-            LifebloomStackCPM / lifebloomStackMultiplier * (1f + lifebloomStackSpell.PeriodicTicks); } }
+            60f * LifebloomStackBPS * (1f + lifebloomStackSpell.PeriodicTicks); } }
         public float LifebloomStackCritsPerMinute { get { return LifebloomStackCF <= 0 || lifebloomStackType == LifeBloomType.Rolling ? 0 :
-            LifebloomStackCPM / lifebloomStackMultiplier * lifebloomStackSpell.CritPercent / 100f; } }
+            60f * LifebloomStackBPS * lifebloomStackSpell.CritPercent / 100f; } }
+        public float LifebloomStackHPS_DH { get { return LifebloomStackCF <= 0 ? 0 : 
+            LifebloomStackBPS * lifebloomStackSpell.AverageHealingwithCrit; } }
+        public float LifebloomStackHPS_HOT { get { return LifebloomStackCF <= 0 ? 0 : 
+            LifebloomStackAvg * lifebloomStackSpell.HPSHoT; } }
         #endregion
 
         #region Wild Growth
@@ -223,8 +225,9 @@ namespace Rawr.Tree
         private float replenishment; // set by constructor
         public float ReplenishmentUptime = 1f;
         public float ReplenishmentMPS { get { return Mana * replenishment * ReplenishmentUptime; } }
-        public float MPSInFSR { get { return GearMPS + ReplenishmentMPS + SpiritMPS * SpiritInCombatFraction; } }
-        public float MPSOutFSR { get { return GearMPS + ReplenishmentMPS + SpiritMPS; } }
+        public float ProcsMPS; // set by constructor
+        public float MPSInFSR { get { return ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS * SpiritInCombatFraction; } }
+        public float MPSOutFSR { get { return ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS; } }
         public float OutOfCombatFraction = 0;
         public float ManaRegen { get { return OutOfCombatFraction * MPSOutFSR + (1f - OutOfCombatFraction) * MPSInFSR; } }
         #endregion
@@ -423,7 +426,7 @@ namespace Rawr.Tree
                     break;
             }
 
-            if (rot.PrimaryHeal is Nourish)
+            /*if (rot.PrimaryHeal is Nourish)
             {
                 rot.nourish[0].calculateNewNaturesGrace(rot.nourish[0].CritPercent / 100f);
                 rot.nourish[1].calculateNewNaturesGrace(rot.nourish[1].CritPercent / 100f);
@@ -434,7 +437,7 @@ namespace Rawr.Tree
             else
             {
                 rot.PrimaryHeal.calculateNewNaturesGrace(rot.PrimaryHeal.CritPercent / 100f);
-            }
+            }*/
             #endregion
 
             #region Primary Heal raw hps

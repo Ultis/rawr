@@ -5,23 +5,28 @@ namespace Rawr.Tree {
         protected float minHeal             = 0f;
         public float    MinHeal     { get { return minHeal + healingBonus * coefDH; } }
         public float    BaseMinHeal { get { return minHeal; } }
+
         protected float maxHeal             = 0f;
         public float    MaxHeal     { get { return maxHeal + healingBonus * coefDH; } }
         public float    BaseMaxHeal { get { return maxHeal; } }
-        public float    castTime            = 0f;
-        public float    castTimeBeforeHaste = 0f;
+
+        protected int numberOfCasts = 1;
+        public float NumberOfCasts { get { return numberOfCasts; } }
+        
+        public float castTime = 0f;
+        public float castTimeBeforeHaste = 0f;
         public float CastTime { 
             get {
-                if (castTime > gcd) { return castTime; // Not castTimeBeforeHaste
-                } else if (gcd > 1) { return gcd;
-                } else {              return 1f; }
+                if (castTime > gcd) { return numberOfCasts * castTime; // Not castTimeBeforeHaste
+                } else if (gcd > 1) { return numberOfCasts * gcd;
+                } else {              return numberOfCasts * 1f; }
             }
         }
         public float gcd            = 1.5f;
         public float gcdBeforeHaste = 1.5f;
         protected float manaCost    = 0f;
 
-        virtual public float ManaCost { get { return checkOmenlikeProcs(); } /*set { manaCost = value; }*/ }
+        virtual public float ManaCost { get { return checkOmenlikeProcs(); } }
 
         public float coefDH  = 0f; //coef for DirectHeal
         public float speed   = 1f;
@@ -87,6 +92,12 @@ namespace Rawr.Tree {
         // This indicates the rate at which the healing is generated
         public float HPCT { get { return (TotalAverageHealing) / CastTime; } }
 
+        public float HPCT_DH { get { return AverageHealingwithCrit / CastTime; } }
+        public float HPCT_HOT { get { return PeriodicTickwithCrit * PeriodicTicks / CastTime; } }
+
+        // The healing per second you will get from the spell; total healing / (casttime+duration)
+        public float HPCTD { get { return TotalAverageHealing / (Math.Max(gcd, Duration + castTime)); } }
+
         public float Duration { get { return periodicTicks * periodicTickTime; } }
 
         private Stats cachedStats;  // Keep a local copy of stats used to create spell
@@ -127,9 +138,9 @@ namespace Rawr.Tree {
         
         protected virtual void applyHaste() {
             gcd = gcdBeforeHaste / (speed * NGspeed);
-            if (gcd < 1f) { gcd = 1f; }
+            //if (gcd < 1f) { gcd = 1f; }
             castTime = (float)Math.Round(castTimeBeforeHaste / (speed * NGspeed), 4);
-            if (castTime < 1f) { castTime = 1f; }
+            //if (castTime < 1f) { castTime = 1f; }
         }
 
         protected virtual void applyHasteToPeriodicTickTime() {
@@ -138,20 +149,19 @@ namespace Rawr.Tree {
             periodicTickTime = periodicTickTimeBeforeHaste / speed;
         }
 
-        protected float OmenProc(float chance, float maxReduction) { return manaCost * (1.0f - chance) + (manaCost < maxReduction ? 0f : chance * (manaCost - maxReduction)); }
+        /*protected float OmenProc(float chance, float maxReduction) { 
+            return manaCost * (1.0f - chance) + (manaCost < maxReduction ? 0f : chance * (manaCost - maxReduction)); 
+        }*/
 
         protected float checkOmenlikeProcs() {
-            float newManaCost = manaCost;
+            float newManaCost = manaCost * numberOfCasts;
 
             //Attempt to handle new SpecialEffect for this
-            foreach (Rawr.SpecialEffect effect in cachedStats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.SpellCast && (effect.Stats.HealingOmenProc > 0)) {
-                    newManaCost = OmenProc(effect.Chance, effect.Stats.HealingOmenProc);
-                }
-            }
-
-            // Handle case of stat not being created as a SpecialEffect
-            //if (cachedStats.ManacostReduceWithin15OnHealingCast > 0) {newManaCost = OmenProc(0.02f, cachedStats.ManacostReduceWithin15OnHealingCast);}
+            //foreach (Rawr.SpecialEffect effect in cachedStats.SpecialEffects()) {
+                //if (effect.Trigger == Trigger.SpellCast && (effect.Stats.HealingOmenProc > 0)) {
+                    //newManaCost = OmenProc(effect.Chance, effect.Stats.HealingOmenProc);
+                //}
+            //}
 
             return newManaCost;
         }
@@ -189,12 +199,8 @@ namespace Rawr.Tree {
             #endregion
 
             #region Idols
-            //guessed that it doesnt work with talents
-            //z.B.: Idol of the Avian Heart (+136 Healing)
+            // Assumption: not increased by talents or anything like that
             healingBonus += calculatedStats.HealingTouchFinalHealBonus;
-
-            //z.B.: Idol of Longevity (25 Mana on cast.... -25 Manacost)
-            manaCost -= calculatedStats.ReduceHealingTouchCost;
             #endregion
 
             applyHaste();
@@ -268,8 +274,6 @@ namespace Rawr.Tree {
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols
-            //z.B.: Idol of the Crescent Goddess (-65 Mana)
-            manaCost -= calculatedStats.ReduceRegrowthCost;
             #endregion
 
             /* Glyph of Regrowth is modelled in the constructor */
@@ -339,12 +343,10 @@ namespace Rawr.Tree {
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols etc
-            //e.g.: Harold's Rejuvenating Broach 
-            healingBonus += calculatedStats.RejuvenationSpellpower;
-            //e.g.: Idol of Pure Thoughts
+            // e.g.: Idol of Pure Thoughts
             periodicTick += calculatedStats.RejuvenationHealBonus;
 
-            //e.g.: Idol of Budding Life (-36 Manacost) Idol of Awakening (-106 Manacost)
+            // e.g.: Idol of Budding Life (-36 Manacost) Idol of Awakening (-106 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
             #endregion
 
@@ -410,13 +412,11 @@ namespace Rawr.Tree {
     }
     public class Lifebloom : Spell {
         protected float idolHoTBonus = 0f;
-        protected float idolDHBonus = 0f;
         private float stackScaling = 1.0f;
         private float stackSize = 1.0f;
         protected float manaRefund = 0.0f;
         public override float PeriodicTick { get { return stackScaling * (periodicTick + (idolHoTBonus + healingBonus) * coefHoT); } }
-        public override float AverageHealing {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH); } }
-        public override float HealingBonus { get { return healingBonus + idolDHBonus; } set { healingBonus = value; } }
+        public override float AverageHealing {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + healingBonus * coefDH); } }
         public override float ManaCost {get { return (base.ManaCost - manaRefund); }/*set { manaCost = value; }*/}
         public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -432,9 +432,9 @@ namespace Rawr.Tree {
             healingBonus        = calculatedStats.SpellPower;
             critPercent         = calculatedStats.SpellCrit;
 
-            minHeal = 776f;         // Patch 3.2 nerfs bloom value
+            minHeal = 776f; 
             maxHeal = 776f;
-            coefDH = 0.645f * 0.8f; // 20 % Nerf
+            coefDH = 0.516f; 
 
             periodicTick = 53f;
             periodicTicks = 7f;
@@ -448,9 +448,6 @@ namespace Rawr.Tree {
             #region Idols
             //z.B.: Idol of the Emerald Queen
             idolHoTBonus = calculatedStats.LifebloomTickHealBonus;
-
-            //z.B.: Gladiator's Idol of Tenacity (87 on final heal), haven't one myself, will correct it when i've one
-            idolDHBonus = calculatedStats.LifebloomFinalHealBonus;
             #endregion
 
             if (calcs.LocalCharacter.DruidTalents.GlyphOfLifebloom) { periodicTicks += 1f; } //(calcOpts.glyphOfLifebloom)
@@ -486,8 +483,7 @@ namespace Rawr.Tree {
                 stackSize = 2.0f; // Bloom heal doubled
 
                 periodicTicks = newPeriodicTicks;
-
-                castTime = 2.0f * gcd;
+                numberOfCasts = 2;
             } else if (numStacks == 3) {
                 manaCost *= 3;
                 manaRefund *= 3;
@@ -510,7 +506,7 @@ namespace Rawr.Tree {
 
                 periodicTicks = newPeriodicTicks;
 
-                castTime = 3.0f * gcd;
+                numberOfCasts = 3;
             }
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
@@ -728,7 +724,7 @@ namespace Rawr.Tree {
             regrowthUseChance = rejuvUseChance = regrowthTicksLost = rejuvTicksLost = 0.0f;
 
             #region Base Values
-            castTimeBeforeHaste = gcd;
+            castTimeBeforeHaste = 0;
             coefDH = 0;
             manaCost = 0.16f * TreeConstants.BaseMana;
             healingBonus = 0f;
