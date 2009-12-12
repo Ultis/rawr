@@ -879,6 +879,7 @@ namespace Rawr.Mage.SequenceReconstruction
         private SequenceItem InsertIndex(int index, double duration, double time)
         {
             SequenceItem item = new SequenceItem(index, duration);
+            SplitAt(time);
             InsertIndex(item, time);
             return item;
         }
@@ -891,9 +892,12 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 double d = sequence[i].Duration;
                 if (sequence[i].IsManaPotionOrGem) d = 0;
-                if (t + d > time + eps)
+                if (t + d > time + eps && time <= t + eps)
                 {
-                    if (time <= t + eps)
+                    // splitting should have been done beforehand
+                    sequence.Insert(i, item);
+                    return;
+                    /*if (time <= t + eps)
                     {
                         sequence.Insert(i, item);
                         return;
@@ -905,7 +909,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         sequence[i + 1].Duration = d - (time - t);
                         sequence.Insert(i + 1, item);
                         return;
-                    }
+                    }*/
                 }
                 t += d;
             }
