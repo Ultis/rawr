@@ -258,14 +258,14 @@ namespace Rawr.Retribution
         {
             return Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets()
                 + Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets()
-                + White.ChanceToLand() / Combats.AttackSpeed;
+                + White.ChanceToLand() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToLand();
         }
 
         public override float GetMeleeCritsPerSec()
         {
             return Solution.CrusaderStrike * CS.ChanceToCrit() / Solution.FightLength * CS.Targets()
                 + Solution.DivineStorm * DS.ChanceToCrit() / Solution.FightLength * DS.Targets()
-                + 1f / Combats.AttackSpeed;
+                + White.ChanceToCrit() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToCrit();
         }
 
         public override float GetPhysicalAttacksPerSec()
@@ -277,7 +277,7 @@ namespace Rawr.Retribution
 
         public override float GetPhysicalCritsPerSec()
         {
-            return GetMeleeAttacksPerSec()
+            return GetMeleeCritsPerSec()
                 + Solution.Judgement * Judge.ChanceToCrit() / Solution.FightLength * Judge.Targets()
                 + Solution.HammerOfWrath * HoW.ChanceToCrit() / Solution.FightLength * HoW.Targets();
         }
@@ -345,7 +345,7 @@ namespace Rawr.Retribution
 
         public override float GetMeleeAttacksPerSec()
         {
-            return White.ChanceToLand() / Combats.AttackSpeed
+            return White.ChanceToLand() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToLand()
                 + (CS.ChanceToLand() / _calcOpts.CSCD * CS.Targets()
                 + DS.ChanceToLand() / _calcOpts.DSCD * DS.Targets()) * (1f - _calcOpts.TimeUnder20)
                 + (CS.ChanceToLand() / _calcOpts.CSCD20 * CS.Targets()
@@ -354,7 +354,7 @@ namespace Rawr.Retribution
 
         public override float GetMeleeCritsPerSec()
         {
-            return White.ChanceToCrit() / Combats.AttackSpeed
+            return White.ChanceToCrit() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToCrit()
                 + (Judge.ChanceToCrit() / _calcOpts.CSCD * CS.Targets()
                 + DS.ChanceToCrit() / _calcOpts.DSCD * DS.Targets()) * (1f - _calcOpts.TimeUnder20)
                 + (Judge.ChanceToCrit() / _calcOpts.CSCD20 * CS.Targets()
@@ -371,7 +371,7 @@ namespace Rawr.Retribution
 
         public override float GetPhysicalCritsPerSec()
         {
-            return GetMeleeAttacksPerSec()
+            return GetMeleeCritsPerSec()
                 + (Judge.ChanceToCrit() / _calcOpts.JudgeCD * Judge.Targets()) * (1f - _calcOpts.TimeUnder20)
                 + (Judge.ChanceToCrit() / _calcOpts.JudgeCD20 * Judge.Targets()
                 + HoW.ChanceToCrit() / _calcOpts.HoWCD20 * HoW.Targets()) * _calcOpts.TimeUnder20;
