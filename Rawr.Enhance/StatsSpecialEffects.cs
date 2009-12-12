@@ -43,6 +43,7 @@ namespace Rawr.Enhance
             }
             AddParagon(statsAverage);
             AddHighestStat(statsAverage);
+            AddDeathBringerProc(statsAverage);
             return statsAverage;
         }
 
@@ -250,6 +251,16 @@ namespace Rawr.Enhance
                         statsAverage.AttackPower += intfromAP * highestStat;
                     }
                 }
+            }
+        }
+
+        private void AddDeathBringerProc(Stats statsAverage)
+        {
+            if (statsAverage.DeathbringerProc > 0)
+            {
+                statsAverage.Agility += statsAverage.DeathbringerProc * (1 + _stats.BonusAgilityMultiplier);
+                statsAverage.AttackPower += statsAverage.DeathbringerProc;
+                statsAverage.ArmorPenetrationRating += statsAverage.DeathbringerProc;
             }
         }
     }

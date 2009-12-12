@@ -918,7 +918,8 @@ namespace Rawr.Enhance
                     SpellCritOnTarget = stats.SpellCritOnTarget,
                     Mp5 = stats.Mp5,
                     ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                    ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM
+                    ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
+                    DeathbringerProc = stats.DeathbringerProc
 				};
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1000,7 +1001,7 @@ namespace Rawr.Enhance
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
+                stats.BonusHealthMultiplier + stats.BonusManaMultiplier + stats.DeathbringerProc +
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon +
                 stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.Enhance4T8 + stats.Enhance4T7 + stats.BonusWFAttackPower + 
