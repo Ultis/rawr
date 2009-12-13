@@ -1234,7 +1234,8 @@ namespace Rawr {
             }
             else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you have a chance to gain (?<amount>\d+) mana.")).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = int.Parse(match.Groups["amount"].Value) }, 0f, 45f, 0.25f));
+                // Ephemeral Snowflake
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = int.Parse(match.Groups["amount"].Value) }, 0f, 45f, 0.4f));
             }
             #endregion
             #region Icecrown Weapon Procs
