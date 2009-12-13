@@ -1738,7 +1738,7 @@ namespace Rawr.Optimizer
                 if (itemInstance != null)
                 {
                     Item item = itemInstance.Item;
-                    if (item != null)
+                    if (item != null && item.AvailabilityInformation != null)
                     {
                         if (item.AvailabilityInformation.PositiveCostItem)
                         {

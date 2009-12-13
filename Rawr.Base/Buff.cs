@@ -3186,9 +3186,19 @@ namespace Rawr
                 Name = "Gladiator's Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
+                Stats = { Resilience = 100, SpellPower = 29 },
                 SetName = "Gladiator's Regalia",
                 SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SpellPower = 88 },
+                SetName = "Gladiator's Regalia",
+                SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             #endregion
