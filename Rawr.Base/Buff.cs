@@ -4588,10 +4588,20 @@ namespace Rawr
             #region PvP
             defaultBuffs.Add(new Buff()
             {
+                Name = "Gladiator's Battlegear (PvP) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 100, AttackPower = 150, },
+                SetName = "Gladiator's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Gladiator's Battlegear (PvP) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_PvP_4P_InterceptCDReduc = 5 },
+                Stats = { BonusWarrior_PvP_4P_InterceptCDReduc = 5, AttackPower = 150, },
                 SetName = "Gladiator's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
