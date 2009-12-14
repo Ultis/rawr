@@ -808,7 +808,7 @@ namespace Rawr.Enhance
                 _relevantGlyphs.Add("Glyph of Flame Shock");
                 _relevantGlyphs.Add("Glyph of Stormstrike");
                 _relevantGlyphs.Add("Glyph of Windfury Weapon");
-                _relevantGlyphs.Add("Glyph of Fire Nova");
+   //             _relevantGlyphs.Add("Glyph of Fire Nova");
                 _relevantGlyphs.Add("Glyph of Fire Elemental Totem");
             }
             return _relevantGlyphs;
