@@ -602,10 +602,10 @@ namespace Rawr.Cat
 				triggerIntervals[Trigger.MangleCatHit] = talents.GlyphOfMangle ? 18f : 12f;
 			triggerIntervals[Trigger.MangleCatOrShredHit] = 4f;
 			triggerChances[Trigger.Use] = 1f;
-			triggerChances[Trigger.MeleeHit] = chanceHit;
-			triggerChances[Trigger.PhysicalHit] = chanceHit;
-			triggerChances[Trigger.MeleeCrit] = chanceCrit;
-			triggerChances[Trigger.PhysicalCrit] = chanceCrit;
+			triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
+			triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
+			triggerChances[Trigger.MeleeCrit] = Math.Max(0f, chanceCrit);
+			triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
 			triggerChances[Trigger.DoTTick] = 1f;
 			triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))

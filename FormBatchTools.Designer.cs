@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBatchTools));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +52,7 @@
             this.saveCharactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCharactersAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.weightColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.scoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +60,7 @@
             this.loadBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.showBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
             this.diffBatchCharacterColumn = new Rawr.FormBatchTools.MyDataGridViewButtonColumn();
+            this.batchCharacterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip1 = new Rawr.FormBatchTools.MyStatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -68,22 +71,20 @@
             this.buttonUp = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.trackBarMaxRounds = new System.Windows.Forms.TrackBar();
+            this.batchToolsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
             this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
-            this.characterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.batchCharacterListBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.batchToolsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRounds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.batchToolsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -275,6 +276,15 @@
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
+            // characterColumn
+            // 
+            this.characterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.characterColumn.DataPropertyName = "Name";
+            this.characterColumn.HeaderText = "Character";
+            this.characterColumn.Name = "characterColumn";
+            this.characterColumn.ReadOnly = true;
+            this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // Locked
             // 
             this.Locked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -337,6 +347,11 @@
             this.diffBatchCharacterColumn.Text = "Diff";
             this.diffBatchCharacterColumn.UseColumnTextForButtonValue = true;
             this.diffBatchCharacterColumn.Width = 50;
+            // 
+            // batchCharacterListBindingSource
+            // 
+            this.batchCharacterListBindingSource.DataSource = typeof(Rawr.BatchCharacterList);
+            this.batchCharacterListBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.batchCharacterListBindingSource_ListChanged);
             // 
             // statusStrip1
             // 
@@ -423,6 +438,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Enabled = false;
             this.buttonCancel.Location = new System.Drawing.Point(90, 310);
             this.buttonCancel.Name = "buttonCancel";
@@ -443,6 +459,10 @@
             this.trackBarMaxRounds.Size = new System.Drawing.Size(77, 45);
             this.trackBarMaxRounds.TabIndex = 13;
             this.trackBarMaxRounds.Value = 3;
+            // 
+            // batchToolsBindingSource
+            // 
+            this.batchToolsBindingSource.DataSource = typeof(Rawr.BatchTools);
             // 
             // label1
             // 
@@ -496,24 +516,6 @@
             this.trackBarThoroughness.TickFrequency = 10;
             this.trackBarThoroughness.Value = 150;
             // 
-            // characterColumn
-            // 
-            this.characterColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.characterColumn.DataPropertyName = "Name";
-            this.characterColumn.HeaderText = "Character";
-            this.characterColumn.Name = "characterColumn";
-            this.characterColumn.ReadOnly = true;
-            this.characterColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // batchCharacterListBindingSource
-            // 
-            this.batchCharacterListBindingSource.DataSource = typeof(Rawr.BatchCharacterList);
-            this.batchCharacterListBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.batchCharacterListBindingSource_ListChanged);
-            // 
-            // batchToolsBindingSource
-            // 
-            this.batchToolsBindingSource.DataSource = typeof(Rawr.BatchTools);
-            // 
             // FormBatchTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -524,22 +526,26 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormBatchTools";
+            this.ShowIcon = false;
             this.Text = "Batch Tools";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormBatchTools_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBatchTools_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxRounds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.batchCharacterListBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.batchToolsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
