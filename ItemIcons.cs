@@ -236,11 +236,10 @@ namespace Rawr
 				}
 				catch (Exception ex)
 				{
-                    Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Getting Talent Icon",
+                    /*Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Getting Talent Icon",
                         ex.Message, "GetTalentIcon(...)",
                         string.Format("\r\n- Talent Tree: {0}\r\n- Talent Name: {1}\r\n- Icon: {2}\r\n- PathToIcon: {3}", talentTree, talentName, icon, pathToIcon ?? (pathToIcon = "null")),
-                        ex.StackTrace);
-                    eb.Show();
+                        ex.StackTrace);*/
                     pathToIcon = wrapper.DownloadTempImage();
                     //Log.Write(ex.Message);
 					//Log.Write(ex.StackTrace);

@@ -473,49 +473,48 @@ namespace Rawr
 		public string DownloadTalentIcon(CharacterClass charClass, string talentTree) { return DownloadTalentIcon(charClass, talentTree, "background", null); }
 		public string DownloadTalentIcon(CharacterClass charClass, string talentTree, string talentName, string icon)
 		{
-            try
-            {
+            string uri = "null";
+            //string codepath = "null";
+            //try {
                 //foreach (string illegalCharacter in new string[] { " ", "'" })
                 talentTree = talentTree.Replace(" ", "");
                 talentName = talentName.Replace(" ", "");
                 talentName = talentName.Replace(":", "");
                 string fullPathToSave;
 
-                if (icon != null)
-                {
+                if (icon != null) {
+                    //codepath = "icon != null";
                     string imageName = icon;
                     fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName.Replace("/", "_"));
-                    string uri = string.Format(NetworkSettingsProvider.ArmoryTalentIconURI, icon);
+                    uri = string.Format(NetworkSettingsProvider.ArmoryTalentIconURI, icon);
                     DownloadFile(uri, fullPathToSave, CONTENT_GIF);
-                }
-                else
-                {
-                    string imageName = talentName + ".gif";
+                } else {
+                    //codepath = "icon == null";
+                    string imageName = talentName + ".jpg";
                     fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName);
                     if (!String.IsNullOrEmpty(talentTree) && !String.IsNullOrEmpty(talentName))
                     {
                         //0 = class, 1=tree, 2=talentname - all lowercase
                         //@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
                         //http://www.worldofwarcraft.com/shared/global/talents//wrath/druid/images/balance/brambles.jpg
-                        string uri = string.Format(NetworkSettingsProvider.TalentIconURI, charClass.ToString().ToLower(),
+                        uri = string.Format(NetworkSettingsProvider.TalentIconURI, charClass.ToString().ToLower(),
                                                         talentTree.ToLower(), talentName.ToLower());
                         DownloadFile(uri, fullPathToSave, CONTENT_JPG);
                     }
                 }
-                if (!File.Exists(fullPathToSave))
-                {
+			if (!File.Exists(fullPathToSave))
+			{
                     fullPathToSave = null;
                 }
                 return fullPathToSave;
-            }
+            /*}
             catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Downloading Talent Icon",
+                /*Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Downloading Talent Icon",
                     ex.Message, "DownloadTalentIcon(...)",
-                    string.Format("\r\n- Talent Tree: {0}\r\n- Talent Name: {1}\r\n- Icon: {2}", talentTree, talentName, icon),
-                    ex.StackTrace);
-                eb.Show();
+                    string.Format("\r\n- Talent Tree: {0}\r\n- Talent Name: {1}\r\n- Icon: {2}\r\n- URI: {3}\r\n- CodePath: {4}", talentTree, talentName, icon, uri, codepath),
+                    ex.StackTrace);*//*
                 return null;
-            }
+            }*/
 		}
 
 		/// <summary>
