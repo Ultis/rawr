@@ -37,6 +37,10 @@ namespace Rawr.Tree
             #endregion
         }
 
+        public void ApplyCombatStats(Stats stats) 
+        {
+        }
+
         #region Spells
         public Rejuvenation rejuvenate;
         public Regrowth regrowth;
@@ -208,7 +212,6 @@ namespace Rawr.Tree
         public float PrimaryRawHPS = 0f;
         public float PrimaryHPS { get { return PrimaryHeal == null ? 0 : PrimaryCF * PrimaryRawHPS; } }
         public float PrimaryMPS { get { return PrimaryHeal == null ? 0 : PrimaryCPS * PrimaryHeal.ManaCost; } }
-        public float MaxPrimaryCF { get { return 1f - (HotsCF + WildGrowthCF + SwiftmendCF); } }
         public float PrimaryCF = 0f;
         public float PrimaryCPS { get { return PrimaryHeal == null ? 0 : PrimaryCF / PrimaryHeal.CastTime; } }
         public float PrimaryCPM { get { return PrimaryHeal == null ? 0 : 60f * PrimaryCF / PrimaryHeal.CastTime; } }
@@ -252,7 +255,10 @@ namespace Rawr.Tree
         public float EffMPSWithoutPrimary { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS - ManaRegen; } }
         public float EffMPS { get { return EffMPSWithoutPrimary + PrimaryMPS; } }
 
-        public float IdleCF { get { return MaxPrimaryCF - PrimaryCF; } }
+        // HotsCF includes Lifebloom stacks...
+        public float TotalCF { get { return (float)Math.Round(HotsCF + WildGrowthCF + SwiftmendCF + PrimaryCF, 4); } }
+        public float MaxPrimaryCF { get { return (float)Math.Round(1f - (HotsCF + WildGrowthCF + SwiftmendCF), 4); } }
+        public float IdleCF { get { return 1f - TotalCF; } }
 
         //float ManaAfterHots = (rot.ExtraMana + rot.Mana) - EffectiveBurn * calcOpts.FightDuration;
         //float PrimaryHealMPSAvailable = ManaAfterHots / calcOpts.FightDuration;
@@ -311,6 +317,7 @@ namespace Rawr.Tree
         public HealTargetTypes healTarget;
         public int SwiftmendPerMin, WildGrowthPerMin;
         public float livingSeedEfficiency;
+        public bool applyIdleToHots;
     }
 
     public class SingleTargetBurstResult
@@ -489,41 +496,54 @@ namespace Rawr.Tree
             // 5. Primary spell
 
             // First, try to reduce Hots
-            if (rot.MaxPrimaryCF < 0f)
+            // also apply to idle time
+            rot.PrimaryCF = 1f;
+            
+            float IdleCF = calcOpts.IdleCastTimePercent / 100f;
+            float IdleHotsCF = calcOpts.ApplyIdleToHots ? calcOpts.IdleCastTimePercent / 100f : 0f;
+
+            if (rot.TotalCF + IdleCF > 1f)
+            {
+                float Static = rot.HotsCF + rot.WildGrowthCF + rot.SwiftmendCF;
+                float Factor = Math.Max(0f, (1f - Static - IdleCF) / (rot.TotalCF - Static));
+                rot.PrimaryCF *= Factor;
+            }
+
+            if (rot.TotalCF + IdleHotsCF > 1f)
             {
                 float Static = rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
-                float Factor = Math.Max(0f, (1f - Static) / (1f - rot.MaxPrimaryCF - Static));
+                float Factor = Math.Max(0f, (1f - Static - IdleHotsCF) / (rot.TotalCF - Static));
                 rot.RejuvCF *= Factor;
                 rot.RegrowthCF *= Factor;
                 rot.LifebloomCF *= Factor;
             }
 
             // Remove Swiftmend if not enough HoTs and rj/rg are not primary heals
-            if (rot.RejuvCPM + rot.RegrowthCPM < rot.SwiftmendCPM && !(rot.PrimaryHeal is Rejuvenation || rot.PrimaryHeal is Regrowth)) rot.SwiftmendCPM = 0f;
+            //if (rot.RejuvAvg + rot.RegrowthAvg < rot.SwiftmendCPM && !(rot.PrimaryHeal is Rejuvenation || rot.PrimaryHeal is Regrowth)) rot.SwiftmendCPM = 0f;
 
             // Next, try to reduce wild growth and swiftmend
-            if (rot.MaxPrimaryCF < 0f)
+            if (rot.TotalCF > 1f)
             {
                 rot.SwiftmendCPM = 0;
                 float Static = rot.LifebloomStackCF;
-                float Factor = Math.Min(1f, Math.Max(0f, (1f - Static) / (1f - rot.MaxPrimaryCF - Static)));
+                float Factor = Math.Min(1f, Math.Max(0f, (1f - Static) / (rot.TotalCF - Static)));
                 // Rejuv/Regrowth/Lifebloom are already 0 at this point
                 rot.WildGrowthCF *= Factor;
             }
 
             // Finally, try to reduce lifebloom stacks
-            if (rot.MaxPrimaryCF < 0f)
+            if (rot.TotalCF > 1f)
             {
                 rot.LifebloomStackCF = 1f;
                 // Now, rot.MaxPrimaryCF *must* be 1f exactly.
             }
 
-            rot.PrimaryCF = Math.Max(0f, rot.MaxPrimaryCF - calcOpts.IdleCastTimePercent / 100f);
-
             // Again, check if Swiftmend can be applied
-            if (rot.RejuvCPM + rot.RegrowthCPM < rot.SwiftmendCPM && 
-                (rot.PrimaryHeal is Rejuvenation || rot.PrimaryHeal is Regrowth) &&
-                rot.PrimaryCPM < rot.SwiftmendCPM) rot.SwiftmendCPM = 0f;
+            /*if (rot.RejuvAvg + rot.RegrowthAvg < rot.SwiftmendCPM && 
+                (!(rot.PrimaryHeal is Rejuvenation || rot.PrimaryHeal is Regrowth) ||
+                rot.PrimaryAvg < rot.SwiftmendCPM)) rot.SwiftmendCPM = 0f;*/
+
+            // rot.PrimaryCF = Math.Max(0f, rot.MaxPrimaryCF - calcOpts.IdleCastTimePercent / 100f);
 
             #endregion
 

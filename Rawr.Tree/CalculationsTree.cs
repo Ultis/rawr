@@ -10,48 +10,81 @@ using System.Drawing;
 
 namespace Rawr.Tree {
 
+    public class DiminishingReturns
+    {
+        private double C;
+        private double D;
+        private float multiplier;
+        private float factor;
+        public DiminishingReturns(float multiplier, int factor)
+        {
+            C = Math.Pow(multiplier / factor, factor / (factor - 1));
+            D = Math.Pow(C, 1 / factor);
+            this.multiplier = multiplier;
+            this.factor = factor;
+        }
+        public float Cap(float value, float cap)
+        {
+            if (cap >= value) return value;
+            return (float)(cap + multiplier * cap * (Math.Pow(value / cap - 1 + C, 1 / factor) - D));
+        }
+        // DiminishingReturns(multiplier,factor).Cap(value,cap) gives the same result as this function
+        public static float Cap(float value, float cap, float multiplier, int factor)
+        {
+            if (cap >= value) return value;
+            double C = Math.Pow(multiplier / factor, factor / (factor - 1));
+            return (float)(cap + multiplier * cap * (Math.Pow(value / cap - 1 + C, 1 / factor) - Math.Pow(C, 1 / factor)));
+        }
+        // max > cap, adviced is cap < max <= 2*cap
+        public static float CapWithMaximum(float value, float cap, float max)
+        {
+            if (cap >= value) return value;
+            return (value * max - cap * cap) / (value + max - 2 * cap);
+        }
+        // with max = 2 * cap 
+        // This is exactly the same as the one above, actually, but with 2*cap the formula is much simpler
+        public static float CapWithMaximum2(float value, float cap)
+        {
+            if (cap >= value) return value;
+            return cap * (2 - cap/value);
+        }
+        /*
+         * Derivation of Cap:
+         * we want to base on a function like "y = x^(1/n)"
+         * parameters: cap, x, C and D (a constant tbd), n, f (a multiplier)
+         * y'(cap) = 1
+         * y(cap) = cap
+         * y = cap + f * cap * ( (x/cap-1+C)^(1/n) - (C)^(1/n) ) + D
+         * y' = f * (C + x/cap - 1)^(1/n - 1) / n = 1 when x=cap
+         *   1   = f/n * (C)^(1/n-1)
+         *   n/f = (C)^((1-n)/n) 
+         *   C   = (n/f)^(n/(1-n))
+         *   C   = (f/n)^(n/(n-1))
+         * y(cap) = cap
+         *   0   = f * cap * ((x/cap-1+C)^(1/n) - (C)^(1/n)) + D
+         *   0   = f * cap * ((C)^(1/n) - (C)^(1/n)) + D
+         *   0   = D
+         *   
+         * Derivation of CapWithMaximum:
+         * we want to base on a function like "y = max - 1/x"
+         * parameters: cap, max, A and B (a constant tbd)
+         * y'(cap) = 1
+         * y(cap) = cap
+         * limit of x to infinity = max
+         *  .... to be written out eventually
+         * y = (x * max - cap^2) / (x + max - 2*cap)
+         * y' = (max - cap)^2 / (max - 2 * cap + x)^2
+         * y'(cap) = (max - cap)^2 / (max - cap)^2 = 1
+         * y(cap) = (cap * max - cap*cap) / (cap + max - 2 * cap)
+         *        = cap * (max - cap) / (max - cap) = 1
+         * limit of x to infinity:
+         * y = (x * max - cap^2) / (x + max - 2*cap) with x to infinity ==> differentiate top and bottom with respect to x
+         * y = (max) / (1) = max
+         */
+    }
+
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", CharacterClass.Druid)]
     public class CalculationsTree : CalculationsBase {
-        private string[] _predefRotations = null;
-        public string[] PredefRotations {
-            get {
-                if (_predefRotations == null)
-                    _predefRotations = new string[] {
-                        "Tank Nourish (plus RJ/RG/Roll LB)",
-                        "Tank Nourish (plus RJ/RG/Slow 3xLB)",
-                        "Tank Nourish (plus RJ/RG/Fast 3xLB)",
-                        "Tank Nourish (2 Tanks RJ/RG/LB)",
-                        "Tank Nourish (2 Tanks RJ/RG/Slow 3xLB)",
-                        "Tank Nourish (2 Tanks RJ/RG/Fast 3xLB)",
-                        "Tank Healing Touch (plus RJ/RG/LB)",
-                        "Tank Healing Touch (2 Tanks RJ/RG/LB)",
-                        "Tank Regrowth (plus RJ/RG/Roll LB)",
-                        "Tank Regrowth (plus RJ/RG/Slow 3xLB)",
-                        "Tank Regrowth (plus RJ/RG/Fast 3xLB)",
-                        "Tank Regrowth (2 Tanks RJ/RG/Roll LB)",
-                        "Tank Regrowth (2 Tanks RJ/RG/Slow 3xLB)",
-                        "Tank Regrowth (2 Tanks RJ/RG/Fast 3xLB)",
-                        "Raid heal with Regrowth (1 Tank RJ/Roll LB)",
-                        "Raid heal with Regrowth (1 Tank RJ/Slow 3xLB)",
-                        "Raid heal with Regrowth (2 Tanks RJ/Roll LB)",
-                        "Raid heal with Regrowth (2 Tanks RJ/Slow 3xLB)",
-                        "Raid heal with Rejuv (1 Tank RJ/Roll LB)",
-                        "Raid heal with Rejuv (1 Tank RJ/Slow 3xLB)",
-                        "Raid heal with Rejuv (2 Tanks RJ/Roll LB)",
-                        "Raid heal with Rejuv (2 Tanks RJ/Slow 3xLB)",
-                        "Raid heal with Nourish (1 Tank RJ/Roll LB)",
-                        "Raid heal with Nourish (1 Tank RJ/Slow 3xLB)",
-                        "Raid heal with Nourish (2 Tanks RJ/Roll LB)",
-                        "Raid heal with Nourish (2 Tanks RJ/Slow 3xLB)",
-                        "Nourish spam",
-                        "Healing Touch spam",
-                        "Regrowth spam on tank",
-                        "Regrowth spam on raid",
-                        "Rejuvenation spam on raid",
-                    };
-                return _predefRotations;
-            }
-        }
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
@@ -201,18 +234,29 @@ and Armor damage reduction. (Survival multiplier is
 applied and result is scaled down by 100)",
                         "Points:Overall",
 
-                        "Basic Stats:Health",
-                        "Basic Stats:Mana",
-                        "Basic Stats:Stamina",
-                        "Basic Stats:Intellect",
-                        "Basic Stats:Spirit",
-                        "Basic Stats:Healing",
-                        "Basic Stats:Effective MP5",
-                        "Basic Stats:Spell Crit",
-                        "Basic Stats:Spell Haste",
-                        "Basic Stats:Global CD",
-                        "Basic Stats:Lifebloom Global CD",
-                        "Basic Stats:Armor",
+                        "Base Stats:Base Health",
+                        "Base Stats:Base Armor",
+                        "Base Stats:Base Mana",
+                        "Base Stats:Base Stamina",
+                        "Base Stats:Base Intellect",
+                        "Base Stats:Base Spirit",
+                        "Base Stats:Base Spell Power",
+                        "Base Stats:Base Spell Crit",
+                        "Base Stats:Base Spell Haste",
+                        "Base Stats:Base Global CD",
+                        "Base Stats:Base MP5",
+
+                        "Combat Stats:Health",
+                        "Combat Stats:Armor",
+                        "Combat Stats:Mana",
+                        "Combat Stats:Stamina",
+                        "Combat Stats:Intellect",
+                        "Combat Stats:Spirit",
+                        "Combat Stats:Spell Power",
+                        "Combat Stats:Spell Crit",
+                        "Combat Stats:Spell Haste",
+                        "Combat Stats:Global CD",
+                        "Combat Stats:MP5",
 
                         /*"Simulation:Result",
                         "Simulation:Time until OOM",
@@ -418,94 +462,9 @@ applied and result is scaled down by 100)",
             settings.SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
             settings.WildGrowthPerMin = calcOpts.WildGrowthPerMinute;
             settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
+            settings.applyIdleToHots = calcOpts.ApplyIdleToHots;
+
             return settings;
-        }
-        private static Stats getAverageStats(Rawr.SpecialEffect effect, float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, out float weight, out float stacksAtEnd)
-        {
-            Stats s = effect.GetAverageStats(triggerInterval, triggerChance, attackSpeed, fightDuration);
-            
-            if (effect.MaxStack > 1)
-            {
-                // Will the stacks drop when the effect is stopped? If not, the average stack size must be increased somehow
-                // E.G. Duration = X, and secondary has Duration = Y
-                // Then average stacksize total will be average accumulation with fight lenght X
-                // plus the amount of stacks that are at the end times Y
-                
-                weight = effect.GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
-                stacksAtEnd = Math.Min(effect.MaxStack, weight*2);
-            }
-            else if (effect.Duration == 0f)
-            {
-                weight = effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
-                stacksAtEnd = 0;
-            }
-            else
-            {
-                // Same story here - usually our secondary won't have a duration now, but it might still be possible, a stack that keeps getting refreshed...
-                weight = effect.GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
-                stacksAtEnd = 1f;
-            }
-
-            return s;
-        }
-
-        private static Stats calculateSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, float weight, bool overflow)
-        {
-            #region New_SpecialEffect_Handling
-            Stats resultNew = new Stats();
-            foreach (Rawr.SpecialEffect effect in stats.SpecialEffects())
-            {
-                Stats s = null;
-                float averageStacks = 1f, stacksEnd = 0f;
-                if (effect.Trigger == Trigger.Use)
-                {
-                    s = getAverageStats(effect, 0.0f, 1.0f, 2.0f, FightDuration, out averageStacks, out stacksEnd); // 0 cooldown, 100% chance to use
-                }
-                else if (effect.Trigger == Trigger.SpellCast)
-                {
-                    s = getAverageStats(effect, CastInterval, 1.0f, CastInterval, FightDuration, out averageStacks, out stacksEnd);
-                }
-                else if (effect.Trigger == Trigger.HealingSpellCast)
-                {
-                    // Same as SpellCast, but split to allow easier placement of breakpoints
-                    s = getAverageStats(effect, CastInterval, 1.0f, CastInterval, FightDuration, out averageStacks, out stacksEnd);
-                }
-                else if (effect.Trigger == Trigger.HealingSpellHit)
-                {
-                    // Heal interval measures time between HoTs as well, direct heals are a different interval
-                    s = getAverageStats(effect, HealInterval, 1.0f, CastInterval, FightDuration, out averageStacks, out stacksEnd);
-                }
-                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
-                {
-                    s = getAverageStats(effect, CastInterval, CritsRatio, CastInterval, FightDuration, out averageStacks, out stacksEnd);
-                }
-                else if (effect.Trigger == Trigger.RejuvenationTick)
-                {
-                    s = getAverageStats(effect, RejuvInterval, 1.0f, RejuvInterval, FightDuration, out averageStacks, out stacksEnd);
-                }
-                else
-                {
-                    // Trigger isn't relevant. Physical Hit, Damage Spell etc.
-                }
-                if (s != null) {
-                    float weightForThisEffect = weight;
-                    if (overflow && !float.IsInfinity(effect.Duration)) // todo : this assumes a stack does not drop off when its parent is terminated
-                    {
-                        // Apparently we're allowed to overflow...
-                        // this calculation basically assumes there was a hitting trigger right at the end, so assume full duration of average stacks...
-                        weightForThisEffect *= (averageStacks * FightDuration + stacksEnd * effect.Duration) / (averageStacks * FightDuration);
-                    }
-
-                    s += calculateSpecialEffects(character, s, effect.Duration, CastInterval, HealInterval, CritsRatio, RejuvInterval, averageStacks, stacksEnd>=1f?true:false);
-                    // Clear special effects
-                    for (int i=0;i<s._rawSpecialEffectDataSize;i++) s._rawSpecialEffectData[i] = null;
-                    s._rawSpecialEffectDataSize = 0;
-                    resultNew += s * weightForThisEffect;
-                }
-            }
-            #endregion
-
-            return resultNew;
         }
 
         private void HandleSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval)
@@ -523,33 +482,12 @@ applied and result is scaled down by 100)",
             stats._rawSpecialEffectDataSize = 0;
         }
 
-        protected float AccumulateAverageStats(SpecialEffect effect, Stats stats, float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, float weight)
-        {
-            float w;
-            if (effect.MaxStack > 1)
-            {
-                w = weight * effect.GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
-            }
-            else if (effect.Duration == 0f)
-            {
-                w = weight * effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
-            }
-            else
-            {
-                w = weight * effect.GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
-            }
-            stats.Accumulate(effect.Stats, w);
-            return w;
-        }        
-
         protected void AccumulateSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, List<SpecialEffect> effects, float weight) 
         {
             foreach (SpecialEffect effect in effects) {
-                effect.Stats.GenerateSparseData();
-
                 if (effect.Trigger == Trigger.Use)
                 {
-                    float w = AccumulateAverageStats(effect, stats, 0f, 1f, 2f, FightDuration, weight);
+                    float factor = effect.AccumulateAverageStats(stats, 0f, 1f, 2f, FightDuration, weight);
                     if (effect.Stats._rawSpecialEffectDataSize >= 1)
                     {
                         List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
@@ -557,30 +495,30 @@ applied and result is scaled down by 100)",
                         {
                             nestedEffect.Add(effect.Stats._rawSpecialEffectData[i]);
                         }
-                        AccumulateSpecialEffects(character, stats, FightDuration, CastInterval, HealInterval, CritsRatio, RejuvInterval, nestedEffect, w);
+                        AccumulateSpecialEffects(character, stats, FightDuration, CastInterval, HealInterval, CritsRatio, RejuvInterval, nestedEffect, factor);
                     }
                 }
                 else if (effect.Trigger == Trigger.SpellCast)
                 {
-                    AccumulateAverageStats(effect, stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
+                    effect.AccumulateAverageStats(stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
                 }
                 else if (effect.Trigger == Trigger.HealingSpellCast)
                 {
                     // Same as SpellCast, but split to allow easier placement of breakpoints
-                    AccumulateAverageStats(effect, stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
+                    effect.AccumulateAverageStats(stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
                 }
                 else if (effect.Trigger == Trigger.HealingSpellHit)
                 {
                     // Heal interval measures time between HoTs as well, direct heals are a different interval
-                    AccumulateAverageStats(effect, stats, HealInterval, 1.0f, CastInterval, FightDuration, weight);
+                    effect.AccumulateAverageStats(stats, HealInterval, 1.0f, CastInterval, FightDuration, weight);
                 }
                 else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
                 {
-                    AccumulateAverageStats(effect, stats, CastInterval, CritsRatio, CastInterval, FightDuration, weight);
+                    effect.AccumulateAverageStats(stats, CastInterval, CritsRatio, CastInterval, FightDuration, weight);
                 }
                 else if (effect.Trigger == Trigger.RejuvenationTick)
                 {
-                    AccumulateAverageStats(effect, stats, RejuvInterval, 1.0f, RejuvInterval, FightDuration, weight);
+                    effect.AccumulateAverageStats(stats, RejuvInterval, 1.0f, RejuvInterval, FightDuration, weight);
                 }
             }
         }
@@ -604,16 +542,7 @@ applied and result is scaled down by 100)",
 
             int nPasses = 4, k;
             for (k = 0; k < nPasses; k++) {
-                /*
-                Stats procs = calculateSpecialEffects(character, stats,
-                    rot.TotalTime, 60f / rot.TotalCastsPerMinute,
-                    60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
-                    60 / rot.RejuvenationHealsPerMinute);*/
-                /*Stats procs = calculateSpecialEffects(character, stats,
-                    rot.TotalTime, 60f / rot.CastsPerMinute,
-                    60f / rot.HealsPerMinute, rot.CritsPerMinute / rot.CastsPerMinute,
-                    60 / rot.RejuvenationHealsPerMinute, 1f, false);*/
-
+                // Create new stats instance with procs
                 stats = GetCharacterStats(character, additionalItem);
                 HandleSpecialEffects(character, stats,
                     rot.TotalTime, 60f / rot.CastsPerMinute,
@@ -622,14 +551,11 @@ applied and result is scaled down by 100)",
 
                 ExtraHealing = stats.Healed;
 
-                // Create a new stats instance that uses the proc effects
-                // stats = GetCharacterStats(character, additionalItem, procs);
-
                 // New run
                 rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);  
             }
             calculationResult.Sustained = rot;
-            calculationResult.BasicStats = stats;     // Replace BasicStats to get Spirit while casting included
+            calculationResult.CombatStats = stats;     // Replace BasicStats to get Spirit while casting included
             #endregion
 
             calculationResult.SingleTarget = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
@@ -642,8 +568,13 @@ applied and result is scaled down by 100)",
             calculationResult.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
             #endregion
 
-            calculationResult.BurstPoints = 10000f * ((float)1f - calcOpts.SingleTarget / calculationResult.BurstPoints);
-            calculationResult.SustainedPoints = 10000f * (1f - (float)calcOpts.SustainedTarget / calculationResult.SustainedPoints);
+            // Apply diminishing returns
+
+//          calculationResult.BurstPoints = DiminishingReturns.Cap(calculationResult.BurstPoints, calcOpts.SingleTarget, 0.25f, 4);
+//          calculationResult.SustainedPoints = 10000f * (1f - (float)calcOpts.SustainedTarget / calculationResult.SustainedPoints);
+            calculationResult.BurstPoints = DiminishingReturns.CapWithMaximum2(calculationResult.BurstPoints, calcOpts.SingleTarget);
+            calculationResult.SustainedPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SustainedPoints, calcOpts.SustainedTarget);
+            
 
             calculationResult.OverallPoints = calculationResult.BurstPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
 

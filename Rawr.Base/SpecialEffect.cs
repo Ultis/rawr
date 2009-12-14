@@ -470,6 +470,38 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Computes average scaled stats given the frequency of triggers; also computers average effect
+        /// </summary>
+        /// <param name="stats">Stats object into which the average stats will be accumulated.</param>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="scale">Scale value of effect, used for secondary effects</param>
+        public float AccumulateAverageStats(Stats stats, float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, float scale)
+        {
+            Stats.GenerateSparseData();
+            float factor;
+            if (MaxStack > 1)
+            {
+                factor = GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else if (Duration == 0f)
+            {
+                factor = GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else
+            {
+                factor = GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            factor *= scale;
+            stats.Accumulate(Stats, factor);
+            return factor;
+        }
+
+        /// <summary>
         /// Computes average stack size given the frequency of triggers.
         /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>

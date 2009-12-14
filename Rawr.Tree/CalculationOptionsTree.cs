@@ -40,6 +40,7 @@ namespace Rawr.Tree {
         private int nourish1, nourish2, nourish3, nourish4;
         private int livingSeedEfficiency;
         private int singleTargetRotation;
+        private bool applyIdleToHots;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
@@ -69,6 +70,7 @@ namespace Rawr.Tree {
             WildGrowthPerMinute = 2;
             SwiftmendPerMinute = 2;
             livingSeedEfficiency = 50;
+            applyIdleToHots = true;
 
             singleTargetRotation = 0;
         }
@@ -106,6 +108,7 @@ namespace Rawr.Tree {
         public int Nourish4 { get { return nourish4; } set { nourish4 = value; OnPropertyChanged("Nourish4"); } }
 
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
+        public bool ApplyIdleToHots { get { return applyIdleToHots; } set { applyIdleToHots = value; OnPropertyChanged("ApplyIdleToHots"); } }
 
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }

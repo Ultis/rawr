@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Rawr.Tree {
     public class CharacterCalculationsTree : CharacterCalculationsBase {
         public Stats BasicStats { get; set; }
+        public Stats CombatStats { get; set; }
 
         private float[] subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints {
@@ -73,26 +74,56 @@ namespace Rawr.Tree {
             dictValues.Add("Survival", SurvivalPoints.ToString());
             dictValues.Add("Overall", OverallPoints.ToString());
 
-            dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Healing", (BasicStats.SpellPower).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
+            dictValues.Add("Base Health", BasicStats.Health.ToString());
+            dictValues.Add("Base Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
+            dictValues.Add("Base Mana", BasicStats.Mana.ToString());
+            dictValues.Add("Base Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Base Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Base Spirit", BasicStats.Spirit.ToString());
+            dictValues.Add("Base Spell Power", (BasicStats.SpellPower).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
+            dictValues.Add("Base Spell Crit", BasicStats.SpellCrit.ToString());
 
-            dictValues.Add("Effective MP5", Math.Round(Sustained.MPSInFSR * 5f).ToString() + "*" + Math.Round(Sustained.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Sustained.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Sustained.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Sustained.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Sustained.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Sustained.InnervateMana).ToString() + " (" + Math.Round(Sustained.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Sustained.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Sustained.PotionMana).ToString() + " extra mana from Potion)\n");
-            dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
+            // dictValues.Add("MP5", Math.Round(Sustained.MPSInFSR * 5f).ToString() + "*" + Math.Round(Sustained.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Sustained.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Sustained.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Sustained.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Sustained.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Sustained.InnervateMana).ToString() + " (" + Math.Round(Sustained.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Sustained.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Sustained.PotionMana).ToString() + " extra mana from Potion)\n");
 
-            doHasteCalcs();
+            float speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating));
+            float speed_from_sh = (1f + BasicStats.SpellHaste);
+            float speed = speed_from_hr * speed_from_sh;
+            float hard = (1.5f / (1f * speed_from_sh) - 1) * StatConversion.RATING_PER_SPELLHASTE;
+            float untilcap = hard - BasicStats.HasteRating;
 
-            dictValues.Add("Spell Haste", Math.Round((spellhaste * haste - 1.0f) * 100.0f, 2) + "%*" + Math.Round((spellhaste - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((haste - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
+            dictValues.Add("Base Spell Haste", Math.Round((speed - 1.0f) * 100.0f, 2) + "%*" + Math.Round((speed_from_sh - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((speed_from_hr - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
             // Use Nourish cast time to equal normal GCD
             Spell spell = new Nourish(this, BasicStats);
-            dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap");
-            spell = new Lifebloom(this, BasicStats);
-            dictValues.Add("Lifebloom Global CD", Math.Round(spell.CastTime, 2) + " sec*" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until Lifebloom (GotEM) gcd cap");
+            dictValues.Add("Base Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Round(untilcap, 0).ToString() + " Haste Rating until hard gcd cap");
 
-            dictValues.Add("Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
+            dictValues.Add("Health", CombatStats.Health.ToString());
+            dictValues.Add("Armor", Math.Round(CombatStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, CombatStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
+            dictValues.Add("Mana", CombatStats.Mana.ToString());
+            dictValues.Add("Stamina", CombatStats.Stamina.ToString());
+            dictValues.Add("Intellect", CombatStats.Intellect.ToString());
+            dictValues.Add("Spirit", CombatStats.Spirit.ToString());
+            dictValues.Add("Spell Power", (CombatStats.SpellPower).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
+            dictValues.Add("Spell Crit", CombatStats.SpellCrit.ToString());
+
+            // dictValues.Add("MP5", Math.Round(Sustained.MPSInFSR * 5f).ToString() + "*" + Math.Round(Sustained.SpiritMPS * 5f * BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Sustained.SpiritMPS*5f).ToString() + " while not Casting)\n" + Math.Round(Sustained.GearMPS*5f).ToString() + " From MP5 gear\n" + Math.Round(Sustained.ReplenishmentMPS*5f).ToString() + " From Replenishment\n(" + Math.Round(Sustained.MPSOutFSR*5f).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Sustained.InnervateMana).ToString() + " (" + Math.Round(Sustained.ManaPerInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Sustained.PotionMPS * 5.0f).ToString() + " (" + Math.Round(Sustained.PotionMana).ToString() + " extra mana from Potion)\n");
+
+            speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(CombatStats.HasteRating));
+            speed_from_sh = (1f + CombatStats.SpellHaste);
+            speed = speed_from_hr * speed_from_sh;
+            hard = (1.5f / (1f * speed_from_sh) - 1) * StatConversion.RATING_PER_SPELLHASTE;
+            untilcap = hard - CombatStats.HasteRating;
+
+            dictValues.Add("Spell Haste", Math.Round((speed - 1.0f) * 100.0f, 2) + "%*" + Math.Round((speed_from_sh - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((speed_from_hr - 1.0f) * 100.0f, 2) + "% from " + CombatStats.HasteRating + " haste rating");
+            // Use Nourish cast time to equal normal GCD
+            spell = Sustained.nourish[0];
+            dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Round(untilcap, 0).ToString() + " Haste Rating until hard gcd cap");
+
+            
+            
+            
+            
+            
+            
             /*
             if (Simulation.TotalTime - Simulation.TimeToOOM > 1.0) {
                 dictValues.Add("Result", "OOM from tank HoTs");

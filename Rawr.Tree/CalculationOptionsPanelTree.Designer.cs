@@ -90,6 +90,7 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.cbIdleToHOTs = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -128,7 +129,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(297, 545);
+            this.tabControl1.Size = new System.Drawing.Size(297, 579);
             this.tabControl1.TabIndex = 23;
             // 
             // tabPage1
@@ -138,7 +139,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(289, 519);
+            this.tabPage1.Size = new System.Drawing.Size(289, 553);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -234,7 +235,7 @@
             this.tbSustained.Location = new System.Drawing.Point(6, 87);
             this.tbSustained.Maximum = 200;
             this.tbSustained.Name = "tbSustained";
-            this.tbSustained.Size = new System.Drawing.Size(262, 45);
+            this.tbSustained.Size = new System.Drawing.Size(265, 45);
             this.tbSustained.TabIndex = 42;
             this.tbSustained.TickFrequency = 10;
             this.tbSustained.Value = 50;
@@ -262,10 +263,10 @@
             // 
             this.tbSingleTargetMax.BackColor = System.Drawing.SystemColors.Window;
             this.tbSingleTargetMax.LargeChange = 10;
-            this.tbSingleTargetMax.Location = new System.Drawing.Point(9, 36);
+            this.tbSingleTargetMax.Location = new System.Drawing.Point(6, 36);
             this.tbSingleTargetMax.Maximum = 300;
             this.tbSingleTargetMax.Name = "tbSingleTargetMax";
-            this.tbSingleTargetMax.Size = new System.Drawing.Size(262, 45);
+            this.tbSingleTargetMax.Size = new System.Drawing.Size(265, 45);
             this.tbSingleTargetMax.TabIndex = 40;
             this.tbSingleTargetMax.TickFrequency = 10;
             this.tbSingleTargetMax.Value = 50;
@@ -278,13 +279,14 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(289, 519);
+            this.tabPage2.Size = new System.Drawing.Size(289, 553);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Fight";
+            this.tabPage2.Text = "Sustained Fight";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.cbIdleToHOTs);
             this.groupBox7.Controls.Add(this.label8);
             this.groupBox7.Controls.Add(this.label7);
             this.groupBox7.Controls.Add(this.label6);
@@ -323,7 +325,7 @@
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(259, 1117);
+            this.groupBox7.Size = new System.Drawing.Size(259, 1139);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
@@ -342,7 +344,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 756);
+            this.label7.Location = new System.Drawing.Point(6, 776);
             this.label7.MaximumSize = new System.Drawing.Size(250, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(234, 26);
@@ -353,7 +355,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 992);
+            this.label6.Location = new System.Drawing.Point(6, 1012);
             this.label6.MaximumSize = new System.Drawing.Size(250, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(228, 65);
@@ -396,7 +398,7 @@
             // tbLivingSeed
             // 
             this.tbLivingSeed.BackColor = System.Drawing.SystemColors.Window;
-            this.tbLivingSeed.Location = new System.Drawing.Point(6, 1079);
+            this.tbLivingSeed.Location = new System.Drawing.Point(6, 1099);
             this.tbLivingSeed.Maximum = 100;
             this.tbLivingSeed.Name = "tbLivingSeed";
             this.tbLivingSeed.Size = new System.Drawing.Size(247, 45);
@@ -407,7 +409,7 @@
             // lblLivingSeed
             // 
             this.lblLivingSeed.AutoSize = true;
-            this.lblLivingSeed.Location = new System.Drawing.Point(6, 1063);
+            this.lblLivingSeed.Location = new System.Drawing.Point(6, 1083);
             this.lblLivingSeed.Name = "lblLivingSeed";
             this.lblLivingSeed.Size = new System.Drawing.Size(108, 13);
             this.lblLivingSeed.TabIndex = 77;
@@ -416,7 +418,7 @@
             // tbNourish4
             // 
             this.tbNourish4.BackColor = System.Drawing.SystemColors.Window;
-            this.tbNourish4.Location = new System.Drawing.Point(6, 958);
+            this.tbNourish4.Location = new System.Drawing.Point(6, 978);
             this.tbNourish4.Maximum = 100;
             this.tbNourish4.Name = "tbNourish4";
             this.tbNourish4.Size = new System.Drawing.Size(247, 45);
@@ -427,7 +429,7 @@
             // lblNourish4
             // 
             this.lblNourish4.AutoSize = true;
-            this.lblNourish4.Location = new System.Drawing.Point(6, 942);
+            this.lblNourish4.Location = new System.Drawing.Point(6, 962);
             this.lblNourish4.Name = "lblNourish4";
             this.lblNourish4.Size = new System.Drawing.Size(93, 13);
             this.lblNourish4.TabIndex = 75;
@@ -436,7 +438,7 @@
             // tbNourish3
             // 
             this.tbNourish3.BackColor = System.Drawing.SystemColors.Window;
-            this.tbNourish3.Location = new System.Drawing.Point(6, 907);
+            this.tbNourish3.Location = new System.Drawing.Point(6, 927);
             this.tbNourish3.Maximum = 100;
             this.tbNourish3.Name = "tbNourish3";
             this.tbNourish3.Size = new System.Drawing.Size(247, 45);
@@ -447,7 +449,7 @@
             // lblNourish3
             // 
             this.lblNourish3.AutoSize = true;
-            this.lblNourish3.Location = new System.Drawing.Point(6, 891);
+            this.lblNourish3.Location = new System.Drawing.Point(6, 911);
             this.lblNourish3.Name = "lblNourish3";
             this.lblNourish3.Size = new System.Drawing.Size(93, 13);
             this.lblNourish3.TabIndex = 73;
@@ -456,7 +458,7 @@
             // tbNourish2
             // 
             this.tbNourish2.BackColor = System.Drawing.SystemColors.Window;
-            this.tbNourish2.Location = new System.Drawing.Point(6, 856);
+            this.tbNourish2.Location = new System.Drawing.Point(6, 876);
             this.tbNourish2.Maximum = 100;
             this.tbNourish2.Name = "tbNourish2";
             this.tbNourish2.Size = new System.Drawing.Size(247, 45);
@@ -467,7 +469,7 @@
             // lblNourish2
             // 
             this.lblNourish2.AutoSize = true;
-            this.lblNourish2.Location = new System.Drawing.Point(6, 840);
+            this.lblNourish2.Location = new System.Drawing.Point(6, 860);
             this.lblNourish2.Name = "lblNourish2";
             this.lblNourish2.Size = new System.Drawing.Size(93, 13);
             this.lblNourish2.TabIndex = 71;
@@ -476,7 +478,7 @@
             // tbNourish1
             // 
             this.tbNourish1.BackColor = System.Drawing.SystemColors.Window;
-            this.tbNourish1.Location = new System.Drawing.Point(6, 805);
+            this.tbNourish1.Location = new System.Drawing.Point(6, 825);
             this.tbNourish1.Maximum = 100;
             this.tbNourish1.Name = "tbNourish1";
             this.tbNourish1.Size = new System.Drawing.Size(247, 45);
@@ -487,7 +489,7 @@
             // lblNourish1
             // 
             this.lblNourish1.AutoSize = true;
-            this.lblNourish1.Location = new System.Drawing.Point(6, 789);
+            this.lblNourish1.Location = new System.Drawing.Point(6, 809);
             this.lblNourish1.Name = "lblNourish1";
             this.lblNourish1.Size = new System.Drawing.Size(88, 13);
             this.lblNourish1.TabIndex = 69;
@@ -502,7 +504,7 @@
             "Healing Touch",
             "Regrowth",
             "Rejuvenation"});
-            this.cbPrimarySpell.Location = new System.Drawing.Point(9, 726);
+            this.cbPrimarySpell.Location = new System.Drawing.Point(9, 746);
             this.cbPrimarySpell.MaxDropDownItems = 10;
             this.cbPrimarySpell.Name = "cbPrimarySpell";
             this.cbPrimarySpell.Size = new System.Drawing.Size(244, 21);
@@ -512,7 +514,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 710);
+            this.label5.Location = new System.Drawing.Point(6, 730);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 13);
             this.label5.TabIndex = 67;
@@ -707,7 +709,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(289, 519);
+            this.tabPage5.Size = new System.Drawing.Size(289, 612);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Mana";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -811,7 +813,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(289, 519);
+            this.tabPage4.Size = new System.Drawing.Size(289, 612);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Module Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -826,8 +828,19 @@
             this.tbModuleNotes.Name = "tbModuleNotes";
             this.tbModuleNotes.ReadOnly = true;
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbModuleNotes.Size = new System.Drawing.Size(283, 513);
+            this.tbModuleNotes.Size = new System.Drawing.Size(283, 606);
             this.tbModuleNotes.TabIndex = 0;
+            // 
+            // cbIdleToHOTs
+            // 
+            this.cbIdleToHOTs.AutoSize = true;
+            this.cbIdleToHOTs.Location = new System.Drawing.Point(9, 709);
+            this.cbIdleToHOTs.Name = "cbIdleToHOTs";
+            this.cbIdleToHOTs.Size = new System.Drawing.Size(153, 17);
+            this.cbIdleToHOTs.TabIndex = 85;
+            this.cbIdleToHOTs.Text = "Apply Idle time to HoTs too";
+            this.cbIdleToHOTs.UseVisualStyleBackColor = true;
+            this.cbIdleToHOTs.CheckedChanged += new System.EventHandler(this.cbIdleToHOTs_CheckedChanged);
             // 
             // CalculationOptionsPanelTree
             // 
@@ -936,5 +949,6 @@
         private System.Windows.Forms.Label lblSustained;
         private System.Windows.Forms.ComboBox cbSingleTargetRotation;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox cbIdleToHOTs;
     }
 }
