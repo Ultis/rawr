@@ -56,8 +56,8 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.itemFilterTreeView = new Rawr.ItemFilterTreeView();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceItemFilter)).BeginInit();
             this.LayoutPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -322,11 +322,12 @@
             // 
             this.buttonUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUp.Enabled = false;
+            this.buttonUp.Font = new System.Drawing.Font("Wingdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonUp.Location = new System.Drawing.Point(187, 2);
             this.buttonUp.Name = "buttonUp";
             this.buttonUp.Size = new System.Drawing.Size(23, 23);
             this.buttonUp.TabIndex = 2;
-            this.buttonUp.Text = "↑";
+            this.buttonUp.Text = "á";
             this.buttonUp.UseVisualStyleBackColor = true;
             this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
             // 
@@ -334,11 +335,12 @@
             // 
             this.buttonDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDown.Enabled = false;
+            this.buttonDown.Font = new System.Drawing.Font("Wingdings", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.buttonDown.Location = new System.Drawing.Point(210, 2);
             this.buttonDown.Name = "buttonDown";
             this.buttonDown.Size = new System.Drawing.Size(23, 23);
             this.buttonDown.TabIndex = 3;
-            this.buttonDown.Text = "↓";
+            this.buttonDown.Text = "â";
             this.buttonDown.UseVisualStyleBackColor = true;
             this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
             // 
@@ -350,7 +352,7 @@
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(23, 23);
             this.buttonDelete.TabIndex = 4;
-            this.buttonDelete.Text = "✕";
+            this.buttonDelete.Text = "X";
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
@@ -415,6 +417,19 @@
             this.label2.Text = "to";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // itemFilterTreeView
+            // 
+            this.LayoutPanel.SetColumnSpan(this.itemFilterTreeView, 4);
+            this.itemFilterTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemFilterTreeView.EditMode = true;
+            this.itemFilterTreeView.HideSelection = false;
+            this.itemFilterTreeView.Location = new System.Drawing.Point(1, 27);
+            this.itemFilterTreeView.Margin = new System.Windows.Forms.Padding(1);
+            this.itemFilterTreeView.Name = "itemFilterTreeView";
+            this.itemFilterTreeView.Size = new System.Drawing.Size(258, 183);
+            this.itemFilterTreeView.TabIndex = 0;
+            this.itemFilterTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.itemFilterTreeView_AfterSelect);
+            // 
             // panel1
             // 
             this.LayoutPanel.SetColumnSpan(this.panel1, 4);
@@ -430,25 +445,12 @@
             this.panel1.Size = new System.Drawing.Size(260, 26);
             this.panel1.TabIndex = 28;
             // 
-            // itemFilterTreeView
-            // 
-            this.LayoutPanel.SetColumnSpan(this.itemFilterTreeView, 4);
-            this.itemFilterTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemFilterTreeView.EditMode = true;
-            this.itemFilterTreeView.HideSelection = false;
-            this.itemFilterTreeView.Location = new System.Drawing.Point(1, 27);
-            this.itemFilterTreeView.Margin = new System.Windows.Forms.Padding(1);
-            this.itemFilterTreeView.Name = "itemFilterTreeView";
-            this.itemFilterTreeView.Size = new System.Drawing.Size(258, 183);
-            this.itemFilterTreeView.TabIndex = 0;
-            this.itemFilterTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.itemFilterTreeView_AfterSelect);
-            // 
             // FormItemFilter
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(285, 521);
+            this.ClientSize = new System.Drawing.Size(293, 529);
             this.Controls.Add(this.LayoutPanel);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.cancelButton);
