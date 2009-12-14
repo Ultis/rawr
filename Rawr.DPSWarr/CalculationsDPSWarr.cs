@@ -419,6 +419,7 @@ These numbers to do not include racial bonuses.",
                 BonusRageGen = stats.BonusRageGen,
                 BonusRageOnCrit = stats.BonusRageOnCrit,
                 HealthRestore = stats.HealthRestore,
+                HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if ((effect.Trigger == Trigger.Use ||
@@ -528,6 +529,7 @@ These numbers to do not include racial bonuses.",
                 + stats.BonusHealthMultiplier
                 + stats.BonusStaminaMultiplier
                 + stats.HealthRestore
+                + stats.HealthRestoreFromMaxHealth
                 ) > 0) {
                 retVal = true;
             }
@@ -1023,7 +1025,11 @@ These numbers to do not include racial bonuses.",
 
                 calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; 
 
-                Rot.MakeRotationandDoDPS(true, needsDisplayCalculations); 
+                Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
+
+                if (stats.HealthRestoreFromMaxHealth > 0) {
+                    //stats.HealthRestore += 
+                }
 
                 float Health2Surv  = (stats.Health) / 100f; 
                       Health2Surv += (stats.HealthRestore) / 1000f; 

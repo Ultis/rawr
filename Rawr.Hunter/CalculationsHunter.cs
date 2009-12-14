@@ -355,6 +355,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                 // Survivability
                 HealthRestore = stats.HealthRestore,
+                HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
                 Dodge = stats.Dodge,
                 DodgeRating = stats.DodgeRating,
                 Parry = stats.Parry,
@@ -517,6 +518,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 + stats.BonusHealthMultiplier
                 + stats.BonusStaminaMultiplier
                 + stats.HealthRestore
+                + stats.HealthRestoreFromMaxHealth
                 ) > 0)
             {
                 retVal = true;

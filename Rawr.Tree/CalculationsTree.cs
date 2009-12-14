@@ -1322,7 +1322,8 @@ applied and result is scaled down by 100)",
                 RejuvenationHealBonus = stats.RejuvenationHealBonus, // Idol of Pure Thoughts (lvl74)
                 ReduceRejuvenationCost = stats.ReduceRejuvenationCost, // Idol of Awakening (lvl80) 
                 LifebloomTickHealBonus = stats.LifebloomTickHealBonus, // Idol of Lush Mosh
-                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, // Idol of Health                 
+                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, // Idol of Health
+                SwiftmendCdReduc = stats.SwiftmendCdReduc, // S7 PvP 4 Pc
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -1383,7 +1384,8 @@ applied and result is scaled down by 100)",
                 + stats.RejuvenationHealBonus // Idol of Pure Thoughts (lvl74)
                 + stats.ReduceRejuvenationCost // Idol of Awakening (lvl80) 
                 + stats.LifebloomTickHealBonus // Idol of Lush Mosh
-                + stats.HealingTouchFinalHealBonus // Idol of Health       
+                + stats.HealingTouchFinalHealBonus // Idol of Health
+                + stats.SwiftmendCdReduc
                 #endregion
                 > 0)
                 return true;

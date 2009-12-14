@@ -2884,12 +2884,22 @@ namespace Rawr
             #region PvP
             defaultBuffs.Add(new Buff()
             {
-                Name = "Gladiator Sanctuary 2 Piece Bonus",
+                Name = "Gladiator Sanctuary (PvP) 2 Piece Set Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
+                Stats = { Resilience = 100, SpellPower = 29 },
                 SetName = "Gladiator's Sanctuary",
                 SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator Sanctuary (PvP) 4 Piece Set Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SpellPower = 88, /*SwiftmendCdReduc = 2*/ },
+                SetName = "Gladiator's Sanctuary",
+                SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
             #endregion

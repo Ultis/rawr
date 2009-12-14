@@ -94,8 +94,8 @@ namespace Rawr {
                 else if (gemBonus == "Sometimes Heal on Your Crits")
                 {
                     // this is supposed to be 2% of your total health healed when it procs, 50% chance to proc on crit
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { Health = 400f }, 0f, 0f, 0.50f));
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { Health = 400f }, 0f, 0f, 0.50f));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { HealthRestoreFromMaxHealth = 0.02f }, 0f, 0f, 0.50f));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit   , new Stats() { HealthRestoreFromMaxHealth = 0.02f }, 0f, 0f, 0.50f));
                 }
                 else if (gemBonus == "2% Reduced Threat")
                 {

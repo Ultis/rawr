@@ -65,6 +65,7 @@ namespace Rawr {
         HitRating,
         Hp5,
         HealthRestore,
+        HealthRestoreFromMaxHealth,
         IdolCritRating,
         InnervateCooldownReduction,
         InsectSwarmDmg,
@@ -218,6 +219,7 @@ namespace Rawr {
         ReduceRejuvenationCost, // Idol of Awakening (lvl80) 
         LifebloomTickHealBonus, // Idol of Lush Mosh
         HealingTouchFinalHealBonus, // Idol of Health 
+        SwiftmendCdReduc, // S7 PvP 4 Pc
         #endregion
         #region Added by Rawr.Enhance
         BonusSSDamage,
@@ -2111,6 +2113,19 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.HealthRestore] = value; }
         }
         /// <summary>
+        /// This stat stores Health restorations such as Invigorating Earthsiege Diamond's
+        /// 'Sometimes Heal on your Crits' (2% of Health Restored)
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% of Max Health Restored")]
+        [Category("Equipment Effects")]
+        [Percentage]
+        public float HealthRestoreFromMaxHealth
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealthRestoreFromMaxHealth]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealthRestoreFromMaxHealth] = value; }
+        }
+        /// <summary>
         /// This stat stores Mana restorations such as Runic Mana Potion
         /// or Mana Restore procs like Figurine - Talasite Owl's Use Effect
         /// </summary>
@@ -3134,6 +3149,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.NourishSpellpower]; }
             set { _rawAdditiveData[(int)AdditiveStat.NourishSpellpower] = value; }
+        }
+
+        // S7 PvP 4 Pc
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Swiftmend Cooldown Reduction")]
+        [Category("Tree")]
+        public float SwiftmendCdReduc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SwiftmendCdReduc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SwiftmendCdReduc] = value; }
         }
         #endregion
         #region Added by Rawr.Enhance

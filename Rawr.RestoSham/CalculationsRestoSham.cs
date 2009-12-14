@@ -250,7 +250,7 @@ namespace Rawr.RestoSham
         }
 
         #endregion
-        #region Item types we're interested in.
+        #region Item types we're interested in
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
         {
@@ -617,7 +617,7 @@ namespace Rawr.RestoSham
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
-            #region Create the statistics for a given characte
+            #region Create the statistics for a given character
             Stats statsRace;
             switch (character.Race)
             {
@@ -651,6 +651,11 @@ namespace Rawr.RestoSham
                 statsTotal += statModifier;
             #region Proc Handling
             Stats statsProcs = new Stats();
+            // Jothay's Note:
+            // Added these two lines for a just in case scenario,
+            // otherwise you might have (1f/0f) which is bad
+            if (HealPerSec == 0) HealPerSec = 1;
+            if (CritPerSec == 0) CritPerSec = 1;
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
                 switch (effect.Trigger)
