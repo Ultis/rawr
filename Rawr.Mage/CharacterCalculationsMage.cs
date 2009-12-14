@@ -854,7 +854,7 @@ namespace Rawr.Mage
             SequenceGroup heroismGroup = sequence.GroupHeroism();
             if (CalculationOptions.HeroismControl == 3)
             {
-                heroismGroup.MinTime = CalculationOptions.FightDuration - CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration;
+                heroismGroup.MinTime = Math.Min(CalculationOptions.FightDuration - CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration, CalculationOptions.FightDuration - 40.0);
             }
             sequence.GroupCombustion();
             sequence.GroupArcanePower();

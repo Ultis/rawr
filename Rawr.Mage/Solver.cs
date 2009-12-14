@@ -2660,7 +2660,10 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    int firstMoltenFurySegment = segmentList.FindIndex(s => s.TimeEnd > calculationOptions.FightDuration * (1 - calculationOptions.MoltenFuryPercentage) + 0.00001);
+                    float mfMin = calculationOptions.FightDuration * (1.0f - calculationOptions.MoltenFuryPercentage) + 0.00001f;
+                    float heroMin = Math.Min(mfMin, calculationOptions.FightDuration - 40.0f + 0.00001f);
+                    int firstMoltenFurySegment = segmentList.FindIndex(s => s.TimeEnd > mfMin);
+                    int firstHeroismSegment = segmentList.FindIndex(s => s.TimeEnd > heroMin);
 
                     List<Cycle> placed = new List<Cycle>();
                     for (int seg = 0; seg < segmentList.Count; seg++)
@@ -2679,7 +2682,7 @@ namespace Rawr.Mage
                                         if (segmentCooldowns && moltenFuryAvailable && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
                                         if (segmentCooldowns && moltenFuryAvailable && !stateList[buffset].MoltenFury && seg >= firstMoltenFurySegment) continue;
                                         if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
-                                        if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
+                                        if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstHeroismSegment) continue;
                                         Cycle c = stateList[buffset].GetCycle(spellList[spell]);
                                         bool skip = false;
                                         foreach (Cycle s2 in placed)
@@ -2776,6 +2779,10 @@ namespace Rawr.Mage
                 if (moltenFuryAvailable)
                 {
                     ticks.Add((1 - calculationOptions.MoltenFuryPercentage) * calculationOptions.FightDuration);
+                }
+                if (calculationOptions.HeroismControl == 3)
+                {
+                    ticks.Add(Math.Max(0.0, Math.Min(calculationOptions.FightDuration - calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration, calculationOptions.FightDuration - 40.0)));
                 }
                 if (!string.IsNullOrEmpty(calculationOptions.CooldownRestrictions) && calculationOptions.CooldownRestrictionList == null)
                 {
