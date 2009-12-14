@@ -6,7 +6,7 @@ namespace Rawr.Tree
 {
     public class RotationResult
     {
-        public RotationResult(CharacterCalculationsTree calculatedStats, Stats stats)
+        public RotationResult(CharacterCalculationsTree calculatedStats, Stats stats, float latency)
         {
             #region Setup Spells
             regrowth = new Regrowth(calculatedStats, stats, false);
@@ -27,6 +27,23 @@ namespace Rawr.Tree
             wildGrowth = new WildGrowth(calculatedStats, stats);
             #endregion
 
+            #region Add latency
+            regrowth.latency = latency;
+            regrowthAgain.latency = latency;
+            lifebloom.latency = latency;
+            lifebloomSlowStack.latency = latency;
+            lifebloomFastStack.latency = latency;
+            lifebloomRollingStack.latency = latency;
+            rejuvenate.latency = latency;
+            nourish[0].latency = latency;
+            nourish[1].latency = latency;
+            nourish[2].latency = latency;
+            nourish[3].latency = latency;
+            nourish[4].latency = latency;
+            healingTouch.latency = latency;
+            wildGrowth.latency = latency;
+            #endregion
+
             #region Setup Mana regen
             SpiritMPS = StatConversion.GetSpiritRegenSec(stats.Intellect, stats.Spirit);
             replenishment = stats.ManaRestoreFromMaxManaPerSecond; 
@@ -39,6 +56,7 @@ namespace Rawr.Tree
 
         public void ApplyCombatStats(Stats stats) 
         {
+            // to be done
         }
 
         #region Spells
@@ -56,11 +74,11 @@ namespace Rawr.Tree
         public Swiftmend swiftmend = null;
         #endregion
 
-        public float HPS { get { return HotsHPS + WildGrowthHPS + SwiftmendHPS + PrimaryHPS + ValAnyrHPS; } }
-        public float MPS { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS + PrimaryMPS; } }
-        public float CastsPerMinute { get { return HotsCastsPerMinute + WildGrowthCPM + SwiftmendCPM + PrimaryCPM; } }
-        public float HealsPerMinute { get { return HotsHealsPerMinute + WildGrowthHealsPerMinute + SwiftmendHealsPerMinute + PrimaryHealsPerMinute; } }
-        public float CritsPerMinute { get { return HotsCritsPerMinute + SwiftmendCritsPerMinute + PrimaryCritsPerMinute; } }
+        public float HPS { get { return HotsHPS + WildGrowthHPS + SwiftmendHPS + NourishHPS + ValAnyrHPS; } }
+        public float MPS { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS + NourishMPS; } }
+        public float CastsPerMinute { get { return HotsCastsPerMinute + WildGrowthCPM + SwiftmendCPM + NourishCPM; } }
+        public float HealsPerMinute { get { return HotsHealsPerMinute + WildGrowthHealsPerMinute + SwiftmendHealsPerMinute + NourishHealsPerMinute; } }
+        public float CritsPerMinute { get { return HotsCritsPerMinute + SwiftmendCritsPerMinute + NourishCritsPerMinute; } }
 
         #region Hots
         public float HotsCF { get { return RejuvCF + RegrowthCF + LifebloomCF + LifebloomStackCF; } }
@@ -77,7 +95,7 @@ namespace Rawr.Tree
         public float RejuvCPM { get { return 60f * RejuvCF / rejuvenate.CastTime; } }
         public float RejuvAvg { get { return RejuvCPS * rejuvenate.Duration; } }
         //public float RejuvHPS { get { return RejuvAvg * rejuvenate.HPSHoT + RejuvCPS * rejuvenate.AverageHealingwithCrit; } }
-        public float RejuvHPS { get { return RejuvCPS * rejuvenate.HPCT; } }
+        public float RejuvHPS { get { return RejuvCF * rejuvenate.HPCT; } }
         public float RejuvMPS { get { return RejuvCPS * rejuvenate.ManaCost; } }
         public float RejuvHealsPerMinute { get { return RejuvCPM * rejuvenate.PeriodicTicks; } }
         #endregion
@@ -88,7 +106,7 @@ namespace Rawr.Tree
         public float RegrowthCPM { get { return 60f * RegrowthCF / regrowth.CastTime; } }
         public float RegrowthAvg { get { return RegrowthCPS * regrowth.Duration; } }
         //public float RegrowthHPS { get { return RegrowthAvg * regrowth.HPSHoT + RegrowthCPS * regrowth.AverageHealingwithCrit; } }
-        public float RegrowthHPS { get { return RegrowthCPS * regrowth.HPCT; } }
+        public float RegrowthHPS { get { return RegrowthCF * regrowth.HPCT; } }
         public float RegrowthMPS { get { return RegrowthCPS * regrowth.ManaCost; } }
         public float RegrowthHealsPerMinute { get { return RegrowthCPM * (1f + regrowth.PeriodicTicks); } }
         public float RegrowthCritsPerMinute { get { return RegrowthCPM * regrowth.CritPercent / 100f; } }
@@ -100,10 +118,21 @@ namespace Rawr.Tree
         public float LifebloomCPM { get { return 60f * LifebloomCF / lifebloom.CastTime; } }
         public float LifebloomAvg { get { return LifebloomCPS * lifebloom.Duration; } }
         //public float LifebloomHPS { get { return LifebloomAvg * lifebloom.HPSHoT + LifebloomCPS * lifebloom.AverageHealingwithCrit; } }
-        public float LifebloomHPS { get { return LifebloomCPS * lifebloom.HPCT; } }
+        public float LifebloomHPS { get { return LifebloomCF * lifebloom.HPCT; } }
         public float LifebloomMPS { get { return LifebloomCPS * lifebloom.ManaCost; } }
         public float LifebloomHealsPerMinute { get { return LifebloomCPM * (1f + lifebloom.PeriodicTicks); } }
         public float LifebloomCritsPerMinute { get { return LifebloomCPM * lifebloom.CritPercent / 100f; } }
+        #endregion
+
+        #region Nourish
+        public float NourishCF = 0f;
+        public float NourishRawHPS = 0f;
+        public float NourishHPS { get { return NourishCF * NourishRawHPS; } }
+        public float NourishMPS { get { return NourishCPS * nourish[0].ManaCost; } }
+        public float NourishCPS { get { return NourishCF / nourish[0].CastTime; } }
+        public float NourishCPM { get { return 60f * NourishCF / nourish[0].CastTime; } }
+        public float NourishHealsPerMinute { get { return NourishCPM; } }
+        public float NourishCritsPerMinute { get { return NourishHealsPerMinute * nourish[0].CritPercent / 100f; } }
         #endregion
 
         #region Lifebloom stacks
@@ -171,7 +200,7 @@ namespace Rawr.Tree
         #region Wild Growth
         public float WildGrowthCF = 0f;
         public float WildGrowthCPS { get { return WildGrowthCF * wildGrowth.CastTime; } }
-        public float WildGrowthCPM { get { return 60f * WildGrowthCPS; } set { WildGrowthCF = value / (60f * wildGrowth.CastTime); } }
+        public float WildGrowthCPM { get { return 60f * WildGrowthCPS; } set { WildGrowthCF = value * (float)wildGrowth.CastTime / 60f; } }
         public float WildGrowthAvg { get { return WildGrowthCPS * wildGrowth.Duration; } }
         public float WildGrowthHPS { get { return WildGrowthAvg * wildGrowth.maxTargets * wildGrowth.PeriodicTick; } }
         public float WildGrowthMPS { get { return WildGrowthCPS * wildGrowth.ManaCost; } }
@@ -207,22 +236,6 @@ namespace Rawr.Tree
         public float SwiftmendCritsPerMinute { get { return swiftmend == null ? 0 : SwiftmendCPM * swiftmend.CritPercent / 100.0f; } }
         #endregion
 
-        #region Primary
-        public Spell PrimaryHeal = null;
-        public float PrimaryRawHPS = 0f;
-        public float PrimaryHPS { get { return PrimaryHeal == null ? 0 : PrimaryCF * PrimaryRawHPS; } }
-        public float PrimaryMPS { get { return PrimaryHeal == null ? 0 : PrimaryCPS * PrimaryHeal.ManaCost; } }
-        public float PrimaryCF = 0f;
-        public float PrimaryCPS { get { return PrimaryHeal == null ? 0 : PrimaryCF / PrimaryHeal.CastTime; } }
-        public float PrimaryCPM { get { return PrimaryHeal == null ? 0 : 60f * PrimaryCF / PrimaryHeal.CastTime; } }
-        public float PrimaryHealsPerMinute { get { return PrimaryHeal == null ? 0 : PrimaryCPM * (PrimaryHeal is Rejuvenation ? PrimaryHeal.PeriodicTicks : 1f); } }
-        public float PrimaryCritsPerMinute { get { return PrimaryHeal == null ? 0 : PrimaryHealsPerMinute * PrimaryHeal.CritPercent / 100f; } }
-        #endregion
-
-        //trueHotsHPS += Activity * regrowth.HPSHoT;
-        //trueHotsHPS += Activity * lifebloom.HPSHoT;
-        // rejuv heals per minute
-
         #region Passive Mana Regen
         public float Mana; // set by constructor
         public float SpiritMPS; // set by constructor
@@ -252,16 +265,11 @@ namespace Rawr.Tree
         public float TimeToOOM { get { return EffMPS > 0 ? Math.Min((ExtraMana + Mana) / EffMPS, TotalTime) : TotalTime; } }
         public float TimeAfterOOM { get { return TotalTime - TimeToOOM; } }
 
-        public float EffMPSWithoutPrimary { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS - ManaRegen; } }
-        public float EffMPS { get { return EffMPSWithoutPrimary + PrimaryMPS; } }
+        public float EffMPS { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS + NourishMPS - ManaRegen; } }
 
         // HotsCF includes Lifebloom stacks...
-        public float TotalCF { get { return (float)Math.Round(HotsCF + WildGrowthCF + SwiftmendCF + PrimaryCF, 4); } }
-        public float MaxPrimaryCF { get { return (float)Math.Round(1f - (HotsCF + WildGrowthCF + SwiftmendCF), 4); } }
+        public float TotalCF { get { return (float)Math.Round(HotsCF + WildGrowthCF + SwiftmendCF + NourishCF, 4); } }
         public float IdleCF { get { return 1f - TotalCF; } }
-
-        //float ManaAfterHots = (rot.ExtraMana + rot.Mana) - EffectiveBurn * calcOpts.FightDuration;
-        //float PrimaryHealMPSAvailable = ManaAfterHots / calcOpts.FightDuration;
 
         public float TotalModifier { get { return TotalTime > TimeToOOM ? (TimeToOOM + BurnRegenFraction * TimeAfterOOM) / TotalTime : 1f; } }
         public float TimeToRegenAll { get { return Mana / MPSOutFSR; } }
@@ -269,14 +277,14 @@ namespace Rawr.Tree
         public float BurnRegenFraction { get { return TimeToBurnAll / (TimeToRegenAll + TimeToBurnAll); } }
 
         public float ValAnyrShield = 0;
-        public float ValAnyrHPS { get { return ValAnyrShield * (HotsHPS + WildGrowthHPS + SwiftmendHPS + PrimaryHPS); } }
+        public float ValAnyrHPS { get { return ValAnyrShield * (HotsHPS + WildGrowthHPS + SwiftmendHPS + NourishHPS); } }
 
         public float TotalHealing { get { return HPS * TotalTime * TotalModifier; } }
         public float TotalCastsPerMinute { get { return CastsPerMinute * TotalModifier; } }
         public float TotalCritsPerMinute { get { return CritsPerMinute * TotalModifier; } }
         public float TotalHealsPerMinute { get { return HealsPerMinute * TotalModifier; } }
 
-        public float RejuvenationHealsPerMinute { get { return RejuvHealsPerMinute + (PrimaryHeal is Rejuvenation ? PrimaryHealsPerMinute : 0); } }
+        public float RejuvenationHealsPerMinute { get { return RejuvHealsPerMinute; } }
         
         public RotationSettings rotSettings;
     }
@@ -310,14 +318,15 @@ namespace Rawr.Tree
 
     public class RotationSettings
     {
-        public float RejuvFraction, RegrowthFraction, averageLifebloomStacks, LifebloomFraction;
-        public float nourish0, nourish1, nourish2, nourish3, nourish4;
+        public float averageLifebloomStacks, averageRejuv, averageRegrowth;
         public LifeBloomType lifeBloomType;
-        public SpellList primaryHeal;
-        public HealTargetTypes healTarget;
         public int SwiftmendPerMin, WildGrowthPerMin;
+        public float RejuvFraction, RegrowthFraction, LifebloomFraction, NourishFraction;
+        public bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
+        public float nourish0, nourish1, nourish2, nourish3, nourish4;
         public float livingSeedEfficiency;
-        public bool applyIdleToHots;
+        public HealTargetTypes healTarget;
+        public float latency;
     }
 
     public class SingleTargetBurstResult
@@ -346,17 +355,21 @@ namespace Rawr.Tree
     {
         public static RotationResult SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings)
         {
-            RotationResult rot = new RotationResult(calculatedStats, stats);
+            RotationResult rot = new RotationResult(calculatedStats, stats, rotSettings.latency);
 
             rot.TotalTime = calcOpts.FightDuration;
 
             #region Maintained Hots
-            rot.RejuvCF = rotSettings.RejuvFraction;
-            rot.RegrowthCF = rotSettings.RegrowthFraction;
-            rot.LifebloomCF = rotSettings.LifebloomFraction;
             rot.LifebloomStackType = rotSettings.lifeBloomType;
             rot.LifebloomStacks = rotSettings.averageLifebloomStacks;
+            float maintainedRejuvCF = rotSettings.averageRejuv * rot.rejuvenate.CastTime / rot.rejuvenate.Duration;
+            float maintainedRegrowthCF = rotSettings.averageRegrowth * rot.regrowth.CastTime / rot.regrowth.Duration;
             #endregion
+
+            rot.RejuvCF = rotSettings.RejuvFraction + maintainedRejuvCF;
+            rot.RegrowthCF = rotSettings.RegrowthFraction + maintainedRegrowthCF;
+            rot.LifebloomCF = rotSettings.LifebloomFraction;
+            rot.NourishCF = rotSettings.NourishFraction;
                 
             #region Wild Growth
             // If talent isn't chosen disregard WildGrowth
@@ -366,29 +379,15 @@ namespace Rawr.Tree
             #region Swiftmend
             if (calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0)
             {
-                rot.swiftmend = new Swiftmend(calculatedStats, stats, 
-                    rot.RejuvCF > 0 || rotSettings.primaryHeal == SpellList.Rejuvenation ? rot.rejuvenate : null,
-                    rot.RegrowthCF > 0 || rotSettings.primaryHeal == SpellList.Regrowth ? rot.regrowth : null);
+                rot.swiftmend = new Swiftmend(calculatedStats, stats,
+                    rot.RejuvCF > 0 ? rot.rejuvenate : null,
+                    rot.RegrowthCF > 0 ? rot.regrowth : null);
+                rot.swiftmend.latency = rotSettings.latency;
                 rot.SwiftmendCPM = rotSettings.SwiftmendPerMin;
-
-                #region Consumed HoTs if not refreshed
-                /*// Handle consumed HoTs
-                // Loss of HoTs HPS if not refreshed          // Use only one of these 2 sections
-                hotsHPS -= swift.rejuvUseChance * swift.rejuvTicksLost * rejuvenate.PeriodicTick * swiftmendPMin / 60.0f;
-                hotsHPS -= swift.regrowthUseChance * swift.regrowthTicksLost * regrowth.PeriodicTick * swiftmendPMin / 60.0f;/
-                #endregion
-                #region Replace HoTs if refreshed
-                // Extra MPS if HoTs refreshed              // Use only one of these 2 sections
-                hotsMPS += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
-                hotsMPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.ManaCost * rotSettings.SwiftmendPerMin / 60.0f;
-                // Replacing Regrowths gives extra direct heals
-                hotsHPS += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.AverageHealingwithCrit * rotSettings.SwiftmendPerMin / 60.0f;
-                // Replacing HoTs take extra time
-                hotsCastFrac += swift.rejuvUseChance * swift.rejuvTicksLost / rejuvenate.PeriodicTicks * rejuvenate.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
-                hotsCastFrac += swift.regrowthUseChance * swift.regrowthTicksLost / regrowth.PeriodicTicks * regrowth.CastTime * rotSettings.SwiftmendPerMin / 60.0f;\
-                 */
-                #endregion
-
+            }
+            else
+            {
+                rot.SwiftmendCPM = 0;
             }
             #endregion
 
@@ -413,108 +412,48 @@ namespace Rawr.Tree
             }
 
             rot.ManaPerInnervate *= Rawr.Tree.TreeConstants.BaseMana;
-
-            // TODO: Should we add this limit back in?
-            // lets assume the mana return is maximally 95% of your mana
-            // thus take the smaller value of 95% of mana pool and total mana regenerated
-            // manaFromInnervate = Math.Min(manaFromInnervate, .95f * stats.Mana);
             #endregion
 
-            #region Select Primary Heal and apply Nature's Grace
-            switch (rotSettings.primaryHeal)
-            {
-                case SpellList.Nourish:
-                    rot.PrimaryHeal = rot.nourish[0];
-                    break;
-                case SpellList.Regrowth:
-                    rot.PrimaryHeal = rotSettings.healTarget == HealTargetTypes.TankHealing ? rot.regrowthAgain : rot.regrowth;
-                    break;
-                case SpellList.Rejuvenation:
-                    rot.PrimaryHeal = rot.rejuvenate;
-                    break;
-                case SpellList.HealingTouch:
-                default:
-                    rot.PrimaryHeal = rot.healingTouch;
-                    break;
-            }
-
-            /*if (rot.PrimaryHeal is Nourish)
-            {
-                rot.nourish[0].calculateNewNaturesGrace(rot.nourish[0].CritPercent / 100f);
-                rot.nourish[1].calculateNewNaturesGrace(rot.nourish[1].CritPercent / 100f);
-                rot.nourish[2].calculateNewNaturesGrace(rot.nourish[2].CritPercent / 100f);
-                rot.nourish[3].calculateNewNaturesGrace(rot.nourish[3].CritPercent / 100f);
-                rot.nourish[4].calculateNewNaturesGrace(rot.nourish[4].CritPercent / 100f);
-            }
-            else
-            {
-                rot.PrimaryHeal.calculateNewNaturesGrace(rot.PrimaryHeal.CritPercent / 100f);
-            }*/
-            #endregion
-
-            #region Primary Heal raw hps
-            if (rot.PrimaryHeal is Nourish)
-            {
-                if (rotSettings.healTarget == HealTargetTypes.TankHealing)
-                {
-                    float _hps = rotSettings.nourish0 * rot.nourish[0].HPS +
-                        rotSettings.nourish1 * rot.nourish[1].HPS +
-                        rotSettings.nourish2 * rot.nourish[2].HPS +
-                        rotSettings.nourish3 * rot.nourish[3].HPS +
-                        rotSettings.nourish4 * rot.nourish[4].HPS;
-                    rot.PrimaryRawHPS = _hps;
-                }
-                else
-                {
-                    float _hpct = rotSettings.nourish0 * rot.nourish[0].HPCT +
-                        rotSettings.nourish1 * rot.nourish[1].HPCT +
-                        rotSettings.nourish2 * rot.nourish[2].HPCT +
-                        rotSettings.nourish3 * rot.nourish[3].HPCT +
-                        rotSettings.nourish4 * rot.nourish[4].HPCT;
-                    rot.PrimaryRawHPS = _hpct / rot.PrimaryHeal.CastTime;
-                }
-            }
-            else
-            {
-                if (rotSettings.healTarget == HealTargetTypes.RaidHealing)
-                {
-                    rot.PrimaryRawHPS = rot.PrimaryHeal.HPCT / rot.PrimaryHeal.CastTime;
-                }
-                else
-                {
-                    rot.PrimaryRawHPS = rot.PrimaryHeal.HPS;
-                }
-            }
+            #region Nourish raw dps
+            float _hpct = rotSettings.nourish0 * rot.nourish[0].HPCT +
+                rotSettings.nourish1 * rot.nourish[1].HPCT +
+                rotSettings.nourish2 * rot.nourish[2].HPCT +
+                rotSettings.nourish3 * rot.nourish[3].HPCT +
+                rotSettings.nourish4 * rot.nourish[4].HPCT;
+            rot.NourishRawHPS = _hpct / rot.nourish[0].CastTime;
             #endregion
 
             #region Correct cast fractions and calculate primary spell cast fraction
             // Priority:
-            // 1. Lifebloom stack
+            // 1. Maintained Hots
             // 2. Wild growth and Swiftmend (Swiftmend cannot be reduced, only enabled/disabled)
-            // 3. Hots
+            // 3. Spells not to be adjusted
             // 4. Idle time
-            // 5. Primary spell
+            // 5. Spells to be adjusted
 
-            // First, try to reduce Hots
-            // also apply to idle time
-            rot.PrimaryCF = 1f;
-            
             float IdleCF = calcOpts.IdleCastTimePercent / 100f;
-            float IdleHotsCF = calcOpts.ApplyIdleToHots ? calcOpts.IdleCastTimePercent / 100f : 0f;
 
             if (rot.TotalCF + IdleCF > 1f)
             {
-                float Static = rot.HotsCF + rot.WildGrowthCF + rot.SwiftmendCF;
+                float Static = maintainedRegrowthCF + maintainedRejuvCF + rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
+                if (!calcOpts.AdjustLifebloom) Static += rot.LifebloomCF;
+                if (!calcOpts.AdjustNourish) Static += rot.NourishCF;
+                if (!calcOpts.AdjustRejuv) Static += rot.RejuvCF;
+                if (!calcOpts.AdjustRegrowth) Static += rot.RegrowthCF;
                 float Factor = Math.Max(0f, (1f - Static - IdleCF) / (rot.TotalCF - Static));
-                rot.PrimaryCF *= Factor;
+                if (calcOpts.AdjustNourish) rot.NourishCF *= Factor;
+                if (calcOpts.AdjustRejuv) rot.RejuvCF = (rot.RejuvCF - maintainedRejuvCF) * Factor + maintainedRejuvCF;
+                if (calcOpts.AdjustRegrowth) rot.RegrowthCF = (rot.RegrowthCF - maintainedRegrowthCF) * Factor + maintainedRegrowthCF;
+                if (calcOpts.AdjustLifebloom) rot.LifebloomCF *= Factor;
             }
 
-            if (rot.TotalCF + IdleHotsCF > 1f)
+            if (rot.TotalCF + IdleCF > 1f)
             {
-                float Static = rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
-                float Factor = Math.Max(0f, (1f - Static - IdleHotsCF) / (rot.TotalCF - Static));
-                rot.RejuvCF *= Factor;
-                rot.RegrowthCF *= Factor;
+                float Static = maintainedRegrowthCF + maintainedRejuvCF + rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
+                float Factor = Math.Max(0f, (1f - Static - IdleCF) / (rot.TotalCF - Static));
+                rot.NourishCF *= Factor;
+                rot.RejuvCF = (rot.RejuvCF - maintainedRejuvCF) * Factor + maintainedRejuvCF;
+                rot.RegrowthCF = (rot.RegrowthCF - maintainedRegrowthCF) * Factor + maintainedRegrowthCF;
                 rot.LifebloomCF *= Factor;
             }
 
@@ -525,7 +464,7 @@ namespace Rawr.Tree
             if (rot.TotalCF > 1f)
             {
                 rot.SwiftmendCPM = 0;
-                float Static = rot.LifebloomStackCF;
+                float Static = rot.LifebloomStackCF + rot.RejuvCF + rot.RegrowthCF;
                 float Factor = Math.Min(1f, Math.Max(0f, (1f - Static) / (rot.TotalCF - Static)));
                 // Rejuv/Regrowth/Lifebloom are already 0 at this point
                 rot.WildGrowthCF *= Factor;
@@ -534,16 +473,12 @@ namespace Rawr.Tree
             // Finally, try to reduce lifebloom stacks
             if (rot.TotalCF > 1f)
             {
-                rot.LifebloomStackCF = 1f;
+                float Factor = 1f / rot.TotalCF;
+                rot.LifebloomStackCF *= Factor;
+                rot.RejuvCF *= Factor;
+                rot.RegrowthCF *= Factor;
                 // Now, rot.MaxPrimaryCF *must* be 1f exactly.
             }
-
-            // Again, check if Swiftmend can be applied
-            /*if (rot.RejuvAvg + rot.RegrowthAvg < rot.SwiftmendCPM && 
-                (!(rot.PrimaryHeal is Rejuvenation || rot.PrimaryHeal is Regrowth) ||
-                rot.PrimaryAvg < rot.SwiftmendCPM)) rot.SwiftmendCPM = 0f;*/
-
-            // rot.PrimaryCF = Math.Max(0f, rot.MaxPrimaryCF - calcOpts.IdleCastTimePercent / 100f);
 
             #endregion
 
@@ -656,6 +591,23 @@ namespace Rawr.Tree
             WildGrowth wildGrowth = new WildGrowth(calculatedStats, stats);
             #endregion
 
+            #region Add latency
+            regrowth.latency = calcOpts.Latency / 1000f;
+            regrowthAgain.latency = calcOpts.Latency / 1000f;
+            lifebloom.latency = calcOpts.Latency / 1000f;
+            lifebloomSlowStack.latency = calcOpts.Latency / 1000f;
+            lifebloomFastStack.latency = calcOpts.Latency / 1000f;
+            lifebloomRollingStack.latency = calcOpts.Latency / 1000f;
+            rejuvenate.latency = calcOpts.Latency / 1000f;
+            nourish[0].latency = calcOpts.Latency / 1000f;
+            nourish[1].latency = calcOpts.Latency / 1000f;
+            nourish[2].latency = calcOpts.Latency / 1000f;
+            nourish[3].latency = calcOpts.Latency / 1000f;
+            nourish[4].latency = calcOpts.Latency / 1000f;
+            healingTouch.latency = calcOpts.Latency / 1000f;
+            wildGrowth.latency = calcOpts.Latency / 1000f;
+            #endregion
+            
             #region Setup Swiftmend
             float swift1HPS = 0f;
             float swift2HPS = 0f;
@@ -669,6 +621,10 @@ namespace Rawr.Tree
                 Swiftmend swift1 = new Swiftmend(calculatedStats, stats, rejuvenate, regrowth);
                 Swiftmend swift2 = new Swiftmend(calculatedStats, stats, rejuvenate, null);
                 Swiftmend swift3 = new Swiftmend(calculatedStats, stats, null, regrowth);
+
+                swift1.latency = calcOpts.Latency / 1000f;
+                swift2.latency = calcOpts.Latency / 1000f;
+                swift3.latency = calcOpts.Latency / 1000f;
 
                 swift1Fraction = swift1.CastTime / 15.0f;
                 swift1HPS = swift1.TotalAverageHealing / 15.0f;

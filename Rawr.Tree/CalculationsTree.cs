@@ -190,12 +190,13 @@ namespace Rawr.Tree {
         private Dictionary<string, Color> _subPointNameColorsHPS = null;
         private Dictionary<string, Color> _subPointNameColorsHPCT = null;
         private Dictionary<string, Color> _subPointNameColorsHPM = null;
+        private Dictionary<string, Color> _subPointNameColorsCF = null;
 
         public CalculationsTree()
         {
             _subPointNameColorsRating = new Dictionary<string, Color>();
-            _subPointNameColorsRating.Add("HealBurst", Color.FromArgb(255, 255, 0, 0));
-            _subPointNameColorsRating.Add("HealSustained", Color.FromArgb(255, 0, 0, 255));
+            _subPointNameColorsRating.Add("SingleTarget", Color.FromArgb(255, 255, 0, 0));
+            _subPointNameColorsRating.Add("Sustained", Color.FromArgb(255, 0, 0, 255));
             _subPointNameColorsRating.Add("Survival", Color.FromArgb(255, 0, 128, 0));
 
             _subPointNameColorsMPS = new Dictionary<string, Color>();
@@ -209,6 +210,9 @@ namespace Rawr.Tree {
 
             _subPointNameColorsHPM = new Dictionary<string, Color>();
             _subPointNameColorsHPM.Add("Healing per mana", Color.FromArgb(128, 0, 255, 255));
+
+            _subPointNameColorsCF = new Dictionary<string, Color>();
+            _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(128, 0, 255, 255));
 
             _subPointNameColors = _subPointNameColorsRating;
         }
@@ -244,7 +248,6 @@ applied and result is scaled down by 100)",
                         "Base Stats:Base Spell Crit",
                         "Base Stats:Base Spell Haste",
                         "Base Stats:Base Global CD",
-                        "Base Stats:Base MP5",
 
                         "Combat Stats:Health",
                         "Combat Stats:Armor",
@@ -256,7 +259,6 @@ applied and result is scaled down by 100)",
                         "Combat Stats:Spell Crit",
                         "Combat Stats:Spell Haste",
                         "Combat Stats:Global CD",
-                        "Combat Stats:MP5",
 
                         /*"Simulation:Result",
                         "Simulation:Time until OOM",
@@ -354,6 +356,7 @@ applied and result is scaled down by 100)",
 					    "Mana sources (sustained)",
                         "Mana usage per spell (sustained)",
                         "Healing per spell (sustained)",
+                        "Casting time per spell (sustained)",
                         "HPCT per spell",
                         "HPS per spell",
                         "HPM per spell",
@@ -418,10 +421,6 @@ applied and result is scaled down by 100)",
         protected RotationSettings getRotationFromCalculationOptions(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
             RotationSettings settings = new RotationSettings();
 
-            settings.RejuvFraction = (float)calcOpts.AverageRejuv / 100.0f;
-            settings.LifebloomFraction = (float)calcOpts.AverageLifebloom / 100.0f;
-            settings.averageLifebloomStacks = (float)calcOpts.AverageLifebloomStack;
-            settings.RegrowthFraction = (float)calcOpts.AverageRegrowths / 100.0f;
             switch (calcOpts.LifebloomStackType)
             {
                 case 0:
@@ -435,22 +434,24 @@ applied and result is scaled down by 100)",
                     settings.lifeBloomType = LifeBloomType.Rolling;
                     break;
             }
-            switch (calcOpts.PrimaryHeal)
-            {
-                case 0:
-                default:
-                    settings.primaryHeal = SpellList.Nourish;
-                    break;
-                case 1:
-                    settings.primaryHeal = SpellList.HealingTouch;
-                    break;
-                case 2:
-                    settings.primaryHeal = SpellList.Regrowth;
-                    break;
-                case 3:
-                    settings.primaryHeal = SpellList.Rejuvenation;
-                    break;
-            }
+
+            settings.averageLifebloomStacks = (float)calcOpts.LifebloomStackAmount;
+            settings.averageRejuv = (float)calcOpts.RejuvAmount;
+            settings.averageRegrowth = (float)calcOpts.RegrowthAmount;
+
+            settings.SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
+            settings.WildGrowthPerMin = calcOpts.WildGrowthPerMinute;
+
+            settings.RejuvFraction = (float)calcOpts.RejuvFrac / 100.0f;
+            settings.LifebloomFraction = (float)calcOpts.LifebloomFrac / 100.0f;
+            settings.RegrowthFraction = (float)calcOpts.RegrowthFrac / 100.0f;
+            settings.NourishFraction = (float)calcOpts.NourishFrac / 100.0f;
+
+            settings.adjustRejuv = calcOpts.AdjustRejuv;
+            settings.adjustRegrowth = calcOpts.AdjustRegrowth;
+            settings.adjustLifebloom = calcOpts.AdjustLifebloom;
+            settings.adjustNourish = calcOpts.AdjustNourish;
+
             settings.nourish1 = (float)calcOpts.Nourish1 / 100f;
             settings.nourish2 = (float)calcOpts.Nourish2 / 100f;
             settings.nourish3 = (float)calcOpts.Nourish3 / 100f;
@@ -459,10 +460,9 @@ applied and result is scaled down by 100)",
 
             settings.healTarget = HealTargetTypes.RaidHealing;
 
-            settings.SwiftmendPerMin = calcOpts.SwiftmendPerMinute;
-            settings.WildGrowthPerMin = calcOpts.WildGrowthPerMinute;
             settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
-            settings.applyIdleToHots = calcOpts.ApplyIdleToHots;
+
+            settings.latency = (float)calcOpts.Latency / 1000f;
 
             return settings;
         }
@@ -570,8 +570,6 @@ applied and result is scaled down by 100)",
 
             // Apply diminishing returns
 
-//          calculationResult.BurstPoints = DiminishingReturns.Cap(calculationResult.BurstPoints, calcOpts.SingleTarget, 0.25f, 4);
-//          calculationResult.SustainedPoints = 10000f * (1f - (float)calcOpts.SustainedTarget / calculationResult.SustainedPoints);
             calculationResult.BurstPoints = DiminishingReturns.CapWithMaximum2(calculationResult.BurstPoints, calcOpts.SingleTarget);
             calculationResult.SustainedPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SustainedPoints, calcOpts.SustainedTarget);
             
@@ -650,6 +648,7 @@ applied and result is scaled down by 100)",
 
             switch (chartName)
             {
+                #region Mana sources (sustained)
                 case "Mana sources (sustained)":
                     _subPointNameColors = _subPointNameColorsMPS;
                     ComparisonCalculationTree gear = new ComparisonCalculationTree()
@@ -710,6 +709,79 @@ applied and result is scaled down by 100)",
                     comparisonList.Add(innervates);
                     
                     return comparisonList.ToArray();
+                #endregion
+                #region Casting time per spell (sustained
+                case "Casting time per spell (sustained)":
+                    {
+                        _subPointNameColors = _subPointNameColorsCF;
+                        ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RejuvCF*100,
+                            SubPoints = new float[] { calculationResult.Sustained.RejuvCF * 100 }
+                        };
+                        comparisonList.Add(rejuv);
+                        ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.RegrowthCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.RegrowthCF * 100 }
+                        };
+                        comparisonList.Add(regrowth);
+                        ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomCF * 100 }
+                        };
+                        comparisonList.Add(lifebloom);
+                        ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
+                        {
+                            Name = "Lifebloom Stack",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.LifebloomStackCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackCF * 100 }
+                        };
+                        comparisonList.Add(lifebloomStack);
+                        ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.WildGrowthCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.WildGrowthCF * 100 }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
+                        {
+                            Name = "Swiftmend",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.SwiftmendCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendCF * 100 }
+                        };
+                        comparisonList.Add(swiftmend);
+                        ComparisonCalculationTree nourish = new ComparisonCalculationTree()
+                        {
+                            Name = "Nourish",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.NourishCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.NourishCF * 100 }
+                        };
+                        comparisonList.Add(nourish);
+                        ComparisonCalculationTree idle = new ComparisonCalculationTree()
+                        {
+                            Name = "Idle",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.IdleCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.IdleCF * 100 }
+                        };
+                        comparisonList.Add(idle);
+                    }
+                    return comparisonList.ToArray();
+                #endregion
+                #region Mana usage per spell (sustained)
                 case "Mana usage per spell (sustained)":
                     {
                         _subPointNameColors = _subPointNameColorsMPS;
@@ -763,14 +835,16 @@ applied and result is scaled down by 100)",
                         comparisonList.Add(swiftmend);
                         ComparisonCalculationTree primary = new ComparisonCalculationTree()
                         {
-                            Name = "Primary Spell",
+                            Name = "Nourish",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.PrimaryMPS,
-                            SubPoints = new float[] { calculationResult.Sustained.PrimaryMPS }
+                            OverallPoints = calculationResult.Sustained.NourishMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.NourishMPS }
                         };
                         comparisonList.Add(primary);
                     }
                     return comparisonList.ToArray();
+                #endregion
+                #region Healing per spell (sustained)
                 case "Healing per spell (sustained)":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
@@ -872,14 +946,16 @@ applied and result is scaled down by 100)",
                         comparisonList.Add(swiftmend);
                         ComparisonCalculationTree primary = new ComparisonCalculationTree()
                         {
-                            Name = "Primary Spell",
+                            Name = "Nourish",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.PrimaryHPS,
-                            SubPoints = new float[] { calculationResult.Sustained.PrimaryHPS }
+                            OverallPoints = calculationResult.Sustained.NourishHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.NourishHPS }
                         };
                         comparisonList.Add(primary);
                     }
                     return comparisonList.ToArray();
+                #endregion
+                #region HPCT per spell
                 case "HPCT per spell":
                     {
                         _subPointNameColors = _subPointNameColorsHPCT;
@@ -992,6 +1068,8 @@ applied and result is scaled down by 100)",
                         comparisonList.Add(nourish4);
                     }
                     return comparisonList.ToArray();
+                #endregion
+                #region HPS per spell
                 case "HPS per spell":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
@@ -1104,6 +1182,8 @@ applied and result is scaled down by 100)",
                         comparisonList.Add(nourish4);
                     }
                     return comparisonList.ToArray();
+#endregion
+                #region HPM per spell
                 case "HPM per spell":
                     {
                         _subPointNameColors = _subPointNameColorsHPM;
@@ -1216,6 +1296,8 @@ applied and result is scaled down by 100)",
                         comparisonList.Add(nourish4);
                     }
                     return comparisonList.ToArray();
+#endregion
+                #region Healing per spell (single target)
                 case "Healing per spell (single target)":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
@@ -1264,6 +1346,8 @@ applied and result is scaled down by 100)",
                         comparisonList.Add(primary);
                     }
                     return comparisonList.ToArray();
+                    #endregion
+                #region Single Target spell mixes
                 case "Single target spell mixes":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
@@ -1281,6 +1365,7 @@ applied and result is scaled down by 100)",
                         }
                     }
                     return comparisonList.ToArray();
+                #endregion
                 default:
                     return new ComparisonCalculationBase[0];
             }
@@ -1322,7 +1407,7 @@ applied and result is scaled down by 100)",
                 RejuvenationHealBonus = stats.RejuvenationHealBonus, // Idol of Pure Thoughts (lvl74)
                 ReduceRejuvenationCost = stats.ReduceRejuvenationCost, // Idol of Awakening (lvl80) 
                 LifebloomTickHealBonus = stats.LifebloomTickHealBonus, // Idol of Lush Mosh
-                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, // Idol of Health
+                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, // Idol of Health                 
                 SwiftmendCdReduc = stats.SwiftmendCdReduc, // S7 PvP 4 Pc
                 #endregion
                 #region Gems
@@ -1384,8 +1469,8 @@ applied and result is scaled down by 100)",
                 + stats.RejuvenationHealBonus // Idol of Pure Thoughts (lvl74)
                 + stats.ReduceRejuvenationCost // Idol of Awakening (lvl80) 
                 + stats.LifebloomTickHealBonus // Idol of Lush Mosh
-                + stats.HealingTouchFinalHealBonus // Idol of Health
-                + stats.SwiftmendCdReduc
+                + stats.HealingTouchFinalHealBonus // Idol of Health       
+                + stats.SwiftmendCdReduc // S7 PvP 4 Pc
                 #endregion
                 > 0)
                 return true;

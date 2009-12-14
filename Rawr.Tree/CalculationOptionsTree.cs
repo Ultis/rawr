@@ -22,11 +22,11 @@ namespace Rawr.Tree {
                 }
                 return _manaPotionsDesc;}
         }
-        //private int bSRatio; // goes from 0 to 100
         private int singleTarget;
         private int sustainedTarget;
         private int survValuePer100; // 100 Survival Points = 1 HPS (Survival Points = Health / (1-ArmorDamage Reduction)
         private int fightDuration; // In seconds
+        private int latency; // in milliseconds
         private int manaPot;
         private int fSRRatio;
         private int replenishmentUptime;
@@ -34,13 +34,13 @@ namespace Rawr.Tree {
         private int innervates;
         private int swiftmendPerMinute;
         private int idleCastTimePercent; // goes from 0 to 100
-        private int avgRejuv, avgRegrowths, avgLifebloom, avgLifebloomStack;
-        private int primaryHeal;
+        private int rejuvFrac, regrowthFrac, lifebloomFrac, nourishFrac;
+        private int rejuvAmount, regrowthAmount, lifebloomStackAmount;
         private int lifebloomStackType;
         private int nourish1, nourish2, nourish3, nourish4;
         private int livingSeedEfficiency;
         private int singleTargetRotation;
-        private bool applyIdleToHots;
+        private bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
@@ -50,6 +50,7 @@ namespace Rawr.Tree {
             sustainedTarget = 8500;
             
             FightDuration = 240; // 4 Minutes
+            Latency = 100; // milliseconds
             ManaPot = 4; // best pot
             FSRRatio = 100;
             ReplenishmentUptime = 90;
@@ -57,11 +58,13 @@ namespace Rawr.Tree {
 
             IdleCastTimePercent = 0;
 
-            AverageRejuv = 40;
-            AverageRegrowths = 0;
-            AverageLifebloom = 20;
-            AverageLifebloomStack = 0;
-            PrimaryHeal = 0;
+            RejuvFrac = 40;
+            RegrowthFrac = 0;
+            LifebloomFrac = 10;
+            NourishFrac = 40;
+            LifebloomStackAmount = 0;
+            RejuvAmount = 0;
+            RegrowthAmount = 0;
             LifebloomStackType = 2;
             Nourish1 = 40;
             Nourish2 = 20;
@@ -70,7 +73,10 @@ namespace Rawr.Tree {
             WildGrowthPerMinute = 2;
             SwiftmendPerMinute = 2;
             livingSeedEfficiency = 50;
-            applyIdleToHots = true;
+            adjustRejuv = true;
+            adjustRegrowth = true;
+            adjustLifebloom = true;
+            adjustNourish = true;
 
             singleTargetRotation = 0;
         }
@@ -85,6 +91,7 @@ namespace Rawr.Tree {
         public int SustainedTarget { get { return sustainedTarget; } set { sustainedTarget = value; OnPropertyChanged("SustainedTarget"); } }
         public int SurvValuePer100 { get { return survValuePer100; } set { survValuePer100 = value; OnPropertyChanged("SurvValuePer100"); } }
         public int FightDuration { get { return fightDuration; } set { fightDuration = value; OnPropertyChanged("FightDuration"); } }
+        public int Latency { get { return latency; } set { latency = value; OnPropertyChanged("Latency"); } }
         public int ManaPot             { get { return manaPot;             } set { manaPot             = value; OnPropertyChanged("ManaPot"             ); } }
         public int FSRRatio            { get { return fSRRatio;            } set { fSRRatio            = value; OnPropertyChanged("FSRRatio"            ); } }
         public int ReplenishmentUptime { get { return replenishmentUptime; } set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime" ); } }
@@ -93,11 +100,13 @@ namespace Rawr.Tree {
         public int SwiftmendPerMinute  { get { return swiftmendPerMinute;  } set { swiftmendPerMinute  = value; OnPropertyChanged("SwiftmendPerMinute"  ); } }
         public int IdleCastTimePercent { get { return idleCastTimePercent; } set { idleCastTimePercent = value; OnPropertyChanged("IdleCastTimePercent"); } }
 
-        public int AverageRejuv { get { return avgRejuv; } set { avgRejuv = value; OnPropertyChanged("AverageRejuv"); } }
-        public int AverageRegrowths { get { return avgRegrowths; } set { avgRegrowths = value; OnPropertyChanged("AverageRegrowths"); } }
-        public int AverageLifebloom { get { return avgLifebloom; } set { avgLifebloom = value; OnPropertyChanged("AverageLifebloom"); } }
-        public int AverageLifebloomStack { get { return avgLifebloomStack; } set { avgLifebloomStack = value; OnPropertyChanged("AverageLifebloomStack"); } }
-        public int PrimaryHeal { get { return primaryHeal; } set { primaryHeal = value; OnPropertyChanged("PrimaryHeal"); } }
+        public int RejuvFrac { get { return rejuvFrac; } set { rejuvFrac = value; OnPropertyChanged("RejuvFrac"); } }
+        public int RegrowthFrac { get { return regrowthFrac; } set { regrowthFrac = value; OnPropertyChanged("RegrowthFrac"); } }
+        public int LifebloomFrac { get { return lifebloomFrac; } set { lifebloomFrac = value; OnPropertyChanged("LifebloomFrac"); } }
+        public int NourishFrac { get { return nourishFrac; } set { nourishFrac = value; OnPropertyChanged("NourishFrac"); } }
+        public int LifebloomStackAmount { get { return lifebloomStackAmount; } set { lifebloomStackAmount = value; OnPropertyChanged("AverageLifebloomStack"); } }
+        public int RejuvAmount { get { return rejuvAmount; } set { rejuvAmount = value; OnPropertyChanged("RejuvAmount"); } }
+        public int RegrowthAmount { get { return regrowthAmount; } set { regrowthAmount = value; OnPropertyChanged("RegrowthAmount"); } }
         public int LifebloomStackType { get { return lifebloomStackType; } set { lifebloomStackType = value; OnPropertyChanged("LifebloomStackType"); } }
 
         public int SingleTargetRotation { get { return singleTargetRotation; } set { singleTargetRotation = value; OnPropertyChanged("SingleTargetRotation"); } }
@@ -107,8 +116,12 @@ namespace Rawr.Tree {
         public int Nourish3 { get { return nourish3; } set { nourish3 = value; OnPropertyChanged("Nourish3"); } }
         public int Nourish4 { get { return nourish4; } set { nourish4 = value; OnPropertyChanged("Nourish4"); } }
 
+        public bool AdjustRejuv { get { return adjustRejuv; } set { adjustRejuv = value; OnPropertyChanged("AdjustRejuv"); } }
+        public bool AdjustRegrowth { get { return adjustRegrowth; } set { adjustRegrowth = value; OnPropertyChanged("AdjustRegrowth"); } }
+        public bool AdjustLifebloom { get { return adjustLifebloom; } set { adjustLifebloom = value; OnPropertyChanged("AdjustLifebloom"); } }
+        public bool AdjustNourish { get { return adjustNourish; } set { adjustNourish = value; OnPropertyChanged("AdjustNourish"); } }
+
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
-        public bool ApplyIdleToHots { get { return applyIdleToHots; } set { applyIdleToHots = value; OnPropertyChanged("ApplyIdleToHots"); } }
 
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }

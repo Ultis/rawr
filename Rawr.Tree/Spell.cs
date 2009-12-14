@@ -12,14 +12,15 @@ namespace Rawr.Tree {
 
         protected int numberOfCasts = 1;
         public float NumberOfCasts { get { return numberOfCasts; } }
-        
+
+        public float latency = 0f;
         public float castTime = 0f;
         public float castTimeBeforeHaste = 0f;
         public float CastTime { 
             get {
-                if (castTime > gcd) { return numberOfCasts * castTime; // Not castTimeBeforeHaste
-                } else if (gcd > 1) { return numberOfCasts * gcd;
-                } else {              return numberOfCasts * 1f; }
+                if (castTime > gcd) { return numberOfCasts * (latency + castTime);
+                } else if (gcd > 1) { return numberOfCasts * (latency + gcd);
+                } else {              return numberOfCasts * (1f + latency); }
             }
         }
         public float gcd            = 1.5f;
@@ -95,7 +96,7 @@ namespace Rawr.Tree {
         public float HPCT_HOT { get { return PeriodicTickwithCrit * PeriodicTicks / CastTime; } }
 
         // The healing per second you will get from the spell; total healing / (casttime+duration)
-        public float HPCTD { get { return TotalAverageHealing / (Math.Max(gcd, Duration + castTime)); } }
+        public float HPCTD { get { return TotalAverageHealing / (Math.Max(gcd + latency, Duration + latency + castTime)); } }
 
         public float Duration { get { return periodicTicks * periodicTickTime; } }
 
