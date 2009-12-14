@@ -500,7 +500,7 @@ namespace Rawr
         public bool GlyphofHungeringCold { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
         [GlyphData(15, "Glyph of Icebound Fortitude", true, @"Your Icebound Fortitude now always grants at least 30% damage reduction, regardless of your defense skill.")]
         public bool GlyphofIceboundFortitude { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-        [GlyphData(16, "Glyph of Icy Touch", true, @"Your Icy Touch generates 10 additional runic power.")]
+        [GlyphData(16, "Glyph of Icy Touch", true, @"Your Frost Fever disease deals 20% additional damage.")]
         public bool GlyphofIcyTouch { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
         [GlyphData(17, "Glyph of Obliterate", true, @"Increases the damage of your Obliterate ability by 20%.")]
         public bool GlyphofObliterate { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
