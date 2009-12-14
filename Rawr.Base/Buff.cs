@@ -4591,7 +4591,7 @@ namespace Rawr
                 Name = "Gladiator's Battlegear (PvP) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 100, AttackPower = 150, },
+                Stats = { Resilience = 100, AttackPower = 50, },
                 SetName = "Gladiator's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
