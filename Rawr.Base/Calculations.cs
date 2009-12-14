@@ -1256,8 +1256,7 @@ namespace Rawr
                         }
                     }
                     if (!CheckHasProf(Profession.Inscription)) {
-                        if (name.Contains("Master's") ||
-                            name.Contains("Inscription of Triumph"))
+                        if (name.Contains("Master's"))
                         {
                             return false;
                         }
