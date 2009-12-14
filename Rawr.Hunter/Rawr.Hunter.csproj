@@ -116,7 +116,7 @@
     <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
-    <Compile Include="Pet\ItemIcons.cs" />
+    <Compile Include="Pet\ItemIconsPet.cs" />
     <Compile Include="Pet\PetBuffSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>

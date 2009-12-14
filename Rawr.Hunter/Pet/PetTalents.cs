@@ -438,7 +438,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         }
         private void UpdateIcon() {
             try{
-                _icon = ItemIcons.GetTalentIcon(CharacterClass.Hunter, "Pet",
+                _icon = ItemIconsPet.GetTalentIcon(CharacterClass.Hunter, "Pet",
                     Name + (Value == 0 ? "-off" : ""),
                     (Value == 0 ? "grey/" : "") + Icon + ".gif");
             }catch(Exception ex){

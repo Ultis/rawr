@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-    public static class ItemIcons
+    public static class ItemIconsPet
     {
 		private static ImageList _talentIcons = null;
 		public static ImageList TalentIcons {

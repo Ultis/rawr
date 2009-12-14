@@ -84,6 +84,7 @@ namespace Rawr.Base
         }
         public void Show()
         {
+#if DEBUG
 #if RAWR3
             System.Windows.MessageBox.Show(Message = Title + "\r\n\r\n" + buildFullMessage());
 #else
@@ -93,6 +94,7 @@ namespace Rawr.Base
             System.IO.StreamWriter file = System.IO.File.CreateText("DEBUGME.log");
             file.Write("\n=====" + System.DateTime.Now.ToShortDateString() + "\n" + Title + "\n" + buildFullMessage() + "\n");
             file.Close();
+#endif
         }
     }
 }

@@ -234,10 +234,15 @@ namespace Rawr
 						pathToIcon = wrapper.DownloadTempImage();
 					}
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
-					pathToIcon = wrapper.DownloadTempImage();
-					//Log.Write(ex.Message);
+                    Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Getting Talent Icon",
+                        ex.Message, "GetTalentIcon(...)",
+                        string.Format("\r\n- Talent Tree: {0}\r\n- Talent Name: {1}\r\n- Icon: {2}\r\n- PathToIcon: {3}", talentTree, talentName, icon, pathToIcon ?? (pathToIcon = "null")),
+                        ex.StackTrace);
+                    eb.Show();
+                    pathToIcon = wrapper.DownloadTempImage();
+                    //Log.Write(ex.Message);
 					//Log.Write(ex.StackTrace);
 					//log.Error("Exception trying to retrieve an icon from the armory", ex);
 				}

@@ -183,7 +183,7 @@
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(345, 518);
+            this.ClientSize = new System.Drawing.Size(355, 518);
             this.Controls.Add(this.numericUpDownCountGemmingsShown);
             this.Controls.Add(this.panelGemmingTemplates);
             this.Controls.Add(this.buttonOK);
@@ -197,9 +197,13 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(361, 2048);
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(361, 300);
             this.Name = "FormGemmingTemplates";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rawr Gemming Templates";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountGemmingsShown)).EndInit();
