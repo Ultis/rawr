@@ -375,7 +375,15 @@ namespace Rawr.Elemental
             return base.IsItemRelevant(item);
 		}
 
-		public override Stats GetRelevantStats(Stats stats)
+        public override bool IsBuffRelevant(Buff buff) {
+            string name = buff.Name;
+            if (!buff.AllowedClasses.Contains(CharacterClass.Shaman)) {
+                return false;
+            }
+            return base.IsBuffRelevant(buff);
+        }
+
+        public override Stats GetRelevantStats(Stats stats)
 		{
             Stats s = new Stats()
             {
@@ -421,6 +429,8 @@ namespace Rawr.Elemental
                 LightningBoltCritDamageModifier = stats.LightningBoltCritDamageModifier,
                 BonusLavaBurstDamageMultiplier = stats.BonusLavaBurstDamageMultiplier,
                 BonusFlameShockDuration = stats.BonusFlameShockDuration,
+                Elemental2T10 = stats.Elemental2T10,
+                Elemental4T10 = stats.Elemental4T10,
                 #endregion
                 #region Misc Damage
                 NatureDamage = stats.NatureDamage,
@@ -503,7 +513,9 @@ namespace Rawr.Elemental
                 stats.LightningBoltCritDamageModifier + 
                 stats.FlameShockDoTCanCrit + 
                 stats.BonusLavaBurstDamageMultiplier + 
-                stats.BonusFlameShockDuration;
+                stats.BonusFlameShockDuration +
+                stats.Elemental2T10 +
+                stats.Elemental4T10;
             #endregion
             #region Misc Damage
             elementalStats +=

@@ -558,8 +558,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             // Force some buffs to go away
             else if (!buff.AllowedClasses.Contains(CharacterClass.Hunter)
-                     // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
-                     || name.Contains("Concentration Aura")
                      // these four foods give stam, which is the only useful part of their buff.
                      // removed because you shouldn't use these foods - other foods are always better.
                      || name.Contains("Spirit Food")
@@ -574,9 +572,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             bool hasbadstats = HasIgnoreStats(buff.Stats);
             bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
             return retVal;
-            //return base.IsBuffRelevant(buff);               
+            //return base.IsBuffRelevant(buff);
         }
-       
+
 		public override bool CanUseAmmo { get { return true; } }
 
 		public override bool IsItemRelevant(Item item) {

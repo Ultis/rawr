@@ -4332,6 +4332,28 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
             #endregion
+            #region Regalia
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Frost Witch's Regalia (T10) 2 Piece Set Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Elemental2T10 = 1 },
+                SetName = "Frost Witch's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Frost Witch's Regalia (T10) 4 Piece Set Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Elemental4T10 = 1 },
+                SetName = "Frost Witch's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
             #endregion
             #endregion
             #region PvP

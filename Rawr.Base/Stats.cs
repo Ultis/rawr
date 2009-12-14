@@ -252,6 +252,8 @@ namespace Rawr {
         LightningBoltHasteProc_15_45,
         LavaBurstBonus,
         LightningBoltCritDamageModifier,
+        Elemental2T10,
+        Elemental4T10,
         #endregion
         #region Added by Rawr.Restosham
         ManaSpringMp5Increase,
@@ -4543,6 +4545,24 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamageMultiplier] = value; }
         }
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("Elemental")]
+        [DisplayName("Your Lightning Bolt and Chain Lightning spells reduce the remaining cooldown on your Elemental Mastery talent by 2 sec.")]
+        public float Elemental2T10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Elemental2T10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Elemental2T10] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("Elemental")]
+        [DisplayName("The cooldown on your Lava Burst ability is reduced by 1.5 sec.")]
+        public float Elemental4T10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Elemental4T10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Elemental4T10] = value; }
+        }
+
         #endregion
         #region Added by Rawr.Restosham
         // Tier 7 Shaman Set

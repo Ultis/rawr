@@ -372,47 +372,47 @@ namespace Rawr
 			CharacterRegion charRegion = CharacterRegion.US;
 
             m_character = new Character(m_sName, m_sRealm,
-			charRegion,
-			race,
-            new BossHandler(),
-			getGearStringBySlot(m_characterInfo, "Head", false),
-            getGearStringBySlot(m_characterInfo, "Neck", false),
-            getGearStringBySlot(m_characterInfo, "Shoulder", false),
-            getGearStringBySlot(m_characterInfo, "Back", false),
-            getGearStringBySlot(m_characterInfo, "Chest", false),
-            getGearStringBySlot(m_characterInfo, "Shirt", false),
-            getGearStringBySlot(m_characterInfo, "Tabard", false),
-            getGearStringBySlot(m_characterInfo, "Wrist", false),
-            getGearStringBySlot(m_characterInfo, "Hands", false),
-            getGearStringBySlot(m_characterInfo, "Waist", false),
-            getGearStringBySlot(m_characterInfo, "Legs", false),
-            getGearStringBySlot(m_characterInfo, "Feet", false),
-            getGearStringBySlot(m_characterInfo, "Finger0", false),
-            getGearStringBySlot(m_characterInfo, "Finger1", false),
-            getGearStringBySlot(m_characterInfo, "Trinket0", false),
-            getGearStringBySlot(m_characterInfo, "Trinket1", false),
-            getGearStringBySlot(m_characterInfo, "MainHand", false),
-            getGearStringBySlot(m_characterInfo, "SecondaryHand", false),
-            getGearStringBySlot(m_characterInfo, "Ranged", false),
-            getGearStringBySlot(m_characterInfo, "Ammo", false),
-			null // Not sure what projectile bag is called
-				/*null, //TODO: Find ExtraWristSocket
-				null, //TODO: Find ExtraHandsSocket
-				null, //TODO: Find ExtraWaistSocket
-				getEnchantBySlot(characterInfo, "Head"),
-				getEnchantBySlot(characterInfo, "Shoulder"),
-				getEnchantBySlot(characterInfo, "Back"),
-				getEnchantBySlot(characterInfo, "Chest"),
-				getEnchantBySlot(characterInfo, "Wrist"),
-				getEnchantBySlot(characterInfo, "Hands"),
-				getEnchantBySlot(characterInfo, "Legs"),
-				getEnchantBySlot(characterInfo, "Feet"),
-				getEnchantBySlot(characterInfo, "Finger0"),
-				getEnchantBySlot(characterInfo, "Finger1"),
-				getEnchantBySlot(characterInfo, "MainHand"),
-				getEnchantBySlot(characterInfo, "SecondaryHand"),
-				getEnchantBySlot(characterInfo, "Ranged")*/
-													   );
+			    charRegion,
+			    race,
+                new BossHandler(),
+		        getGearStringBySlot(m_characterInfo, "Head", false),
+                getGearStringBySlot(m_characterInfo, "Neck", false),
+                getGearStringBySlot(m_characterInfo, "Shoulder", false),
+                getGearStringBySlot(m_characterInfo, "Back", false),
+                getGearStringBySlot(m_characterInfo, "Chest", false),
+                getGearStringBySlot(m_characterInfo, "Shirt", false),
+                getGearStringBySlot(m_characterInfo, "Tabard", false),
+                getGearStringBySlot(m_characterInfo, "Wrist", false),
+                getGearStringBySlot(m_characterInfo, "Hands", false),
+                getGearStringBySlot(m_characterInfo, "Waist", false),
+                getGearStringBySlot(m_characterInfo, "Legs", false),
+                getGearStringBySlot(m_characterInfo, "Feet", false),
+                getGearStringBySlot(m_characterInfo, "Finger0", false),
+                getGearStringBySlot(m_characterInfo, "Finger1", false),
+                getGearStringBySlot(m_characterInfo, "Trinket0", false),
+                getGearStringBySlot(m_characterInfo, "Trinket1", false),
+                getGearStringBySlot(m_characterInfo, "MainHand", false),
+                getGearStringBySlot(m_characterInfo, "SecondaryHand", false),
+                getGearStringBySlot(m_characterInfo, "Ranged", false),
+                getGearStringBySlot(m_characterInfo, "Ammo", false),
+		        null // Not sure what projectile bag is called
+			        /*null, //TODO: Find ExtraWristSocket
+			        null, //TODO: Find ExtraHandsSocket
+			        null, //TODO: Find ExtraWaistSocket
+			        getEnchantBySlot(characterInfo, "Head"),
+			        getEnchantBySlot(characterInfo, "Shoulder"),
+			        getEnchantBySlot(characterInfo, "Back"),
+			        getEnchantBySlot(characterInfo, "Chest"),
+			        getEnchantBySlot(characterInfo, "Wrist"),
+			        getEnchantBySlot(characterInfo, "Hands"),
+			        getEnchantBySlot(characterInfo, "Legs"),
+			        getEnchantBySlot(characterInfo, "Feet"),
+			        getEnchantBySlot(characterInfo, "Finger0"),
+			        getEnchantBySlot(characterInfo, "Finger1"),
+			        getEnchantBySlot(characterInfo, "MainHand"),
+			        getEnchantBySlot(characterInfo, "SecondaryHand"),
+			        getEnchantBySlot(characterInfo, "Ranged")*/
+			);
 
 			// set the character class
 			Character.Class = charClass;
@@ -421,40 +421,18 @@ namespace Rawr
 			if (m_iLevel >= 10)
 			{
 				// create an empty talent tree
-				switch (charClass)
-				{
-					case CharacterClass.Warrior:
-						m_character.WarriorTalents = new WarriorTalents();
-						break;
-					case CharacterClass.Paladin:
-						m_character.PaladinTalents = new PaladinTalents();
-						break;
-					case CharacterClass.Hunter:
-						m_character.HunterTalents = new HunterTalents();
-						break;
-					case CharacterClass.Rogue:
-						m_character.RogueTalents = new RogueTalents();
-						break;
-					case CharacterClass.Priest:
-						m_character.PriestTalents = new PriestTalents();
-						break;
-					case CharacterClass.Shaman:
-						m_character.ShamanTalents = new ShamanTalents();
-						break;
-					case CharacterClass.Mage:
-						m_character.MageTalents = new MageTalents();
-						break;
-					case CharacterClass.Warlock:
-						m_character.WarlockTalents = new WarlockTalents();
-						break;
-					case CharacterClass.Druid:
-						m_character.DruidTalents = new DruidTalents();
-						break;
-					case CharacterClass.DeathKnight:
-						m_character.DeathKnightTalents = new DeathKnightTalents();
-						break;
-					default:
-						break;
+				switch (charClass) {
+					case CharacterClass.Warrior: m_character.WarriorTalents = new WarriorTalents(); break;
+					case CharacterClass.Paladin: m_character.PaladinTalents = new PaladinTalents(); break;
+					case CharacterClass.Hunter: m_character.HunterTalents = new HunterTalents(); break;
+					case CharacterClass.Rogue: m_character.RogueTalents = new RogueTalents(); break;
+					case CharacterClass.Priest: m_character.PriestTalents = new PriestTalents(); break;
+					case CharacterClass.Shaman: m_character.ShamanTalents = new ShamanTalents(); break;
+					case CharacterClass.Mage: m_character.MageTalents = new MageTalents(); break;
+					case CharacterClass.Warlock: m_character.WarlockTalents = new WarlockTalents(); break;
+					case CharacterClass.Druid: m_character.DruidTalents = new DruidTalents(); break;
+					case CharacterClass.DeathKnight: m_character.DeathKnightTalents = new DeathKnightTalents(); break;
+					default: break;
 				}
 
 				// load up the talents
