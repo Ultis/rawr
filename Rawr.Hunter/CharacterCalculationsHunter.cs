@@ -497,7 +497,7 @@ namespace Rawr.Hunter
                 case "Haste %": return BasicStats.PhysicalHaste * 100f;
                 case "Attack Power": return BasicStats.AttackPower;
                 case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
-                case "% Chance to Miss (Yellow)": return StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit * 100f;
+                case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit) * 100f;
 			}
 			return 0;
 		}
