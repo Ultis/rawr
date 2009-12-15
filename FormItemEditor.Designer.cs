@@ -779,6 +779,7 @@ namespace Rawr
             // textBoxSource
             // 
             this.textBoxSource.BackColor = System.Drawing.SystemColors.Control;
+            this.textBoxSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxSource.Location = new System.Drawing.Point(57, 19);
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";

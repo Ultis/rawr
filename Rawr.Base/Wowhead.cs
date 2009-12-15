@@ -202,6 +202,7 @@ namespace Rawr
                     _vendorTokenMap["40753"] = "Emblem of Valor";
                     _vendorTokenMap["45624"] = "Emblem of Conquest";
                     _vendorTokenMap["47241"] = "Emblem of Triumph";
+                    _vendorTokenMap["47242"] = "Trophy of the Crusade";
                     break;
             }
         }
@@ -263,7 +264,9 @@ namespace Rawr
 				}
 			}
 			if (item.Slot == ItemSlot.None) return null;
-			//if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
+
+            #region Item Source
+            //if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
             if (!string.IsNullOrEmpty(source))
             {
                 string[] sourceKeys = source.Split(',');
@@ -311,11 +314,11 @@ namespace Rawr
                     // if we only have vendor information then we will want to download the normal html page and scrape the currency information
                     // and in case it is a token link it to the boss/zone where the token drops
 
-                    string tokenId = null;
-                    int tokenCount = 1;
+                    string[] tokenIds = { null, null };
+                    int[] tokenCounts = {1, 1};
+                    string[] tokenNames = { null, null };
                     int cost = 0;
-                    try
-                    {
+                    try {
                         XmlDocument rawHtmlDoc = wrw.DownloadItemHtmlWowhead(query);
                         if (rawHtmlDoc != null)
                         {
@@ -329,16 +332,25 @@ namespace Rawr
                                 int costIndex = text.IndexOf("cost:[");
                                 if (costIndex >= 0)
                                 {
+                                    string costtext = text.Substring(costIndex + 6);
                                     // get the cost
-                                    cost = int.Parse(text.Substring(costIndex + 6, text.IndexOfAny(new char[] {',', ']'}, costIndex) - costIndex - 6));
+                                    cost = int.Parse(costtext.Substring(0, costtext.IndexOfAny(new char[] { ',', ']' }, 0)));
                                     // get the token and count out
-                                    int tokenIndex = text.IndexOf("[[", costIndex);
+                                    int tokenIndex = costtext.IndexOf("[[", 0);
                                     if (tokenIndex >= 0)
                                     {
-                                        int tokenEnd = text.IndexOf("]]", tokenIndex);
-                                        string[] token = text.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
-                                        tokenId = token[0];
-                                        tokenCount = int.Parse(token[1]);
+                                        int tokenEnd = costtext.IndexOf("]]", tokenIndex);
+                                        string tokentext = costtext.Substring(tokenIndex + 1, tokenEnd - tokenIndex);
+                                        if (tokentext.Length > 10) {
+                                            string[] token1 = tokentext.Substring( 1, 8).Split(',');
+                                            string[] token2 = tokentext.Substring(12, 8).Split(',');
+                                            tokenIds[0] = token1[0]; tokenCounts[0] = int.Parse(token1[1].Trim('[').Trim(']'));
+                                            tokenIds[1] = token2[0]; tokenCounts[1] = int.Parse(token2[1].Trim('[').Trim(']'));
+                                        } else {
+                                            string[] token = costtext.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
+                                            tokenIds[0] = token[0];
+                                            tokenCounts[0] = int.Parse(token[1]);
+                                        }
                                     }
                                 }
                             }
@@ -347,158 +359,190 @@ namespace Rawr
                     catch
                     {
                     }
-                    string tokenName;
-                    if (tokenId != null && _pvpTokenMap.TryGetValue(tokenId, out tokenName))
+                    for (int i = 0; i < 2; i++)
                     {
-                        ItemLocation locInfo = new PvpItem()
+                        if (tokenIds[i] == null) { continue; } // break out if there's only 1 or for some reason there's none
+                        if (tokenIds[i] != null && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
                         {
-                            TokenCount = tokenCount,
-                            TokenType = tokenName
-                        };
-                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                    }
-                    else if (tokenId != null && _vendorTokenMap.TryGetValue(tokenId, out tokenName))
-                    {
-                        VendorItem locInfo = new VendorItem()
-                        {
-                            Cost = cost,
-                            Count = tokenCount,
-                            Token = tokenName
-                        };
-                        if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
-                        foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
-                        {
-                            if (!string.IsNullOrEmpty(keyval))
+                            ItemLocation locInfo = new PvpItem()
                             {
-                                string[] keyvalsplit = keyval.Split(':');
-                                string key = keyvalsplit[0];
-                                string val = keyvalsplit[1];
-                                switch (key)
+                                TokenCount = tokenCounts[i],
+                                TokenType = tokenNames[i]
+                            };
+                            LocationFactory.Add(item.Id.ToString(), locInfo);
+                        }
+                        else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
+                        {
+                            VendorItem locInfo = new VendorItem()
+                            {
+                                Cost = cost,
+                                Count = tokenCounts[i],
+                                Token = tokenNames[i]
+                            };
+                            if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                            foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                            {
+                                if (!string.IsNullOrEmpty(keyval))
                                 {
-                                    case "z":       // Zone
-                                        locInfo.VendorArea = GetZoneName(val);
-                                        break;
+                                    string[] keyvalsplit = keyval.Split(':');
+                                    string key = keyvalsplit[0];
+                                    string val = keyvalsplit[1];
+                                    switch (key)
+                                    {
+                                        case "z":       // Zone
+                                            locInfo.VendorArea = GetZoneName(val);
+                                            break;
+                                    }
                                 }
+                            }
+                            if (i == 1) {
+                                LocationFactory.Add(item.Id.ToString(), new VendorItem[] { (VendorItem)item.LocationInfo[0], locInfo }, true);
+                            } else {
+                                LocationFactory.Add(item.Id.ToString(), locInfo);
                             }
                         }
-                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                    }
-                    else if (tokenId != null)
-                    {
-                        // ok now let's see what info we can get about this token
-                        string boss = null;
-                        string area = null;
-                        bool heroic = false;
-                        bool container = false;
-                        if (!_tokenDropMap.ContainsKey(tokenId))
+                        else if (tokenIds[i] != null)
                         {
-                            XmlDocument docToken = wrw.DownloadItemWowhead(site, tokenId);
-
-                            tokenName = docToken.SelectSingleNode("wowhead/item/name").InnerText;
-
-                            string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
-
-                            string tokenSource = string.Empty;
-                            if (tokenJson.Contains("source:["))
+                            // ok now let's see what info we can get about this token
+                            string boss = null;
+                            string area = null;
+                            bool heroic = false;
+                            bool container = false;
+                            if (!_tokenDropMap.ContainsKey(tokenIds[i]))
                             {
-                                tokenSource = tokenJson.Substring(tokenJson.IndexOf("source:[") + "source:[".Length);
-                                tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
-                            }
+                                XmlDocument docToken = wrw.DownloadItemWowhead(site, tokenIds[i]);
 
-                            string tokenSourcemore = string.Empty;
-                            if (tokenJson.Contains("sourcemore:[{"))
-                            {
-                                tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
-                                tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
-                            }
+                                tokenNames[i] = docToken.SelectSingleNode("wowhead/item/name").InnerText;
 
-                            if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
-                            {
-                                string[] tokenSourceKeys = tokenSource.Split(',');
-                                string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+                                string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
 
-                                // for tokens we prefer loot info, we don't care if it can be bought with badges
-                                tokenSource = tokenSourceKeys[0];
-                                tokenSourcemore = tokenSourcemoreKeys[0];
-
-                                int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
-                                if (dropIndex >= 0)
+                                string tokenSource = string.Empty;
+                                if (tokenJson.Contains("source:["))
                                 {
-                                    tokenSource = tokenSourceKeys[dropIndex];
-                                    tokenSourcemore = tokenSourcemoreKeys[dropIndex];
+                                    tokenSource = tokenJson.Substring(tokenJson.IndexOf("source:[") + "source:[".Length);
+                                    tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
                                 }
 
-                                if (tokenSource == "2")
+                                string tokenSourcemore = string.Empty;
+                                if (tokenJson.Contains("sourcemore:[{"))
                                 {
-                                    foreach (string kv in tokenSourcemore.Split(','))
+                                    tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
+                                    tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
+                                }
+
+                                if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
+                                {
+                                    string[] tokenSourceKeys = tokenSource.Split(',');
+                                    string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                    // for tokens we prefer loot info, we don't care if it can be bought with badges
+                                    tokenSource = tokenSourceKeys[0];
+                                    tokenSourcemore = tokenSourcemoreKeys[0];
+
+                                    int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
+                                    if (dropIndex >= 0)
                                     {
-                                        if (!string.IsNullOrEmpty(kv))
+                                        tokenSource = tokenSourceKeys[dropIndex];
+                                        tokenSourcemore = tokenSourcemoreKeys[dropIndex];
+                                    }
+
+                                    if (tokenSource == "2")
+                                    {
+                                        foreach (string kv in tokenSourcemore.Split(','))
                                         {
-                                            string[] keyvalsplit = kv.Split(':');
-                                            string key = keyvalsplit[0];
-                                            string val = keyvalsplit[1];
-                                            switch (key)
+                                            if (!string.IsNullOrEmpty(kv))
                                             {
-                                                case "t":
-                                                    container = val == "2" || val == "3";
-                                                    break;
-                                                case "n":       // NPC 'Name'
-                                                    boss = val.Replace("\\'", "'").Trim('\'');
-                                                    break;
-                                                case "z":       // Zone
-                                                    area = GetZoneName(val);
-                                                    break;
-                                                case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
-                                                    heroic = val == "2";
-                                                    break;
+                                                string[] keyvalsplit = kv.Split(':');
+                                                string key = keyvalsplit[0];
+                                                string val = keyvalsplit[1];
+                                                switch (key)
+                                                {
+                                                    case "t":
+                                                        container = val == "2" || val == "3";
+                                                        break;
+                                                    case "n":       // NPC 'Name'
+                                                        boss = val.Replace("\\'", "'").Trim('\'');
+                                                        break;
+                                                    case "z":       // Zone
+                                                        area = GetZoneName(val);
+                                                        break;
+                                                    case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+                                                        heroic = val == "2";
+                                                        break;
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            _tokenDropMap[tokenId] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenName, Container = container };
-                        }
-                        else
-                        {
-                            TokenDropInfo info = _tokenDropMap[tokenId];
-                            boss = info.Boss;
-                            area = info.Area;
-                            heroic = info.Heroic;
-                            tokenName = info.Name;
-                            container = info.Container;
-                        }
-                        if (area != null)
-                        {
-                            if (container)
-                            {
-                                ItemLocation locInfo = new ContainerItem()
-                                {                                    
-                                    Area = area,
-                                    Container = boss,
-                                    Heroic = heroic
-                                };
-                                LocationFactory.Add(item.Id.ToString(), locInfo);
+                                _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
                             }
                             else
                             {
-                                ItemLocation locInfo = new StaticDrop()
+                                TokenDropInfo info = _tokenDropMap[tokenIds[i]];
+                                boss = info.Boss;
+                                area = info.Area;
+                                heroic = info.Heroic;
+                                tokenNames[i] = info.Name;
+                                container = info.Container;
+                            }
+                            if (area != null)
+                            {
+                                if (container)
                                 {
-                                    Area = area,
-                                    Boss = boss,
-                                    Heroic = heroic
+                                    ItemLocation locInfo = new ContainerItem()
+                                    {
+                                        Area = area,
+                                        Container = boss,
+                                        Heroic = heroic
+                                    };
+                                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                                }
+                                else
+                                {
+                                    ItemLocation locInfo = new StaticDrop()
+                                    {
+                                        Area = area,
+                                        Boss = boss,
+                                        Heroic = heroic
+                                    };
+                                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                                }
+                            }
+                            else
+                            {
+                                // this is not a drop token, so treat it as a normal vendor item and include token info
+                                VendorItem locInfo = new VendorItem()
+                                {
+                                    Cost = cost,
+                                    Count = tokenCounts[i],
+                                    Token = tokenNames[i]
                                 };
+                                if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                                foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                                {
+                                    if (!string.IsNullOrEmpty(keyval))
+                                    {
+                                        string[] keyvalsplit = keyval.Split(':');
+                                        string key = keyvalsplit[0];
+                                        string val = keyvalsplit[1];
+                                        switch (key)
+                                        {
+                                            case "z":       // Zone
+                                                locInfo.VendorArea = GetZoneName(val);
+                                                break;
+                                        }
+                                    }
+                                }
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
                             }
                         }
                         else
                         {
-                            // this is not a drop token, so treat it as a normal vendor item and include token info
+                            // if there is no token then this is a normal vendor item
                             VendorItem locInfo = new VendorItem()
                             {
                                 Cost = cost,
-                                Count = tokenCount,
-                                Token = tokenName
                             };
                             if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
                             foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
@@ -519,31 +563,6 @@ namespace Rawr
                             LocationFactory.Add(item.Id.ToString(), locInfo);
                         }
                     }
-                    else
-                    {
-                        // if there is no token then this is a normal vendor item
-                        VendorItem locInfo = new VendorItem()
-                        {
-                            Cost = cost,
-                        };
-                        if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
-                        foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
-                        {
-                            if (!string.IsNullOrEmpty(keyval))
-                            {
-                                string[] keyvalsplit = keyval.Split(':');
-                                string key = keyvalsplit[0];
-                                string val = keyvalsplit[1];
-                                switch (key)
-                                {
-                                    case "z":       // Zone
-                                        locInfo.VendorArea = GetZoneName(val);
-                                        break;
-                                }
-                            }
-                        }
-                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                    }
                 }
                 else
                 {
@@ -559,14 +578,13 @@ namespace Rawr
                     }
                     if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
                 }
-            }
-            else
-                if ((!string.IsNullOrEmpty(source)) && (source == "2"))
-                {
+            } else {
+                if ((!string.IsNullOrEmpty(source)) && (source == "2")) {
                     WorldDrop locInfo = new WorldDrop();
                     LocationFactory.Add(item.Id.ToString(), locInfo);
                 }
-
+            }
+            #endregion
 
             if (item.Slot == ItemSlot.Meta)
             {
@@ -579,7 +597,12 @@ namespace Rawr
                 else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
             }
 
-			if (item.LocationInfo is CraftedItem && htmlTooltip.Contains("Binds when picked up")) (item.LocationInfo as CraftedItem).Bind = BindsOn.BoP;
+			if (item.LocationInfo[0] is CraftedItem && htmlTooltip.Contains("Binds when picked up")) (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
+
+            // Socket Bonuses
+            if (htmlTooltip.Contains("<span class=\"q0\">") && htmlTooltip.Contains("</span>")) {
+                //SpecialEffects.ProcessEquipLine()
+            }
 
 			List<string> useLines = new List<string>();
 			List<string> equipLines = new List<string>();
@@ -1024,7 +1047,7 @@ namespace Rawr
 					break;
 
 				case "ti":      // NPC ID that drops/gives... We use the name, so ignoring this
-                    ItemLocation questName = item.LocationInfo;
+                    ItemLocation questName = item.LocationInfo[0];
                     if (questName is QuestItem)
                     {
                         WebRequestWrapper wrw = new WebRequestWrapper();
@@ -1077,7 +1100,7 @@ namespace Rawr
                     break;
 
 				case "n":       // NPC 'Name'
-					ItemLocation locationName = item.LocationInfo;
+					ItemLocation locationName = item.LocationInfo[0];
 					if (locationName is StaticDrop)	(locationName as StaticDrop).Boss = value;
 					if (locationName is ContainerItem) (locationName as ContainerItem).Container = value;
 					if (locationName is QuestItem) (locationName as QuestItem).Quest = value;
@@ -1086,7 +1109,7 @@ namespace Rawr
 
 				case "z":       // Zone
                     string zonename = GetZoneName(value);
-					ItemLocation locationZone = item.LocationInfo;
+					ItemLocation locationZone = item.LocationInfo[0];
 					if (locationZone is StaticDrop) (locationZone as StaticDrop).Area = zonename;
 					else if (locationZone is ContainerItem) (locationZone as ContainerItem).Area = zonename;
 					else if (locationZone is QuestItem) (locationZone as QuestItem).Area = zonename;
@@ -1096,7 +1119,7 @@ namespace Rawr
 
 				case "c": //Zone again, used for quests
 					string continentname = GetZoneName(value);
-					ItemLocation locationContinent = item.LocationInfo;
+					ItemLocation locationContinent = item.LocationInfo[0];
 					if (locationContinent is StaticDrop) (locationContinent as StaticDrop).Area = continentname;
 					else if (locationContinent is ContainerItem) (locationContinent as ContainerItem).Area = continentname;
 					else if (locationContinent is QuestItem) (locationContinent as QuestItem).Area = continentname;
@@ -1112,7 +1135,7 @@ namespace Rawr
 					bool heroic = (value == "-2" || value == "3" || value == "4");
 					string areaAppend = (value == "1" || value == "3" ) ? " (10)" :
 						( (value == "2" || value == "4") ? " (25)" : string.Empty  );
-					ItemLocation locationDifficulty = item.LocationInfo;
+					ItemLocation locationDifficulty = item.LocationInfo[0];
 					if (locationDifficulty is StaticDrop)
 					{
 						(locationDifficulty as StaticDrop).Heroic = heroic;
@@ -1131,7 +1154,7 @@ namespace Rawr
                     break;
 
 				case "s":
-					if (item.LocationInfo is CraftedItem)
+					if (item.LocationInfo[0] is CraftedItem)
 					{
 						string profession = "";
                         switch (Rawr.Properties.GeneralSettings.Default.Locale)
@@ -1178,7 +1201,7 @@ namespace Rawr
 						}
                                 break;
                         }
-						if (!string.IsNullOrEmpty(profession)) (item.LocationInfo as CraftedItem).Skill = profession;
+						if (!string.IsNullOrEmpty(profession)) (item.LocationInfo[0] as CraftedItem).Skill = profession;
 					}
 					"".ToString();
                     break;
@@ -1189,8 +1212,8 @@ namespace Rawr
 
 				case "p": //PvP
 					LocationFactory.Add(item.Id.ToString(), PvpItem.Construct());
-					(item.LocationInfo as PvpItem).Points = 0;
-					(item.LocationInfo as PvpItem).PointType = "PvP";
+					(item.LocationInfo[0] as PvpItem).Points = 0;
+					(item.LocationInfo[0] as PvpItem).PointType = "PvP";
 					"".ToString();
                     break;
 
@@ -1301,6 +1324,7 @@ namespace Rawr
                 case "4723": return "Trial of the Champion";
                 case "4722": return "Trial of the Crusader";
                 case "4812": return "Icecrown Citadel";
+                case "4809": return "Halls of Reflection";
                 default: return "Unknown - " + zoneId;
     			}
             }
@@ -1360,273 +1384,143 @@ namespace Rawr
             Stats stats = new Stats();
             switch (socketbonus)
             {
-                #region Hugeass switch to deal with all the socket bonuses. You dont want to see this. Really!
-                case "430":
-                    stats.SpellPower += 9;
-                    break;
-                case "440":
-                    stats.SpellPower += 9;
-                    break;
-                case "1587":
-                    stats.AttackPower += 12;
-                    break;
-                case "1589":
-                    stats.AttackPower += 16;
-                    break;
-                case "1597":
-                    stats.AttackPower += 32;
-                    break;
-                case "1886":
-                    stats.Stamina += 9;
-                    break;
-                case "2314":
-                    stats.SpellPower += 9;
-                    break;
-                case "2370":
-                    stats.Mp5 += 3;
-                    break;
-                case "2767":
-                    stats.HitRating += 8;
-                    break;
-                case "2770":
-                    stats.SpellPower += 7;
-                    break;
-                case "2771":
-                    stats.CritRating += 8;
-                    break;
-                case "2787":
-                    stats.CritRating += 8;
-                    break;
-                case "2842":
-                    stats.Spirit += 8;
-                    break;
-                case "2843":
-                    stats.CritRating += 8;
-                    break;
-                case "2844":
-                    stats.HitRating += 8;
-                    break;
-                case "2854":
-                    stats.Mp5 += 3;
-                    break;
-                case "2864":
-                    stats.CritRating += 4;
-                    break;
-                case "2865":
-                    stats.Mp5 += 2;
-                    break;
-                case "2868":
-                    stats.Stamina += 6;
-                    break;
-                case "2869":
-                    stats.Intellect += 4;
-                    break;
-                case "2871":
-                    stats.DodgeRating += 4;
-                    break;
+                #region Spell Power
+                case "2900": stats.SpellPower += 4; break;
                 case "2872":
-                    stats.SpellPower += 5;
-                    break;
-                case "2873":
-                    stats.HitRating += 4;
-                    break;
-                case "2874":
-                    stats.CritRating += 4;
-                    break;
-                case "2877":
-                    stats.Agility += 4;
-                    break;
-                case "2878":
-                    stats.Resilience += 4;
-                    break;
-                case "2882":
-                    stats.Stamina += 6;
-                    break;
-                case "2888":
-                    stats.BlockValue += 6;
-                    break;
-                case "2889":
-                    stats.SpellPower += 5;
-                    break;
-                case "2890":
-                    stats.Spirit += 4;
-                    break;
-                case "2892":
-                    stats.Strength += 4;
-                    break;
-                case "2895":
-                    stats.Stamina += 4;
-                    break;
-                case "2900":
-                    stats.SpellPower += 4;
-                    break;
-                case "2908":
-                    stats.HitRating += 4;
-                    break;
-                case "2927":
-                    stats.Strength += 4;
-                    break;
-                case "2932":
-                    stats.DefenseRating += 4;
-                    break;
-                case "2936":
-                    stats.AttackPower += 8;
-                    break;
-                case "2951":
-                    stats.CritRating += 4;
-                    break;
-                case "2952":
-                    stats.CritRating += 4;
-                    break;
-                case "2963":
-                    stats.HasteRating += 8;
-                    break;
-                case "2972":
-                    stats.BlockRating += 4;
-                    break;
-                case "3094":
-                    stats.ExpertiseRating += 4;
-                    break;
-                case "3198":
-                    stats.SpellPower += 5;
-                    break;
-                case "3204":
-                    stats.CritRating += 3;
-                    break;
-                case "3263":
-                    stats.CritRating += 4;
-                    break;
-                case "3267":
-                    stats.HasteRating += 4;
-                    break;
-                case "3301":
-                    stats.CritRating += 6;
-                    break;
-                case "3302":
-                    stats.DefenseRating += 8;
-                    break;
-                case "3303":
-                    stats.HasteRating += 8;
-                    break;
-                case "3304":
-                    stats.DodgeRating += 8;
-                    break;
-                case "3305":
-                    stats.Stamina += 12;
-                    break;
-                case "3306":
-                    stats.Mp5 += 2;
-                    break;
-                case "3307":
-                    stats.Stamina += 9;
-                    break;
-                case "3308":
-                    stats.HasteRating += 4;
-                    break;
-                case "3309":
-                    stats.HasteRating += 6;
-                    break;
-                case "3310":
-                    stats.Intellect += 6;
-                    break;
-                case "3311":
-                    stats.Spirit += 6;
-                    break;
-                case "3312":
-                    stats.Strength += 8;
-                    break;
-                case "3313":
-                    stats.Agility += 8;
-                    break;
-                case "3314":
-                    stats.CritRating += 8;
-                    break;
-                case "3316":
-                    stats.CritRating += 6;
-                    break;
-                case "3351":
-                    stats.HitRating += 6;
-                    break;
-                case "3352":
-                    stats.Spirit += 8;
-                    break;
-                case "3353":
-                    stats.Intellect += 8;
-                    break;
-                case "3354":
-                    stats.Stamina += 12;
-                    break;
-                case "3355":
-                    stats.Agility += 6;
-                    break;
-                case "3356":
-                    stats.AttackPower += 12;
-                    break;
-                case "3357":
-                    stats.Strength += 6;
-                    break;
-                case "3358":
-                    stats.DodgeRating += 6;
-                    break;
-                case "3359":
-                    stats.ParryRating += 4;
-                    break;
-                case "3360":
-                    stats.ParryRating += 8;
-                    break;
-                case "3361":
-                    stats.BlockRating += 6;
-                    break;
-                case "3362":
-                    stats.ExpertiseRating += 6;
-                    break;
-                case "3363":
-                    stats.BlockValue += 9;
-                    break;
+                case "2889": 
+                case "3198": 
                 case "3596":
-                    stats.SpellPower += 5;
-                    break;
-                case "3600":
-                    stats.Resilience += 6;
-                    break;
-                case "3602":
-                    stats.SpellPower += 7;
-                    break;
+                case "3752": stats.SpellPower += 5; break;
+                case  "428":
+                case "2770": 
+                case "3602": stats.SpellPower += 7; break;
+                case  "430": 
+                case  "440": 
+                case "2314": 
+                case "3753": stats.SpellPower += 9; break;
+                #endregion
+                #region Attack Power
+                case "3114": stats.AttackPower += 4; break;
+                case "2936": stats.AttackPower += 8; break;
+                case "1587": 
+                case "3356": 
+                case "3764": 
+                case "3877": stats.AttackPower += 12; break;
+                case "1589": stats.AttackPower += 16; break;
+                case "1597": stats.AttackPower += 32; break;
+                #endregion
+                #region Stamina
+                case "2895": stats.Stamina += 4; break;
+                case "2868": 
+                case "2882": stats.Stamina += 6; break;
+                case "1886": 
+                case "3307": stats.Stamina += 9; break;
+                case "3354": 
+                case "3305": 
+                case "3766": stats.Stamina += 12; break;
+                #endregion
+                #region Mp5
+                case "2865": 
+                case "3306": stats.Mp5 += 2; break;
+                case "2370": 
+                case "2854": stats.Mp5 += 3; break;
+                case "2371": stats.Mp5 += 4; break;
+                #endregion
+                #region Hit Rating
+                case "2873": 
+                case "2908": stats.HitRating += 4; break;
+                case "3351": stats.HitRating += 6; break;
+                case "2767": 
+                case "2844": stats.HitRating += 8; break;
+                #endregion
+                #region Crit Rating
+                case "2887":
+                case "3204": stats.CritRating += 3; break;
+                case "2864": 
+                case "2874": 
+                case "2951": 
+                case "2952": 
+                case "3263": stats.CritRating += 4; break;
+                case "3301": 
+                case "3316": stats.CritRating += 6; break;
+                case "2771": 
+                case "2787": 
+                case "2843": 
+                case "3314": stats.CritRating += 8; break;
+                #endregion
+                #region Spirit
+                case "2890": stats.Spirit += 4; break;
+                case "3311": stats.Spirit += 6; break;
+                case "2842": 
+                case "3352": stats.Spirit += 8; break;
+                #endregion
+                #region Intellect
+                case "2869": stats.Intellect += 4; break;
+                case "3310": stats.Intellect += 6; break;
+                case "3353": stats.Intellect += 8; break;
+                #endregion
+                #region Dodge Rating
+                case "2871": stats.DodgeRating += 4; break;
+                case "3358": stats.DodgeRating += 6; break;
+                case "3304": stats.DodgeRating += 8; break;
+                #endregion
+                #region Agility
+                case "3149": stats.Agility += 2; break;
+                case "2877": stats.Agility += 4; break;
+                case "3355": stats.Agility += 6; break;
+                case "3313": stats.Agility += 8; break;
+                #endregion
+                #region Resilience
+                case "2878": stats.Resilience += 4; break;
+                case "3600": stats.Resilience += 6; break;
+                case "3821": stats.Resilience += 8; break;
+                #endregion
+                #region Strength
+                case "2892": stats.Strength += 4; break;
+                case "2927": stats.Strength += 4; break;
+                case "3312": stats.Strength += 8; break;
+                case "3357": stats.Strength += 6; break;
+                #endregion
+                #region Block Rating
+                case "2972": stats.BlockRating += 4; break;
+                case "3361": stats.BlockRating += 6; break;
+                #endregion
+                #region Block Value
+                case "2888": stats.BlockValue += 6; break;
+                case "3363": stats.BlockValue += 9; break;
+                #endregion
+                #region Defense Rating
+                case "2932": stats.DefenseRating += 4; break;
                 case "3751":
-                    stats.DefenseRating += 6;
-                    break;
-                case "3752":
-                    stats.SpellPower += 5;
-                    break;
-                case "3753":
-                    stats.SpellPower += 9;
-                    break;
-                case "3764":
-                    stats.AttackPower += 12;
-                    break;
+                case "3857": stats.DefenseRating += 6; break;
+                case "3302": stats.DefenseRating += 8; break;
+                #endregion
+                #region Haste Rating
+                case "3267": 
+                case "3308": stats.HasteRating += 4; break;
+                case "3309": stats.HasteRating += 6; break;
+                case "2963": 
+                case "3303": stats.HasteRating += 8; break;
+                #endregion
+                #region Expertise Rating
+                case "3094": stats.ExpertiseRating += 4; break;
+                case "3362": stats.ExpertiseRating += 6; break;
+                case "3778": stats.ExpertiseRating += 8; break;
+                #endregion
+                #region Parry Rating
+                case "3359": stats.ParryRating += 4; break;
+                case "3871": stats.ParryRating += 6; break;
+                case "3360": stats.ParryRating += 8; break;
+                #endregion
+                #region ArP Rating
                 case "3765":
-                    stats.ArmorPenetrationRating += 4;
-                    break;
-                case "3766":
-                    stats.Stamina += 12;
-                    break;
-                case "3778":
-                    stats.ExpertiseRating += 8;
-                    break;
-                case "3821":
-                    stats.Resilience += 8;
-                    break;
-                case "3857":
-                    stats.DefenseRating += 6;
-                    break;
-                case "3871":
-                    stats.ParryRating += 6;
-                    break;
+                case "3880": stats.ArmorPenetrationRating += 4; break;
+                case "3882": stats.ArmorPenetrationRating += 8; break;
+                #endregion
                 default:
                     if (!_unhandledSocketBonus.Contains(socketbonus))
                         _unhandledSocketBonus.Add(socketbonus);
                     break;
-                #endregion
             }
             return stats;
         }

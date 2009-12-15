@@ -116,8 +116,9 @@ namespace Rawr
 					//itemButtonGem2.DataBindings.Add("SelectedItemId", selectedItem, "Gem2Id");
 					//itemButtonGem3.DataBindings.Add("SelectedItemId", selectedItem, "Gem3Id");
 
-                    textBoxSource.Text = selectedItem.LocationInfo.Description;
-                    textBoxNote.DataBindings.Add("Text", selectedItem.LocationInfo, "Note");
+                    textBoxSource.Text = selectedItem.LocationInfo[0].Description;
+                    if(selectedItem.LocationInfo[1] != null) textBoxSource.Text += "\r\n" + selectedItem.LocationInfo[1].Description;
+                    textBoxNote.DataBindings.Add("Text", selectedItem.LocationInfo[0], "Note");
 
                     propertyGridStats.SelectedObject = selectedItem.Stats;
 

@@ -2204,7 +2204,7 @@ namespace Rawr
 						itemInstance.Gem2 != null ? itemInstance.Gem2.Name : null,
 						itemInstance.Gem3 != null ? itemInstance.Gem3.Name : null,
 						itemInstance.Enchant.Name,
-						itemInstance.Item.LocationInfo.Description.Split(',')[0],
+						itemInstance.Item.LocationInfo[0].Description.Split(',')[0] + (itemInstance.Item.LocationInfo[1]!=null ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : ""),
 						itemInstance.Id,
 						itemInstance.GemmedId,
 						comparisonCalculation.OverallPoints);
@@ -2222,7 +2222,7 @@ namespace Rawr
 						null,
 						null,
 						null,
-						item.LocationInfo.Description.Split(',')[0],
+                        item.LocationInfo[0].Description.Split(',')[0] + (itemInstance.Item.LocationInfo[1] != null ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : ""),
 						item.Id,
 						null,
 						comparisonCalculation.OverallPoints);

@@ -262,7 +262,7 @@ namespace Rawr
 						item.Gem2 != null ? item.Gem2.Name : null,
 						item.Gem3 != null ? item.Gem3.Name : null,
 						item.Enchant.Name,
-						item.Item.LocationInfo.Description.Split(',')[0],
+                        item.Item.LocationInfo[0].Description.Split(',')[0] + (item.Item.LocationInfo[1] != null ? "|" + item.Item.LocationInfo[1].Description.Split(',')[0] : ""),
                         item.Item.ItemLevel,
 						item.Id,
 						item.GemmedId,

@@ -234,7 +234,7 @@ namespace Rawr
 						pathToIcon = wrapper.DownloadTempImage();
 					}
 				}
-				catch (Exception ex)
+				catch (Exception /*ex*/)
 				{
                     /*Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Getting Talent Icon",
                         ex.Message, "GetTalentIcon(...)",

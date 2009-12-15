@@ -83,7 +83,7 @@ namespace Rawr
         [XmlElement("LocalizedName")]
         public string _localizedName;
         
-        public ItemLocation LocationInfo
+        public ItemLocation[] LocationInfo
 		{
 			get
 			{

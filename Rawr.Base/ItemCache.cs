@@ -302,9 +302,9 @@ namespace Rawr
             foreach (Item item in AllItems)
             {
                 item.Cost = 0.0f; 
-                if (item.LocationInfo.Source == ItemSource.Vendor)
+                if (item.LocationInfo[0].Source == ItemSource.Vendor)
                 {
-                    VendorItem vendor = item.LocationInfo as VendorItem;
+                    VendorItem vendor = item.LocationInfo[0] as VendorItem;
                     if (vendor.Token == token)
                     {
                         item.Cost = vendor.Count;

@@ -33,14 +33,15 @@ namespace Rawr.UserControls
             // 
             // txtMessage
             // 
-            this.txtMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMessage.Location = new System.Drawing.Point(0, -2);
+            this.txtMessage.Location = new System.Drawing.Point(0, 0);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.ReadOnly = true;
             this.txtMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMessage.Size = new System.Drawing.Size(328, 227);
+            this.txtMessage.Size = new System.Drawing.Size(330, 227);
             this.txtMessage.TabIndex = 1;
             // 
             // ScrollableMessageBox
@@ -52,8 +53,8 @@ namespace Rawr.UserControls
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ScrollableMessageBox";
             this.Text = "Message";
-            this.Resize += new System.EventHandler(this.ScrollableMessageBox_Resize);
             this.Load += new System.EventHandler(this.ScrollableMessageBox_Load);
+            this.Resize += new System.EventHandler(this.ScrollableMessageBox_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 

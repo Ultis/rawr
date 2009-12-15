@@ -851,7 +851,7 @@ namespace Rawr
 
     [XmlRoot("dictionary")]
     
-    public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation>
+    public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation[]>
     {
     }
 
@@ -875,19 +875,19 @@ namespace Rawr
 
         static ItemLocationDictionary _allLocations = new ItemLocationDictionary();
 
-        public static ItemLocation Lookup(int id)
+        public static ItemLocation[] Lookup(int id)
         {
             return Lookup(id.ToString());
         }
 
-        public static ItemLocation Lookup(string id)
+        public static ItemLocation[] Lookup(string id)
         {
-            ItemLocation item = null;
+            ItemLocation[] item = { null, null };
             if(_allLocations.TryGetValue(id, out item))
             {
                 return item;
             }
-            item = new ItemLocation("Unknown Location, please refresh");
+            item = new ItemLocation[] { new ItemLocation("Unknown Location, please refresh"), null };
 
             return item;
         }
@@ -953,10 +953,10 @@ namespace Rawr
             {
                 item = new ItemLocation("Failed - " + e.Message);
             }
-            ItemLocation prev = null;
+            ItemLocation[] prev = { null, null };
             _allLocations.TryGetValue(itemId, out prev);
-            if (prev != null) item.Note = prev.Note;
-            _allLocations[itemId] = item;
+            if (prev != null) item.Note = prev[0].Note;
+            _allLocations[itemId] = new ItemLocation[] {item, null};
 
             return item;
         }
@@ -964,8 +964,14 @@ namespace Rawr
 		public static void Add(string itemId, ItemLocation itemLocation)
 		{
 			if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
-			_allLocations.Add(itemId, itemLocation);
+			_allLocations.Add(itemId, new ItemLocation[] {itemLocation, null});
 		}
+
+        public static void Add(string itemId, ItemLocation[] itemLocation, bool allow2ndsource)
+        {
+            if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
+            _allLocations.Add(itemId, itemLocation);
+        }
 
         static SortedList<string, Construct> _LocationFactory = null;
     }

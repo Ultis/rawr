@@ -1,10 +1,3 @@
-// This code was written by Mike Gold  .  This code may be used only for educational purposes.
-// Any distribution of this code may only be carried out with written consent from the author.
-// Copyright ©  2005 by Microgold Software Inc. 
-
- 
-
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,62 +9,33 @@ using System.IO;
 
 namespace Rawr.UserControls
 {
-
     public partial class ScrollableMessageBox : Form
     {
-        public ScrollableMessageBox()
-        {
+        public ScrollableMessageBox() {
             InitializeComponent();
         }
 
-        public Font MessageFont
-        {
-            set
-            {
-                txtMessage.Font = value;
-            }
-
-            get
-            {
-                return txtMessage.Font;
-            }
+        public Font MessageFont {
+            set { txtMessage.Font = value; }
+            get { return txtMessage.Font; }
         }
 
-        public Color MessageForeColor
-        {
-            get
-            {
-                return txtMessage.ForeColor;
-            }
-
-            set
-            {
-                txtMessage.ForeColor  = value;
-            }
+        public Color MessageForeColor {
+            get { return txtMessage.ForeColor; }
+            set { txtMessage.ForeColor  = value; }
         }
 
-        public Color MessageBackColor
-        {
-            get
-            {
-                return txtMessage.BackColor;
-            }
-
-            set
-            {
-                txtMessage.BackColor  = value;
-                this.BackColor = value;
-            }
+        public Color MessageBackColor {
+            get { return txtMessage.BackColor; }
+            set { txtMessage.BackColor  = value; this.BackColor = value; }
         }
-
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="text">text inside the message box</param>
         /// <param name="caption">caption on the title bar</param>
-        public void Show (string text, string caption)
-        {
+        public void Show (string text, string caption) {
             // populate the text box with the message
             txtMessage.Text = text;
             // populate the caption with the passed in caption
@@ -83,8 +47,7 @@ namespace Rawr.UserControls
             this.ShowDialog();
         }
 
-        public void Show (string text, string caption, MessageBoxButtons buttonType)
-        {
+        public void Show (string text, string caption, MessageBoxButtons buttonType) {
             txtMessage.Text = text;
             this.Text = caption;
             //Assume OK Button
@@ -93,8 +56,7 @@ namespace Rawr.UserControls
             this.ShowDialog();
         }
 
-        public void ShowFromFile(string filename, string caption, MessageBoxButtons buttonType)
-        {
+        public void ShowFromFile(string filename, string caption, MessageBoxButtons buttonType) {
             // read the file into the message box
             StreamReader sr = new StreamReader(filename);
             txtMessage.Text = sr.ReadToEnd();
@@ -105,60 +67,43 @@ namespace Rawr.UserControls
             this.ShowDialog();
         }
 
-        void RemoveButtons()
-        {
+        void RemoveButtons() {
             List<Button> buttons = new List<Button>();
-            foreach (Control c in this.Controls)
-            {
-                if (c is Button)
-                {
+            foreach (Control c in this.Controls) {
+                if (c is Button) {
                     buttons.Add(c as Button);
                 }
             }
-
-            foreach (Button b in buttons)
-            {
+            foreach (Button b in buttons) {
                 this.Controls.Remove(b);
             }
-
         }
 
-        void ChooseButtons(MessageBoxButtons buttonType)
-        {
+        void ChooseButtons(MessageBoxButtons buttonType) {
             // remove existing buttons
             RemoveButtons();
 
             // decide which button set to add from buttonType, and add it
-            switch (buttonType)
-            {
-                case MessageBoxButtons.OK:
-                    AddOKButton();
-                    break;
-                case MessageBoxButtons.YesNo:
-                    AddYesNoButtons();
-                    break;
-                case MessageBoxButtons.OKCancel:
-                    AddOkCancelButtons();
-                    break;
-                default:
-                    AddOKButton(); // default is an OK button
-                    break;
+            switch (buttonType) {
+                case MessageBoxButtons.OK: AddOKButton(); break;
+                case MessageBoxButtons.YesNo: AddYesNoButtons(); break;
+                case MessageBoxButtons.OKCancel: AddOkCancelButtons(); break;
+                default: AddOKButton(); break; // default is an OK button
             }
         }
 
-        private void AddOKButton()
-        {
+        private void AddOKButton() {
             Button btnOK = new Button();
             btnOK.Text = "OK";
             this.Controls.Add(btnOK);
             btnOK.Location = new Point(this.Width / 2 - 35, this.txtMessage.Bottom + 5);
+            btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnOK.Size = new Size(70, 20);
             btnOK.DialogResult = DialogResult.OK;
             this.AcceptButton = btnOK;
         }
 
-        private void AddYesNoButtons()
-        {
+        private void AddYesNoButtons() {
             Button btnYes = new Button();
             btnYes.Text = "Yes";
             this.Controls.Add(btnYes);
@@ -179,8 +124,7 @@ namespace Rawr.UserControls
             this.CancelButton = btnNo;
         }
 
-        private void AddOkCancelButtons()
-        {
+        private void AddOkCancelButtons() {
             Button btnOK = new Button();
             btnOK.Text = "OK";
             this.Controls.Add(btnOK);
@@ -196,24 +140,18 @@ namespace Rawr.UserControls
             btnCancel.Size = new Size(70, 20);
             btnCancel.DialogResult = DialogResult.Cancel;
             this.CancelButton = btnCancel;
-
         }
 
-
-        public void Show (string text)
-        {
+        public void Show (string text) {
             txtMessage.Text = text;
             ChooseButtons(MessageBoxButtons.OK);
             this.ShowDialog();
         }
 
-        private void ScrollableMessageBox_Resize(object sender, EventArgs e)
-        {
+        private void ScrollableMessageBox_Resize(object sender, EventArgs e) {
             // txtMessage.SetBounds(0, 0, this.ClientRectangle.Width - 10, this.Height - 55);
         }
 
-        private void ScrollableMessageBox_Load(object sender, EventArgs e)
-        {
-       }
+        private void ScrollableMessageBox_Load(object sender, EventArgs e) { }
     }
 }

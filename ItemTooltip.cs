@@ -329,17 +329,19 @@ namespace Rawr
                             #region Location Section
                             int extraLocation = 0;
                             string location = "Unknown source";
-                            if (_currentItem.Quality != ItemQuality.Temp)
-                            {
-                                if (_currentItem.LocationInfo != null)
-                                {
-                                    location = _currentItem.LocationInfo.Description;
+                            if (_currentItem.Quality != ItemQuality.Temp) {
+                                if (_currentItem.LocationInfo != null) {
+                                    location =  _currentItem.LocationInfo[0].Description;
+                                    if (_currentItem.LocationInfo[1] != null) {
+                                        location += " and" + _currentItem.LocationInfo[1].Description.Replace("Purchasable with", "");
+                                        //extraLocation += 13;
+                                    }
                                 }
                                 SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
-                                if (locationSize.Width > 300)
-                                {
-                                    extraLocation = (int)locationSize.Height;
-                                    int index = location.IndexOf(" in ");
+                                if (locationSize.Width > 300) {
+                                    extraLocation += (int)locationSize.Height;
+                                    int index = location.IndexOf(" in ", 20);
+                                    index = (index == -1 ? location.IndexOf(" and ") : index);
                                     index = (index == -1 ? -1 : index + 4);
                                     if (index != -1) { location = location.Insert(index, "\r\n    "); }
                                 }
@@ -625,8 +627,8 @@ namespace Rawr
                                             }
                                             if (Rawr.Properties.GeneralSettings.Default.DisplayGemNames && !CurrentItem.IsGem)
                                             {
-                                                SizeF gemNameSize = g.MeasureString(gem.Name, _fontStats);
-                                                g.DrawString(gem.Name, _fontStats, SystemBrushes.InfoText, 2, 63 + statHeight + i * ((int)gemNameSize.Height));
+                                                SizeF gemNameSize = g.MeasureString("- " + gem.Name, _fontStats);
+                                                g.DrawString("- " + gem.Name, _fontStats, SystemBrushes.InfoText, 2, 63 + statHeight + i * ((int)gemNameSize.Height));
                                                 gemNameHeight += (int)gemNameSize.Height;
                                             }
                                         }

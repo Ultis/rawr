@@ -53,7 +53,7 @@ namespace Rawr.Mage
 
                 textBoxResult.Text = sb.ToString();
             }
-            catch (OutOfMemoryException ex)
+            catch (OutOfMemoryException /*ex*/)
             {
                 textBoxResult.Text = "State Space too complex to solve, please select a different cycle solver.";
             }
