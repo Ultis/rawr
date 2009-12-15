@@ -828,7 +828,8 @@ namespace Rawr
 
             XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/containerObjects/object[1]");
 
-            Area = subNode.Attributes["area"].Value;
+            Heroic = subNode.Attributes["heroic"].Value == "1";
+            Area = /*(Heroic ? "Heroic " : "") +*/ subNode.Attributes["area"].Value;
 			if (Area.Contains("(25)") && !Area.StartsWith("Heroic "))
 			{
 				if (doc.SelectSingleNode("/page/itemInfo/item").Attributes["level"].Value == "258")
@@ -839,6 +840,7 @@ namespace Rawr
 				if (doc.SelectSingleNode("/page/itemInfo/item").Attributes["level"].Value == "245")
 					Area = "Heroic " + Area;
 			}
+            Area = Area.Replace("Heroic Heroic", "Heroic");
             Container = subNode.Attributes["name"].Value;
             return this;
         }
