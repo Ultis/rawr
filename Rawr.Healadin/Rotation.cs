@@ -83,6 +83,11 @@ namespace Rawr.Healadin
                 calc.ManaReplenishment + calc.ManaLayOnHands;
         }
 
+        public static float GetHolyLightCastsPerSec(CharacterCalculationsHealadin calc)
+        {
+            return (calc.RotationHL / calc.HL.CastTime()) / calc.FightLength;
+        }
+
         public static float GetHealingCastsPerSec(CharacterCalculationsHealadin calc)
         {
             return (calc.RotationHL / calc.HL.CastTime()

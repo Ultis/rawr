@@ -110,6 +110,7 @@ namespace Rawr
         DivinePlea,
         CrusaderStrikeHit,
         SealOfVengeanceTick,
+        HolyLightCast,
         #endregion
         #region Added by Shaman
         ShamanLightningBolt,

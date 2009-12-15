@@ -348,6 +348,7 @@ namespace Rawr.Healadin
                         else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
                             trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
                         else if (effect.Trigger == Trigger.Use) trigger = 0f;
+                        else if (effect.Trigger == Trigger.HolyLightCast) trigger = 1f / Rotation.GetHolyLightCastsPerSec(calc);
                         else continue;
                     }
                     statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
@@ -522,7 +523,7 @@ namespace Rawr.Healadin
 
         public bool HasRelevantSpecialEffect(SpecialEffect effect)
         {
-            if (effect.Trigger == Trigger.Use
+            if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.HolyLightCast
                 || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
                 || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
             {

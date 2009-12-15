@@ -253,7 +253,12 @@ namespace Rawr {
 			{ //Shattered Sun Pendant of Restoration
 				stats.ShatteredSunRestoProc += 1f;
 			}
-			else if (line.StartsWith("Protected from the cold.  Your Frost resistance is increased by 20."))
+            else if (line.StartsWith("Each time you cast Holy Light, you have a chance to gain 234 spell power for 15 sec."))
+            { // Libram of Veracity
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyLightCast,
+                    new Stats() { SpellPower = 234f }, 15f, 10f, 0.70f));
+            }
+            else if (line.StartsWith("Protected from the cold.  Your Frost resistance is increased by 20."))
 			{ //Mechanized Snow Goggles of the...
 				stats.FrostResistance = 20;
 			}
