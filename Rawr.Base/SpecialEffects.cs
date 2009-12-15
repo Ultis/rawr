@@ -917,7 +917,8 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, .10f));
                 stats.ManaRestoreOnCast_10_45 += int.Parse(match.Groups["amount"].Value) * 3f;
             }
-            else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
+            else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times")
+                || line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec, stacking up to 10 times."))
             {
                 // Majestic Dragon Figurine
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 18.0f }, 10f, 0f, 1.0f, 10));
@@ -1542,7 +1543,7 @@ namespace Rawr {
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id) {
-            Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)? for (?<duration>\d\d*) sec\. \((?<cooldown>\d\d*) Min Cooldown\)");
+            Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)?(<a.*q2.*>) for (?<duration>\d\d*) sec\. \((?<cooldown>\d\d*) Min Cooldown\)");
             Match match = regex.Match(line);
             if (match.Success)
             {
@@ -1572,7 +1573,8 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
             }
             // Victor's Call and Vengeance of the Forsaken (232)
-            else if (line.Contains("Each time you strike an enemy, you gain 215 attack power.  Stacks up to 5 times.  Entire effect lasts 20 sec."))
+            else if (line.Contains("Each time you strike an enemy, you gain 215 attack power.  Stacks up to 5 times.  Entire effect lasts 20 sec.")
+                || line.Contains("Each time you strike an enemy with a melee attack, you gain 215 attack power. nbsp;Stacks up to 5 times. nbsp;Entire effect lasts 20 sec. (2 Min Cooldown)"))
             {
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 20f, 2f * 60f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 215f }, 20f, 0f, 1f, 5);
@@ -1580,7 +1582,8 @@ namespace Rawr {
                 stats.AddSpecialEffect(primary);
             }
             // Victor's Call and Vengeance of the Forsaken (245)
-            else if (line.Contains("Each time you strike an enemy, you gain 250 attack power.  Stacks up to 5 times.  Entire effect lasts 20 sec."))
+            else if (line.Contains("Each time you strike an enemy, you gain 250 attack power.  Stacks up to 5 times.  Entire effect lasts 20 sec.")
+                  || line.Contains("Each time you strike an enemy with a melee attack, you gain 250 attack power. nbsp;Stacks up to 5 times. nbsp;Entire effect lasts 20 sec. (2 Min Cooldown)"))
             {
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 20f, 2f * 60f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 250f }, 20f, 0f, 1f, 5);

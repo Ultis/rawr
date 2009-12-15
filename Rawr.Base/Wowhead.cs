@@ -592,6 +592,18 @@ namespace Rawr
                 {
                     string line = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q1\">") + "<span class=\"q1\">".Length);
                     line = line.Substring(0, line.IndexOf("</span>"));
+                    if (line.Contains("<a"))
+                    {
+                        {
+                            int start = line.IndexOf("<a");
+                            int end = line.IndexOf(">", start + 1);
+                            line = line.Remove(start, end - start + 1);
+                        }
+                        {
+                            int start = line.IndexOf("</a>");
+                            line = line.Remove(start, 4);
+                        }
+                    }
                     SpecialEffects.ProcessMetaGem(line, item.Stats, false);
                 }
                 else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
@@ -613,7 +625,15 @@ namespace Rawr
 				if (line.StartsWith("Equip: "))
 				{
 					string equipLine = line.Substring("Equip: ".Length);
-					if (equipLine.StartsWith("<a"))
+                    // Remove Comments
+                    while (equipLine.Contains("<!--"))
+                    {
+                        int start = equipLine.IndexOf("<!--");
+                        int end = equipLine.IndexOf("-->");
+                        string toRemove = equipLine.Substring(start, end - start + 3);
+                        equipLine = equipLine.Replace(toRemove, "");
+                    }
+                    if (equipLine.StartsWith("<a"))
 					{
 						equipLine = equipLine.Substring(equipLine.IndexOf(">") + 1);
 						equipLine = equipLine.Substring(0, equipLine.IndexOf("<"));
@@ -623,7 +643,15 @@ namespace Rawr
 				else if (line.StartsWith("Chance on hit: "))
 				{
 					string chanceLine = line.Substring("Chance on hit: ".Length);
-					if (chanceLine.StartsWith("<a"))
+                    // Remove Comments
+                    while (chanceLine.Contains("<!--"))
+                    {
+                        int start = chanceLine.IndexOf("<!--");
+                        int end = chanceLine.IndexOf("-->");
+                        string toRemove = chanceLine.Substring(start, end - start + 3);
+                        chanceLine = chanceLine.Replace(toRemove, "");
+                    }
+                    if (chanceLine.StartsWith("<a"))
 					{
 						chanceLine = chanceLine.Substring(chanceLine.IndexOf(">") + 1);
 						chanceLine = chanceLine.Substring(0, chanceLine.IndexOf("<"));
@@ -633,10 +661,18 @@ namespace Rawr
 				else if (line.StartsWith("Use: "))
 				{
 					string useLine = line.Substring("Use: ".Length);
-					if (useLine.StartsWith("<a"))
-					{
+                    // Remove Comments
+                    while (useLine.Contains("<!--")) {
+                        int start = useLine.IndexOf("<!--");
+                        int end = useLine.IndexOf("-->");
+                        string toRemove = useLine.Substring(start, end - start + 3);
+                        useLine = useLine.Replace(toRemove, "");
+                    }
+                    // Remove the Initial Spell Link
+                    if (useLine.StartsWith("<a")) {
 						useLine = useLine.Substring(useLine.IndexOf(">") + 1);
-						useLine = useLine.Substring(0, useLine.IndexOf("<"));
+						useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
+                        if(useLine.IndexOf("</a>") != -1) useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
 					}
 					useLines.Add(useLine);
 				}
