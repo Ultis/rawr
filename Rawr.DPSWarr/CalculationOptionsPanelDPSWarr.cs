@@ -365,7 +365,27 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes() {
 PNStuff.Add(
-"v2.2.28 (Unreleased)",
+"v2.3.3 (Unreleased)",
+@"- Updated PvP set bonuses for Warriors
+- Fixed the Warrior PvP 2 pc bonus (stupid typos)");
+PNStuff.Add(
+"v2.3.2 (Dec 12, 2009 14:39)",
+@"No Significant Changes due to short period of time between releases.");
+PNStuff.Add(
+"v2.3.1 (Dec 10, 2009 03:47)",
+@"- Fix for DW tick frequency: no longer using one per sec, as each crit will push back your next tick by 1sec. This caused the value of 2pT10 to decrease.");
+PNStuff.Add(
+"v2.3.0 (Dec 08, 2009 17:04)",
+@"- Fixed the set threshold on T10 4Pc to actually need 4 pieces instead of 2
+- Trying to get the SD proc change into place from T10 4P
+- Support for 4p10 Arms - assumes that both executes have the 1.0sec GCD. If only one does, then its value is decreased roughly in half.
+- Redid a couple of the Warrior set bonus descriptions
+- Added PvP 4 pc set bonus to the Get Stats function, was missing by accident
+- Fixed Improved Slam to provide positive DPS again
+- Fixed bug causing your maintained BattleShout/CommandingShout (special effects don't like Use effects with CD=Duration)
+- Fixed a bug with Second Wind providing DPS when you weren't being stunned/rooted, and while I was at it I fixed a bug where roots were being counted as fears and therefore not triggering SecondWind.");
+PNStuff.Add(
+"v2.2.28 (Dec 06, 2009 22:28)",
 @"- Fixed a bug where some of the interface wasn't initially setting it's enable/disable
 - Added the missing 7th WW hit for Bladestorm
 - Modification to OP GCD usage (uses less when the CD is less than a base GCD)

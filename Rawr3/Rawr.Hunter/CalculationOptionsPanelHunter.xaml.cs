@@ -136,10 +136,72 @@ namespace Rawr.Hunter {
             CB_FAQ_Questions_SelectedIndexChanged(null, null);*/
         }
         private void SetUpPatchNotes()
-        {
-            PNStuff.Add(
-            "v2.2.28 (Unreleased)",
-            @"- Fix for issue 14739: Optimize Requirement '% Chance to Miss' error (calcOpts wasn't being set before the call to it in the requirement, added set before call)
+        { // No Significant Changes due to short period of time between releases.
+PNStuff.Add(
+"v2.3.3 (Unreleased)",
+@"- Fix for Issue 15431: Hunter Hit Optimizer Req wasn't working correctly
+- Fix for issue 15430: Pet Talents not saving correctly
+- Fix for Issue 15412: Running OoM just before the end of the fight was causing it to use full viper uptime instead of minimal needed
+");
+PNStuff.Add(
+"v2.3.2 (Dec 12, 2009 14:39)",
+@"- Corrected the pet talent descriptions called in the pet talents comparison chart (was possible to call the incorrect rank's info)
+- Added a couple of missing Special Effect Triggers to Relevancy
+- Renamed the Set Bonuses to include '(T?)' where ? is the Tier number
+- Reworked the T9 4P to use new Stat PetAttackPower
+- Added Survivability to Hunter, This is separated for Hunter and Pet and can be Scaled/Weighted from 0.0 to 10.0 (default 1.0). This includes simple things that improve survivability like reduced damage taken, or ability heals that occur on self, and healing potions, etc
+- Added Pet Dodge Percentage to the Stats Pane so users can see when their pet is getting dodged (due to the Hunter lacking Hit)
+- Fixed a typo in the tooltip for the Rabid pet talent
+- Heavy Reworking of the Pet Stats, these need to be stabilized a bit but the end-result is a much more accurate depiction of Pet Stats instead of the really weird way they were being done before.
+- Added a new series of gemming templates
+- Adjusted the special effects formula with regard to pet attacks and steady shot hit intervals
+- Fixed a bug with Hit Rating not getting full value (I had revered teh anti-dodge handling for pets)
+- Fixed Attack Power usage on Hunter & Pet (was migrating it all to AttackPower stat but shots n stuff were using RangedAttackPower)
+- Refactored CombatTable to a new file
+- Added PetAttackTable class (derivative of CombatTable, set to use pet stats and abilities)
+- Couple of minor fixes to Pet Stats
+- Fixed a bug where Bestial Wrath could cause Aspect of the Beast Uptime to go Infinite when you don't have the talent
+- Some corrections to Crit Calcs
+- Fixed a bug with Aspect of the Beast uptime during Bestial Wrath calculation (was doubling hunter DPS /facepalm)
+- Fixed the damage adjustments to Volley (still need to add multiple target count)
+- Added several talent's survivability values
+- Fixed Aspect of the Hawk/DragonHawk AP bonus addage
+- Fixed Pet Haste effect bonuses (had to add a recalculate after special effects in pet)
+- Fixed a couple of survivability related talent values
+- Changed Stat addage to Accumulate for better performance
+- Added Longevity Cd reduc to Call of the Wild handling
+- Did some work on the Intervals for Special Effects, integrating pet frequencies
+- Fixed a bug with CombatTable for Pets
+- Fixed Pet Spell Miss variable (didn't realize the Spell miss function in StatConversion was inverse)
+- Removed some dead code
+- Fixed a scope damage issue
+- Fixed an issue with Mana Regen stats (at least I think I did)
+- Improved Attack Intervals for Pet Special Effects
+- Fix for Serpent Sting proc related damage
+");
+PNStuff.Add(
+"v2.3.1 (Dec 10, 2009 03:47)",
+@"- Corrected a couple of Get Stat points for Mana Recovery options
+- Fixed a problem with Hunter's Hit translating to Pet's Dodged attacks
+NOTICE: A new issue has been identified, if you do not select the option to use Aspect of the Viper but you are running out of Mana before end of fight, there's presently no penalty. I'll need to fix this but it's not a simple correction so please be patient and until then at least use Viper at 'Just Enough'
+- Fixed some back end naming for Aspect of the Viper Usage
+- Your DPS is now appropriately penalized when you are running OoM and not using an Aspect of the Viper Uptime, giving heavy favor to Mana Regen methods (pots, Mp5, etc). When using Viper, those stats reduce in value but don't go away unless your time to OoM is more than the fight duration
+- Added a method by which users could get off the specialized chart setups after having viewed them. Since it doesn't auto-revert after seeing one of those and going back to a normal chart, you can now select one of the Custom DPS charts to revert the view then go to a normal chart.
+- Added a new Custom Chart 'Pet Talents' looks and feels just like the regular talent chart but works on Pet Talents, even shows the information about the talent at it's current rank on mouse-over
+");
+PNStuff.Add(
+"v2.3.0 (Dec 08, 2009 17:04)",
+@"- Was doing some work on the PetTalents but it didn't pan out, leaving it in but commented until a better solution is found
+- Fix for Expose Weakness not being applied
+- Changed T9 4P to use the stat itself instead of relying on the Buff Name
+- Working with Pet Stats to ensure proper scaling
+- More back end work
+- Removed Avoidance talent from PetTalents, users may see their talents reset or look funky in next version but it shouldn't crash
+- Fix for Issue 15240: Pet Talent Changes Cause Crash (was a talent indexing issue)
+");
+PNStuff.Add(
+"v2.2.28 (Dec 06, 2009 22:28)",
+@"- Fix for issue 14739: Optimize Requirement '% Chance to Miss' error (calcOpts wasn't being set before the call to it in the requirement, added set before call)
 - Fix for bug with Hit Rating where more of it would hurt SpecialEffects
 - Applied Patch 4398:
   * Adding tab to show shot rotation details
