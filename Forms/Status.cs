@@ -111,7 +111,11 @@ namespace Rawr.Forms
 				}
                 if (TaskListView.Items.Count > i)
                 {
-                    TaskListView.Items[i].SubItems["Description"].Text = _StatusUpdates[i].Description;
+                    // Insert a check to prevent unnecessary refreshing of identical content
+                    if (!TaskListView.Items[i].SubItems["Description"].Text.Equals(_StatusUpdates[i].Description))
+                    {
+                        TaskListView.Items[i].SubItems["Description"].Text = _StatusUpdates[i].Description;
+                    }
                 }
                 else
                 {
