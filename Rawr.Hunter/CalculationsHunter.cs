@@ -1228,6 +1228,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.shotsPerSecondCritting = crittingShotsPerSecond;
             #endregion
         }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
             bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             cacheChar = character;
@@ -1363,8 +1364,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
             #endregion
 
-            // mana consumption
-            #region August 2009 Mana Adjustments
+            // Mana Consumption
+            #region Mana Adjustments
             float efficiencyManaAdjust = 1f - (talents.Efficiency * 0.03f);
             float thrillOfTheHuntManaAdjust = 1f - (calculatedStats.priorityRotation.critsCompositeSum * 0.40f * (talents.ThrillOfTheHunt / 3f));
             float masterMarksmanManaAdjust = 1f - (talents.MasterMarksman * 0.05f);
@@ -1433,7 +1434,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float resourcefulnessManaAdjust = 1f - (talents.Resourcefulness * 0.2f);
             #endregion
             #endregion
-            #region August 2009 Shot Mana Usage
+            #region Shot Mana Usage
 
             // we do this ASAP so that we can get the MPS.
             // this allows us to calculate viper/aspect bonuses & penalties
@@ -1460,7 +1461,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.priorityRotation.calculateRotationMPS();
 
             #endregion
-            #region August 2009 Mana Regen
+            #region Mana Regen
             // Mp5
             calculatedStats.manaRegenGearBuffs = stats.Mp5 / 5f; // Convert to per sec
             
@@ -1535,7 +1536,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.manaRegenTargetDebuffs +
                 calculatedStats.manaRegenFromPots;
             #endregion
-            #region August 2009 Aspect Usage
+            #region Aspect Usage
             float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
             float glpyhOfAspectOfTheViperBonus = talents.GlyphOfAspectOfTheViper ? 1.1f : 1f;
 
@@ -1569,9 +1570,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.Duration) {
                 if      (calcOpts.aspectUsage == AspectUsage.ViperRegen) {
-                    aspectUptimeViper = calculatedStats.manaTimeToFull / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
+                    aspectUptimeViper = Math.Min(calcOpts.Duration - calculatedStats.manaTimeToOOM, calculatedStats.manaTimeToFull) / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
                 }else if(calcOpts.aspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f) {
-                    aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.Duration;
+                    aspectUptimeViper = Math.Min(calcOpts.Duration - calculatedStats.manaTimeToOOM, viperTimeNeededToLastFight) / calcOpts.Duration;
                 }else if(calcOpts.aspectUsage == AspectUsage.None) {
                     PercTimeNoDPSforNoMana = (calcOpts.Duration - calculatedStats.manaTimeToOOM) / calcOpts.Duration;
                 }
@@ -1611,7 +1612,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
 
             // damage
-            #region August 2009 Ranged Attack Power
+            #region Ranged Attack Power
             calculatedStats.apFromBase = character.Level * 2f - 20f;
             calculatedStats.apFromAGI  = stats.Agility;
             calculatedStats.apFromSTR  = stats.Strength;
@@ -1628,11 +1629,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float RAP = calculatedStats.apTotal;
             #endregion
-            #region August 2009 Armor Penetration
+            #region Armor Penetration
             float ArmorDamageReduction = GetArmorDamageReduction(character, stats, calcOpts);
             calculatedStats.damageReductionFromArmor = (1f - ArmorDamageReduction);
             #endregion
-            #region August 2009 Damage Adjustments
+            #region Damage Adjustments
             // Partial Resists
             float averageResist = (levelDifF) * 0.02f;
             float resist10 = 5.0f * averageResist;
@@ -1714,7 +1715,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Full Bonus Damage Adjust
             float BonusDamageAdjust = 1f + stats.BonusDamageMultiplier;
             #endregion
-            #region August 2009 Bonus Crit Damage
+            #region Bonus Crit Damage
             // MortalShots
             float mortalShotsCritDamage = 0.06f * talents.MortalShots;
             // CritDamageMetaGems
@@ -2612,8 +2613,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
                     "Error Generating Character Stats",
-                    ex.Message, "GetCharacterStats(...)", "No Additional Info",ex.StackTrace);
-                eb.Show();
+                    ex.Message, "GetCharacterStats(...)", "No Additional Info", ex.StackTrace);
                 return new Stats();
             }
         }
