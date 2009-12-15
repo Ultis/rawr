@@ -117,7 +117,7 @@ namespace Rawr.Enhance
             string backEnchant = character.BackEnchant == null ? string.Empty : character.BackEnchant.Name;
             if (backEnchant == "Lightweave Embroidery")
                 sb.AppendLine("cloak_enchant                   lightweave_embroidery");
-            else if (handEnchant == "Swordguard Embroidery")
+            else if (backEnchant == "Swordguard Embroidery")
                 sb.AppendLine("cloak_enchant                   swordguard_embroidery");
             else
                 sb.AppendLine("cloak_enchant                   -");
