@@ -23,6 +23,13 @@ namespace Rawr
         {
             InitializeComponent();
 
+            Rectangle bounds = ConfigBounds;
+            if (bounds.Width >= this.MinimumSize.Width && bounds.Height >= this.MinimumSize.Height)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                this.Bounds = bounds;
+            }
+
             batchTools = new BatchTools();
             batchTools.OverrideRegem = Properties.Optimizer.Default.OverrideRegem;
             batchTools.OverrideReenchant = Properties.Optimizer.Default.OverrideReenchant;
@@ -48,6 +55,20 @@ namespace Rawr
             layout.RowStyles.Clear();
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, statusStrip1.Height));
             statusProgressBar.Dock = DockStyle.Fill;
+        }
+
+        public Rectangle ConfigBounds
+        {
+            get
+            {
+                return new Rectangle(Properties.Recent.Default.BatchToolsWindowLocation,
+                    Properties.Recent.Default.BatchToolsWindowSize);
+            }
+            set
+            {
+                Properties.Recent.Default.BatchToolsWindowLocation = value.Location;
+                Properties.Recent.Default.BatchToolsWindowSize = value.Size;
+            }
         }
 
         void batchTools_UpgradeListCompleted(object sender, EventArgs e)
@@ -78,6 +99,8 @@ namespace Rawr
         private void FormBatchTools_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = batchTools.IsBusy || !PromptToSaveBeforeClosing();
+            ConfigBounds = this.Bounds;
+            Properties.Recent.Default.Save();
         }
 
         private void FormBatchTools_FormClosed(object sender, FormClosedEventArgs e)
