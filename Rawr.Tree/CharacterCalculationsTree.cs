@@ -11,7 +11,7 @@ namespace Rawr.Tree {
             get { return subPoints; }
             set { subPoints = value; }
         }
-        public float BurstPoints {
+        public float SingleTargetPoints {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
         }
@@ -27,6 +27,8 @@ namespace Rawr.Tree {
         public RotationResult Sustained;
         public SingleTargetBurstResult[] SingleTarget;
         public Character LocalCharacter { get; set; }
+        public float SingleTargetHPS;
+        public float SustainedHPS;
         public float haste { get; set; }
         float spellhaste { get; set; }
         float haste_until_hard_cap { get; set; }
@@ -69,10 +71,10 @@ namespace Rawr.Tree {
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
 
-            dictValues.Add("HealBurst", BurstPoints.ToString());
-            dictValues.Add("HealSustained", SustainedPoints.ToString());
-            dictValues.Add("Survival", SurvivalPoints.ToString());
-            dictValues.Add("Overall", OverallPoints.ToString());
+            dictValues.Add("Single Target Points", SingleTargetPoints.ToString());
+            dictValues.Add("Sustained Points", SustainedPoints.ToString());
+            dictValues.Add("Survival Points", SurvivalPoints.ToString());
+            dictValues.Add("Overall Points", OverallPoints.ToString());
 
             dictValues.Add("Base Health", BasicStats.Health.ToString());
             dictValues.Add("Base Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
@@ -114,6 +116,9 @@ namespace Rawr.Tree {
             spell = Sustained.nourish[0];
             dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until soft gcd cap");
 
+            dictValues.Add("Single Target HPS", Math.Round(SingleTarget[0].HPS, 2).ToString());
+            dictValues.Add("Sustained HPS", Math.Round(Sustained.HPS, 2).ToString());
+            dictValues.Add("Revitalize procs per minute", Math.Round(Sustained.RevitalizeProcsPerMinute, 2).ToString());
             
             
             

@@ -98,7 +98,7 @@ namespace Rawr.Tree {
             cbInnervate.Checked = calcOpts.Innervates > 0;
 
             tbIdlePercentage.Value = calcOpts.IdleCastTimePercent;
-            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value;
+            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
 
             cbSingleTargetRotation.SelectedIndex = calcOpts.SingleTargetRotation;
 
@@ -177,7 +177,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.IdleCastTimePercent = tbIdlePercentage.Value;
-            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value;
+            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -368,7 +368,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.NourishFrac = tbNourishCF.Value;
-            lblNourishFrac.Text = "Nourish casting time: " + (float)tbLifebloomCF.Value + "%.";
+            lblNourishFrac.Text = "Nourish casting time: " + (float)tbNourishCF.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -417,6 +417,14 @@ namespace Rawr.Tree {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbRejuvenateSelf_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.RejuvSelf = cbRejuvenateSelf.Checked;
             Character.OnCalculationsInvalidated();
         }
 

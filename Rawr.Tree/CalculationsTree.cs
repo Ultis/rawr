@@ -230,13 +230,13 @@ namespace Rawr.Tree {
             get {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
-                        "Points:HealBurst",
-                        "Points:HealSustained",
-                        @"Points:Survival*Survival Points represents the total raw physical damage 
+                        "Points:Single Target Points",
+                        "Points:Sustained Points",
+                        @"Points:Survival Points*Survival Points represents the total raw physical damage 
 you can take before dying. Calculated based on Health
 and Armor damage reduction. (Survival multiplier is 
 applied and result is scaled down by 100)",
-                        "Points:Overall",
+                        "Points:Overall Points",
 
                         "Base Stats:Base Health",
                         "Base Stats:Base Armor",
@@ -259,6 +259,10 @@ applied and result is scaled down by 100)",
                         "Combat Stats:Spell Crit",
                         "Combat Stats:Spell Haste",
                         "Combat Stats:Global CD",
+
+                        "Model:Single Target HPS",
+                        "Model:Sustained HPS",
+                        "Model:Revitalize procs per minute",
 
                         /*"Simulation:Result",
                         "Simulation:Time until OOM",
@@ -355,7 +359,7 @@ applied and result is scaled down by 100)",
                         "Healing per spell (single target)",
 					    "Mana sources (sustained)",
                         "Mana usage per spell (sustained)",
-                        "Healing per spell (sustained)",
+                        "Total HPS per spell (sustained)",
                         "Casting time percentage per spell (sustained)",
                         "HPCT per spell",
                         "HPS per spell",
@@ -372,13 +376,7 @@ applied and result is scaled down by 100)",
                     _optimizableCalculationLabels = new string[] {
 					    "Mana",
 					    "MP5",
-                        "GCD (milliseconds)",
-                        "Lifebloom GCD (milliseconds)",
-					    "Spell Haste Percentage",
-                        "Haste Percentage",
-                        "Combined Haste Percentage",
-                        "Haste until Lifebloom Cap",
-                        "Haste until Hard Cap",
+                        "Global CD",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -566,8 +564,8 @@ applied and result is scaled down by 100)",
 
             calculationResult.SingleTarget = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
 
-            calculationResult.BurstPoints = calculationResult.SingleTarget[0].HPS;
-            calculationResult.SustainedPoints = (rot.TotalHealing + ExtraHealing) / rot.TotalTime;
+            calculationResult.SingleTargetHPS = calculationResult.SingleTarget[0].HPS;
+            calculationResult.SustainedHPS = (rot.TotalHealing + ExtraHealing) / rot.TotalTime;
 
             #region Survival Points
             float DamageReduction = StatConversion.GetArmorDamageReduction(83, stats.Armor, 0, 0, 0);
@@ -576,11 +574,10 @@ applied and result is scaled down by 100)",
 
             // Apply diminishing returns
 
-            calculationResult.BurstPoints = DiminishingReturns.CapWithMaximum2(calculationResult.BurstPoints, calcOpts.SingleTarget);
-            calculationResult.SustainedPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SustainedPoints, calcOpts.SustainedTarget);
-            
+            calculationResult.SingleTargetPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SingleTargetHPS, calcOpts.SingleTarget);
+            calculationResult.SustainedPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SustainedHPS, calcOpts.SustainedTarget);
 
-            calculationResult.OverallPoints = calculationResult.BurstPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
+            calculationResult.OverallPoints = calculationResult.SingleTargetPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
 
             return calculationResult;
         }
@@ -603,6 +600,7 @@ applied and result is scaled down by 100)",
                 SpellHaste               = ((1f + 0.01f * talents.CelestialFocus) * (1f + 0.02f * talents.GiftOfTheEarthmother)) - 1f,
                 SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f,
+                RevitalizeChance         = talents.Revitalize * 0.05f,
             };
 
             if (!calcOpts.IgnoreNaturesGrace)
@@ -662,7 +660,7 @@ applied and result is scaled down by 100)",
                     _subPointNameColors = _subPointNameColorsMPS;
                     ComparisonCalculationTree gear = new ComparisonCalculationTree()
                     {
-                        Name = "MP5 from gear and procs",
+                        Name = "MP5 from gear, buffs and MP5 procs",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.GearMPS,
                         SubPoints = new float[] { calculationResult.Sustained.GearMPS }
@@ -676,6 +674,14 @@ applied and result is scaled down by 100)",
                         SubPoints = new float[] { calculationResult.Sustained.ProcsMPS }
                     };
                     comparisonList.Add(procs);
+                    ComparisonCalculationTree revitalize = new ComparisonCalculationTree()
+                    {
+                        Name = "Mana from Revitalize",
+                        Equipped = false,
+                        OverallPoints = calculationResult.Sustained.RevitalizeMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.RevitalizeMPS }
+                    };
+                    comparisonList.Add(revitalize);
                     ComparisonCalculationTree spiritIC = new ComparisonCalculationTree()
                     {
                         Name = "Spirit in combat",
@@ -854,7 +860,7 @@ applied and result is scaled down by 100)",
                     return comparisonList.ToArray();
                 #endregion
                 #region Healing per spell (sustained)
-                case "Healing per spell (sustained)":
+                case "Total HPS spell (sustained)":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
                         ComparisonCalculationTree rejuv = new ComparisonCalculationTree()

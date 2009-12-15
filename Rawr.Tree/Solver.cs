@@ -52,6 +52,8 @@ namespace Rawr.Tree
             SpiritInCombatFraction = stats.SpellCombatManaRegeneration;
             ProcsMPS = stats.ManaRestore;
             #endregion
+
+            RevitalizeChance = stats.RevitalizeChance;
         }
 
         public void ApplyCombatStats(Stats stats) 
@@ -244,9 +246,11 @@ namespace Rawr.Tree
         private float replenishment; // set by constructor
         public float ReplenishmentUptime = 1f;
         public float ReplenishmentMPS { get { return Mana * replenishment * ReplenishmentUptime; } }
+        public bool CalculateManaFromRevitalize = false;
+        public float RevitalizeMPS { get { return CalculateManaFromRevitalize ? RevitalizeChance * 0.01f * Mana / rejuvenate.PeriodicTickTime : 0f; } }
         public float ProcsMPS; // set by constructor
-        public float MPSInFSR { get { return ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS * SpiritInCombatFraction; } }
-        public float MPSOutFSR { get { return ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS; } }
+        public float MPSInFSR { get { return RevitalizeMPS + ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS * SpiritInCombatFraction; } }
+        public float MPSOutFSR { get { return RevitalizeMPS + ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS; } }
         public float OutOfCombatFraction = 0;
         public float ManaRegen { get { return OutOfCombatFraction * MPSOutFSR + (1f - OutOfCombatFraction) * MPSInFSR; } }
         #endregion
@@ -285,6 +289,9 @@ namespace Rawr.Tree
         public float TotalHealsPerMinute { get { return HealsPerMinute * TotalModifier; } }
 
         public float RejuvenationHealsPerMinute { get { return RejuvHealsPerMinute; } }
+
+        public float RevitalizeChance = 0f;
+        public float RevitalizeProcsPerMinute { get { return RevitalizeChance * (RejuvHealsPerMinute + WildGrowthHealsPerMinute); } }
         
         public RotationSettings rotSettings;
     }
@@ -394,6 +401,7 @@ namespace Rawr.Tree
             #region Mana regeneration
             rot.ReplenishmentUptime = calcOpts.ReplenishmentUptime / 100f; 
             rot.OutOfCombatFraction = 1f - .01f * calcOpts.FSRRatio;
+            rot.CalculateManaFromRevitalize = calcOpts.RejuvSelf && rotSettings.averageRejuv >= 1;
             #endregion
 
             #region Mana potion
@@ -438,8 +446,8 @@ namespace Rawr.Tree
                 float Static = maintainedRegrowthCF + maintainedRejuvCF + rot.LifebloomStackCF + rot.WildGrowthCF + rot.SwiftmendCF;
                 if (!calcOpts.AdjustLifebloom) Static += rot.LifebloomCF;
                 if (!calcOpts.AdjustNourish) Static += rot.NourishCF;
-                if (!calcOpts.AdjustRejuv) Static += rot.RejuvCF;
-                if (!calcOpts.AdjustRegrowth) Static += rot.RegrowthCF;
+                if (!calcOpts.AdjustRejuv) Static += (rot.RejuvCF - maintainedRejuvCF);
+                if (!calcOpts.AdjustRegrowth) Static += (rot.RegrowthCF - maintainedRejuvCF);
                 float Factor = Math.Max(0f, (1f - Static - IdleCF) / (rot.TotalCF - Static));
                 if (calcOpts.AdjustNourish) rot.NourishCF *= Factor;
                 if (calcOpts.AdjustRejuv) rot.RejuvCF = (rot.RejuvCF - maintainedRejuvCF) * Factor + maintainedRejuvCF;

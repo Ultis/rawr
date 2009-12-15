@@ -107,6 +107,7 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.cbRejuvenateSelf = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -369,12 +370,13 @@
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.cbRejuvenateSelf);
             this.groupBox8.Controls.Add(this.label6);
             this.groupBox8.Controls.Add(this.lblLivingSeed);
             this.groupBox8.Controls.Add(this.tbLivingSeed);
             this.groupBox8.Location = new System.Drawing.Point(7, 1304);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(259, 121);
+            this.groupBox8.Size = new System.Drawing.Size(259, 160);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Miscellaneous";
@@ -756,7 +758,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(238, 26);
             this.label7.TabIndex = 83;
-            this.label7.Text = "Use the sliders to indicate how many hots are on the target.";
+            this.label7.Text = "Use the sliders to indicate how many hots are on the Nourish target, on average.";
             // 
             // label3
             // 
@@ -1057,6 +1059,20 @@
             this.tbModuleNotes.Size = new System.Drawing.Size(283, 523);
             this.tbModuleNotes.TabIndex = 0;
             // 
+            // cbRejuvenateSelf
+            // 
+            this.cbRejuvenateSelf.AutoSize = true;
+            this.cbRejuvenateSelf.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.cbRejuvenateSelf.Location = new System.Drawing.Point(11, 114);
+            this.cbRejuvenateSelf.MaximumSize = new System.Drawing.Size(250, 0);
+            this.cbRejuvenateSelf.MinimumSize = new System.Drawing.Size(0, 30);
+            this.cbRejuvenateSelf.Name = "cbRejuvenateSelf";
+            this.cbRejuvenateSelf.Size = new System.Drawing.Size(250, 30);
+            this.cbRejuvenateSelf.TabIndex = 83;
+            this.cbRejuvenateSelf.Text = "One maintained Rejuvenation is on myself (for mana from Revitalize)";
+            this.cbRejuvenateSelf.UseVisualStyleBackColor = true;
+            this.cbRejuvenateSelf.CheckedChanged += new System.EventHandler(this.cbRejuvenateSelf_CheckedChanged);
+            // 
             // CalculationOptionsPanelTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1196,5 +1212,6 @@
         private System.Windows.Forms.CheckBox cbIgnoreAllHasteEffects;
         private System.Windows.Forms.CheckBox cbIgnoreNaturesGrace;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox cbRejuvenateSelf;
     }
 }

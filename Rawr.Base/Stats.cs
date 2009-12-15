@@ -220,6 +220,7 @@ namespace Rawr {
         LifebloomTickHealBonus, // Idol of Lush Mosh
         HealingTouchFinalHealBonus, // Idol of Health 
         SwiftmendCdReduc, // S7 PvP 4 Pc
+        RevitalizeChance, // From talent
         #endregion
         #region Added by Rawr.Enhance
         BonusSSDamage,
@@ -3162,6 +3163,16 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.SwiftmendCdReduc]; }
             set { _rawAdditiveData[(int)AdditiveStat.SwiftmendCdReduc] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Chance to proc Revitalize")]
+        [Category("Tree")]
+        public float RevitalizeChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RevitalizeChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RevitalizeChance] = value; }
+        }
+
         #endregion
         #region Added by Rawr.Enhance
 
