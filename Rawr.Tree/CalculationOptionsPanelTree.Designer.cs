@@ -103,6 +103,10 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.cbIgnoreNaturesGrace = new System.Windows.Forms.CheckBox();
+            this.cbIgnoreAllHasteEffects = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -138,6 +142,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -154,6 +159,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox9);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -876,7 +882,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(289, 553);
+            this.tabPage5.Size = new System.Drawing.Size(289, 529);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Mana";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -980,7 +986,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(289, 553);
+            this.tabPage4.Size = new System.Drawing.Size(289, 529);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Module Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -995,8 +1001,61 @@
             this.tbModuleNotes.Name = "tbModuleNotes";
             this.tbModuleNotes.ReadOnly = true;
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbModuleNotes.Size = new System.Drawing.Size(283, 547);
+            this.tbModuleNotes.Size = new System.Drawing.Size(283, 523);
             this.tbModuleNotes.TabIndex = 0;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.label5);
+            this.groupBox9.Controls.Add(this.cbIgnoreAllHasteEffects);
+            this.groupBox9.Controls.Add(this.cbIgnoreNaturesGrace);
+            this.groupBox9.Location = new System.Drawing.Point(7, 277);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(275, 153);
+            this.groupBox9.TabIndex = 44;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Special effects";
+            // 
+            // cbIgnoreNaturesGrace
+            // 
+            this.cbIgnoreNaturesGrace.AutoSize = true;
+            this.cbIgnoreNaturesGrace.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.cbIgnoreNaturesGrace.Location = new System.Drawing.Point(9, 20);
+            this.cbIgnoreNaturesGrace.MaximumSize = new System.Drawing.Size(260, 0);
+            this.cbIgnoreNaturesGrace.MinimumSize = new System.Drawing.Size(0, 30);
+            this.cbIgnoreNaturesGrace.Name = "cbIgnoreNaturesGrace";
+            this.cbIgnoreNaturesGrace.Size = new System.Drawing.Size(260, 30);
+            this.cbIgnoreNaturesGrace.TabIndex = 0;
+            this.cbIgnoreNaturesGrace.Text = "Ignore contributions of Nature\'s Grace procs to average haste in combat";
+            this.cbIgnoreNaturesGrace.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.cbIgnoreNaturesGrace.UseVisualStyleBackColor = true;
+            this.cbIgnoreNaturesGrace.CheckedChanged += new System.EventHandler(this.cbIgnoreNaturesGrace_CheckedChanged);
+            // 
+            // cbIgnoreAllHasteEffects
+            // 
+            this.cbIgnoreAllHasteEffects.AutoSize = true;
+            this.cbIgnoreAllHasteEffects.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.cbIgnoreAllHasteEffects.Location = new System.Drawing.Point(9, 56);
+            this.cbIgnoreAllHasteEffects.MaximumSize = new System.Drawing.Size(260, 0);
+            this.cbIgnoreAllHasteEffects.MinimumSize = new System.Drawing.Size(0, 30);
+            this.cbIgnoreAllHasteEffects.Name = "cbIgnoreAllHasteEffects";
+            this.cbIgnoreAllHasteEffects.Size = new System.Drawing.Size(260, 30);
+            this.cbIgnoreAllHasteEffects.TabIndex = 1;
+            this.cbIgnoreAllHasteEffects.Text = "Ignore contributions of Haste Rating and Spell Haste effects in combat";
+            this.cbIgnoreAllHasteEffects.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.cbIgnoreAllHasteEffects.UseVisualStyleBackColor = true;
+            this.cbIgnoreAllHasteEffects.CheckedChanged += new System.EventHandler(this.cbIgnoreAllHasteEffects_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 93);
+            this.label5.MaximumSize = new System.Drawing.Size(260, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(252, 39);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "The reason you would disable haste from special effects, is because as a healer y" +
+                "ou may not want to depend on a buff that isn\'t always up.";
             // 
             // CalculationOptionsPanelTree
             // 
@@ -1050,6 +1109,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1131,5 +1192,9 @@
         private System.Windows.Forms.TrackBar tbNourishCF;
         private System.Windows.Forms.Label lblNourishFrac;
         private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.CheckBox cbIgnoreAllHasteEffects;
+        private System.Windows.Forms.CheckBox cbIgnoreNaturesGrace;
+        private System.Windows.Forms.Label label5;
     }
 }

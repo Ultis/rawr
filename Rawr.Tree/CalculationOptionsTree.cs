@@ -41,6 +41,7 @@ namespace Rawr.Tree {
         private int livingSeedEfficiency;
         private int singleTargetRotation;
         private bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
+        private bool ignoreNaturesGrace, ignoreAllHasteEffects;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
@@ -77,6 +78,9 @@ namespace Rawr.Tree {
             adjustRegrowth = true;
             adjustLifebloom = true;
             adjustNourish = true;
+
+            ignoreNaturesGrace = true;
+            ignoreAllHasteEffects = true;
 
             singleTargetRotation = 0;
         }
@@ -120,6 +124,9 @@ namespace Rawr.Tree {
         public bool AdjustRegrowth { get { return adjustRegrowth; } set { adjustRegrowth = value; OnPropertyChanged("AdjustRegrowth"); } }
         public bool AdjustLifebloom { get { return adjustLifebloom; } set { adjustLifebloom = value; OnPropertyChanged("AdjustLifebloom"); } }
         public bool AdjustNourish { get { return adjustNourish; } set { adjustNourish = value; OnPropertyChanged("AdjustNourish"); } }
+
+        public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
+        public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }
 
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
 

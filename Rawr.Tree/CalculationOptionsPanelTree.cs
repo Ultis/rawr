@@ -401,5 +401,21 @@ namespace Rawr.Tree {
             Character.OnCalculationsInvalidated();
         }
 
+        private void cbIgnoreNaturesGrace_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.IgnoreNaturesGrace = cbIgnoreNaturesGrace.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbIgnoreAllHasteEffects_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
     }
 }

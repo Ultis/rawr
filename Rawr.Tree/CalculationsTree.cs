@@ -551,6 +551,12 @@ applied and result is scaled down by 100)",
 
                 ExtraHealing = stats.Healed;
 
+                if (calcOpts.IgnoreAllHasteEffects)
+                {
+                    stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
+                    stats.HasteRating = calculationResult.BasicStats.HasteRating;
+                }
+
                 // New run
                 rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);  
             }
@@ -599,7 +605,10 @@ applied and result is scaled down by 100)",
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f,
             };
 
-            statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, talents.NaturesGrace * 1f / 3f, 1));
+            if (!calcOpts.IgnoreNaturesGrace)
+            {
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, talents.NaturesGrace * 1f / 3f, 1));
+            }
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
@@ -1455,7 +1464,7 @@ applied and result is scaled down by 100)",
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
-                + stats.Armor + stats.Stamina + stats.ManaRestoreFromMaxManaPerSecond
+                /*+ stats.Armor + stats.Stamina*/ + stats.ManaRestoreFromMaxManaPerSecond
                 + stats.SpellCombatManaRegeneration // Bangle of nerfed - might be useful in future
                 #region Trinkets
                 + stats.HighestStat + stats.BonusManaPotion + stats.SpellsManaReduction + stats.HealingOmenProc
