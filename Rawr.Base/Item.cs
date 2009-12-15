@@ -92,10 +92,9 @@ namespace Rawr
 		}
 
         /// <summary>
-        /// Cost of acquiring the item, saved separately from item cache
-        /// to allow for separate costs (i.e. badges, dkp, gold, etc.)
+        /// Cost of acquiring the item (i.e. badges, dkp, gold, etc.)
         /// </summary>
-        [XmlIgnore]
+        [DefaultValueAttribute(0.0f)]
         public float Cost { get; set; }
 
         [XmlIgnore]
@@ -998,6 +997,11 @@ namespace Rawr
 							newItem.Faction = oldItem.Faction;
 						}
 					}
+                    if (cachedItem != null)
+                    {
+                        // preserve Cost information
+                        newItem.Cost = cachedItem.Cost;
+                    }
                     ItemCache.AddItem(newItem, raiseEvent);
                 }
 				return ItemCache.FindItemById(id);
