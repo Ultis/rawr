@@ -807,6 +807,7 @@ namespace Rawr.Hunter
                 if (tree == PetFamilyTree.None) { CalcOpts.PetTalents.Reset(); }
 
                 //initTalentImages();
+                CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
 
                 Character.OnCalculationsInvalidated();
             } catch (Exception ex) {
@@ -822,6 +823,7 @@ namespace Rawr.Hunter
             int line = 0;
             try
             {
+                isLoading = true;
                 PetFamilyTree tree = getPetFamilyTree();
                 // Cunning
                 CB_CunningCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++; // Add in 3.3
@@ -889,7 +891,6 @@ namespace Rawr.Hunter
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
                     "Error Populating Pet Talent ComboBoxes", ex.Message,
                     "populatePetTalentCombos", "Line: " + line.ToString(), ex.StackTrace);
-                eb.Show();
             }
         }
         #endregion
