@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelTree));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -107,7 +108,12 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.cbRejuvenateSelf = new System.Windows.Forms.CheckBox();
+            this.lblRejuvRevitalize = new System.Windows.Forms.Label();
+            this.tbRejuvRevitalize = new System.Windows.Forms.TrackBar();
+            this.lblWGRevitalize = new System.Windows.Forms.Label();
+            this.tbWGRevitalize = new System.Windows.Forms.TrackBar();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -144,6 +150,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbRejuvRevitalize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbWGRevitalize)).BeginInit();
+            this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -370,13 +379,12 @@
             // 
             // groupBox8
             // 
-            this.groupBox8.Controls.Add(this.cbRejuvenateSelf);
             this.groupBox8.Controls.Add(this.label6);
             this.groupBox8.Controls.Add(this.lblLivingSeed);
             this.groupBox8.Controls.Add(this.tbLivingSeed);
             this.groupBox8.Location = new System.Drawing.Point(7, 1304);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(259, 160);
+            this.groupBox8.Size = new System.Drawing.Size(259, 105);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Miscellaneous";
@@ -389,8 +397,8 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(245, 26);
             this.label6.TabIndex = 82;
-            this.label6.Text = "Use this slider to indicate the percentage of Living Seed is usually effective he" +
-                "aling.";
+            this.label6.Text = "Use this slider to indicate the percentage of Living Seed\'s healing that is usual" +
+                "ly effective.";
             // 
             // lblLivingSeed
             // 
@@ -569,9 +577,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 129);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(107, 13);
+            this.label4.Size = new System.Drawing.Size(216, 13);
             this.label4.TabIndex = 65;
-            this.label4.Text = "Lifebloom stack type:";
+            this.label4.Text = "Lifebloom stack type (also for Single Target):";
             // 
             // cbLifebloomStackType
             // 
@@ -933,6 +941,7 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.groupBox10);
             this.tabPage5.Controls.Add(this.groupBox3);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
@@ -953,7 +962,7 @@
             this.groupBox3.Controls.Add(this.lblReplenishment);
             this.groupBox3.Location = new System.Drawing.Point(3, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(283, 201);
+            this.groupBox3.Size = new System.Drawing.Size(283, 203);
             this.groupBox3.TabIndex = 56;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Mana Regeneration";
@@ -963,9 +972,9 @@
             this.cbInnervate.AutoSize = true;
             this.cbInnervate.Location = new System.Drawing.Point(6, 174);
             this.cbInnervate.Name = "cbInnervate";
-            this.cbInnervate.Size = new System.Drawing.Size(115, 17);
+            this.cbInnervate.Size = new System.Drawing.Size(149, 17);
             this.cbInnervate.TabIndex = 56;
-            this.cbInnervate.Text = "Use own innervate";
+            this.cbInnervate.Text = "Use innervate on yourself.";
             this.cbInnervate.UseVisualStyleBackColor = true;
             this.cbInnervate.CheckedChanged += new System.EventHandler(this.cbInnervate_CheckedChanged);
             // 
@@ -1059,19 +1068,69 @@
             this.tbModuleNotes.Size = new System.Drawing.Size(283, 523);
             this.tbModuleNotes.TabIndex = 0;
             // 
-            // cbRejuvenateSelf
+            // lblRejuvRevitalize
             // 
-            this.cbRejuvenateSelf.AutoSize = true;
-            this.cbRejuvenateSelf.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.cbRejuvenateSelf.Location = new System.Drawing.Point(11, 114);
-            this.cbRejuvenateSelf.MaximumSize = new System.Drawing.Size(250, 0);
-            this.cbRejuvenateSelf.MinimumSize = new System.Drawing.Size(0, 30);
-            this.cbRejuvenateSelf.Name = "cbRejuvenateSelf";
-            this.cbRejuvenateSelf.Size = new System.Drawing.Size(250, 30);
-            this.cbRejuvenateSelf.TabIndex = 83;
-            this.cbRejuvenateSelf.Text = "One maintained Rejuvenation is on myself (for mana from Revitalize)";
-            this.cbRejuvenateSelf.UseVisualStyleBackColor = true;
-            this.cbRejuvenateSelf.CheckedChanged += new System.EventHandler(this.cbRejuvenateSelf_CheckedChanged);
+            this.lblRejuvRevitalize.AutoSize = true;
+            this.lblRejuvRevitalize.Location = new System.Drawing.Point(4, 20);
+            this.lblRejuvRevitalize.Name = "lblRejuvRevitalize";
+            this.lblRejuvRevitalize.Size = new System.Drawing.Size(175, 13);
+            this.lblRejuvRevitalize.TabIndex = 79;
+            this.lblRejuvRevitalize.Text = "Uptime of Rejuvenation on yourself:";
+            // 
+            // tbRejuvRevitalize
+            // 
+            this.tbRejuvRevitalize.BackColor = System.Drawing.SystemColors.Window;
+            this.tbRejuvRevitalize.Location = new System.Drawing.Point(4, 36);
+            this.tbRejuvRevitalize.Maximum = 100;
+            this.tbRejuvRevitalize.Name = "tbRejuvRevitalize";
+            this.tbRejuvRevitalize.Size = new System.Drawing.Size(273, 45);
+            this.tbRejuvRevitalize.TabIndex = 80;
+            this.tbRejuvRevitalize.TickFrequency = 5;
+            this.tbRejuvRevitalize.Scroll += new System.EventHandler(this.tbRejuvRevitalize_Scroll);
+            // 
+            // lblWGRevitalize
+            // 
+            this.lblWGRevitalize.AutoSize = true;
+            this.lblWGRevitalize.Location = new System.Drawing.Point(6, 71);
+            this.lblWGRevitalize.Name = "lblWGRevitalize";
+            this.lblWGRevitalize.Size = new System.Drawing.Size(170, 13);
+            this.lblWGRevitalize.TabIndex = 81;
+            this.lblWGRevitalize.Text = "Uptime of Wild Growth on yourself:";
+            // 
+            // tbWGRevitalize
+            // 
+            this.tbWGRevitalize.BackColor = System.Drawing.SystemColors.Window;
+            this.tbWGRevitalize.Location = new System.Drawing.Point(6, 87);
+            this.tbWGRevitalize.Maximum = 100;
+            this.tbWGRevitalize.Name = "tbWGRevitalize";
+            this.tbWGRevitalize.Size = new System.Drawing.Size(271, 45);
+            this.tbWGRevitalize.TabIndex = 82;
+            this.tbWGRevitalize.TickFrequency = 5;
+            this.tbWGRevitalize.Scroll += new System.EventHandler(this.tbWGRevitalize_Scroll);
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.label11);
+            this.groupBox10.Controls.Add(this.lblWGRevitalize);
+            this.groupBox10.Controls.Add(this.tbWGRevitalize);
+            this.groupBox10.Controls.Add(this.tbRejuvRevitalize);
+            this.groupBox10.Controls.Add(this.lblRejuvRevitalize);
+            this.groupBox10.Location = new System.Drawing.Point(3, 215);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(283, 222);
+            this.groupBox10.TabIndex = 83;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Revitalizate";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 119);
+            this.label11.MaximumSize = new System.Drawing.Size(270, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(265, 91);
+            this.label11.TabIndex = 83;
+            this.label11.Text = resources.GetString("label11.Text");
             // 
             // CalculationOptionsPanelTree
             // 
@@ -1127,6 +1186,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbRejuvRevitalize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbWGRevitalize)).EndInit();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1212,6 +1275,11 @@
         private System.Windows.Forms.CheckBox cbIgnoreAllHasteEffects;
         private System.Windows.Forms.CheckBox cbIgnoreNaturesGrace;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox cbRejuvenateSelf;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Label lblWGRevitalize;
+        private System.Windows.Forms.TrackBar tbWGRevitalize;
+        private System.Windows.Forms.TrackBar tbRejuvRevitalize;
+        private System.Windows.Forms.Label lblRejuvRevitalize;
+        private System.Windows.Forms.Label label11;
     }
 }

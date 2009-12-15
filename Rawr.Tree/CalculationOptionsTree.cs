@@ -42,7 +42,7 @@ namespace Rawr.Tree {
         private int singleTargetRotation;
         private bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
         private bool ignoreNaturesGrace, ignoreAllHasteEffects;
-        private bool rejuvSelf;
+        private int rejuveUptime, wgUptime;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
@@ -84,6 +84,9 @@ namespace Rawr.Tree {
             ignoreAllHasteEffects = true;
 
             singleTargetRotation = 0;
+
+            rejuveUptime = 80;
+            wgUptime = 20;
         }
         public string GetXml() {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));
@@ -130,7 +133,8 @@ namespace Rawr.Tree {
         public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }
 
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
-        public bool RejuvSelf { get { return rejuvSelf; } set { rejuvSelf = value; OnPropertyChanged("RejuvSelf"); } }
+        public int RejuvUptime { get { return rejuveUptime; } set { rejuveUptime = value; OnPropertyChanged("RejuvUptime"); } }
+        public int WGUptime { get { return wgUptime; } set { wgUptime = value; OnPropertyChanged("WGUptime"); } }
 
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }

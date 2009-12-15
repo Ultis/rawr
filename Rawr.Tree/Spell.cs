@@ -386,7 +386,7 @@ namespace Rawr.Tree {
         private float extraTicks = 0f;
         public override float PeriodicTick { get { return stackScaling * (periodicTick + (idolHoTBonus + healingBonus) * coefHoT); } }
         public override float AverageHealing {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + healingBonus * coefDH); } }
-        public override float ManaCost {get { return (base.ManaCost - manaRefund); }/*set { manaCost = value; }*/}
+        public override float ManaCost {get { return (base.ManaCost - stackSize * manaRefund); }/*set { manaCost = value; }*/}
         public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 

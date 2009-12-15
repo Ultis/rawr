@@ -212,7 +212,8 @@ namespace Rawr.Tree {
             _subPointNameColorsHPM.Add("Healing per mana", Color.FromArgb(128, 0, 255, 255));
 
             _subPointNameColorsCF = new Dictionary<string, Color>();
-            _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(128, 0, 255, 255));
+            _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(196, 0, 255, 255));
+            _subPointNameColorsCF.Add("Casting time auto reduction", Color.FromArgb(64, 0, 255, 255));
 
             _subPointNameColors = _subPointNameColorsRating;
         }
@@ -733,64 +734,72 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Rejuvenation",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.RejuvCF*100,
-                            SubPoints = new float[] { calculationResult.Sustained.RejuvCF * 100 }
+                            OverallPoints = calculationResult.Sustained.RejuvCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.RejuvCF * 100,
+                            (calculationResult.Sustained.RejuvCF_unreduced - calculationResult.Sustained.RejuvCF) * 100}
                         };
                         comparisonList.Add(rejuv);
                         ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
                         {
                             Name = "Regrowth",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.RegrowthCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.RegrowthCF * 100 }
+                            OverallPoints = calculationResult.Sustained.RegrowthCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.RegrowthCF * 100,
+                            (calculationResult.Sustained.RegrowthCF_unreduced - calculationResult.Sustained.RegrowthCF) * 100 }
                         };
                         comparisonList.Add(regrowth);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.LifebloomCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.LifebloomCF * 100 }
+                            OverallPoints = calculationResult.Sustained.LifebloomCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomCF * 100,
+                            (calculationResult.Sustained.LifebloomCF_unreduced - calculationResult.Sustained.LifebloomCF) * 100 }
                         };
                         comparisonList.Add(lifebloom);
                         ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom Stack",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.LifebloomStackCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackCF * 100 }
+                            OverallPoints = calculationResult.Sustained.LifebloomStackCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackCF * 100,
+                            (calculationResult.Sustained.LifebloomStackCF_unreduced - calculationResult.Sustained.LifebloomStackCF) * 100 }
                         };
                         comparisonList.Add(lifebloomStack);
                         ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
                         {
                             Name = "Wild Growth",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.WildGrowthCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.WildGrowthCF * 100 }
+                            OverallPoints = calculationResult.Sustained.WildGrowthCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.WildGrowthCF * 100,
+                            (calculationResult.Sustained.WildGrowthCF_unreduced - calculationResult.Sustained.WildGrowthCF) * 100 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
                         {
                             Name = "Swiftmend",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.SwiftmendCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendCF * 100 }
+                            OverallPoints = calculationResult.Sustained.SwiftmendCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendCF * 100,
+                            (calculationResult.Sustained.SwiftmendCF_unreduced - calculationResult.Sustained.SwiftmendCF) * 100 }
                         };
                         comparisonList.Add(swiftmend);
                         ComparisonCalculationTree nourish = new ComparisonCalculationTree()
                         {
                             Name = "Nourish",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.NourishCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.NourishCF * 100 }
+                            OverallPoints = calculationResult.Sustained.NourishCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.NourishCF * 100,
+                            (calculationResult.Sustained.NourishCF_unreduced - calculationResult.Sustained.NourishCF) * 100 }
                         };
                         comparisonList.Add(nourish);
                         ComparisonCalculationTree idle = new ComparisonCalculationTree()
                         {
                             Name = "Idle",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.IdleCF * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.IdleCF * 100 }
+                            OverallPoints = calculationResult.Sustained.IdleCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.IdleCF * 100,
+                            (calculationResult.Sustained.IdleCF_unreduced - calculationResult.Sustained.IdleCF) * 100 }
                         };
                         comparisonList.Add(idle);
                     }
@@ -860,7 +869,7 @@ applied and result is scaled down by 100)",
                     return comparisonList.ToArray();
                 #endregion
                 #region Healing per spell (sustained)
-                case "Total HPS spell (sustained)":
+                case "Total HPS per spell (sustained)":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
                         ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
@@ -951,6 +960,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.WildGrowthHPS }
                         };
                         comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth (single target)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.WildGrowthHPS / calculationResult.Sustained.wildGrowth.maxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.WildGrowthHPS / calculationResult.Sustained.wildGrowth.maxTargets }
+                        };
+                        comparisonList.Add(wildGrowthSingle);
                         ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
                         {
                             Name = "Swiftmend",
@@ -1026,10 +1043,18 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth",
                             Equipped = false,
+                            OverallPoints = calculationResult.Sustained.wildGrowth.HPCT * calculationResult.Sustained.wildGrowth.maxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPCT * calculationResult.Sustained.wildGrowth.maxTargets }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth (single target)",
+                            Equipped = false,
                             OverallPoints = calculationResult.Sustained.wildGrowth.HPCT,
                             SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPCT }
                         };
-                        comparisonList.Add(wildGrowth);
+                        comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.swiftmend != null)
                         {
                             ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
@@ -1140,10 +1165,18 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth",
                             Equipped = false,
+                            OverallPoints = calculationResult.Sustained.wildGrowth.HPCTD * calculationResult.Sustained.wildGrowth.maxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPCTD * calculationResult.Sustained.wildGrowth.maxTargets }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth (single target)",
+                            Equipped = false,
                             OverallPoints = calculationResult.Sustained.wildGrowth.HPCTD,
                             SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPCTD }
                         };
-                        comparisonList.Add(wildGrowth);
+                        comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.swiftmend != null)
                         {
                             ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
@@ -1254,10 +1287,18 @@ applied and result is scaled down by 100)",
                         {
                             Name = "Wild Growth",
                             Equipped = false,
+                            OverallPoints = calculationResult.Sustained.wildGrowth.HPM * calculationResult.Sustained.wildGrowth.maxTargets,
+                            SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPM * calculationResult.Sustained.wildGrowth.maxTargets }
+                        };
+                        comparisonList.Add(wildGrowth);
+                        ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
+                        {
+                            Name = "Wild Growth (one target)",
+                            Equipped = false,
                             OverallPoints = calculationResult.Sustained.wildGrowth.HPM,
                             SubPoints = new float[] { calculationResult.Sustained.wildGrowth.HPM }
                         };
-                        comparisonList.Add(wildGrowth);
+                        comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.swiftmend != null)
                         {
                             ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()

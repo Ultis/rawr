@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Note: for Rejuvenation, there is a check that you must have at least 1 maintained Rejuvenation spell. The model will use your own haste rating to calculate Rejuvenation tick frequency. For Wild Growth, it is simply assumed you've entered a correct value. The calculation uses your talents to find the chance of a Revitalize proc per tick.</value>
+  </data>
 </root>

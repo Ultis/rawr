@@ -105,6 +105,11 @@ namespace Rawr.Tree {
             cbIgnoreNaturesGrace.Checked = calcOpts.IgnoreNaturesGrace;
             cbIgnoreAllHasteEffects.Checked = calcOpts.IgnoreAllHasteEffects;
 
+            tbRejuvRevitalize.Value = calcOpts.RejuvUptime;
+            tbWGRevitalize.Value = calcOpts.WGUptime;
+            lblRejuvRevitalize.Text = "Uptime of Rejuvenation on yourself: " + (float)calcOpts.RejuvUptime + "%.";
+            lblWGRevitalize.Text = "Uptime of Wild Growth on yourself: " + (float)calcOpts.WGUptime + "%.";
+
             loading = false;
         }
         private float parseFloat(string s) {
@@ -420,11 +425,22 @@ namespace Rawr.Tree {
             Character.OnCalculationsInvalidated();
         }
 
-        private void cbRejuvenateSelf_CheckedChanged(object sender, EventArgs e)
+
+        private void tbRejuvRevitalize_Scroll(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RejuvSelf = cbRejuvenateSelf.Checked;
+            calcOpts.RejuvUptime = tbRejuvRevitalize.Value;
+            lblRejuvRevitalize.Text = "Uptime of Rejuvenation on yourself: " + (float)calcOpts.RejuvUptime + "%.";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbWGRevitalize_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.WGUptime = tbWGRevitalize.Value;
+            lblWGRevitalize.Text = "Uptime of Wild Growth on yourself: " + (float)calcOpts.WGUptime + "%.";
             Character.OnCalculationsInvalidated();
         }
 

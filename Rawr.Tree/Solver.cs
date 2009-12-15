@@ -246,8 +246,10 @@ namespace Rawr.Tree
         private float replenishment; // set by constructor
         public float ReplenishmentUptime = 1f;
         public float ReplenishmentMPS { get { return Mana * replenishment * ReplenishmentUptime; } }
-        public bool CalculateManaFromRevitalize = false;
-        public float RevitalizeMPS { get { return CalculateManaFromRevitalize ? RevitalizeChance * 0.01f * Mana / rejuvenate.PeriodicTickTime : 0f; } }
+        public float RevitalizeFromRejuvenation = 0f;
+        public float RevitalizeFromWildGrowth = 0f;
+        public float RevitalizeMPS { get { return RevitalizeFromRejuvenation * RevitalizeChance * 0.01f * Mana / rejuvenate.PeriodicTickTime
+            + RevitalizeFromWildGrowth * RevitalizeChance * 0.01f * Mana / wildGrowth.PeriodicTickTime; } }
         public float ProcsMPS; // set by constructor
         public float MPSInFSR { get { return RevitalizeMPS + ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS * SpiritInCombatFraction; } }
         public float MPSOutFSR { get { return RevitalizeMPS + ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS; } }
@@ -263,6 +265,17 @@ namespace Rawr.Tree
         public float InnervateMPS { get { return InnervateMana / TotalTime; } }
         public float ManaPerInnervate = 0f;
         public float NumberOfInnervates = 0f;
+        #endregion
+
+        #region Saved unreduces cast fractions
+        public float RejuvCF_unreduced = 0f;
+        public float RegrowthCF_unreduced = 0f;
+        public float LifebloomCF_unreduced = 0f;
+        public float LifebloomStackCF_unreduced = 0f;
+        public float NourishCF_unreduced = 0f;
+        public float WildGrowthCF_unreduced = 0f;
+        public float SwiftmendCF_unreduced = 0f;
+        public float IdleCF_unreduced = 1f;
         #endregion
 
         public float TotalTime;
@@ -373,14 +386,15 @@ namespace Rawr.Tree
             float maintainedRegrowthCF = rotSettings.averageRegrowth * rot.regrowth.CastTime / rot.regrowth.Duration;
             #endregion
 
-            rot.RejuvCF = rotSettings.RejuvFraction + maintainedRejuvCF;
-            rot.RegrowthCF = rotSettings.RegrowthFraction + maintainedRegrowthCF;
-            rot.LifebloomCF = rotSettings.LifebloomFraction;
-            rot.NourishCF = rotSettings.NourishFraction;
+            rot.RejuvCF_unreduced = rot.RejuvCF = rotSettings.RejuvFraction + maintainedRejuvCF;
+            rot.RegrowthCF_unreduced = rot.RegrowthCF = rotSettings.RegrowthFraction + maintainedRegrowthCF;
+            rot.LifebloomCF_unreduced = rot.LifebloomCF = rotSettings.LifebloomFraction;
+            rot.NourishCF_unreduced = rot.NourishCF = rotSettings.NourishFraction;
                 
             #region Wild Growth
             // If talent isn't chosen disregard WildGrowth
             rot.WildGrowthCPM = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? rotSettings.WildGrowthPerMin : 0;
+            rot.WildGrowthCF_unreduced = rot.WildGrowthCF;
             #endregion
 
             #region Swiftmend
@@ -396,12 +410,14 @@ namespace Rawr.Tree
             {
                 rot.SwiftmendCPM = 0;
             }
+            rot.SwiftmendCF_unreduced = rot.SwiftmendCF;
             #endregion
 
             #region Mana regeneration
             rot.ReplenishmentUptime = calcOpts.ReplenishmentUptime / 100f; 
             rot.OutOfCombatFraction = 1f - .01f * calcOpts.FSRRatio;
-            rot.CalculateManaFromRevitalize = calcOpts.RejuvSelf && rotSettings.averageRejuv >= 1;
+            rot.RevitalizeFromRejuvenation = rotSettings.averageRejuv >= 1 ? (float)calcOpts.RejuvUptime / 100f : 0f;
+            rot.RevitalizeFromWildGrowth = (float)calcOpts.WGUptime / 100f;
             #endregion
 
             #region Mana potion
@@ -422,7 +438,7 @@ namespace Rawr.Tree
             rot.ManaPerInnervate *= Rawr.Tree.TreeConstants.BaseMana;
             #endregion
 
-            #region Nourish raw dps
+            #region Nourish raw hps
             float _hpct = rotSettings.nourish0 * rot.nourish[0].HPCT +
                 rotSettings.nourish1 * rot.nourish[1].HPCT +
                 rotSettings.nourish2 * rot.nourish[2].HPCT +
@@ -440,6 +456,7 @@ namespace Rawr.Tree
             // 5. Spells to be adjusted
 
             float IdleCF = calcOpts.IdleCastTimePercent / 100f;
+            rot.IdleCF_unreduced = IdleCF;
 
             if (rot.TotalCF + IdleCF > 1f)
             {
@@ -596,7 +613,7 @@ namespace Rawr.Tree
             nourish[3] = new Nourish(calculatedStats, stats, 3);
             nourish[4] = new Nourish(calculatedStats, stats, 4);
             Spell healingTouch = new HealingTouch(calculatedStats, stats);
-            WildGrowth wildGrowth = new WildGrowth(calculatedStats, stats);
+            //WildGrowth wildGrowth = new WildGrowth(calculatedStats, stats);
             #endregion
 
             #region Add latency
@@ -613,7 +630,7 @@ namespace Rawr.Tree
             nourish[3].latency = calcOpts.Latency / 1000f;
             nourish[4].latency = calcOpts.Latency / 1000f;
             healingTouch.latency = calcOpts.Latency / 1000f;
-            wildGrowth.latency = calcOpts.Latency / 1000f;
+            //wildGrowth.latency = calcOpts.Latency / 1000f;
             #endregion
             
             #region Setup Swiftmend
@@ -654,60 +671,79 @@ namespace Rawr.Tree
             }
             #endregion
 
+            Spell lifebloomSpell = null;
+
+            switch (calcOpts.LifebloomStackType)
+            {
+                case 0:
+                    lifebloomSpell = lifebloomSlowStack;
+                    break;
+                case 1:
+                    lifebloomSpell = lifebloomFastStack;
+                    break;
+                case 2:
+                    lifebloomSpell = lifebloomRollingStack;
+                    break;
+                default:
+                    // err...
+                    lifebloomSpell = lifebloom;
+                    break;
+            }
+
             float RejuvFraction = rejuvenate.CastTime / rejuvenate.Duration;
             float RegrowthFraction = regrowth.CastTime / regrowth.Duration;
-            float LifebloomFraction = lifebloomRollingStack.CastTime / lifebloomRollingStack.Duration;
+            float LifebloomFraction = lifebloomSpell.CastTime / lifebloomSpell.Duration;
 
             // RJ + N1 
-            SingleTargetBurstResult RjN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN, 
-                rejuvenate.HPSHoT, 0, 0, 0, (1f - RejuvFraction) * nourish[1].HPS);
+            SingleTargetBurstResult RjN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN,
+                RejuvFraction * rejuvenate.HPCT, 0, 0, 0, (1f - RejuvFraction) * nourish[1].HPCT);
             // RJ + LB + N2 
-            SingleTargetBurstResult RjLbN2 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN, 
-                rejuvenate.HPSHoT, 0, lifebloomRollingStack.HPSHoT, 0, (1f - RejuvFraction - LifebloomFraction) * nourish[2].HPS);
+            SingleTargetBurstResult RjLbN2 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN,
+                RejuvFraction * rejuvenate.HPCT, 0, LifebloomFraction * lifebloomSpell.HPCT, 0, (1f - RejuvFraction - LifebloomFraction) * nourish[2].HPCT);
             // RJ + RG + LB + N3 
             SingleTargetBurstResult RjRgLbN3 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN,
-                rejuvenate.HPSHoT, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, lifebloomRollingStack.HPSHoT, 0, 
-                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction) * nourish[3].HPS);
+                RejuvFraction * rejuvenate.HPCT, RegrowthFraction * regrowth.HPCT, LifebloomFraction * lifebloomSpell.HPCT, 0,
+                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction) * nourish[3].HPCT);
             // RJ + RG 
-            SingleTargetBurstResult RjRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg, 
-                rejuvenate.HPSHoT, (1f - RejuvFraction) * regrowthAgain.HPS, 0, 0, 0);
+            SingleTargetBurstResult RjRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg,
+                RejuvFraction * rejuvenate.HPCT, (1f - RejuvFraction) * regrowthAgain.HPCT_DH, 0, 0, 0);
             // RJ + LB + RG
-            SingleTargetBurstResult RjLbRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbRg, 
-                rejuvenate.HPSHoT, (1f - RejuvFraction - LifebloomFraction) * regrowthAgain.HPS, lifebloomRollingStack.HPSHoT, 0, 0);
+            SingleTargetBurstResult RjLbRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbRg,
+                RejuvFraction * rejuvenate.HPCT, (1f - RejuvFraction - LifebloomFraction) * regrowthAgain.HPCT_DH, LifebloomFraction * lifebloomSpell.HPCT, 0, 0);
             // RG
             SingleTargetBurstResult Rg = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg, 
                 0, regrowthAgain.HPS, 0, 0, 0);
             // RG + N1
             SingleTargetBurstResult RgN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN,
-                0, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, 0, 0, (1f - RegrowthFraction) * nourish[1].HPS);
+                0, RegrowthFraction * regrowth.HPCT, 0, 0, (1f - RegrowthFraction) * nourish[1].HPCT);
             // N0
             SingleTargetBurstResult N0 = new SingleTargetBurstResult(SingleTargetBurstRotations.N, 
                 0, 0, 0, 0, nourish[0].HPS);
 
             // RJ + N1 S
-            SingleTargetBurstResult RjN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN_s, 
-                rejuvenate.HPSHoT, 0, 0, swift2HPS, (1f - RejuvFraction - swift2Fraction) * nourish[1].HPS);
+            SingleTargetBurstResult RjN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN_s,
+                RejuvFraction * rejuvenate.HPCT, 0, 0, swift2HPS, (1f - RejuvFraction - swift2Fraction) * nourish[1].HPCT);
             // RJ + LB + N2 S
-            SingleTargetBurstResult RjLbN2S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN_s, 
-                rejuvenate.HPSHoT, 0, lifebloomRollingStack.HPSHoT, swift2HPS, 
-                (1f - RejuvFraction - LifebloomFraction - swift2Fraction) * nourish[2].HPS);
+            SingleTargetBurstResult RjLbN2S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN_s,
+                RejuvFraction * rejuvenate.HPCT, 0, LifebloomFraction * lifebloomSpell.HPCT, swift2HPS,
+                (1f - RejuvFraction - LifebloomFraction - swift2Fraction) * nourish[2].HPCT);
             // RJ + RG + LB + N3 S
             SingleTargetBurstResult RjRgLbN3S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN_s,
-                rejuvenate.HPSHoT, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, lifebloomRollingStack.HPSHoT, swift1HPS, 
-                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction - swift1Fraction) * nourish[3].HPS);
+                RejuvFraction * rejuvenate.HPCT, RegrowthFraction * regrowth.HPCT, LifebloomFraction * lifebloomSpell.HPCT, swift1HPS, 
+                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction - swift1Fraction) * nourish[3].HPCT);
             // RJ + RG S
-            SingleTargetBurstResult RjRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg_s, 
-                rejuvenate.HPSHoT, (1f - RejuvFraction - swift1Fraction) * regrowthAgain.HPS, 0, swift1HPS, 0);
+            SingleTargetBurstResult RjRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg_s,
+                RejuvFraction * rejuvenate.HPCT, (1f - RejuvFraction - swift1Fraction) * regrowthAgain.HPCT_DH, 0, swift1HPS, 0);
             // RJ + LB + RG S
-            SingleTargetBurstResult RjLbRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbRg_s, 
-                rejuvenate.HPSHoT, (1f - RejuvFraction - LifebloomFraction - swift1Fraction) * regrowthAgain.HPS, 
-                lifebloomRollingStack.HPSHoT, swift1HPS, 0);
+            SingleTargetBurstResult RjLbRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbRg_s,
+                RejuvFraction * rejuvenate.HPCT, (1f - RejuvFraction - LifebloomFraction - swift1Fraction) * regrowthAgain.HPCT_DH,
+                LifebloomFraction * lifebloomSpell.HPCT, swift1HPS, 0);
             // RG S
             SingleTargetBurstResult RgS = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg_s, 
-                0, (1f - swift3Fraction) * regrowthAgain.HPS, 0, swift3HPS, 0);
+                0, (1f - swift3Fraction) * regrowthAgain.HPCT_DH, 0, swift3HPS, 0);
             // RG + N1 S
             SingleTargetBurstResult RgN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN_s,
-                0, regrowth.HPSHoT + regrowth.AverageHealingwithCrit / regrowth.Duration, 0, swift3HPS, (1f - RegrowthFraction - swift3Fraction) * nourish[1].HPS);
+                0, RegrowthFraction * regrowth.HPCT, 0, swift3HPS, (1f - RegrowthFraction - swift3Fraction) * nourish[1].HPCT);
 
             SingleTargetBurstResult result = new SingleTargetBurstResult(SingleTargetBurstRotations.AutoSelect, 0, 0, 0, 0, 0);
 
