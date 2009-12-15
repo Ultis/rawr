@@ -125547,7 +125547,21 @@
     <DisplayId>0</DisplayId>
     <DisplaySlot>0</DisplaySlot>
     <IconPath>trade_herbalism</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>RejuvenationTick</Trigger>
+          <Stats>
+            <SpellPower>32</SpellPower>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>8</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
