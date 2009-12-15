@@ -356,7 +356,7 @@ applied and result is scaled down by 100)",
 					    "Mana sources (sustained)",
                         "Mana usage per spell (sustained)",
                         "Healing per spell (sustained)",
-                        "Casting time per spell (sustained)",
+                        "Casting time percentage per spell (sustained)",
                         "HPCT per spell",
                         "HPS per spell",
                         "HPM per spell",
@@ -719,8 +719,8 @@ applied and result is scaled down by 100)",
                     
                     return comparisonList.ToArray();
                 #endregion
-                #region Casting time per spell (sustained
-                case "Casting time per spell (sustained)":
+                #region Casting time percentage per spell (sustained)
+                case "Casting time percentage per spell (sustained)":
                     {
                         _subPointNameColors = _subPointNameColorsCF;
                         ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
