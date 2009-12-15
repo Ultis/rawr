@@ -527,22 +527,22 @@ namespace Rawr
                             case CharacterRace.Draenei:
                                 S.Strength = 121;
                                 S.Agility = 71;
-                                S.Stamina = 135;
-                                S.Intellect = 129;
+                                S.Stamina = 136;
+                                S.Intellect = 128;
                                 S.Spirit = 145;
                                 break;
                             case CharacterRace.Orc:
                                 S.Strength = 123;
                                 S.Agility = 71;
-                                S.Stamina = 138;
+                                S.Stamina = 137;
                                 S.Intellect = 125;
-                                S.Spirit = 146;
+                                S.Spirit = 145;
                                 break;
                             case CharacterRace.Tauren:
                                 S.Strength = 125;
-                                S.Agility = 69;
-                                S.Stamina = 138;
-                                S.Intellect = 123;
+                                S.Agility = 70;
+                                S.Stamina = 137;
+                                S.Intellect = 124;
                                 S.Spirit = 145;
                                 break;
                             case CharacterRace.Troll:
