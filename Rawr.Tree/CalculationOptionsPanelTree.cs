@@ -102,6 +102,9 @@ namespace Rawr.Tree {
 
             cbSingleTargetRotation.SelectedIndex = calcOpts.SingleTargetRotation;
 
+            cbIgnoreNaturesGrace.Checked = calcOpts.IgnoreNaturesGrace;
+            cbIgnoreAllHasteEffects.Checked = calcOpts.IgnoreAllHasteEffects;
+
             loading = false;
         }
         private float parseFloat(string s) {
