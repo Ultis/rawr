@@ -336,6 +336,7 @@ namespace Rawr.Moonkin
                 float burstDPS = accumulatedDamage / rot.Duration * percentTimeInRotation;
                 float sustainedDPS = burstDPS;
                 float timeToOOM = (manaPool / rot.RotationData.ManaUsed) * rot.Duration;
+                if (timeToOOM <= 0) timeToOOM = calcs.FightLength * 60.0f;   // Happens when ManaUsed is less than 0
                 if (timeToOOM < calcs.FightLength * 60.0f)
                 {
                     rot.RotationData.TimeToOOM = new TimeSpan(0, (int)(timeToOOM / 60), (int)(timeToOOM % 60));
