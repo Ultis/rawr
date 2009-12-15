@@ -25,7 +25,7 @@ namespace Rawr.Enhance
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.EnhSimStats;
             if(_character.ActiveBuffsContains("Master of Anatomy"))
-                stats.CritRating += 32;
+                stats.CritRating += 40;
             CombatStats cs = new CombatStats(character, stats, calcOpts);
             
             getSpecialsNames(character, stats);

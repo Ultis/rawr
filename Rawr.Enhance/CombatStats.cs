@@ -222,7 +222,8 @@ namespace Rawr.Enhance
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
-            chanceCrit         = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            // max crit chance 95.2% (ie 100% - 4.8% crit reduction) see http://elitistjerks.com/f31/t76785-crit_depression_combat_table/
+            chanceCrit         = Math.Min(1f - whiteCritDepression - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             chanceDodgeMH      = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
             chanceDodgeOH      = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);
             float ParryChance = ParryChanceCap - expertiseBonusMH;
