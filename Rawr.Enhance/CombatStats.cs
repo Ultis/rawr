@@ -314,12 +314,15 @@ namespace Rawr.Enhance
                 whiteHitsPerSOH = (1f - chanceWhiteMissOH - chanceDodgeOH) * swingsPerSOHMelee;
 
                 // Windfury model
-                float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
-                float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
-                float ineligibleSeconds = maxExpectedWFPerFight * (3.25f - hastedMHSpeed);
-                float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
-                wfProcsPerSecond = expectedWFPerFight / fightLength;
-                hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
+                if (_calcOpts.MainhandImbue == "Windfury")
+                {
+                    float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
+                    float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
+                    float ineligibleSeconds = maxExpectedWFPerFight * (3.25f - hastedMHSpeed);
+                    float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
+                    wfProcsPerSecond = expectedWFPerFight / fightLength;
+                    hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
+                }
                 yellowHitsPerSMH = hitsPerSWF + hitsPerSMHSS;
                 yellowHitsPerSOH = hitsPerSOHSS + hitsPerSLL;
                     
