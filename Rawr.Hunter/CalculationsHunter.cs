@@ -339,6 +339,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Special
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
+                DeathbringerProc = stats.DeathbringerProc,
                 FireDamage   = stats.FireDamage,
                 ArcaneDamage = stats.ArcaneDamage,
                 ShadowDamage = stats.ShadowDamage,
@@ -452,6 +453,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.HighestStat +
                 stats.Paragon +
                 stats.ManaorEquivRestore +
+                stats.DeathbringerProc +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusAttackPowerMultiplier +

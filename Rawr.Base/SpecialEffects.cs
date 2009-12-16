@@ -1266,7 +1266,7 @@ namespace Rawr {
             else if (line == "Your attacks have a chance to awaken the powers of the races of Northrend, temporarily transforming you and increasing your combat capabilities for 30 sec.")
             {
                 // Deathbringer's Will
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DeathbringerProc = ilvl == 277 ? 700 : 600 }, 30f, 90f, 0.15f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { DeathbringerProc = ilvl == 277 ? 700 : 600 }, 30f, 90f, 0.15f));
             }
             else if ((match = Regex.Match(line, @"When you deal damage you have a chance to gain (?<amount>\d+) attack power for 15 sec\.")).Success)
             {
