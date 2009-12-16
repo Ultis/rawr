@@ -51,8 +51,11 @@ namespace Rawr
                     if (oldItem.Id != selectedId)
                     {
                         // we changed the id of the item, sanitize the item cache
-                        ItemCache.Items.Remove(selectedId); // clean the entry at old id
-                        ItemCache.AddItem(oldItem); // insert it at the new id and clear whatever was at that id before
+                        lock (ItemCache.Items)
+                        {
+                            ItemCache.Items.Remove(selectedId); // clean the entry at old id
+                            ItemCache.AddItem(oldItem); // insert it at the new id and clear whatever was at that id before
+                        }
                     }
 				}
 

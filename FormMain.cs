@@ -1604,23 +1604,46 @@ namespace Rawr
 			StatusMessaging.UpdateStatus("Update All Items from Armory", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
-			for (int i = 0; i < ItemCache.AllItems.Length; i++)
+            ItemUpdater updater = new ItemUpdater(true, false, false);
+            int skippedItems = 0;
+            Item[] allItems = ItemCache.AllItems;
+            for (int i = 0; i < allItems.Length; i++)
 			{
-				Item item = ItemCache.AllItems[i];
-				string before = item.Stats.ToString();
-				StatusMessaging.UpdateStatus("Update All Items from Armory", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
-				if (item.Id < 90000)
-				{
-					Item newItem = Item.LoadFromId(item.Id, true, false, false);
+                Item item = allItems[i];
+                if (item.Id < 90000)
+                {
+                    updater.AddItem(i, item);
+                }
+                else
+                {
+                    skippedItems++;
+                }
+            }
 
-					string after = newItem.Stats.ToString();
-					if (before != after)
-					{
-						sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
-						sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
-						sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
-					}
-				}
+            updater.FinishAdding();
+
+            while (!updater.Done)
+            {
+                StatusMessaging.UpdateStatus("Update All Items from Armory", "Updating " + (skippedItems+updater.ItemsDone)  + " of " + updater.ItemsToDo + " items");
+                Thread.Sleep(1000);
+            }
+
+            for (int i = 0; i < allItems.Length; i++)
+            {
+                Item item = allItems[i];
+                Item newItem = updater[i];
+				
+                if (item.Id < 90000 && newItem != null)
+                {
+                    string before = item.Stats.ToString();
+                    string after = newItem.Stats.ToString();
+                    if (before != after)
+                    {
+                        sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
+                        sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
+                        sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
+                    }
+                }
 			}
 #if DEBUG
             if (sbChanges.Length > 0)
@@ -1629,7 +1652,7 @@ namespace Rawr
                 msgBox.Show(sbChanges.ToString());
             }
 #endif
-			StatusMessaging.UpdateStatusFinished("Update All Items");
+            StatusMessaging.UpdateStatusFinished("Update All Items from Armory");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
             _character.InvalidateItemInstances();
@@ -1641,28 +1664,45 @@ namespace Rawr
 			StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
-			for (int i = 0; i < ItemCache.AllItems.Length; i++)
-			{
-				Item item = ItemCache.AllItems[i];
-                string before = item.Stats.ToString();
-				StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
-				if (item.Id < 90000)
-				{
-					try
+
+            ItemUpdater updater = new ItemUpdater(true, true, usePTRDataToolStripMenuItem.Checked);
+            int skippedItems = 0;
+            Item[] allItems = ItemCache.AllItems;
+            for (int i = 0; i < allItems.Length; i++)
+            {
+                Item item = allItems[i];
+                if (item.Id < 90000)
+                {
+                    updater.AddItem(i, item);
+                }
+                else
+                {
+                    skippedItems++;
+                }
+            }
+
+            updater.FinishAdding();
+
+            while (!updater.Done)
+            {
+                StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + (skippedItems + updater.ItemsDone) + " of " + updater.ItemsToDo + " items");
+                Thread.Sleep(1000);
+            }
+            
+            for (int i = 0; i < allItems.Length; i++)
+            {
+                Item item = allItems[i];
+                Item newItem = updater[i];
+				
+                if (item.Id < 90000 && newItem != null)
+                {
+                    string before = item.Stats.ToString();
+                    string after = newItem.Stats.ToString();
+					if (before != after)
 					{
-                        Item newItem = Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTRDataToolStripMenuItem.Checked ? "ptr" : "www");
-						
-						string after = newItem.Stats.ToString();
-						if (before != after)
-						{
-							sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
-							sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
-							sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
-						}
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show(string.Format("Unable to update '{0}' due to an error: {1}\r\n\r\n{2}", item.Name, ex.Message, ex.StackTrace));
+						sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
+						sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
+						sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
 					}
 				}
 			}
@@ -1673,7 +1713,7 @@ namespace Rawr
                 msgBox.Show(sbChanges.ToString());
             }
 #endif
-			StatusMessaging.UpdateStatusFinished("Update All Items");
+            StatusMessaging.UpdateStatusFinished("Update All Items from Wowhead");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
             _character.InvalidateItemInstances();

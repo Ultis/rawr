@@ -61,7 +61,7 @@ namespace Rawr
 
 	public class ItemCacheInstance
 	{
-		public ItemCacheInstance() { }
+		public ItemCacheInstance() {  }
 		public ItemCacheInstance(ItemCacheInstance instanceToClone)
 		{
 #if RAWR3
@@ -69,10 +69,13 @@ namespace Rawr
 #else
             _items = new SortedDictionary<int, Item>();
 #endif
-            foreach (KeyValuePair<int, Item> kvp in instanceToClone.Items)
-			{
-                _items[kvp.Key] = kvp.Value;
-			}
+            lock (instanceToClone.Items)
+            {
+                foreach (KeyValuePair<int, Item> kvp in instanceToClone.Items)
+                {
+                    _items[kvp.Key] = kvp.Value;
+                }
+            }
 		}
 
 #if RAWR3
@@ -100,9 +103,12 @@ namespace Rawr
 
         public void InvalidateCachedStats()
         {
-            foreach (Item item in Items.Values)
+            lock (Items)
             {
-                item.InvalidateCachedData();
+                foreach (Item item in Items.Values)
+                {
+                    item.InvalidateCachedData();
+                }
             }
         }
 
@@ -111,7 +117,10 @@ namespace Rawr
 			if (id > 0)
 			{
 				Item item;
-                Items.TryGetValue(id, out item);
+                lock (Items)
+                {
+                    Items.TryGetValue(id, out item);
+                }
 				return item;
 			}
 			return null;
@@ -121,7 +130,10 @@ namespace Rawr
         {
             if (id > 0)
             {
-                return Items.ContainsKey(id);
+                lock (Items)
+                {
+                    return Items.ContainsKey(id);
+                }
             }
             return false;
         }
@@ -133,15 +145,18 @@ namespace Rawr
 			//Chasing the lies no one believed...
 
             Item cachedItem;
-            if (Items.TryGetValue(item.Id, out cachedItem))
+            lock (Items)
             {
-                cachedItem.Delete();
-            }
-            item.LastChange = DateTime.Now;
-            Items[item.Id] = item;
+                if (Items.TryGetValue(item.Id, out cachedItem))
+                {
+                    cachedItem.Delete();
+                }
+                item.LastChange = DateTime.Now;
+                Items[item.Id] = item;
 #if RAWR3
             Items.OrderBy(kvp => kvp.Key);
 #endif
+            }
 
 			if (raiseEvent) OnItemsChanged();
 			return item;
@@ -152,11 +167,14 @@ namespace Rawr
 		{
 			if (item != null)
 			{
-                Item cachedItem;
-                if (Items.TryGetValue(item.Id, out cachedItem))
+                lock (Items)
                 {
-                    cachedItem.Delete();
-                    Items.Remove(item.Id);
+                    Item cachedItem;
+                    if (Items.TryGetValue(item.Id, out cachedItem))
+                    {
+                        cachedItem.Delete();
+                        Items.Remove(item.Id);
+                    }
                 }
 			}
 			if (raiseEvent) OnItemsChanged();
@@ -169,7 +187,10 @@ namespace Rawr
 			{
 				if (_allItems == null)
 				{
-					_allItems = new List<Item>(Items.Values).ToArray();
+                    lock (Items)
+                    {
+                        _allItems = new List<Item>(Items.Values).ToArray();
+                    }
 				}
 				return _allItems;
 			}
@@ -261,9 +282,12 @@ namespace Rawr
                 foreach (var kvp in data)
                 {
                     Item item;
-                    if (Items.TryGetValue(kvp.Key, out item))
+                    lock (Items)
                     {
-                        item.Cost = kvp.Value;
+                        if (Items.TryGetValue(kvp.Key, out item))
+                        {
+                            item.Cost = kvp.Value;
+                        }
                     }
                 }
                 // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.

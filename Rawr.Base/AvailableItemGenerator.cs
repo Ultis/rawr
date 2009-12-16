@@ -825,10 +825,13 @@ namespace Rawr.Optimizer
 
 		private void PopulateAvailableIds(bool positiveCostItemsAvailable)
 		{
-			foreach (Item citem in ItemCache.Items.Values)
-			{
-				citem.AvailabilityInformation = null;
-			}
+            lock (ItemCache.Items)
+            {
+                foreach (Item citem in ItemCache.Items.Values)
+                {
+                    citem.AvailabilityInformation = null;
+                }
+            }
 
 			List<string> itemIds = new List<string>(availableItems);
 			List<string> removeIds = new List<string>();
@@ -928,16 +931,19 @@ namespace Rawr.Optimizer
             if (positiveCostItemsAvailable)
             {
                 // add items that have positive cost and are not available yet in any form
-                foreach (Item citem in ItemCache.Items.Values)
+                lock (ItemCache.Items)
                 {
-                    if (citem.Cost > 0.0f)
+                    foreach (Item citem in ItemCache.Items.Values)
                     {
-                        string key = citem.Id.ToString();
-                        if (!gemmedIdMap.ContainsKey(key))
+                        if (citem.Cost > 0.0f)
                         {
-                            var map = new Dictionary<string, bool>();
-                            gemmedIdMap[key] = map;
-                            map["C" + key + ".*.*.*.*"] = true;
+                            string key = citem.Id.ToString();
+                            if (!gemmedIdMap.ContainsKey(key))
+                            {
+                                var map = new Dictionary<string, bool>();
+                                gemmedIdMap[key] = map;
+                                map["C" + key + ".*.*.*.*"] = true;
+                            }
                         }
                     }
                 }
