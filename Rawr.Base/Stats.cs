@@ -1997,7 +1997,7 @@ namespace Rawr {
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Percentage]
-        [DisplayName("Clearcast On Bleed Chance")]
+        [DisplayName("% chance to proc Clearcast On Bleed Damage")]
         [Category("Feral")]
 		public float ClearcastOnBleedChance
 		{
