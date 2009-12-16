@@ -184,11 +184,15 @@ namespace Rawr.Enhance
 
         public float GetMHUptime()
         {
+            if (mainHandEnchant != null && mainHandEnchant.Trigger == Trigger.SpellHit)
+                return mainHandEnchant.GetAverageUptime(_cs.HastedMHSpeed, _cs.ChanceSpellHit, _cs.UnhastedMHSpeed, _cs.FightLength);
             return mainHandEnchant == null ? 0f : mainHandEnchant.GetAverageUptime(_cs.HastedMHSpeed, _cs.ChanceMeleeHit, _cs.UnhastedMHSpeed, _cs.FightLength);
         }
 
         public float GetOHUptime()
         {
+            if (offHandEnchant != null && offHandEnchant.Trigger == Trigger.SpellHit)
+                return offHandEnchant.GetAverageUptime(_cs.HastedOHSpeed, _cs.ChanceSpellHit, _cs.UnhastedOHSpeed, _cs.FightLength);
             return offHandEnchant == null ? 0f : offHandEnchant.GetAverageUptime(_cs.HastedOHSpeed, _cs.ChanceMeleeHit, _cs.UnhastedOHSpeed, _cs.FightLength);
         }
 
