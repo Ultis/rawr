@@ -198,6 +198,8 @@ namespace Rawr.DPSWarr {
 
         public virtual void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalculations) {
             _needDisplayCalcs = needsDisplayCalculations;
+            AbilWrapper AW = GetWrapper<SpellDamageEffect>();
+            AW.numActivates = AW.ability.Activates;
         }
 
         protected virtual void initAbilities() {
@@ -254,6 +256,11 @@ namespace Rawr.DPSWarr {
             AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
 
             DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+
+            Ability Bryntroll = new SpellDamageEffect(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AbilWrapper AW = new AbilWrapper(Bryntroll);
+            AddAbility(new AbilWrapper(Bryntroll));
+            
         }
 
         private void AddAbility(AbilWrapper abilWrapper)

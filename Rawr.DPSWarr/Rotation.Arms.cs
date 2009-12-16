@@ -85,6 +85,7 @@ namespace Rawr.DPSWarr {
 
             calcDeepWounds();
             _DPS_TTL += DW.TickSize;
+            _DPS_TTL += GetWrapper<Skills.SpellDamageEffect>().DPS;
 
             //if (_needDisplayCalcs) { GCDUsage += "\n" + availGCDs.ToString("000") + " : Avail GCDs"; }
 

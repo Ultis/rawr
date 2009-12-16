@@ -828,7 +828,7 @@ namespace Rawr
 
             XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/containerObjects/object[1]");
 
-            Heroic = subNode.Attributes["heroic"].Value == "1";
+            Heroic = (subNode.Attributes["heroic"] != null && subNode.Attributes["heroic"].Value == "1");
             Area = /*(Heroic ? "Heroic " : "") +*/ subNode.Attributes["area"].Value;
 			if (Area.Contains("(25)") && !Area.StartsWith("Heroic "))
 			{

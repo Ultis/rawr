@@ -148,6 +148,7 @@ These numbers to do not include racial bonuses.",
                         "DPS Breakdown (General):Cleave",
                         "DPS Breakdown (General):White DPS",
                         "DPS Breakdown (General):Execute*<20% Spamming only",
+                        "DPS Breakdown (General):Spell Damage Procs*Such as from Bryntroll or Shadowmourne",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
                       
@@ -390,6 +391,8 @@ These numbers to do not include racial bonuses.",
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
+                DeathbringerProc = stats.DeathbringerProc,
+                ShadowDamage = stats.ShadowDamage,
                 // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
@@ -477,6 +480,8 @@ These numbers to do not include racial bonuses.",
                 stats.HighestStat +
                 stats.Paragon +
                 stats.ManaorEquivRestore +
+                stats.DeathbringerProc +
+                stats.ShadowDamage +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusStrengthMultiplier +
@@ -1220,16 +1225,26 @@ These numbers to do not include racial bonuses.",
                 
             float fightDuration = calcOpts.Duration;
 
-            SpecialEffect bersMainHand = null;
-            SpecialEffect bersOffHand = null;
+            List<SpecialEffect> bersMainHand = new List<SpecialEffect>();
+            List<SpecialEffect> bersOffHand = new List<SpecialEffect>();
 
             if (character.MainHandEnchant != null/* && character.MainHandEnchant.Id == 3789*/) { // 3789 = Berserker Enchant ID, but now supporting other proc effects as well
                 Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
-                if (mhEffects.MoveNext()) { bersMainHand = mhEffects.Current; }
+                if (mhEffects.MoveNext()) { bersMainHand.Add(mhEffects.Current); }
+            }
+            if (character.MainHand != null && character.MainHand.Item.Stats._rawSpecialEffectData != null)
+            {
+                Stats.SpecialEffectEnumerator mhEffects = character.MainHand.Item.Stats.SpecialEffects();
+                if (mhEffects.MoveNext()) { bersMainHand.Add(mhEffects.Current); }
             }
             if (combatFactors.useOH && character.OffHandEnchant != null /*&& character.OffHandEnchant.Id == 3789*/) {
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
-                if (ohEffects.MoveNext()) { bersOffHand = ohEffects.Current; }
+                if (ohEffects.MoveNext()) { bersOffHand.Add(ohEffects.Current); }
+            }
+            if (character.OffHand != null && character.OffHand.Item.Stats._rawSpecialEffectData != null)
+            {
+                Stats.SpecialEffectEnumerator ohEffects = character.OffHand.Item.Stats.SpecialEffects();
+                if (ohEffects.MoveNext()) { bersOffHand.Add(ohEffects.Current); }
             }
             if (statType == StatType.Average)
             {
@@ -1246,14 +1261,30 @@ These numbers to do not include racial bonuses.",
             // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
             //combatFactors.StatS = statsTotal;
             Stats bersStats = new Stats();
-            if (bersMainHand != null) {
-                // berserker enchant id
-                float f = bersMainHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
-                bersStats.Accumulate(bersMainHand.Stats, f);
+            foreach (SpecialEffect e in bersMainHand)
+            {
+                if (e.Duration == 0)
+                {
+                    bersStats.ShadowDamage = e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                }
+                else
+                {
+                    // berserker enchant id
+                    float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats.Accumulate(e.Stats, f);
+                }
             }
-            if (bersOffHand != null) {
-                float f = bersOffHand.GetAverageUptime( fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
-                bersStats.Accumulate(bersOffHand.Stats, f);    
+            foreach (SpecialEffect e in bersOffHand)
+            {
+                if (e.Duration == 0)
+                {
+                    bersStats.ShadowDamage += e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                }
+                else
+                {
+                    float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats.Accumulate(e.Stats, f);
+                }
             }
             combatFactors.StatS = UpdateStatsAndAdd(bersStats, combatFactors.StatS, character);
             combatFactors.InvalidateCache();
@@ -1261,14 +1292,23 @@ These numbers to do not include racial bonuses.",
         }
 
         private void DoSpecialEffects(Character Char, Rotation Rot, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts,
-            SpecialEffect bersMainHand, SpecialEffect bersOffHand,
+            List<SpecialEffect> bersMainHand, List<SpecialEffect> bersOffHand,
             Stats statsTotal)
         {
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 effect.Stats.GenerateSparseData();
-                if (effect != bersMainHand && effect != bersOffHand &&
+                if (effect.Stats.DeathbringerProc > 0f)
+                {
+                    SpecialEffect proc1 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, Strength = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
+                    SpecialEffect proc2 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, CritRating = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
+                    SpecialEffect proc3 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, ArmorPenetrationRating = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
+                    secondPass.Add(proc1); // strength and arp go in second pass
+                    firstPass.Add(proc2); // crit rating goes in first pass
+                    secondPass.Add(proc3);
+                }
+                if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
                    (effect.Stats.Agility > 0f ||
                     effect.Stats.HasteRating > 0f ||
                     effect.Stats.HitRating > 0f ||
@@ -1277,7 +1317,7 @@ These numbers to do not include racial bonuses.",
                     effect.Stats.PhysicalCrit > 0f ||
                     effect.Stats.PhysicalHit > 0f)) {
                     firstPass.Add(effect);
-                } else if (effect != bersMainHand && effect != bersOffHand) {
+                } else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect)) {
                     secondPass.Add(effect);
                 }
             }
@@ -1361,7 +1401,7 @@ These numbers to do not include racial bonuses.",
         private enum SpecialEffectDataType { AverageStats, UpTime };
         private float ApplySpecialEffect(SpecialEffect effect, Character character, Rotation rotation, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts, float avoidedAttacks, ref Stats applyTo) {
             float fightDuration = calcOpts.Duration;
-            float fightDuration2Pass = calcOpts.SE_UseDur ? fightDuration : 0;
+            float fightDuration2Pass = (calcOpts.SE_UseDur && effect.Stats.DeathbringerProc == 0) ? fightDuration : 0;
 
             float attempted = rotation.AttemptedAtksOverDur;
             float land = rotation.LandedAtksOverDur;
@@ -1384,6 +1424,10 @@ These numbers to do not include racial bonuses.",
             float critRate = crit / attempted;
 
             Stats effectStats = effect.Stats;
+            if (effect.Duration == 0f)
+            {
+                int j = 0;
+            }
             float upTime = 0f;
             //float avgStack = 1f;
 
@@ -1403,7 +1447,14 @@ These numbers to do not include racial bonuses.",
                     break;
                 case Trigger.MeleeHit:
                 case Trigger.PhysicalHit:
-                    upTime = effect.GetAverageStackSize(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.Duration == 0f)
+                    {
+                        upTime = effect.GetAverageProcsPerSecond(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    }
+                    else
+                    {
+                        upTime = effect.GetAverageStackSize(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    }
                     break;
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
@@ -1428,8 +1479,12 @@ These numbers to do not include racial bonuses.",
                     upTime = effect.GetAverageStackSize(dwbleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
             }
-            if (upTime > 0f && upTime <= effect.MaxStack) {
-                applyTo.Accumulate(effectStats, upTime);
+            if (upTime > 0f) {
+                if (effect.Duration == 0f)
+                    applyTo.ShadowDamage = upTime;
+                else if (upTime <= effect.MaxStack)
+                    applyTo.Accumulate(effectStats, upTime);
+
                 return upTime;
             }
             return 0f;
@@ -1437,6 +1492,10 @@ These numbers to do not include racial bonuses.",
 
         private static Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
         {
+            if (statsToAdd.ShadowDamage > 0)
+            {
+                int j = 0;
+            }
             Stats retVal;
             float newStaMult = 1f + statsToAdd.BonusStaminaMultiplier;
             float newStrMult = 1f + statsToAdd.BonusStrengthMultiplier;

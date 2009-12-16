@@ -825,5 +825,60 @@ namespace Rawr.DPSWarr.Skills
         }
         public float StackCap;
     }
+
+    public class SpellDamageEffect : Ability
+    {
+        public SpellDamageEffect(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Spell Damage Procs";
+            Description = "For weapon procs that have a damaging component";
+            StanceOkFury = StanceOkDef = StanceOkArms = true;
+            ReqMeleeRange = true;
+            ReqMeleeWeap = true;
+            //Targets += StatS.BonusTargets;
+            Cd = 1f / StatS.ShadowDamage;
+            UseHitTable = true;
+            UsesGCD = false;
+            UseSpellHit = true;
+            CanBeBlocked = CanBeDodged = CanBeParried = CanCrit = false;
+            
+            //
+            Initialize();
+        }
+
+        public override float DamageOverride
+        {
+            get
+            {
+                if (StatS.ShadowDamage == 0) return 0f;
+                float dmg;
+                if (Char.MainHand.Item.Stats._rawSpecialEffectDataSize != 0) dmg = Char.MainHand.Item.Stats._rawSpecialEffectData[0].Stats.ShadowDamage;
+                else if (Char.OffHand.Item.Stats._rawSpecialEffectDataSize != 0) dmg = Char.OffHand.Item.Stats._rawSpecialEffectData[0].Stats.ShadowDamage;
+                else return 0f;
+                dmg *= 1f + StatS.BonusDamageMultiplier;
+
+                // Work the Attack Table
+                float dmgDrop = (1f
+                    - MHAtkTable.Miss   // no damage when being missed
+                    - MHAtkTable.Dodge  // no damage when being dodged
+                    - MHAtkTable.Parry  // no damage when being parried
+                    - MHAtkTable.Glance // glancing handled below
+                    - MHAtkTable.Block  // blocked handled below
+                    - MHAtkTable.Crit); // crits   handled below
+
+                float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                float dmgBlock = dmg * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                float dmgCrit = dmg * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+
+                dmg *= dmgDrop;
+
+                dmg += /*dmgGlance +*/ dmgBlock + dmgCrit;
+
+                return dmg;
+            }
+        }
+    }
     #endregion
 }

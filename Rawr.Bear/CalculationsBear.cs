@@ -395,6 +395,7 @@ the Threat Scale defined on the Options tab.",
 		{
             cacheChar = character;
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+            if (calcOpts == null) calcOpts = new CalculationOptionsBear();
 			int targetLevel = calcOpts.TargetLevel;
 			int characterLevel = character.Level;
 			Stats stats = GetCharacterStats(character, additionalItem);
@@ -545,6 +546,7 @@ the Threat Scale defined on the Options tab.",
         private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, Character character)
         {
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+            if (calcOpts == null) calcOpts = new CalculationOptionsBear();
 			DruidTalents talents = character.DruidTalents;
 
 			//Establish base multipliers and chances
@@ -760,6 +762,7 @@ the Threat Scale defined on the Options tab.",
 		{
             cacheChar = character;
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+            if (calcOpts == null) calcOpts = new CalculationOptionsBear();
             Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Bear);
 			
 			/* TODO:
