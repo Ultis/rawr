@@ -1112,13 +1112,30 @@ These numbers to do not include racial bonuses.",
 
         private Stats GetCharacterStats_Buffed(Character character, Item additionalItem, CalculationOptionsDPSWarr calcOpts, bool isBuffed) {
             cacheChar = character;
-            if (calcOpts == null) 
-                calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+            if (calcOpts == null) { calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; }
             WarriorTalents talents = character.WarriorTalents;
 
+            #region From Race
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
+            #endregion
+            #region From Gear/Buffs
             Stats statsBuffs = (isBuffed ? GetBuffsStats(character, calcOpts) : new Stats());
             Stats statsItems = GetItemStats(character, additionalItem);
+            if (statsItems._rawSpecialEffectData != null) {
+                foreach (SpecialEffect effect in statsItems._rawSpecialEffectData) {
+                    if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0)
+                    {
+                        statsItems.RemoveSpecialEffect(effect);
+                        List<SpecialEffect> new2add = SpecialEffects.GetDeathBringerEffects(character.Class, effect.Stats.DeathbringerProc);
+                        foreach (SpecialEffect e in new2add) {
+                            e.Stats.DeathbringerProc = 1;
+                            statsItems.AddSpecialEffect(e);
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region From Options
             Stats statsOptionsPanel = new Stats()
             {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
@@ -1127,6 +1144,8 @@ These numbers to do not include racial bonuses.",
                             + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
                 DamageTakenMultiplier = (calcOpts.FuryStance ? 0.05f : 0f),
             };
+            #endregion
+            #region From Talents
             Stats statsTalents = new Stats() {
                 // Offensive
                 BonusDamageMultiplier = (character.MainHand == null ? 0f :
@@ -1180,6 +1199,7 @@ These numbers to do not include racial bonuses.",
                     30f, 3f * 60f * (1f - 1f / 9f * talents.IntensifyRage));
                 statsTalents.AddSpecialEffect(death);
             }
+            #endregion
 
             /*Stats statsGearEnchantsBuffs = new Stats();
             statsGearEnchantsBuffs.Accumulate(statsItems);
@@ -1299,7 +1319,7 @@ These numbers to do not include racial bonuses.",
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 effect.Stats.GenerateSparseData();
-                if (effect.Stats.DeathbringerProc > 0f)
+                /*if (effect.Stats.DeathbringerProc > 0f)
                 {
                     SpecialEffect proc1 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, Strength = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
                     SpecialEffect proc2 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, CritRating = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
@@ -1307,7 +1327,7 @@ These numbers to do not include racial bonuses.",
                     secondPass.Add(proc1); // strength and arp go in second pass
                     firstPass.Add(proc2); // crit rating goes in first pass
                     secondPass.Add(proc3);
-                }
+                }*/
                 if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
                    (effect.Stats.Agility > 0f ||
                     effect.Stats.HasteRating > 0f ||
@@ -1342,15 +1362,17 @@ These numbers to do not include racial bonuses.",
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
+                int LevelDif = calcOpts.TargetLevel - Char.Level;
+
                 foreach (SpecialEffect effect in specialEffects) {
                     if (effect.Stats.ArmorPenetrationRating > 0) {
                         float arpenBuffs =
                             ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
                             (!calcOpts.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
-                        float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[calcOpts.TargetLevel - Char.Level],
+                        float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
                             originalStats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating);
-                        float ProccedArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[calcOpts.TargetLevel - Char.Level],
+                        float ProccedArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
                             originalStats.ArmorPenetration + effect.Stats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating + effect.Stats.ArmorPenetrationRating);
 
                         Stats dummyStats = new Stats();
@@ -1358,7 +1380,7 @@ These numbers to do not include racial bonuses.",
 
                         float targetReduction = ProccedArmorReduction * procUptime + OriginalArmorReduction * (1f - procUptime);
                         //float arpDiff = OriginalArmorReduction - targetReduction;
-                        float procArp = StatConversion.GetRatingFromArmorReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level],
+                        float procArp = StatConversion.GetRatingFromArmorReduction(Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
                             originalStats.ArmorPenetration, arpenBuffs, targetReduction);
                         statsProcs.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);
                     } else if (effect.Stats.ManaorEquivRestore > 0f) {

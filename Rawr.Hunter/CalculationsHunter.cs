@@ -2368,14 +2368,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 Stats statsItems = GetItemStats(character, additionalItem);
                 if(statsItems._rawSpecialEffectData != null){
                     foreach (SpecialEffect effect in statsItems._rawSpecialEffectData) {
-                        if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0)
-                        {
+                        if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0) {
                             statsItems.RemoveSpecialEffect(effect);
                             List<SpecialEffect> new2add = SpecialEffects.GetDeathBringerEffects(character.Class, effect.Stats.DeathbringerProc);
-                            if (new2add.Count > 0) {
-                                statsItems.AddSpecialEffect(new2add[0]);
-                                statsItems.AddSpecialEffect(new2add[1]);
-                                statsItems.AddSpecialEffect(new2add[2]);
+                            foreach (SpecialEffect e in new2add) {
+                                e.Stats.DeathbringerProc = 1;
+                                statsItems.AddSpecialEffect(e);
                             }
                         }
                     }
@@ -2670,9 +2668,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
             Stats statsProcs = new Stats();
-            float fightDuration = calcOpts.Duration;
+            float fightDuration_M = calcOpts.Duration;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
+                float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
                 float oldArp = effect.Stats.ArmorPenetrationRating;
                 if (effect.Stats.ArmorPenetrationRating > 0) {
                     float arpenBuffs = 0.0f;
