@@ -2171,7 +2171,7 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3875</Id>
+    <Id>2986</Id>
     <Name>Lesser Inscription of the Axe</Name>
     <Slot>Shoulders</Slot>
     <Stats>
@@ -2207,7 +2207,7 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3876</Id>
+    <Id>2978</Id>
     <Name>Lesser Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
@@ -2474,27 +2474,11 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3878</Id>
-    <Name>Mind Amplification Dish</Name>
-    <Slot>Head</Slot>
-    <Stats>
-      <Stamina>45</Stamina>
-    </Stats>
-  </Enchant>
-  <Enchant>
     <Id>3859</Id>
     <Name>Springy Arachnoweave</Name>
     <Slot>Back</Slot>
     <Stats>
       <SpellPower>27</SpellPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3605</Id>
-    <Name>Flexweave Underlay</Name>
-    <Slot>Back</Slot>
-    <Stats>
-      <Agility>23</Agility>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2620,6 +2604,40 @@
     </Stats>
   </Enchant>
   <Enchant>
+    <Id>3878</Id>
+    <Name>Mind Amplification Dish</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>45</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3605</Id>
+    <Name>Flexweave Underlay</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <Agility>23</Agility>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3875</Id>
+    <Name>Lesser Inscription of the Axe</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <AttackPower>30</AttackPower>
+      <CritRating>10</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3876</Id>
+    <Name>Lesser Inscription of the Pinnacle</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <DodgeRating>15</DodgeRating>
+      <DefenseRating>10</DefenseRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
     <Id>3790</Id>
     <Name>Black Magic</Name>
     <Slot>OneHand</Slot>
@@ -2637,6 +2655,15 @@
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3883</Id>
+    <Name>Rune of the Nerubian Carapace</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <Defense>13</Defense>
+      <BonusStaminaMultiplier>0.01</BonusStaminaMultiplier>
     </Stats>
   </Enchant>
 </ArrayOfEnchant>
