@@ -933,7 +933,7 @@ namespace Rawr
                     BonusSpiritMultiplier = 0.08f,
                     BonusStaminaMultiplier = 0.08f
                 },
-                ConflictingBuffs = new List<string>(new string[] { "Blessing of Kings" })
+                ConflictingBuffs = new List<string>(new string[] { "Blessing of Kings", "Blessing of Kings (Str/Sta Bonus)" })
             });
             #endregion
 

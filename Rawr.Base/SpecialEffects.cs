@@ -1266,7 +1266,7 @@ namespace Rawr {
             else if (line == "Your attacks have a chance to awaken the powers of the races of Northrend, temporarily transforming you and increasing your combat capabilities for 30 sec.")
             {
                 // Deathbringer's Will
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { DeathbringerProc = ilvl == 277 ? 700 : 600 }, 30f, 90f, 0.15f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { DeathbringerProc = ilvl == 277 ? 700 : 600 }, 30f, 105f, 0.15f));
             }
             else if ((match = Regex.Match(line, @"When you deal damage you have a chance to gain (?<amount>\d+) attack power for 15 sec\.")).Success)
             {
@@ -2081,7 +2081,7 @@ namespace Rawr {
         /// <returns>List of Special Effects relevant to your class. Will be a list of 3 items or 0 if passing an invalid class.</returns>
         public static List<SpecialEffect> GetDeathBringerEffects(CharacterClass Class, float value) {
             List<SpecialEffect> retVal = new List<SpecialEffect>();
-            float dur = 30f, cd = 90 * 3, ch = 0.15f;
+            float dur = 30f, cd = 105 * 3, ch = 0.15f;
 
             SpecialEffect procSTR   = new SpecialEffect(Trigger.PhysicalHit, new Stats { Strength               = value }, dur, cd, ch);
             SpecialEffect procCrit  = new SpecialEffect(Trigger.PhysicalHit, new Stats { CritRating             = value }, dur, cd, ch);
