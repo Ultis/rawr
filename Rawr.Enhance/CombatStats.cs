@@ -306,6 +306,7 @@ namespace Rawr.Enhance
             float whiteHitsPerSOH = 0f;
             float yellowHitsPerSMH = 0f;
             float yellowHitsPerSOH = 0f;
+            float flameTongueHitsPerSecond = 0f;
             for (int i = 0; i < 5; i++)
             {
                 // float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
@@ -349,8 +350,11 @@ namespace Rawr.Enhance
 
                 // Elemental Devastation Uptime calc
                 staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
-                spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond;
-                float couldCritSpellsPerS = spellAttacksPerSec * (1f - chanceSpellMiss);
+                flameTongueHitsPerSecond = (_calcOpts.MainhandImbue == "Flametongue" ? HitsPerSMH : 0f) +
+                    ((_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1) ? HitsPerSOH : 0f);
+                spellAttacksPerSec = (1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond + flameTongueHitsPerSecond)
+                                   * (1f - chanceSpellMiss);
+                float couldCritSpellsPerS = spellAttacksPerSec - staticShocksPerSecond; // LS procs from Static Shock cannot crit
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
                 averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f + edUptime * edCritBonus;
             }
