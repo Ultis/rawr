@@ -533,6 +533,22 @@ These numbers to do not include racial bonuses.",
                 ) > 0) {
                 retVal = true;
             }
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.MeleeCrit ||
+                    effect.Trigger == Trigger.MeleeHit ||
+                    effect.Trigger == Trigger.PhysicalCrit ||
+                    effect.Trigger == Trigger.PhysicalHit ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageTaken ||
+                    effect.Trigger == Trigger.DamageAvoided ||
+                    effect.Trigger == Trigger.HSorSLHit)
+                {
+                    retVal |= HasSurvivabilityStats(effect.Stats);
+                    if (retVal) break;
+                }
+            }
             return retVal;
         }
 
@@ -1028,7 +1044,7 @@ These numbers to do not include racial bonuses.",
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
                 if (stats.HealthRestoreFromMaxHealth > 0) {
-                    //stats.HealthRestore += 
+                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth * stats.Health * calcOpts.Duration;
                 }
 
                 float Health2Surv  = (stats.Health) / 100f; 
