@@ -2366,6 +2366,20 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #region From Gear/Buffs
                 Stats statsBuffs = GetBuffsStats(character, calcOpts);
                 Stats statsItems = GetItemStats(character, additionalItem);
+                if(statsItems._rawSpecialEffectData != null){
+                    foreach (SpecialEffect effect in statsItems._rawSpecialEffectData) {
+                        if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0)
+                        {
+                            statsItems.RemoveSpecialEffect(effect);
+                            List<SpecialEffect> new2add = SpecialEffects.GetDeathBringerEffects(character.Class, effect.Stats.DeathbringerProc);
+                            if (new2add.Count > 0) {
+                                statsItems.AddSpecialEffect(new2add[0]);
+                                statsItems.AddSpecialEffect(new2add[1]);
+                                statsItems.AddSpecialEffect(new2add[2]);
+                            }
+                        }
+                    }
+                }
                 #endregion
                 #region From Options
                 Stats statsOptionsPanel = new Stats() {
@@ -2697,14 +2711,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         break;
                     case Trigger.MeleeCrit: // Pets Only
                         if (petattemptedAtksInterval[0] > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[0], critRates[1], speed, fightDuration);
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[0], Math.Min(1f, critRates[1]), speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
                     case Trigger.RangedCrit:
                     case Trigger.PhysicalCrit:
                         if (attemptedAtkInterval[0] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval[0], critRates[0], speed, fightDuration);
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval[0], Math.Min(1f, critRates[0]), speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
@@ -2728,7 +2742,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         break;
                     case Trigger.PetClawBiteSmackCrit:
                         if (petattemptedAtksInterval[3] > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[3], critRates[1], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[3], Math.Min(1f, critRates[1]), speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs += add;
                         }
                         break;

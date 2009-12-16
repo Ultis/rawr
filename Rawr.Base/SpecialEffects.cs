@@ -2071,7 +2071,43 @@ namespace Rawr {
             }
         }
 
+        #region Specialized Items that need Extra Handling
+        #region DeathBringer's Will (264 & 277)
+        /// <summary>
+        /// Special Handler for Deathbringer's Will to be call from INSIDE the model.
+        /// </summary>
+        /// <param name="Class">The class of the character</param>
+        /// <param name="value">The current stats.DeathBringerProc value</param>
+        /// <returns>List of Special Effects relevant to your class. Will be a list of 3 items or 0 if passing an invalid class.</returns>
+        public static List<SpecialEffect> GetDeathBringerEffects(CharacterClass Class, float value) {
+            List<SpecialEffect> retVal = new List<SpecialEffect>();
+            float dur = 30f, cd = 90 * 3, ch = 0.15f;
+
+            SpecialEffect procSTR   = new SpecialEffect(Trigger.PhysicalHit, new Stats { Strength               = value }, dur, cd, ch);
+            SpecialEffect procCrit  = new SpecialEffect(Trigger.PhysicalHit, new Stats { CritRating             = value }, dur, cd, ch);
+            SpecialEffect procArP   = new SpecialEffect(Trigger.PhysicalHit, new Stats { ArmorPenetrationRating = value }, dur, cd, ch);
+            SpecialEffect procHaste = new SpecialEffect(Trigger.PhysicalHit, new Stats { HasteRating            = value }, dur, cd, ch);
+            SpecialEffect procAGI   = new SpecialEffect(Trigger.PhysicalHit, new Stats { Agility                = value }, dur, cd, ch);
+            SpecialEffect procAP    = new SpecialEffect(Trigger.PhysicalHit, new Stats { AttackPower            = value * 2 }, dur, cd, ch);
+
+            switch (Class) {
+                case CharacterClass.Warrior:     retVal.Add(procSTR); retVal.Add(procArP);   retVal.Add(procCrit);  break;
+                case CharacterClass.Rogue:       retVal.Add(procAGI); retVal.Add(procArP);   retVal.Add(procAP);    break;
+                case CharacterClass.Paladin:     retVal.Add(procSTR); retVal.Add(procHaste); retVal.Add(procCrit);  break;
+                case CharacterClass.Hunter:      retVal.Add(procAP ); retVal.Add(procAGI);   retVal.Add(procCrit);  break;
+                case CharacterClass.DeathKnight: retVal.Add(procSTR); retVal.Add(procCrit);  retVal.Add(procHaste); break;
+                case CharacterClass.Druid:       retVal.Add(procArP); retVal.Add(procSTR);   retVal.Add(procAGI);   break;
+                case CharacterClass.Shaman:      retVal.Add(procAGI); retVal.Add(procAP);    retVal.Add(procCrit);  break;
+                default: break; // None
+            }
+
+            return retVal;
+        }
+        #endregion
+        #endregion
+
         public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown) { return EvalRegex(statName, amount, duration, ability, cooldown, 1f); }
+
         /// <summary>
         /// For those objects that have a special effect trigger (As opposed to just straight stat upgrades)
         /// This allows you to pass in a statName, amount, duration, trigger type, and cooldown and get a SpecialEffect back.
@@ -2141,7 +2177,6 @@ namespace Rawr {
             return new SpecialEffect(trigger, s, duration, cooldown, chance);
 
         }
-
 
         /// <summary>
         /// For those objects that have a special effect trigger (As opposed to just straight stat upgrades)
