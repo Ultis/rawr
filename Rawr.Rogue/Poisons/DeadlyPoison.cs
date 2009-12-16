@@ -23,9 +23,9 @@ namespace Rawr.Rogue.Poisons
             baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
             baseDamage *= (1f - combatFactors.PoisonDamageReduction);
 
-            float countEnve = 0;
-            float timeEnvnProc = 0;
-            float consumeDP = 0;
+            float countEnve = 0;// Number of Envenoms used
+            float timeEnvnProc = 0;//Envenom uptime
+            float consumeDP = 0;// Number of DP Stacks lost due to Envenom
 
             foreach (CycleComponent comp in calcOpts.DpsCycle.Components)
             {
@@ -34,23 +34,54 @@ namespace Rawr.Rogue.Poisons
                     countEnve++;
                     timeEnvnProc += (float)comp.Rank + 1f;
                     consumeDP += (float)comp.Rank * (1f - Talents.MasterPoisoner.NotConsumeDeadlyPoison.Bonus);
-        }
+                }
             }
 
             hits = hits * (cycleTime.Duration - timeEnvnProc) / cycleTime.Duration * ChanceToApply(false) +
-                   hits * timeEnvnProc / cycleTime.Duration * ChanceToApply(true);
+                   hits * timeEnvnProc / cycleTime.Duration * ChanceToApply(true);//number of dp applies
 
-            float avgHitTime = cycleTime.Duration / hits;
+            float avgHitTime = cycleTime.Duration / hits;//time between dp applies
 
-            float sDPPerSec = (countEnve > 0) ? (STACK_SIZE - consumeDP / countEnve) * baseDamage / DURATION : 0;
-            float eDPPerSec = STACK_SIZE * baseDamage / DURATION;
+            float sDPPerSec = (countEnve > 0) ? (STACK_SIZE - consumeDP / countEnve) * baseDamage / DURATION : 0;// dp avg incomplete stack dps
+            float eDPPerSec = STACK_SIZE * baseDamage / DURATION;// dp 5er stack dps
 
             float damageStacking = (sDPPerSec + eDPPerSec) * .5f * consumeDP * avgHitTime;
             float damageStacked = eDPPerSec * (cycleTime.Duration - consumeDP * avgHitTime);
 
-            return (damageStacking + damageStacked) / cycleTime.Duration;
+            float otherHandPoisonDamage = 0f; // Damage dealt by other Poison if dp has 5 stacks & procs
+            if (!calcOpts.TempMainHandEnchant.IsDeadlyPoison) //MH != dp
+            {
+                    otherHandPoisonDamage = OtherHandPoisonDamage( stats,  calcOpts,  combatFactors);
+            }
+            else
+            {
+                if (!calcOpts.TempOffHandEnchant.IsDeadlyPoison) //OH != dp
+                {
+                    otherHandPoisonDamage = OtherHandPoisonDamage(stats, calcOpts, combatFactors);
+                }
+            }
+            float surplusDPStacks = hits - consumeDP - 5; // surplus dp applies, which will be used by other weapon poison
+            float additionalPoisonDamage = surplusDPStacks * otherHandPoisonDamage; //additional Damage dealt by other weapon Poison if dp has 5 stacks & procs for the complete duration
+
+            return (additionalPoisonDamage + damageStacking + damageStacked) / cycleTime.Duration;
         }
 
+        /// <summary>Returns the average Damage one Poison hit/crit the other Poison than Deadly Poison deals.</summary>
+        /// <returns> Average Damage from one Poison hit/crit</returns>
+        public static float OtherHandPoisonDamage(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors )
+        {
+            if (calcOpts.TempMainHandEnchant.Name == "Instant Poison" || calcOpts.TempOffHandEnchant.Name == "Instant Poison")
+            {
+                InstantPoison poison = new InstantPoison();
+                return poison.CalcPoisonApplied(stats, calcOpts, combatFactors);
+            } 
+            if (calcOpts.TempMainHandEnchant.Name == "Wound Poison" || calcOpts.TempOffHandEnchant.Name == "Wound Poison")
+            {
+                WoundPoison poison = new WoundPoison();
+                return poison.CalcPoisonApplied(stats, calcOpts, combatFactors);
+            }
+            return 0f;
+        }
         public static float ChanceToApply(bool bEnvenom)
         {
             float BaseChanceToApply = .3f + Talents.ImprovedPoisons.DeadlyPoison.Bonus;

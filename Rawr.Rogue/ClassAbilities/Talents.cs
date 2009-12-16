@@ -35,7 +35,7 @@ namespace Rawr.Rogue.ClassAbilities
 		
         public class ImprovedPoisons
         {
-            public static readonly Talents DeadlyPoison = new TalentBonusPulledFromList(() => _talents.ImprovedPoisons, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
+            public static readonly Talents DeadlyPoison = new TalentBonusPulledFromList(() => _talents.ImprovedPoisons, 0.04f, 0.08f, 0.12f, 0.16f, 0.20f);
             public static readonly Talents InstantPoison = new TalentBonusPulledFromList(() => _talents.ImprovedPoisons, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f);
         }
         //NEED:  Cold Blood

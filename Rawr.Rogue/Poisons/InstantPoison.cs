@@ -15,6 +15,24 @@ namespace Rawr.Rogue.Poisons
 
         public override bool IsDeadlyPoison { get { return false; } }
 
+        /// <summary>Returns the average Damage from one Instant Poison hit/crit.</summary>
+        /// <returns>Average Damage from one Instant Poison hit/crit</returns>
+        public float CalcPoisonApplied(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors)
+        {
+            float baseDamage = (300f + .10f * stats.AttackPower);
+            baseDamage *= (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
+            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus);
+            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f - combatFactors.PoisonDamageReduction);
+
+            float critDamage = baseDamage * combatFactors.BaseSpellCritMultiplier;
+
+            float damage = (1f - combatFactors.ProbPoisonCrit) * baseDamage;
+            damage += combatFactors.ProbPoisonCrit * critDamage;
+
+            return damage;
+        }
+
         public override float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon )
         {
             float baseDamage = (300f + .10f * stats.AttackPower);
