@@ -14,6 +14,7 @@ namespace Rawr.Enhance
         private ShamanTalents _talents;
         private Priorities _rotation;
 
+        private int levelDifference = 3;
         private float glancingRate = 0.24f;
         private float whiteCritDepression = 0.048f;
         private float yellowCritDepression = 0.018f;
@@ -178,6 +179,9 @@ namespace Rawr.Enhance
             _calcOpts = calcOpts;
             _talents = _character.ShamanTalents;
             fightLength = _calcOpts.FightLength * 60f;
+            levelDifference = _calcOpts.TargetLevel - _character.Level;
+            whiteCritDepression = 0.03f + 0.006f * levelDifference;
+            yellowCritDepression = 0.006f * levelDifference;
             SetManaRegen();
             UpdateCalcs(true);
             _rotation = new Priorities(this, _calcOpts, _character, _stats, _talents);
@@ -403,10 +407,10 @@ namespace Rawr.Enhance
         }
         
         private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Shaman);}
-        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
-        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
-        private float WhiteHitCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level]; } }
-        private float YellowHitCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
+        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[levelDifference]; } }
+        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[levelDifference]; } }
+        private float WhiteHitCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP_DW[levelDifference]; } }
+        private float YellowHitCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]; } }
 
         #region getters
         public float GetMeleeCritsPerSec()
