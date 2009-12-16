@@ -2576,7 +2576,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     1f / specialShotsPerSecond,    // Yellow
                     1f / autoShotsPerSecond,       // AutoShot
                     calculatedStats.steadyShot.Cd, // SteadyShot
-                    (calculatedStats.serpentSting.Freq > 0 ? 3f : 0f) // SerpentWyvernStings do damage
+                    (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f) // SerpentWyvernStings do damage
                 };
                 float[] petattemptedAtksInterval = {
                     calculatedStats.pet.PetCompInterval, // All
