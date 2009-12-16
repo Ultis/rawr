@@ -1,4 +1,4 @@
-<basics2:ChildWindow
+﻿<basics2:ChildWindow
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -49,20 +49,20 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<TextBox x:Name="NameText" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Name}"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" Margin="2,2,2,2"/>
-			<TextBlock HorizontalAlignment="Right" Text="Item Level:" Grid.Row="2" VerticalAlignment="Center" Margin="2,2,2,2"/>
-			<TextBlock Text="Name:"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_iLevel" HorizontalAlignment="Right" Text="Item Level:" Grid.Row="2" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Name" Text="Name:"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
 			<TextBox x:Name="SetNameText" Margin="2,2,0,2" Grid.Column="1" Text="{Binding Mode=OneWay, Path=SetName}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
-			<TextBlock Text="Set Name:" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
-			<TextBlock Text="ID:" VerticalAlignment="Center" Grid.Row="3" HorizontalAlignment="Right" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_SetName" Text="Set Name:" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Id" Text="ID:" VerticalAlignment="Center" Grid.Row="3" HorizontalAlignment="Right" Margin="2,2,2,2"/>
 			<TextBox x:Name="IconPathText" Margin="2,2,0,2" Grid.Column="1" Text="{Binding Mode=OneWay, Path=IconPath}" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
-			<TextBlock Text="Icon:" TextWrapping="Wrap" HorizontalAlignment="Right" Grid.Row="4" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Icon" Text="Icon:" TextWrapping="Wrap" HorizontalAlignment="Right" Grid.Row="4" VerticalAlignment="Center" Margin="2,2,2,2"/>
 			<ComboBox x:Name="TypeCombo" Margin="2,2,0,2" Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
 			<ComboBox x:Name="QualityCombo" Margin="2,2,0,2" Grid.Column="1"  Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
-			<TextBlock HorizontalAlignment="Right" Text="Type:" Grid.Row="5" VerticalAlignment="Center" Margin="2,2,2,2"/>
-			<TextBlock Text="Quality:" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Type" HorizontalAlignment="Right" Text="Type:" Grid.Row="5" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Quality" Text="Quality:" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
 			<ComboBox x:Name="SlotCombo" Margin="2,2,0,2" Grid.Column="1" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
-			<TextBlock Text="Slot:" Grid.Row="7" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
-			<TextBlock VerticalAlignment="Center" Text="Unique:" Grid.Row="8" HorizontalAlignment="Right" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Slot" Text="Slot:" Grid.Row="7" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
+			<TextBlock x:Name="LB_Unique" VerticalAlignment="Center" Text="Unique:" Grid.Row="8" HorizontalAlignment="Right" Margin="2,2,2,2"/>
 			<CheckBox x:Name="UniqueCheck" HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Center" Grid.Column="1" Grid.Row="8" IsChecked="{Binding Mode=OneWay, Path=Unique}"/>
 
 			<inputToolkit:NumericUpDown x:Name="IlvlNum" HorizontalAlignment="Left" Margin="2,2,2,2" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Height="22" Width="60" Maximum="500" Value="{Binding Mode=OneWay, Path=ItemLevel}"/>
@@ -145,7 +145,7 @@
 							<RowDefinition/>
 						</Grid.RowDefinitions>
 						<TextBlock Text="Source:" Grid.Row="0" Grid.Column="0" Margin="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-						<TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" IsEnabled="False" Width="140" Height="60"/>
+						<TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" IsEnabled="False" Width="140" Height="60" FontSize="7"/>
 						<TextBlock Text="Note:" Grid.Row="1" Grid.Column="0" Margin="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Right"/>
 						<TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="140" Height="60"/>
 					</Grid>

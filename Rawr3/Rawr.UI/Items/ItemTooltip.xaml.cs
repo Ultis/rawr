@@ -394,7 +394,8 @@ namespace Rawr.UI
             #region Location Section
             if (actualItem.Id > 0 && actualItem.Id < 100000)
             {
-                LocationLabel.Text = actualItem.LocationInfo.Description;
+                LocationLabel.Text = actualItem.LocationInfo[0].Description;
+                if(actualItem.LocationInfo[1] != null) LocationLabel.Text += " and" + actualItem.LocationInfo[1].Description.Replace("Purchasable with","");
                 LocationLabel.Visibility = Visibility.Visible;
             }
             else LocationLabel.Visibility = Visibility.Collapsed;
