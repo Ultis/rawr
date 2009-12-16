@@ -201,7 +201,7 @@ namespace Rawr.Tree
 
         #region Wild Growth
         public float WildGrowthCF = 0f;
-        public float WildGrowthCPS { get { return WildGrowthCF * wildGrowth.CastTime; } }
+        public float WildGrowthCPS { get { return WildGrowthCF / wildGrowth.CastTime; } }
         public float WildGrowthCPM { get { return 60f * WildGrowthCPS; } set { WildGrowthCF = value * (float)wildGrowth.CastTime / 60f; } }
         public float WildGrowthAvg { get { return WildGrowthCPS * wildGrowth.Duration; } }
         public float WildGrowthHPS { get { return WildGrowthAvg * wildGrowth.maxTargets * wildGrowth.PeriodicTick; } }
@@ -246,10 +246,8 @@ namespace Rawr.Tree
         private float replenishment; // set by constructor
         public float ReplenishmentUptime = 1f;
         public float ReplenishmentMPS { get { return Mana * replenishment * ReplenishmentUptime; } }
-        public float RevitalizeFromRejuvenation = 0f;
-        public float RevitalizeFromWildGrowth = 0f;
-        public float RevitalizeMPS { get { return RevitalizeFromRejuvenation * RevitalizeChance * 0.01f * Mana / rejuvenate.PeriodicTickTime
-            + RevitalizeFromWildGrowth * RevitalizeChance * 0.01f * Mana / wildGrowth.PeriodicTickTime; } }
+        public float RevitalizePPM = 0f;
+        public float RevitalizeMPS { get { return RevitalizePPM * 0.01f * Mana; } }
         public float ProcsMPS; // set by constructor
         public float MPSInFSR { get { return RevitalizeMPS + ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS * SpiritInCombatFraction; } }
         public float MPSOutFSR { get { return RevitalizeMPS + ProcsMPS + GearMPS + ReplenishmentMPS + SpiritMPS; } }
@@ -276,13 +274,21 @@ namespace Rawr.Tree
         public float WildGrowthCF_unreduced = 0f;
         public float SwiftmendCF_unreduced = 0f;
         public float IdleCF_unreduced = 1f;
+
+        public float RejuvCF_unreducedOOM = 0f;
+        public float RegrowthCF_unreducedOOM = 0f;
+        public float LifebloomCF_unreducedOOM = 0f;
+        public float NourishCF_unreducedOOM = 0f;
+        public float WildGrowthCF_unreducedOOM = 0f;
+        public float IdleCF_unreducedOOM = 1f;
         #endregion
 
         public float TotalTime;
         public float TimeToOOM { get { return EffMPS > 0 ? Math.Min((ExtraMana + Mana) / EffMPS, TotalTime) : TotalTime; } }
+        public float TimeToOOM_unreduced = 0f;
         public float TimeAfterOOM { get { return TotalTime - TimeToOOM; } }
 
-        public float EffMPS { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS + NourishMPS - ManaRegen; } }
+        public float EffMPS { get { return MPS - ManaRegen; } }
 
         // HotsCF includes Lifebloom stacks...
         public float TotalCF { get { return (float)Math.Round(HotsCF + WildGrowthCF + SwiftmendCF + NourishCF, 4); } }
@@ -347,6 +353,7 @@ namespace Rawr.Tree
         public float livingSeedEfficiency;
         public HealTargetTypes healTarget;
         public float latency;
+        public float reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom, reduceOOMNourish, reduceOOMWildGrowth;
     }
 
     public class SingleTargetBurstResult
@@ -376,6 +383,7 @@ namespace Rawr.Tree
         public static RotationResult SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings)
         {
             RotationResult rot = new RotationResult(calculatedStats, stats, rotSettings.latency);
+            rot.rotSettings = rotSettings;
 
             rot.TotalTime = calcOpts.FightDuration;
 
@@ -416,12 +424,11 @@ namespace Rawr.Tree
             #region Mana regeneration
             rot.ReplenishmentUptime = calcOpts.ReplenishmentUptime / 100f; 
             rot.OutOfCombatFraction = 1f - .01f * calcOpts.FSRRatio;
-            rot.RevitalizeFromRejuvenation = rotSettings.averageRejuv >= 1 ? (float)calcOpts.RejuvUptime / 100f : 0f;
-            rot.RevitalizeFromWildGrowth = (float)calcOpts.WGUptime / 100f;
+            rot.RevitalizePPM = (float)calcOpts.RevitalizePPM / 100f;
             #endregion
 
             #region Mana potion
-            rot.PotionMana = new int[] { 0, 1800, 2200, 2400, 4300 }[calcOpts.ManaPot];
+            rot.PotionMana = new int[] { 0, 1800, 2200, 2400, 3125, 4300 }[calcOpts.ManaPot];
             rot.PotionMana *= (stats.BonusManaPotion + 1f);
             #endregion
 
@@ -447,7 +454,7 @@ namespace Rawr.Tree
             rot.NourishRawHPS = _hpct / rot.nourish[0].CastTime;
             #endregion
 
-            #region Correct cast fractions and calculate primary spell cast fraction
+            #region Correct cast fractions 
             // Priority:
             // 1. Maintained Hots
             // 2. Wild growth and Swiftmend (Swiftmend cannot be reduced, only enabled/disabled)
@@ -503,6 +510,50 @@ namespace Rawr.Tree
                 rot.RejuvCF *= Factor;
                 rot.RegrowthCF *= Factor;
                 // Now, rot.MaxPrimaryCF *must* be 1f exactly.
+            }
+
+            #endregion
+
+            #region Correct going OOM
+            // Based on MPS (and possibly HPM).
+            // Actually, if you cast less, you will also see less returns. This is calculated elsewhere
+            // in the Special Effects. Repeated calculations are necessary.
+            // We assume this effect is convergent.
+
+            float f = Math.Max(0.0f, (rot.TimeToOOM * (rot.MPS - rot.ManaRegen) + rot.TotalTime * rot.ManaRegen) / (rot.MPS * rot.TotalTime));
+            // We want our MPS to become f*MPS
+
+            float MPStoGain = rot.MPS * (1f - f);
+            float max = Math.Max(rotSettings.reduceOOMRejuv, rotSettings.reduceOOMRegrowth);
+            max = Math.Max(max, rotSettings.reduceOOMLifebloom);
+            max = Math.Max(max, rotSettings.reduceOOMNourish);
+            max = Math.Max(max, rotSettings.reduceOOMWildGrowth);
+            MPStoGain *= max;
+
+            float total = rotSettings.reduceOOMRejuv + rotSettings.reduceOOMRegrowth + rotSettings.reduceOOMLifebloom
+                + rotSettings.reduceOOMNourish + rotSettings.reduceOOMWildGrowth;
+
+            rot.TimeToOOM_unreduced = rot.TimeToOOM;
+            rot.IdleCF_unreducedOOM = rot.IdleCF;
+            rot.RejuvCF_unreducedOOM = rot.RejuvCF;
+            rot.RegrowthCF_unreducedOOM = rot.RegrowthCF;
+            rot.LifebloomCF_unreducedOOM = rot.LifebloomCF;
+            rot.NourishCF_unreducedOOM = rot.NourishCF;
+            rot.WildGrowthCF_unreducedOOM = rot.WildGrowthCF;
+
+            if (total > 0)
+            {
+                float MPSfromRejuv = MPStoGain * rotSettings.reduceOOMRejuv / total;
+                float MPSfromRegrowth = MPStoGain * rotSettings.reduceOOMRegrowth / total;
+                float MPSfromLifebloom = MPStoGain * rotSettings.reduceOOMLifebloom / total;
+                float MPSfromNourish = MPStoGain * rotSettings.reduceOOMNourish / total;
+                float MPSfromWildGrowth = MPStoGain * rotSettings.reduceOOMWildGrowth / total;
+
+                rot.RejuvCF = Math.Max(0.0f, rot.RejuvCPS - MPSfromRejuv / rot.rejuvenate.ManaCost) * rot.rejuvenate.CastTime;
+                rot.RegrowthCF = Math.Max(0.0f, rot.RegrowthCPS - MPSfromRegrowth / rot.regrowth.ManaCost) * rot.regrowth.CastTime;
+                rot.LifebloomCF = Math.Max(0.0f, rot.LifebloomCPS - MPSfromLifebloom / rot.lifebloom.ManaCost) * rot.lifebloom.CastTime;
+                rot.NourishCF = Math.Max(0.0f, rot.NourishCPS - MPSfromNourish / rot.nourish[0].ManaCost) * rot.nourish[0].CastTime;
+                rot.WildGrowthCF = Math.Max(0.0f, rot.WildGrowthCPS - MPSfromWildGrowth / rot.wildGrowth.ManaCost) * rot.wildGrowth.CastTime;
             }
 
             #endregion

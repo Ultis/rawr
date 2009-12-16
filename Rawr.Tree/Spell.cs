@@ -85,18 +85,21 @@ namespace Rawr.Tree {
         /// </summary>
         public float TotalAverageHealing { get { return (AverageHealingwithCrit + PeriodicTickwithCrit * PeriodicTicks); } }
 
-        public float HPM { get { return (TotalAverageHealing) / ManaCost; } }
+        public float HPM { get { return TotalAverageHealing / ManaCost; } }
+        public float HPM_DH { get { return AverageHealingwithCrit / ManaCost; } }
+        public float HPM_HOT { get { return PeriodicTickwithCrit * PeriodicTicks / ManaCost; } }
 
         // Wildebees: 20090221 : Healing per cast time, considers direct healing and HoT parts
         //     Total healing divided by CastTime
         // This indicates the rate at which the healing is generated
-        public float HPCT { get { return (TotalAverageHealing) / CastTime; } }
-
+        public float HPCT { get { return TotalAverageHealing / CastTime; } }
         public float HPCT_DH { get { return AverageHealingwithCrit / CastTime; } }
         public float HPCT_HOT { get { return PeriodicTickwithCrit * PeriodicTicks / CastTime; } }
 
-        // The healing per second you will get from the spell; total healing / (casttime+duration)
-        public float HPCTD { get { return TotalAverageHealing / (Math.Max(gcd + latency, Duration + latency + castTime)); } }
+        // The healing per second you will get when either chaincasting or refreshing perfectly
+        // Maybe rename this to "HPS" and rename "HPS" to "HPS_DH" and rename "HPSHoT" to "HPS_HOT"
+        // And for chaincasting a Regrowth, use HPCT_DH instead of HPS (because that's the same thing)
+        public float HPCTD { get { return TotalAverageHealing / (Math.Max(CastTime, Duration)); } }
 
         public float Duration { get { return periodicTicks * periodicTickTime; } }
 
@@ -530,6 +533,8 @@ namespace Rawr.Tree {
         public int maxTargets;
         private float manaCostModifier = 1f;
         private float periodickTickModifier = 1f;
+        private float[] tick = new float[7];
+        public float[] Tick { get { return tick; } }
         public WildGrowth(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
@@ -557,15 +562,13 @@ namespace Rawr.Tree {
             manaCost *= manaCostModifier;
             periodicTick = 206f; // 1442 / 7
             #region T10 (2) SetBonus
-            if (stats.WildGrowthLessReduction > 0)
+            float healing = 0f;
+            for (int i = 0; i < 7; i++)
             {
-                float healing = 0f;
-                for (int i = 0; i < 7; i++)
-                {
-                    healing += 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
-                }
-                periodicTick = healing / 7;
+                tick[i] = 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
+                healing += 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
             }
+            periodicTick = healing / 7;
             #endregion
             periodicTick *= periodickTickModifier;
         }

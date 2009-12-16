@@ -18,6 +18,7 @@ namespace Rawr.Tree {
                         "(Major) 1350-2250, Avg 1800",
                         "(Mad) 1650-2750, Avg 2200",
                         "(Super) 1800-3000, Avg 2400",
+                        "(Rejuvenation) 2475-4125, Avg 3125",
                         "(Runic) 4200-4400, Avg 4300"};
                 }
                 return _manaPotionsDesc;}
@@ -42,7 +43,8 @@ namespace Rawr.Tree {
         private int singleTargetRotation;
         private bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
         private bool ignoreNaturesGrace, ignoreAllHasteEffects;
-        private int rejuveUptime, wgUptime;
+        private int revitalizePPM, wgUptime;
+        private int reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom, reduceOOMNourish, reduceOOMWildGrowth;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
@@ -53,7 +55,7 @@ namespace Rawr.Tree {
             
             FightDuration = 240; // 4 Minutes
             Latency = 100; // milliseconds
-            ManaPot = 4; // best pot
+            ManaPot = 5; // best pot
             FSRRatio = 100;
             ReplenishmentUptime = 90;
             Innervates = 1;
@@ -85,7 +87,7 @@ namespace Rawr.Tree {
 
             singleTargetRotation = 0;
 
-            rejuveUptime = 80;
+            revitalizePPM = 80;
             wgUptime = 20;
         }
         public string GetXml() {
@@ -129,13 +131,18 @@ namespace Rawr.Tree {
         public bool AdjustLifebloom { get { return adjustLifebloom; } set { adjustLifebloom = value; OnPropertyChanged("AdjustLifebloom"); } }
         public bool AdjustNourish { get { return adjustNourish; } set { adjustNourish = value; OnPropertyChanged("AdjustNourish"); } }
 
+        public int ReduceOOMRejuv { get { return reduceOOMRejuv; } set { reduceOOMRejuv = value; OnPropertyChanged("ReduceOOMRejuv"); } }
+        public int ReduceOOMRegrowth { get { return reduceOOMRegrowth; } set { reduceOOMRegrowth = value; OnPropertyChanged("ReduceOOMRegrowth"); } }
+        public int ReduceOOMLifebloom { get { return reduceOOMLifebloom; } set { reduceOOMLifebloom = value; OnPropertyChanged("ReduceOOMLifebloom"); } }
+        public int ReduceOOMNourish { get { return reduceOOMNourish; } set { reduceOOMNourish = value; OnPropertyChanged("ReduceOOMNourish"); } }
+        public int ReduceOOMWildGrowth { get { return reduceOOMWildGrowth; } set { reduceOOMWildGrowth = value; OnPropertyChanged("ReduceOOMWildGrowth"); } }
+
         public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
         public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }
 
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
-        public int RejuvUptime { get { return rejuveUptime; } set { rejuveUptime = value; OnPropertyChanged("RejuvUptime"); } }
-        public int WGUptime { get { return wgUptime; } set { wgUptime = value; OnPropertyChanged("WGUptime"); } }
-
+        public int RevitalizePPM { get { return revitalizePPM; } set { revitalizePPM = value; OnPropertyChanged("RevitalizePPM"); } }
+        
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }
         public event PropertyChangedEventHandler PropertyChanged;

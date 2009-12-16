@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label11.Text" xml:space="preserve">
-    <value>Note: for Rejuvenation, there is a check that you must have at least 1 maintained Rejuvenation spell. The model will use your own haste rating to calculate Rejuvenation tick frequency. For Wild Growth, it is simply assumed you've entered a correct value. The calculation uses your talents to find the chance of a Revitalize proc per tick.</value>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Select spells to cast less to prevent going out of mana. Reduction will be applied to spells according to the weight you assign. The total reduction equals the highest value. So if you choose Nourish (80%) and Rejuvenation (40%), that means only 80% of the necessary reduction is applied, 66% of which to Nourish and 33% to Rejuvenation). Reduction is based on mana cost and includes maintained Rejuvenations and maintained Regrowths.</value>
   </data>
 </root>

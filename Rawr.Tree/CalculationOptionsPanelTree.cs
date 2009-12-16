@@ -10,12 +10,9 @@ namespace Rawr.Tree {
 
             // Set about text
             tbModuleNotes.Text =
-                "Notes on trinkets:\r\n"+
-                "Some trinkets are hard to model. They can be much better if you use them in a smart way...\r\n"+
-                "\r\n" +
-                "HealBurst is the maximum HPS of your current primary heal plus any selected hots.\r\n"+
-                "HealSustained is the HPS from your current rotation for the entire fight.\r\n" +
-                "Survival is scaled based on the physical damage you can take based on your health and armor.\r\n";
+                "The module is currently undergoing lots of work.\r\n\r\n" +
+                "You're welcome to send feedback via the CodePlex site.\r\n\r\n" +
+                "A small list of things I plan to do:\r\n- Fix haste trinkets to give better values.\r\n- Add a much simpler interface, including preset fight profiles (e.g. Tank heal, Raid heal, Hybrid healing, WG+RJ all out et cetera).\r\n- Add Healing Touch in spell rotations.\r\n- Lifebloom x2 stacks.\r\n- A custom chart that shows HPM for single target rotations.\r\n Update Main Stats statistics to show healing without crit, healing with crit and crit chance.";
         }
         protected override void LoadCalculationOptions() {
             loading = true;
@@ -105,10 +102,21 @@ namespace Rawr.Tree {
             cbIgnoreNaturesGrace.Checked = calcOpts.IgnoreNaturesGrace;
             cbIgnoreAllHasteEffects.Checked = calcOpts.IgnoreAllHasteEffects;
 
-            tbRejuvRevitalize.Value = calcOpts.RejuvUptime;
-            tbWGRevitalize.Value = calcOpts.WGUptime;
-            lblRejuvRevitalize.Text = "Uptime of Rejuvenation on yourself: " + (float)calcOpts.RejuvUptime + "%.";
-            lblWGRevitalize.Text = "Uptime of Wild Growth on yourself: " + (float)calcOpts.WGUptime + "%.";
+            tbRevitalize.Value = calcOpts.RevitalizePPM;
+            lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.RevitalizePPM;
+
+
+            tbOOMRejuv.Value = calcOpts.ReduceOOMRejuv;
+            tbOOMRegrowth.Value = calcOpts.ReduceOOMRegrowth;
+            tbOOMLifebloom.Value = calcOpts.ReduceOOMLifebloom;
+            tbOOMNourish.Value = calcOpts.ReduceOOMNourish;
+            tbOOMWildGrowth.Value = calcOpts.ReduceOOMWildGrowth;
+            lblOOMRejuv.Text = "Rejuvenation: " + calcOpts.ReduceOOMRejuv + "%.";
+            lblOOMRegrowth.Text = "Regrowth: " + calcOpts.ReduceOOMRegrowth + "%.";
+            lblOOMLifebloom.Text = "Lifebloom: " + calcOpts.ReduceOOMLifebloom + "%.";
+            lblOOMNourish.Text = "Nourish: " + calcOpts.ReduceOOMNourish + "%.";
+            lblOOMWildGrowth.Text = "WildGrowth: " + calcOpts.ReduceOOMWildGrowth + "%.";
+
 
             loading = false;
         }
@@ -430,18 +438,58 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RejuvUptime = tbRejuvRevitalize.Value;
-            lblRejuvRevitalize.Text = "Uptime of Rejuvenation on yourself: " + (float)calcOpts.RejuvUptime + "%.";
+            calcOpts.RevitalizePPM = tbRevitalize.Value;
+            lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.RevitalizePPM;
             Character.OnCalculationsInvalidated();
         }
 
-        private void tbWGRevitalize_Scroll(object sender, EventArgs e)
+        private void tbOOMRejuv_Scroll(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.WGUptime = tbWGRevitalize.Value;
-            lblWGRevitalize.Text = "Uptime of Wild Growth on yourself: " + (float)calcOpts.WGUptime + "%.";
+            calcOpts.ReduceOOMRejuv = tbOOMRejuv.Value;
+            lblOOMRejuv.Text = "Rejuvenation: " + (float)calcOpts.ReduceOOMRejuv + "%.";
             Character.OnCalculationsInvalidated();
+        }
+
+        private void tbOOMRegrowth_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.ReduceOOMRegrowth = tbOOMRegrowth.Value;
+            lblOOMRegrowth.Text = "Regrowth: " + (float)calcOpts.ReduceOOMRegrowth + "%.";
+            Character.OnCalculationsInvalidated();
+
+        }
+
+        private void tbOOMLifebloom_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.ReduceOOMLifebloom = tbOOMLifebloom.Value;
+            lblOOMLifebloom.Text = "Lifebloom: " + (float)calcOpts.ReduceOOMLifebloom + "%.";
+            Character.OnCalculationsInvalidated();
+
+        }
+
+        private void tbOOMNourish_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.ReduceOOMNourish = tbOOMNourish.Value;
+            lblOOMNourish.Text = "Nourish: " + (float)calcOpts.ReduceOOMNourish + "%.";
+            Character.OnCalculationsInvalidated();
+
+        }
+
+        private void tbOOMWildGrowth_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.ReduceOOMWildGrowth = tbOOMWildGrowth.Value;
+            lblOOMWildGrowth.Text = "WildGrowth: " + (float)calcOpts.ReduceOOMWildGrowth + "%.";
+            Character.OnCalculationsInvalidated();
+
         }
 
     }

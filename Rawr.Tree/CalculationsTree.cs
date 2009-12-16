@@ -212,8 +212,9 @@ namespace Rawr.Tree {
             _subPointNameColorsHPM.Add("Healing per mana", Color.FromArgb(128, 0, 255, 255));
 
             _subPointNameColorsCF = new Dictionary<string, Color>();
-            _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(196, 0, 255, 255));
-            _subPointNameColorsCF.Add("Casting time auto reduction", Color.FromArgb(64, 0, 255, 255));
+            _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(196, 0, 255, 0));
+            _subPointNameColorsCF.Add("Mana reduction", Color.FromArgb(196, 255, 255, 0));
+            _subPointNameColorsCF.Add("Time reduction", Color.FromArgb(196, 0, 0, 255));
 
             _subPointNameColors = _subPointNameColorsRating;
         }
@@ -261,80 +262,107 @@ applied and result is scaled down by 100)",
                         "Combat Stats:Spell Haste",
                         "Combat Stats:Global CD",
 
-                        "Model:Single Target HPS",
+
+                        "Model:Total Time",
+                        "Model:Time until OOM",
+                        "Model:Time until OOM (reduced)",
+                        "Model:Total healing done",
                         "Model:Sustained HPS",
+                        "Model:Single Target HPS",
+                        "Model:Mana regen per second",
+                        "Model:Mana from potions",
+                        "Model:Mana from innervates",
+                        "Model:Average casts per minute",
+                        "Model:Average crits per minute",
+                        "Model:Average heals per minute",
+                        "Model:Rejuvenation casts per minute",
+                        "Model:Rejuvenation average up",
+                        "Model:Regrowth casts per minute",
+                        "Model:Regrowth average up",
+                        "Model:Lifebloom (stack) casts per minute",
+                        "Model:Lifebloom (stack) average up",
+                        "Model:Lifebloom (stack) method",
+                        "Model:Lifebloom casts per minute",
+                        "Model:Lifebloom average up",
+                        "Model:Nourish casts per minute",
+                        //"Model:Healing Touch casts per minute",
+                        "Model:Swiftmend casts per minute",
+                        "Model:Wild Growth casts per minute",
                         "Model:Revitalize procs per minute",
 
-                        /*"Simulation:Result",
-                        "Simulation:Time until OOM",
-                        "Simulation:Unused Mana Remaining",
-                        "Simulation:Unused cast time percentage",
-                        "Simulation:Total healing done",
-                        "Simulation:Number of tanks",
-                        "Simulation:Lifebloom method",
-                        "Simulation:Extra Tank HoTs",
-                        "Simulation:HPS for tank HoTs",
-                        "Simulation:MPS for tank HoTs",
-                        "Simulation:HPS for Wild Growth",
-                        "Simulation:MPS for Wild Growth",
-                        "Simulation:HPS for Swiftmend",
-                        "Simulation:MPS for Swiftmend",
-                        "Simulation:HoT refresh fraction",
-                        "Simulation:Spell for primary heal",
-                        "Simulation:HPS for primary heal",
-                        "Simulation:MPS for primary heal",
-                        "Simulation:Mana regen per second",
-                        "Simulation:Casts per minute until OOM",
-                        "Simulation:Crits per minute until OOM",
-
-                        "Lifebloom:LB Tick",
-                        "Lifebloom:LB Heal",
-                        "Lifebloom:LB HPS",
-                        "Lifebloom:LB HPM",
-
-                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPM",
-                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPS",
-                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPM",
-
-                        "Lifebloom Continuous Stack:LBS Tick",
-                        "Lifebloom Continuous Stack:LBS HPS",
-                        "Lifebloom Continuous Stack:LBS HPM",
-
-                        "Rejuvenation:RJ Tick",
+                        "Rejuvenation:RJ Heal per tick",
+                        "Rejuvenation:RJ Tick time",
                         "Rejuvenation:RJ HPS",
                         "Rejuvenation:RJ HPM",
-            
+                        "Rejuvenation:RJ HPCT",
+
                         "Regrowth:RG Heal",
                         "Regrowth:RG Tick",
                         "Regrowth:RG HPS",
-                        "Regrowth:RG HPS (HoT)",
+                        "Regrowth:RG HPS (HoT only)",
                         "Regrowth:RG HPM",
+                        "Regrowth:RG HPCT",
+                        "Regrowth:RG Heal (spam)",
+                        "Regrowth:RG HPS (spam)",
                         "Regrowth:RG HPM (spam)",
+                        "Regrowth:RG HPCT (spam)",
+
+                        "Lifebloom:LB Tick",
+                        "Lifebloom:LB Bloom Heal",
+                        "Lifebloom:LB HPS",
+                        "Lifebloom:LB HPS (HoT only)",
+                        "Lifebloom:LB HPM",
+                        "Lifebloom:LB HPCT",
+
+                        //"Lifebloom Stacked Blooms:LBx2 (fast stack) HPS",
+                        //"Lifebloom Stacked Blooms:LBx2 (fast stack) HPM",
+                        //"Lifebloom Stacked Blooms:LBx2 (fast stack) HPCT",
+                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx3 (fast stack) HPCT",
+                        //"Lifebloom Stacked Blooms:LBx2 (slow stack) HPS",
+                        //"Lifebloom Stacked Blooms:LBx2 (slow stack) HPM",
+                        //"Lifebloom Stacked Blooms:LBx2 (slow stack) HPCT",
+                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx3 (slow stack) HPCT",
+
+                        "Lifebloom Stacked Blooms:LBx3 (rolling) Tick",
+                        "Lifebloom Stacked Blooms:LBx3 (rolling) HPS",
+                        "Lifebloom Stacked Blooms:LBx3 (rolling) HPM",
+                        "Lifebloom Stacked Blooms:LBx3 (rolling) HPCT",
 
                         "Healing Touch:HT Heal",
                         "Healing Touch:HT HPS",
                         "Healing Touch:HT HPM",
+                        "Healing Touch:HT HPCT",
 
                         "Wild Growth:WG first Tick",
-                        "Wild Growth:WG HPS(single)",
-                        "Wild Growth:WG HPM(single)",
+                        "Wild Growth:WG HPS(single target)",
+                        "Wild Growth:WG HPM(single target)",
                         "Wild Growth:WG HPS(max)",
                         "Wild Growth:WG HPM(max)",
 
                         "Nourish:N Heal",
                         "Nourish:N HPM",
                         "Nourish:N HPS",
+                        "Nourish:N HPCT",
                         "Nourish:N (1 HoT) Heal",
                         "Nourish:N (1 HoT) HPM",
                         "Nourish:N (1 HoT) HPS",
+                        "Nourish:N (1 HoT) HPCT",
+                        "Nourish:N (2 HoTs) Heal",
+                        "Nourish:N (2 HoTs) HPM",
+                        "Nourish:N (2 HoTs) HPS",
+                        "Nourish:N (2 HoTs) HPCT",
                         "Nourish:N (3 HoTs) Heal",
                         "Nourish:N (3 HoTs) HPM",
                         "Nourish:N (3 HoTs) HPS",
+                        "Nourish:N (3 HoTs) HPCT",
+                        "Nourish:N (4 HoTs) Heal",
+                        "Nourish:N (4 HoTs) HPM",
+                        "Nourish:N (4 HoTs) HPS",
+                        "Nourish:N (4 HoTs) HPCT",
 
                         "Swiftmend:SM Rejuv Heal",
                         "Swiftmend:SM Rejuv HPM",
@@ -345,7 +373,7 @@ applied and result is scaled down by 100)",
                         "Swiftmend:SM Both Heal",
                         "Swiftmend:SM Both HPM",
                         "Swiftmend:SM Both Rejuv Lost Ticks",
-                        "Swiftmend:SM Both Regrowth Lost Ticks",*/
+                        "Swiftmend:SM Both Regrowth Lost Ticks",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -462,6 +490,12 @@ applied and result is scaled down by 100)",
             settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
 
             settings.latency = (float)calcOpts.Latency / 1000f;
+
+            settings.reduceOOMRejuv = (float)calcOpts.ReduceOOMRejuv / 100f;
+            settings.reduceOOMRegrowth = (float)calcOpts.ReduceOOMRegrowth / 100f;
+            settings.reduceOOMLifebloom = (float)calcOpts.ReduceOOMLifebloom / 100f;
+            settings.reduceOOMNourish = (float)calcOpts.ReduceOOMNourish / 100f;
+            settings.reduceOOMWildGrowth = (float)calcOpts.ReduceOOMWildGrowth / 100f;
 
             return settings;
         }
@@ -735,8 +769,11 @@ applied and result is scaled down by 100)",
                             Name = "Rejuvenation",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.RejuvCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.RejuvCF * 100,
-                            (calculationResult.Sustained.RejuvCF_unreduced - calculationResult.Sustained.RejuvCF) * 100}
+                            SubPoints = new float[] { 
+                                calculationResult.Sustained.RejuvCF * 100,
+                                (calculationResult.Sustained.RejuvCF_unreducedOOM - calculationResult.Sustained.RejuvCF) * 100f,
+                                (calculationResult.Sustained.RejuvCF_unreduced - calculationResult.Sustained.RejuvCF_unreducedOOM) * 100
+                            }
                         };
                         comparisonList.Add(rejuv);
                         ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
@@ -745,7 +782,8 @@ applied and result is scaled down by 100)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.RegrowthCF_unreduced * 100,
                             SubPoints = new float[] { calculationResult.Sustained.RegrowthCF * 100,
-                            (calculationResult.Sustained.RegrowthCF_unreduced - calculationResult.Sustained.RegrowthCF) * 100 }
+                            (calculationResult.Sustained.RegrowthCF_unreducedOOM - calculationResult.Sustained.RegrowthCF) * 100f,
+                            (calculationResult.Sustained.RegrowthCF_unreduced - calculationResult.Sustained.RegrowthCF_unreducedOOM) * 100}
                         };
                         comparisonList.Add(regrowth);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
@@ -754,7 +792,8 @@ applied and result is scaled down by 100)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.LifebloomCF_unreduced * 100,
                             SubPoints = new float[] { calculationResult.Sustained.LifebloomCF * 100,
-                            (calculationResult.Sustained.LifebloomCF_unreduced - calculationResult.Sustained.LifebloomCF) * 100 }
+                                (calculationResult.Sustained.LifebloomCF_unreducedOOM - calculationResult.Sustained.LifebloomCF) * 100f,
+                            (calculationResult.Sustained.LifebloomCF_unreduced - calculationResult.Sustained.LifebloomCF_unreducedOOM) * 100 }
                         };
                         comparisonList.Add(lifebloom);
                         ComparisonCalculationTree lifebloomStack = new ComparisonCalculationTree()
@@ -762,7 +801,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.LifebloomStackCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.LifebloomStackCF * 100, 0,
                             (calculationResult.Sustained.LifebloomStackCF_unreduced - calculationResult.Sustained.LifebloomStackCF) * 100 }
                         };
                         comparisonList.Add(lifebloomStack);
@@ -772,7 +811,8 @@ applied and result is scaled down by 100)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.WildGrowthCF_unreduced * 100,
                             SubPoints = new float[] { calculationResult.Sustained.WildGrowthCF * 100,
-                            (calculationResult.Sustained.WildGrowthCF_unreduced - calculationResult.Sustained.WildGrowthCF) * 100 }
+                                (calculationResult.Sustained.WildGrowthCF_unreducedOOM - calculationResult.Sustained.WildGrowthCF) * 100f,
+                            (calculationResult.Sustained.WildGrowthCF_unreduced - calculationResult.Sustained.WildGrowthCF_unreducedOOM) * 100 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree swiftmend = new ComparisonCalculationTree()
@@ -780,7 +820,7 @@ applied and result is scaled down by 100)",
                             Name = "Swiftmend",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.SwiftmendCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.SwiftmendCF * 100, 0,
                             (calculationResult.Sustained.SwiftmendCF_unreduced - calculationResult.Sustained.SwiftmendCF) * 100 }
                         };
                         comparisonList.Add(swiftmend);
@@ -790,16 +830,18 @@ applied and result is scaled down by 100)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.NourishCF_unreduced * 100,
                             SubPoints = new float[] { calculationResult.Sustained.NourishCF * 100,
-                            (calculationResult.Sustained.NourishCF_unreduced - calculationResult.Sustained.NourishCF) * 100 }
+                                (calculationResult.Sustained.NourishCF_unreducedOOM - calculationResult.Sustained.NourishCF) * 100f,
+                            (calculationResult.Sustained.NourishCF_unreduced - calculationResult.Sustained.NourishCF_unreducedOOM) * 100 }
                         };
                         comparisonList.Add(nourish);
                         ComparisonCalculationTree idle = new ComparisonCalculationTree()
                         {
                             Name = "Idle",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.IdleCF_unreduced * 100,
-                            SubPoints = new float[] { calculationResult.Sustained.IdleCF * 100,
-                            (calculationResult.Sustained.IdleCF_unreduced - calculationResult.Sustained.IdleCF) * 100 }
+                            OverallPoints = calculationResult.Sustained.IdleCF * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.IdleCF_unreduced * 100f,
+                                (calculationResult.Sustained.IdleCF - calculationResult.Sustained.IdleCF_unreducedOOM) * 100f,
+                            (calculationResult.Sustained.IdleCF_unreducedOOM - calculationResult.Sustained.IdleCF_unreduced) * 100f }
                         };
                         comparisonList.Add(idle);
                     }
@@ -1007,6 +1049,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.regrowth.HPCT }
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth (chaincast)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.regrowthAgain.HPCT_DH,
+                            SubPoints = new float[] { calculationResult.Sustained.regrowthAgain.HPCT_DH }
+                        };
+                        comparisonList.Add(regrowthAgain);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
@@ -1112,6 +1162,9 @@ applied and result is scaled down by 100)",
                 #region HPS per spell
                 case "HPS per spell":
                     {
+                        // YES, we use HPCTD here. That's TotalAverageHealing / max(CastTime, Duration)
+                        // with CastTime, that means chaincasting a DH spell (Nourish/HT/SM)
+                        // with Duration, that means refreshing a spell with a HoT component (RG/RJ/LB/WG)
                         _subPointNameColors = _subPointNameColorsHPS;
                         ComparisonCalculationTree rejuv = new ComparisonCalculationTree()
                         {
@@ -1129,6 +1182,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.regrowth.HPCTD }
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth (chaincasting)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.regrowthAgain.HPS, // HPS here, because chaincasting
+                            SubPoints = new float[] { calculationResult.Sustained.regrowthAgain.HPS }
+                        };
+                        comparisonList.Add(regrowthAgain);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
@@ -1251,6 +1312,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.regrowth.HPM }
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
+                        {
+                            Name = "Regrowth (chaincast)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.regrowthAgain.HPM_DH,
+                            SubPoints = new float[] { calculationResult.Sustained.regrowthAgain.HPM_DH }
+                        };
+                        comparisonList.Add(regrowthAgain);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
