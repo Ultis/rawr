@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOptimizeResult));
             this.buttonKeep = new System.Windows.Forms.Button();
             this.buttonChange = new System.Windows.Forms.Button();
             this.paperDollAfter = new Rawr.PaperDoll();
@@ -126,6 +127,8 @@
             this.Controls.Add(this.buttonKeep);
             this.Controls.Add(this.paperDollAfter);
             this.Controls.Add(this.paperDollBefore);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormOptimizeResult";
             this.Text = "Optimizer Results";
             this.ResumeLayout(false);

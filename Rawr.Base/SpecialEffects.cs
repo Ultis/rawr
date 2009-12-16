@@ -335,7 +335,8 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45f, .15f));
             }
-            else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec.") || line.StartsWith("Your spells have a chance to increase your spell power by 751 for 10 sec."))
+            else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec.")
+                  || line.StartsWith("Your spells have a chance to increase your spell power by 751 for 10 sec."))
             {
                 // Pandora's Plea
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 751f }, 10f, 45f, .1f));

@@ -2289,11 +2289,36 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
             #endregion
 
+            #region Zod's Repeating Longbow
+            // Equip: Your ranged attacks have a [x]% chance to cause you
+            // to instantly attack with this weapon for 50% weapon damage.
+            // iLevel 264 | x = 4
+            // iLevel 277 | x = 5
+            calculatedStats.BonusAttackProcsDPS = 0f;
+            if (character.Ranged != null && (character.Ranged.Item.Id == 50638 || character.Ranged.Item.Id == 50034)) {
+                float Chance = (character.Ranged.Item.Id == 50638 ? 0.05f : (character.Ranged.Item.Id == 50034 ? 0.04f : 0f));
+                float ProcDamage = rangedWeaponDamage
+                                 + rangedAmmoDamage
+                                 + stats.WeaponDamage
+                                 + stats.ScopeDamage;
+                float ProcDamageReal = CalcEffectiveDamage(ProcDamage * 0.50f,
+                                                           ChanceToMiss,
+                                                           0f,
+                                                           1f,
+                                                           autoShotDamageAdjust);
+                SpecialEffect zod = new SpecialEffect(Trigger.RangedHit,new Stats(),0f,0f,Chance);
+                float numProcs = calcOpts.Duration * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, calcOpts.Duration);
+                float totalDamage = numProcs * ProcDamageReal;
+                calculatedStats.BonusAttackProcsDPS = totalDamage / calcOpts.Duration;
+            }
+            #endregion
+
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS
                                                     + calculatedStats.WildQuiverDPS
                                                     + calculatedStats.CustomDPS
                                                     + calculatedStats.killShotSub20FinalGain
-                                                    + calculatedStats.aspectBeastLostDPS);
+                                                    + calculatedStats.aspectBeastLostDPS
+                                                    + calculatedStats.BonusAttackProcsDPS);
             calculatedStats.HunterSurvPoints = calcOpts.SurvScale *
                                                (0 // TotalHPSOnHunter
                                                 + Health2SurvHunter

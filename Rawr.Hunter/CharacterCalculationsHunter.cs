@@ -12,6 +12,7 @@ namespace Rawr.Hunter
 		private Stats _basicStats;
 		private float _baseAttackSpeed;
         private float _autoshotDPS;
+        private float _BonusAttackProcsDPS;
         private float _wildQuiverDPS;
         private float _customDPS;
         public Character character = null;
@@ -218,6 +219,12 @@ namespace Rawr.Hunter
         {
             get { return _autoshotDPS; }
             set { _autoshotDPS = value; }
+        }
+
+        public float BonusAttackProcsDPS
+        {
+            get { return _BonusAttackProcsDPS; }
+            set { _BonusAttackProcsDPS = value; }
         }
 
         public float WildQuiverDPS
@@ -479,7 +486,8 @@ namespace Rawr.Hunter
                             "Chimera Shot: " + PiercingShotsDPSChimeraShot.ToString("F2") + "\n");
 
             // Combined DPS
-            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2"));
+            string zod = (BonusAttackProcsDPS != 0 ? string.Format("*Includes:\r\nZod's Proc: {0:0.0}", BonusAttackProcsDPS) : "");
+            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2") + zod);
             dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
             dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
 
