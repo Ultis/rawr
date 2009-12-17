@@ -2094,10 +2094,10 @@ namespace Rawr {
                 case CharacterClass.Warrior:     retVal.Add(procSTR); retVal.Add(procArP);   retVal.Add(procCrit);  break;
                 case CharacterClass.Rogue:       retVal.Add(procAGI); retVal.Add(procArP);   retVal.Add(procAP);    break;
                 case CharacterClass.Paladin:     retVal.Add(procSTR); retVal.Add(procHaste); retVal.Add(procCrit);  break;
-                case CharacterClass.Hunter:      retVal.Add(procAP ); retVal.Add(procAGI);   retVal.Add(procCrit);  break;
+                case CharacterClass.Hunter:      retVal.Add(procAP);  retVal.Add(procAGI);   retVal.Add(procCrit);  break;
                 case CharacterClass.DeathKnight: retVal.Add(procSTR); retVal.Add(procCrit);  retVal.Add(procHaste); break;
                 case CharacterClass.Druid:       retVal.Add(procArP); retVal.Add(procSTR);   retVal.Add(procAGI);   break;
-                case CharacterClass.Shaman:      retVal.Add(procAGI); retVal.Add(procAP);    retVal.Add(procCrit);  break;
+                case CharacterClass.Shaman:      retVal.Add(procAGI); retVal.Add(procAP);    retVal.Add(procArP);   break;
                 default: break; // None
             }
 
