@@ -107,17 +107,32 @@ namespace Rawr.Tree {
             lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.RevitalizePPM;
 
 
-            tbOOMRejuv.Value = calcOpts.ReduceOOMRejuv;
-            tbOOMRegrowth.Value = calcOpts.ReduceOOMRegrowth;
-            tbOOMLifebloom.Value = calcOpts.ReduceOOMLifebloom;
-            tbOOMNourish.Value = calcOpts.ReduceOOMNourish;
-            tbOOMWildGrowth.Value = calcOpts.ReduceOOMWildGrowth;
-            lblOOMRejuv.Text = "Rejuvenation: " + calcOpts.ReduceOOMRejuv + "%.";
-            lblOOMRegrowth.Text = "Regrowth: " + calcOpts.ReduceOOMRegrowth + "%.";
-            lblOOMLifebloom.Text = "Lifebloom: " + calcOpts.ReduceOOMLifebloom + "%.";
-            lblOOMNourish.Text = "Nourish: " + calcOpts.ReduceOOMNourish + "%.";
-            lblOOMWildGrowth.Text = "WildGrowth: " + calcOpts.ReduceOOMWildGrowth + "%.";
+            lbOOMspells.Items.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                if (calcOpts.ReduceOOMRejuvOrder == i)
+                {
+                    lbOOMspells.Items.Add("Rejuvenation until " + calcOpts.ReduceOOMRejuv + "%.");
+                }
+                else if (calcOpts.ReduceOOMRegrowthOrder == i)
+                {
+                    lbOOMspells.Items.Add("Regrowth until " + calcOpts.ReduceOOMRegrowth + "%.");
+                }
+                else if (calcOpts.ReduceOOMLifebloomOrder == i)
+                {
+                    lbOOMspells.Items.Add("Lifebloom until " + calcOpts.ReduceOOMLifebloom + "%.");
+                }
+                else if (calcOpts.ReduceOOMNourishOrder == i)
+                {
+                    lbOOMspells.Items.Add("Nourish until " + calcOpts.ReduceOOMNourish + "%.");
+                }
+                else if (calcOpts.ReduceOOMWildGrowthOrder == i)
+                {
+                    lbOOMspells.Items.Add("WildGrowth until " + calcOpts.ReduceOOMWildGrowth + "%.");
+                }
+            }
 
+            tbOOMpercentage.Enabled = false;
 
             loading = false;
         }
@@ -444,53 +459,176 @@ namespace Rawr.Tree {
             Character.OnCalculationsInvalidated();
         }
 
-        private void tbOOMRejuv_Scroll(object sender, EventArgs e)
+        private int currentSelection;
+        // 0 = rejuv
+        // 1 = regrowth
+        // 2 = lifebloom
+        // 3 = nourish
+        // 4 = wild growth
+
+        private void btnOOMup_Click(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ReduceOOMRejuv = tbOOMRejuv.Value;
-            lblOOMRejuv.Text = "Rejuvenation: " + (float)calcOpts.ReduceOOMRejuv + "%.";
-            Character.OnCalculationsInvalidated();
+            if (lbOOMspells.SelectedItem == null || lbOOMspells.SelectedIndex == 0) { return; }
+
+            int index = lbOOMspells.SelectedIndex - 1;
+            lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex - 1, lbOOMspells.SelectedItem);
+            lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+            lbOOMspells.SelectedIndex = index;
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (((string)lbOOMspells.Items[i]).StartsWith("Rejuvenation"))
+                {
+                    calcOpts.ReduceOOMRejuvOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Regrowth"))
+                {
+                    calcOpts.ReduceOOMRegrowthOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Lifebloom"))
+                {
+                    calcOpts.ReduceOOMLifebloomOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Nourish"))
+                {
+                    calcOpts.ReduceOOMNourishOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Wild Growth"))
+                {
+                    calcOpts.ReduceOOMWildGrowthOrder = i;
+                }
+            }
+
         }
 
-        private void tbOOMRegrowth_Scroll(object sender, EventArgs e)
+        private void btnOOMdown_Click(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ReduceOOMRegrowth = tbOOMRegrowth.Value;
-            lblOOMRegrowth.Text = "Regrowth: " + (float)calcOpts.ReduceOOMRegrowth + "%.";
-            Character.OnCalculationsInvalidated();
+            if (lbOOMspells.SelectedItem == null || lbOOMspells.SelectedIndex == lbOOMspells.Items.Count - 1) { return; }
 
+            int index = lbOOMspells.SelectedIndex + 1;
+            lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 2, lbOOMspells.SelectedItem);
+            lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+            lbOOMspells.SelectedIndex = index;
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (((string)lbOOMspells.Items[i]).StartsWith("Rejuvenation"))
+                {
+                    calcOpts.ReduceOOMRejuvOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Regrowth"))
+                {
+                    calcOpts.ReduceOOMRegrowthOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Lifebloom"))
+                {
+                    calcOpts.ReduceOOMLifebloomOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Nourish"))
+                {
+                    calcOpts.ReduceOOMNourishOrder = i;
+                }
+                else if (((string)lbOOMspells.Items[i]).StartsWith("Wild Growth"))
+                {
+                    calcOpts.ReduceOOMWildGrowthOrder = i;
+                }
+            }
         }
 
-        private void tbOOMLifebloom_Scroll(object sender, EventArgs e)
+        private void lbOOMspells_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ReduceOOMLifebloom = tbOOMLifebloom.Value;
-            lblOOMLifebloom.Text = "Lifebloom: " + (float)calcOpts.ReduceOOMLifebloom + "%.";
-            Character.OnCalculationsInvalidated();
+            if (lbOOMspells.SelectedItem == null) { return; }
 
+            if (((string)lbOOMspells.SelectedItem).StartsWith("Rejuvenation"))
+            {
+                tbOOMpercentage.Enabled = true;
+                tbOOMpercentage.Value = calcOpts.ReduceOOMRejuv;
+                currentSelection = 0;
+            }
+            else if (((string)lbOOMspells.SelectedItem).StartsWith("Regrowth"))
+            {
+                tbOOMpercentage.Enabled = true;
+                tbOOMpercentage.Value = calcOpts.ReduceOOMRegrowth;
+                currentSelection = 1;
+            }
+            else if (((string)lbOOMspells.SelectedItem).StartsWith("Lifebloom"))
+            {
+                tbOOMpercentage.Enabled = true;
+                tbOOMpercentage.Value = calcOpts.ReduceOOMLifebloom;
+                currentSelection = 2;
+            }
+            else if (((string)lbOOMspells.SelectedItem).StartsWith("Nourish"))
+            {
+                tbOOMpercentage.Enabled = true;
+                tbOOMpercentage.Value = calcOpts.ReduceOOMNourish;
+                currentSelection = 3;
+            }
+            else if (((string)lbOOMspells.SelectedItem).StartsWith("Wild Growth"))
+            {
+                tbOOMpercentage.Enabled = true;
+                tbOOMpercentage.Value = calcOpts.ReduceOOMWildGrowth;
+                currentSelection = 4;
+            }
+            else
+            {
+                tbOOMpercentage.Enabled = false;
+                currentSelection = 5;
+            }
         }
 
-        private void tbOOMNourish_Scroll(object sender, EventArgs e)
+        private void tbOOMpercentage_Scroll(object sender, EventArgs e)
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ReduceOOMNourish = tbOOMNourish.Value;
-            lblOOMNourish.Text = "Nourish: " + (float)calcOpts.ReduceOOMNourish + "%.";
+            String newText;
+            int index = lbOOMspells.SelectedIndex;
+            switch (currentSelection)
+            {
+                case 0:
+                    calcOpts.ReduceOOMRejuv = tbOOMpercentage.Value;
+                    newText = "Rejuvenation until " + tbOOMpercentage.Value + "%.";
+                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
+                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+                    lbOOMspells.SelectedIndex = index;
+                    break;
+                case 1:
+                    calcOpts.ReduceOOMRegrowth = tbOOMpercentage.Value;
+                    newText = "Regrowth until " + tbOOMpercentage.Value + "%.";
+                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
+                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+                    lbOOMspells.SelectedIndex = index;
+                    break;
+                case 2:
+                    calcOpts.ReduceOOMLifebloom = tbOOMpercentage.Value;
+                    newText = "Lifebloom until " + tbOOMpercentage.Value + "%.";
+                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
+                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+                    lbOOMspells.SelectedIndex = index;
+                    break;
+                case 3:
+                    calcOpts.ReduceOOMNourish = tbOOMpercentage.Value;
+                    newText = "Nourish until " + tbOOMpercentage.Value + "%.";
+                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
+                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+                    lbOOMspells.SelectedIndex = index;
+                    break;
+                case 4:
+                    calcOpts.ReduceOOMWildGrowth = tbOOMpercentage.Value;
+                    newText = "Wild Growth until " + tbOOMpercentage.Value + "%.";
+                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
+                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
+                    lbOOMspells.SelectedIndex = index;
+                    break;
+                default:
+                    break;
+            } 
             Character.OnCalculationsInvalidated();
-
-        }
-
-        private void tbOOMWildGrowth_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ReduceOOMWildGrowth = tbOOMWildGrowth.Value;
-            lblOOMWildGrowth.Text = "WildGrowth: " + (float)calcOpts.ReduceOOMWildGrowth + "%.";
-            Character.OnCalculationsInvalidated();
-
         }
 
     }

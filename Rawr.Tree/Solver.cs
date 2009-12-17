@@ -524,14 +524,6 @@ namespace Rawr.Tree
             // We want our MPS to become f*MPS
 
             float MPStoGain = rot.MPS * (1f - f);
-            float max = Math.Max(rotSettings.reduceOOMRejuv, rotSettings.reduceOOMRegrowth);
-            max = Math.Max(max, rotSettings.reduceOOMLifebloom);
-            max = Math.Max(max, rotSettings.reduceOOMNourish);
-            max = Math.Max(max, rotSettings.reduceOOMWildGrowth);
-            MPStoGain *= max;
-
-            float total = rotSettings.reduceOOMRejuv + rotSettings.reduceOOMRegrowth + rotSettings.reduceOOMLifebloom
-                + rotSettings.reduceOOMNourish + rotSettings.reduceOOMWildGrowth;
 
             rot.TimeToOOM_unreduced = rot.TimeToOOM;
             rot.IdleCF_unreducedOOM = rot.IdleCF;
@@ -541,21 +533,39 @@ namespace Rawr.Tree
             rot.NourishCF_unreducedOOM = rot.NourishCF;
             rot.WildGrowthCF_unreducedOOM = rot.WildGrowthCF;
 
-            if (total > 0)
+            for (int i = 0; i < 5; i++)
             {
-                float MPSfromRejuv = MPStoGain * rotSettings.reduceOOMRejuv / total;
-                float MPSfromRegrowth = MPStoGain * rotSettings.reduceOOMRegrowth / total;
-                float MPSfromLifebloom = MPStoGain * rotSettings.reduceOOMLifebloom / total;
-                float MPSfromNourish = MPStoGain * rotSettings.reduceOOMNourish / total;
-                float MPSfromWildGrowth = MPStoGain * rotSettings.reduceOOMWildGrowth / total;
-
-                rot.RejuvCF = Math.Max(0.0f, rot.RejuvCPS - MPSfromRejuv / rot.rejuvenate.ManaCost) * rot.rejuvenate.CastTime;
-                rot.RegrowthCF = Math.Max(0.0f, rot.RegrowthCPS - MPSfromRegrowth / rot.regrowth.ManaCost) * rot.regrowth.CastTime;
-                rot.LifebloomCF = Math.Max(0.0f, rot.LifebloomCPS - MPSfromLifebloom / rot.lifebloom.ManaCost) * rot.lifebloom.CastTime;
-                rot.NourishCF = Math.Max(0.0f, rot.NourishCPS - MPSfromNourish / rot.nourish[0].ManaCost) * rot.nourish[0].CastTime;
-                rot.WildGrowthCF = Math.Max(0.0f, rot.WildGrowthCPS - MPSfromWildGrowth / rot.wildGrowth.ManaCost) * rot.wildGrowth.CastTime;
+                if (calcOpts.ReduceOOMRejuvOrder == i)
+                {
+                    float r = Math.Min(1f, (MPStoGain / rot.rejuvenate.ManaCost * rot.rejuvenate.CastTime));
+                    rot.RejuvCF = Math.Max(rot.RejuvCF * (1f - calcOpts.ReduceOOMRejuv / 100f), rot.RejuvCF - r);
+                    MPStoGain -= rot.rejuvenate.ManaCost * (rot.RejuvCF_unreducedOOM - rot.RejuvCF) / rot.rejuvenate.CastTime;
+                }
+                else if (calcOpts.ReduceOOMRegrowthOrder == i)
+                {
+                    float r = Math.Min(1f, (MPStoGain / rot.regrowth.ManaCost * rot.regrowth.CastTime));
+                    rot.RegrowthCF = Math.Max(rot.RegrowthCF * (1f - calcOpts.ReduceOOMRegrowth / 100f), rot.RegrowthCF - r);
+                    MPStoGain -= rot.regrowth.ManaCost * (rot.RegrowthCF_unreducedOOM - rot.RegrowthCF) / rot.regrowth.CastTime;
+                }
+                else if (calcOpts.ReduceOOMLifebloomOrder == i)
+                {
+                    float r = Math.Min(1f, (MPStoGain / rot.lifebloom.ManaCost * rot.lifebloom.CastTime));
+                    rot.LifebloomCF = Math.Max(rot.LifebloomCF * (1f - calcOpts.ReduceOOMLifebloom / 100f), rot.LifebloomCF - r);
+                    MPStoGain -= rot.lifebloom.ManaCost * (rot.LifebloomCF_unreducedOOM - rot.LifebloomCF) / rot.lifebloom.CastTime;
+                }
+                else if (calcOpts.ReduceOOMNourishOrder == i)
+                {
+                    float r = Math.Min(1f, (MPStoGain / rot.nourish[0].ManaCost * rot.nourish[0].CastTime));
+                    rot.NourishCF = Math.Max(rot.NourishCF * (1f - calcOpts.ReduceOOMNourish / 100f), rot.NourishCF - r);
+                    MPStoGain -= rot.nourish[0].ManaCost * (rot.NourishCF_unreducedOOM - rot.NourishCF) / rot.nourish[0].CastTime;
+                }
+                else if (calcOpts.ReduceOOMWildGrowthOrder == i)
+                {
+                    float r = Math.Min(1f, (MPStoGain / rot.wildGrowth.ManaCost * rot.wildGrowth.CastTime));
+                    rot.WildGrowthCF = Math.Max(rot.WildGrowthCF * (1f - calcOpts.ReduceOOMWildGrowth / 100f), rot.WildGrowthCF - r);
+                    MPStoGain -= rot.wildGrowth.ManaCost * (rot.WildGrowthCF_unreducedOOM - rot.WildGrowthCF) / rot.wildGrowth.CastTime;
+                }
             }
-
             #endregion
 
             if (stats.ShieldFromHealed > 0) rot.ValAnyrShield = stats.ShieldFromHealed;

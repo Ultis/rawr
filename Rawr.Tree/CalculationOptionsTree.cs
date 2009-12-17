@@ -45,6 +45,7 @@ namespace Rawr.Tree {
         private bool ignoreNaturesGrace, ignoreAllHasteEffects;
         private int revitalizePPM, wgUptime;
         private int reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom, reduceOOMNourish, reduceOOMWildGrowth;
+        private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder, reduceOOMNourishOrder, reduceOOMWildGrowthOrder;
 
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
@@ -76,14 +77,26 @@ namespace Rawr.Tree {
             Nourish4 = 0;
             WildGrowthPerMinute = 2;
             SwiftmendPerMinute = 2;
-            livingSeedEfficiency = 50;
-            adjustRejuv = true;
-            adjustRegrowth = true;
-            adjustLifebloom = true;
-            adjustNourish = true;
+            LivingSeedEfficiency = 50;
+            AdjustRejuv = true;
+            AdjustRegrowth = true;
+            AdjustLifebloom = true;
+            AdjustNourish = true;
 
-            ignoreNaturesGrace = true;
-            ignoreAllHasteEffects = true;
+            ReduceOOMRejuv = 40;
+            ReduceOOMNourish = 80;
+            ReduceOOMLifebloom = 50;
+            ReduceOOMRegrowth = 100;
+            ReduceOOMWildGrowth = 40;
+
+            ReduceOOMNourishOrder = 0;
+            ReduceOOMLifebloomOrder = 1;
+            ReduceOOMRegrowthOrder = 2;
+            ReduceOOMWildGrowthOrder = 3;
+            ReduceOOMRejuvOrder = 4;
+
+            IgnoreNaturesGrace = true;
+            IgnoreAllHasteEffects = true;
 
             singleTargetRotation = 0;
 
@@ -136,6 +149,12 @@ namespace Rawr.Tree {
         public int ReduceOOMLifebloom { get { return reduceOOMLifebloom; } set { reduceOOMLifebloom = value; OnPropertyChanged("ReduceOOMLifebloom"); } }
         public int ReduceOOMNourish { get { return reduceOOMNourish; } set { reduceOOMNourish = value; OnPropertyChanged("ReduceOOMNourish"); } }
         public int ReduceOOMWildGrowth { get { return reduceOOMWildGrowth; } set { reduceOOMWildGrowth = value; OnPropertyChanged("ReduceOOMWildGrowth"); } }
+
+        public int ReduceOOMRejuvOrder { get { return reduceOOMRejuvOrder; } set { reduceOOMRejuvOrder = value; OnPropertyChanged("ReduceOOMRejuvOrder"); } }
+        public int ReduceOOMRegrowthOrder { get { return reduceOOMRegrowthOrder; } set { reduceOOMRegrowthOrder = value; OnPropertyChanged("ReduceOOMRegrowthOrder"); } }
+        public int ReduceOOMLifebloomOrder { get { return reduceOOMLifebloomOrder; } set { reduceOOMLifebloomOrder = value; OnPropertyChanged("ReduceOOMLifebloomOrder"); } }
+        public int ReduceOOMNourishOrder { get { return reduceOOMNourishOrder; } set { reduceOOMNourishOrder = value; OnPropertyChanged("ReduceOOMNourishOrder"); } }
+        public int ReduceOOMWildGrowthOrder { get { return reduceOOMWildGrowthOrder; } set { reduceOOMWildGrowthOrder = value; OnPropertyChanged("ReduceOOMWildGrowthOrder"); } }
 
         public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
         public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }

@@ -99,16 +99,10 @@
             this.lblIdleFraction = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.tbOOMWildGrowth = new System.Windows.Forms.TrackBar();
-            this.lblOOMWildGrowth = new System.Windows.Forms.Label();
-            this.tbOOMNourish = new System.Windows.Forms.TrackBar();
-            this.lblOOMNourish = new System.Windows.Forms.Label();
-            this.tbOOMLifebloom = new System.Windows.Forms.TrackBar();
-            this.lblOOMLifebloom = new System.Windows.Forms.Label();
-            this.tbOOMRegrowth = new System.Windows.Forms.TrackBar();
-            this.lblOOMRegrowth = new System.Windows.Forms.Label();
-            this.tbOOMRejuv = new System.Windows.Forms.TrackBar();
-            this.lblOOMRejuv = new System.Windows.Forms.Label();
+            this.tbOOMpercentage = new System.Windows.Forms.TrackBar();
+            this.btnOOMdown = new System.Windows.Forms.Button();
+            this.btnOOMup = new System.Windows.Forms.Button();
+            this.lbOOMspells = new System.Windows.Forms.ListBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -157,11 +151,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbRejuvCF)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.groupBox11.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMWildGrowth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMNourish)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMLifebloom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMRegrowth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMRejuv)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOOMpercentage)).BeginInit();
             this.groupBox10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbRevitalize)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -971,123 +961,57 @@
             // 
             // groupBox11
             // 
-            this.groupBox11.Controls.Add(this.tbOOMWildGrowth);
-            this.groupBox11.Controls.Add(this.lblOOMWildGrowth);
-            this.groupBox11.Controls.Add(this.tbOOMNourish);
-            this.groupBox11.Controls.Add(this.lblOOMNourish);
-            this.groupBox11.Controls.Add(this.tbOOMLifebloom);
-            this.groupBox11.Controls.Add(this.lblOOMLifebloom);
-            this.groupBox11.Controls.Add(this.tbOOMRegrowth);
-            this.groupBox11.Controls.Add(this.lblOOMRegrowth);
-            this.groupBox11.Controls.Add(this.tbOOMRejuv);
-            this.groupBox11.Controls.Add(this.lblOOMRejuv);
+            this.groupBox11.Controls.Add(this.tbOOMpercentage);
+            this.groupBox11.Controls.Add(this.btnOOMdown);
+            this.groupBox11.Controls.Add(this.btnOOMup);
+            this.groupBox11.Controls.Add(this.lbOOMspells);
             this.groupBox11.Controls.Add(this.label12);
             this.groupBox11.Location = new System.Drawing.Point(4, 369);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(263, 413);
+            this.groupBox11.Size = new System.Drawing.Size(263, 232);
             this.groupBox11.TabIndex = 84;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Mana strategy";
             // 
-            // tbOOMWildGrowth
+            // tbOOMpercentage
             // 
-            this.tbOOMWildGrowth.BackColor = System.Drawing.SystemColors.Window;
-            this.tbOOMWildGrowth.Location = new System.Drawing.Point(6, 362);
-            this.tbOOMWildGrowth.Maximum = 100;
-            this.tbOOMWildGrowth.Name = "tbOOMWildGrowth";
-            this.tbOOMWildGrowth.Size = new System.Drawing.Size(226, 45);
-            this.tbOOMWildGrowth.TabIndex = 97;
-            this.tbOOMWildGrowth.TickFrequency = 10;
-            this.tbOOMWildGrowth.Scroll += new System.EventHandler(this.tbOOMWildGrowth_Scroll);
+            this.tbOOMpercentage.BackColor = System.Drawing.SystemColors.Window;
+            this.tbOOMpercentage.Location = new System.Drawing.Point(6, 176);
+            this.tbOOMpercentage.Maximum = 100;
+            this.tbOOMpercentage.Name = "tbOOMpercentage";
+            this.tbOOMpercentage.Size = new System.Drawing.Size(250, 45);
+            this.tbOOMpercentage.TabIndex = 101;
+            this.tbOOMpercentage.TickFrequency = 10;
+            this.tbOOMpercentage.Scroll += new System.EventHandler(this.tbOOMpercentage_Scroll);
             // 
-            // lblOOMWildGrowth
+            // btnOOMdown
             // 
-            this.lblOOMWildGrowth.AutoSize = true;
-            this.lblOOMWildGrowth.Location = new System.Drawing.Point(6, 346);
-            this.lblOOMWildGrowth.Name = "lblOOMWildGrowth";
-            this.lblOOMWildGrowth.Size = new System.Drawing.Size(46, 13);
-            this.lblOOMWildGrowth.TabIndex = 96;
-            this.lblOOMWildGrowth.Text = "Nourish:";
+            this.btnOOMdown.Location = new System.Drawing.Point(226, 148);
+            this.btnOOMdown.Name = "btnOOMdown";
+            this.btnOOMdown.Size = new System.Drawing.Size(30, 23);
+            this.btnOOMdown.TabIndex = 100;
+            this.btnOOMdown.Text = "Dn";
+            this.btnOOMdown.UseVisualStyleBackColor = true;
+            this.btnOOMdown.Click += new System.EventHandler(this.btnOOMdown_Click);
             // 
-            // tbOOMNourish
+            // btnOOMup
             // 
-            this.tbOOMNourish.BackColor = System.Drawing.SystemColors.Window;
-            this.tbOOMNourish.Location = new System.Drawing.Point(6, 312);
-            this.tbOOMNourish.Maximum = 100;
-            this.tbOOMNourish.Name = "tbOOMNourish";
-            this.tbOOMNourish.Size = new System.Drawing.Size(226, 45);
-            this.tbOOMNourish.TabIndex = 95;
-            this.tbOOMNourish.TickFrequency = 10;
-            this.tbOOMNourish.Scroll += new System.EventHandler(this.tbOOMNourish_Scroll);
+            this.btnOOMup.Location = new System.Drawing.Point(226, 99);
+            this.btnOOMup.Name = "btnOOMup";
+            this.btnOOMup.Size = new System.Drawing.Size(30, 23);
+            this.btnOOMup.TabIndex = 99;
+            this.btnOOMup.Text = "Up";
+            this.btnOOMup.UseVisualStyleBackColor = true;
+            this.btnOOMup.Click += new System.EventHandler(this.btnOOMup_Click);
             // 
-            // lblOOMNourish
+            // lbOOMspells
             // 
-            this.lblOOMNourish.AutoSize = true;
-            this.lblOOMNourish.Location = new System.Drawing.Point(6, 296);
-            this.lblOOMNourish.Name = "lblOOMNourish";
-            this.lblOOMNourish.Size = new System.Drawing.Size(46, 13);
-            this.lblOOMNourish.TabIndex = 94;
-            this.lblOOMNourish.Text = "Nourish:";
-            // 
-            // tbOOMLifebloom
-            // 
-            this.tbOOMLifebloom.BackColor = System.Drawing.SystemColors.Window;
-            this.tbOOMLifebloom.Location = new System.Drawing.Point(6, 261);
-            this.tbOOMLifebloom.Maximum = 100;
-            this.tbOOMLifebloom.Name = "tbOOMLifebloom";
-            this.tbOOMLifebloom.Size = new System.Drawing.Size(226, 45);
-            this.tbOOMLifebloom.TabIndex = 93;
-            this.tbOOMLifebloom.TickFrequency = 10;
-            this.tbOOMLifebloom.Scroll += new System.EventHandler(this.tbOOMLifebloom_Scroll);
-            // 
-            // lblOOMLifebloom
-            // 
-            this.lblOOMLifebloom.AutoSize = true;
-            this.lblOOMLifebloom.Location = new System.Drawing.Point(6, 245);
-            this.lblOOMLifebloom.Name = "lblOOMLifebloom";
-            this.lblOOMLifebloom.Size = new System.Drawing.Size(55, 13);
-            this.lblOOMLifebloom.TabIndex = 92;
-            this.lblOOMLifebloom.Text = "Lifebloom:";
-            // 
-            // tbOOMRegrowth
-            // 
-            this.tbOOMRegrowth.BackColor = System.Drawing.SystemColors.Window;
-            this.tbOOMRegrowth.Location = new System.Drawing.Point(6, 210);
-            this.tbOOMRegrowth.Maximum = 100;
-            this.tbOOMRegrowth.Name = "tbOOMRegrowth";
-            this.tbOOMRegrowth.Size = new System.Drawing.Size(226, 45);
-            this.tbOOMRegrowth.TabIndex = 91;
-            this.tbOOMRegrowth.TickFrequency = 10;
-            this.tbOOMRegrowth.Scroll += new System.EventHandler(this.tbOOMRegrowth_Scroll);
-            // 
-            // lblOOMRegrowth
-            // 
-            this.lblOOMRegrowth.AutoSize = true;
-            this.lblOOMRegrowth.Location = new System.Drawing.Point(6, 194);
-            this.lblOOMRegrowth.Name = "lblOOMRegrowth";
-            this.lblOOMRegrowth.Size = new System.Drawing.Size(56, 13);
-            this.lblOOMRegrowth.TabIndex = 90;
-            this.lblOOMRegrowth.Text = "Regrowth:";
-            // 
-            // tbOOMRejuv
-            // 
-            this.tbOOMRejuv.BackColor = System.Drawing.SystemColors.Window;
-            this.tbOOMRejuv.Location = new System.Drawing.Point(6, 159);
-            this.tbOOMRejuv.Maximum = 100;
-            this.tbOOMRejuv.Name = "tbOOMRejuv";
-            this.tbOOMRejuv.Size = new System.Drawing.Size(226, 45);
-            this.tbOOMRejuv.TabIndex = 89;
-            this.tbOOMRejuv.TickFrequency = 10;
-            this.tbOOMRejuv.Scroll += new System.EventHandler(this.tbOOMRejuv_Scroll);
-            // 
-            // lblOOMRejuv
-            // 
-            this.lblOOMRejuv.AutoSize = true;
-            this.lblOOMRejuv.Location = new System.Drawing.Point(6, 143);
-            this.lblOOMRejuv.Name = "lblOOMRejuv";
-            this.lblOOMRejuv.Size = new System.Drawing.Size(73, 13);
-            this.lblOOMRejuv.TabIndex = 88;
-            this.lblOOMRejuv.Text = "Rejuvenation:";
+            this.lbOOMspells.FormattingEnabled = true;
+            this.lbOOMspells.Location = new System.Drawing.Point(6, 101);
+            this.lbOOMspells.Name = "lbOOMspells";
+            this.lbOOMspells.Size = new System.Drawing.Size(214, 69);
+            this.lbOOMspells.TabIndex = 98;
+            this.lbOOMspells.SelectedIndexChanged += new System.EventHandler(this.lbOOMspells_SelectedIndexChanged);
             // 
             // label12
             // 
@@ -1095,7 +1019,7 @@
             this.label12.Location = new System.Drawing.Point(6, 20);
             this.label12.MaximumSize = new System.Drawing.Size(250, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(250, 117);
+            this.label12.Size = new System.Drawing.Size(250, 78);
             this.label12.TabIndex = 0;
             this.label12.Text = resources.GetString("label12.Text");
             // 
@@ -1311,11 +1235,7 @@
             this.tabPage5.ResumeLayout(false);
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMWildGrowth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMNourish)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMLifebloom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMRegrowth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbOOMRejuv)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOOMpercentage)).EndInit();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbRevitalize)).EndInit();
@@ -1416,15 +1336,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TrackBar tbOOMNourish;
-        private System.Windows.Forms.Label lblOOMNourish;
-        private System.Windows.Forms.TrackBar tbOOMLifebloom;
-        private System.Windows.Forms.Label lblOOMLifebloom;
-        private System.Windows.Forms.TrackBar tbOOMRegrowth;
-        private System.Windows.Forms.Label lblOOMRegrowth;
-        private System.Windows.Forms.TrackBar tbOOMRejuv;
-        private System.Windows.Forms.Label lblOOMRejuv;
-        private System.Windows.Forms.TrackBar tbOOMWildGrowth;
-        private System.Windows.Forms.Label lblOOMWildGrowth;
+        private System.Windows.Forms.TrackBar tbOOMpercentage;
+        private System.Windows.Forms.Button btnOOMdown;
+        private System.Windows.Forms.Button btnOOMup;
+        private System.Windows.Forms.ListBox lbOOMspells;
     }
 }
