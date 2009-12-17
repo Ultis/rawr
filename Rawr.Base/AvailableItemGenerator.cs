@@ -607,11 +607,14 @@ namespace Rawr.Optimizer
 			return valid;
 		}
 
-		public void AddItemRestrictions(ItemInstance[] items)
+		public void AddItemRestrictions(ItemInstance[] items, bool includeOffHand)
 		{
 			for (int slot = 0; slot < items.Length; slot++)
 			{
-				AddItemRestriction(items[slot]);
+                if (slot != (int)CharacterSlot.OffHand || includeOffHand)
+                {
+                    AddItemRestriction(items[slot]);
+                }
 			}
 		}
 

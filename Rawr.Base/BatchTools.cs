@@ -430,7 +430,7 @@ namespace Rawr
                             upgradeListPhase = 1; // item was used, from now on we do evaluate upgrade on specific item instance only
                             optimizedItemInstance = comp.ItemInstance;
                             // make item restrictions based on best character
-                            itemGenerator.AddItemRestrictions(comp.CharacterItems);
+                            itemGenerator.AddItemRestrictions(comp.CharacterItems, workingCharacter.CurrentCalculations.IncludeOffHandInCalculations(workingCharacter));
                             foundUpgrade = true;
                             string key = comp.ItemInstance.Id.ToString();
                             UpgradeEntry upgradeEntry;
@@ -727,7 +727,7 @@ namespace Rawr
                     if (e.UpgradeValue > 0)
                     {
                         // make item restrictions based on best character
-                        itemGenerator.AddItemRestrictions(e.Upgrade.CharacterItems);
+                        itemGenerator.AddItemRestrictions(e.Upgrade.CharacterItems, workingCharacter.CurrentCalculations.IncludeOffHandInCalculations(workingCharacter));
                         upgradeEntry.Value += e.UpgradeValue * CurrentBatchCharacter.Weight;
                         upgradeEntry.ValueList.Add(e.UpgradeValue);
                     }
