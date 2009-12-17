@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Rawr
 {
@@ -50,7 +51,10 @@ namespace Rawr
 
         private Object lockObject; // because lock(this) is discouraged by documentation
 
-        public ItemUpdater(bool multiThreaded, bool useArmory, bool usePTR)
+        private Queue<ItemToUpdate> itemQueue;
+        private int itemsPerSecond;
+
+        public ItemUpdater(bool multiThreaded, bool useArmory, bool usePTR, int itemsPerSecond)
         {
             this.itemsDone = 0;
             this.itemsToDo = 0;
@@ -62,6 +66,45 @@ namespace Rawr
             this.usePTR = usePTR;
             this.eventDone = new AutoResetEvent(false);
             this.lockObject = new Object();
+            this.itemsPerSecond = itemsPerSecond;
+            this.itemQueue = new Queue<ItemToUpdate>();
+
+            Thread t = new Thread(new ThreadStart(Throttle));
+            t.Start();
+        }
+
+        private void Throttle()
+        {
+            Stopwatch stopwatch = new Stopwatch(); ;
+            stopwatch.Start();
+
+            while (!Done)
+            {
+                long before = stopwatch.ElapsedMilliseconds;
+
+                for (int i = 0; i < itemsPerSecond; i++)
+                {
+                    ItemToUpdate info = null;
+                    lock (lockObject)
+                    {
+                        if (itemQueue.Count == 0) break;
+                        info = itemQueue.Dequeue();
+                    }
+                    if (multiThreaded)
+                    {
+                        ThreadPool.QueueUserWorkItem(LoadItem, info);
+                    }
+                    else
+                    {
+                        LoadItem(info);
+                        Interlocked.Increment(ref itemsDone);
+                    }
+                }
+
+                long elapsed = stopwatch.ElapsedMilliseconds - before;                
+
+                if (elapsed < 1000) Thread.Sleep((int)(1000 - elapsed));
+            }
         }
 
         private void LoadItem(object state)
@@ -102,22 +145,15 @@ namespace Rawr
 
         public void AddItem(int index, Item i)
         {
-            lock (lockObject)
-            {
-                itemsToDo++;
-            }
             ItemToUpdate info = new ItemToUpdate()
             {
                 index = index,
                 item = i
             };
-            if (multiThreaded)
+            lock (lockObject)
             {
-                ThreadPool.QueueUserWorkItem(LoadItem, info);
-            }
-            else
-            {
-                LoadItem(info);
+                itemsToDo++;
+                itemQueue.Enqueue(info);
             }
         }
 
