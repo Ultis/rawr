@@ -792,20 +792,20 @@ namespace Rawr
 			{
 				//if (enchantCalcs.ContainsKey(enchant.Id)) continue;
 
-				bool isEquipped = character.GetEnchantBySlot(enchant.Slot) == enchant;
+				bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
 				if (isEquipped)
 				{
 					calcsEquipped = currentCalcs;
 					Character charUnequipped = character.Clone();
-					charUnequipped.SetEnchantBySlot(enchant.Slot, null);
+					charUnequipped.SetEnchantBySlot(slot, null);
 					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
 				}
 				else
 				{
 					Character charUnequipped = character.Clone();
 					Character charEquipped = character.Clone();
-					charUnequipped.SetEnchantBySlot(enchant.Slot, null);
-					charEquipped.SetEnchantBySlot(enchant.Slot, enchant);
+					charUnequipped.SetEnchantBySlot(slot, null);
+					charEquipped.SetEnchantBySlot(slot, enchant);
 					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
 					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
 				}

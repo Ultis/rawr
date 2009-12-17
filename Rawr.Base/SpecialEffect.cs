@@ -54,6 +54,12 @@ namespace Rawr
         /// <summary>Any ranged crits on the target</summary>
         RangedCrit,
         #endregion
+        #region Single-Weapon Hits
+        /// <summary>Hit or Crit with just the main-hand, useful for dual-wielding weapon procs/enchants</summary>
+        MainHandHit,
+        /// <summary>Hit or Crit with just the off-hand, useful for dual-wielding weapon procs/enchants</summary>
+        OffHandHit,
+        #endregion
 
         #region Damage, in or out
         /// <summary>Any damage taken, regardless of type</summary>
