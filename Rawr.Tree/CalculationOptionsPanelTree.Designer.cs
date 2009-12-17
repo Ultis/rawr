@@ -228,7 +228,8 @@
             this.cbIgnoreAllHasteEffects.Name = "cbIgnoreAllHasteEffects";
             this.cbIgnoreAllHasteEffects.Size = new System.Drawing.Size(260, 30);
             this.cbIgnoreAllHasteEffects.TabIndex = 1;
-            this.cbIgnoreAllHasteEffects.Text = "Ignore contributions of Haste Rating and Spell Haste proc effects in combat";
+            this.cbIgnoreAllHasteEffects.Text = "Ignore haste from special effects in combat (such as trinkets) when calculating C" +
+                "ombat Stats";
             this.cbIgnoreAllHasteEffects.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.cbIgnoreAllHasteEffects.UseVisualStyleBackColor = true;
             this.cbIgnoreAllHasteEffects.CheckedChanged += new System.EventHandler(this.cbIgnoreAllHasteEffects_CheckedChanged);
@@ -243,7 +244,7 @@
             this.cbIgnoreNaturesGrace.Name = "cbIgnoreNaturesGrace";
             this.cbIgnoreNaturesGrace.Size = new System.Drawing.Size(260, 30);
             this.cbIgnoreNaturesGrace.TabIndex = 0;
-            this.cbIgnoreNaturesGrace.Text = "Ignore contributions of Nature\'s Grace procs to average haste in combat";
+            this.cbIgnoreNaturesGrace.Text = "Ignore haste from Nature\'s Grace when calculating Combat Stats";
             this.cbIgnoreNaturesGrace.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.cbIgnoreNaturesGrace.UseVisualStyleBackColor = true;
             this.cbIgnoreNaturesGrace.CheckedChanged += new System.EventHandler(this.cbIgnoreNaturesGrace_CheckedChanged);
@@ -458,8 +459,8 @@
             this.label2.Size = new System.Drawing.Size(250, 52);
             this.label2.TabIndex = 80;
             this.label2.Text = "Next: Wild Growth and Swiftmend. If there is not enough casting time left after t" +
-                "he maintained HoTs, the model removes Swiftmend and reduces the number of Wild G" +
-                "rowth casts per minute.";
+                "he maintained HoTs, the model first removes Swiftmend and then, if still needed," +
+                " reduces Wild Growth casting.";
             // 
             // lblWG
             // 
@@ -779,9 +780,9 @@
             this.label7.Location = new System.Drawing.Point(8, 399);
             this.label7.MaximumSize = new System.Drawing.Size(250, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(238, 26);
+            this.label7.Size = new System.Drawing.Size(244, 26);
             this.label7.TabIndex = 83;
-            this.label7.Text = "Use the sliders to indicate how many hots are on the Nourish target, on average.";
+            this.label7.Text = "Use the sliders to indicate how many HoTs are on Nourish targets, on average.";
             // 
             // label3
             // 

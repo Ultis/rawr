@@ -214,7 +214,7 @@ namespace Rawr.Tree {
             _subPointNameColorsCF = new Dictionary<string, Color>();
             _subPointNameColorsCF.Add("Casting time percentage", Color.FromArgb(196, 0, 255, 0));
             _subPointNameColorsCF.Add("Mana reduction", Color.FromArgb(196, 255, 255, 0));
-            _subPointNameColorsCF.Add("Time reduction", Color.FromArgb(196, 0, 0, 255));
+            _subPointNameColorsCF.Add("Time reduction", Color.FromArgb(196, 255, 0, 0));
 
             _subPointNameColors = _subPointNameColorsRating;
         }
