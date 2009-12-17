@@ -3246,7 +3246,7 @@
             // 
             this.checkBoxMode33.AutoSize = true;
             this.checkBoxMode33.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode33", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMode33.Location = new System.Drawing.Point(185, 127);
+            this.checkBoxMode33.Location = new System.Drawing.Point(209, 127);
             this.checkBoxMode33.Name = "checkBoxMode33";
             this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMode33.TabIndex = 211;
@@ -3269,7 +3269,7 @@
             // 
             this.checkBoxMaxUseAssumption.AutoSize = true;
             this.checkBoxMaxUseAssumption.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MaxUseAssumption", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMaxUseAssumption.Location = new System.Drawing.Point(185, 107);
+            this.checkBoxMaxUseAssumption.Location = new System.Drawing.Point(209, 107);
             this.checkBoxMaxUseAssumption.Name = "checkBoxMaxUseAssumption";
             this.checkBoxMaxUseAssumption.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMaxUseAssumption.TabIndex = 209;
@@ -3290,7 +3290,7 @@
             // 
             this.checkBoxForceIncrementalOptimizations.AutoSize = true;
             this.checkBoxForceIncrementalOptimizations.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ForceIncrementalOptimizations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxForceIncrementalOptimizations.Location = new System.Drawing.Point(185, 47);
+            this.checkBoxForceIncrementalOptimizations.Location = new System.Drawing.Point(209, 47);
             this.checkBoxForceIncrementalOptimizations.Name = "checkBoxForceIncrementalOptimizations";
             this.checkBoxForceIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxForceIncrementalOptimizations.TabIndex = 207;
@@ -3298,7 +3298,7 @@
             // 
             // numericUpDownMaxThreads
             // 
-            this.numericUpDownMaxThreads.Location = new System.Drawing.Point(171, 276);
+            this.numericUpDownMaxThreads.Location = new System.Drawing.Point(185, 276);
             this.numericUpDownMaxThreads.Maximum = new decimal(new int[] {
             10,
             0,
@@ -3310,7 +3310,7 @@
             0,
             0});
             this.numericUpDownMaxThreads.Name = "numericUpDownMaxThreads";
-            this.numericUpDownMaxThreads.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownMaxThreads.Size = new System.Drawing.Size(39, 20);
             this.numericUpDownMaxThreads.TabIndex = 199;
             this.numericUpDownMaxThreads.Value = new decimal(new int[] {
             1,
@@ -3333,27 +3333,27 @@
             // numericUpDownDisplayAdvancedConstraintsLevel
             // 
             this.numericUpDownDisplayAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraintsLevel", true));
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(171, 255);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(185, 255);
             this.numericUpDownDisplayAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
             5,
             0,
             0,
             0});
             this.numericUpDownDisplayAdvancedConstraintsLevel.Name = "numericUpDownDisplayAdvancedConstraintsLevel";
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Size = new System.Drawing.Size(39, 20);
             this.numericUpDownDisplayAdvancedConstraintsLevel.TabIndex = 197;
             // 
             // numericUpDownComparisonAdvancedConstraintsLevel
             // 
             this.numericUpDownComparisonAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraintsLevel", true));
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(137, 255);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(140, 255);
             this.numericUpDownComparisonAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
             5,
             0,
             0,
             0});
             this.numericUpDownComparisonAdvancedConstraintsLevel.Name = "numericUpDownComparisonAdvancedConstraintsLevel";
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(39, 20);
             this.numericUpDownComparisonAdvancedConstraintsLevel.TabIndex = 196;
             // 
             // label102
@@ -3371,7 +3371,7 @@
             // 
             this.checkBoxEnableHastedEvocation.AutoSize = true;
             this.checkBoxEnableHastedEvocation.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "EnableHastedEvocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxEnableHastedEvocation.Location = new System.Drawing.Point(185, 87);
+            this.checkBoxEnableHastedEvocation.Location = new System.Drawing.Point(209, 87);
             this.checkBoxEnableHastedEvocation.Name = "checkBoxEnableHastedEvocation";
             this.checkBoxEnableHastedEvocation.Size = new System.Drawing.Size(15, 14);
             this.checkBoxEnableHastedEvocation.TabIndex = 191;
@@ -3390,9 +3390,9 @@
             // textBoxLowerBoundHint
             // 
             this.textBoxLowerBoundHint.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LowerBoundHint", true));
-            this.textBoxLowerBoundHint.Location = new System.Drawing.Point(132, 394);
+            this.textBoxLowerBoundHint.Location = new System.Drawing.Point(140, 394);
             this.textBoxLowerBoundHint.Name = "textBoxLowerBoundHint";
-            this.textBoxLowerBoundHint.Size = new System.Drawing.Size(68, 20);
+            this.textBoxLowerBoundHint.Size = new System.Drawing.Size(84, 20);
             this.textBoxLowerBoundHint.TabIndex = 186;
             // 
             // label100
@@ -3409,9 +3409,9 @@
             // textBoxAdditionalSegmentSplits
             // 
             this.textBoxAdditionalSegmentSplits.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AdditionalSegmentSplits", true));
-            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(132, 368);
+            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(140, 368);
             this.textBoxAdditionalSegmentSplits.Name = "textBoxAdditionalSegmentSplits";
-            this.textBoxAdditionalSegmentSplits.Size = new System.Drawing.Size(68, 20);
+            this.textBoxAdditionalSegmentSplits.Size = new System.Drawing.Size(84, 20);
             this.textBoxAdditionalSegmentSplits.TabIndex = 184;
             // 
             // label98
@@ -3429,7 +3429,7 @@
             // 
             this.checkBoxVariableSegmentDuration.AutoSize = true;
             this.checkBoxVariableSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "VariableSegmentDuration", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(185, 348);
+            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(209, 348);
             this.checkBoxVariableSegmentDuration.Name = "checkBoxVariableSegmentDuration";
             this.checkBoxVariableSegmentDuration.Size = new System.Drawing.Size(15, 14);
             this.checkBoxVariableSegmentDuration.TabIndex = 182;
@@ -3455,9 +3455,9 @@
             "15",
             "20",
             "30"});
-            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(125, 322);
+            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(140, 322);
             this.comboBoxSegmentDuration.Name = "comboBoxSegmentDuration";
-            this.comboBoxSegmentDuration.Size = new System.Drawing.Size(75, 21);
+            this.comboBoxSegmentDuration.Size = new System.Drawing.Size(84, 21);
             this.comboBoxSegmentDuration.TabIndex = 179;
             // 
             // label95
@@ -3483,7 +3483,7 @@
             // checkBoxDebugCooldownSegmentation
             // 
             this.checkBoxDebugCooldownSegmentation.AutoSize = true;
-            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(185, 302);
+            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(209, 302);
             this.checkBoxDebugCooldownSegmentation.Name = "checkBoxDebugCooldownSegmentation";
             this.checkBoxDebugCooldownSegmentation.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDebugCooldownSegmentation.TabIndex = 175;
@@ -3495,9 +3495,9 @@
             this.comboBoxMIPMethod.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.calculationOptionsMageBindingSource, "MIPMethod", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comboBoxMIPMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMIPMethod.FormattingEnabled = true;
-            this.comboBoxMIPMethod.Location = new System.Drawing.Point(115, 177);
+            this.comboBoxMIPMethod.Location = new System.Drawing.Point(140, 177);
             this.comboBoxMIPMethod.Name = "comboBoxMIPMethod";
-            this.comboBoxMIPMethod.Size = new System.Drawing.Size(85, 21);
+            this.comboBoxMIPMethod.Size = new System.Drawing.Size(84, 21);
             this.comboBoxMIPMethod.TabIndex = 174;
             // 
             // label78
@@ -3526,7 +3526,7 @@
             // 
             this.checkBoxDisplayIntegralMana.AutoSize = true;
             this.checkBoxDisplayIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisplayIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(185, 217);
+            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(209, 217);
             this.checkBoxDisplayIntegralMana.Name = "checkBoxDisplayIntegralMana";
             this.checkBoxDisplayIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplayIntegralMana.TabIndex = 171;
@@ -3536,7 +3536,7 @@
             // 
             this.checkBoxComparisonIntegralMana.AutoSize = true;
             this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(151, 217);
+            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(164, 217);
             this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
             this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonIntegralMana.TabIndex = 170;
@@ -3555,7 +3555,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(83, 201);
+            this.label31.Location = new System.Drawing.Point(107, 201);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(117, 13);
             this.label31.TabIndex = 168;
@@ -3565,9 +3565,9 @@
             // textBoxSMPComputationLimit
             // 
             this.textBoxSMPComputationLimit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MaxHeapLimit", true));
-            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 151);
+            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(140, 151);
             this.textBoxSMPComputationLimit.Name = "textBoxSMPComputationLimit";
-            this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(68, 20);
+            this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(84, 20);
             this.textBoxSMPComputationLimit.TabIndex = 167;
             // 
             // label38
@@ -3584,7 +3584,7 @@
             // 
             this.checkBoxDisplaySegmentCoodlowns.AutoSize = true;
             this.checkBoxDisplaySegmentCoodlowns.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisplaySegmentCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(185, 237);
+            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(209, 237);
             this.checkBoxDisplaySegmentCoodlowns.Name = "checkBoxDisplaySegmentCoodlowns";
             this.checkBoxDisplaySegmentCoodlowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplaySegmentCoodlowns.TabIndex = 162;
@@ -3595,7 +3595,7 @@
             // 
             this.checkBoxComparisonSegmentCooldowns.AutoSize = true;
             this.checkBoxComparisonSegmentCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ComparisonSegmentCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(151, 237);
+            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(164, 237);
             this.checkBoxComparisonSegmentCooldowns.Name = "checkBoxComparisonSegmentCooldowns";
             this.checkBoxComparisonSegmentCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonSegmentCooldowns.TabIndex = 160;
@@ -3617,7 +3617,7 @@
             // 
             this.checkBoxReconstructSequence.AutoSize = true;
             this.checkBoxReconstructSequence.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ReconstructSequence", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(185, 67);
+            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(209, 67);
             this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
             this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);
             this.checkBoxReconstructSequence.TabIndex = 158;
@@ -3638,7 +3638,7 @@
             // 
             this.checkBoxIncrementalOptimizations.AutoSize = true;
             this.checkBoxIncrementalOptimizations.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "IncrementalOptimizations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(185, 27);
+            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(209, 27);
             this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
             this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxIncrementalOptimizations.TabIndex = 156;
@@ -3660,7 +3660,7 @@
             // 
             this.checkBoxSmartOptimization.AutoSize = true;
             this.checkBoxSmartOptimization.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "SmartOptimization", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(185, 7);
+            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(209, 7);
             this.checkBoxSmartOptimization.Name = "checkBoxSmartOptimization";
             this.checkBoxSmartOptimization.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSmartOptimization.TabIndex = 154;

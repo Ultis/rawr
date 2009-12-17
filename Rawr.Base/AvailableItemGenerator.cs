@@ -620,7 +620,10 @@ namespace Rawr.Optimizer
 		{
 			for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
 			{
-				AddItemRestriction(character._item[slot]);
+                if (slot != (int)CharacterSlot.OffHand || character.CurrentCalculations.IncludeOffHandInCalculations(character))
+                {
+                    AddItemRestriction(character._item[slot]);
+                }
 			}
 		}
 
