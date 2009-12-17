@@ -1121,7 +1121,7 @@ These numbers to do not include racial bonuses.",
             #region From Gear/Buffs
             Stats statsBuffs = (isBuffed ? GetBuffsStats(character, calcOpts) : new Stats());
             Stats statsItems = GetItemStats(character, additionalItem);
-            if (statsItems._rawSpecialEffectData != null) {
+            /*if (statsItems._rawSpecialEffectData != null) {
                 foreach (SpecialEffect effect in statsItems._rawSpecialEffectData) {
                     if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0)
                     {
@@ -1133,7 +1133,7 @@ These numbers to do not include racial bonuses.",
                         }
                     }
                 }
-            }
+            }*/
             #endregion
             #region From Options
             Stats statsOptionsPanel = new Stats()
@@ -1431,6 +1431,8 @@ These numbers to do not include racial bonuses.",
                 }
                 else if (effect.Stats.DeathbringerProc > 0f)
                 {
+                    firstPass.Add(effect);
+
                     SpecialEffect dbproc =
                         new SpecialEffect(effect.Trigger,
                                           new Stats() { ArmorPenetrationRating = effect.Stats.DeathbringerProc + effect.Stats.ArmorPenetrationRating },
@@ -1612,7 +1614,7 @@ These numbers to do not include racial bonuses.",
         private enum SpecialEffectDataType { AverageStats, UpTime };
         private float ApplySpecialEffect(SpecialEffect effect, Character character, Rotation rotation, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts, Dictionary<Trigger, float> triggerChances, Dictionary<Trigger, float> triggerIntervals, ref Stats applyTo) {
             float fightDuration = calcOpts.Duration;
-            float fightDuration2Pass = (calcOpts.SE_UseDur && effect.Stats.DeathbringerProc == 0) ? fightDuration : 0;
+            float fightDuration2Pass = calcOpts.SE_UseDur ? fightDuration : 0;
 
             Stats effectStats = effect.Stats;
 
@@ -1649,7 +1651,8 @@ These numbers to do not include racial bonuses.",
                                                          fightDuration2Pass);
             }
 
-            if (effect.Stats.DeathbringerProc > 0) upTime /= 3;
+            if (effect.Stats.DeathbringerProc > 0) 
+                upTime /= 3;
             if (upTime > 0f) {
                 if (effect.Duration == 0f)
                     applyTo.ShadowDamage = upTime;
