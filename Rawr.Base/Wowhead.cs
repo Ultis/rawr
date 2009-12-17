@@ -266,7 +266,6 @@ namespace Rawr
 			if (item.Slot == ItemSlot.None) return null;
 
             #region Item Source
-            //if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
             if (!string.IsNullOrEmpty(source))
             {
                 string[] sourceKeys = source.Split(',');
@@ -586,6 +585,7 @@ namespace Rawr
             }
             #endregion
 
+            #region Meta Gem Effects
             if (item.Slot == ItemSlot.Meta)
             {
                 if (htmlTooltip.Contains("<span class=\"q1\">") && htmlTooltip.Contains("</span>"))
@@ -608,15 +608,12 @@ namespace Rawr
                 }
                 else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
             }
+            #endregion
 
-			if (item.LocationInfo[0] is CraftedItem && htmlTooltip.Contains("Binds when picked up")) (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
+            if (item.LocationInfo[0] is CraftedItem && htmlTooltip.Contains("Binds when picked up")) (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
 
-            // Socket Bonuses
-            if (htmlTooltip.Contains("<span class=\"q0\">") && htmlTooltip.Contains("</span>")) {
-                //SpecialEffects.ProcessEquipLine()
-            }
-
-			List<string> useLines = new List<string>();
+            #region Special Effects
+            List<string> useLines = new List<string>();
 			List<string> equipLines = new List<string>();
 			while (htmlTooltip.Contains("<span class=\"q2\">") && htmlTooltip.Contains("</span>"))
 			{
@@ -680,8 +677,10 @@ namespace Rawr
 			}
 			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
 			foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel);
+            #endregion
 
-			if (item.Slot == ItemSlot.Finger ||
+            #region Armor vs Bonus Armor Fix
+            if (item.Slot == ItemSlot.Finger ||
 				item.Slot == ItemSlot.MainHand ||
 				item.Slot == ItemSlot.Neck ||
 				(item.Slot == ItemSlot.OffHand && item.Type != ItemType.Shield) ||
@@ -696,9 +695,11 @@ namespace Rawr
 			{ //Fix for wowhead bug where guns/bows/crossbows show up with 0 total armor, but 24.5 (or some such) bonus armor (they really have no armor at all)
 				item.Stats.Armor = 0;
 				item.Stats.BonusArmor = 0;
-			}
+            }
+            #endregion
 
-			if (htmlTooltip.Contains(" (0/"))
+            #region Belongs to a Set
+            if (htmlTooltip.Contains(" (0/"))
 			{
 				htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
@@ -736,9 +737,10 @@ namespace Rawr
                                          .Replace("Koltira's", "Thassarian's")  // Death Knight T9
 										 .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
 				item.SetName = htmlTooltip.Trim();
-			}
+            }
+            #endregion
 
-			if (filter && item.Quality == ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
+            if (filter && item.Quality == ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
 			return item;
 		}
 

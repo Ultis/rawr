@@ -1404,6 +1404,16 @@ the Threat Scale defined on the Options tab.",
 			}
 			return relevant;
 		}
+
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            // Bad DK Enchants! Bad!
+            if (enchant.Name.Contains("Rune")) {
+                return false;
+            }
+            // else do normal IsEnchantRelevent
+            return base.IsEnchantRelevant(enchant);
+        }
 		#endregion
 
         public Stats GetBuffsStats(Character character, CalculationOptionsBear calcOpts) {
