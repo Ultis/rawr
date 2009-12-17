@@ -489,7 +489,7 @@ applied and result is scaled down by 100)",
 
             settings.livingSeedEfficiency = (float)calcOpts.LivingSeedEfficiency / 100f;
 
-            settings.latency = (float)calcOpts.Latency / 1000f;
+            settings.latency = 0;// (float)calcOpts.Latency / 1000f;
 
             settings.reduceOOMRejuv = (float)calcOpts.ReduceOOMRejuv / 100f;
             settings.reduceOOMRegrowth = (float)calcOpts.ReduceOOMRegrowth / 100f;

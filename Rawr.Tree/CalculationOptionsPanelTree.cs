@@ -43,6 +43,7 @@ namespace Rawr.Tree {
             int s = calcOpts.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
 
+            calcOpts.Latency = 0;
             tbLatency.Value = calcOpts.Latency / 10;
             lblLatency.Text = "Latency: " + calcOpts.Latency + " ms.";
 
