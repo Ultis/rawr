@@ -77,6 +77,7 @@ namespace Rawr
             public float[] p; /*in*/
             public float[] c; /*in*/
             public float[] o; /*in*/
+            public float[] k; /*in*/
             public float[] triggerInterval; /*in*/
             public float[] uptime; /*out*/
             public float[,] combinedUptime; /*out*/
@@ -85,7 +86,11 @@ namespace Rawr
             public int NC;
             public Ibeta Ibeta;
 
-            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed)
+            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed) : this(effects, triggerInterval, triggerChance, offset, attackSpeed, null)
+            {
+            }
+
+            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float[] scale)
             {
                 this.effects = effects;
                 this.triggerInterval = triggerInterval;
@@ -93,6 +98,15 @@ namespace Rawr
                 p = new float[effects.Length];
                 c = new float[effects.Length];
                 o = new float[effects.Length];
+                k = scale;
+                if (scale == null)
+                {
+                    k = new float[effects.Length];
+                    for (int i = 0; i < effects.Length; i++)
+                    {
+                        k[i] = 1.0f;
+                    }
+                }
 
                 bool discretizationCorrection = true;
 
@@ -156,10 +170,27 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public static WeightedStat[] GetAverageCombinedUptimeCombinations(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float fightDuration, AdditiveStat stat)
         {
+            return GetAverageCombinedUptimeCombinations(effects, triggerInterval, triggerChance, offset, null, attackSpeed, fightDuration, stat);
+        }
+
+        /// <summary>
+        /// Computes the average uptime of specific effects being active/inactive.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds for each effect.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced for each effect.</param>
+        /// <param name="active">Determines if specific effects are being active/inactive for the uptime calculation.</param>
+        /// <param name="offset">Initial cooldown for each effect.</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="scale">Chance that the effect will give the desired proc.</param>
+        /// <param name="effects">The effects for which the combined uptime is to be computed.</param>
+        /// <param name="stat">The stat for which we're computing the combinations.</param>
+        public static WeightedStat[] GetAverageCombinedUptimeCombinations(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float[] scale, float attackSpeed, float fightDuration, AdditiveStat stat)
+        {
             // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
 
             // initialize data, translate into interval time
-            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed);
+            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed, scale);
             p.uptime = new float[effects.Length];
             const int maxRecursionDepth = 20;
             p.N = effects.Length;
@@ -473,11 +504,11 @@ namespace Rawr
                 {
 					if ((i & (1 << j)) == 0)
 					{
-						p.combinedUptime[index, i] *= (1.0f - p.uptime[j]);
+						p.combinedUptime[index, i] *= (1.0f - p.uptime[j] * p.k[j]);
 					}
 					else
 					{
-						p.combinedUptime[index, i] *= p.uptime[j];
+						p.combinedUptime[index, i] *= p.uptime[j] * p.k[j];
 					}
 				}
             }
