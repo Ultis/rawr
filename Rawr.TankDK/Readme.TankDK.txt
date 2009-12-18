@@ -3,6 +3,13 @@
 Currently targeting: 
 * Wow version 3.3.0
 
+2.3.4:
+* Adding in the experimental work in prep for Bosshandler.
+
+2.3.1:
+
+* No Defect: Actually remembered to check in the Rune of Nerubian Carapace change.
+
 2.3.0:
 * Update for 3.3.
 * Check ins for Ability base class and some implmented classes - not utilized yet

@@ -343,8 +343,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
         {
-            bool bEnableExperimental = false;
-
             cacheChar = character;
             #region Setup what we need and validate.
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
@@ -537,15 +535,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // So let's populate the miss, dodge and parry values pulling them out of the avoidance number.
             fChanceToGetHit = 1f;
             stats.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Miss]);
-            fChanceToGetHit -= Math.Max(stats.Miss, 0);
+            stats.Miss = Math.Max(0, stats.Miss);
+            fChanceToGetHit -= stats.Miss;
             // Dodge needs to be factored in here.
             stats.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Dodge]);
-            fChanceToGetHit -= Math.Max(stats.Dodge, 0) ;
+            stats.Dodge = Math.Max(stats.Dodge, 0);
+            fChanceToGetHit -= stats.Dodge;
             // Pary factors
             stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Parry]);
+            stats.Parry = Math.Max(stats.Parry, 0);
+
             if (character.MainHand != null || character.OffHand != null) 
             { 
-                fChanceToGetHit -= Math.Max(stats.Parry, 0); 
+                fChanceToGetHit -= stats.Parry; 
             }
 
             float fChanceToGetCrit = fAvoidance[(int)HitResult.Crit];
@@ -592,6 +594,45 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // I'll do more research and see if it needs to go into the general function.
             float ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f, 0f));
 
+            float fFightDuration = opts.FightLength;
+            // Does the boss have parry haste?
+            bool bParryHaste = true;
+            float fIncDPS = opts.IncomingDamage / opts.BossAttackSpeed;
+            float fTotalMitigation = 0f;
+
+            // We want to start getting the Boss Handler stuff going on.
+            #region ***** Boss Handler *****
+            // Setup initial Boss data.
+            BossHandler hCurrentBoss = new BossHandler();
+            if (opts.bExperimental)
+            {
+                Rawr.BossList BL = new Rawr.BossList();
+                hCurrentBoss = BL.TheAvgBoss;
+
+                // How much of what kind of damage does this boss deal with?
+                #region ** Incoming Boss Damage **
+                int uAttackCount = hCurrentBoss.Attacks.Count;
+                if (uAttackCount <= 0)
+                {
+                    // Error
+                }
+                else
+                {
+                    foreach (Attack a in hCurrentBoss.Attacks)
+                    {
+                        // Bleeds vs Magic vs Physical
+                    }
+                }
+                #endregion
+
+                // Set the Fight Duration to no larger than the Berserk Timer
+                // Question: What is the units for Berserk & Speed Timer? MS/S/M?
+                fFightDuration = Math.Min(hCurrentBoss.BerserkTimer, fFightDuration);
+                bParryHaste = hCurrentBoss.UseParryHaste;
+            }
+            #endregion
+
+
             #region ***** Survival Rating *****
             // For right now Survival Rating == Effective Health will be HP + Armor/Resistance mitigation values.
             // Everything else is really mitigating damage based on RNG.
@@ -602,7 +643,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Physical damage:
             // So need the percent that is NOT from magic.
-            fPhysicalSurvival = (stats.Health / (1 - ArmorDamageReduction)) * (1 - opts.PercentIncomingFromMagic);
+            fPhysicalSurvival = GetEffectiveHealth(stats.Health, ArmorDamageReduction, (1 - opts.PercentIncomingFromMagic));
 
             // Magical damage:
             // if there is a max resistance, then it's likely they are stacking for that resistance.  So factor in that Max resistance.
@@ -612,7 +653,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fMaxResist = Math.Max(fMaxResist, stats.ShadowResistance);
 
             float fMagicDR = StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f);
-            fMagicalSurvival = (stats.Health / (1 - fMagicDR)) * (opts.PercentIncomingFromMagic);
+            fMagicalSurvival = GetEffectiveHealth(stats.Health, fMagicDR, opts.PercentIncomingFromMagic);
 
             float fEffectiveHealth = fPhysicalSurvival + fMagicalSurvival;
             // EffHealth is used further down for Burst/Reaction Times.
@@ -646,9 +687,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #region ***** Experimental Mitigation Rating *****
             if (opts.bExperimental)
             {
-                float fIncDPS = opts.IncomingDamage / opts.BossAttackSpeed;
-                float fTotalMitigation = 0f;
-
                 #region ** Crit Mitigation **
                 // Crit mitigation:
                 // Crit mitigation works for Magical as well as Physical damage so take care of that first.
@@ -666,7 +704,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                 #region ** Parry Haste **
 
-                float fFightDuration = opts.FightLength;
                 if (fFightDuration == 0f)
                 {
                     opts.FightLength = fFightDuration = 10f;
@@ -675,8 +712,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                 // How much damage per shot normal shot?
                 float fPerShotPhysical = fIncPhyDPS * opts.BossAttackSpeed;
-                // Does the boss have parry haste?
-                bool bParryHaste = true;
                 // How many shots over the length of the fight?
                 // Factor in attack speed negative haste caused by talents.
                 float fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + (.02f * character.DeathKnightTalents.ImprovedIcyTouch));
@@ -829,7 +864,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             else
             #region ***** Legacy Mitigation Rating *****
             {
-                float fFightDuration = opts.FightLength;
                 if (fFightDuration == 0f)
                 {
                     opts.FightLength = fFightDuration = 10f;
@@ -1231,8 +1265,673 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
             statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Miss]);
             statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Dodge]);
-            statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Parry]);
+            statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Parry]);
         }
+
+        /// <summary>
+        /// Pass in the total stats object we're working with and add specific stat modifiers.
+        /// </summary>
+        /// <param name="s"></param>
+        private void AccumulateFrostPresence(Stats s)
+        {
+            s.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
+            // Patch 3.2: Replace 10% Health w/ 6% Stamina
+            s.BonusStaminaMultiplier += .06f; // Bonus 6% Stamina
+            //            FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
+            s.DamageTakenMultiplier -= .08f;// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
+            s.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
+        }
+
+        /// <summary>Build the talent special effects.</summary>
+        private void AccumulateTalents(Stats FullCharacterStats, Character character)
+        {
+            Stats newStats = new Stats();
+            float fDamageDone = 0f;
+            // ok... I don't like that we have to do some evaluation at this point.
+            // However, this health value is not passed forward, just gives an initial pass 
+            // to evaluate the value of talents.
+            float fHealth = StatConversion.ApplyMultiplier((FullCharacterStats.Health + StatConversion.GetHealthFromStamina(FullCharacterStats.Stamina)), FullCharacterStats.BonusHealthMultiplier);
+
+            #region Blood Talents
+            // Butchery
+            // 1RPp5 per Point
+            // TODO: Implement Runic Regen info.
+            if (character.DeathKnightTalents.Butchery > 0)
+            {
+                FullCharacterStats.RPp5 += 1 * character.DeathKnightTalents.Butchery;
+            }
+
+            // Subversion
+            // Increase crit 3% per point of BS, HS, Oblit
+            // 3.2.2: also SS
+            if (character.DeathKnightTalents.Subversion > 0)
+            {
+                // implmented in CombatTable.cs
+            }
+
+            // Blade Barrier
+            // Reduce damage by 1% per point for 10 sec.
+            if (character.DeathKnightTalents.BladeBarrier > 0)
+            {
+                // for now having the functionality that currently exists is better than nothing.
+                // TODO: Implement SpecialEffect for Rune CD.
+                FullCharacterStats.DamageTakenMultiplier -= (.01f * character.DeathKnightTalents.BladeBarrier);
+            }
+
+            // Bladed Armor
+            // 1 AP per point per 180 Armor
+            // Implmented after Frost Presence above.
+
+            // Scent of Blood
+            // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 5 runic power.
+            // TODO: setup RP gains.
+
+            // 2H weapon spec.
+            // 2% per point increased damage
+            // Implmented in weapon section above.
+
+            // Rune Tap
+            // Convert 1 BR to 10% health.
+            if (character.DeathKnightTalents.RuneTap > 0)
+            {
+                newStats = new Stats();
+                float fCD = 60f;
+                newStats.Healed = (fHealth * .1f);
+                if (character.DeathKnightTalents.ImprovedRuneTap > 0)
+                {
+                    // Improved Rune Tap.
+                    // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
+                    fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
+                    newStats.Healed += (newStats.Healed * (0.33f * character.DeathKnightTalents.ImprovedRuneTap));
+                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
+                }
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
+            }
+
+            // Dark Conviction 
+            // Increase Crit w/ weapons, spells, and abilities by 1% per point.
+            if (character.DeathKnightTalents.DarkConviction > 0)
+            {
+                FullCharacterStats.PhysicalCrit += (0.01f * character.DeathKnightTalents.DarkConviction);
+                FullCharacterStats.SpellCrit += (0.01f * character.DeathKnightTalents.DarkConviction);
+            }
+
+            // Death Rune Mastery
+            // Create death runes out of Frost & Unholy for each oblit.
+            // TODO: Implement Death Runes in CombatTable/Ability/Rotation
+
+            // Spell Deflection
+            // Parry chance of taking 15% less damage per point from direct damage spell
+            // Implmented after Parry calc above.
+
+            // Vendetta
+            // Heals you for up to 2% per point on killing blow
+            // TODO: Not important for MT but may be useful in OTing?
+
+            // Bloody Strikes
+            // increases damage of BS and HS by 15% per point
+            // increases damage of BB by 10% per point
+            // Implemented in Combattable.cs
+
+            // Veteran of the 3rd War
+            // Patch 3.2 from 2% to 1% per point.
+            // increases Str and Stam by 1% per point
+            // increases expertise by 2 per point.
+            if (character.DeathKnightTalents.VeteranOfTheThirdWar > 0)
+            {
+                FullCharacterStats.BonusStrengthMultiplier += (.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+                FullCharacterStats.BonusStaminaMultiplier += (.01f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+                FullCharacterStats.Expertise += (2f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+            }
+
+            // Mark of blood
+            // Cast on the enemy
+            // buff that lasts 20 secs or 20 hits
+            // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
+            // Implemented in Mitigation section above.
+
+            // Bloody Vengence
+            // 1% per point bonus to physical damage for 30 secs after a crit w/ up to 3 stacks.
+            if (character.DeathKnightTalents.BloodyVengeance > 0)
+            {
+                newStats = new Stats();
+                newStats.BonusPhysicalDamageMultiplier = .01f * character.DeathKnightTalents.BloodyVengeance;
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, newStats, 30, 0, 1, 3));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit, newStats, 30, 0, 1, 3));
+            }
+
+            // Abominations Might
+            // BS & HS have 25% chance per point
+            // DS and Oblit have 50% chance per point
+            // increase AP by 10% of raid for 10 sec.
+            // 1% per point increase to str.
+            if (character.DeathKnightTalents.AbominationsMight > 0)
+            {
+                FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
+                newStats = new Stats();
+                newStats.BonusAttackPowerMultiplier = .1f;
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.ObliterateHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DeathStrikeHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
+            }
+
+            // Bloodworms
+            // 3% chance per point per hit to cause the target to spawn 2-4 blood worms
+            // Healing you 150% of the damage they do for 20 sec.
+            if (character.DeathKnightTalents.Bloodworms > 0)
+            {
+                newStats = new Stats();
+                // TODO: figure out how much damage the worms do.
+                fDamageDone = 100f;
+                float fBWAttackSpeed = 2f;
+                float fBWDuration = 20f;
+                newStats.Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f);
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, fBWDuration, 0, .03f * character.DeathKnightTalents.Bloodworms));
+            }
+
+            // Hysteria
+            // Killy frenzy for 30 sec.
+            // Increase physical damage by 20%
+            // take damage 1% of max every sec.
+            if (character.DeathKnightTalents.Hysteria > 0)
+            {
+                float fDur = 30f;
+                newStats = new Stats();
+                newStats.BonusPhysicalDamageMultiplier += 0.2f;
+                newStats.Healed -= (fHealth * 0.01f * fDur);
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fDur, 3f * 60f));
+            }
+
+            // Improved Blood Presence
+            // while in frost or unholy, you retain the 2% per point healing from blood presence
+            // Healing done to you is increased by 5% per point
+            // Implemented above.
+
+            // Improved Death Strike
+            // increase damage of DS by 15% per point 
+            // increase crit chance of DS by 3% per point
+            // Implemented in CombatTable.cs
+
+            // Sudden Doom
+            // BS & HS have a 5% per point chance to launch a DC at target
+            if (character.DeathKnightTalents.SuddenDoom > 0)
+            {
+                // Implmented in CombatTable.cs
+            }
+
+            // Vampiric Blood
+            // temp 15% of max health and
+            // increases health generated by 35% for 10 sec.
+            // 1 min CD. as of 3.2.2
+            if (character.DeathKnightTalents.VampiricBlood > 0)
+            {
+                newStats = new Stats();
+                // TODO: need to figure out how to factor this back in.
+                newStats.Health = (fHealth * 0.15f);
+                newStats.HealingReceivedMultiplier += 0.35f;
+
+                float fVBCD = 60f;
+                if (m_bT9_4PC) fVBCD -= 10f;
+                float fVBDur = 10f;
+                if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
+                {
+                    fVBDur += 5f;
+                }
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fVBDur, fVBCD));
+            }
+
+            // Will of the Necropolis
+            // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
+            // CD 15 sec.
+            // Incoming damage must be >= than 5% of total health.
+            if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
+            {
+                newStats = new Stats();
+                newStats.DamageTakenMultiplier -= (0.05f * character.DeathKnightTalents.WillOfTheNecropolis);
+                // Need to factor in the damage taken aspect of the trigger.
+                // Using the assumption that the tank will be at < 35% health about that % of the time.
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 0, 15f, 0.35f));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 15f, 0.35f));
+            }
+
+            // Heart Strike
+            // 3.2.2: Secondary targets of HS take 1/2 as much damage
+            // Implemented in CombatTable.cs
+
+            // Might of Mograine
+            // increase crit damage of BB, BS, DS, and HS by 15% per point
+            // Implemented in CombatTable.cs
+
+            // Blood Gorged
+            // when above 75% health, you deal 2% more damage per point
+            // when above 75% health, you receive 2% Armor Pen
+            if (character.DeathKnightTalents.BloodGorged > 0)
+            {
+                // Damage done increase has to be in shot rotation.
+                // Assuming a 50% up time 
+                FullCharacterStats.ArmorPenetration += (0.02f * character.DeathKnightTalents.BloodGorged * 0.5f);
+            }
+
+            // Dancing Rune Weapon
+            // not impl
+            #endregion
+
+            #region Frost Talents
+            // Improved Icy Touch
+            // 5% per point additional IT damage
+            // 2% per point target haste reduction 
+            if (character.DeathKnightTalents.ImprovedIcyTouch > 0)
+            {
+                FullCharacterStats.BonusIcyTouchDamage += (0.05f * character.DeathKnightTalents.ImprovedIcyTouch);
+                // TODO: Need to factor in the correct haste adjustment for target.
+                // For now assuming a straight 2% damage reduction per point.
+
+                //                sReturn.DamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.ImprovedIcyTouch;
+            }
+
+            // Runic Power Mastery
+            // Increases Max RP by 15 per point
+            if (character.DeathKnightTalents.RunicPowerMastery > 0)
+            {
+                FullCharacterStats.BonusMaxRunicPower += 5 * character.DeathKnightTalents.RunicPowerMastery;
+            }
+
+            // Toughness
+            // Patch 3.2: Increases Armor Value from items by 2% per point.
+            // Reducing duration of all slowing effects by 6% per point.  
+            if (character.DeathKnightTalents.Toughness > 0)
+            {
+                FullCharacterStats.BaseArmorMultiplier += (.02f * character.DeathKnightTalents.Toughness); // Patch 3.2
+
+            }
+
+            // Icy Reach
+            // Increases range of IT & CoI and HB by 5 yards per point.
+
+            // Black Ice
+            // Increase Frost & shadow damage by 2% per point
+            if (character.DeathKnightTalents.BlackIce > 0)
+            {
+                FullCharacterStats.BonusFrostDamageMultiplier += 0.02f * character.DeathKnightTalents.BlackIce;
+                FullCharacterStats.BonusShadowDamageMultiplier += 0.02f * character.DeathKnightTalents.BlackIce;
+            }
+
+            // Nerves of Cold Steel
+            // Increase hit w/ 1H weapons by 1% per point
+            // Increase damage done by off hand weapons by 5% per point
+            // Implement in combat shot roation
+
+            // Icy Talons
+            // Increase melee attack speed by 4% per point for the next 20 sec.
+            if (character.DeathKnightTalents.IcyTalons > 0)
+            {
+                newStats = new Stats();
+                newStats.PhysicalHaste += (0.04f * character.DeathKnightTalents.IcyTalons);
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
+            }
+
+            // Lichborne
+            // for 10 sec, immune to charm, fear, sleep
+            // CD 2 Mins
+
+            // Threat of Thassarian: 
+            // New 3-point talent. When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, 
+            // Blood Strikes and Frost Strikes and Rune Strike (as of 3.2.2) have a 30/60/100% chance 
+            // to also deal damage with your  off-hand weapon. Off-hand strikes are roughly one half the effect of the original strike. 
+
+            // Annihilation
+            // +1 % per point melee Crit chance 
+            // 33% per point that oblit will not consume diseases
+            if (character.DeathKnightTalents.Annihilation > 0)
+            {
+                FullCharacterStats.PhysicalCrit += (0.01f * character.DeathKnightTalents.Annihilation);
+            }
+
+            // Killing Machine
+            // Melee attacks have a chance to make IT, HB, or FS a crit.
+            // increased proc per point.
+
+            // Chill of the Grave
+            // CoI, HB, IT and Oblit generate 2.5 RP per point.
+
+            // Endless Winter
+            // CoI has 50% per point to cause FF
+            // Mind Freeze RP cost is reduced by 50% per point.
+
+            // Frigid Dreadplate
+            // Melee attacks against you will miss by +1% per point
+            if (character.DeathKnightTalents.FrigidDreadplate > 0)
+            {
+                FullCharacterStats.Miss += 0.01f * character.DeathKnightTalents.FrigidDreadplate;
+            }
+
+            // Glacier Rot
+            // Diseased enemies take 7%, 13% , 20% more damage from IT, HB, FS.
+            if (character.DeathKnightTalents.GlacierRot > 0)
+            {
+                float fBonus = 0f;
+                switch (character.DeathKnightTalents.GlacierRot)
+                {
+                    case 1: fBonus = 0.07f; break;
+                    case 2: fBonus = 0.13f; break;
+                    case 3: fBonus = 0.20f; break;
+                }
+                FullCharacterStats.BonusIcyTouchDamage += fBonus;
+                FullCharacterStats.BonusFrostStrikeDamage += fBonus;
+                FullCharacterStats.BonusHowlingBlastDamage += fBonus;
+            }
+
+            // Deathchill
+            // when active IT, HB, FS, Oblit will crit.
+
+            // Improved Icy Talons
+            // increases the melee hast of the group/raid by 20%
+            // increases your haste by 5% all the time.
+            if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
+            {
+                FullCharacterStats.PhysicalHaste += 0.05f;
+                // TODO: Factor in raid utility by improving raid haste by 20%
+                newStats = new Stats();
+                newStats.PhysicalHaste += (0.2f * character.DeathKnightTalents.IcyTalons);
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
+            }
+
+            // Merciless Combat
+            // addtional 6% per point damage for IT, HB, Oblit, and FS
+            // on targets of less than 35% health.
+
+            // Rime
+            // increases crit chance of IT and Oblit by 5% per point
+            // Oblit has a 5% per point to reset CD of HB and HB consumes no runes
+
+            // Chilblains
+            // FF victimes are movement reduced 15, 30, 50%
+
+            // Hungering Cold
+            // Spell that freezes all enemies w/ 10 yards.
+
+            // Improved Frost Presence
+            // retain the health bonus 5% per point when in non-Frost presence
+            // Decrease damage done to you by 1% per point.
+            if (character.DeathKnightTalents.ImprovedFrostPresence > 0)
+            {
+                FullCharacterStats.DamageTakenMultiplier -= (0.01f * character.DeathKnightTalents.ImprovedFrostPresence);
+            }
+
+            // Blood of the North
+            // Patch 3.2: BS & FS damage +3% per point
+            // Patch 3.2: BS & Pest create DeathRune from Blood 33% per point.
+            if (character.DeathKnightTalents.BloodOfTheNorth > 0)
+            {
+                float fBonus = 0f;
+                switch (character.DeathKnightTalents.BloodOfTheNorth)
+                {
+                    case 1:
+                        fBonus = 0.03f;
+                        break;
+                    case 2:
+                        fBonus = 0.06f;
+                        break;
+                    case 3:
+                        fBonus = 0.1f;
+                        break;
+                }
+                FullCharacterStats.BonusFrostStrikeDamage += fBonus;
+                FullCharacterStats.BonusBloodStrikeDamage += fBonus;
+            }
+
+            // Unbreakable Armor
+            // Reinforces your armor with a thick coat of ice, Increasing Armor by 25% and increasing your Strength by 10% for 20 sec.
+            if (character.DeathKnightTalents.UnbreakableArmor > 0)
+            {
+                newStats = new Stats();
+                newStats.BonusStrengthMultiplier += 0.10f;
+                newStats.BaseArmorMultiplier += .25f;
+                newStats.BonusArmorMultiplier += .25f;
+                if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
+                {
+                    // As per wowhead:
+                    // Effect: Apply Aura: Add % Modifier (3)
+                    // Value: 20
+                    newStats.BaseArmorMultiplier += .2f;
+                    newStats.BonusArmorMultiplier += .2f;
+                }
+                float fUACD = 60f;
+                if (m_bT9_4PC) fUACD -= 10f;
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, fUACD));
+            }
+
+            // Acclimation
+            // When hit by a spell, 10% chance per point to boost resistance to that type of magic for 18 sec.  
+            // up to 3 stacks.
+            if (character.DeathKnightTalents.Acclimation > 0)
+            {
+                newStats = new Stats();
+                float chance = (.1f * character.DeathKnightTalents.Acclimation);
+                newStats.FireResistance += 50f;
+                newStats.FrostResistance += 50f;
+                newStats.ArcaneResistance += 50f;
+                newStats.ShadowResistance += 50f;
+                newStats.NatureResistance += 50f;
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 18f, 0f, chance, 3));
+            }
+
+            // Frost Strike
+
+            // Guile of Gorefiend
+            // Increases CritStrike Damage of BS, FS, HB, Oblit by 15% per point.
+            // Increases Duration of IBF by 2 sec per point.
+            // HACK: Implenting IceBound Fortitude. ////////////////////////////////////////////////////////
+            // Implmenting IBF here because it's affected by GoGF
+            // Four T7 increases IBF by 3 sec.
+            // Patch 3.2: IBF has a 120 sec CD. 
+            float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + FullCharacterStats.BonusIceboundFortitudeDuration);
+            // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
+            float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
+            float ibfReduction = 0.2f + (ibfDefense * 0.03f / 28.0f);
+            if (character.DeathKnightTalents.GlyphofIceboundFortitude)
+            {
+                // Glyphed to 30% + def value.
+                ibfReduction += 0.1f;
+                // Since 3.1 the glyph is capped to 30%.
+            }
+            // There has always been a cap on the IBF to 30% the glyph was nerfed, not IBF.
+            // So it's not worth it for those who already have alot of DEF. (EG. most tanks)
+            ibfReduction = Math.Min(0.3f, ibfReduction);
+            newStats = new Stats();
+            newStats.DamageTakenMultiplier -= ibfReduction;
+            FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 120)); // Patch 3.2
+
+            // Tundra Stalker
+            // Your spells & abilities deal 3% per point more damage to targets w/ FF
+            // Increases Expertise by 1 per point
+            if (character.DeathKnightTalents.TundraStalker > 0)
+            {
+                // Assuming FF is always up.
+                FullCharacterStats.BonusDamageMultiplier += .03f * character.DeathKnightTalents.TundraStalker;
+                FullCharacterStats.Expertise += 1f * character.DeathKnightTalents.TundraStalker;
+            }
+
+            // Howling Blast.
+
+            #endregion
+
+            #region UnHoly Talents
+            // Vicious Strikes
+            // Increases Crit chance by 3% per point of PS and SS
+            // Increases Crit Strike Damage by 15% per point of PS and SS
+
+            // Virulence
+            // Increases Spell hit +1% per point
+            if (character.DeathKnightTalents.Virulence > 0)
+            {
+                FullCharacterStats.SpellHit += 0.01f * character.DeathKnightTalents.Virulence;
+            }
+
+            // Anticipation
+            // Increases dodge by 1% per point
+            if (character.DeathKnightTalents.Anticipation > 0)
+            {
+                FullCharacterStats.Dodge += 0.01f * character.DeathKnightTalents.Anticipation;
+            }
+
+            // Epidemic
+            // Increases Duration of BP and FF by 3 sec per point
+
+            // Morbidity
+            // increases dam & healing of DC by 5% per point
+            // Decreases CD of DnD by 5 sec per point
+
+            // Unholy Command
+            // reduces CD of DG by 5 sec per point
+
+            // Ravenous Dead
+            // Increases Str +1% per point.
+            // Increases contribution of your str & stam to ghoul by 20% per point
+            if (character.DeathKnightTalents.RavenousDead > 0)
+            {
+                FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.RavenousDead);
+                // Ghouls don't help tank here.
+            }
+
+            // Outbreak
+            // increases dam of PS by 10% per point
+            // increases dam of SS by 7% per point
+
+            // Necrosis
+            // Autoattacks deal additional 4% shadow
+
+            // Corpse Explosion
+            // Does damage by blowing up a corpse to all targets in 10 yards
+
+            // On a Pale Horse
+            // Reduce dur of stun and fear by 10% per point
+            // increase mount speed byh 10% per point
+
+            // Blood-Caked Blade
+            // 10% chance per point to cause Blood-Caked strike
+
+            // Night of the Dead
+            // Reduces CD of Raise Dead by 45 sec per point
+            // Reduces CD of Army of the dead by 5 min per point
+
+            // Unholy Blight
+            // Shadow Damage done to all targets in 10 yards for 20 sec.
+
+            // Impurity
+            // Attack Power bonus to spells increased by 4% per point.
+
+            // Dirge
+            // DS, PS and SS generate 2.5 more runic power per point.
+
+            // Magic Suppression
+            // 2% per point less damage from all magic.
+            // AMS absorbs additional 8, 16, 25% of spell damage.
+            if (character.DeathKnightTalents.MagicSuppression > 0)
+            {
+                FullCharacterStats.SpellDamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.MagicSuppression;
+                // TODO: factor in AMS
+            }
+
+            // Reaping 
+            // BS or Pest convert to DR.
+
+            // Master of Ghouls
+            // Reduces CD on Raise Dead by 60 sec.
+            // Ghoul summoned is perm (pet). 
+
+            // Desecration
+            // PS and SS cause Desecrated Ground effect.
+            // Targets are slowed by 10% per point
+            // Patch 3.2: You don't cause 1% more damage 
+            // Lasts 12 sec.
+            /* Patch 3.2
+            if (character.DeathKnightTalents.Desecration > 0)
+            {
+                newStats = new Stats();
+                newStats.BonusDamageMultiplier += 0.01f * character.DeathKnightTalents.Desecration;
+                // Gonna use an average CD of a rune at 10sec per rune divided by 2 runes == 5 sec.
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 12f, 5f));
+            }
+            */
+
+            // AntiMagic Zone
+            // Creates a zone where party/raid members take 75% less spell damage
+            // Lasts 10 secs or X damage.  
+            if (character.DeathKnightTalents.AntiMagicZone > 0)
+            {
+                newStats = new Stats();
+                newStats.SpellDamageTakenMultiplier -= .75f * character.DeathKnightTalents.AntiMagicZone;
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, 2f * 60f));
+            }
+
+            // Improved Unholy Presence
+            // in Blood or Frost, retain movement speed (8%, 15%).
+            // Runes finish CD 5% per point faster.
+
+            // Ghoul Frenzy
+            // Grants pet 25% haste for 30 sec and heals it for 60% health.
+
+            // Crypt Fever
+            // CF increases disease damage taken by target by 10% per point
+
+            // Bone Shield
+            // 3 Bones as of 3.2.2
+            // Takes 20% less dmage from all sources
+            // Does 2% more damage to target
+            // Each damaging attack consumes a bone.
+            // Lasts 5 mins
+
+            // Ebon Plaguebringer
+            // CF becomes EP - increases magic damage taken by targets 4, 9, 13% in addition to disease damage
+            // Increases crit strike chance by 1% per point
+            if (character.DeathKnightTalents.EbonPlaguebringer > 0)
+            {
+                FullCharacterStats.PhysicalCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
+                FullCharacterStats.SpellCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
+                float fBonus = 0f;
+                switch (character.DeathKnightTalents.EbonPlaguebringer)
+                {
+                    case 1:
+                        fBonus = .04f;
+                        break;
+                    case 2:
+                        fBonus = .09f;
+                        break;
+                    case 3:
+                        fBonus = .13f;
+                        break;
+                    default:
+                        break;
+                }
+                FullCharacterStats.BonusArcaneDamageMultiplier += fBonus;
+                FullCharacterStats.BonusFireDamageMultiplier += fBonus;
+                FullCharacterStats.BonusFrostDamageMultiplier += fBonus;
+                FullCharacterStats.BonusHolyDamageMultiplier += fBonus;
+                FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
+                FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
+            }
+
+            // Sourge Strike
+
+            // Rage of Rivendare
+            // 2% per point more damage to targets w/ BP
+            // Expertise +1 per point
+            if (character.DeathKnightTalents.RageOfRivendare > 0)
+            {
+                FullCharacterStats.Expertise += character.DeathKnightTalents.RageOfRivendare;
+                // Assuming BP is always on.
+                FullCharacterStats.BonusDamageMultiplier += 0.02f * character.DeathKnightTalents.RageOfRivendare;
+            }
+
+            // Summon Gargoyle
+
+            #endregion
+
+            //            return sReturn;
+        }
+
 
         /// <summary>
         /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
@@ -1244,7 +1943,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         {
             return new ComparisonCalculationBase[0];
         }
-  
+
+        #region Relevant Stats
         /// <summary>
         /// Filters a Stats object to just the stats relevant to the model.
         /// </summary>
@@ -1527,640 +2227,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) { return false; }
             return base.IsItemRelevant(item);
         }
-
-        /// <summary>
-        /// Pass in the total stats object we're working with and add specific stat modifiers.
-        /// </summary>
-        /// <param name="s"></param>
-        private void AccumulateFrostPresence(Stats s)
-        {
-            s.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
-            // Patch 3.2: Replace 10% Health w/ 6% Stamina
-            s.BonusStaminaMultiplier += .06f; // Bonus 6% Stamina
-//            FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
-            s.DamageTakenMultiplier -= .08f;// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
-            s.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
-        }
-
-        /// <summary>Build the talent special effects.</summary>
-        private void AccumulateTalents(Stats FullCharacterStats, Character character) 
-        {
-            Stats newStats = new Stats();
-            float fDamageDone = 0f;
-            // ok... I don't like that we have to do some evaluation at this point.
-            // However, this health value is not passed forward, just gives an initial pass 
-            // to evaluate the value of talents.
-            float fHealth = StatConversion.ApplyMultiplier((FullCharacterStats.Health + StatConversion.GetHealthFromStamina(FullCharacterStats.Stamina)), FullCharacterStats.BonusHealthMultiplier);
-
-            #region Blood Talents
-            // Butchery
-            // 1RPp5 per Point
-            // TODO: Implement Runic Regen info.
-            if (character.DeathKnightTalents.Butchery > 0) {
-                FullCharacterStats.RPp5 += 1 * character.DeathKnightTalents.Butchery;
-            }
-
-            // Subversion
-            // Increase crit 3% per point of BS, HS, Oblit
-            // 3.2.2: also SS
-            if (character.DeathKnightTalents.Subversion > 0) 
-            { 
-                // implmented in CombatTable.cs
-            }
-
-            // Blade Barrier
-            // Reduce damage by 1% per point for 10 sec.
-            if (character.DeathKnightTalents.BladeBarrier > 0) {
-                // for now having the functionality that currently exists is better than nothing.
-                // TODO: Implement SpecialEffect for Rune CD.
-                FullCharacterStats.DamageTakenMultiplier -= (.01f * character.DeathKnightTalents.BladeBarrier);
-            }
-
-            // Bladed Armor
-            // 1 AP per point per 180 Armor
-            // Implmented after Frost Presence above.
-
-            // Scent of Blood
-            // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 5 runic power.
-            // TODO: setup RP gains.
-
-            // 2H weapon spec.
-            // 2% per point increased damage
-            // Implmented in weapon section above.
-
-            // Rune Tap
-            // Convert 1 BR to 10% health.
-            if (character.DeathKnightTalents.RuneTap > 0) 
-            {
-                newStats = new Stats();
-                float fCD = 60f;
-                newStats.Healed = (fHealth * .1f);
-                if (character.DeathKnightTalents.ImprovedRuneTap > 0) 
-                {
-                    // Improved Rune Tap.
-                    // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-                    fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                    newStats.Healed += (newStats.Healed * (0.33f * character.DeathKnightTalents.ImprovedRuneTap));
-                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
-                }
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
-            }
-
-            // Dark Conviction 
-            // Increase Crit w/ weapons, spells, and abilities by 1% per point.
-            if (character.DeathKnightTalents.DarkConviction > 0) {
-                FullCharacterStats.PhysicalCrit += (0.01f * character.DeathKnightTalents.DarkConviction);
-                FullCharacterStats.SpellCrit += (0.01f * character.DeathKnightTalents.DarkConviction);
-            }
-
-            // Death Rune Mastery
-            // Create death runes out of Frost & Unholy for each oblit.
-            // TODO: Implement Death Runes in CombatTable/Ability/Rotation
-
-            // Spell Deflection
-            // Parry chance of taking 15% less damage per point from direct damage spell
-            // Implmented after Parry calc above.
-
-            // Vendetta
-            // Heals you for up to 2% per point on killing blow
-            // TODO: Not important for MT but may be useful in OTing?
-
-            // Bloody Strikes
-            // increases damage of BS and HS by 15% per point
-            // increases damage of BB by 10% per point
-            // Implemented in Combattable.cs
-
-            // Veteran of the 3rd War
-            // Patch 3.2 from 2% to 1% per point.
-            // increases Str and Stam by 1% per point
-            // increases expertise by 2 per point.
-            if (character.DeathKnightTalents.VeteranOfTheThirdWar > 0)
-            {
-                FullCharacterStats.BonusStrengthMultiplier += (.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-                FullCharacterStats.BonusStaminaMultiplier += (.01f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-                FullCharacterStats.Expertise += (2f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-            }
-
-            // Mark of blood
-            // Cast on the enemy
-            // buff that lasts 20 secs or 20 hits
-            // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
-            // Implemented in Mitigation section above.
-
-            // Bloody Vengence
-            // 1% per point bonus to physical damage for 30 secs after a crit w/ up to 3 stacks.
-            if (character.DeathKnightTalents.BloodyVengeance > 0) {
-                newStats = new Stats();
-                newStats.BonusPhysicalDamageMultiplier = .01f * character.DeathKnightTalents.BloodyVengeance;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, newStats, 30, 0, 1, 3));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit, newStats, 30, 0, 1, 3));
-            }
-
-            // Abominations Might
-            // BS & HS have 25% chance per point
-            // DS and Oblit have 50% chance per point
-            // increase AP by 10% of raid for 10 sec.
-            // 1% per point increase to str.
-            if (character.DeathKnightTalents.AbominationsMight > 0) {
-                FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
-                newStats = new Stats();
-                newStats.BonusAttackPowerMultiplier = .1f;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.ObliterateHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DeathStrikeHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
-            }
-
-            // Bloodworms
-            // 3% chance per point per hit to cause the target to spawn 2-4 blood worms
-            // Healing you 150% of the damage they do for 20 sec.
-            if (character.DeathKnightTalents.Bloodworms > 0) {
-                newStats = new Stats();
-                // TODO: figure out how much damage the worms do.
-                fDamageDone = 100f;
-                float fBWAttackSpeed = 2f;
-                float fBWDuration = 20f;
-                newStats.Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, fBWDuration, 0, .03f * character.DeathKnightTalents.Bloodworms));
-            }
-
-            // Hysteria
-            // Killy frenzy for 30 sec.
-            // Increase physical damage by 20%
-            // take damage 1% of max every sec.
-            if (character.DeathKnightTalents.Hysteria > 0) 
-            {
-                float fDur = 30f;
-                newStats = new Stats();
-                newStats.BonusPhysicalDamageMultiplier += 0.2f;
-                newStats.Healed -= (fHealth * 0.01f * fDur);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fDur, 3f * 60f));
-            }
-
-            // Improved Blood Presence
-            // while in frost or unholy, you retain the 2% per point healing from blood presence
-            // Healing done to you is increased by 5% per point
-            // Implemented above.
-
-            // Improved Death Strike
-            // increase damage of DS by 15% per point 
-            // increase crit chance of DS by 3% per point
-            // Implemented in CombatTable.cs
-
-            // Sudden Doom
-            // BS & HS have a 5% per point chance to launch a DC at target
-            if (character.DeathKnightTalents.SuddenDoom > 0) 
-            { 
-                // Implmented in CombatTable.cs
-            }
-
-            // Vampiric Blood
-            // temp 15% of max health and
-            // increases health generated by 35% for 10 sec.
-            // 1 min CD. as of 3.2.2
-            if (character.DeathKnightTalents.VampiricBlood > 0) {
-                newStats = new Stats();
-                // TODO: need to figure out how to factor this back in.
-                newStats.Health = (fHealth * 0.15f);
-                newStats.HealingReceivedMultiplier += 0.35f;
-
-                float fVBCD = 60f;
-                if (m_bT9_4PC) fVBCD -= 10f;
-                float fVBDur = 10f;
-                if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
-                {
-                    fVBDur += 5f;
-                }
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fVBDur, fVBCD));
-            }
-
-            // Will of the Necropolis
-            // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
-            // CD 15 sec.
-            // Incoming damage must be >= than 5% of total health.
-            if (character.DeathKnightTalents.WillOfTheNecropolis > 0) {
-                newStats = new Stats();
-                newStats.DamageTakenMultiplier -= (0.05f * character.DeathKnightTalents.WillOfTheNecropolis);
-                // Need to factor in the damage taken aspect of the trigger.
-                // Using the assumption that the tank will be at < 35% health about that % of the time.
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 0, 15f, 0.35f));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 15f, 0.35f));
-            }
-
-            // Heart Strike
-            // 3.2.2: Secondary targets of HS take 1/2 as much damage
-            // Implemented in CombatTable.cs
-
-            // Might of Mograine
-            // increase crit damage of BB, BS, DS, and HS by 15% per point
-            // Implemented in CombatTable.cs
-
-            // Blood Gorged
-            // when above 75% health, you deal 2% more damage per point
-            // when above 75% health, you receive 2% Armor Pen
-            if (character.DeathKnightTalents.BloodGorged > 0) {
-                // Damage done increase has to be in shot rotation.
-                // Assuming a 50% up time 
-                FullCharacterStats.ArmorPenetration += (0.02f * character.DeathKnightTalents.BloodGorged * 0.5f);
-            }
-
-            // Dancing Rune Weapon
-            // not impl
-            #endregion
-
-            #region Frost Talents
-            // Improved Icy Touch
-            // 5% per point additional IT damage
-            // 2% per point target haste reduction 
-            if (character.DeathKnightTalents.ImprovedIcyTouch > 0) {
-                FullCharacterStats.BonusIcyTouchDamage += (0.05f * character.DeathKnightTalents.ImprovedIcyTouch);
-                // TODO: Need to factor in the correct haste adjustment for target.
-                // For now assuming a straight 2% damage reduction per point.
-
-//                sReturn.DamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.ImprovedIcyTouch;
-            }
-
-            // Runic Power Mastery
-            // Increases Max RP by 15 per point
-            if (character.DeathKnightTalents.RunicPowerMastery > 0) {
-                FullCharacterStats.BonusMaxRunicPower += 5 * character.DeathKnightTalents.RunicPowerMastery;
-            }
-
-            // Toughness
-            // Patch 3.2: Increases Armor Value from items by 2% per point.
-            // Reducing duration of all slowing effects by 6% per point.  
-            if (character.DeathKnightTalents.Toughness > 0)
-            {
-                FullCharacterStats.BaseArmorMultiplier += (.02f * character.DeathKnightTalents.Toughness); // Patch 3.2
-
-            }
-
-            // Icy Reach
-            // Increases range of IT & CoI and HB by 5 yards per point.
-
-            // Black Ice
-            // Increase Frost & shadow damage by 2% per point
-            if (character.DeathKnightTalents.BlackIce > 0) {
-                FullCharacterStats.BonusFrostDamageMultiplier += 0.02f * character.DeathKnightTalents.BlackIce;
-                FullCharacterStats.BonusShadowDamageMultiplier += 0.02f * character.DeathKnightTalents.BlackIce;
-            }
-
-            // Nerves of Cold Steel
-            // Increase hit w/ 1H weapons by 1% per point
-            // Increase damage done by off hand weapons by 5% per point
-            // Implement in combat shot roation
-
-            // Icy Talons
-            // Increase melee attack speed by 4% per point for the next 20 sec.
-            if (character.DeathKnightTalents.IcyTalons > 0) {
-                newStats = new Stats();
-                newStats.PhysicalHaste += (0.04f * character.DeathKnightTalents.IcyTalons);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
-            }
-
-            // Lichborne
-            // for 10 sec, immune to charm, fear, sleep
-            // CD 2 Mins
-
-            // Threat of Thassarian: 
-            // New 3-point talent. When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, 
-            // Blood Strikes and Frost Strikes and Rune Strike (as of 3.2.2) have a 30/60/100% chance 
-            // to also deal damage with your  off-hand weapon. Off-hand strikes are roughly one half the effect of the original strike. 
-
-            // Annihilation
-            // +1 % per point melee Crit chance 
-            // 33% per point that oblit will not consume diseases
-            if (character.DeathKnightTalents.Annihilation > 0) {
-                FullCharacterStats.PhysicalCrit += (0.01f * character.DeathKnightTalents.Annihilation);
-            }
-
-            // Killing Machine
-            // Melee attacks have a chance to make IT, HB, or FS a crit.
-            // increased proc per point.
-
-            // Chill of the Grave
-            // CoI, HB, IT and Oblit generate 2.5 RP per point.
-
-            // Endless Winter
-            // CoI has 50% per point to cause FF
-            // Mind Freeze RP cost is reduced by 50% per point.
-
-            // Frigid Dreadplate
-            // Melee attacks against you will miss by +1% per point
-            if (character.DeathKnightTalents.FrigidDreadplate > 0) {
-                FullCharacterStats.Miss += 0.01f * character.DeathKnightTalents.FrigidDreadplate;
-            }
-
-            // Glacier Rot
-            // Diseased enemies take 7%, 13% , 20% more damage from IT, HB, FS.
-            if (character.DeathKnightTalents.GlacierRot > 0) {
-                float fBonus = 0f;
-                switch (character.DeathKnightTalents.GlacierRot) {
-                    case 1: fBonus = 0.07f; break;
-                    case 2: fBonus = 0.13f; break;
-                    case 3: fBonus = 0.20f; break;
-                }
-                FullCharacterStats.BonusIcyTouchDamage += fBonus;
-                FullCharacterStats.BonusFrostStrikeDamage += fBonus;
-                FullCharacterStats.BonusHowlingBlastDamage += fBonus;
-            }
-
-            // Deathchill
-            // when active IT, HB, FS, Oblit will crit.
-
-            // Improved Icy Talons
-            // increases the melee hast of the group/raid by 20%
-            // increases your haste by 5% all the time.
-            if (character.DeathKnightTalents.ImprovedIcyTalons > 0) {
-                FullCharacterStats.PhysicalHaste += 0.05f;
-                // TODO: Factor in raid utility by improving raid haste by 20%
-                newStats = new Stats();
-                newStats.PhysicalHaste += (0.2f * character.DeathKnightTalents.IcyTalons);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
-            }
-
-            // Merciless Combat
-            // addtional 6% per point damage for IT, HB, Oblit, and FS
-            // on targets of less than 35% health.
-
-            // Rime
-            // increases crit chance of IT and Oblit by 5% per point
-            // Oblit has a 5% per point to reset CD of HB and HB consumes no runes
-            
-            // Chilblains
-            // FF victimes are movement reduced 15, 30, 50%
-
-            // Hungering Cold
-            // Spell that freezes all enemies w/ 10 yards.
-
-            // Improved Frost Presence
-            // retain the health bonus 5% per point when in non-Frost presence
-            // Decrease damage done to you by 1% per point.
-            if (character.DeathKnightTalents.ImprovedFrostPresence > 0) {
-                FullCharacterStats.DamageTakenMultiplier -= (0.01f * character.DeathKnightTalents.ImprovedFrostPresence);
-            }
-
-            // Blood of the North
-            // Patch 3.2: BS & FS damage +3% per point
-            // Patch 3.2: BS & Pest create DeathRune from Blood 33% per point.
-            if (character.DeathKnightTalents.BloodOfTheNorth > 0)
-            {
-                float fBonus = 0f;
-                switch (character.DeathKnightTalents.BloodOfTheNorth)
-                {
-                    case 1:
-                        fBonus = 0.03f;
-                        break;
-                    case 2:
-                        fBonus = 0.06f;
-                        break;
-                    case 3:
-                        fBonus = 0.1f;
-                        break;
-                }
-                FullCharacterStats.BonusFrostStrikeDamage += fBonus;
-                FullCharacterStats.BonusBloodStrikeDamage += fBonus;
-            }
-
-            // Unbreakable Armor
-            // Reinforces your armor with a thick coat of ice, Increasing Armor by 25% and increasing your Strength by 10% for 20 sec.
-            if (character.DeathKnightTalents.UnbreakableArmor > 0) {
-                newStats = new Stats();
-                newStats.BonusStrengthMultiplier += 0.10f;
-                newStats.BaseArmorMultiplier += .25f;
-                newStats.BonusArmorMultiplier += .25f;
-                if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
-                {
-                    // As per wowhead:
-                    // Effect: Apply Aura: Add % Modifier (3)
-                    // Value: 20
-                    newStats.BaseArmorMultiplier += .2f;
-                    newStats.BonusArmorMultiplier += .2f;
-                }
-                float fUACD = 60f;
-                if (m_bT9_4PC) fUACD -= 10f;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, fUACD));
-            }
-
-            // Acclimation
-            // When hit by a spell, 10% chance per point to boost resistance to that type of magic for 18 sec.  
-            // up to 3 stacks.
-            if (character.DeathKnightTalents.Acclimation > 0) {
-                newStats = new Stats();
-                float chance = (.1f * character.DeathKnightTalents.Acclimation);
-                newStats.FireResistance   += 50f;
-                newStats.FrostResistance  += 50f;
-                newStats.ArcaneResistance += 50f;
-                newStats.ShadowResistance += 50f;
-                newStats.NatureResistance += 50f;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 18f, 0f, chance, 3));
-            }
-
-            // Frost Strike
-
-            // Guile of Gorefiend
-            // Increases CritStrike Damage of BS, FS, HB, Oblit by 15% per point.
-            // Increases Duration of IBF by 2 sec per point.
-            // HACK: Implenting IceBound Fortitude. ////////////////////////////////////////////////////////
-            // Implmenting IBF here because it's affected by GoGF
-            // Four T7 increases IBF by 3 sec.
-            // Patch 3.2: IBF has a 120 sec CD. 
-            float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + FullCharacterStats.BonusIceboundFortitudeDuration);
-            // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
-            float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
-            float ibfReduction = 0.2f + (ibfDefense * 0.03f / 28.0f);
-            if (character.DeathKnightTalents.GlyphofIceboundFortitude) {
-                // Glyphed to 30% + def value.
-                ibfReduction += 0.1f;
-                // Since 3.1 the glyph is capped to 30%.
-            }
-            // There has always been a cap on the IBF to 30% the glyph was nerfed, not IBF.
-            // So it's not worth it for those who already have alot of DEF. (EG. most tanks)
-            ibfReduction = Math.Min(0.3f, ibfReduction);
-            newStats = new Stats();
-            newStats.DamageTakenMultiplier -= ibfReduction;
-            FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 120)); // Patch 3.2
-
-            // Tundra Stalker
-            // Your spells & abilities deal 3% per point more damage to targets w/ FF
-            // Increases Expertise by 1 per point
-            if (character.DeathKnightTalents.TundraStalker > 0) {
-                // Assuming FF is always up.
-                FullCharacterStats.BonusDamageMultiplier += .03f * character.DeathKnightTalents.TundraStalker;
-                FullCharacterStats.Expertise += 1f * character.DeathKnightTalents.TundraStalker;
-            }
-
-            // Howling Blast.
-
-            #endregion
-
-            #region UnHoly Talents
-            // Vicious Strikes
-            // Increases Crit chance by 3% per point of PS and SS
-            // Increases Crit Strike Damage by 15% per point of PS and SS
-
-            // Virulence
-            // Increases Spell hit +1% per point
-            if (character.DeathKnightTalents.Virulence > 0) {
-                FullCharacterStats.SpellHit += 0.01f * character.DeathKnightTalents.Virulence;
-            }
-
-            // Anticipation
-            // Increases dodge by 1% per point
-            if (character.DeathKnightTalents.Anticipation > 0) {
-                FullCharacterStats.Dodge += 0.01f * character.DeathKnightTalents.Anticipation;
-            }
-
-            // Epidemic
-            // Increases Duration of BP and FF by 3 sec per point
-
-            // Morbidity
-            // increases dam & healing of DC by 5% per point
-            // Decreases CD of DnD by 5 sec per point
-
-            // Unholy Command
-            // reduces CD of DG by 5 sec per point
-
-            // Ravenous Dead
-            // Increases Str +1% per point.
-            // Increases contribution of your str & stam to ghoul by 20% per point
-            if (character.DeathKnightTalents.RavenousDead > 0) {
-                FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.RavenousDead);
-                // Ghouls don't help tank here.
-            }
-
-            // Outbreak
-            // increases dam of PS by 10% per point
-            // increases dam of SS by 7% per point
-
-            // Necrosis
-            // Autoattacks deal additional 4% shadow
-
-            // Corpse Explosion
-            // Does damage by blowing up a corpse to all targets in 10 yards
-
-            // On a Pale Horse
-            // Reduce dur of stun and fear by 10% per point
-            // increase mount speed byh 10% per point
-
-            // Blood-Caked Blade
-            // 10% chance per point to cause Blood-Caked strike
-            
-            // Night of the Dead
-            // Reduces CD of Raise Dead by 45 sec per point
-            // Reduces CD of Army of the dead by 5 min per point
-            
-            // Unholy Blight
-            // Shadow Damage done to all targets in 10 yards for 20 sec.
-
-            // Impurity
-            // Attack Power bonus to spells increased by 4% per point.
-            
-            // Dirge
-            // DS, PS and SS generate 2.5 more runic power per point.
-
-            // Magic Suppression
-            // 2% per point less damage from all magic.
-            // AMS absorbs additional 8, 16, 25% of spell damage.
-            if (character.DeathKnightTalents.MagicSuppression > 0) {
-                FullCharacterStats.SpellDamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.MagicSuppression;
-                // TODO: factor in AMS
-            }
-
-            // Reaping 
-            // BS or Pest convert to DR.
-
-            // Master of Ghouls
-            // Reduces CD on Raise Dead by 60 sec.
-            // Ghoul summoned is perm (pet). 
-
-            // Desecration
-            // PS and SS cause Desecrated Ground effect.
-            // Targets are slowed by 10% per point
-            // Patch 3.2: You don't cause 1% more damage 
-            // Lasts 12 sec.
-            /* Patch 3.2
-            if (character.DeathKnightTalents.Desecration > 0)
-            {
-                newStats = new Stats();
-                newStats.BonusDamageMultiplier += 0.01f * character.DeathKnightTalents.Desecration;
-                // Gonna use an average CD of a rune at 10sec per rune divided by 2 runes == 5 sec.
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 12f, 5f));
-            }
-            */
-
-            // AntiMagic Zone
-            // Creates a zone where party/raid members take 75% less spell damage
-            // Lasts 10 secs or X damage.  
-            if (character.DeathKnightTalents.AntiMagicZone > 0) {
-                newStats = new Stats();
-                newStats.SpellDamageTakenMultiplier -= .75f * character.DeathKnightTalents.AntiMagicZone;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, 2f * 60f));
-            }
-
-            // Improved Unholy Presence
-            // in Blood or Frost, retain movement speed (8%, 15%).
-            // Runes finish CD 5% per point faster.
-
-            // Ghoul Frenzy
-            // Grants pet 25% haste for 30 sec and heals it for 60% health.
-
-            // Crypt Fever
-            // CF increases disease damage taken by target by 10% per point
-
-            // Bone Shield
-            // 3 Bones as of 3.2.2
-            // Takes 20% less dmage from all sources
-            // Does 2% more damage to target
-            // Each damaging attack consumes a bone.
-            // Lasts 5 mins
-
-            // Ebon Plaguebringer
-            // CF becomes EP - increases magic damage taken by targets 4, 9, 13% in addition to disease damage
-            // Increases crit strike chance by 1% per point
-            if (character.DeathKnightTalents.EbonPlaguebringer > 0) {
-                FullCharacterStats.PhysicalCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
-                FullCharacterStats.SpellCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
-                float fBonus = 0f;
-                switch (character.DeathKnightTalents.EbonPlaguebringer)
-                {
-                    case 1:
-                        fBonus = .04f;
-                        break;
-                    case 2:
-                        fBonus = .09f;
-                        break;
-                    case 3:
-                        fBonus = .13f;
-                        break;
-                    default:
-                        break;
-                }
-                FullCharacterStats.BonusArcaneDamageMultiplier += fBonus;
-                FullCharacterStats.BonusFireDamageMultiplier += fBonus;
-                FullCharacterStats.BonusFrostDamageMultiplier += fBonus;
-                FullCharacterStats.BonusHolyDamageMultiplier += fBonus;
-                FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
-                FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
-            }
-
-            // Sourge Strike
-
-            // Rage of Rivendare
-            // 2% per point more damage to targets w/ BP
-            // Expertise +1 per point
-            if (character.DeathKnightTalents.RageOfRivendare > 0) {
-                FullCharacterStats.Expertise += character.DeathKnightTalents.RageOfRivendare;
-                // Assuming BP is always on.
-                FullCharacterStats.BonusDamageMultiplier += 0.02f * character.DeathKnightTalents.RageOfRivendare;
-            }
-
-            // Summon Gargoyle
-
-            #endregion
-
-//            return sReturn;
-        }
+        #endregion
 
         #region Evaluations And Ratings
         /// <summary>Evaluate how many swings until the tank is next hit.</summary>
@@ -2194,14 +2261,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         }
 
         /// <summary>
-        /// Get the effective health of the current character for a particular damage school.
+        /// Get the value for a sub-component of Survival
         /// </summary>
-        /// <returns>The value of the survival SubPoint.</returns>
-        private float GetEffectiveHealth(float fHealth, float fDR)
+        /// <param name="fHealth">Current HP</param>
+        /// <param name="fDR">Damage Reduction rate</param>
+        /// <param name="PercValue">% value of the survival rank. valid range 0-1</param>
+        /// <returns></returns>
+        private float GetEffectiveHealth(float fHealth, float fDR, float PercValue)
         {
             // TotalSurvival == sum(Survival for each school)
             // Survival = (Health / (1 - DR)) * % damage inc from that school
-            return (fHealth / (1-fDR));
+            if (0f <= PercValue && PercValue <= 1f && fDR < 1f)
+                return (fHealth / (1 - fDR)) * PercValue;
+            else
+                return 0;
         }
 
         /// <summary>

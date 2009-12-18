@@ -140,7 +140,8 @@ namespace Rawr.TankDK
         {
             get 
             {
-                if (null == _cType)
+                if (_cType != CalculationType.Burst 
+                    && _cType != CalculationType.SMT)
                 {
                     _cType = CalculationType.SMT;
                 }
@@ -149,21 +150,17 @@ namespace Rawr.TankDK
             set { _cType = value; OnPropertyChanged("cType"); }
         }
 
-        private bool _m_bExperimental;
+        private bool _m_bExperimental = false;
         public bool bExperimental
         {
             get
             {
-                if (_m_bExperimental == null)
-                {
-                    _m_bExperimental = false;
-                }
                 return _m_bExperimental;
             }
             set { _m_bExperimental = value; OnPropertyChanged("Experimental"); }
         }
 
-        private bool _m_AdditiveMitigation;
+        private bool _m_AdditiveMitigation = false;
         public bool AdditiveMitigation
         {
             get
