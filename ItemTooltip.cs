@@ -351,7 +351,7 @@ namespace Rawr
                             #region Enchant Section
                             int extraEnchant = 0;
                             string enchant = "No Enchant";
-                            if (_currentItem.Quality != ItemQuality.Temp)
+                            if (_currentItem.Quality != ItemQuality.Temp && !CurrentItem.IsGem)
                             {
                                 if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
                                 {
@@ -406,7 +406,7 @@ namespace Rawr
                             _cachedToolTipImage = new Bitmap(309,
                                 (hasSockets ? 78 : 20) + statHeight                                   // Stats
                                 + (_currentItem.Quality != ItemQuality.Temp ? 13 + extraLocation : 0) // Location
-                                + (_currentItem.Quality != ItemQuality.Temp ? 13 + extraEnchant  : 0) // Enchant
+                                + (_currentItem.Quality != ItemQuality.Temp && !CurrentItem.IsGem ? 13 + extraEnchant  : 0) // Enchant
                                 + gemInfoSize + gemNamesSize                                          // Gems
                                 + numTinyItems * tinyItemSize,                                        // Tiny Items, like in Build Upgrade list
                                 PixelFormat.Format32bppArgb);
@@ -684,11 +684,13 @@ namespace Rawr
                                 SizeF quality_size = g.MeasureString(location, _fontStats);
                                 yPos += (int)quality_size.Height;
 
-                                draw_pos = new PointF(2, yPos);
-                                g.DrawString(enchant, _fontStats, SystemBrushes.InfoText, draw_pos);
-                                // update yPos here
-                                quality_size = g.MeasureString(enchant, _fontStats);
-                                yPos += (int)quality_size.Height;
+                                if (!CurrentItem.IsGem) {
+                                    draw_pos = new PointF(2, yPos);
+                                    g.DrawString(enchant, _fontStats, SystemBrushes.InfoText, draw_pos);
+                                    // update yPos here
+                                    quality_size = g.MeasureString(enchant, _fontStats);
+                                    yPos += (int)quality_size.Height;
+                                }
                             }
 
                             xPos = 2;
