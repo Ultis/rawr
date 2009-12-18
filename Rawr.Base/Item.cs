@@ -6,6 +6,7 @@ using System.Net;
 #if RAWR3
 using System.Linq;
 #endif
+using System.Windows.Forms;
 
 namespace Rawr
 {
@@ -887,7 +888,12 @@ namespace Rawr
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale, string wowheadSite)
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
-			if (cachedItem != null && !forceRefresh) return cachedItem;
+            string oldItemStats = cachedItem != null ? cachedItem.ToString().Split(':')[1] : "";
+            ItemLocation[] oldItemLoc = cachedItem.LocationInfo;
+            string oldItemSource = cachedItem != null ? (cachedItem.LocationInfo[0].Description
+                + (cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : "")) : "";
+
+            if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
 #if RAWR3
@@ -946,6 +952,40 @@ namespace Rawr
                         // preserve Cost information
                         newItem.Cost = cachedItem.Cost;
                     }
+                    #if DEBUG
+                    string newItemStats = newItem.ToString().Split(':')[1];
+                    string newItemSource = newItem.LocationInfo[0].Description
+                        + (newItem.LocationInfo[1] != null ? " and" + newItem.LocationInfo[1].Description.Replace("Purchasable with", "") : "");
+
+                    if (!Rawr.Properties.GeneralSettings.Default.UseMultithreading
+                        && (oldItemStats != newItemStats || oldItemSource != newItemSource))
+                    {
+                        switch (MessageBox.Show(
+                            "Do you want to use the New Data and overwrite the Old?"
+                            + "\r\n\r\n"
+                            + "[" + cachedItem.Id + "] " + cachedItem.Name
+                            + "\r\n\r\n"
+                            + "Old Data:\r\n"
+                            + "Stats:\r\n" + oldItemStats
+                            + "\r\n"
+                            + "Source: " + oldItemSource
+                            + "\r\n\r\n"
+                            + "New Data:\r\n"
+                            + "Stats:\r\n" + newItemStats
+                            + "\r\n"
+                            + "Source: " + newItemSource
+                            , "Update Item Cache",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1))
+                        {
+                            case DialogResult.Yes: { break; } // Do Nothing, go to AddItem
+                            default: {
+                                // User wants to keep orig data
+                                LocationFactory.Add(cachedItem.Id.ToString(), oldItemLoc, true);
+                                return ItemCache.FindItemById(id);
+                            }
+                        }
+                    }
+                    #endif
                     ItemCache.AddItem(newItem, raiseEvent);
                 }
 				return ItemCache.FindItemById(id);
