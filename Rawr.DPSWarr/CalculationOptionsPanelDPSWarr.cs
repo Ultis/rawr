@@ -33,7 +33,6 @@ namespace Rawr.DPSWarr {
                 SetUpFAQ();
                 SetUpPatchNotes();
 #if !DEBUG
-                //calcOpts.UseMarkov = false;
                 CK_Markov.Checked  = false;
                 CK_Markov.Visible  = false;
 #endif
@@ -1328,52 +1327,47 @@ CB_Version.Items.Add("All");
             }
         }
         private void CK_HideBadItems_Spl_CheckedChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.HideBadItems_Spl = CK_HideSplGear.Checked;
-                CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
-                ItemCache.OnItemsChanged();
-                Character.OnCalculationsInvalidated();
-            }
+            if (isLoading) return;
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.HideBadItems_Spl = CK_HideSplGear.Checked;
+            CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+            ItemCache.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
         private void CK_HideBadItems_PvP_CheckedChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.HideBadItems_PvP = CK_HidePvPGear.Checked;
-                CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
-                ItemCache.OnItemsChanged();
-                Character.OnCalculationsInvalidated();
-            }
+            if (isLoading) return;
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.HideBadItems_PvP = CK_HidePvPGear.Checked;
+            CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
+            ItemCache.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
         private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.PTRMode = CK_PTRMode.Checked;
-                Character.OnCalculationsInvalidated();
-            }
+            if (isLoading) return;
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.PTRMode = CK_PTRMode.Checked;
+            Character.OnCalculationsInvalidated();
         }
         private void RB_StanceFury_CheckedChanged(object sender, EventArgs e)
         {
-            if (!isLoading) {
-                CB_BossList.Text = "Custom";
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.FuryStance = RB_StanceFury.Checked;
-                CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
-                CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
-                Character.OnCalculationsInvalidated();
-            }
+            if (isLoading) return;
+            CB_BossList.Text = "Custom";
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.FuryStance = RB_StanceFury.Checked;
+            CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
+            CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
+            Character.OnCalculationsInvalidated();
         }
         // Boss
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!isLoading) {
-                CB_BossList.Text = "Custom";
-                int targetArmor = int.Parse(CB_TargArmor.Text);
+            if (isLoading) return;
+            CB_BossList.Text = "Custom";
+            int targetArmor = int.Parse(CB_TargArmor.Text);
 
-                if (Character != null && Character.CalculationOptions != null) {
-                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                    calcOpts.TargetArmor = targetArmor;
-                    Character.OnCalculationsInvalidated();
-                }
+            if (Character != null && Character.CalculationOptions != null) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.TargetArmor = targetArmor;
+                Character.OnCalculationsInvalidated();
             }
         }
         private void CB_TargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
@@ -1753,7 +1747,7 @@ CB_Version.Items.Add("All");
             }
         }
         // Survival
-        private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
+private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.SurvScale = (float)NUD_SurvScale.Value;

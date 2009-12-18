@@ -1375,6 +1375,7 @@ namespace Rawr
 				case "394": return "Grizzly Hills";
 				case "495": return "Howling Fjord";
 				case "1196": return "Utgarde Pinnacle";
+                case "1584": return "Blackrock Depths";
 				case "2817": return "Crystalsong Forest";
 				case "2917": return "Hall of Legends";
 				case "2918": return "Champion's Hall";
@@ -1411,6 +1412,7 @@ namespace Rawr
                 case "4723": return "Trial of the Champion";
                 case "4722": return "Trial of the Crusader";
                 case "4812": return "Icecrown Citadel";
+                case "4813": return "Pit of Saron";
                 case "4809": return "Halls of Reflection";
                 default: return "Unknown - " + zoneId;
     			}
