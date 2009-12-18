@@ -82,7 +82,7 @@ namespace Rawr
             {
                 long before = stopwatch.ElapsedMilliseconds;
 
-                for (int i = 0; i < itemsPerSecond; i++)
+                for (int i = 0; i < itemsPerSecond || itemsPerSecond == 0; i++)
                 {
                     ItemToUpdate info = null;
                     lock (lockObject)
