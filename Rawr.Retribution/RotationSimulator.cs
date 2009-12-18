@@ -111,7 +111,7 @@ namespace Rawr.Retribution
 
             bool gcdUsed;
             float minNext, tryUse, timeElapsed = 0;
-            Random rand = new Random(6021987);
+            //Random rand = new Random(6021987);
 
             while (currentTime < sol.FightLength)
             {
@@ -124,13 +124,13 @@ namespace Rawr.Retribution
                         timeElapsed = tryUse - currentTime;
                         currentTime = tryUse;
                         gcdUsed = true;
-                        if (rot.T10_Speed > 0)
-                        {
-                            if (ability == Ability.CrusaderStrike || ability == Ability.Judgement)
-                            {
-                                if (rand.NextDouble() < 0.4) abilities[(int)Ability.DivineStorm].ResetCD();
-                            }
-                        }
+						//if (rot.T10_Speed > 0)
+						//{
+						//    if (ability == Ability.CrusaderStrike || ability == Ability.Judgement)
+						//    { //Seriously? You thought it'd be OK to use a Random? /facepalm
+						//        if (rand.NextDouble() < 0.4) abilities[(int)Ability.DivineStorm].ResetCD();
+						//    }
+						//}
                         break;
                     }
                 }
@@ -144,10 +144,10 @@ namespace Rawr.Retribution
                     timeElapsed = minNext - currentTime;
                     currentTime = minNext;
                 }
-                if (rot.T10_Speed > 0)
-                {
-                    if (rand.NextDouble() < (0.4 * timeElapsed / rot.T10_Speed)) abilities[(int)Ability.DivineStorm].ResetCD();
-                }
+                //if (rot.T10_Speed > 0)
+                //{
+                //    if (rand.NextDouble() < (0.4 * timeElapsed / rot.T10_Speed)) abilities[(int)Ability.DivineStorm].ResetCD();
+                //}
             }
 
             sol.Judgement = abilities[(int)Ability.Judgement].Uses;
