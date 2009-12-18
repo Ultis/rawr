@@ -132,7 +132,7 @@ namespace Rawr
 
             lock (lockObject)
             {
-                if (i != null)
+                if (i != null && (i.Stats.ToString().Contains(",") || (i.Stats.Armor + i.Stats.BonusArmor == 0 && i.Stats.ToString().Length > 0)))
                 {
                     newItems.Add(info.index, i);
                 }

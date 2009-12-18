@@ -253,8 +253,8 @@ namespace Rawr.Cat
 			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
 			int targetLevel = calcOpts.TargetLevel;
 			float targetArmor = calcOpts.TargetArmor;
-			List<float> tempArPenRatings, tempArPenRatingUptimes;
-			Stats stats = GetCharacterStatsWithTemporaryArPen(character, additionalItem, out tempArPenRatings, out tempArPenRatingUptimes);
+			WeightedStat[] arPenUptimes, critRatingUptimes;
+			Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, out arPenUptimes, out critRatingUptimes);
 			float levelDifference = (targetLevel - 80f) * 0.2f;
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
@@ -264,9 +264,9 @@ namespace Rawr.Cat
 
 			#region Basic Chances and Constants
 			float modArmor = 0f;
-			for (int i = 0; i < tempArPenRatings.Count; i++)
+			for (int i = 0; i < arPenUptimes.Length; i++)
 			{
-				modArmor += tempArPenRatingUptimes[i] * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRatings[i]);
+				modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
 			}
 
 			modArmor = 1f - modArmor;
@@ -287,29 +287,58 @@ namespace Rawr.Cat
 			float glanceMultiplier = 0.7f;
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 			float chanceNonAvoided = 1f - chanceAvoided;
-			
-			//Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
-			float chanceCritYellow = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating, CharacterClass.Druid)
-                + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
-                + stats.PhysicalCrit
-                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80]);
-			float chanceHitYellow = 1f - chanceCritYellow;
 
-			//Bite - Identical to Yellow, with higher crit chance
-			float chanceCritBite = Math.Min(1f, chanceCritYellow + stats.BonusFerociousBiteCrit);
-			float chanceHitBite = 1f - chanceCritBite;
-			
-			//Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
-			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCritYellow : 0f;
-			float chanceCritRip = Math.Min(1f, chanceCritBleed > 0f ? chanceCritBleed + stats.BonusRipCrit : 0f);
-            float chanceCritRake = stats.BonusRakeCrit > 0 ? chanceCritBleed : 0;
+			////Crit Chances
+			float chanceCritYellow = 0f;
+			float chanceHitYellow = 0f;
+			float cpPerCPG = 0f;
+			float chanceCritBite = 0f;
+			float chanceHitBite = 0f;
+			float chanceCritBleed = 0f;
+			float chanceCritRip = 0f;
+			float chanceCritRake = 0f;
+			float chanceGlance = 0f;
+			float chanceCritWhite = 0f;
+			float chanceHitWhite = 0f;
 
-			//White
-			float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
-			float chanceCritWhite = Math.Min(chanceCritYellow, 1f - chanceGlance - chanceAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
-			float chanceHitWhite = 1f - chanceCritWhite - chanceAvoided - chanceGlance;
+			for (int i = 0; i < critRatingUptimes.Length; i++)
+			{ //Sum up the weighted chances for each crit value
+				WeightedStat iStat = critRatingUptimes[i];
+				//Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
+				float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Druid)
+					+ StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
+					+ stats.PhysicalCrit
+					+ StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+				float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
+				float cpPerCPGTemp = (chanceHitYellowTemp + chanceCritYellowTemp * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
+
+				//Bite - Identical to Yellow, with higher crit chance
+				float chanceCritBiteTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusFerociousBiteCrit);
+				float chanceHitBiteTemp = 1f - chanceCritBiteTemp;
+
+				//Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
+				float chanceCritBleedTemp = character.DruidTalents.PrimalGore > 0 ? chanceCritYellowTemp : 0f;
+				float chanceCritRipTemp = Math.Min(1f, chanceCritBleedTemp > 0f ? chanceCritBleedTemp + stats.BonusRipCrit : 0f);
+				float chanceCritRakeTemp = stats.BonusRakeCrit > 0 ? chanceCritBleedTemp : 0;
+
+				//White
+				float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
+				float chanceCritWhiteTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+				float chanceHitWhiteTemp = 1f - chanceCritWhiteTemp - chanceAvoided - chanceGlanceTemp;
+
+				chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
+				chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
+				cpPerCPG += iStat.Chance * cpPerCPGTemp;
+				chanceCritBite += iStat.Chance * chanceCritBiteTemp;
+				chanceHitBite += iStat.Chance * chanceHitBiteTemp;
+				chanceCritBleed += iStat.Chance * chanceCritBleedTemp;
+				chanceCritRip += iStat.Chance * chanceCritRipTemp;
+				chanceCritRake += iStat.Chance * chanceCritRakeTemp;
+				chanceGlance += iStat.Chance * chanceGlanceTemp;
+				chanceCritWhite += iStat.Chance * chanceCritWhiteTemp;
+				chanceHitWhite += iStat.Chance * chanceHitWhiteTemp;
+			}
 			
-			float cpPerCPG = (chanceHitYellow + chanceCritYellow * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
@@ -490,11 +519,11 @@ namespace Rawr.Cat
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
             cacheChar = character;
-			List<float> arPenRating, arPenRatingUptime;
-			return GetCharacterStatsWithTemporaryArPen(character, additionalItem, out arPenRating, out arPenRatingUptime);
+			WeightedStat[] armorPenetrationUptimes, critRatingUptimes;
+			return GetCharacterStatsWithTemporaryEffects(character, additionalItem, out armorPenetrationUptimes, out critRatingUptimes);
 		}
 
-		private Stats GetCharacterStatsWithTemporaryArPen(Character character, Item additionalItem, out List<float> tempArPenRatings, out List<float> tempArPenRatingUptimes)
+		private Stats GetCharacterStatsWithTemporaryEffects(Character character, Item additionalItem, out WeightedStat[] armorPenetrationUptimes, out WeightedStat[] critRatingUptimes)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
             int targetLevel = calcOpts.TargetLevel;
@@ -614,12 +643,13 @@ namespace Rawr.Cat
 
             // Handle Trinket procs
 			Stats statsProcs = new Stats();
-			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating == 0))
-			{ //Calculate all non-ArPen procs first.
-				statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration));
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger)))
+			{
+				statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration), effect.Stats.DeathbringerProc > 0 ? 1f/3f : 1f);
 			}
 
-			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon;
+			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon + statsProcs.DeathbringerProc;
+			statsProcs.Strength += statsProcs.DeathbringerProc;
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
@@ -628,38 +658,121 @@ namespace Rawr.Cat
 			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
 			statsProcs.Armor += 2f * statsProcs.Agility;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
+			
+			//Agility is only use for crit from here on out; we'll be converting Agility to CritRating, 
+			//and calculating CritRating separately, so don't add any Agility or CritRating from procs here.
+			//Also calculating ArPen separately, so don't add that either.
+			statsProcs.CritRating = statsProcs.Agility = statsProcs.ArmorPenetrationRating = 0;
 			statsTotal.Accumulate(statsProcs);
 
+			//Handle Crit procs
+			critRatingUptimes = new WeightedStat[0];
+			List<SpecialEffect> tempCritEffects = new List<SpecialEffect>();
+			List<float> tempCritEffectIntervals = new List<float>();
+			List<float> tempCritEffectChances = new List<float>();
+			List<float> tempCritEffectScales = new List<float>();
+
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && (se.Stats.CritRating + se.Stats.Agility + se.Stats.DeathbringerProc + se.Stats.HighestStat + se.Stats.Paragon) > 0))
+			{
+				tempCritEffects.Add(effect);
+				tempCritEffectIntervals.Add(triggerIntervals[effect.Trigger]);
+				tempCritEffectChances.Add(triggerChances[effect.Trigger]);
+				tempCritEffectScales.Add(effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
+			}
+
+			if (tempCritEffects.Count == 0)
+			{
+				critRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = 1f, Value = 0f } };
+			}
+			else if (tempCritEffects.Count == 1)
+			{ //Only one, add it to
+				SpecialEffect effect = tempCritEffects[0];
+				float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempCritEffectScales[0];
+				float totalAgi = (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
+				critRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = 
+						effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi,
+						CharacterClass.Druid) * StatConversion.RATING_PER_PHYSICALCRIT },
+					new WeightedStat() { Chance = 1f - uptime, Value = 0f }};
+			}
+			else if (tempCritEffects.Count > 1)
+			{
+				List<SpecialEffect> tempCritEffectsAdjusted = new List<SpecialEffect>();
+				foreach (SpecialEffect effect in tempCritEffects)
+				{
+					SpecialEffect adjustedEffect = effect;
+					float totalAgi = (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
+					if (totalAgi - effect.Stats.Agility > 0)
+					{
+						adjustedEffect = new SpecialEffect(effect.Trigger,
+							new Stats()
+							{
+								CritRating = effect.Stats.CritRating +
+									StatConversion.GetCritFromAgility(totalAgi,
+									CharacterClass.Druid) * StatConversion.RATING_PER_PHYSICALCRIT
+							},
+							effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
+					}
+					tempCritEffectsAdjusted.Add(adjustedEffect);
+				}
+				
+				float[] intervals = new float[tempCritEffects.Count];
+				float[] chances = new float[tempCritEffects.Count];
+				float[] offset = new float[tempCritEffects.Count];
+				for (int i = 0; i < tempCritEffects.Count; i++)
+				{
+					intervals[i] = triggerIntervals[tempCritEffects[i].Trigger];
+					chances[i] = triggerChances[tempCritEffects[i].Trigger];
+				}
+				if (tempCritEffects.Count >= 2)
+				{
+					offset[0] = calcOpts.TrinketOffset;
+				}
+				WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffectsAdjusted.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, calcOpts.Duration, AdditiveStat.CritRating);
+				critRatingUptimes = critWeights;
+			}
+
 			//Handle ArPen procs
-			tempArPenRatings = new List<float>();
-			tempArPenRatingUptimes = new List<float>();
+			armorPenetrationUptimes = new WeightedStat[0];
 			List<SpecialEffect> tempArPenEffects = new List<SpecialEffect>();
 			List<float> tempArPenEffectIntervals = new List<float>();
 			List<float> tempArPenEffectChances = new List<float>();
+			List<float> tempArPenEffectScales = new List<float>();
 
-			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating > 0))
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating + se.Stats.DeathbringerProc > 0))
 			{
 				tempArPenEffects.Add(effect);
 				tempArPenEffectIntervals.Add(triggerIntervals[effect.Trigger]);
 				tempArPenEffectChances.Add(triggerChances[effect.Trigger]);
+				tempArPenEffectScales.Add(effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
 			}
 
 			if (tempArPenEffects.Count == 0)
 			{
-				tempArPenRatings.Add(0.0f);
-				tempArPenRatingUptimes.Add(1.0f);
+				armorPenetrationUptimes = new WeightedStat[] { new WeightedStat() { Chance = 1f, Value = 0f } };
 			}
 			else if (tempArPenEffects.Count == 1)
 			{ //Only one, add it to
 				SpecialEffect effect = tempArPenEffects[0];
-				float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration);
-				tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
-				tempArPenRatingUptimes.Add(uptime);
-				tempArPenRatings.Add(0.0f);
-				tempArPenRatingUptimes.Add(1.0f - uptime);
+				float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempArPenEffectScales[0];
+				armorPenetrationUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc },
+					new WeightedStat() { Chance = 1f - uptime, Value = 0f }};
 			}
 			else if (tempArPenEffects.Count > 1)
 			{
+				List<SpecialEffect> tempArPenEffectsAdjusted = new List<SpecialEffect>();
+				foreach (SpecialEffect effect in tempArPenEffects)
+				{
+					SpecialEffect adjustedEffect = effect;
+					float totalArPen = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc;
+					if (effect.Stats.DeathbringerProc > 0)
+					{
+						adjustedEffect = new SpecialEffect(effect.Trigger,
+							new Stats() { ArmorPenetrationRating = totalArPen },
+							effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
+					}
+					tempArPenEffectsAdjusted.Add(adjustedEffect);
+				}
+
 				float[] intervals = new float[tempArPenEffects.Count];
 				float[] chances = new float[tempArPenEffects.Count];
 				float[] offset = new float[tempArPenEffects.Count];
@@ -672,12 +785,8 @@ namespace Rawr.Cat
 				{
 					offset[0] = calcOpts.TrinketOffset;
 				}
-				WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, 1f, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
-				for (int i = 0; i < arPenWeights.Length; i++)
-				{
-					tempArPenRatings.Add(arPenWeights[i].Value);
-					tempArPenRatingUptimes.Add(arPenWeights[i].Chance);
-				}
+				WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffectsAdjusted.ToArray(), intervals, chances, offset, tempArPenEffectScales.ToArray(), 1f, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
+				armorPenetrationUptimes = arPenWeights;
 			}
 
 			return statsTotal;
@@ -756,6 +865,7 @@ namespace Rawr.Cat
 					TerrorProc = stats.TerrorProc,
 					HighestStat = stats.HighestStat,
 					Paragon = stats.Paragon,
+					DeathbringerProc = stats.DeathbringerProc,
 					BonusRakeDuration = stats.BonusRakeDuration,
 					BonusRipCrit = stats.BonusRipCrit,
                     BonusRakeCrit = stats.BonusRakeCrit,
@@ -798,7 +908,7 @@ namespace Rawr.Cat
 				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
-				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.Bloodlust +
+				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.Bloodlust + stats.DeathbringerProc +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.TerrorProc + stats.BonusRipCrit +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneDamage + stats.ShadowDamage +
