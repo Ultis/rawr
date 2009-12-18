@@ -198,7 +198,8 @@ namespace Rawr
 					}
 					if (Area != "*")
 					{
-						return new VendorItem()
+                        // Change this to a drop from a Boss
+						return new StaticDrop()
 						{
 							Area = Area,
 							Boss = Boss,
