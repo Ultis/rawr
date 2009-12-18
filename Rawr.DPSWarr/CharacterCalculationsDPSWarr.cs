@@ -202,7 +202,7 @@ namespace Rawr.DPSWarr {
             // DPS Fury
             format = "{0:0000} : {1:0000} : {2:000.00}";
 
-            if (TotalDPS < 1f) TotalDPS = 1f;
+            if (TotalDPS < 0f) TotalDPS = 0f;
             foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList())
             {
                 if (!aw.ability.Name.Equals("Invalid")) dictValues.Add(aw.ability.Name, string.Format(format, aw.DPS, aw.ability.DamageOnUse, aw.numActivates) + aw.ability.GenTooltip(aw.numActivates, aw.DPS / TotalDPS));

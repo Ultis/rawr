@@ -82,6 +82,26 @@ namespace Rawr.DPSWarr {
             }
 
         private string[] _characterDisplayCalculationLabels = null;
+
+        public override string GetCharacterStatsString(Character character)
+        {
+            StringBuilder stats = new StringBuilder();
+            stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
+                character.Name, character.Region, character.Realm, character.Race);
+
+            char[] splits = {':','*'};
+            Dictionary<string,string> dict = GetCharacterCalculations(character, null, false, false, true).GetAsynchronousCharacterDisplayCalculationValues();
+            foreach (string s in CharacterDisplayCalculationLabels)
+            {
+                string[] label = s.Split(splits);
+                if (dict.ContainsKey(label[1]))
+                {
+                    stats.AppendFormat("\r\n{0}:\t\t{1}", label[1], dict[label[1]].Split('*')[0]);
+                }
+            }
+            
+            return stats.ToString();
+        }
         public override string[] CharacterDisplayCalculationLabels {
             get {
                 if (_characterDisplayCalculationLabels == null) {
@@ -1097,7 +1117,7 @@ These numbers to do not include racial bonuses.",
         }
 
         private enum StatType { Unbuffed, Buffed, Average, Maximum };
-
+        
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             try {
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions);

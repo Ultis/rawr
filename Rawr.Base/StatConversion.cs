@@ -544,7 +544,7 @@ namespace Rawr
 
             float ArpFromRating = (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a));
             //if (/*first*/(  x  )/*br*/ - /*second*/(  (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a))  ) <= 0.1)) return 0f;
-            return ArpFromRating * RATING_PER_ARMORPENETRATION;
+            return (float)Math.Round(ArpFromRating * RATING_PER_ARMORPENETRATION,3);
         }
 
         /// <summary>
