@@ -276,7 +276,10 @@ namespace Rawr
             {
                 int start = json2.IndexOf(",dura:");
                 int end = json2.IndexOf(",", start + 1);
-                if (start != -1) { json2 = json2.Remove(start, end - start); }
+                if (start != -1) {
+                    if(end ==-1){json2 = json2.Remove(start);}
+                    else{json2 = json2.Remove(start, end - start);}
+                }
             }
             #endregion
 
