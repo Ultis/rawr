@@ -117,11 +117,16 @@ namespace Rawr.Hunter
                     isLoading = true;
                 }
                 CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-                for (int i = 0; i < CB_TargetLevel.Items.Count; i++)
-                {
-                    if (CB_TargetLevel.Items[i] as string == CalcOpts.TargetLevel.ToString())
-                    {
+
+                for (int i = 0; i < CB_TargetLevel.Items.Count; i++) {
+                    if (CB_TargetLevel.Items[i] as string == CalcOpts.TargetLevel.ToString()) {
                         CB_TargetLevel.SelectedItem = CB_TargetLevel.Items[i];
+                        break;
+                    }
+                }
+                for (int i = 0; i < CB_TargArmor.Items.Count; i++) {
+                    if (CB_TargArmor.Items[i] as string == CalcOpts.TargetArmor.ToString()) {
+                        CB_TargArmor.SelectedItem = CB_TargArmor.Items[i];
                         break;
                     }
                 }
@@ -143,9 +148,6 @@ namespace Rawr.Hunter
                 NUD_MultiTargsUptime.Enabled = CalcOpts.MultipleTargets;
                 NUD_MultiTargsUptime.Value = (int)(CalcOpts.MultipleTargetsPerc * 100f);
 
-                Bar_TargArmor.Value = CalcOpts.TargetArmor;
-                LB_TargArmorValue.Text = CalcOpts.TargetArmor.ToString();
-
                 CB_PetFamily.Items.Clear();
                 foreach (PetFamily f in Enum.GetValues(typeof(PetFamily))) CB_PetFamily.Items.Add(f);
                 CB_PetFamily.SelectedItem = CalcOpts.PetFamily;
@@ -155,7 +157,6 @@ namespace Rawr.Hunter
                 NUD_35.Value = CalcOpts.timeSpent35To20;
                 NUD_BossHP.Value = (decimal)Math.Round(100 * CalcOpts.bossHPPercentage);
 
-                // Drizz: Added option for CDCutoff
                 NUD_CDCutOff.Value = CalcOpts.cooldownCutoff;
 
                 NUD_Time20.Maximum = CB_Duration.Value;
@@ -225,10 +226,9 @@ namespace Rawr.Hunter
             CalcOpts.TargetLevel = int.Parse(CB_TargetLevel.SelectedItem.ToString());
             Character.OnCalculationsInvalidated();
         }
-        private void trackBarTargetArmor_Scroll(object sender, EventArgs e) {
+        private void CB_TargArmor_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.TargetArmor = Bar_TargArmor.Value;
-            LB_TargArmorValue.Text = Bar_TargArmor.Value.ToString();
+            CalcOpts.TargetArmor = int.Parse(CB_TargArmor.SelectedItem.ToString());
             Character.OnCalculationsInvalidated();
         }
         private void numericUpDownLatency_ValueChanged(object sender, EventArgs e) {
