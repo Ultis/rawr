@@ -1570,7 +1570,9 @@ namespace Rawr.DPSDK
                 }
             }
 
-            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon;
+            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc/3;
+            statsTotal.HasteRating += statsTotal.DeathbringerProc/3;
+            statsTotal.CritRating += statsTotal.DeathbringerProc/3;
 
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
@@ -1908,6 +1910,7 @@ namespace Rawr.DPSDK
                 BonusRPFromScourgeStrike = stats.BonusRPFromScourgeStrike,
                 BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
                 BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
+                DeathbringerProc = stats.DeathbringerProc,
 
                 BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
                 CinderglacierProc = stats.CinderglacierProc
@@ -2007,7 +2010,7 @@ namespace Rawr.DPSDK
                 + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + 
                 stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage + stats.Armor + stats.BonusArmor
                 + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusObliterateMultiplier +
-                stats.BonusHeartStrikeMultiplier + stats.BonusScourgeStrikeMultiplier) != 0;
+                stats.BonusHeartStrikeMultiplier + stats.BonusScourgeStrikeMultiplier + stats.DeathbringerProc) != 0;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSDK calcOpts) {
