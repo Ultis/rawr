@@ -1604,7 +1604,7 @@ namespace Rawr
 			StatusMessaging.UpdateStatus("Update All Items from Armory", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
-            ItemUpdater updater = new ItemUpdater(true, true, false, 3);
+            ItemUpdater updater = new ItemUpdater(true, true, false, 1);
             int skippedItems = 0;
             Item[] allItems = ItemCache.AllItems;
             for (int i = 0; i < allItems.Length; i++)

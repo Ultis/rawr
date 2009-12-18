@@ -18,19 +18,22 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.2.0
- - Added several new talent presets.
- - Implemented several new trinkets.
- - Added a new Gear Planning Option. It allows you to assign an arbitrary cost to each item, and use the Optimizer to find the best upgrade set per cost, or within a cost threshold. There's also a new version of the Direct Upgrades chart, rated by Upgrade per Cost. See the discussion thread on our forums for further details.
- - Rawr.Tree: Further major changes to rotations. Keep the feedback coming, please! Fix for Lifebloom stacks being bugged. Support for T10 set bonuses, and the new idol. Added custom charts, more stat information.
- - Rawr.SPriest: Fix for Mind Flay and 4T10.
- - Rawr.Moonkin: Fix for the T10 set bonuses not applying.
- - Rawr.Mage: Further improvements to Frost cycles; should be very close to accurate now (possibly underestimating 2T10). Adjusted Flamestrike cast time, and implemented 2T10 in FBLBPyro. Improved sequence reconstruction.
- - Rawr.Hunter: Improved support for several trinkets. Added Survivability rating (can adjust the weight on the options tab)! Added display of pet attacks being dodged. Significantly improved pet stat calculations. Fixes and improvements for several other damage calculations.
- - Rawr.DPSDK: Scourge Strike calculations updated to reflect the hotfix.
- - Rawr.Retribution: You can now definte multiple rotation priorities and the calculations will try each of them and use the highest DPS rotation. A new graph will show all of the defined rotations.
- - Rawr.DPSWarr: Fix for DW tick frequency. 
- - Rawr.Enhance: Implemented Deathbringer's Will, and added support for procs on DoT ticks.";
+			labelVersionHistory.Text = @"v2.3.3.0
+ - Further improvements to parsing and calculations on many of the new trinkets and relics.
+ - Lots of improvements and tweaks to the Item Cost handling.
+ - Rawr.Tree: Keep bearing with us as we continue with significant Tree changes. Please keep giving feedback on our discussion forums. GotEM should be fixed now, along with many rating calculations updates. Many new or improved options. 
+ - Rawr.Enhance: Improved Deathbringer's Will calculations. Removed Glyph of Fire Nova. Fix for Windfury damage applying without using Windfury on MH/OH. Fix for spell-triggered special effect uptime.
+ - Rawr.Mage: Updated PvP set bonuses. Fix for bug with heroism on short fights.
+ - Rawr.DPSWarrior: Updated PvP set bonuses. Implemented ArPen capping from special effects.
+ - Rawr.Elemental: Several minor fixes.
+ - Rawr.Cat: Fix for crit capping due to special effects. Accurate modelling of Deathbringer's Will.
+ - Rawr.ProtWarr: Fix for expertise from racials.
+ - Rawr.Healadin: Support for new Libram. 
+ - Rawr.Hunter: Fix for hit optimization, pet talents, and a rare issue with viper uptime. Handling for Zod's Repeating Longbow. Fix for Chimera Shot + Serpent Sting interaction.
+ - Rawr.RestoSham: Added/improved support for many more trinkets.
+ - Rawr.Moonkin: Fix for calculations of rotations that are mana neutral.
+ - Rawr.Rogue: Implemented most 3.3 changes.
+ - Rawr.DPSDK: Implemented Deathbringer's Will.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
