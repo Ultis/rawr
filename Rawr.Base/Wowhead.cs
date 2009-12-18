@@ -212,62 +212,96 @@ namespace Rawr
         public static Item GetItem(int id, bool filter, string locale) { return GetItem(locale, id.ToString(), filter); }
         public static Item GetItem(string query, bool filter) { return GetItem("www", query, filter); }
 		public static Item GetItem(string site, string query, bool filter)
-		{
+        {
             if (site.Equals("en")) site = "www";
-			WebRequestWrapper wrw = new WebRequestWrapper();
+            WebRequestWrapper wrw = new WebRequestWrapper();
             XmlDocument docItem = wrw.DownloadItemWowhead(site, query);
-			if (docItem == null || docItem.InnerXml.Contains("Item not found!")) return null;
+            if (docItem == null || docItem.InnerXml.Contains("Item not found!")) return null;
             // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
             int id = 0;
             foreach (XmlNode node in docItem.SelectNodes("wowhead/item")) { id = int.Parse(node.Attributes["id"].Value); }
-			Item item = new Item() { Id = id, Stats = new Stats() };
-			string htmlTooltip = string.Empty;
-			string json1 = string.Empty;
-			string json2 = string.Empty;
-			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/name")) { item.Name = node.InnerText; }
-			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/quality")) { item.Quality = (ItemQuality)int.Parse(node.Attributes["id"].Value); }
-			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/icon")) { item.IconPath = node.InnerText; }
-			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/htmlTooltip")) { htmlTooltip = node.InnerText; }
-			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/json")) { json1 = node.InnerText; }
-			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/jsonEquip")) { json2 = node.InnerText; }
-			if (htmlTooltip.Contains("Unique")) item.Unique = true;
+            Item item = new Item() { Id = id, Stats = new Stats() };
+            string htmlTooltip = string.Empty;
+            string json1 = string.Empty;
+            string json2 = string.Empty;
+            string source = string.Empty;
+            string sourcemore = string.Empty;
 
-			if (filter && (int)item.Quality < 2) return null;
+            #region Set Initial Data (Name, Quality, Unique, etc) and record the Tooltip, json & jsonequip sections
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item/name")) { item.Name = node.InnerText; }
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item/quality")) { item.Quality = (ItemQuality)int.Parse(node.Attributes["id"].Value); }
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item/icon")) { item.IconPath = node.InnerText; }
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item/htmlTooltip")) { htmlTooltip = node.InnerText; }
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item/json")) { json1 = node.InnerText; }
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item/jsonEquip")) { json2 = node.InnerText; }
+            if (htmlTooltip.Contains("Unique")) item.Unique = true;
+            #endregion
 
-			json1 = json1.Replace(",subclass:", ".");//.Replace(",armor:", ",armorDUPE:");
-			json1 = json1.Replace(item.Name.Replace("'", "\\'"), "NAME");
-			string source = string.Empty;
-			if (json1.Contains("source:["))
-			{
-				source = json1.Substring(json1.IndexOf("source:[") + "source:[".Length);
-				source = source.Substring(0, source.IndexOf("]"));
-				json1 = json1.Replace(string.Format("source:[{0}]", source), "source:[SOURCE]");
-			}
+            // On Load items from Wowhead Filter, we don't want any
+            // items that aren't at least Epic quality
+            if (filter && (int)item.Quality < 2) { return null; }
 
-			string sourcemore = string.Empty;
-			if (json1.Contains("sourcemore:[{"))
-			{
-				sourcemore = json1.Substring(json1.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
-				sourcemore = sourcemore.Substring(0, sourcemore.IndexOf("}]"));
-				json1 = json1.Replace(sourcemore, "SOURCEMORE");
-			}
+            #region Get json & jsonequip ready for processing
+            // Remove Id as we've already processed it
+            json1 = json1.Replace("id:" + item.Id.ToString() + ",", "");
+            // Remove Name as we've already processed it
+            {
+                json1 = json1.Replace(item.Name.Replace("'", "\\'"), "NAME");
+                int end = json1.IndexOf(",") + 1;
+                json1 = json1.Remove(0, end);
+            }
+            // Remove Level Requirement, if you aren't 80+ you shouldn't be using Rawr
+            {int start = json1.IndexOf(",reqlevel:");
+             if (start != -1) { json1 = json1.Remove(start, (",reqlevel:").Length + 2); }}
+            {int start = json2.IndexOf(",reqlevel:");
+             if (start != -1) { json2 = json2.Remove(start, (",reqlevel:").Length + 2); }}
+            // Change the reference for subclass so it combines with
+            // class, as that is how we are handling it
+            json1 = json1.Replace(",subclass:", ".");
+            // Remove the Heroic flag from the Item as we don't care
+            json1 = json1.Replace(",heroic:1","");
+            // Pull the Source string into a variable then remove it from json
+            if (json1.Contains("source:[")) {
+                source = json1.Substring(json1.IndexOf("source:[") + "source:[".Length);
+                source = source.Substring(0, source.IndexOf("]"));
+                json1 = json1.Replace(string.Format("source:[{0}]", source), "source:[SOURCE]");
+            }
+            // Pull the SourceMore string into a variable then remove it from json
+            if (json1.Contains("sourcemore:[{")) {
+                sourcemore = json1.Substring(json1.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
+                sourcemore = sourcemore.Substring(0, sourcemore.IndexOf("}]"));
+                json1 = json1.Replace(sourcemore, "SOURCEMORE");
+            }
+            // Remove Durability as we don't use that in Rawr
+            {
+                int start = json2.IndexOf(",dura:");
+                int end = json2.IndexOf(",", start + 1);
+                if (start != -1) { json2 = json2.Remove(start, end - start); }
+            }
+            #endregion
 
-			foreach (string keyval in (json1 + "," + json2).Split(','))
-			{
-				if (!string.IsNullOrEmpty(keyval))
-				{
-					string[] keyvalsplit = keyval.Split(':');
-					string key = keyvalsplit[0];
-					string val = keyvalsplit[1];
-					if (ProcessKeyValue(item, key, val) && !json1.Contains("classs:3."))
-						return null;
-				}
-			}
-			if (item.Slot == ItemSlot.None) return null;
+            #region Process the remaining points of json & jsonequip as stats
+            foreach (string keyval in (json1 + "," + json2).Split(','))
+            {
+                if (!string.IsNullOrEmpty(keyval))
+                {
+                    string[] keyvalsplit = keyval.Split(':');
+                    string key = keyvalsplit[0];
+                    string val = keyvalsplit[1];
+                    if (ProcessKeyValue(item, key, val) && !json1.Contains("classs:3."))
+                        return null;
+                }
+            }
+            #endregion
+
+            // NOTE: json and jsonequip are no longer used past this point
+
+            // We don't need to process any more data if it's not a slottable item (eg not Gear/Gem)
+            if (item.Slot == ItemSlot.None) return null;
 
             #region Item Source
-            if (!string.IsNullOrEmpty(source))
-            {
+            if (!string.IsNullOrEmpty(source)) {
+                #region We have Source Data
                 string[] sourceKeys = source.Split(',');
                 string[] sourcemoreKeys = sourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -283,41 +317,43 @@ namespace Rawr
                 if (vendorIndex >= 0)
                 {
                     source = sourceKeys[vendorIndex];
-					if (sourcemoreKeys.Length > vendorIndex)
+                    if (sourcemoreKeys.Length > vendorIndex)
                     {
                         sourcemore = sourcemoreKeys[vendorIndex];
                     }
                 }
 
-				string n = string.Empty;
-				if (sourcemore.Contains("n:'"))
-				{
-					n = sourcemore.Substring(sourcemore.IndexOf("n:'") + "n:'".Length);
-					if (n.Contains("',"))
-						n = n.Substring(0, n.IndexOf("',"));
-					else
-						n = n.Substring(0, n.LastIndexOf("'"));
-					if (!string.IsNullOrEmpty(n))
-						sourcemore = sourcemore.Replace(n, "N");
-					n = n.Replace("\\'", "'");
-				}
-
-                if (source == "2")
+                string n = string.Empty;
+                if (sourcemore.Contains("n:'"))
                 {
-                    WorldDrop locInfo = new WorldDrop();
-                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                    n = sourcemore.Substring(sourcemore.IndexOf("n:'") + "n:'".Length);
+                    if (n.Contains("',")) {
+                        n = n.Substring(0, n.IndexOf("',"));
+                    } else {
+                        n = n.Substring(0, n.LastIndexOf("'"));
+                    }
+                    if (!string.IsNullOrEmpty(n)) {
+                        sourcemore = sourcemore.Replace(n, "N");
+                        sourcemore = sourcemore.Remove(sourcemore.IndexOf(",n:'N'"), (",n:'N'").Length);
+                    }
+
+                    n = n.Replace("\\'", "'");
                 }
 
-                if (source == "5")
-                {
-                    // if we only have vendor information then we will want to download the normal html page and scrape the currency information
-                    // and in case it is a token link it to the boss/zone where the token drops
-
+                if (source == "2" && string.IsNullOrEmpty(sourcemore)) {
+                    WorldDrop locInfo = new WorldDrop();
+                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                } else  if (source == "5") {
+                    // if we only have vendor information then we will want to download
+                    // the normal html page and scrape the currency information
+                    // and in case it is a token, link it to the boss/zone where the token drops
+                    #region vendor related
                     string[] tokenIds = { null, null };
-                    int[] tokenCounts = {1, 1};
+                    int[] tokenCounts = { 1, 1 };
                     string[] tokenNames = { null, null };
                     int cost = 0;
-                    try {
+                    try
+                    {
                         XmlDocument rawHtmlDoc = wrw.DownloadItemHtmlWowhead(query);
                         if (rawHtmlDoc != null)
                         {
@@ -340,12 +376,15 @@ namespace Rawr
                                     {
                                         int tokenEnd = costtext.IndexOf("]]", tokenIndex);
                                         string tokentext = costtext.Substring(tokenIndex + 1, tokenEnd - tokenIndex);
-                                        if (tokentext.Length > 10) {
-                                            string[] token1 = tokentext.Substring( 1, 8).Split(',');
+                                        if (tokentext.Length > 10)
+                                        {
+                                            string[] token1 = tokentext.Substring(1, 8).Split(',');
                                             string[] token2 = tokentext.Substring(12, 8).Split(',');
                                             tokenIds[0] = token1[0]; tokenCounts[0] = int.Parse(token1[1].Trim('[').Trim(']'));
                                             tokenIds[1] = token2[0]; tokenCounts[1] = int.Parse(token2[1].Trim('[').Trim(']'));
-                                        } else {
+                                        }
+                                        else
+                                        {
                                             string[] token = costtext.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
                                             tokenIds[0] = token[0];
                                             tokenCounts[0] = int.Parse(token[1]);
@@ -360,7 +399,7 @@ namespace Rawr
                     }
                     for (int i = 0; i < 2; i++)
                     {
-                        if (tokenIds[i] == null) { continue; } // break out if there's only 1 or for some reason there's none
+                        if (tokenIds[i] == null) { continue; } // break out if we're one 2 and there's only 1 or for some reason there's 0
                         if (tokenIds[i] != null && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
                         {
                             ItemLocation locInfo = new PvpItem()
@@ -394,9 +433,12 @@ namespace Rawr
                                     }
                                 }
                             }
-                            if (i == 1) {
+                            if (i == 1)
+                            {
                                 LocationFactory.Add(item.Id.ToString(), new VendorItem[] { (VendorItem)item.LocationInfo[0], locInfo }, true);
-                            } else {
+                            }
+                            else
+                            {
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
                             }
                         }
@@ -473,7 +515,9 @@ namespace Rawr
                                         }
                                     }
                                 }
-
+                                if (boss == null) {
+                                    boss = "Unknown Boss (Wowhead lacks data)";
+                                }
                                 _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
                             }
                             else
@@ -562,13 +606,10 @@ namespace Rawr
                             LocationFactory.Add(item.Id.ToString(), locInfo);
                         }
                     }
-                }
-                else
-                {
-                    foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
-                    {
-                        if (!string.IsNullOrEmpty(keyval))
-                        {
+                    #endregion
+                } else {
+                    foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(',')) {
+                        if (!string.IsNullOrEmpty(keyval)) {
                             string[] keyvalsplit = keyval.Split(':');
                             string key = keyvalsplit[0];
                             string val = keyvalsplit[1];
@@ -577,11 +618,11 @@ namespace Rawr
                     }
                     if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
                 }
+                #endregion
             } else {
-                if ((!string.IsNullOrEmpty(source)) && (source == "2")) {
-                    WorldDrop locInfo = new WorldDrop();
-                    LocationFactory.Add(item.Id.ToString(), locInfo);
-                }
+                // We DON'T have Source Data
+                // Since we are doing nothing, the ItemSource cache doesn't change
+                // Therefore the original ItemSource persists
             }
             #endregion
 
@@ -610,18 +651,21 @@ namespace Rawr
             }
             #endregion
 
-            if (item.LocationInfo[0] is CraftedItem && htmlTooltip.Contains("Binds when picked up")) (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
+            // If it's Craftable and Bings on Pickup, mark it as such
+            if (item.LocationInfo[0] is CraftedItem && htmlTooltip.Contains("Binds when picked up")) {
+                (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
+            }
 
             #region Special Effects
             List<string> useLines = new List<string>();
-			List<string> equipLines = new List<string>();
-			while (htmlTooltip.Contains("<span class=\"q2\">") && htmlTooltip.Contains("</span>"))
-			{
-				htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
-				string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
-				if (line.StartsWith("Equip: "))
-				{
-					string equipLine = line.Substring("Equip: ".Length);
+            List<string> equipLines = new List<string>();
+            while (htmlTooltip.Contains("<span class=\"q2\">") && htmlTooltip.Contains("</span>"))
+            {
+                htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
+                string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
+                if (line.StartsWith("Equip: "))
+                {
+                    string equipLine = line.Substring("Equip: ".Length);
                     // Remove Comments
                     while (equipLine.Contains("<!--"))
                     {
@@ -631,15 +675,15 @@ namespace Rawr
                         equipLine = equipLine.Replace(toRemove, "");
                     }
                     if (equipLine.StartsWith("<a"))
-					{
-						equipLine = equipLine.Substring(equipLine.IndexOf(">") + 1);
-						equipLine = equipLine.Substring(0, equipLine.IndexOf("<"));
-					}
-					equipLines.Add(equipLine);
-				}
-				else if (line.StartsWith("Chance on hit: "))
-				{
-					string chanceLine = line.Substring("Chance on hit: ".Length);
+                    {
+                        equipLine = equipLine.Substring(equipLine.IndexOf(">") + 1);
+                        equipLine = equipLine.Substring(0, equipLine.IndexOf("<"));
+                    }
+                    equipLines.Add(equipLine);
+                }
+                else if (line.StartsWith("Chance on hit: "))
+                {
+                    string chanceLine = line.Substring("Chance on hit: ".Length);
                     // Remove Comments
                     while (chanceLine.Contains("<!--"))
                     {
@@ -649,108 +693,116 @@ namespace Rawr
                         chanceLine = chanceLine.Replace(toRemove, "");
                     }
                     if (chanceLine.StartsWith("<a"))
-					{
-						chanceLine = chanceLine.Substring(chanceLine.IndexOf(">") + 1);
-						chanceLine = chanceLine.Substring(0, chanceLine.IndexOf("<"));
-					}
-					equipLines.Add(chanceLine);
-				}
-				else if (line.StartsWith("Use: "))
-				{
-					string useLine = line.Substring("Use: ".Length);
+                    {
+                        chanceLine = chanceLine.Substring(chanceLine.IndexOf(">") + 1);
+                        chanceLine = chanceLine.Substring(0, chanceLine.IndexOf("<"));
+                    }
+                    equipLines.Add(chanceLine);
+                }
+                else if (line.StartsWith("Use: "))
+                {
+                    string useLine = line.Substring("Use: ".Length);
                     // Remove Comments
-                    while (useLine.Contains("<!--")) {
+                    while (useLine.Contains("<!--"))
+                    {
                         int start = useLine.IndexOf("<!--");
                         int end = useLine.IndexOf("-->");
                         string toRemove = useLine.Substring(start, end - start + 3);
                         useLine = useLine.Replace(toRemove, "");
                     }
                     // Remove the Initial Spell Link
-                    if (useLine.StartsWith("<a")) {
-						useLine = useLine.Substring(useLine.IndexOf(">") + 1);
-						useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
-                        if(useLine.IndexOf("</a>") != -1) useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
-					}
-					useLines.Add(useLine);
-				}
-				htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
-			}
-			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
-			foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel);
+                    if (useLine.StartsWith("<a"))
+                    {
+                        useLine = useLine.Substring(useLine.IndexOf(">") + 1);
+                        useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
+                        if (useLine.IndexOf("</a>") != -1) useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
+                    }
+                    useLines.Add(useLine);
+                }
+                htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
+            }
+            foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
+            foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel);
             #endregion
 
-            #region Armor vs Bonus Armor Fix
+            #region Armor vs Bonus Armor Fixes
             if (item.Slot == ItemSlot.Finger ||
-				item.Slot == ItemSlot.MainHand ||
-				item.Slot == ItemSlot.Neck ||
-				(item.Slot == ItemSlot.OffHand && item.Type != ItemType.Shield) ||
-				item.Slot == ItemSlot.OneHand ||
-				item.Slot == ItemSlot.Trinket ||
-				item.Slot == ItemSlot.TwoHand)
-			{
-				item.Stats.BonusArmor += item.Stats.Armor;
-				item.Stats.Armor = 0f;
-			}
-			else if (item.Stats.Armor + item.Stats.BonusArmor == 0f)
-			{ //Fix for wowhead bug where guns/bows/crossbows show up with 0 total armor, but 24.5 (or some such) bonus armor (they really have no armor at all)
-				item.Stats.Armor = 0;
-				item.Stats.BonusArmor = 0;
+                item.Slot == ItemSlot.MainHand ||
+                item.Slot == ItemSlot.Neck ||
+                (item.Slot == ItemSlot.OffHand && item.Type != ItemType.Shield) ||
+                item.Slot == ItemSlot.OneHand ||
+                item.Slot == ItemSlot.Trinket ||
+                item.Slot == ItemSlot.TwoHand)
+            {
+                item.Stats.BonusArmor += item.Stats.Armor;
+                item.Stats.Armor = 0f;
+            }
+            else if (item.Stats.Armor + item.Stats.BonusArmor == 0f)
+            { //Fix for wowhead bug where guns/bows/crossbows show up with 0 total armor, but 24.5 (or some such) bonus armor (they really have no armor at all)
+                item.Stats.Armor = 0;
+                item.Stats.BonusArmor = 0;
             }
             #endregion
 
             #region Belongs to a Set
             if (htmlTooltip.Contains(" (0/"))
-			{
-				htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
-				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
+            {
+                htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
+                htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
                 htmlTooltip = htmlTooltip.Replace("Relentless ", "").Replace("Furious ", "").Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
-					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
+                    .Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
+                    .Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
 
-				if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
-					htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
-					htmlTooltip.Contains("Runetotem's") || htmlTooltip.Contains("Windrunner's Pursuit") ||
-					htmlTooltip.Contains("Thrall's") || htmlTooltip.Contains("Liadrin's") ||
-					htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's") || htmlTooltip.Contains("Koltira's"))
-				{
-					item.Faction = ItemFaction.Horde;
-				}
-				else if (htmlTooltip.Contains("Khadgar's") || htmlTooltip.Contains("Velen's") ||
-					htmlTooltip.Contains("Kel'Thuzad's") || htmlTooltip.Contains("VanCleef's") ||
-					htmlTooltip.Contains("Malfurion's") || htmlTooltip.Contains("Windrunner's Battlegear") ||
-					htmlTooltip.Contains("Nobundo's") || htmlTooltip.Contains("Turalyon's") ||
-					htmlTooltip.Contains("Wrynn's") || htmlTooltip.Contains("Thassarian's"))
-				{
-					item.Faction = ItemFaction.Alliance;
-				}
+                if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
+                    htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
+                    htmlTooltip.Contains("Runetotem's") || htmlTooltip.Contains("Windrunner's Pursuit") ||
+                    htmlTooltip.Contains("Thrall's") || htmlTooltip.Contains("Liadrin's") ||
+                    htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's") || htmlTooltip.Contains("Koltira's"))
+                {
+                    item.Faction = ItemFaction.Horde;
+                }
+                else if (htmlTooltip.Contains("Khadgar's") || htmlTooltip.Contains("Velen's") ||
+                    htmlTooltip.Contains("Kel'Thuzad's") || htmlTooltip.Contains("VanCleef's") ||
+                    htmlTooltip.Contains("Malfurion's") || htmlTooltip.Contains("Windrunner's Battlegear") ||
+                    htmlTooltip.Contains("Nobundo's") || htmlTooltip.Contains("Turalyon's") ||
+                    htmlTooltip.Contains("Wrynn's") || htmlTooltip.Contains("Thassarian's"))
+                {
+                    item.Faction = ItemFaction.Alliance;
+                }
 
                 // normalize alliance/horde set names
-				htmlTooltip = htmlTooltip.Replace("Sunstrider's", "Khadgar's")   // Mage T9
-										 .Replace("Zabra's", "Velen's") // Priest T9
-										 .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
-										 .Replace("Garona's", "VanCleef's") // Rogue T9
-										 .Replace("Runetotem's", "Malfurion's") // Druid T9
-										 .Replace("Windrunner's Pursuit", "Windrunner's Battlegear") // Hunter T9
-										 .Replace("Thrall's", "Nobundo's") // Shaman T9
-										 .Replace("Liadrin's", "Turalyon's") // Paladin T9
-										 .Replace("Hellscream's", "Wrynn's") // Warrior T9
+                htmlTooltip = htmlTooltip.Replace("Sunstrider's", "Khadgar's")   // Mage T9
+                                         .Replace("Zabra's", "Velen's") // Priest T9
+                                         .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
+                                         .Replace("Garona's", "VanCleef's") // Rogue T9
+                                         .Replace("Runetotem's", "Malfurion's") // Druid T9
+                                         .Replace("Windrunner's Pursuit", "Windrunner's Battlegear") // Hunter T9
+                                         .Replace("Thrall's", "Nobundo's") // Shaman T9
+                                         .Replace("Liadrin's", "Turalyon's") // Paladin T9
+                                         .Replace("Hellscream's", "Wrynn's") // Warrior T9
                                          .Replace("Koltira's", "Thassarian's")  // Death Knight T9
-										 .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
-				item.SetName = htmlTooltip.Trim();
+                                         .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
+                item.SetName = htmlTooltip.Trim();
             }
             #endregion
 
-            if (filter && item.Quality == ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
-			return item;
-		}
+            // Filter out random suffix greens
+            if (filter
+                && item.Quality == ItemQuality.Uncommon
+                && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 })
+            { return null; }
+
+            return item;
+        }
 
 		private static List<string> _unhandledKeys = new List<string>();
         private static List<string> _unhandledSocketBonus = new List<string>();
 		private static bool ProcessKeyValue(Item item, string key, string value)
 		{
 			switch (key)
-			{
-				case "id": //ID's are parsed out of the main data, not the json
+            {
+                #region Item Info/Stat Keys
+                case "id": //ID's are parsed out of the main data, not the json
 				case "name": //Item names are parsed out of the main data, not the json
 				case "subclass": //subclass is combined with class
 				case "subsubclass": //Only used for Battle vs Guardian Elixirs
@@ -796,11 +848,9 @@ namespace Rawr
 
 				case "classs":
 					if (value.StartsWith("1.") || value.StartsWith("12.")) return true; //Container and Quest
-					if (value.StartsWith("3."))
-					{
+					if (value.StartsWith("3.")) {
 						item.Type = ItemType.None;
-						switch (value)
-						{
+						switch (value) {
 							case "3.0": item.Slot = ItemSlot.Red; break;
 							case "3.1": item.Slot = ItemSlot.Blue; break;
 							case "3.2": item.Slot = ItemSlot.Yellow; break;
@@ -810,9 +860,7 @@ namespace Rawr
 							case "3.6": item.Slot = ItemSlot.Meta; break;
 							case "3.8": item.Slot = ItemSlot.Prismatic; break;
 						}
-					}
-					else
-					{
+					} else {
 						item.Type = GetItemType(value);
 					}
 					break;
@@ -1039,10 +1087,8 @@ namespace Rawr
 				case "arcspldmg":
 					item.Stats.SpellArcaneDamageRating = int.Parse(value);
 					break;
-
-
-
-				//sourcemore keys
+                #endregion
+                #region Source Keys
 				case "t":   //Source Type
 					/*
 					#define CTYPE_NPC            1
@@ -1254,9 +1300,9 @@ namespace Rawr
 					(item.LocationInfo[0] as PvpItem).PointType = "PvP";
 					"".ToString();
                     break;
+                #endregion
 
-
-				default:
+                default:
 					if (!_unhandledKeys.Contains(key))
 						_unhandledKeys.Add(key);
 					break;

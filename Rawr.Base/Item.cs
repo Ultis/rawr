@@ -83,12 +83,8 @@ namespace Rawr
         [XmlElement("LocalizedName")]
         public string _localizedName;
         
-        public ItemLocation[] LocationInfo
-		{
-			get
-			{
-				return LocationFactory.Lookup(Id);
-			}
+        public ItemLocation[] LocationInfo {
+			get { return LocationFactory.Lookup(Id); }
 		}
 
         /// <summary>
@@ -306,106 +302,54 @@ namespace Rawr
 			set { _faction = (ItemFaction)Enum.Parse(typeof(ItemFaction), value, false); }
 		}
 		[XmlIgnore]
-		public ItemType Type
-		{
-			get
-			{
-				return _type;
-			}
-			set
-			{
-				_type = value;
-			}
+		public ItemType Type {
+			get { return _type; }
+			set { _type = value; }
 		}
 		/// <summary>
 		/// String version of Type, to facilitate databinding
 		/// </summary>
 		[XmlIgnore]
-		public string TypeString
-		{
+		public string TypeString {
 			get { return _type.ToString(); }
 			set { _type = (ItemType)Enum.Parse(typeof(ItemType), value, false); }
 		}
 		[XmlIgnore]
-		public int MinDamage
-		{
-			get
-			{
-				return _minDamage;
-			}
-			set
-			{
-				_minDamage = value;
-			}
+		public int MinDamage {
+			get { return _minDamage; }
+			set { _minDamage = value; }
 		}
 		[XmlIgnore]
-		public int MaxDamage
-		{
-			get
-			{
-				return _maxDamage;
-			}
-			set
-			{
-				_maxDamage = value;
-			}
+		public int MaxDamage {
+			get { return _maxDamage; }
+			set { _maxDamage = value; }
 		}
 		[XmlIgnore]
-		public ItemDamageType DamageType
-		{
-			get
-			{
-				return _damageType;
-			}
-			set
-			{
-				_damageType = value;
-			}
+		public ItemDamageType DamageType {
+			get { return _damageType; }
+			set { _damageType = value; }
 		}
 		[XmlIgnore]
-		public float Speed
-		{
-			get
-			{
-				return _speed;
-			}
-			set
-			{
-				_speed = value;
-			}
+		public float Speed {
+			get { return _speed; }
+			set { _speed = value; }
 		}
 		[XmlIgnore]
-		public float DPS
-		{
-			get
-			{
+		public float DPS {
+			get {
 				if (Speed == 0f) return 0f;
 				else return ((float)(MinDamage + MaxDamage) * 0.5f) / Speed;
 			}
 		}
 		[XmlIgnore]
-		public string RequiredClasses
-		{
-			get
-			{
-				return _requiredClasses;
-			}
-			set
-			{
-				_requiredClasses = value;
-			}
+		public string RequiredClasses {
+			get { return _requiredClasses; }
+			set { _requiredClasses = value; }
 		}
 		[XmlIgnore]
-		public bool Unique
-		{
-			get
-			{
-				return _unique;
-			}
-			set
-			{
-				_unique = value;
-			}
+		public bool Unique {
+			get { return _unique; }
+			set { _unique = value; }
 		}
 		[XmlIgnore]
 		public ItemSlot SocketColor1
@@ -628,7 +572,7 @@ namespace Rawr
 
 		public override string ToString()
 		{
-			return this.Name + ": " + this.Stats.ToString();
+			return (!string.IsNullOrEmpty(this.Name) ? this.Name : this.Id.ToString("00000")) + ": " + this.Stats.ToString();
 		}
 
 		public static bool GemMatchesSlot(Item gem, ItemSlot slotColor)
@@ -972,10 +916,10 @@ namespace Rawr
                             newItem.LocalizedName = wrw.GetNameFromArmory(id, "kr");
                         else
                         {
-                        Item localItem = Wowhead.GetItem(id, false, locale);
-                        if (localItem != null)
-                            newItem.LocalizedName = localItem.Name;
-                    }
+                            Item localItem = Wowhead.GetItem(id, false, locale);
+                            if (localItem != null)
+                                newItem.LocalizedName = localItem.Name;
+                        }
                     }
 					if (!useWowhead && newItem.SocketBonus.ToString() == "")
 					{

@@ -43,7 +43,6 @@ namespace Rawr
     };
 
     delegate ItemLocation Construct();
-
     
     [XmlInclude(typeof(StaticDrop))]
     [XmlInclude(typeof(NoSource))]
@@ -59,72 +58,43 @@ namespace Rawr
     {
         [XmlIgnore]
         public ItemSource Source{get;set;}
-
         public string Note { get; set; }
-
         private string _description;
         [XmlIgnore]
-        public virtual string Description
-        {
-            get{return _description;}
-        }
-        public ItemLocation():this("Unknown location")
-        {            
-        }
-        public ItemLocation(string desc)
-        {
+        public virtual string Description { get { return _description; } }
+        public ItemLocation() : this("Unknown location") { }
+        public ItemLocation(string desc) {
             Source = ItemSource.Unknown;
             _description = desc;
         }
-        public virtual ItemLocation Fill(XmlNode node, string itemId)
-        {
+        public virtual ItemLocation Fill(XmlNode node, string itemId) {
             return this;
         }
-        public static ItemLocation Construct()
-        {
+        public static ItemLocation Construct() {
             return new ItemLocation("");
         }
     }
-
     
-    public class NoSource : ItemLocation
-    {
-        public NoSource():base("")
-        {
-            Source = ItemSource.None;
-        }
-        public new static ItemLocation Construct()
-        {
+    public class NoSource : ItemLocation {
+        [XmlIgnore]
+        public override string Description { get { return "Armory reports no source, try Wowhead"; } }
+        public NoSource() : base("") { Source = ItemSource.None; }
+        public new static ItemLocation Construct() {
             return new NoSource();
         }
     }
     
-    public class UnknownItem : ItemLocation
-    {
+    public class UnknownItem : ItemLocation {
         [XmlIgnore]
-        public override string Description
-        {
-            get
-            {
-                return "Not found on armory";
-            }
-        }
-
-        public UnknownItem()
-            : base("")
-        {
-            Source = ItemSource.NotFound;
-        }
-        public new static ItemLocation Construct()
-        {
+        public override string Description { get { return "Not found on armory"; } }
+        public UnknownItem() : base("") { Source = ItemSource.NotFound; }
+        public new static ItemLocation Construct() {
             return new UnknownItem();
         }
     }
-  
     
     public class VendorItem : ItemLocation
     {
-
         public string Token { get; set; }
         public int Count { get; set; }
         public int Cost { get; set; }
@@ -132,56 +102,40 @@ namespace Rawr
         public string VendorArea { get; set; }
      
         [XmlIgnore]
-        public string CostString
-        {
-            get
-            {
+        public string CostString {
+            get {
                 int total = Cost;
                 int gold = total / 10000;
                 total -= gold * 10000;
                 int silver = total / 100;
                 total -= silver * 100;
 
-                if (gold > 0)
-                {
+                if (gold > 0) {
                     return string.Format("{0}g{1}s{2}c", gold, silver, total);
-                }
-                else if (silver > 0)
-                {
+                } else if (silver > 0) {
                     return string.Format("{1}s{2}c", gold, silver, total);
-                }
-                else if (total > 0)
-                {
+                } else if (total > 0) {
                     return string.Format("{2}c", gold, silver, total);
                 }
                 return "";
             }
-
         }
 
-
-
-        public VendorItem()
-        {
+        public VendorItem() {
             Source = ItemSource.Vendor;
         }
 
         [XmlIgnore]
         public override string Description
         {
-            get
-            {
-                if (!string.IsNullOrEmpty(Token))
-                {
+            get {
+                if (!string.IsNullOrEmpty(Token)) {
                     return string.Format("Purchasable with {0} [{1}]{2}{3}", Count, Token, Cost > 0 ? " and" : "", CostString);
-                }
-                else
-                {
+                } else {
                     return string.Format("Sold by {0} at {1}", VendorName, VendorArea);
                 }
             }
         }
-
 
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
@@ -193,7 +147,6 @@ namespace Rawr
 				XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token");
 				if (subNode != null)
 				{
-
 					string tokenId = subNode.Attributes["id"].Value;
 					int count = int.Parse(subNode.Attributes["count"].Value);
 
@@ -245,7 +198,7 @@ namespace Rawr
 					}
 					if (Area != "*")
 					{
-						return new StaticDrop()
+						return new VendorItem()
 						{
 							Area = Area,
 							Boss = Boss,
@@ -282,28 +235,21 @@ namespace Rawr
         static SortedList<string, string> _idToBossMap = new SortedList<string, string>();
         static SortedList<string, string> _bossToAreaMap = new SortedList<string, string>();
     }
-  
     
     public class FactionItem : ItemLocation
     {
-
         [XmlIgnore]
-        public string CostString
-        {
-            get
-            {
+        public string CostString {
+            get {
                 int total = Cost;
                 int gold = total / 10000;
                 total -= gold * 10000;
                 int silver = total / 100;
                 total -= silver * 100;
 
-                if (gold > 0)
-                {
+                if (gold > 0) {
                     return string.Format("{0}g{1}s{2}c", gold, silver, total);
-                }
-                else if (silver > 0)
-                {
+                } else if (silver > 0) {
                     return string.Format("{1}s{2}c", gold, silver, total);
                 }
                 return string.Format("{2}c", gold, silver, total);
@@ -313,62 +259,32 @@ namespace Rawr
         public string FactionName {get;set;}
         public ReputationLevel Level{get;set;}
         public int Cost{get;set;}
-        public SerializableDictionary<string, int> TokenMap
-        {
-            get
-            {
-                return _tokenMap;
-            }
-            set
-            {
-                _tokenMap = value;
-            }
+        public SerializableDictionary<string, int> TokenMap {
+            get { return _tokenMap; }
+            set { _tokenMap = value; }
         }
-
-
         static SortedList<string, string> tokenIDMap = new SortedList<string, string>();
         private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
-
-        public FactionItem()
-        {
-            Source = ItemSource.Faction;
-        }
-
-        public override string Description
-        {
-            get
-            {
-                if (_tokenMap.Count > 0)
-                {
+        public FactionItem() { Source = ItemSource.Faction; }
+        public override string Description {
+            get {
+                if (_tokenMap.Count > 0) {
                     StringBuilder sb = new StringBuilder();
-                    foreach (string key in _tokenMap.Keys)
-                    {
+                    foreach (string key in _tokenMap.Keys) {
                         sb.AppendFormat("{0} [{1}] ", _tokenMap[key], key);
                     }
-
-                    if(Cost>0)
-                    {
+                    if(Cost>0) {
                         return string.Format("Purchasable for {3}{2} and requires {0} - {1}", FactionName, Level.ToString(), CostString, sb.ToString());
-
-                    }
-                    else
-                    {
+                    } else {
                         return string.Format("Purchasable for {2} and requires {0} - {1}", FactionName, Level.ToString(), sb.ToString());
-
                     }
-                }
-                else if (Cost > 0)
-                {
+                } else if (Cost > 0) {
                     return string.Format("Purchasable for {2} and requires {0} - {1}", FactionName, Level.ToString(), CostString);
-                }
-                else
-                {
+                } else {
                     return string.Format("Purchasable and requires {0} - {1}", FactionName, Level.ToString());
                 }
-
             }
         }
-
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
             WebRequestWrapper wrw = new WebRequestWrapper();
@@ -380,17 +296,11 @@ namespace Rawr
             {
                 return QuestItem.Construct().Fill(node, itemId);
             }
-                
-                
-                
             subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/@buyPrice");
 
-            if (subNode != null)
-            {
+            if (subNode != null) {
                 Cost = int.Parse(subNode.InnerText);
-            }
-            else
-            {
+            } else {
                 Cost = 0;
             }
 
@@ -409,7 +319,6 @@ namespace Rawr
                 _tokenMap[tokenIDMap[id]] = Count;
             }
 
-
             subNode = node.SelectSingleNode("/page/itemTooltips/itemTooltip/requiredFaction");
             if(subNode != null)
             {
@@ -419,13 +328,11 @@ namespace Rawr
 
             return this;
         }
-        public static new ItemLocation Construct()
-        {
+        public static new ItemLocation Construct() {
             FactionItem item = new FactionItem();
             return item;
         }
     }
-   
     
     public class PvpItem : ItemLocation
     {
@@ -513,7 +420,6 @@ namespace Rawr
         }
         static SortedList<string, string> _tokenMap = new SortedList<string, string>();
     }
-   
     
     public class StaticDrop : ItemLocation
     {
@@ -548,7 +454,6 @@ namespace Rawr
             return item;
         }
     }
-   
     
     public class WorldDrop : ItemLocation
     {
@@ -599,7 +504,6 @@ namespace Rawr
         }
 
     }
-
     
     public class CraftedItem : ItemLocation
     {
@@ -742,7 +646,6 @@ namespace Rawr
             return item;
         }
     }
-
     
     public class QuestItem : ItemLocation
     {
@@ -798,7 +701,6 @@ namespace Rawr
             return item;
         }
     }
-
     
     public class ContainerItem : ItemLocation
     {

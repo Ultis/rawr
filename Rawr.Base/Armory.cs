@@ -440,8 +440,9 @@ namespace Rawr
 				List<string> requiredClasses = new List<string>();
                 bool unique = false;
                 int itemLevel = 0;
-						
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
+
+                #region Basics
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (ItemQuality)Enum.Parse(typeof(ItemQuality), node.InnerText); }
@@ -457,14 +458,12 @@ namespace Rawr
 
 				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/@level")) { itemLevel = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/translationFor")) { faction = node.Attributes["factionEquiv"].Value == "1" ? ItemFaction.Alliance : ItemFaction.Horde; }
+                if (inventoryType >= 0) { slot = GetItemSlot(inventoryType, classId); }
+                if (!string.IsNullOrEmpty(subclassName)) { type = GetItemType(subclassName, inventoryType, classId); }
+                #endregion
 
-				if (inventoryType >= 0)
-					slot = GetItemSlot(inventoryType, classId);
-				if (!string.IsNullOrEmpty(subclassName))
-					type = GetItemType(subclassName, inventoryType, classId);
-
-				/* fix class restrictions on BOP items that can only be made by certain classes */
-				switch (id)
+                #region Fix class restrictions on BOP items that can only be made by certain classes
+                switch (id)
 				{
 					case 35181:
 					case 32495:
@@ -491,8 +490,11 @@ namespace Rawr
 						requiredClasses.Add("Druid");
 						requiredClasses.Add("Rogue");
 						break;
-				}
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
+                }
+                #endregion
+
+                #region Stats
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAttackPower")) { stats.AttackPower = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
@@ -529,8 +531,10 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
 
 				DetermineBaseBonusArmor(stats, slot, type, id);
+                #endregion
 
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
+                #region Special Equip Lines
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
 				{
 					bool isEquip = false;
 					bool isUse = false;
@@ -549,9 +553,11 @@ namespace Rawr
 					//parse Use/Equip lines
 					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, id);
 					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true, itemLevel);
-				}
+                }
+                #endregion
 
-				XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
+                #region Sockets
+                XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
                 if (socketNodes.Count > 0) socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[0].Attributes["color"].Value);
                 if (socketNodes.Count > 1) socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[1].Attributes["color"].Value);
                 if (socketNodes.Count > 2) socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[2].Attributes["color"].Value);
@@ -914,8 +920,8 @@ namespace Rawr
                             catch { }
                         }
 					}
-				}
-				string desc = string.Empty;
+                }
+                string desc = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText.ToLower(); }
                 if (desc.Contains("matches any socket"))
                 {
@@ -937,9 +943,10 @@ namespace Rawr
 				}
 				else if (desc.Contains("meta gem slot"))
 					slot = ItemSlot.Meta;
+                #endregion
 
-                // normalize alliance/horde set names
-				setName = setName.Replace("Sunstrider's", "Khadgar's")   // Mage T9
+                #region Normalize alliance/horde set names
+                setName = setName.Replace("Sunstrider's", "Khadgar's")   // Mage T9
 								 .Replace("Zabra's", "Velen's") // Priest T9
 								 .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
 								 .Replace("Garona's", "VanCleef's") // Rogue T9
@@ -951,6 +958,8 @@ namespace Rawr
                                  .Replace("Kolitra's", "Koltira's") // Fix for Death Knight T9 set name being misspelled
                                  .Replace("Koltira's", "Thassarian's") // Death Knight T9
 								 .Replace("Regaila", "Regalia"); // Fix for Moonkin set name being misspelled
+                #endregion
+
                 Item item = new Item()
                 {
 					Id = id,
@@ -978,9 +987,7 @@ namespace Rawr
 				//item.Stats.ConvertStatsToWotLKEquivalents();
 
                 return item;
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
                 //This condition is now accounted for elsewhere since this function is usually called in a loop and would display
                 //the armory not accessable error many many times.
                 //if (docItem == null || docItem.InnerXml.Length == 0)
@@ -1341,12 +1348,8 @@ namespace Rawr
 	}
 }
 /*
-
 A Tip: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/tooltip.xsl"?><page globalSearch="1" lang="en_us" requestUrl="/item-tooltip.xml"><itemTooltips><itemTooltip><id>48211</id><name>Malfurion's Headguard of Triumph</name><icon>inv_helmet_139`</icon><overallQualityId>4</overallQualityId><bonding>1</bonding><classId>4</classId><equipData><inventoryType>1</inventoryType><subclassName>Leather</subclassName></equipData><damageData /><bonusAgility>120</bonusAgility><bonusStamina>136</bonusStamina><armor armorBonus="0">506</armor><socketData><socket color="Meta" /><socket color="Yellow" /></socketData><durability current="70" max="70" /><allowableClasses><class>Druid</class></allowableClasses><requiredLevel>80</requiredLevel><itemLevel>245</itemLevel><bonusAttackPower>149</bonusAttackPower><bonusCritRating>90</bonusCritRating><bonusExpertiseRating>74</bonusExpertiseRating><setData><name>Malfurion's Battlegear</name><item name="Malfurion's Handgrips " /><item name="Malfurion's Headguard " /><item name="Malfurion's Legguards " /><item name="Malfurion's Raiments " /><item name="Malfurion's Shoulderpads " /><setBonus desc="Decreases the cooldown on your Growl ability by 2 sec, increases the periodic damage done by your Lacerate ability by 5%, and increases the duration of your Rake ability by 3 sec." threshold="2" /><setBonus desc="Reduces the cooldown on Barkskin by 12 sec and increases the critical strike chance of Rip and Ferocious Bite by 5%." threshold="4" /></setData><itemSource value="sourceType.vendor" /></itemTooltip></itemTooltips></page>
 H Tip: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/tooltip.xsl"?><page globalSearch="1" lang="en_us" requestUrl="/item-tooltip.xml"><itemTooltips><itemTooltip><id>48194</id><name>Runetotem's Headguard of Triumph</name><icon>inv_helmet_145b</icon><overallQualityId>4</overallQualityId><bonding>1</bonding><classId>4</classId><equipData><inventoryType>1</inventoryType><subclassName>Leather</subclassName></equipData><damageData /><bonusAgility>120</bonusAgility><bonusStamina>136</bonusStamina><armor armorBonus="0">506</armor><socketData><socket color="Meta" /><socket color="Yellow" /></socketData><durability current="70" max="70" /><allowableClasses><class>Druid</class></allowableClasses><requiredLevel>80</requiredLevel><itemLevel>245</itemLevel><bonusAttackPower>149</bonusAttackPower><bonusCritRating>90</bonusCritRating><bonusExpertiseRating>74</bonusExpertiseRating><setData><name>Runetotem's Battlegear</name><item name="Runetotem's Handgrips " /><item name="Runetotem's Headguard " /><item name="Runetotem's Legguards " /><item name="Runetotem's Raiments " /><item name="Runetotem's Shoulderpads " /><setBonus desc="Decreases the cooldown on your Growl ability by 2 sec, increases the periodic damage done by your Lacerate ability by 5%, and increases the duration of your Rake ability by 3 sec." threshold="2" /><setBonus desc="Reduces the cooldown on Barkskin by 12 sec and increases the critical strike chance of Rip and Ferocious Bite by 5%." threshold="4" /></setData><itemSource value="sourceType.vendor" /></itemTooltip></itemTooltips></page>
 A Info: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/info.xsl"?><page globalSearch="1" lang="en_us" requestQuery="i=48211" requestUrl="/item-info.xml"><itemInfo><item icon="inv_helmet_139`" id="48211" level="245" name="Malfurion's Headguard of Triumph" quality="4" type="Leather"><cost><token count="75" icon="spell_holy_summonchampion" id="47241" /><token count="1" icon="inv_misc_trophy_argent" id="47242" /></cost><disenchantLoot requiredSkillRank="375"><item dropRate="6" icon="inv_enchant_abysscrystal" id="34057" level="80" maxCount="1" minCount="1" name="Abyss Crystal" quality="4" type="Enchanting" /></disenchantLoot><vendors><creature area="Icecrown" classification="0" heroic="1" id="35577" maxLevel="79" minLevel="79" name="Valiant Laradia" title="Triumphant Armor Vendor" type="Humanoid" /></vendors><translationFor factionEquiv="1"><item icon="inv_helmet_145b" id="48194" level="245" name="Runetotem's Headguard of Triumph" quality="4" /></translationFor></item></itemInfo></page>
 H Info: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/info.xsl"?><page globalSearch="1" lang="en_us" requestQuery="i=48194" requestUrl="/item-info.xml"><itemInfo><item icon="inv_helmet_145b" id="48194" level="245" name="Runetotem's Headguard of Triumph" quality="4" type="Leather"><cost><token count="75" icon="spell_holy_summonchampion" id="47241" /><token count="1" icon="inv_misc_trophy_argent" id="47242" /></cost><disenchantLoot requiredSkillRank="375"><item dropRate="6" icon="inv_enchant_abysscrystal" id="34057" level="80" maxCount="1" minCount="1" name="Abyss Crystal" quality="4" type="Enchanting" /></disenchantLoot><vendors><creature area="Icecrown" classification="0" heroic="1" id="35578" maxLevel="79" minLevel="79" name="Valiant Bressia" title="Triumphant Armor Vendor" type="Humanoid" /></vendors><translationFor factionEquiv="0"><item icon="inv_helmet_139`" id="48211" level="245" name="Malfurion's Headguard of Triumph" quality="4" /></translationFor></item></itemInfo></page>
-
-
-
 */

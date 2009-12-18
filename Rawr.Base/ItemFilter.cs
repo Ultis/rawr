@@ -4,21 +4,21 @@ using System.Text;
 using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 #if !SILVERLIGHT
 using System.Windows.Forms;
 #endif
+using System.Xml.Serialization;
 
 namespace Rawr
 {
+    public class ItemFilterRegexList : 
 #if SILVERLIGHT   
-    public class ItemFilterRegexList : List<ItemFilterRegex>
+    List<ItemFilterRegex>
 #else
-    public class ItemFilterRegexList : BindingList<ItemFilterRegex>
+    BindingList<ItemFilterRegex>
 #endif
     {
     }
-
     
     public class ItemFilterRegex
     {
@@ -39,17 +39,9 @@ namespace Rawr
         [XmlIgnore]
         private string _pattern;
 
-        public string Pattern
-        {
-            get
-            {
-                return _pattern;
-            }
-            set
-            {
-                _pattern = value;
-                _regex = null;
-            }
+        public string Pattern {
+            get { return _pattern; }
+            set { _pattern = value; _regex = null; }
         }
 
         public int MinItemLevel { get; set; }
@@ -76,11 +68,14 @@ namespace Rawr
                 if (_regex == null)
                 {
                     if (_pattern == null) _pattern = "";
+                    _regex = new Regex(_pattern, 
 #if SILVERLIGHT
-                    _regex = new Regex(_pattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 #else
-                    _regex = new Regex(_pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                        RegexOptions.Compiled | 
 #endif
+                        RegexOptions.CultureInvariant |
+                        RegexOptions.IgnoreCase |
+                        RegexOptions.Singleline);
                 }
                 return _regex;
             }
@@ -128,24 +123,19 @@ namespace Rawr
                     }
                 }
             }
-            if (anyMatch)
-            {
+            if (anyMatch) {
                 return enabledMatch;
-            }
-            else
-            {
+            } else {
                 return OtherRegexEnabled;
             }
         }
     }
 
-    
     public class ItemTypeList : List<ItemType>
     {
         public ItemTypeList() : base() { }
         public ItemTypeList(IEnumerable<ItemType> collection) : base(collection) { }
     }
-
     
     public class ItemFilterData
     {
@@ -173,24 +163,11 @@ namespace Rawr
             return list;
         }
 
-        public static ItemFilterRegexList RegexList
-        {
-            get
-            {
-                return data.RegexList;
-            }
-        }
+        public static ItemFilterRegexList RegexList { get { return data.RegexList; } }
 
-        public static bool OtherRegexEnabled
-        {
-            get
-            {
-                return data.OtherRegexEnabled;
-            }
-            set
-            {
-                data.OtherRegexEnabled = value;
-            }
+        public static bool OtherRegexEnabled {
+            get { return data.OtherRegexEnabled; }
+            set { data.OtherRegexEnabled = value; }
         }
 
         public static bool IsItemRelevant(CalculationsBase model, Item item)
