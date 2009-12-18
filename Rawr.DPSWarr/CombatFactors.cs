@@ -500,10 +500,10 @@ namespace Rawr.DPSWarr {
             } else { Glance = 0f; }
             // Critical Hit
             if (isWhite) {
-                Crit = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhwcrit : combatFactors._c_ohwcrit);
+                Crit = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit) + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level];
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                Crit = Math.Min(1f - tableSize, Abil.BonusCritChance + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit)) * (1f - Dodge - Miss);
+                Crit = Math.Min(1f - tableSize, Abil.BonusCritChance + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level]) * (1f - Dodge - Miss);
                 tableSize += Crit;
             } else {
                 Crit = 0f;

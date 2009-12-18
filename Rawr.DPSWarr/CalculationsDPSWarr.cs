@@ -1138,9 +1138,8 @@ These numbers to do not include racial bonuses.",
             Stats statsOptionsPanel = new Stats()
             {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
-                PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f)
-                    // handle boss level difference
-                            + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
+                PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
+                    
                 DamageTakenMultiplier = (calcOpts.FuryStance ? 0.05f : 0f),
             };
             #endregion

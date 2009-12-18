@@ -117,10 +117,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*" +
                                                       "{2:00.00%} : Rating " +
                                 Environment.NewLine + "{3:00.00%} : MH Crit" +
-                                Environment.NewLine + "{4:00.00%} : OH Crit" +
-                                Environment.NewLine + "Target level affects this" +
-                                Environment.NewLine + "LVL 80 will match tooltip in game" +
-                                Environment.NewLine + "LVL 83 has a total of ~4.8% drop",
+                                Environment.NewLine + "{4:00.00%} : OH Crit",
                                 CritPercent, AverageStats.CritRating,
                                 StatConversion.GetCritFromRating(AverageStats.CritRating),
                                 MhCrit, OhCrit));
