@@ -2298,30 +2298,6 @@ namespace Rawr
             DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Koltira's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = DK2T9,
-                SetName = "Koltira's Battlegear",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Koltira's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    DiseasesCanCrit = 1f
-                },
-                SetName = "Koltira's Battlegear",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Thassarian's Battlegear 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
