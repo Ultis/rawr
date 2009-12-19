@@ -9,12 +9,13 @@ namespace Rawr.DPSWarr {
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
             StatS = stats;
+            critProcs = new WeightedStat[] { new WeightedStat() { Chance = 1f, Value = 0f } };
             InvalidateCache();
             // Optimizations
             
             //Set_c_values();
         }
-
+        public WeightedStat[] critProcs { get; set; }
         private void Set_c_values()
         {
             _c_mhItemType = MH.Type;
@@ -389,13 +390,14 @@ namespace Rawr.DPSWarr {
         private float _anyNotLand = 1f;
         public float AnyLand { get { return _anyLand; } }
         public float AnyNotLand { get { return _anyNotLand; } }
-
+        private bool _alwaysHit = false;
         protected virtual void Calculate() {
             _anyNotLand = Dodge + Parry + Miss;
             _anyLand = 1f - _anyNotLand;
         }
         protected virtual void CalculateAlwaysHit()
         {
+            _alwaysHit = true;
             Miss = Dodge = Parry = Block = Glance = Crit = 0f;
             Hit = 1f;
             _anyLand = 1f;
@@ -420,45 +422,20 @@ namespace Rawr.DPSWarr {
             Critical
             Hit*/
             // Start a calc            
+            Reset(alwaysHit);            
+        }
+        protected void Reset(bool alwaysHit)
+        {
             if (alwaysHit) CalculateAlwaysHit();
-            else Calculate();            
+            else Calculate();
+        }
+        public void Reset()
+        {
+            if (_alwaysHit) return;
+            Reset(false);
         }
     }
 
-    /*public class DefendTable : CombatTable {
-        protected override void Calculate() {
-            float tableSize = 0f;
-            float tempVal = 0f;
-
-            // Miss
-            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Miss, calcOpts.TargetLevel);
-            Miss = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-            tableSize += Miss;
-            // Dodge
-            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Dodge, calcOpts.TargetLevel);
-            Dodge = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-            tableSize += Dodge;
-            // Parry
-            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Parry, calcOpts.TargetLevel);
-            Parry = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-            tableSize += Parry;
-            // Block
-            if (combatFactors.OH != null && combatFactors.OH.Type == ItemType.Shield) {
-                tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Block, calcOpts.TargetLevel);
-                Block = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
-                tableSize += Block;
-            }
-            // Critical Hit
-            Crit = Math.Max(0f, Math.Min(1f - tableSize, combatFactors.NPC_CritChance()));
-            tableSize += Crit;
-            // Normal Hit
-            Hit = Math.Max(0f, 1f - tableSize);
-
-            base.Calculate();
-        }
-
-        public DefendTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co) { Initialize(character, stats, cf, co, null, true, useSpellHit, false); }
-    }*/
     public class NullCombatTable : CombatTable
     {
         public NullCombatTable()
@@ -472,7 +449,6 @@ namespace Rawr.DPSWarr {
 
             // Miss
             if (useSpellHit) {
-                //float hitIncrease = StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit;
                 Miss = Math.Min(1f - tableSize, Math.Max(0.17f - (StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
             } else {
                 Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
@@ -499,14 +475,26 @@ namespace Rawr.DPSWarr {
                 tableSize += Glance;
             } else { Glance = 0f; }
             // Critical Hit
+            Crit = 0;
             if (isWhite) {
-                Crit = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit) + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level];
+                float critValueToUse = (isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit);
+                foreach (WeightedStat ws in combatFactors.critProcs)
+                {
+                    float modCritChance = Math.Min(1f - tableSize, critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class))
+                        + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level];
+                    Crit += ws.Chance * modCritChance;
+                }
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                Crit = Math.Min(1f - tableSize, Abil.BonusCritChance + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level]) * (1f - Dodge - Miss);
+                float critValueToUse =  StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level]
+                    + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit)
+                    + Abil.BonusCritChance;
+                foreach (WeightedStat ws in combatFactors.critProcs)
+                {
+                    float modCritChance = Math.Min(1f - tableSize, (critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class)) * (1f - Dodge - Miss));
+                    Crit += ws.Chance * modCritChance;
+                }
                 tableSize += Crit;
-            } else {
-                Crit = 0f;
             }
             // Normal Hit
             Hit = Math.Max(0f, 1f - tableSize);

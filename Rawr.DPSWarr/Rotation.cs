@@ -934,5 +934,17 @@ namespace Rawr.DPSWarr {
                 statsTotal.AddSpecialEffect(flurry);
             }
         }
+
+        internal void ResetHitTables()
+        {
+            foreach (AbilWrapper aw in GetAbilityList())
+            {
+                if (aw.ability.CanCrit)
+                {
+                    aw.ability.MHAtkTable.Reset();
+                    aw.ability.OHAtkTable.Reset();
+                }
+            }
+        }
     }
 }
