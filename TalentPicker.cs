@@ -345,6 +345,12 @@ namespace Rawr
 				UpdateSavedTalents();
 				_character.OnCalculationsInvalidated();
 			}
+			if( _tree1Count + _tree2Count + _tree3Count < _character.Level-9 )
+				comboBoxTalentSpec.BackColor = Color.FromArgb(255,255,128);
+			else if ( _tree1Count + _tree2Count + _tree3Count > _character.Level-9 )
+				comboBoxTalentSpec.BackColor = Color.FromArgb(255,128,128);
+			else
+				comboBoxTalentSpec.BackColor = Color.White;
         }
 
         private void comboBoxTalentSpec_SelectedIndexChanged(object sender, EventArgs e)

@@ -92,7 +92,17 @@ namespace Rawr
 
         public override string ToString()
         {
-            return string.Format("{0} ({1}/{2}/{3})", Name, Tree1, Tree2, Tree3);
+            //return string.Format("{0} ({1}/{2}/{3})", Name, Tree1, Tree2, Tree3);
+            string warning = "";
+			// TODO: That 71 shouldn't be hard-coded, but I don't have a Character.Level here.
+			int pointsleft = 71 - (Tree1 + Tree2 + Tree3);
+
+			if (pointsleft > 0)
+				warning = string.Format(" ({0} Points Left)", pointsleft);
+			else if (pointsleft < 0)
+				warning = string.Format(" ({0} Points Over)", Math.Abs(pointsleft));
+
+			return string.Format("{0} ({1}/{2}/{3}){4}", Name, Tree1, Tree2, Tree3, warning);
         }
 
         public bool Equals(TalentsBase talents)
