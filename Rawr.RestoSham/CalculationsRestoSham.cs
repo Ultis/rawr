@@ -493,7 +493,7 @@ namespace Rawr.RestoSham
             if (options.SustStyle.Equals("HW Spam"))
                 HWCPerSec = (1f / HWCast) * CriticalChance;
             #endregion
-            #region Create Final calcs via spell cast (Improve Water Shield Mana Return)
+            #region Create Final calcs via spell cast (Improve Water Shield Mana Return and proc handling)
             HealsPerSec = RTPerSec + LHWPerSec + HWPerSec + CHPerSec;
             CritsPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
             HealPerSec = HealsPerSec;
@@ -526,7 +526,7 @@ namespace Rawr.RestoSham
                         effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs2, effect.Cooldown, 1f, 0f, FightSeconds);
+                        effect.AccumulateAverageStats(statsProcs2, 0f, 1f, 0f, FightSeconds);
                         break;
                 }
             }
@@ -700,7 +700,7 @@ namespace Rawr.RestoSham
                         effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs, effect.Cooldown, 1f, 0f, effect.Duration);
+                        effect.AccumulateAverageStats(statsProcs, 0f, 1f, 0f, FightSeconds);
                         break;
                 }
             }
