@@ -889,7 +889,7 @@ namespace Rawr
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
             string oldItemStats = cachedItem != null ? cachedItem.ToString().Split(':')[1] : "";
-            ItemLocation[] oldItemLoc = cachedItem.LocationInfo;
+            ItemLocation[] oldItemLoc = cachedItem != null ? cachedItem.LocationInfo : null;
             string oldItemSource = cachedItem != null ? (cachedItem.LocationInfo[0].Description
                 + (cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : "")) : "";
 
