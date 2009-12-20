@@ -381,17 +381,18 @@ namespace Rawr.Hunter
             dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 			
             // Pet Stats
-            dictValues.Add("Pet Attack Power", pet.PetStats.AttackPower.ToString("F0") + "*includes:\n" +
-                            petAPFromStrength.ToString("F2") + " from strength\n" +
-                            petAPFromHunterVsWild.ToString("F2") + " from Hunter vs Wild\n" +
-                            petAPFromTier9.ToString("F2") + " from Tier 9 4-piece bonus\n" +
-                            petAPFromBuffs.ToString("F2") + " from buffs\n" +
-                            petAPFromHunterRAP.ToString("F2") + " from Hunter RAP\n" +
-                            petAPFromRabidProc.ToString("P2") + " from Rabid\n" +
-                            petAPFromSerenityDust.ToString("P2") + " from Serenity Dust\n" +
-                            petAPFromOutsideBuffs.ToString("P2") + " from outside buffs\n" +
-                            petAPFromAnimalHandler.ToString("P2") + " from Animal Handler\n" +
-                            petAPFromAspectOfTheBeast.ToString("P2") + " from Aspect of the Beast");
+            dictValues.Add("Pet Attack Power", pet.PetStats.AttackPower.ToString("F0") +
+                                                string.Format("*Full Pet Stats:\r\n"
+                                                              + "Strength: {0:0.0}\r\n"
+                                                              + "Agility: {1:0.0}\r\n"
+                                                              + "Hit: {2:0.00%}\r\n"
+                                                              + "PhysCrit: {3:0.00%}\r\n"
+                                                              + "PhysHaste: {4:0.00%}\r\n",
+                                                            pet.PetStats.Strength,
+                                                            pet.PetStats.Agility,
+                                                            pet.PetStats.PhysicalHit,
+                                                            pet.PetStats.PhysicalCrit,
+                                                            pet.PetStats.PhysicalHaste));
             dictValues.Add("Pet Hit Percentage", petHitTotal.ToString("P2"));
             dictValues.Add("Pet Dodge Percentage", petTargetDodge.ToString("P2"));
             dictValues.Add("Pet Melee Crit Percentage", petCritTotalMelee.ToString("P2") + "*includes:\n" +
@@ -408,7 +409,12 @@ namespace Rawr.Hunter
                             petCritFromCobraStrikes.ToString("P2") + " from Cobra Strikes");
             dictValues.Add("Pet White DPS", petWhiteDPS.ToString("F2"));
             dictValues.Add("Pet Kill Command DPS", petKillCommandDPS.ToString("F2"));
-            dictValues.Add("Pet Specials DPS", petSpecialDPS.ToString("F2"));
+            dictValues.Add("Pet Specials DPS", petSpecialDPS.ToString("F2") /*+ 
+                string.Format("Breakout:\r\n"
+                            + "Furious Howl: Use {0} DPS {1:0.00}"
+                            + "Bite: Use {2} DPS {3:0.00}",
+                            pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl), 0f,
+                            pet.priorityRotation.getSkillFrequency(PetAttacks.Bite), pet.priorityRotation.dps - petWhiteDPS)*/);
 
             // Shot Stats
             dictValues.Add("Aimed Shot", aimedShot.GenTooltip());

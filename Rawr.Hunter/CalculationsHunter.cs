@@ -543,7 +543,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override bool IsEnchantRelevant(Enchant enchant) {
             string name = enchant.Name;
-            if (name.Contains("Rune of the Fallen Crusader")) {
+            if (name.Contains("Rune")) {
                 return false; // Bad DK Enchant, Bad!
             }
             return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
@@ -615,22 +615,21 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         private static bool IsPetBuffRelevant(Buff buff)
         {
-            if (buff.Group == "Elixirs and Flasks") return false;
-            if (buff.Group == "Food") return false;
-            if (buff.Group == "Set Bonuses") return false;
-            if (buff.Group == "Profession Buffs") return false;
-            if (buff.Group == "Temporary Buffs") return false;
-            if (buff.Group == "Potion") return false;
-            if (buff.Group == "Critical Strike Chance Taken") return false; // target debuff
-            //if (buff.Group == "Heroism/Bloodlust") return true;
+            if (buff.Group == "Elixirs and Flasks"
+                || buff.Group == "Food"
+                || buff.Group == "Set Bonuses"
+                || buff.Group == "Profession Buffs"
+                || buff.Group == "Temporary Buffs"
+                || buff.Group == "Potion")
+            { return false; }
 
             // Greater Blessing of Kings
             if (buff.Stats.BonusAgilityMultiplier != 0) return true;
             if (buff.Stats.BonusStrengthMultiplier != 0) return true;
-            //if (buff.Stats.BonusStaminaMultiplier != 0) return true;
+            if (buff.Stats.BonusStaminaMultiplier != 0) return true;
 
-            //Commanding Shout & Blood Pact
-            //if (buff.Stats.Health != 0) return true;
+            // Commanding Shout & Blood Pact
+            if (buff.Stats.Health != 0) return true;
 
             // Greater Blessing of Might & Battle Shout
 		    if (buff.Stats.AttackPower != 0) return true;
@@ -646,16 +645,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Strength of Earth Totem & Horn of Winter &  Gift of the Wild & Prayer of Fortitude & Scrolls
             if (buff.Stats.Strength != 0) return true;
             if (buff.Stats.Agility != 0) return true;
-            //if (buff.Stats.Stamina != 0) return true;
+            if (buff.Stats.Stamina != 0) return true;
 
             // WF Totem & Imp. Icy Talons & Swift Ret & Moonkin Aura
 		    if (buff.Stats.PhysicalHaste != 0) return true;
+
+            // Sunder Armor, Sting
+            if (buff.Stats.ArmorPenetration != 0) return true;
 
             // Ret Aura & Feroc. Insp.
 		    if (buff.Stats.BonusDamageMultiplier != 0) return true;
 
             // Pet Food
-            //if (buff.Stats.PetStamina != 0) return true;
+            if (buff.Stats.PetStamina != 0) return true;
             if (buff.Stats.PetStrength != 0) return true;
 
             if (buff.Stats._rawSpecialEffectData != null && buff.Stats._rawSpecialEffectData.Length > 0) {
@@ -2439,12 +2441,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
                     statsTalents.AddSpecialEffect(callofthewild);
                 }
-                if (calcOpts.PetFamily == PetFamily.Wolf) {
-                    SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use,
-                        new Stats() { AttackPower = 320f, },
-                        20f, 40f);
-                    statsTalents.AddSpecialEffect(FuriousHowl);
-                }
                 if (calcOpts.PetFamily != PetFamily.None
                     && calculatedStats.priorityRotation.containsShot(Shots.BeastialWrath)
                     && talents.BestialWrath > 0)
@@ -2573,6 +2569,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, statsTotal, GetBuffsStats(calcOpts.petActiveBuffs));
                 calculatedStats.pet.GenPetStats();
 
+                if (calcOpts.PetFamily == PetFamily.Wolf
+                    && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
+                {
+                    SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use,
+                        new Stats() { AttackPower = 320f, PetAttackPower = 320f, },
+                        20f, 40f);
+                    statsTotal.AddSpecialEffect(FuriousHowl);
+                }
+                
                 float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
                 float autoShotSpeed = 0;
                 float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;

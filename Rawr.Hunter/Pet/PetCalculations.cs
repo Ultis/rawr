@@ -16,7 +16,7 @@ namespace Rawr.Hunter
         Stats HunterStats;
         Stats StatsPetBuffs;
         public Stats PetStats;
-        private PetSkillPriorityRotation priorityRotation;
+        public PetSkillPriorityRotation priorityRotation;
 
         public float ferociousInspirationUptime;
         private List<float> freqs = new List<float>();
@@ -286,7 +286,10 @@ namespace Rawr.Hunter
             Stats petStatsOptionsPanel = new Stats() {
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDiff],
                 BonusStaminaMultiplier = 0.05f,
-                BonusDamageMultiplier = CalcOpts.PetHappinessLevel == PetHappiness.Happy ? 1.25f : CalcOpts.PetHappinessLevel == PetHappiness.Content ? 1f : 0.75f,
+                BonusDamageMultiplier = (CalcOpts.PetHappinessLevel == PetHappiness.Happy ? 1.25f
+                                        : CalcOpts.PetHappinessLevel == PetHappiness.Content ? 1f
+                                        : 0.75f)
+                                        - 1f,
             };
             CalculateTimings();
             if(priorityRotation.getSkillFrequency(PetAttacks.SerenityDust) > 0){
@@ -329,12 +332,12 @@ namespace Rawr.Hunter
 
             #region Strength
             float totalBSTRM = petStatsTotal.BonusStrengthMultiplier;
-            petStatsTotal.Strength = (float)Math.Floor((1f + totalBSTRM) * petStatsTotal.Strength);
+            petStatsTotal.Strength = /*(float)Math.Floor(*/(1f + totalBSTRM) * petStatsTotal.Strength/*)*/;
             #endregion
 
             #region Agility
             float totalBAGIM = petStatsTotal.BonusAgilityMultiplier;
-            petStatsTotal.Agility = (float)Math.Floor((1f + totalBAGIM) * petStatsTotal.Agility);
+            petStatsTotal.Agility = /*(float)Math.Floor(*/(1f + totalBAGIM) * petStatsTotal.Agility/*)*/;
             #endregion
 
             #region Attack Power
@@ -352,10 +355,10 @@ namespace Rawr.Hunter
             #endregion
 
             #region Haste
-            if (StatsPetBuffs._rawSpecialEffectData != null && StatsPetBuffs._rawSpecialEffectData.Length > 0) {
+            /*if (StatsPetBuffs._rawSpecialEffectData != null && StatsPetBuffs._rawSpecialEffectData.Length > 0) {
                 Stats add = StatsPetBuffs._rawSpecialEffectData[0].GetAverageStats();
                 StatsPetBuffs.PhysicalHaste *= (1f + add.PhysicalHaste);
-            }
+            }*/
             #endregion
 
             #region Armor
@@ -486,17 +489,9 @@ namespace Rawr.Hunter
             petStatsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(petStatsProcs.Agility, CharacterClass.Warrior);
             //petStatsProcs.PhysicalCrit += StatConversion.GetCritFromRating(petStatsProcs.CritRating, CharacterClass.Warrior);
 
-            // Haste
-            petStatsProcs.PhysicalHaste = (1f + petStatsProcs.PhysicalHaste)
-                                        //* (1f + petStatsProcs.RangedHaste)
-                                        //* (1f + StatConversion.GetPhysicalHasteFromRating(petStatsProcs.HasteRating, character.Class))
-                                        - 1f;
             #endregion
-            //float hastebefore = petStatsTotal.PhysicalHaste;
             petStatsTotal.Accumulate(petStatsProcs);
-            /*petStatsTotal.PhysicalHaste = (1f + hastebefore)
-                                        * (1f + petStatsProcs.PhysicalHaste)
-                                        - 1f;*/
+
             GenPetFullAttackSpeed(petStatsTotal);
             CalculateTimings();
             clawbitesmackinterval = 0f;
@@ -654,81 +649,11 @@ namespace Rawr.Hunter
 
             // setup
             #region Attack Power
-            /*
-            float apFromHunterScaling = 0.22f * (1f + CalcOpts.PetTalents.WildHunt.Value * 0.15f);
-            calculatedStats.petAPFromStrength = (PetStats.Strength - 10f) * 2f;
-            calculatedStats.petAPFromHunterVsWild = (float)Math.Floor(calculatedStats.BasicStats.Stamina * (0.1f * character.HunterTalents.HunterVsWild));
-            calculatedStats.petAPFromBuffs = StatsPetBuffs.AttackPower;
-            calculatedStats.petAPFromHunterRAP = (float)Math.Floor(calculatedStats.apSelfBuffed * apFromHunterScaling);
-
-            // Tier 9 4-pice bonus is complex
-            calculatedStats.petAPFromTier9 = 0;
-
-            // 31-10-2009 Drizz: Name in buffs seems to be Battlegear instead of Pursuit (i.e. not Alliance just Horde)
-            if (calculatedStats.BasicStats.BonusHunter_T9_4P_SteadyShotPetAPProc > 0)
-            {
-                float tier9BonusTimePetShot = 0.9f;
-                float tier9BonusTimeBetween = tier9BonusTimePetShot > 0 ? 1f / 0.15f * tier9BonusTimePetShot + 45f : 0;
-                SpecialEffect tier94pc = new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 600f, }, 15f, 0f, 0.35f);
-                float tier94pcUptime = tier94pc.GetAverageUptime(1.5f,
-                    1f - Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level] - calculatedStats.BasicStats.PhysicalHit),
-                    calculatedStats.autoShotStaticSpeed, CalcOpts.Duration);
-                calculatedStats.petAPFromTier9 = 600f * tier94pcUptime;
-            }
-
-            // Serenity Dust
-            calculatedStats.petAPFromSerenityDust = 0;
-            if (priorityRotation.getSkillFrequency(PetAttacks.SerenityDust) > 0)
-            {
-                calculatedStats.petAPFromSerenityDust = 0.025f; // 0.1 * (15 / 60);
-            }
-
-            calculatedStats.petAPFromAnimalHandler = character.HunterTalents.AnimalHandler * 0.05f;
-            calculatedStats.petAPFromAspectOfTheBeast = calculatedStats.aspectBonusAPBeast;
-
-            calculatedStats.petAPFromOutsideBuffs = StatsPetBuffs.BonusAttackPowerMultiplier;
-
-            calculatedStats.petAPFromRabidProc = 0;
-
-            float longevityCooldownAdjust = 1f - character.HunterTalents.Longevity * 0.1f;
-            float rabidCooldown = 45f * longevityCooldownAdjust;
-            SpecialEffect rabid = new SpecialEffect(Trigger.Use,
-                new Stats() { BonusAttackPowerMultiplier = 0.05f },
-                20, rabidCooldown, 0.50f, 5);
-            //float rabidUptime = CalcOpts.PetTalents.Rabid.Value * rabid.GetAverageUptime(0f, 1f, 2f, CalcOpts.Duration);
-
-            if(CalcOpts.PetTalents.Rabid.Value > 0){
-                SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats() { }, 20f, rabidCooldown);
-                SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit,
-                    new Stats() { BonusAttackPowerMultiplier = 0.05f }, 20f, 0f, 0.50f, 5);
-                calculatedStats.petAPFromRabidProc = secondary.Stats.BonusAttackPowerMultiplier
-                    * (secondary.GetAverageStackSize(compositeSpeed, (1f - PetChanceToMiss - PetChanceToBeDodged), compositeSpeed, CalcOpts.Duration)
-                    * primary.GetAverageUptime(0f, 1f, compositeSpeed, CalcOpts.Duration));
-            }
-
-            float apScalingFactor = 1f
-                                 //* (1f + calculatedStats.petAPFromCallOfTheWild)
-                                 * (1f + calculatedStats.petAPFromRabidProc)
-                                 * (1f + calculatedStats.petAPFromSerenityDust)
-                                 * (1f + calculatedStats.petAPFromOutsideBuffs)
-                                 * (1f + calculatedStats.petAPFromAnimalHandler)
-                                 * (1f + calculatedStats.petAPFromAspectOfTheBeast);
-
-            float apTotalUnadjusted = calculatedStats.petAPFromStrength
-                                    + calculatedStats.petAPFromHunterVsWild
-                                    + calculatedStats.petAPFromTier9
-                                    + calculatedStats.petAPFromBuffs
-                                    + calculatedStats.petAPFromHunterRAP;
-
-            float apTotal = (float)Math.Round(apTotalUnadjusted * apScalingFactor, 1);
-            */
             float damageBonusMeleeFromAP  = 0.07f * PetStats.AttackPower; // PetAPBonus
             float damageBonusSpellsFromAP = (1.5f / 35f) * PetStats.AttackPower; // PetSpellScaling * PetAP
-
-            //PetStats.AttackPower = (float)apTotal;
             #endregion
             #region Spell Hit
-            //Full Resists (Spell Hit)
+            // Full Resists (Spell Hit)
             float levelResistFactor = 0.04f;
             if (levelDifference == 1) levelResistFactor = 0.05f;
             if (levelDifference == 2) levelResistFactor = 0.06f;
@@ -738,7 +663,7 @@ namespace Rawr.Hunter
             if (fullResist < 0) fullResist = 0;
             float fullResistDamageAdjust = 1f - fullResist;
 
-            //Partial Resists (Spell Hit)
+            // Partial Resists (Spell Hit)
             float averageResist = (CalcOpts.TargetLevel - character.Level) * 0.02f;
             float resist10 = 5.0f * averageResist;
             float resist20 = 2.5f * averageResist;
@@ -842,7 +767,7 @@ namespace Rawr.Hunter
 
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
             float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(
-                character.Level, CalcOpts.TargetArmor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
+                CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
 
             float damageAdjustBase = 1f
                     * (1f + PetStats.BonusDamageMultiplier)
