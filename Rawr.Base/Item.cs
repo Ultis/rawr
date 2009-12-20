@@ -963,7 +963,9 @@ namespace Rawr
                         switch (MessageBox.Show(
                             "Do you want to use the New Data and overwrite the Old?"
                             + "\r\n\r\n"
-                            + "[" + cachedItem.Id + "] " + cachedItem.Name
+                            + (cachedItem != null ? "[" + cachedItem.Id + "] " + cachedItem.Name
+                            : (newItem    != null ? "[" + newItem.Id    + "] " + newItem.Name
+                            : ""))
                             + "\r\n\r\n"
                             + "Old Data:\r\n"
                             + "Stats:\r\n" + oldItemStats

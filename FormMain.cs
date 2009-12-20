@@ -899,38 +899,35 @@ namespace Rawr
 
         void bw_LoadSavedCharacter(object sender, DoWorkEventArgs e)
         {
-            WebRequestWrapper.ResetFatalErrorIndicator();
-            StatusMessaging.UpdateStatus("Loading Character", "Loading Saved Character");
-            StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
-            StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
-            _loadingCharacter = true; // suppress item changed event
-            Character character = Character.Load(e.Argument as string);
-            _loadingCharacter = false;
-            StatusMessaging.UpdateStatusFinished("Loading Character");
-            if (character != null)
-            {
+                WebRequestWrapper.ResetFatalErrorIndicator();
+                StatusMessaging.UpdateStatus("Loading Character", "Loading Saved Character");
+                StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
+                StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
                 _loadingCharacter = true; // suppress item changed event
-                this.EnsureItemsLoaded(character.GetAllEquippedAndAvailableGearIds());
+                Character character = Character.Load(e.Argument as string);
                 _loadingCharacter = false;
-                _characterPath = e.Argument as string;
-                Invoke((AddRecentCharacterDelegate)AddRecentCharacter, e.Argument);
-                //InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
-                e.Result = character;
-            }
+                StatusMessaging.UpdateStatusFinished("Loading Character");
+                if (character != null)
+                {
+                    _loadingCharacter = true; // suppress item changed event
+                    this.EnsureItemsLoaded(character.GetAllEquippedAndAvailableGearIds());
+                    _loadingCharacter = false;
+                    _characterPath = e.Argument as string;
+                    Invoke((AddRecentCharacterDelegate)AddRecentCharacter, e.Argument);
+                    //InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
+                    e.Result = character;
+                }
         }
 
         void bw_LoadSavedCharacterComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Error != null)
-            {
-                MessageBox.Show(e.Error.Message);
-            }
-            else
-            {
+            if (e.Error != null) {
+                MessageBox.Show(e.Error.Message, "Error loading Saved Character file");
+            } else {
                 //Load Character into UI
                 LoadCharacterIntoForm(e.Result as Character);
-                FinishedProcessing();
             }
+            FinishedProcessing();
         }
 
 		private void loadFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
