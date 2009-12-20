@@ -1344,6 +1344,9 @@ focus on Survival Points.",
         }
 
         public override bool IsEnchantRelevant(Enchant enchant) {
+            // Remove Death Knight runes
+            if (enchant.Name.StartsWith("Rune of")) { return false; }
+
             Stats stats = enchant.Stats;
 
             bool relevant = IsProfEnchantRelevant(enchant) && (HasRelevantStats(stats));
