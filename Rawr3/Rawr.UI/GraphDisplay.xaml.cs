@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Reflection;
+using System.Threading;
 
 namespace Rawr.UI
 {
@@ -197,37 +198,55 @@ namespace Rawr.UI
             }
         }
 
+		private int _calculationCount = 0;
+		private ComparisonCalculationBase[] _itemCalculations = null;
+		private AutoResetEvent _autoResetEvent = null;
+		private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
+
         private void UpgradeGraphGear(string subgraph)
         {
-            CharacterSlot slot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
-            bool seenEquippedItem = (Character[slot] == null);
+			_characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
+			bool seenEquippedItem = (Character[_characterSlot] == null);
 
             Calculations.ClearCache();
-            List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(slot);
-            ComparisonCalculationBase[] itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count + 1];
-
-            int index = 0;
+			List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
+            _itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
+			_calculationCount = 0;
+			_autoResetEvent = new AutoResetEvent(false);
+					
             if (relevantItemInstances.Count > 0)
             {
                 foreach (ItemInstance item in relevantItemInstances)
                 {
-                    if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
-                    itemCalculations[index++] = Calculations.GetItemCalculations(item, Character, slot);
-                }
+					if (!seenEquippedItem && Character[_characterSlot].Equals(item)) seenEquippedItem = true;
+					ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
+				}
+				_autoResetEvent.WaitOne();
             }
-            if (!seenEquippedItem) itemCalculations[index++] = Calculations.GetItemCalculations(Character[slot], Character, slot);
+
+			List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
+			if (!seenEquippedItem) listItemCalculations.Add(Calculations.GetItemCalculations(Character[_characterSlot], Character, _characterSlot));
+			_itemCalculations = FilterTopXGemmings(listItemCalculations);
 
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(itemCalculations);
+			ComparisonGraph.DisplayCalcs(_itemCalculations);
         }
+
+		private void GetItemInstanceCalculations(object item)
+		{
+			ComparisonCalculationBase result = Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot);
+			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
+			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
+		}
+        
 
         private void UpgradeGraphEnchants(string subgraph)
         {
             ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1","").Replace(" 2","").Replace(" ", ""), true);
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character)).ToArray());
+            ComparisonGraph.DisplayCalcs(Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
         }
 
         private void UpgradeGraphGems(string subgraph)
@@ -243,22 +262,34 @@ namespace Rawr.UI
             }
             Calculations.ClearCache();
             Character.ClearRelevantGems(); // we need to reset relevant items for gems to allow colour selection
-            List<Item> relevantItems = Character.GetRelevantItems(cslot, islot);
-            ComparisonCalculationBase[] itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
+			List<Item> relevantItems = Character.GetRelevantItems(cslot, islot);
+			_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
+			_calculationCount = 0;
+			_autoResetEvent = new AutoResetEvent(false);
 
-            int index = 0;
             if (relevantItems.Count > 0)
             {
-                foreach (Item item in relevantItems)
-                {
-                    itemCalculations[index++] = Calculations.GetItemCalculations(item, Character, cslot);
-                }
+				foreach (Item item in relevantItems)
+				{
+					ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+				}
+				_autoResetEvent.WaitOne();
             }
 
-            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+			_itemCalculations = FilterTopXGemmings(new List<ComparisonCalculationBase>(_itemCalculations));
+
+			ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(itemCalculations);
-        }
+            ComparisonGraph.DisplayCalcs(_itemCalculations);
+		}
+
+		private void GetItemCalculations(object item)
+		{
+			ComparisonCalculationBase result = Calculations.GetItemCalculations((Item)item, Character, _characterSlot);
+			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
+			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
+		}
+
 
         private void UpgradeGraphBuffs(string subgraph)
         {
@@ -412,16 +443,47 @@ namespace Rawr.UI
         {
             if (subgraph == "Gear")
             {
-                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
-                calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
+				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+				CharacterSlot[] slots = new CharacterSlot[]
+				{
+					 CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1,
+					 CharacterSlot.Finger2, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs,
+					 CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile,
+					 CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders,
+					 CharacterSlot.Trinket1, CharacterSlot.Trinket2, CharacterSlot.Waist, CharacterSlot.Wrist
+				};
+				foreach (CharacterSlot slot in slots)
+				{
+					ItemInstance item = Character[slot];
+					if (item != null)
+					{
+						itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
+					}
+				}
+
+				ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+				ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+				ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
             }
             else if (subgraph == "Enchants")
             {
-                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
-                calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
-            }
+				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+				ItemSlot[] slots = new ItemSlot[]
+				{
+					 ItemSlot.Back, ItemSlot.Chest, ItemSlot.Feet, ItemSlot.Finger,
+					 ItemSlot.Hands, ItemSlot.Head, ItemSlot.Legs,
+					 ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.Shoulders,
+					 ItemSlot.Waist, ItemSlot.Wrist
+				};
+				
+				foreach (ItemSlot slot in slots)
+					foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
+						itemCalculations.Add(calc);
+				
+				ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+				ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+				ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
+			}
             else if (subgraph == "Buffs")
             {
                 UpgradeGraphBuffs("Current");

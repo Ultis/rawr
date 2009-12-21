@@ -241,9 +241,9 @@ namespace Rawr
         {
             return Instance.GetItemCalculations(item, character, slot);
         }
-        public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+        public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
 		{
-			return Instance.GetEnchantCalculations(slot, character, currentCalcs);
+			return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly);
 		}
 		public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, string filter)
 		{
@@ -782,7 +782,7 @@ namespace Rawr
             return itemCalc;
         }
 
-		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
 		{
 			ClearCache();
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
@@ -790,8 +790,6 @@ namespace Rawr
 			CharacterCalculationsBase calcsUnequipped = null;
 			foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
 			{
-				//if (enchantCalcs.ContainsKey(enchant.Id)) continue;
-
 				bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
 				if (isEquipped)
 				{
@@ -802,6 +800,7 @@ namespace Rawr
 				}
 				else
 				{
+					if (equippedOnly) continue;
 					Character charUnequipped = character.Clone();
 					Character charEquipped = character.Clone();
 					charUnequipped.SetEnchantBySlot(slot, null);

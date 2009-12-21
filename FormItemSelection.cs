@@ -345,7 +345,7 @@ namespace Rawr
 				List<ComparisonCalculationBase> itemCalculations = null;
 				if (Character != null && CurrentCalculations != null)
 				{
-					itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(slot), Character, CurrentCalculations);
+					itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(slot), Character, CurrentCalculations, false);
                 }
                 itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
                 ItemCalculations = itemCalculations.ToArray();

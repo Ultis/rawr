@@ -125,7 +125,7 @@ namespace Rawr.UI
                 CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
                 if (Character != null && current != null)
                 {
-                    itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current);
+                    itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current, false);
                 }
             }
             else if (IsGemList)

@@ -176,7 +176,7 @@ namespace Rawr
             {
                 comparisonGraph1.RoundValues = true;
                 comparisonGraph1.CustomRendered = false;
-                comparisonGraph1.ItemCalculations = Calculations.GetEnchantCalculations(slot, Character, currentCalculations).ToArray();
+                comparisonGraph1.ItemCalculations = Calculations.GetEnchantCalculations(slot, Character, currentCalculations, false).ToArray();
 				comparisonGraph1.EquipSlot = CharacterSlot.None;
 				_characterSlot = CharacterSlot.None;
             }
@@ -363,9 +363,8 @@ namespace Rawr
                     if (Character[slot] != null)
                         itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
 
-                foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(ItemSlot.None, Character, currentCalculations))
-                    if (calc.Equipped)
-                        itemCalculations.Add(calc);
+                foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(ItemSlot.None, Character, currentCalculations, true))
+                    itemCalculations.Add(calc);
 
                 foreach (ComparisonCalculationBase calc in Calculations.GetBuffCalculations(Character, currentCalculations, "Current"))
                     itemCalculations.Add(calc);
