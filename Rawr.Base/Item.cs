@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Net;
 #if RAWR3
 using System.Linq;
-#endif
+#else
 using System.Windows.Forms;
-
+#endif
 namespace Rawr
 {
 	#region Item

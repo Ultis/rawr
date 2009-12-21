@@ -815,6 +815,7 @@ namespace Rawr
                 {
                     Item selectedItem = SelectedItem.Tag as Item;
                     selectedItem.Stats.RemoveSpecialEffect(eff);
+					form.Stats.InvalidateSparseData();
                     selectedItem.Stats.AddSpecialEffect(new SpecialEffect(form.Trigger, form.Stats,
                         form.Duration, form.Cooldown, form.Chance, form.Stacks));
                     UpdateSpecialEffects();

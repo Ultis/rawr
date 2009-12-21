@@ -659,7 +659,7 @@ namespace Rawr.Cat
 			statsProcs.Armor += 2f * statsProcs.Agility;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			
-			//Agility is only use for crit from here on out; we'll be converting Agility to CritRating, 
+			//Agility is only used for crit from here on out; we'll be converting Agility to CritRating, 
 			//and calculating CritRating separately, so don't add any Agility or CritRating from procs here.
 			//Also calculating ArPen separately, so don't add that either.
 			statsProcs.CritRating = statsProcs.Agility = statsProcs.ArmorPenetrationRating = 0;
@@ -696,23 +696,13 @@ namespace Rawr.Cat
 			}
 			else if (tempCritEffects.Count > 1)
 			{
-				List<SpecialEffect> tempCritEffectsAdjusted = new List<SpecialEffect>();
+				List<float> tempCritEffectsValues = new List<float>();
 				foreach (SpecialEffect effect in tempCritEffects)
 				{
-					SpecialEffect adjustedEffect = effect;
 					float totalAgi = (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
-					if (totalAgi - effect.Stats.Agility > 0)
-					{
-						adjustedEffect = new SpecialEffect(effect.Trigger,
-							new Stats()
-							{
-								CritRating = effect.Stats.CritRating +
-									StatConversion.GetCritFromAgility(totalAgi,
-									CharacterClass.Druid) * StatConversion.RATING_PER_PHYSICALCRIT
-							},
-							effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
-					}
-					tempCritEffectsAdjusted.Add(adjustedEffect);
+					tempCritEffectsValues.Add(effect.Stats.CritRating +
+						StatConversion.GetCritFromAgility(totalAgi, CharacterClass.Druid) * 
+						StatConversion.RATING_PER_PHYSICALCRIT);
 				}
 				
 				float[] intervals = new float[tempCritEffects.Count];
@@ -727,7 +717,7 @@ namespace Rawr.Cat
 				{
 					offset[0] = calcOpts.TrinketOffset;
 				}
-				WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffectsAdjusted.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, calcOpts.Duration, AdditiveStat.CritRating);
+				WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffects.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, calcOpts.Duration, tempCritEffectsValues.ToArray());
 				critRatingUptimes = critWeights;
 			}
 
@@ -759,18 +749,11 @@ namespace Rawr.Cat
 			}
 			else if (tempArPenEffects.Count > 1)
 			{
-				List<SpecialEffect> tempArPenEffectsAdjusted = new List<SpecialEffect>();
+				List<float> tempArPenEffectValues = new List<float>();
 				foreach (SpecialEffect effect in tempArPenEffects)
 				{
-					SpecialEffect adjustedEffect = effect;
-					float totalArPen = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc;
-					if (effect.Stats.DeathbringerProc > 0)
-					{
-						adjustedEffect = new SpecialEffect(effect.Trigger,
-							new Stats() { ArmorPenetrationRating = totalArPen },
-							effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
-					}
-					tempArPenEffectsAdjusted.Add(adjustedEffect);
+					tempArPenEffectValues.Add(effect.Stats.ArmorPenetrationRating +
+						effect.Stats.DeathbringerProc);
 				}
 
 				float[] intervals = new float[tempArPenEffects.Count];
@@ -785,7 +768,7 @@ namespace Rawr.Cat
 				{
 					offset[0] = calcOpts.TrinketOffset;
 				}
-				WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffectsAdjusted.ToArray(), intervals, chances, offset, tempArPenEffectScales.ToArray(), 1f, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
+				WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, tempArPenEffectScales.ToArray(), 1f, calcOpts.Duration, tempArPenEffectValues.ToArray());
 				armorPenetrationUptimes = arPenWeights;
 			}
 

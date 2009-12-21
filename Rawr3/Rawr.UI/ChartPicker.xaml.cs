@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 namespace Rawr.UI
 {
@@ -47,6 +48,10 @@ namespace Rawr.UI
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 
             this.DataContext = this;
+
+			_timer = new DispatcherTimer();
+			_timer.Interval = TimeSpan.FromMilliseconds(150);
+			_timer.Tick += new EventHandler(_timer_Tick);
         }
 
         void Calculations_ModelChanged(object sender, EventArgs e)
@@ -70,9 +75,31 @@ namespace Rawr.UI
         private void Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             ChartPickerItem mousedOverItem = ((FrameworkElement)sender).DataContext as ChartPickerItem;
-            PrimaryItem = mousedOverItem;
-            ListBoxSecondary.SelectedItem = PrimaryItem.SelectedItem;
-        }
+            _timer.Stop();
+			_lastMousedOverItem = mousedOverItem;
+			_timer.Start();
+		}
+
+		private void Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+		{
+			ChartPickerItem mousedOverItem = ((FrameworkElement)sender).DataContext as ChartPickerItem;
+			if (_lastMousedOverItem == mousedOverItem)
+			{
+				_lastMousedOverItem = null;
+				_timer.Stop();
+			}
+		}
+
+		private DispatcherTimer _timer;
+		private ChartPickerItem _lastMousedOverItem;
+		private void _timer_Tick(object sender, EventArgs e)
+		{
+			_timer.Stop();
+			if (_lastMousedOverItem == null) return;
+
+			PrimaryItem = _lastMousedOverItem;
+			ListBoxSecondary.SelectedItem = PrimaryItem.SelectedItem;
+		}
 
         private void Grid_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {

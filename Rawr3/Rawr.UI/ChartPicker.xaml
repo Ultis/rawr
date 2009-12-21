@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
 	<UserControl.Resources>
 		<DataTemplate x:Key="ChartPickerItemTemplatePrimary">
-			<Grid Background="#00000000" HorizontalAlignment="Stretch" MouseEnter="Grid_MouseEnter">
+			<Grid Background="#00000000" HorizontalAlignment="Stretch" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
 				<TextBlock Margin="4" Text="{Binding Header}"/>
 				<Path Fill="#000066" Height="7" Width="12" HorizontalAlignment="Right" VerticalAlignment="Center" Data="M0,0 7,3.5 0,7 z"/>
 			</Grid>
