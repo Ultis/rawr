@@ -727,6 +727,8 @@ namespace Rawr
             darkglow.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 400 }, 1f, 60f, 0.35f));
             defaultEnchants.Add(new Enchant(3728, "Darkglow Embroidery", ItemSlot.Back, darkglow));
 
+            defaultEnchants.Add(new Enchant(3873, "Master's Spellthread", ItemSlot.Legs, new Stats() { SpellPower = 50f, Stamina = 30f }));
+
             //3.0.8 enchants
             defaultEnchants.Add(new Enchant(3850, "Major Stamina", ItemSlot.Wrist, new Stats() { Stamina = 40 }));
             defaultEnchants.Add(new Enchant(3849, "Titanium Plating", ItemSlot.OffHand, new Stats() { BlockValue = 81 }));

@@ -1256,7 +1256,8 @@ namespace Rawr
                         }
                     }
                     if (!CheckHasProf(Profession.Inscription)) {
-                        if (name.Contains("Master's"))
+                        if (name.Contains("Master's")
+                            && !name.Contains("Spellthread"))
                         {
                             return false;
                         }
