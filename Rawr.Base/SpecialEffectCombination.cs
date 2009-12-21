@@ -217,8 +217,8 @@ namespace Rawr
             const int maxRecursionDepth = 20;
             p.N = effects.Length;
             p.NC = 1 << effects.Length;
-            p.combinedUptime = new float[1 + 2 * maxRecursionDepth, p.NC];
-            p.partialIntegral = new float[1 + 2 * maxRecursionDepth, p.NC];
+            p.combinedUptime = new float[5 + 2 * maxRecursionDepth, p.NC];
+            p.partialIntegral = new float[5 + 2 * maxRecursionDepth, p.NC];
 
             // integrate using adaptive Simspon's method
             AdaptiveSimpsonsMethodCombinations(p, fightDuration, 0.001f, maxRecursionDepth);
