@@ -1554,9 +1554,9 @@
             this.label12.Size = new System.Drawing.Size(96, 13);
             this.label12.TabIndex = 148;
             this.label12.Text = "Molten Fury (0-1): *";
-            this.toolTipMage.SetToolTip(this.label12, "Percentage of time spent in molen fury range (i.e. < 35% boss health). Default va" +
-                    "lue of 0.3 indicates that 30% of time is spent in molten fury range due to raid " +
-                    "dps stacking in execute range.");
+            this.toolTipMage.SetToolTip(this.label12, "Percentage of time spent in molten fury range (i.e. < 35% boss health). Default v" +
+                    "alue of 0.3 indicates that 30% of time is spent in molten fury range due to raid" +
+                    " dps stacking in execute range.");
             // 
             // label10
             // 
@@ -1711,7 +1711,7 @@
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
             this.toolStripLabel2.Text = "of {0}";
             this.toolStripLabel2.ToolTipText = "Total number of items";
             // 
@@ -1962,7 +1962,7 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
             this.toolStripLabel1.Text = "of {0}";
             this.toolStripLabel1.ToolTipText = "Total number of items";
             // 
@@ -2095,7 +2095,7 @@
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 22);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(36, 22);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
