@@ -4215,7 +4215,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Nobundo's Regalia",
-                Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
+                Stats = { BonusLavaBurstDamageMultiplier = 0.1f },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4241,26 +4241,6 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thrall's/Nobundo's Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Nobundo's Regalia",
-                Stats = { BonusFlameShockDuration = 9f },
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
-            });
-			defaultBuffs.Add(new Buff()
-			{
-                Name = "Thrall's/Nobundo's Regalia 4 Piece Bonus",
-			    Group = "Set Bonuses",
-			    ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Nobundo's Regalia",
-			    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
-			});
             #endregion
             #endregion
             #region Tier 10 | Frost Witch's
