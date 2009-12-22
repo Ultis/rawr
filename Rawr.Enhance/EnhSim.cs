@@ -187,7 +187,7 @@ namespace Rawr.Enhance
 			catch { }
             if(Clipboard.Success)
                 MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.3.0 or higher, to import it\n" +
+                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.4.1 or higher, to import it\n" +
                     "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                     "Enhance Module", MessageBoxButton.OK);
         }
@@ -200,7 +200,7 @@ namespace Rawr.Enhance
 			}
 			catch { }
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.3.0 or higher, to import it\n" +
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.4.1 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
