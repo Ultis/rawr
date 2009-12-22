@@ -14,6 +14,101 @@ namespace Rawr.Tree {
                 "You're welcome to send feedback via the CodePlex site.\r\n\r\n" +
                 "A small list of things I plan to do:\r\n- Fix haste trinkets to give better values.\r\n- Add a much simpler interface, including preset fight profiles (e.g. Tank heal, Raid heal, Hybrid healing, WG+RJ all out et cetera).\r\n- Add Healing Touch in spell rotations.\r\n- Lifebloom x2 stacks.\r\n- A custom chart that shows HPM for single target rotations.\r\n Update Main Stats statistics to show healing without crit, healing with crit and crit chance.";
         }
+        protected void RefreshProfile()
+        {
+            CalculationOptionsTree calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
+
+            trkFightLength.Value = calcOpts.Current.FightDuration / 5;
+            int m = trkFightLength.Value / 12;
+            int s = calcOpts.Current.FightDuration - 60 * m;
+            lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
+
+            calcOpts.Current.Latency = 0;
+            tbLatency.Value = calcOpts.Current.Latency / 10;
+            lblLatency.Text = "Latency: " + calcOpts.Current.Latency + " ms.";
+
+            tkReplenishment.Value = calcOpts.Current.ReplenishmentUptime;
+            lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
+
+            tbRejuvCF.Value = calcOpts.Current.RejuvFrac;
+            tbRegrowthCF.Value = calcOpts.Current.RegrowthFrac;
+            tbLifebloomCF.Value = calcOpts.Current.LifebloomFrac;
+            tbNourishCF.Value = calcOpts.Current.NourishFrac;
+            lblRejuvFrac.Text = "Rejuvenation casting time: " + tbRejuvCF.Value + "%.";
+            lblRegrowthFrac.Text = "Regrowth casting time: " + tbRegrowthCF.Value + "%.";
+            lblLifebloomFrac.Text = "Lifebloom casting time: " + tbLifebloomCF.Value + "%.";
+            lblNourishFrac.Text = "Nourish casting time: " + tbNourishCF.Value + "%.";
+
+            tbLifebloomStackAmount.Value = calcOpts.Current.LifebloomStackAmount;
+            tbRejuvAmount.Value = calcOpts.Current.RejuvAmount;
+            tbRegrowthAmount.Value = calcOpts.Current.RegrowthAmount;
+            lblLifebloomStackAmount.Text = "Number of maintained Lifebloom stacks: " + tbLifebloomStackAmount.Value;
+            lblRejuvAmount.Text = "Number of maintained Rejuvenations: " + tbRejuvAmount.Value;
+            lblRegrowthAmount.Text = "Number of maintained Regrowths: " + tbRegrowthAmount.Value;
+
+            cbLifebloomStackType.SelectedIndex = calcOpts.Current.LifebloomStackType;
+
+            tbNourish1.Value = calcOpts.Current.Nourish1;
+            tbNourish2.Value = calcOpts.Current.Nourish2;
+            tbNourish3.Value = calcOpts.Current.Nourish3;
+            tbNourish4.Value = calcOpts.Current.Nourish4;
+            lblNourish1.Text = "Nourish on 1 hot: " + tbNourish1.Value + "%.";
+            lblNourish2.Text = "Nourish on 2 hots: " + tbNourish2.Value + "%.";
+            lblNourish3.Text = "Nourish on 3 hots: " + tbNourish3.Value + "%.";
+            lblNourish4.Text = "Nourish on 4 hots: " + tbNourish4.Value + "%.";
+
+            calcOpts.Current.AdjustRejuv = cbRejuvAdjust.Checked;
+            calcOpts.Current.AdjustRegrowth = cbRegrowthAdjust.Checked;
+            calcOpts.Current.AdjustLifebloom = cbLifebloomAdjust.Checked;
+            calcOpts.Current.AdjustNourish = cbNourishAdjust.Checked;
+
+            tbLivingSeed.Value = calcOpts.Current.LivingSeedEfficiency;
+            lblLivingSeed.Text = "Living Seed effectiveness: " + (float)tbLivingSeed.Value + "%.";
+
+            tbWildGrowth.Value = calcOpts.Current.WildGrowthPerMinute;
+            lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
+
+            tbSwiftmendPerMin.Value = calcOpts.Current.SwiftmendPerMinute;
+            lblSwiftMend.Text = "Swiftmend casts per minute: " + tbSwiftmendPerMin.Value;
+
+            cbInnervate.Checked = calcOpts.Current.Innervates > 0;
+
+            tbIdlePercentage.Value = calcOpts.Current.IdleCastTimePercent;
+            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
+
+            cbIgnoreNaturesGrace.Checked = calcOpts.Current.IgnoreNaturesGrace;
+            cbIgnoreAllHasteEffects.Checked = calcOpts.Current.IgnoreAllHasteEffects;
+
+            tbRevitalize.Value = calcOpts.Current.RevitalizePPM;
+            lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.Current.RevitalizePPM;
+
+            lbOOMspells.Items.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                if (calcOpts.Current.ReduceOOMRejuvOrder == i)
+                {
+                    lbOOMspells.Items.Add("Rejuvenation until " + calcOpts.Current.ReduceOOMRejuv + "%.");
+                }
+                else if (calcOpts.Current.ReduceOOMRegrowthOrder == i)
+                {
+                    lbOOMspells.Items.Add("Regrowth until " + calcOpts.Current.ReduceOOMRegrowth + "%.");
+                }
+                else if (calcOpts.Current.ReduceOOMLifebloomOrder == i)
+                {
+                    lbOOMspells.Items.Add("Lifebloom until " + calcOpts.Current.ReduceOOMLifebloom + "%.");
+                }
+                else if (calcOpts.Current.ReduceOOMNourishOrder == i)
+                {
+                    lbOOMspells.Items.Add("Nourish until " + calcOpts.Current.ReduceOOMNourish + "%.");
+                }
+                else if (calcOpts.Current.ReduceOOMWildGrowthOrder == i)
+                {
+                    lbOOMspells.Items.Add("WildGrowth until " + calcOpts.Current.ReduceOOMWildGrowth + "%.");
+                }
+            }
+
+            tbOOMpercentage.Enabled = false;
+        }
         protected override void LoadCalculationOptions() {
             loading = true;
 
@@ -35,104 +130,17 @@ namespace Rawr.Tree {
             tbSurvMulti.Value = calcOpts.SurvValuePer100;
             lblSurvMulti.Text = calcOpts.SurvValuePer100.ToString() + " points per 100 survival (effective) health";
 
-            trkTimeInFSR.Value = calcOpts.FSRRatio;
-            lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
-
-            trkFightLength.Value = calcOpts.FightDuration / 5;
-            int m = trkFightLength.Value / 12;
-            int s = calcOpts.FightDuration - 60 * m;
-            lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
-
-            calcOpts.Latency = 0;
-            tbLatency.Value = calcOpts.Latency / 10;
-            lblLatency.Text = "Latency: " + calcOpts.Latency + " ms.";
-
-            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
-
-            tkReplenishment.Value = calcOpts.ReplenishmentUptime;
-            lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
-            
-            tbRejuvCF.Value = calcOpts.RejuvFrac;
-            tbRegrowthCF.Value = calcOpts.RegrowthFrac;
-            tbLifebloomCF.Value = calcOpts.LifebloomFrac;
-            tbNourishCF.Value = calcOpts.NourishFrac;
-            lblRejuvFrac.Text = "Rejuvenation casting time: " + tbRejuvCF.Value + "%.";
-            lblRegrowthFrac.Text = "Regrowth casting time: " + tbRegrowthCF.Value + "%.";
-            lblLifebloomFrac.Text = "Lifebloom casting time: " + tbLifebloomCF.Value + "%.";
-            lblNourishFrac.Text = "Nourish casting time: " + tbNourishCF.Value + "%.";
-
-            tbLifebloomStackAmount.Value = calcOpts.LifebloomStackAmount;
-            tbRejuvAmount.Value = calcOpts.RejuvAmount;
-            tbRegrowthAmount.Value = calcOpts.RegrowthAmount;
-            lblLifebloomStackAmount.Text = "Number of maintained Lifebloom stacks: " + tbLifebloomStackAmount.Value;
-            lblRejuvAmount.Text = "Number of maintained Rejuvenations: " + tbRejuvAmount.Value;
-            lblRegrowthAmount.Text = "Number of maintained Regrowths: " + tbRegrowthAmount.Value;
-
-            cbLifebloomStackType.SelectedIndex = calcOpts.LifebloomStackType;
-
-            tbNourish1.Value = calcOpts.Nourish1;
-            tbNourish2.Value = calcOpts.Nourish2;
-            tbNourish3.Value = calcOpts.Nourish3;
-            tbNourish4.Value = calcOpts.Nourish4;
-            lblNourish1.Text = "Nourish on 1 hot: " + tbNourish1.Value + "%.";
-            lblNourish2.Text = "Nourish on 2 hots: " + tbNourish2.Value + "%.";
-            lblNourish3.Text = "Nourish on 3 hots: " + tbNourish3.Value + "%.";
-            lblNourish4.Text = "Nourish on 4 hots: " + tbNourish4.Value + "%.";
-
-            calcOpts.AdjustRejuv = cbRejuvAdjust.Checked;
-            calcOpts.AdjustRegrowth = cbRegrowthAdjust.Checked;
-            calcOpts.AdjustLifebloom = cbLifebloomAdjust.Checked;
-            calcOpts.AdjustNourish = cbNourishAdjust.Checked;
-
-            tbLivingSeed.Value = calcOpts.LivingSeedEfficiency;
-            lblLivingSeed.Text = "Living Seed effectiveness: " + (float)tbLivingSeed.Value + "%.";
-
-            tbWildGrowth.Value = calcOpts.WildGrowthPerMinute;
-            lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
-
-            tbSwiftmendPerMin.Value = calcOpts.SwiftmendPerMinute;
-            lblSwiftMend.Text = "Swiftmend casts per minute: " + tbSwiftmendPerMin.Value;
-
-            cbInnervate.Checked = calcOpts.Innervates > 0;
-
-            tbIdlePercentage.Value = calcOpts.IdleCastTimePercent;
-            lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
-
             cbSingleTargetRotation.SelectedIndex = calcOpts.SingleTargetRotation;
 
-            cbIgnoreNaturesGrace.Checked = calcOpts.IgnoreNaturesGrace;
-            cbIgnoreAllHasteEffects.Checked = calcOpts.IgnoreAllHasteEffects;
-
-            tbRevitalize.Value = calcOpts.RevitalizePPM;
-            lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.RevitalizePPM;
-
-
-            lbOOMspells.Items.Clear();
-            for (int i = 0; i < 5; i++)
+            cbSpellProfiles.Items.Clear();
+            foreach (SpellProfile profile in calcOpts.Profiles)
             {
-                if (calcOpts.ReduceOOMRejuvOrder == i)
-                {
-                    lbOOMspells.Items.Add("Rejuvenation until " + calcOpts.ReduceOOMRejuv + "%.");
-                }
-                else if (calcOpts.ReduceOOMRegrowthOrder == i)
-                {
-                    lbOOMspells.Items.Add("Regrowth until " + calcOpts.ReduceOOMRegrowth + "%.");
-                }
-                else if (calcOpts.ReduceOOMLifebloomOrder == i)
-                {
-                    lbOOMspells.Items.Add("Lifebloom until " + calcOpts.ReduceOOMLifebloom + "%.");
-                }
-                else if (calcOpts.ReduceOOMNourishOrder == i)
-                {
-                    lbOOMspells.Items.Add("Nourish until " + calcOpts.ReduceOOMNourish + "%.");
-                }
-                else if (calcOpts.ReduceOOMWildGrowthOrder == i)
-                {
-                    lbOOMspells.Items.Add("WildGrowth until " + calcOpts.ReduceOOMWildGrowth + "%.");
-                }
+                cbSpellProfiles.Items.Add(profile);
             }
+            btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
 
-            tbOOMpercentage.Enabled = false;
+            RefreshProfile();
 
             loading = false;
         }
@@ -145,31 +153,16 @@ namespace Rawr.Tree {
         private void trkFightLength_Scroll(object sender, EventArgs e) {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.FightDuration = trkFightLength.Value * 5;
+            calcOpts.Current.FightDuration = trkFightLength.Value * 5;
             int m = trkFightLength.Value / 12;
-            int s = calcOpts.FightDuration - 60 * m;
+            int s = calcOpts.Current.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
-            Character.OnCalculationsInvalidated();
-        }
-        private void trkTimeInFSR_Scroll(object sender, EventArgs e)
-        {
-            if (loading) { return; }
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
-            calcOpts.FSRRatio = trkTimeInFSR.Value;
-            Character.OnCalculationsInvalidated();
-        }
-        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (loading) { return; }
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void tkReplenishment_Scroll(object sender, EventArgs e) {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.ReplenishmentUptime = tkReplenishment.Value;
+            calcOpts.Current.ReplenishmentUptime = tkReplenishment.Value;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
             Character.OnCalculationsInvalidated();
         }
@@ -183,21 +176,21 @@ namespace Rawr.Tree {
         private void cbInnervate_CheckedChanged(object sender, EventArgs e) {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Innervates = cbInnervate.Checked?1:0;
+            calcOpts.Current.Innervates = cbInnervate.Checked ? 1 : 0;
             Character.OnCalculationsInvalidated();
         }
         private void tbWildGrowth_Scroll(object sender, EventArgs e)
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.WildGrowthPerMinute = tbWildGrowth.Value;
+            calcOpts.Current.WildGrowthPerMinute = tbWildGrowth.Value;
             lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
             Character.OnCalculationsInvalidated();
         }
         private void tbSwiftmend_Scroll(object sender, EventArgs e) {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.SwiftmendPerMinute = tbSwiftmendPerMin.Value;
+            calcOpts.Current.SwiftmendPerMinute = tbSwiftmendPerMin.Value;
             lblSwiftMend.Text = "Swiftmend casts per minute: " + tbSwiftmendPerMin.Value;
             Character.OnCalculationsInvalidated();
         }
@@ -205,7 +198,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.IdleCastTimePercent = tbIdlePercentage.Value;
+            calcOpts.Current.IdleCastTimePercent = tbIdlePercentage.Value;
             lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
@@ -214,7 +207,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.LifebloomStackAmount = tbLifebloomStackAmount.Value;
+            calcOpts.Current.LifebloomStackAmount = tbLifebloomStackAmount.Value;
             lblLifebloomStackAmount.Text = "Number of maintained Lifebloom stacks: " + (float)tbLifebloomStackAmount.Value;
             Character.OnCalculationsInvalidated();
         }
@@ -223,7 +216,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RejuvAmount = tbRejuvAmount.Value;
+            calcOpts.Current.RejuvAmount = tbRejuvAmount.Value;
             lblRejuvAmount.Text = "Number of maintained Rejuvenations: " + (float)tbRejuvAmount.Value;
             Character.OnCalculationsInvalidated();
         }
@@ -232,7 +225,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RegrowthAmount = tbRegrowthAmount.Value;
+            calcOpts.Current.RegrowthAmount = tbRegrowthAmount.Value;
             lblRegrowthAmount.Text = "Number of maintained Regrowths: " + (float)tbRegrowthAmount.Value;
             Character.OnCalculationsInvalidated();
         }
@@ -241,7 +234,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.LifebloomStackType = cbLifebloomStackType.SelectedIndex;
+            calcOpts.Current.LifebloomStackType = cbLifebloomStackType.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
 
@@ -250,13 +243,13 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
-            calcOpts.Nourish1 = tbNourish1.Value;
+            calcOpts.Current.Nourish1 = tbNourish1.Value;
 
-            int max = 100 - (calcOpts.Nourish2 + calcOpts.Nourish3 + calcOpts.Nourish4);
+            int max = 100 - (calcOpts.Current.Nourish2 + calcOpts.Current.Nourish3 + calcOpts.Current.Nourish4);
             if (max < 0) max = 0;
-            if (calcOpts.Nourish1 > max)
+            if (calcOpts.Current.Nourish1 > max)
             {
-                calcOpts.Nourish1 = max;
+                calcOpts.Current.Nourish1 = max;
                 tbNourish1.Value = max;
             }
             
@@ -269,13 +262,13 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
-            calcOpts.Nourish2 = tbNourish2.Value;
+            calcOpts.Current.Nourish2 = tbNourish2.Value;
 
-            int max = 100 - (calcOpts.Nourish1 + calcOpts.Nourish3 + calcOpts.Nourish4);
+            int max = 100 - (calcOpts.Current.Nourish1 + calcOpts.Current.Nourish3 + calcOpts.Current.Nourish4);
             if (max < 0) max = 0;
-            if (calcOpts.Nourish2 > max)
+            if (calcOpts.Current.Nourish2 > max)
             {
-                calcOpts.Nourish2 = max;
+                calcOpts.Current.Nourish2 = max;
                 tbNourish2.Value = max;
             }
 
@@ -288,13 +281,13 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
-            calcOpts.Nourish3 = tbNourish3.Value;
+            calcOpts.Current.Nourish3 = tbNourish3.Value;
 
-            int max = 100 - (calcOpts.Nourish1 + calcOpts.Nourish2 + calcOpts.Nourish4);
+            int max = 100 - (calcOpts.Current.Nourish1 + calcOpts.Current.Nourish2 + calcOpts.Current.Nourish4);
             if (max < 0) max = 0;
-            if (calcOpts.Nourish3 > max)
+            if (calcOpts.Current.Nourish3 > max)
             {
-                calcOpts.Nourish3 = max;
+                calcOpts.Current.Nourish3 = max;
                 tbNourish3.Value = max;
             }
 
@@ -307,13 +300,13 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
-            calcOpts.Nourish4 = tbNourish4.Value;
+            calcOpts.Current.Nourish4 = tbNourish4.Value;
 
-            int max = 100 - (calcOpts.Nourish1 + calcOpts.Nourish2 + calcOpts.Nourish3);
+            int max = 100 - (calcOpts.Current.Nourish1 + calcOpts.Current.Nourish2 + calcOpts.Current.Nourish3);
             if (max < 0) max = 0;
-            if (calcOpts.Nourish4 > max)
+            if (calcOpts.Current.Nourish4 > max)
             {
-                calcOpts.Nourish4 = max;
+                calcOpts.Current.Nourish4 = max;
                 tbNourish4.Value = max;
             }
 
@@ -325,7 +318,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.LivingSeedEfficiency = tbLivingSeed.Value;
+            calcOpts.Current.LivingSeedEfficiency = tbLivingSeed.Value;
             lblLivingSeed.Text = "Living Seed effectiveness: " + (float)tbLivingSeed.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
@@ -360,8 +353,8 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Latency = tbLatency.Value * 10;
-            lblLatency.Text = "Latency: " + calcOpts.Latency + " ms.";
+            calcOpts.Current.Latency = tbLatency.Value * 10;
+            lblLatency.Text = "Latency: " + calcOpts.Current.Latency + " ms.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -369,7 +362,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RejuvFrac = tbRejuvCF.Value;
+            calcOpts.Current.RejuvFrac = tbRejuvCF.Value;
             lblRejuvFrac.Text = "Rejuvenation casting time: " + (float)tbRejuvCF.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
@@ -378,7 +371,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RegrowthFrac = tbRegrowthCF.Value;
+            calcOpts.Current.RegrowthFrac = tbRegrowthCF.Value;
             lblRegrowthFrac.Text = "Regrowth casting time: " + (float)tbRegrowthCF.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
@@ -387,7 +380,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.LifebloomFrac = tbLifebloomCF.Value;
+            calcOpts.Current.LifebloomFrac = tbLifebloomCF.Value;
             lblLifebloomFrac.Text = "Lifebloom casting time: " + (float)tbLifebloomCF.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
@@ -396,7 +389,7 @@ namespace Rawr.Tree {
         {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.NourishFrac = tbNourishCF.Value;
+            calcOpts.Current.NourishFrac = tbNourishCF.Value;
             lblNourishFrac.Text = "Nourish casting time: " + (float)tbNourishCF.Value + "%.";
             Character.OnCalculationsInvalidated();
         }
@@ -405,7 +398,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.AdjustRejuv = cbRejuvAdjust.Checked;
+            calcOpts.Current.AdjustRejuv = cbRejuvAdjust.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -413,7 +406,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.AdjustRegrowth = cbRegrowthAdjust.Checked;
+            calcOpts.Current.AdjustRegrowth = cbRegrowthAdjust.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -421,7 +414,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.AdjustLifebloom = cbLifebloomAdjust.Checked;
+            calcOpts.Current.AdjustLifebloom = cbLifebloomAdjust.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -429,7 +422,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.AdjustNourish = cbNourishAdjust.Checked;
+            calcOpts.Current.AdjustNourish = cbNourishAdjust.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -437,7 +430,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.IgnoreNaturesGrace = cbIgnoreNaturesGrace.Checked;
+            calcOpts.Current.IgnoreNaturesGrace = cbIgnoreNaturesGrace.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -445,7 +438,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
+            calcOpts.Current.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -454,8 +447,8 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.RevitalizePPM = tbRevitalize.Value;
-            lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.RevitalizePPM;
+            calcOpts.Current.RevitalizePPM = tbRevitalize.Value;
+            lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.Current.RevitalizePPM;
             Character.OnCalculationsInvalidated();
         }
 
@@ -481,23 +474,23 @@ namespace Rawr.Tree {
             {
                 if (((string)lbOOMspells.Items[i]).StartsWith("Rejuvenation"))
                 {
-                    calcOpts.ReduceOOMRejuvOrder = i;
+                    calcOpts.Current.ReduceOOMRejuvOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Regrowth"))
                 {
-                    calcOpts.ReduceOOMRegrowthOrder = i;
+                    calcOpts.Current.ReduceOOMRegrowthOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Lifebloom"))
                 {
-                    calcOpts.ReduceOOMLifebloomOrder = i;
+                    calcOpts.Current.ReduceOOMLifebloomOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Nourish"))
                 {
-                    calcOpts.ReduceOOMNourishOrder = i;
+                    calcOpts.Current.ReduceOOMNourishOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Wild Growth"))
                 {
-                    calcOpts.ReduceOOMWildGrowthOrder = i;
+                    calcOpts.Current.ReduceOOMWildGrowthOrder = i;
                 }
             }
 
@@ -518,23 +511,23 @@ namespace Rawr.Tree {
             {
                 if (((string)lbOOMspells.Items[i]).StartsWith("Rejuvenation"))
                 {
-                    calcOpts.ReduceOOMRejuvOrder = i;
+                    calcOpts.Current.ReduceOOMRejuvOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Regrowth"))
                 {
-                    calcOpts.ReduceOOMRegrowthOrder = i;
+                    calcOpts.Current.ReduceOOMRegrowthOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Lifebloom"))
                 {
-                    calcOpts.ReduceOOMLifebloomOrder = i;
+                    calcOpts.Current.ReduceOOMLifebloomOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Nourish"))
                 {
-                    calcOpts.ReduceOOMNourishOrder = i;
+                    calcOpts.Current.ReduceOOMNourishOrder = i;
                 }
                 else if (((string)lbOOMspells.Items[i]).StartsWith("Wild Growth"))
                 {
-                    calcOpts.ReduceOOMWildGrowthOrder = i;
+                    calcOpts.Current.ReduceOOMWildGrowthOrder = i;
                 }
             }
         }
@@ -548,31 +541,31 @@ namespace Rawr.Tree {
             if (((string)lbOOMspells.SelectedItem).StartsWith("Rejuvenation"))
             {
                 tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.ReduceOOMRejuv;
+                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMRejuv;
                 currentSelection = 0;
             }
             else if (((string)lbOOMspells.SelectedItem).StartsWith("Regrowth"))
             {
                 tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.ReduceOOMRegrowth;
+                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMRegrowth;
                 currentSelection = 1;
             }
             else if (((string)lbOOMspells.SelectedItem).StartsWith("Lifebloom"))
             {
                 tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.ReduceOOMLifebloom;
+                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMLifebloom;
                 currentSelection = 2;
             }
             else if (((string)lbOOMspells.SelectedItem).StartsWith("Nourish"))
             {
                 tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.ReduceOOMNourish;
+                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMNourish;
                 currentSelection = 3;
             }
             else if (((string)lbOOMspells.SelectedItem).StartsWith("Wild Growth"))
             {
                 tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.ReduceOOMWildGrowth;
+                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMWildGrowth;
                 currentSelection = 4;
             }
             else
@@ -591,35 +584,35 @@ namespace Rawr.Tree {
             switch (currentSelection)
             {
                 case 0:
-                    calcOpts.ReduceOOMRejuv = tbOOMpercentage.Value;
+                    calcOpts.Current.ReduceOOMRejuv = tbOOMpercentage.Value;
                     newText = "Rejuvenation until " + tbOOMpercentage.Value + "%.";
                     lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
                     lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
                     lbOOMspells.SelectedIndex = index;
                     break;
                 case 1:
-                    calcOpts.ReduceOOMRegrowth = tbOOMpercentage.Value;
+                    calcOpts.Current.ReduceOOMRegrowth = tbOOMpercentage.Value;
                     newText = "Regrowth until " + tbOOMpercentage.Value + "%.";
                     lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
                     lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
                     lbOOMspells.SelectedIndex = index;
                     break;
                 case 2:
-                    calcOpts.ReduceOOMLifebloom = tbOOMpercentage.Value;
+                    calcOpts.Current.ReduceOOMLifebloom = tbOOMpercentage.Value;
                     newText = "Lifebloom until " + tbOOMpercentage.Value + "%.";
                     lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
                     lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
                     lbOOMspells.SelectedIndex = index;
                     break;
                 case 3:
-                    calcOpts.ReduceOOMNourish = tbOOMpercentage.Value;
+                    calcOpts.Current.ReduceOOMNourish = tbOOMpercentage.Value;
                     newText = "Nourish until " + tbOOMpercentage.Value + "%.";
                     lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
                     lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
                     lbOOMspells.SelectedIndex = index;
                     break;
                 case 4:
-                    calcOpts.ReduceOOMWildGrowth = tbOOMpercentage.Value;
+                    calcOpts.Current.ReduceOOMWildGrowth = tbOOMpercentage.Value;
                     newText = "Wild Growth until " + tbOOMpercentage.Value + "%.";
                     lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
                     lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
@@ -628,6 +621,77 @@ namespace Rawr.Tree {
                 default:
                     break;
             } 
+            Character.OnCalculationsInvalidated();
+        }
+
+        private bool isUniqueName(string name)
+        {
+            if (loading) return true;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            foreach (SpellProfile sp in calcOpts.Profiles)
+            {
+                if (sp.Name.Equals(name)) return false;
+            }
+
+            return true;
+        }
+
+        private void btnSpellProfileAdd_Click(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            if (!isUniqueName(calcOpts.Current.Name)) return;
+
+            SpellProfile profile = (SpellProfile)calcOpts.Current.Clone();
+            calcOpts.Profiles.Add(profile);
+
+            cbSpellProfiles.Items.Add(profile);
+            cbSpellProfiles.SelectedItem = profile;
+            btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
+        }
+
+        private void btnSpellProfileDelete_Click(object sender, EventArgs e)
+        {
+            // Delete current selection, confirm button
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            if (cbSpellProfiles.SelectedItem != null)
+            {
+                SpellProfile item = (SpellProfile)cbSpellProfiles.SelectedItem;
+                calcOpts.Profiles.Remove(item);
+                cbSpellProfiles.Items.Remove(item);
+                btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+                btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
+            }
+        }
+
+        private void tbSpellProfileName_TextChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            calcOpts.Current.Name = tbSpellProfileName.Text;
+        }
+
+        private void cbSpellProfiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
+            calcOpts.Current = (SpellProfile)((SpellProfile)cbSpellProfiles.SelectedItem).Clone();
+
+            loading = true;
+            RefreshProfile();
+            loading = false;
+
+            btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
+
             Character.OnCalculationsInvalidated();
         }
 

@@ -39,6 +39,10 @@
             this.lblSurvMulti = new System.Windows.Forms.Label();
             this.tbSurvMulti = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnSpellProfileAdd = new System.Windows.Forms.Button();
+            this.btnSpellProfileDelete = new System.Windows.Forms.Button();
+            this.cbSpellProfiles = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.cbSingleTargetRotation = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tbSustained = new System.Windows.Forms.TrackBar();
@@ -104,20 +108,16 @@
             this.btnOOMup = new System.Windows.Forms.Button();
             this.lbOOMspells = new System.Windows.Forms.ListBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.tbRevitalize = new System.Windows.Forms.TrackBar();
-            this.lblRevitalize = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbInnervate = new System.Windows.Forms.CheckBox();
-            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.trkTimeInFSR = new System.Windows.Forms.TrackBar();
-            this.lblFSR = new System.Windows.Forms.Label();
+            this.tbRevitalize = new System.Windows.Forms.TrackBar();
+            this.label11 = new System.Windows.Forms.Label();
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
+            this.lblRevitalize = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.tbSpellProfileName = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -152,10 +152,8 @@
             this.tabPage5.SuspendLayout();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOOMpercentage)).BeginInit();
-            this.groupBox10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbRevitalize)).BeginInit();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbRevitalize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
@@ -190,7 +188,7 @@
             this.groupBox9.Controls.Add(this.label5);
             this.groupBox9.Controls.Add(this.cbIgnoreAllHasteEffects);
             this.groupBox9.Controls.Add(this.cbIgnoreNaturesGrace);
-            this.groupBox9.Location = new System.Drawing.Point(7, 277);
+            this.groupBox9.Location = new System.Drawing.Point(6, 345);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(275, 153);
             this.groupBox9.TabIndex = 44;
@@ -243,7 +241,7 @@
             // 
             this.groupBox1.Controls.Add(this.lblSurvMulti);
             this.groupBox1.Controls.Add(this.tbSurvMulti);
-            this.groupBox1.Location = new System.Drawing.Point(6, 183);
+            this.groupBox1.Location = new System.Drawing.Point(6, 252);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(276, 87);
             this.groupBox1.TabIndex = 43;
@@ -272,6 +270,11 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.tbSpellProfileName);
+            this.groupBox2.Controls.Add(this.btnSpellProfileAdd);
+            this.groupBox2.Controls.Add(this.btnSpellProfileDelete);
+            this.groupBox2.Controls.Add(this.cbSpellProfiles);
+            this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.cbSingleTargetRotation);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.tbSustained);
@@ -280,10 +283,70 @@
             this.groupBox2.Controls.Add(this.tbSingleTargetMax);
             this.groupBox2.Location = new System.Drawing.Point(6, 6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(276, 171);
+            this.groupBox2.Size = new System.Drawing.Size(276, 240);
             this.groupBox2.TabIndex = 41;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Healing targets";
+            // 
+            // btnSpellProfileAdd
+            // 
+            this.btnSpellProfileAdd.Location = new System.Drawing.Point(193, 204);
+            this.btnSpellProfileAdd.Name = "btnSpellProfileAdd";
+            this.btnSpellProfileAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnSpellProfileAdd.TabIndex = 48;
+            this.btnSpellProfileAdd.Text = "Add";
+            this.btnSpellProfileAdd.UseVisualStyleBackColor = true;
+            this.btnSpellProfileAdd.Click += new System.EventHandler(this.btnSpellProfileAdd_Click);
+            // 
+            // btnSpellProfileDelete
+            // 
+            this.btnSpellProfileDelete.Location = new System.Drawing.Point(193, 177);
+            this.btnSpellProfileDelete.Name = "btnSpellProfileDelete";
+            this.btnSpellProfileDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnSpellProfileDelete.TabIndex = 47;
+            this.btnSpellProfileDelete.Text = "Delete";
+            this.btnSpellProfileDelete.UseVisualStyleBackColor = true;
+            this.btnSpellProfileDelete.Click += new System.EventHandler(this.btnSpellProfileDelete_Click);
+            // 
+            // cbSpellProfiles
+            // 
+            this.cbSpellProfiles.BackColor = System.Drawing.SystemColors.Window;
+            this.cbSpellProfiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSpellProfiles.FormattingEnabled = true;
+            this.cbSpellProfiles.Items.AddRange(new object[] {
+            "Auto",
+            "Auto, force Swiftmend",
+            "Rj + N*",
+            "Rj + Lb + N*",
+            "Rj + Rg + N*",
+            "Rj + Rg + Lb + N*",
+            "Rj + Rg*",
+            "Rj + Lb + Rg*",
+            "Rg*",
+            "Rg N*",
+            "N*",
+            "Rj + N* + Swiftmend",
+            "Rj + Lb + N* + Swiftmend",
+            "Rj + Rg + N* + Swiftmend",
+            "Rj + Rg + Lb + N* + Swiftmend",
+            "Rj + Rg* + Swiftmend",
+            "Rj + Lb + Rg* + Swiftmend",
+            "Rg* + Swiftmend",
+            "Rg N* + Swiftmend"});
+            this.cbSpellProfiles.Location = new System.Drawing.Point(10, 179);
+            this.cbSpellProfiles.Name = "cbSpellProfiles";
+            this.cbSpellProfiles.Size = new System.Drawing.Size(177, 21);
+            this.cbSpellProfiles.TabIndex = 46;
+            this.cbSpellProfiles.SelectedIndexChanged += new System.EventHandler(this.cbSpellProfiles_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(9, 163);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(115, 13);
+            this.label10.TabIndex = 45;
+            this.label10.Text = "Sustained Spell Profile:";
             // 
             // cbSingleTargetRotation
             // 
@@ -295,6 +358,7 @@
             "Auto, force Swiftmend",
             "Rj + N*",
             "Rj + Lb + N*",
+            "Rj + Rg + N*",
             "Rj + Rg + Lb + N*",
             "Rj + Rg*",
             "Rj + Lb + Rg*",
@@ -303,6 +367,7 @@
             "N*",
             "Rj + N* + Swiftmend",
             "Rj + Lb + N* + Swiftmend",
+            "Rj + Rg + N* + Swiftmend",
             "Rj + Rg + Lb + N* + Swiftmend",
             "Rj + Rg* + Swiftmend",
             "Rj + Lb + Rg* + Swiftmend",
@@ -594,7 +659,9 @@
             this.cbLifebloomStackType.Items.AddRange(new object[] {
             "Slow build and bloom",
             "Fast build and bloom",
-            "Rolling no bloom"});
+            "Rolling no bloom",
+            "Slow build 2 stacks and bloom",
+            "Fast build 2 stacks and bloom"});
             this.cbLifebloomStackType.Location = new System.Drawing.Point(6, 145);
             this.cbLifebloomStackType.MaxDropDownItems = 10;
             this.cbLifebloomStackType.Name = "cbLifebloomStackType";
@@ -949,7 +1016,6 @@
             // 
             this.tabPage5.AutoScroll = true;
             this.tabPage5.Controls.Add(this.groupBox11);
-            this.tabPage5.Controls.Add(this.groupBox10);
             this.tabPage5.Controls.Add(this.groupBox3);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
@@ -966,7 +1032,7 @@
             this.groupBox11.Controls.Add(this.btnOOMup);
             this.groupBox11.Controls.Add(this.lbOOMspells);
             this.groupBox11.Controls.Add(this.label12);
-            this.groupBox11.Location = new System.Drawing.Point(4, 369);
+            this.groupBox11.Location = new System.Drawing.Point(3, 249);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(263, 232);
             this.groupBox11.TabIndex = 84;
@@ -1023,62 +1089,17 @@
             this.label12.TabIndex = 0;
             this.label12.Text = resources.GetString("label12.Text");
             // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.label11);
-            this.groupBox10.Controls.Add(this.tbRevitalize);
-            this.groupBox10.Controls.Add(this.lblRevitalize);
-            this.groupBox10.Location = new System.Drawing.Point(3, 215);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(264, 147);
-            this.groupBox10.TabIndex = 83;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Revitalizate";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(5, 84);
-            this.label11.MaximumSize = new System.Drawing.Size(270, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(259, 52);
-            this.label11.TabIndex = 83;
-            this.label11.Text = "Note: use the above slider to estimate the amount of Revitalize procs on you per " +
-                "minute by your spells and spells of others (it procs fully talented at 15% of Re" +
-                "juvenation and Wild Growth ticks)";
-            // 
-            // tbRevitalize
-            // 
-            this.tbRevitalize.BackColor = System.Drawing.SystemColors.Window;
-            this.tbRevitalize.Location = new System.Drawing.Point(4, 36);
-            this.tbRevitalize.Maximum = 100;
-            this.tbRevitalize.Name = "tbRevitalize";
-            this.tbRevitalize.Size = new System.Drawing.Size(254, 45);
-            this.tbRevitalize.TabIndex = 80;
-            this.tbRevitalize.TickFrequency = 5;
-            this.tbRevitalize.Scroll += new System.EventHandler(this.tbRejuvRevitalize_Scroll);
-            // 
-            // lblRevitalize
-            // 
-            this.lblRevitalize.AutoSize = true;
-            this.lblRevitalize.Location = new System.Drawing.Point(4, 20);
-            this.lblRevitalize.Name = "lblRevitalize";
-            this.lblRevitalize.Size = new System.Drawing.Size(137, 13);
-            this.lblRevitalize.TabIndex = 79;
-            this.lblRevitalize.Text = "Revitalize procs per minute:";
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.cbInnervate);
-            this.groupBox3.Controls.Add(this.cmbManaAmt);
-            this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Controls.Add(this.trkTimeInFSR);
-            this.groupBox3.Controls.Add(this.lblFSR);
+            this.groupBox3.Controls.Add(this.tbRevitalize);
+            this.groupBox3.Controls.Add(this.label11);
             this.groupBox3.Controls.Add(this.tkReplenishment);
+            this.groupBox3.Controls.Add(this.lblRevitalize);
             this.groupBox3.Controls.Add(this.lblReplenishment);
             this.groupBox3.Location = new System.Drawing.Point(3, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(264, 203);
+            this.groupBox3.Size = new System.Drawing.Size(264, 237);
             this.groupBox3.TabIndex = 56;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Mana Regeneration";
@@ -1086,7 +1107,7 @@
             // cbInnervate
             // 
             this.cbInnervate.AutoSize = true;
-            this.cbInnervate.Location = new System.Drawing.Point(6, 174);
+            this.cbInnervate.Location = new System.Drawing.Point(6, 208);
             this.cbInnervate.Name = "cbInnervate";
             this.cbInnervate.Size = new System.Drawing.Size(149, 17);
             this.cbInnervate.TabIndex = 56;
@@ -1094,57 +1115,33 @@
             this.cbInnervate.UseVisualStyleBackColor = true;
             this.cbInnervate.CheckedChanged += new System.EventHandler(this.cbInnervate_CheckedChanged);
             // 
-            // cmbManaAmt
+            // tbRevitalize
             // 
-            this.cmbManaAmt.DisplayMember = "2400";
-            this.cmbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbManaAmt.Items.AddRange(new object[] {
-            "(None) 0",
-            "(Major) 1350-2250, Avg 1800",
-            "(Mad) 1650-2750, Avg 2200",
-            "(Super) 1800-3000, Avg 2400",
-            "(Rejuvenation) 2475-4125k, Avg 3125",
-            "(Runic) 4200-4400, Avg 4300"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(85, 19);
-            this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(173, 21);
-            this.cmbManaAmt.TabIndex = 53;
-            this.cmbManaAmt.ValueMember = "2400";
-            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
+            this.tbRevitalize.BackColor = System.Drawing.SystemColors.Window;
+            this.tbRevitalize.Location = new System.Drawing.Point(6, 157);
+            this.tbRevitalize.Maximum = 100;
+            this.tbRevitalize.Name = "tbRevitalize";
+            this.tbRevitalize.Size = new System.Drawing.Size(254, 45);
+            this.tbRevitalize.TabIndex = 80;
+            this.tbRevitalize.TickFrequency = 5;
+            this.tbRevitalize.Scroll += new System.EventHandler(this.tbRejuvRevitalize_Scroll);
             // 
-            // label10
+            // label11
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 22);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(69, 13);
-            this.label10.TabIndex = 54;
-            this.label10.Text = "Mana potion:";
-            // 
-            // trkTimeInFSR
-            // 
-            this.trkTimeInFSR.BackColor = System.Drawing.SystemColors.Window;
-            this.trkTimeInFSR.Location = new System.Drawing.Point(6, 123);
-            this.trkTimeInFSR.Maximum = 100;
-            this.trkTimeInFSR.Name = "trkTimeInFSR";
-            this.trkTimeInFSR.Size = new System.Drawing.Size(252, 45);
-            this.trkTimeInFSR.TabIndex = 39;
-            this.trkTimeInFSR.TickFrequency = 5;
-            this.trkTimeInFSR.Scroll += new System.EventHandler(this.trkTimeInFSR_Scroll);
-            // 
-            // lblFSR
-            // 
-            this.lblFSR.AutoSize = true;
-            this.lblFSR.Location = new System.Drawing.Point(3, 107);
-            this.lblFSR.Name = "lblFSR";
-            this.lblFSR.Size = new System.Drawing.Size(97, 13);
-            this.lblFSR.TabIndex = 40;
-            this.lblFSR.Text = "Time spent in FSR:";
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 82);
+            this.label11.MaximumSize = new System.Drawing.Size(260, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(255, 52);
+            this.label11.TabIndex = 83;
+            this.label11.Text = "Note: use the following slider to estimate the amount of Revitalize procs on you " +
+                "per minute by your spells and spells of others (it procs fully talented at 15% o" +
+                "f Rejuvenation and Wild Growth ticks)";
             // 
             // tkReplenishment
             // 
             this.tkReplenishment.BackColor = System.Drawing.SystemColors.Window;
-            this.tkReplenishment.Location = new System.Drawing.Point(6, 59);
+            this.tkReplenishment.Location = new System.Drawing.Point(6, 34);
             this.tkReplenishment.Maximum = 100;
             this.tkReplenishment.Name = "tkReplenishment";
             this.tkReplenishment.Size = new System.Drawing.Size(252, 45);
@@ -1152,10 +1149,19 @@
             this.tkReplenishment.TickFrequency = 5;
             this.tkReplenishment.Scroll += new System.EventHandler(this.tkReplenishment_Scroll);
             // 
+            // lblRevitalize
+            // 
+            this.lblRevitalize.AutoSize = true;
+            this.lblRevitalize.Location = new System.Drawing.Point(6, 141);
+            this.lblRevitalize.Name = "lblRevitalize";
+            this.lblRevitalize.Size = new System.Drawing.Size(137, 13);
+            this.lblRevitalize.TabIndex = 79;
+            this.lblRevitalize.Text = "Revitalize procs per minute:";
+            // 
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(5, 43);
+            this.lblReplenishment.Location = new System.Drawing.Point(5, 18);
             this.lblReplenishment.Name = "lblReplenishment";
             this.lblReplenishment.Size = new System.Drawing.Size(80, 13);
             this.lblReplenishment.TabIndex = 55;
@@ -1184,6 +1190,14 @@
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbModuleNotes.Size = new System.Drawing.Size(283, 523);
             this.tbModuleNotes.TabIndex = 0;
+            // 
+            // tbSpellProfileName
+            // 
+            this.tbSpellProfileName.Location = new System.Drawing.Point(10, 206);
+            this.tbSpellProfileName.Name = "tbSpellProfileName";
+            this.tbSpellProfileName.Size = new System.Drawing.Size(177, 20);
+            this.tbSpellProfileName.TabIndex = 49;
+            this.tbSpellProfileName.TextChanged += new System.EventHandler(this.tbSpellProfileName_TextChanged);
             // 
             // CalculationOptionsPanelTree
             // 
@@ -1236,12 +1250,9 @@
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOOMpercentage)).EndInit();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbRevitalize)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbRevitalize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
@@ -1265,10 +1276,6 @@
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TrackBar tkReplenishment;
         private System.Windows.Forms.Label lblReplenishment;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.ComboBox cmbManaAmt;
-        private System.Windows.Forms.Label lblFSR;
-        private System.Windows.Forms.TrackBar trkTimeInFSR;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbInnervate;
         private System.Windows.Forms.TrackBar tbSwiftmendPerMin;
@@ -1330,7 +1337,6 @@
         private System.Windows.Forms.CheckBox cbIgnoreAllHasteEffects;
         private System.Windows.Forms.CheckBox cbIgnoreNaturesGrace;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.TrackBar tbRevitalize;
         private System.Windows.Forms.Label lblRevitalize;
         private System.Windows.Forms.Label label11;
@@ -1340,5 +1346,10 @@
         private System.Windows.Forms.Button btnOOMdown;
         private System.Windows.Forms.Button btnOOMup;
         private System.Windows.Forms.ListBox lbOOMspells;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnSpellProfileAdd;
+        private System.Windows.Forms.Button btnSpellProfileDelete;
+        private System.Windows.Forms.ComboBox cbSpellProfiles;
+        private System.Windows.Forms.TextBox tbSpellProfileName;
     }
 }
