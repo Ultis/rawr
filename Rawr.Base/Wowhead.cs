@@ -164,17 +164,17 @@ namespace Rawr
             public bool Container;
             public string Name;
         }
-        private class UnkDropInfo
+        /*private class UnkDropInfo
         {
             public string Boss;
             public string Area;
             public bool Heroic;
             public bool Container;
             public string Name;
-        }
+        }*/
 
         static Dictionary<string, TokenDropInfo> _tokenDropMap = new Dictionary<string, TokenDropInfo>();
-        static Dictionary<string, UnkDropInfo> _UnkDropMap = new Dictionary<string, UnkDropInfo>();
+        //static Dictionary<string, UnkDropInfo> _UnkDropMap = new Dictionary<string, UnkDropInfo>();
         static Dictionary<string, string> _pvpTokenMap = new Dictionary<string, string>();
         static Dictionary<string, string> _vendorTokenMap = new Dictionary<string, string>();
 
@@ -354,6 +354,7 @@ namespace Rawr
 
                 string itemId = item.Id.ToString();
                 if (source == "2" && string.IsNullOrEmpty(sourcemore)) {
+                    #region Didn't work
                     /*// We don't have SourceMore data so let's see if the web page has what we need
                     // If not, call it a World Drop
                     string name = null;
@@ -477,6 +478,7 @@ namespace Rawr
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
                             }
                         }*/
+                    #endregion
                     /*} catch (Exception ex) {
                         Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error getting drop data from wowhead",
                             ex.Message, "GetItem(...)", "", ex.StackTrace);*/
@@ -789,60 +791,47 @@ namespace Rawr
             {
                 htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
                 string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
-                if (line.StartsWith("Equip: "))
-                {
+
+                // Remove Comments
+                while (line.Contains("<!--")) {
+                    int start = line.IndexOf("<!--");
+                    int end = line.IndexOf("-->");
+                    string toRemove = line.Substring(start, end - start + 3);
+                    line = line.Replace(toRemove, "");
+                }
+                // Swap out to real spaces
+                while (line.Contains("nbsp;")) { line = line.Replace("nbsp;", " "); }
+                // Remove the Spell Links
+                // Later we will instead USE the spell links but we aren't set up for that right now
+                while (line.Contains("<a")) {
+                    int start = line.IndexOf("<a");
+                    int end = line.IndexOf(">");
+                    string toRemove = line.Substring(start, end - start + 1);
+                    line = line.Replace(toRemove, "");
+                }
+                while (line.Contains("</a>")) { line = line.Replace("</a>", ""); }
+                // Remove the Small tags, we don't use those
+                while (line.Contains("<small")) {
+                    int start = line.IndexOf("<small>");
+                    int end = line.IndexOf("</small>");
+                    string toRemove = line.Substring(start, end - start + "</small>".Length);
+                    line = line.Replace(toRemove, "");
+                }
+                // Remove double spaces
+                while (line.Contains("  ")) { line = line.Replace("  ", " "); }
+                // Swap out "sec." with "sec" as sometimes they
+                // do and sometimes they don't, regex for both is annoying
+                while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
+
+                // Now Process it
+                if (line.StartsWith("Equip: ")) {
                     string equipLine = line.Substring("Equip: ".Length);
-                    // Remove Comments
-                    while (equipLine.Contains("<!--"))
-                    {
-                        int start = equipLine.IndexOf("<!--");
-                        int end = equipLine.IndexOf("-->");
-                        string toRemove = equipLine.Substring(start, end - start + 3);
-                        equipLine = equipLine.Replace(toRemove, "");
-                    }
-                    if (equipLine.StartsWith("<a"))
-                    {
-                        equipLine = equipLine.Substring(equipLine.IndexOf(">") + 1);
-                        equipLine = equipLine.Substring(0, equipLine.IndexOf("<"));
-                    }
                     equipLines.Add(equipLine);
-                }
-                else if (line.StartsWith("Chance on hit: "))
-                {
+                } else if (line.StartsWith("Chance on hit: ")) {
                     string chanceLine = line.Substring("Chance on hit: ".Length);
-                    // Remove Comments
-                    while (chanceLine.Contains("<!--"))
-                    {
-                        int start = chanceLine.IndexOf("<!--");
-                        int end = chanceLine.IndexOf("-->");
-                        string toRemove = chanceLine.Substring(start, end - start + 3);
-                        chanceLine = chanceLine.Replace(toRemove, "");
-                    }
-                    if (chanceLine.StartsWith("<a"))
-                    {
-                        chanceLine = chanceLine.Substring(chanceLine.IndexOf(">") + 1);
-                        chanceLine = chanceLine.Substring(0, chanceLine.IndexOf("<"));
-                    }
                     equipLines.Add(chanceLine);
-                }
-                else if (line.StartsWith("Use: "))
-                {
+                } else if (line.StartsWith("Use: ")) {
                     string useLine = line.Substring("Use: ".Length);
-                    // Remove Comments
-                    while (useLine.Contains("<!--"))
-                    {
-                        int start = useLine.IndexOf("<!--");
-                        int end = useLine.IndexOf("-->");
-                        string toRemove = useLine.Substring(start, end - start + 3);
-                        useLine = useLine.Replace(toRemove, "");
-                    }
-                    // Remove the Initial Spell Link
-                    if (useLine.StartsWith("<a"))
-                    {
-                        useLine = useLine.Substring(useLine.IndexOf(">") + 1);
-                        useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
-                        if (useLine.IndexOf("</a>") != -1) useLine = useLine.Remove(useLine.IndexOf("</a>"), 4);
-                    }
                     useLines.Add(useLine);
                 }
                 htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
@@ -1440,9 +1429,9 @@ namespace Rawr
 		{
             switch (Rawr.Properties.GeneralSettings.Default.Locale)
             {
-                case "fr":
-                    switch (zoneId)
-                    {
+                #region French Translations
+                case "fr": {
+                    switch (zoneId) {
                         case "65": return "Désolation des dragons";
                         case "66": return "Zul'Drak";
                         case "67": return "Les pics Foudroyés";
@@ -1486,58 +1475,72 @@ namespace Rawr
                         case "4273": return "Ulduar";
                         default: return "Inconnue - " + zoneId;
                     }
-
-                default:
-			switch (zoneId)
-			{
-				case "65": return "Dragonblight";
-				case "66": return "Zul'Drak";
-				case "67": return "The Storm Peaks";
-				case "206": return "Utgarde Keep";
-				case "210": return "Icecrown";
-				case "394": return "Grizzly Hills";
-				case "495": return "Howling Fjord";
-				case "1196": return "Utgarde Pinnacle";
-                case "1584": return "Blackrock Depths";
-				case "2817": return "Crystalsong Forest";
-				case "2917": return "Hall of Legends";
-				case "2918": return "Champion's Hall";
-                case "3456": return "Naxxramas";
-				case "3477": return "Azjol-Nerub";
-				case "3537": return "Borean Tundra";
-				case "3711": return "Sholazar Basin";
-				case "4100": return "CoT: Stratholme";
-				case "4120": return "The Nexus";
-				case "4196": return "Drak'Tharon Keep";
-				case "4197": return "Wintergrasp";
-				case "4228": return "The Oculus";
-				case "4264": return "Halls of Stone";
-				case "4272": return "Halls of Lightning";
-				case "4298": return "The Scarlet Enclave";
-				case "4375": return "Gundrak";
-				case "4395": return "Dalaran";
-				case "4415": return "The Violet Hold";
-				case "4493": return "The Obsidian Sanctum";
-				case "4494": return "Ahn'kahet";
-				case "4500": return "The Eye of Eternity";
-				case "4603": return "Vault of Archavon";
-                case "3520": return "Shadowmoon Valley";
-                case "4075": return "Sunwell Plateau";
-                case "3959": return "Black Temple";
-                case "3606": return "Hyjal Summit";
-                case "3607": return "Serpentshrine Cavern";
-                case "3618": return "Gruul's Lair";
-                case "3836": return "Magtheridon's Lair";
-                case "2562": return "Karazhan";
-                case "3842": return "The Eye";
-                case "3805": return "Zul'Aman";
-                case "4273": return "Ulduar";
-                case "4723": return "Trial of the Champion";
-                case "4722": return "Trial of the Crusader";
-                case "4812": return "Icecrown Citadel";
-                case "4813": return "Pit of Saron";
-                case "4809": return "Halls of Reflection";
-                default: return "Unknown - " + zoneId;
+                }
+                #endregion
+                default: {
+                    switch (zoneId)
+                    {
+                        #region Old World
+                        case "2367": return "Old Hillsbrad Foothills";
+                        case "1519": return "Stormwind City";
+                        case "2677": return "Blackwing Lair";
+                        case "2918": return "Champion's Hall";
+                        case "2159": return "Onyxia's Lair";
+                        #endregion
+                        #region TBC
+                        case "4080": return "Isle of Quel'Danas";
+                        case "3703": return "Shattrath City";
+                        case "3520": return "Shadowmoon Valley";
+                        case "4075": return "Sunwell Plateau";
+                        case "3959": return "Black Temple";
+                        case "3606": return "Hyjal Summit";
+                        case "3607": return "Serpentshrine Cavern";
+                        case "3618": return "Gruul's Lair";
+                        case "3836": return "Magtheridon's Lair";
+                        case "2562": return "Karazhan";
+                        case "3842": return "The Eye";
+                        case "3805": return "Zul'Aman";
+                        #endregion
+                        #region WotLK
+                        case "65": return "Dragonblight";
+                        case "66": return "Zul'Drak";
+                        case "67": return "The Storm Peaks";
+                        case "206": return "Utgarde Keep";
+                        case "210": return "Icecrown";
+                        case "394": return "Grizzly Hills";
+                        case "495": return "Howling Fjord";
+                        case "1196": return "Utgarde Pinnacle";
+                        case "1584": return "Blackrock Depths";
+                        case "2817": return "Crystalsong Forest";
+                        case "2917": return "Hall of Legends";
+                        case "3456": return "Naxxramas";
+                        case "3477": return "Azjol-Nerub";
+                        case "3537": return "Borean Tundra";
+                        case "3711": return "Sholazar Basin";
+                        case "4100": return "The Culling of Stratholme";
+                        case "4120": return "The Nexus";
+                        case "4196": return "Drak'Tharon Keep";
+                        case "4197": return "Wintergrasp";
+                        case "4228": return "The Oculus";
+                        case "4264": return "Halls of Stone";
+                        case "4272": return "Halls of Lightning";
+                        case "4298": return "The Scarlet Enclave";
+                        case "4375": return "Gundrak";
+                        case "4395": return "Dalaran";
+                        case "4415": return "The Violet Hold";
+                        case "4493": return "The Obsidian Sanctum";
+                        case "4494": return "Ahn'kahet: The Old Kingdom";
+                        case "4500": return "The Eye of Eternity";
+                        case "4603": return "Vault of Archavon";
+                        case "4273": return "Ulduar";
+                        case "4723": return "Trial of the Champion";
+                        case "4722": return "Trial of the Crusader";
+                        case "4812": return "Icecrown Citadel";
+                        case "4813": return "Pit of Saron";
+                        case "4820": case "4809": return "Halls of Reflection";
+                        #endregion
+                        default: return "Unknown - " + zoneId;
+                    }
     			}
             }
 		}

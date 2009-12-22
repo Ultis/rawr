@@ -407,24 +407,19 @@ namespace Rawr
 		{
 			_items = new SortedDictionary<int, Item>();
 			List<Item> listItems = new List<Item>();
-			if (File.Exists(ItemCache.SavedFilePath))
-			{
-				try
-				{
+			if (File.Exists(ItemCache.SavedFilePath)) {
+				try {
 					string xml = System.IO.File.ReadAllText(ItemCache.SavedFilePath).Replace("/images/icons/", "");
 					xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>TwoHand</Slot>").Replace("<Slot>Idol</Slot", "<Slot>Ranged</Slot>").Replace("<Slot>Robe</Slot", "<Slot>Chest</Slot>");
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemList));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					listItems = (List<Item>)serializer.Deserialize(reader);
 					reader.Close();
-				}
-				catch (Exception)
-				{
+				} catch (Exception) {
 					Log.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
 				}
 			}
-			foreach (Item item in listItems)
-			{
+			foreach (Item item in listItems) {
 				//item.Stats.ConvertStatsToWotLKEquivalents();
                 //item.Sockets.Stats.ConvertStatsToWotLKEquivalents();
 				//if (item.Type == ItemType.Leather) UpdateArmorFromWowhead(item);

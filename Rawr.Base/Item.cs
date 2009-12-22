@@ -888,10 +888,17 @@ namespace Rawr
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale, string wowheadSite)
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
-            string oldItemStats = cachedItem != null ? cachedItem.ToString().Split(':')[1] : "";
-            ItemLocation[] oldItemLoc = cachedItem != null ? cachedItem.LocationInfo : null;
-            string oldItemSource = cachedItem != null ? (cachedItem.LocationInfo[0].Description
-                + (cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : "")) : "";
+            #if DEBUG
+            string oldItemStats = "";
+            string oldItemSource = "";
+            ItemLocation[] oldItemLoc = null;
+            if (cachedItem != null && forceRefresh){
+                oldItemStats  = cachedItem.ToString().Split(':')[1];
+                oldItemLoc    = cachedItem.LocationInfo;
+                oldItemSource = (cachedItem.LocationInfo[0].Description
+                    + (cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : ""));
+            }
+            #endif
 
             if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
