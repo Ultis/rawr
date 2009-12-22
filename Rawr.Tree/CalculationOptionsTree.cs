@@ -4,12 +4,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 
 namespace Rawr.Tree {
 
-    public class SpellProfile : ICloneable
+    public class SpellProfile
     {
         private string name;
         private int fightDuration; // In seconds
@@ -78,13 +76,12 @@ namespace Rawr.Tree {
 
             revitalizePPM = 80;
         }
-        public object Clone()
+        public SpellProfile Clone()
         {
             // Yes, dirty trick. Works.
             using (Stream objectStream = new MemoryStream())
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(SpellProfile));
-                IFormatter formatter = new BinaryFormatter();
                 serializer.Serialize(objectStream, this);
                 objectStream.Seek(0, SeekOrigin.Begin);
                 return (SpellProfile)serializer.Deserialize(objectStream);
