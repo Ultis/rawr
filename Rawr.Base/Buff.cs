@@ -4396,6 +4396,26 @@ namespace Rawr
             });
             #endregion
             #region Tier 10 | Dark Coven's Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dark Coven's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock2T10 = 0.05f },
+                SetName = "Dark Coven's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dark Coven's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock4T10 = 0.15f },
+                SetName = "Dark Coven's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
+            });
             #endregion
             #region PvP
             #endregion

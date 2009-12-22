@@ -494,6 +494,8 @@ namespace Rawr {
         Warlock4T8,
         Warlock2T9,
         Warlock4T9,
+        Warlock2T10,
+        Warlock4T10,
         #endregion
         #region Added by Rawr.Warrior
         BonusShieldSlamDamage,
@@ -3946,6 +3948,26 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T9]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T9] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased critical strike chance to your Shadowbolt, Incinerate, Soulfire & Corruption spells")]
+        [Category("Warlock")]
+        public float Warlock2T10
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T10]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T10] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% chance for you & your pet to gain 10% increased damage for 10 seconds\r\neach time your Immolate and Unstable Affliction spells deals periodic damage.")]
+        [Category("Warlock")]
+        public float Warlock4T10
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T10]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T10] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
