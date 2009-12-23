@@ -140,6 +140,7 @@ namespace Rawr.Tree {
                 cbSpellProfiles.Items.Add(profile);
             }
             btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            btnSpellProfileLoad.Enabled = cbSpellProfiles.SelectedItem != null;
             btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
 
             RefreshProfile();

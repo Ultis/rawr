@@ -168,7 +168,8 @@ namespace Rawr.Tree {
             
             singleTargetRotation = 0;
 
-            SpellProfile tankHealing = new SpellProfile() {
+            SpellProfile tankHealing = new SpellProfile()
+            {
                 Name = "Tank Healing",
                 FightDuration = 300,
                 Latency = 0,
@@ -182,6 +183,48 @@ namespace Rawr.Tree {
                 LifebloomFrac = 0,
                 NourishFrac = 100,
                 LifebloomStackAmount = 1,
+                LifebloomStackType = 0,
+                RejuvAmount = 1,
+                RegrowthAmount = 1,
+                Nourish1 = 0,
+                Nourish2 = 0,
+                Nourish3 = 100,
+                Nourish4 = 0,
+                AdjustRejuv = false,
+                AdjustRegrowth = true,
+                AdjustLifebloom = true,
+                AdjustNourish = true,
+                ReduceOOMNourish = 100,
+                ReduceOOMRejuv = 0,
+                ReduceOOMRegrowth = 50,
+                ReduceOOMLifebloom = 50,
+                ReduceOOMWildGrowth = 100,
+                ReduceOOMRegrowthOrder = 0,
+                ReduceOOMNourishOrder = 1,
+                ReduceOOMLifebloomOrder = 2,
+                ReduceOOMWildGrowthOrder = 3,
+                ReduceOOMRejuvOrder = 4,
+                IgnoreNaturesGrace = true,
+                IgnoreAllHasteEffects = true,
+                RevitalizePPM = 4,
+                LivingSeedEfficiency = 50
+            };
+
+            SpellProfile tankHealing2 = new SpellProfile()
+            {
+                Name = "Tank Healing (no Lifebloom)",
+                FightDuration = 300,
+                Latency = 0,
+                ReplenishmentUptime = 90,
+                WildGrowthPerMinute = 0,
+                Innervates = 1,
+                SwiftmendPerMinute = 3,
+                IdleCastTimePercent = 0,
+                RejuvFrac = 0,
+                RegrowthFrac = 0,
+                LifebloomFrac = 0,
+                NourishFrac = 100,
+                LifebloomStackAmount = 0,
                 LifebloomStackType = 0,
                 RejuvAmount = 1,
                 RegrowthAmount = 1,
@@ -295,6 +338,7 @@ namespace Rawr.Tree {
 
             profiles = new List<SpellProfile>();
             profiles.Add(tankHealing);
+            profiles.Add(tankHealing2);
             profiles.Add(raidHealing);
             profiles.Add(raidHealing2);
             current = new SpellProfile();
