@@ -75,7 +75,7 @@ namespace Rawr.Tree {
             dictValues.Add("Base Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Base Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Base Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Base Spell Power", (BasicStats.SpellPower).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
+            dictValues.Add("Base Spell Power", (BasicStats.SpellPower).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " from Improved Tree of Life");
             dictValues.Add("Base Spell Crit", BasicStats.SpellCrit.ToString());
 
             float speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating));
@@ -95,7 +95,7 @@ namespace Rawr.Tree {
             dictValues.Add("Stamina", CombatStats.Stamina.ToString());
             dictValues.Add("Intellect", CombatStats.Intellect.ToString());
             dictValues.Add("Spirit", CombatStats.Spirit.ToString());
-            dictValues.Add("Spell Power", (CombatStats.SpellPower).ToString() + "*" + CombatStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
+            dictValues.Add("Spell Power", (CombatStats.SpellPower).ToString() + "*" + CombatStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " from Improved Tree of Life");
             dictValues.Add("Spell Crit", CombatStats.SpellCrit.ToString());
 
             speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(CombatStats.HasteRating));
