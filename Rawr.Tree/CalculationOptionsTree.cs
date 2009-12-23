@@ -23,7 +23,6 @@ namespace Rawr.Tree {
         private int nourish1, nourish2, nourish3, nourish4;
         private int livingSeedEfficiency;
         private bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
-        private bool ignoreNaturesGrace, ignoreAllHasteEffects;
         private int revitalizePPM;
         private int reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom, reduceOOMNourish, reduceOOMWildGrowth;
         private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder, reduceOOMNourishOrder, reduceOOMWildGrowthOrder;
@@ -70,9 +69,6 @@ namespace Rawr.Tree {
             ReduceOOMRegrowthOrder = 2;
             ReduceOOMWildGrowthOrder = 3;
             ReduceOOMRejuvOrder = 4;
-
-            IgnoreNaturesGrace = true;
-            IgnoreAllHasteEffects = true;
 
             revitalizePPM = 5;
         }
@@ -140,9 +136,6 @@ namespace Rawr.Tree {
         public int ReduceOOMNourishOrder { get { return reduceOOMNourishOrder; } set { reduceOOMNourishOrder = value; OnPropertyChanged("ReduceOOMNourishOrder"); } }
         public int ReduceOOMWildGrowthOrder { get { return reduceOOMWildGrowthOrder; } set { reduceOOMWildGrowthOrder = value; OnPropertyChanged("ReduceOOMWildGrowthOrder"); } }
 
-        public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
-        public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }
-
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
         public int RevitalizePPM { get { return revitalizePPM; } set { revitalizePPM = value; OnPropertyChanged("RevitalizePPM"); } }
         
@@ -157,6 +150,7 @@ namespace Rawr.Tree {
         private int sustainedTarget;
         private int survValuePer100; // 100 Survival Points = 1 HPS (Survival Points = Health / (1-ArmorDamage Reduction)
         private int singleTargetRotation;
+        private bool ignoreNaturesGrace, ignoreAllHasteEffects;
         private List<SpellProfile> profiles;
         private SpellProfile current;
 
@@ -204,8 +198,6 @@ namespace Rawr.Tree {
                 ReduceOOMLifebloomOrder = 2,
                 ReduceOOMWildGrowthOrder = 3,
                 ReduceOOMRejuvOrder = 4,
-                IgnoreNaturesGrace = true,
-                IgnoreAllHasteEffects = true,
                 RevitalizePPM = 4,
                 LivingSeedEfficiency = 50
             };
@@ -246,8 +238,6 @@ namespace Rawr.Tree {
                 ReduceOOMLifebloomOrder = 2,
                 ReduceOOMWildGrowthOrder = 3,
                 ReduceOOMRejuvOrder = 4,
-                IgnoreNaturesGrace = true,
-                IgnoreAllHasteEffects = true,
                 RevitalizePPM = 4,
                 LivingSeedEfficiency = 50
             };
@@ -288,8 +278,6 @@ namespace Rawr.Tree {
                 ReduceOOMLifebloomOrder = 2,
                 ReduceOOMWildGrowthOrder = 3,
                 ReduceOOMRejuvOrder = 4,
-                IgnoreNaturesGrace = true,
-                IgnoreAllHasteEffects = true,
                 RevitalizePPM = 7,
                 LivingSeedEfficiency = 50
             };
@@ -330,8 +318,6 @@ namespace Rawr.Tree {
                 ReduceOOMLifebloomOrder = 2,
                 ReduceOOMWildGrowthOrder = 3,
                 ReduceOOMRejuvOrder = 4,
-                IgnoreNaturesGrace = true,
-                IgnoreAllHasteEffects = true,
                 RevitalizePPM = 7,
                 LivingSeedEfficiency = 50
             };
@@ -342,6 +328,10 @@ namespace Rawr.Tree {
             profiles.Add(raidHealing);
             profiles.Add(raidHealing2);
             current = new SpellProfile();
+
+            IgnoreNaturesGrace = true;
+            IgnoreAllHasteEffects = true;
+
         }
         public string GetXml() {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));
@@ -358,6 +348,9 @@ namespace Rawr.Tree {
         public SpellProfile Current { get { return current; } set { current = value; OnPropertyChanged("Current"); } }
 
         public int SingleTargetRotation { get { return singleTargetRotation; } set { singleTargetRotation = value; OnPropertyChanged("SingleTargetRotation"); } }
+        public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
+        public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }
+
 
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }

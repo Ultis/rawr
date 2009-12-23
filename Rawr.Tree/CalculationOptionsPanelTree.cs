@@ -78,8 +78,8 @@ namespace Rawr.Tree {
             tbIdlePercentage.Value = calcOpts.Current.IdleCastTimePercent;
             lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
 
-            cbIgnoreNaturesGrace.Checked = calcOpts.Current.IgnoreNaturesGrace;
-            cbIgnoreAllHasteEffects.Checked = calcOpts.Current.IgnoreAllHasteEffects;
+            cbIgnoreNaturesGrace.Checked = calcOpts.IgnoreNaturesGrace;
+            cbIgnoreAllHasteEffects.Checked = calcOpts.IgnoreAllHasteEffects;
 
             tbRevitalize.Value = calcOpts.Current.RevitalizePPM;
             lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.Current.RevitalizePPM;
@@ -433,7 +433,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.IgnoreNaturesGrace = cbIgnoreNaturesGrace.Checked;
+            calcOpts.IgnoreNaturesGrace = cbIgnoreNaturesGrace.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -441,7 +441,7 @@ namespace Rawr.Tree {
         {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
+            calcOpts.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
             Character.OnCalculationsInvalidated();
         }
 

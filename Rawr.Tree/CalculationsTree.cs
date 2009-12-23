@@ -593,7 +593,7 @@ applied and result is scaled down by 100)",
 
                 ExtraHealing = stats.Healed;
 
-                if (profile.IgnoreAllHasteEffects)
+                if (calcOpts.IgnoreAllHasteEffects)
                 {
                     stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
                     stats.HasteRating = calculationResult.BasicStats.HasteRating;
@@ -648,7 +648,7 @@ applied and result is scaled down by 100)",
                 RevitalizeChance         = talents.Revitalize * 0.05f,
             };
 
-            if (!profile.IgnoreNaturesGrace)
+            if (!calcOpts.IgnoreNaturesGrace)
             {
                 statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, talents.NaturesGrace * 1f / 3f, 1));
             }
