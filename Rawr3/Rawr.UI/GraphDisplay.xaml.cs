@@ -185,16 +185,16 @@ namespace Rawr.UI
             string[] parts = CurrentGraph.Split('|');
             switch (parts[0])
             {
-                case "Gear":                UpgradeGraphGear(parts[1]); break;
-                case "Enchants":            UpgradeGraphEnchants(parts[1]); break;
-                case "Gems":                UpgradeGraphGems(parts[1]); break;
-                case "Buffs":               UpgradeGraphBuffs(parts[1]); break;
-                case "Talents and Glyphs":  UpgradeGraphTalents(parts[1]); break;
-                case "Equipped":            UpgradeGraphEquipped(parts[1]); break;
-                case "Available":           UpgradeGraphAvailable(parts[1]); break;
-                case "Direct Upgrades":     UpgradeGraphDirectUpgrades(parts[1]); break;
-                case "Stat Values":         UpgradeGraphStatValues(parts[1]); break;
-                default:                    UpgradeGraphModelSpecific(parts[1]); break;
+                case "Gear":                UpdateGraphGear(parts[1]); break;
+                case "Enchants":            UpdateGraphEnchants(parts[1]); break;
+                case "Gems":                UpdateGraphGems(parts[1]); break;
+                case "Buffs":               UpdateGraphBuffs(parts[1]); break;
+                case "Talents and Glyphs":  UpdateGraphTalents(parts[1]); break;
+                case "Equipped":            UpdateGraphEquipped(parts[1]); break;
+                case "Available":           UpdateGraphAvailable(parts[1]); break;
+                case "Direct Upgrades":     UpdateGraphDirectUpgrades(parts[1]); break;
+                case "Stat Values":         UpdateGraphStatValues(parts[1]); break;
+                default:                    UpdateGraphModelSpecific(parts[1]); break;
             }
         }
 
@@ -203,7 +203,7 @@ namespace Rawr.UI
 		private AutoResetEvent _autoResetEvent = null;
 		private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
 
-        private void UpgradeGraphGear(string subgraph)
+        private void UpdateGraphGear(string subgraph)
         {
 			_characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
 			bool seenEquippedItem = (Character[_characterSlot] == null);
@@ -241,7 +241,7 @@ namespace Rawr.UI
 		}
         
 
-        private void UpgradeGraphEnchants(string subgraph)
+        private void UpdateGraphEnchants(string subgraph)
         {
             ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1","").Replace(" 2","").Replace(" ", ""), true);
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
@@ -249,7 +249,7 @@ namespace Rawr.UI
             ComparisonGraph.DisplayCalcs(Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
         }
 
-        private void UpgradeGraphGems(string subgraph)
+        private void UpdateGraphGems(string subgraph)
         {
             CharacterSlot cslot = CharacterSlot.Gems;
             ItemSlot islot = ItemSlot.None;
@@ -291,7 +291,7 @@ namespace Rawr.UI
 		}
 
 
-        private void UpgradeGraphBuffs(string subgraph)
+        private void UpdateGraphBuffs(string subgraph)
         {
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
@@ -299,7 +299,7 @@ namespace Rawr.UI
                 Calculations.GetCharacterCalculations(Character), ConvertBuffSelector(subgraph)).ToArray());
         }
 
-        private void UpgradeGraphTalents(string subgraph)
+        private void UpdateGraphTalents(string subgraph)
         {
             if (subgraph == "Individual Talents")
             {
@@ -439,7 +439,7 @@ namespace Rawr.UI
             }
         }
 
-        private void UpgradeGraphEquipped(string subgraph)
+        private void UpdateGraphEquipped(string subgraph)
         {
             if (subgraph == "Gear")
             {
@@ -486,14 +486,19 @@ namespace Rawr.UI
 			}
             else if (subgraph == "Buffs")
             {
-                UpgradeGraphBuffs("Current");
+                UpdateGraphBuffs("Current");
             }
         }
 
-        private void UpgradeGraphAvailable(string subgraph)
+        private void UpdateGraphAvailable(string subgraph)
         {
             if (subgraph == "Gear")
             {
+				foreach (string availableItem in Character.AvailableItems)
+				{
+					availableItem.ToString();
+				}
+
                 ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
                 calc.Name = "Chart Not Yet Implemented";
                 ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
@@ -506,7 +511,7 @@ namespace Rawr.UI
             }
         }
 
-        private void UpgradeGraphDirectUpgrades(string subgraph)
+        private void UpdateGraphDirectUpgrades(string subgraph)
         {
             if (subgraph == "Gear")
             {
@@ -660,7 +665,7 @@ namespace Rawr.UI
             }
         }
 
-        private void UpgradeGraphStatValues(string subgraph)
+        private void UpdateGraphStatValues(string subgraph)
         {
             if (subgraph == "Relative Stat Values")
             {
@@ -670,7 +675,7 @@ namespace Rawr.UI
             }
         }
 
-        private void UpgradeGraphModelSpecific(string subgraph)
+        private void UpdateGraphModelSpecific(string subgraph)
         {
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;

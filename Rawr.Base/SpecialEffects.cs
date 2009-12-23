@@ -511,7 +511,12 @@ namespace Rawr {
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, 1f));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, .7f));
-            }
+			}
+			else if (line.StartsWith("The periodic damage from your Lacerate and Rake abilities grants"))
+			{ //Idol of the Crying Moon
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.LacerateTick, new Stats() { Agility = 44f }, 15f, 0f, 1f, 5));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.RakeTick, new Stats() { Agility = 44f }, 15f, 0f, 1f, 5));
+			}
             #endregion
             else if (line.StartsWith("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant "))
             {
@@ -522,8 +527,8 @@ namespace Rawr {
                 line = line.Substring("200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant ".Length);
                 if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SwipeBearOrLacerateHit, new Stats() { DodgeRating = int.Parse(bearDodge) }, 9f, 0f, .65f));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredHit, new Stats() { Agility = int.Parse(line) }, 16f, 0f, .85f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SwipeBearOrLacerateHit, new Stats() { DodgeRating = int.Parse(bearDodge) }, 9f, 8f, .65f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredHit, new Stats() { Agility = int.Parse(line) }, 16f, 8f, .85f));
             }
             else if (line.StartsWith("Each time a melee attack strikes you, you have a chance to gain "))
             {

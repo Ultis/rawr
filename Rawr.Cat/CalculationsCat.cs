@@ -627,6 +627,7 @@ namespace Rawr.Cat
 			triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
 			triggerIntervals[Trigger.DoTTick] = 1.5f;
 			triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
+			triggerIntervals[Trigger.RakeTick] = 3f + (float)calcOpts.LagVariance / 3000f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
 				triggerIntervals[Trigger.MangleCatHit] = talents.GlyphOfMangle ? 18f : 12f;
 			triggerIntervals[Trigger.MangleCatOrShredHit] = 4f;
@@ -637,6 +638,7 @@ namespace Rawr.Cat
 			triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
 			triggerChances[Trigger.DoTTick] = 1f;
 			triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
+			triggerChances[Trigger.RakeTick] = 1f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
 				triggerChances[Trigger.MangleCatHit] = 1f;
 			triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
@@ -699,7 +701,7 @@ namespace Rawr.Cat
 				List<float> tempCritEffectsValues = new List<float>();
 				foreach (SpecialEffect effect in tempCritEffects)
 				{
-					float totalAgi = (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
+					float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
 					tempCritEffectsValues.Add(effect.Stats.CritRating +
 						StatConversion.GetCritFromAgility(totalAgi, CharacterClass.Druid) * 
 						StatConversion.RATING_PER_PHYSICALCRIT);
@@ -871,7 +873,7 @@ namespace Rawr.Cat
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-					|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit 
+					|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.RakeTick
 					|| effect.Trigger == Trigger.MangleCatOrShredHit)
 				{
 					if (HasRelevantStats(effect.Stats))
@@ -903,7 +905,7 @@ namespace Rawr.Cat
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
+					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.RakeTick
 					|| effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit)
 				{
 					relevant |= HasRelevantStats(effect.Stats);

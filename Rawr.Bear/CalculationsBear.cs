@@ -922,6 +922,9 @@ the Threat Scale defined on the Options tab.",
 					case Trigger.SwipeBearOrLacerateHit:
 						statsProcs += effect.GetAverageStats(2.25f, chanceHit, 2.5f);
 						break;
+					case Trigger.LacerateTick:
+						statsProcs += effect.GetAverageStats(3f, 1f, 2.5f);
+						break;
 					case Trigger.DamageTaken:
 						statsProcs += effect.GetAverageStats(calcOpts.TargetAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
 						break;
@@ -1362,7 +1365,7 @@ the Threat Scale defined on the Options tab.",
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-				|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit
+				|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.LacerateTick
 				|| effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken)
 				{
 					if (HasRelevantStats(effect.Stats))
@@ -1396,7 +1399,7 @@ the Threat Scale defined on the Options tab.",
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
 					|| effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.SwipeBearOrLacerateHit
-					|| effect.Trigger == Trigger.DamageTaken)
+					|| effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.LacerateTick)
 				{
 					relevant |= HasRelevantStats(effect.Stats);
 					if (relevant) break;
