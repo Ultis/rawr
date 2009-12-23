@@ -385,6 +385,7 @@ applied and result is scaled down by 100)",
                     _customChartNames = new string[] {
                         "Single target spell mixes (HPS)",
                         "Single target spell mixes (HPM)",
+                        "Single target spell mixes (MPS)",
                         "Healing per spell (single target)",
 					    "Mana sources (sustained)",
                         "Mana usage per spell (sustained)",
@@ -1545,6 +1546,25 @@ applied and result is scaled down by 100)",
                                 Equipped = false,
                                 OverallPoints = calculationResult.SingleTarget[i].HPM,
                                 SubPoints = new float[] { calculationResult.SingleTarget[i].HPM }
+                            };
+                            comparisonList.Add(spell);
+                        }
+                    }
+                    return comparisonList.ToArray();
+                #endregion
+                #region Single Target spell mixes (MPS)
+                case "Single target spell mixes (MPS)":
+                    {
+                        _subPointNameColors = _subPointNameColorsMPS;
+                        for (int i = 2; i < 19; i++)
+                        {
+
+                            ComparisonCalculationTree spell = new ComparisonCalculationTree()
+                            {
+                                Name = Solver.SingleTargetRotationToText(calculationResult.SingleTarget[i].rotation),
+                                Equipped = false,
+                                OverallPoints = calculationResult.SingleTarget[i].spellMix.MPS,
+                                SubPoints = new float[] { calculationResult.SingleTarget[i].spellMix.MPS }
                             };
                             comparisonList.Add(spell);
                         }
