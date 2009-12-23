@@ -18,22 +18,21 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.3.0
- - Further improvements to parsing and calculations on many of the new trinkets and relics.
- - Lots of improvements and tweaks to the Item Cost handling.
- - Rawr.Tree: Keep bearing with us as we continue with significant Tree changes. Please keep giving feedback on our discussion forums. GotEM should be fixed now, along with many rating calculations updates. Many new or improved options. 
- - Rawr.Enhance: Improved Deathbringer's Will calculations. Removed Glyph of Fire Nova. Fix for Windfury damage applying without using Windfury on MH/OH. Fix for spell-triggered special effect uptime.
- - Rawr.Mage: Updated PvP set bonuses. Fix for bug with heroism on short fights.
- - Rawr.DPSWarrior: Updated PvP set bonuses. Implemented ArPen capping from special effects.
- - Rawr.Elemental: Several minor fixes.
- - Rawr.Cat: Fix for crit capping due to special effects. Accurate modelling of Deathbringer's Will.
- - Rawr.ProtWarr: Fix for expertise from racials.
- - Rawr.Healadin: Support for new Libram. 
- - Rawr.Hunter: Fix for hit optimization, pet talents, and a rare issue with viper uptime. Handling for Zod's Repeating Longbow. Fix for Chimera Shot + Serpent Sting interaction.
- - Rawr.RestoSham: Added/improved support for many more trinkets.
- - Rawr.Moonkin: Fix for calculations of rotations that are mana neutral.
- - Rawr.Rogue: Implemented most 3.3 changes.
- - Rawr.DPSDK: Implemented Deathbringer's Will.";
+			labelVersionHistory.Text = @"v2.3.4.0
+ - More improvements to Wowhead/Armory parsing.
+ - More special effect handling improvements.
+ - Added an ilvl 259-276 filter group.
+ - Added a warning if you have too many/few talent points allocated.
+ - Fix for a couple enchants being missing, or mistagged as requiring a profession.
+ - Rawr.ProtPaladin: Fix for DK rune enchants showing up.
+ - Rawr.Hunter: Improved the UI of the options screen. Fix for DK rune enchants showing up. Fix for armor penetration debuffs applying to pets. Fix for happiness being applied twice to pets.
+ - Rawr.DPSWarr: Fix for crit depression calculations. Displayed crit chance is now locked at your basic crit chance against equal level mobs (ie, should match character screen). Fix for a bug with very low amounts of armor penetration. Fix for DBW trinket calculations.
+ - Rawr.RestoSham: Support for more special effects.
+ - Rawr.Elemental: Updated T9 set bonuses.
+ - Rawr.Tree: Added option to save/load spell profiles, and included several defaults. Added an MPS chart.
+ - Rawr.Warlock: There's still a big updating coming, but it's still not quite ready. We're sorry that it keeps getting dragged out.
+ - Rawr.Cat: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. NOTE: It's currently undervaluing Idol of the Crying Moon; this idol is indeed better than Mutilation for Cats, assuming you can keep the buff up for the fight duration.
+ - Rawr.Bear: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. ";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
