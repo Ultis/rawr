@@ -69,8 +69,11 @@ namespace Rawr
             this.itemsPerSecond = itemsPerSecond;
             this.itemQueue = new Queue<ItemToUpdate>();
 
-            Thread t = new Thread(new ThreadStart(Throttle));
-            t.Start();
+            if (multiThreaded)
+            {
+                Thread t = new Thread(new ThreadStart(Throttle));
+                t.Start();
+            }
         }
 
         private void Throttle()
@@ -143,12 +146,37 @@ namespace Rawr
             if (completelyDone) eventDone.Set();
         }
 
-        public void AddItem(int index, Item i)
+        public void AddItem(int index, Item item)
         {
+            if (!multiThreaded)
+            {
+                Item i = null;
+                try
+                {
+                    if (useArmory)
+                    {
+                        i = Item.LoadFromId(item.Id, true, false, false);
+                    }
+                    else
+                    {
+                        i = Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTR ? "ptr" : "www");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    StatusMessaging.ReportError("Load item", ex, string.Format("Unable to update '{0}' due to an error: {1}\r\n\r\n{2}", item.Name, ex.Message, ex.StackTrace));
+                }
+                if (i != null)
+                {
+                    newItems.Add(index, i);
+                }
+                return;
+            }
+
             ItemToUpdate info = new ItemToUpdate()
             {
                 index = index,
-                item = i
+                item = item
             };
             lock (lockObject)
             {
@@ -167,7 +195,7 @@ namespace Rawr
 
         public void WaitUntilDone()
         {
-            eventDone.WaitOne();
+            if (multiThreaded) eventDone.WaitOne();
         }
     }
 }
