@@ -18,6 +18,8 @@ namespace Rawr.Tree {
         {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
 
+            tbSpellProfileName.Text = calcOpts.Current.Name;
+
             trkFightLength.Value = calcOpts.Current.FightDuration / 5;
             int m = trkFightLength.Value / 12;
             int s = calcOpts.Current.FightDuration - 60 * m;
@@ -642,16 +644,19 @@ namespace Rawr.Tree {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
-            if (!isUniqueName(tbSpellProfileName.Text)) return;
+            if (!isUniqueName(calcOpts.Current.Name))
+            {
+                return;
+            }
 
             SpellProfile profile = (SpellProfile)calcOpts.Current.Clone();
-            profile.Name = tbSpellProfileName.Text;
             calcOpts.Profiles.Add(profile);
 
             cbSpellProfiles.Items.Add(profile);
             cbSpellProfiles.SelectedItem = profile;
             calcOpts.Current = profile;
             btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            btnSpellProfileLoad.Enabled = cbSpellProfiles.SelectedItem != null;
             btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
         }
 
@@ -667,6 +672,7 @@ namespace Rawr.Tree {
                 calcOpts.Profiles.Remove(item);
                 cbSpellProfiles.Items.Remove(item);
                 btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+                btnSpellProfileLoad.Enabled = cbSpellProfiles.SelectedItem != null;
                 btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
             }
         }
@@ -676,7 +682,7 @@ namespace Rawr.Tree {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
-            //calcOpts.Current.Name = ;
+            calcOpts.Current.Name = tbSpellProfileName.Text;
         }
 
         private void cbSpellProfiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -684,14 +690,27 @@ namespace Rawr.Tree {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
+            btnSpellProfileLoad.Enabled = cbSpellProfiles.SelectedItem != null;
+            btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
             btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
-            calcOpts.Current = (SpellProfile)cbSpellProfiles.SelectedItem;
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void btnSpellProfileLoad_Click(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
+            calcOpts.Current = ((SpellProfile)cbSpellProfiles.SelectedItem).Clone();
 
             loading = true;
             RefreshProfile();
             loading = false;
 
-            btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
+            btnSpellProfileAdd.Enabled = false;
+            btnSpellProfileLoad.Enabled = cbSpellProfiles.SelectedItem != null;
             btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
 
             Character.OnCalculationsInvalidated();

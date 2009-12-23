@@ -99,6 +99,8 @@ namespace Rawr.Tree {
         {
             return Name;
         }
+
+        public string Name { get { return name; } set { name = value; OnPropertyChanged("Name"); } }
         public int FightDuration { get { return fightDuration; } set { fightDuration = value; OnPropertyChanged("FightDuration"); } }
         public int Latency { get { return latency; } set { latency = value; OnPropertyChanged("Latency"); } }
         public int ReplenishmentUptime { get { return replenishmentUptime; } set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime" ); } }
@@ -143,7 +145,6 @@ namespace Rawr.Tree {
 
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
         public int RevitalizePPM { get { return revitalizePPM; } set { revitalizePPM = value; OnPropertyChanged("RevitalizePPM"); } }
-        public string Name { get { return name; } set { name = value; OnPropertyChanged("Name"); } }
         
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }
@@ -167,10 +168,136 @@ namespace Rawr.Tree {
             
             singleTargetRotation = 0;
 
-            current = new SpellProfile();
+            SpellProfile tankHealing = new SpellProfile() {
+                Name = "Tank Healing",
+                FightDuration = 300,
+                Latency = 0,
+                ReplenishmentUptime = 90,
+                WildGrowthPerMinute = 0,
+                Innervates = 1,
+                SwiftmendPerMinute = 3,
+                IdleCastTimePercent = 0,
+                RejuvFrac = 0,
+                RegrowthFrac = 0,
+                LifebloomFrac = 0,
+                NourishFrac = 100,
+                LifebloomStackAmount = 1,
+                LifebloomStackType = 0,
+                RejuvAmount = 1,
+                RegrowthAmount = 1,
+                Nourish1 = 0,
+                Nourish2 = 0,
+                Nourish3 = 100,
+                Nourish4 = 0,
+                AdjustRejuv = false,
+                AdjustRegrowth = true,
+                AdjustLifebloom = true,
+                AdjustNourish = true,
+                ReduceOOMNourish = 100,
+                ReduceOOMRejuv = 0,
+                ReduceOOMRegrowth = 50,
+                ReduceOOMLifebloom = 50,
+                ReduceOOMWildGrowth = 100,
+                ReduceOOMRegrowthOrder = 0,
+                ReduceOOMNourishOrder = 1,
+                ReduceOOMLifebloomOrder = 2,
+                ReduceOOMWildGrowthOrder = 3,
+                ReduceOOMRejuvOrder = 4,
+                IgnoreNaturesGrace = true,
+                IgnoreAllHasteEffects = true,
+                RevitalizePPM = 4,
+                LivingSeedEfficiency = 50
+            };
+
+            SpellProfile raidHealing = new SpellProfile()
+            {
+                Name = "Raid Healing (RJ/LB/SM/WG/N)",
+                FightDuration = 300,
+                Latency = 0,
+                ReplenishmentUptime = 90,
+                WildGrowthPerMinute = 8,
+                Innervates = 1,
+                SwiftmendPerMinute = 3,
+                IdleCastTimePercent = 0,
+                RejuvFrac = 60,
+                RegrowthFrac = 0,
+                LifebloomFrac = 20,
+                NourishFrac = 20,
+                LifebloomStackAmount = 0,
+                LifebloomStackType = 0,
+                RejuvAmount = 0,
+                RegrowthAmount = 0,
+                Nourish1 = 70,
+                Nourish2 = 0,
+                Nourish3 = 0,
+                Nourish4 = 0,
+                AdjustRejuv = false,
+                AdjustRegrowth = true,
+                AdjustLifebloom = true,
+                AdjustNourish = true,
+                ReduceOOMNourish = 100,
+                ReduceOOMRejuv = 0,
+                ReduceOOMRegrowth = 100,
+                ReduceOOMLifebloom = 50,
+                ReduceOOMWildGrowth = 50,
+                ReduceOOMRegrowthOrder = 0,
+                ReduceOOMNourishOrder = 1,
+                ReduceOOMLifebloomOrder = 2,
+                ReduceOOMWildGrowthOrder = 3,
+                ReduceOOMRejuvOrder = 4,
+                IgnoreNaturesGrace = true,
+                IgnoreAllHasteEffects = true,
+                RevitalizePPM = 7,
+                LivingSeedEfficiency = 50
+            };
+
+            SpellProfile raidHealing2 = new SpellProfile()
+            {
+                Name = "Raid Healing (only WG/RJ)",
+                FightDuration = 300,
+                Latency = 0,
+                ReplenishmentUptime = 90,
+                WildGrowthPerMinute = 10,
+                Innervates = 1,
+                SwiftmendPerMinute = 0,
+                IdleCastTimePercent = 0,
+                RejuvFrac = 100,
+                RegrowthFrac = 0,
+                LifebloomFrac = 0,
+                NourishFrac = 0,
+                LifebloomStackAmount = 0,
+                LifebloomStackType = 0,
+                RejuvAmount = 0,
+                RegrowthAmount = 0,
+                Nourish1 = 0,
+                Nourish2 = 0,
+                Nourish3 = 0,
+                Nourish4 = 0,
+                AdjustRejuv = false,
+                AdjustRegrowth = true,
+                AdjustLifebloom = true,
+                AdjustNourish = true,
+                ReduceOOMNourish = 100,
+                ReduceOOMRejuv = 100,
+                ReduceOOMRegrowth = 100,
+                ReduceOOMLifebloom = 100,
+                ReduceOOMWildGrowth = 100,
+                ReduceOOMRegrowthOrder = 0,
+                ReduceOOMNourishOrder = 1,
+                ReduceOOMLifebloomOrder = 2,
+                ReduceOOMWildGrowthOrder = 3,
+                ReduceOOMRejuvOrder = 4,
+                IgnoreNaturesGrace = true,
+                IgnoreAllHasteEffects = true,
+                RevitalizePPM = 7,
+                LivingSeedEfficiency = 50
+            };
+
             profiles = new List<SpellProfile>();
-            profiles.Add(current);
-            current.Name = "Default";
+            profiles.Add(tankHealing);
+            profiles.Add(raidHealing);
+            profiles.Add(raidHealing2);
+            current = new SpellProfile();
         }
         public string GetXml() {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));

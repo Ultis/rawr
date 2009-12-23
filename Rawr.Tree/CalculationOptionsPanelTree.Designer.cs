@@ -39,6 +39,7 @@
             this.lblSurvMulti = new System.Windows.Forms.Label();
             this.tbSurvMulti = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tbSpellProfileName = new System.Windows.Forms.TextBox();
             this.btnSpellProfileAdd = new System.Windows.Forms.Button();
             this.btnSpellProfileDelete = new System.Windows.Forms.Button();
             this.cbSpellProfiles = new System.Windows.Forms.ComboBox();
@@ -117,7 +118,7 @@
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.tbSpellProfileName = new System.Windows.Forms.TextBox();
+            this.btnSpellProfileLoad = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -270,6 +271,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnSpellProfileLoad);
             this.groupBox2.Controls.Add(this.tbSpellProfileName);
             this.groupBox2.Controls.Add(this.btnSpellProfileAdd);
             this.groupBox2.Controls.Add(this.btnSpellProfileDelete);
@@ -288,23 +290,31 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Healing targets";
             // 
+            // tbSpellProfileName
+            // 
+            this.tbSpellProfileName.Location = new System.Drawing.Point(10, 206);
+            this.tbSpellProfileName.Name = "tbSpellProfileName";
+            this.tbSpellProfileName.Size = new System.Drawing.Size(211, 20);
+            this.tbSpellProfileName.TabIndex = 49;
+            this.tbSpellProfileName.TextChanged += new System.EventHandler(this.tbSpellProfileName_TextChanged);
+            // 
             // btnSpellProfileAdd
             // 
-            this.btnSpellProfileAdd.Location = new System.Drawing.Point(193, 204);
+            this.btnSpellProfileAdd.Location = new System.Drawing.Point(227, 204);
             this.btnSpellProfileAdd.Name = "btnSpellProfileAdd";
-            this.btnSpellProfileAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnSpellProfileAdd.Size = new System.Drawing.Size(41, 23);
             this.btnSpellProfileAdd.TabIndex = 48;
-            this.btnSpellProfileAdd.Text = "Add";
+            this.btnSpellProfileAdd.Text = "Save";
             this.btnSpellProfileAdd.UseVisualStyleBackColor = true;
             this.btnSpellProfileAdd.Click += new System.EventHandler(this.btnSpellProfileAdd_Click);
             // 
             // btnSpellProfileDelete
             // 
-            this.btnSpellProfileDelete.Location = new System.Drawing.Point(193, 177);
+            this.btnSpellProfileDelete.Location = new System.Drawing.Point(227, 177);
             this.btnSpellProfileDelete.Name = "btnSpellProfileDelete";
-            this.btnSpellProfileDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnSpellProfileDelete.Size = new System.Drawing.Size(41, 23);
             this.btnSpellProfileDelete.TabIndex = 47;
-            this.btnSpellProfileDelete.Text = "Delete";
+            this.btnSpellProfileDelete.Text = "Del";
             this.btnSpellProfileDelete.UseVisualStyleBackColor = true;
             this.btnSpellProfileDelete.Click += new System.EventHandler(this.btnSpellProfileDelete_Click);
             // 
@@ -335,7 +345,7 @@
             "Rg N* + Swiftmend"});
             this.cbSpellProfiles.Location = new System.Drawing.Point(10, 179);
             this.cbSpellProfiles.Name = "cbSpellProfiles";
-            this.cbSpellProfiles.Size = new System.Drawing.Size(177, 21);
+            this.cbSpellProfiles.Size = new System.Drawing.Size(165, 21);
             this.cbSpellProfiles.TabIndex = 46;
             this.cbSpellProfiles.SelectedIndexChanged += new System.EventHandler(this.cbSpellProfiles_SelectedIndexChanged);
             // 
@@ -1191,13 +1201,15 @@
             this.tbModuleNotes.Size = new System.Drawing.Size(283, 523);
             this.tbModuleNotes.TabIndex = 0;
             // 
-            // tbSpellProfileName
+            // btnSpellProfileLoad
             // 
-            this.tbSpellProfileName.Location = new System.Drawing.Point(10, 206);
-            this.tbSpellProfileName.Name = "tbSpellProfileName";
-            this.tbSpellProfileName.Size = new System.Drawing.Size(177, 20);
-            this.tbSpellProfileName.TabIndex = 49;
-            this.tbSpellProfileName.TextChanged += new System.EventHandler(this.tbSpellProfileName_TextChanged);
+            this.btnSpellProfileLoad.Location = new System.Drawing.Point(181, 177);
+            this.btnSpellProfileLoad.Name = "btnSpellProfileLoad";
+            this.btnSpellProfileLoad.Size = new System.Drawing.Size(40, 23);
+            this.btnSpellProfileLoad.TabIndex = 50;
+            this.btnSpellProfileLoad.Text = "Load";
+            this.btnSpellProfileLoad.UseVisualStyleBackColor = true;
+            this.btnSpellProfileLoad.Click += new System.EventHandler(this.btnSpellProfileLoad_Click);
             // 
             // CalculationOptionsPanelTree
             // 
@@ -1351,5 +1363,6 @@
         private System.Windows.Forms.Button btnSpellProfileDelete;
         private System.Windows.Forms.ComboBox cbSpellProfiles;
         private System.Windows.Forms.TextBox tbSpellProfileName;
+        private System.Windows.Forms.Button btnSpellProfileLoad;
     }
 }
