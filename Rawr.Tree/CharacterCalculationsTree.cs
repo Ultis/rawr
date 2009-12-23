@@ -110,8 +110,8 @@ namespace Rawr.Tree {
             dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until soft gcd cap");
 
             dictValues.Add("Total Time", Math.Round(Sustained.TotalTime, 2).ToString());
-            dictValues.Add("Time until OOM", Math.Round(Sustained.TimeToOOM_unreduced, 2).ToString());
-            dictValues.Add("Time until OOM (reduced)", Math.Round(Sustained.TimeToOOM, 2).ToString());
+            dictValues.Add("Time until OOM (unreduced)", Math.Round(Sustained.TimeToOOM_unreduced, 2).ToString());
+            dictValues.Add("Time until OOM", Math.Round(Sustained.TimeToOOM, 2).ToString());
             dictValues.Add("Total healing done", Math.Round(Sustained.TotalTime * SustainedHPS, 2).ToString()); // Has extra component from procs
             dictValues.Add("Sustained HPS", Math.Round(SustainedHPS, 2).ToString());
             dictValues.Add("Single Target HPS", Math.Round(SingleTargetHPS, 2).ToString());
@@ -141,16 +141,16 @@ namespace Rawr.Tree {
             dictValues.Add("RJ HPM", Math.Round(Sustained.spellMix.rejuvenate.HPM, 2).ToString());
             dictValues.Add("RJ HPCT", Math.Round(Sustained.spellMix.rejuvenate.HPCT, 2).ToString());
 
-            dictValues.Add("RG Heal", Math.Round(Sustained.spellMix.regrowth.AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("RG Heal", Sustained.spellMix.regrowth.ToString());
             dictValues.Add("RG Tick", Math.Round(Sustained.spellMix.regrowth.PeriodicTickwithCrit, 2).ToString());
             dictValues.Add("RG HPS", Math.Round(Sustained.spellMix.regrowth.HPS, 2).ToString());
             dictValues.Add("RG HPS (HoT only)", Math.Round(Sustained.spellMix.regrowth.HPS_HOT, 2).ToString());
             dictValues.Add("RG HPM", Math.Round(Sustained.spellMix.regrowth.HPM, 2).ToString());
             dictValues.Add("RG HPCT", Math.Round(Sustained.spellMix.regrowth.HPCT, 2).ToString());
-            dictValues.Add("RG Heal (spam)", Math.Round(Sustained.spellMix.regrowth.AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("RG Heal (spam)", Sustained.spellMix.regrowthAgain.ToString());
             dictValues.Add("RG HPS (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPCT_DH, 2).ToString());
             dictValues.Add("RG HPM (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPM_DH, 2).ToString());
-            dictValues.Add("RG HPCT (spam)", Math.Round(Sustained.spellMix.regrowth.HPCT_DH, 2).ToString());
+            dictValues.Add("RG HPCT (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPCT_DH, 2).ToString());
 
             dictValues.Add("LB Tick", Math.Round(Sustained.spellMix.lifebloom.PeriodicTick, 2).ToString());
             dictValues.Add("LB Bloom Heal", Math.Round(Sustained.spellMix.lifebloom.AverageHealingwithCrit, 2).ToString());
@@ -159,15 +159,15 @@ namespace Rawr.Tree {
             dictValues.Add("LB HPM", Math.Round(Sustained.spellMix.lifebloom.HPM, 2).ToString());
             dictValues.Add("LB HPCT", Math.Round(Sustained.spellMix.lifebloom.HPCT, 2).ToString());
 
-            //dictValues.Add("LBx2 (fast stack) HPS", Math.Round(, 2).ToString());
-            //dictValues.Add("LBx2 (fast stack) HPM", Math.Round(, 2).ToString());
-            //dictValues.Add("LBx2 (fast stack) HPCT", Math.Round(, 2).ToString());
+            dictValues.Add("LBx2 (fast stack) HPS", Math.Round(Sustained.spellMix.lifebloomFast2Stack.HPS, 2).ToString());
+            dictValues.Add("LBx2 (fast stack) HPM", Math.Round(Sustained.spellMix.lifebloomFast2Stack.HPM, 2).ToString());
+            dictValues.Add("LBx2 (fast stack) HPCT", Math.Round(Sustained.spellMix.lifebloomFast2Stack.HPCT, 2).ToString());
             dictValues.Add("LBx3 (fast stack) HPS", Math.Round(Sustained.spellMix.lifebloomFastStack.HPS, 2).ToString());
             dictValues.Add("LBx3 (fast stack) HPM", Math.Round(Sustained.spellMix.lifebloomFastStack.HPM, 2).ToString());
             dictValues.Add("LBx3 (fast stack) HPCT", Math.Round(Sustained.spellMix.lifebloomFastStack.HPCT, 2).ToString());
-            //dictValues.Add("LBx2 (slow stack) HPS", Math.Round(, 2).ToString());
-            //dictValues.Add("LBx2 (slow stack) HPM", Math.Round(, 2).ToString());
-            //dictValues.Add("LBx2 (slow stack) HPCT", Math.Round(, 2).ToString());
+            dictValues.Add("LBx2 (slow stack) HPS", Math.Round(Sustained.spellMix.lifebloomSlow2Stack.HPS, 2).ToString());
+            dictValues.Add("LBx2 (slow stack) HPM", Math.Round(Sustained.spellMix.lifebloomSlow2Stack.HPM, 2).ToString());
+            dictValues.Add("LBx2 (slow stack) HPCT", Math.Round(Sustained.spellMix.lifebloomSlow2Stack.HPCT, 2).ToString());
             dictValues.Add("LBx3 (slow stack) HPS", Math.Round(Sustained.spellMix.lifebloomSlowStack.HPS, 2).ToString());
             dictValues.Add("LBx3 (slow stack) HPM", Math.Round(Sustained.spellMix.lifebloomSlowStack.HPM, 2).ToString());
             dictValues.Add("LBx3 (slow stack) HPCT", Math.Round(Sustained.spellMix.lifebloomSlowStack.HPCT, 2).ToString());
@@ -176,7 +176,7 @@ namespace Rawr.Tree {
             dictValues.Add("LBx3 (rolling) HPM", Math.Round(Sustained.spellMix.lifebloomRollingStack.HPM, 2).ToString());
             dictValues.Add("LBx3 (rolling) HPCT", Math.Round(Sustained.spellMix.lifebloomRollingStack.HPCT, 2).ToString());
 
-            dictValues.Add("HT Heal", Math.Round(Sustained.spellMix.healingTouch.AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("HT Heal", Sustained.spellMix.healingTouch.ToString());
             dictValues.Add("HT HPS", Math.Round(Sustained.spellMix.healingTouch.HPCT_DH, 2).ToString());
             dictValues.Add("HT HPM", Math.Round(Sustained.spellMix.healingTouch.HPM_DH, 2).ToString());
             dictValues.Add("HT HPCT", Math.Round(Sustained.spellMix.healingTouch.HPCT_DH, 2).ToString());
@@ -187,37 +187,37 @@ namespace Rawr.Tree {
             dictValues.Add("WG HPS(max)", Math.Round(Sustained.spellMix.wildGrowth.HPS * Sustained.spellMix.wildGrowth.maxTargets, 2).ToString());
             dictValues.Add("WG HPM(max)", Math.Round(Sustained.spellMix.wildGrowth.HPM * Sustained.spellMix.wildGrowth.maxTargets, 2).ToString());
 
-            dictValues.Add("N Heal", Math.Round(Sustained.spellMix.nourish[0].AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("N Heal",Sustained.spellMix.nourish[0].ToString());
             dictValues.Add("N HPM", Math.Round(Sustained.spellMix.nourish[0].HPM_DH, 2).ToString());
             dictValues.Add("N HPS", Math.Round(Sustained.spellMix.nourish[0].HPCT_DH, 2).ToString());
             dictValues.Add("N HPCT", Math.Round(Sustained.spellMix.nourish[0].HPCT_DH, 2).ToString());
-            dictValues.Add("N (1 HoT) Heal", Math.Round(Sustained.spellMix.nourish[1].AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("N (1 HoT) Heal", Sustained.spellMix.nourish[1].ToString());
             dictValues.Add("N (1 HoT) HPM", Math.Round(Sustained.spellMix.nourish[1].HPM_DH, 2).ToString());
             dictValues.Add("N (1 HoT) HPS", Math.Round(Sustained.spellMix.nourish[1].HPCT_DH, 2).ToString());
             dictValues.Add("N (1 HoT) HPCT", Math.Round(Sustained.spellMix.nourish[1].HPCT_DH, 2).ToString());
-            dictValues.Add("N (2 HoTs) Heal", Math.Round(Sustained.spellMix.nourish[2].AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("N (2 HoTs) Heal", Sustained.spellMix.nourish[2].ToString());
             dictValues.Add("N (2 HoTs) HPM", Math.Round(Sustained.spellMix.nourish[2].HPM_DH, 2).ToString());
             dictValues.Add("N (2 HoTs) HPS", Math.Round(Sustained.spellMix.nourish[2].HPCT_DH, 2).ToString());
             dictValues.Add("N (2 HoTs) HPCT", Math.Round(Sustained.spellMix.nourish[2].HPCT_DH, 2).ToString());
-            dictValues.Add("N (3 HoTs) Heal", Math.Round(Sustained.spellMix.nourish[3].AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("N (3 HoTs) Heal", Sustained.spellMix.nourish[3].ToString());
             dictValues.Add("N (3 HoTs) HPM", Math.Round(Sustained.spellMix.nourish[3].HPM_DH, 2).ToString());
             dictValues.Add("N (3 HoTs) HPS", Math.Round(Sustained.spellMix.nourish[3].HPCT_DH, 2).ToString());
             dictValues.Add("N (3 HoTs) HPCT", Math.Round(Sustained.spellMix.nourish[3].HPCT_DH, 2).ToString());
-            dictValues.Add("N (4 HoTs) Heal", Math.Round(Sustained.spellMix.nourish[4].AverageHealingwithCrit, 2).ToString());
+            dictValues.Add("N (4 HoTs) Heal", Sustained.spellMix.nourish[4].ToString());
             dictValues.Add("N (4 HoTs) HPM", Math.Round(Sustained.spellMix.nourish[4].HPM_DH, 2).ToString());
             dictValues.Add("N (4 HoTs) HPS", Math.Round(Sustained.spellMix.nourish[4].HPCT_DH, 2).ToString());
             dictValues.Add("N (4 HoTs) HPCT", Math.Round(Sustained.spellMix.nourish[4].HPCT_DH, 2).ToString());
 
             Swiftmend swift = new Swiftmend(LocalCharacter, CombatStats, new Rejuvenation(LocalCharacter, CombatStats), null);
-            dictValues.Add("SM Rejuv Heal", Math.Round(swift.AverageHealing, 2) + "*" + Math.Round(swift.MinHeal, 2) + " - " + Math.Round(swift.MaxHeal, 2) + "\n" + Math.Round(swift.MinHeal * 1.5f, 2) + " - " + Math.Round(swift.MaxHeal * 1.5f, 2) + "\n" + Math.Round(swift.CritPercent, 2) + "% Crit");
+            dictValues.Add("SM Rejuv Heal", swift.ToString());
             dictValues.Add("SM Rejuv HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
             swift = new Swiftmend(LocalCharacter, BasicStats, null, new Regrowth(LocalCharacter, BasicStats));
-            dictValues.Add("SM Regrowth Heal", Math.Round(swift.AverageHealing, 2) + "*" + Math.Round(swift.MinHeal, 2) + " - " + Math.Round(swift.MaxHeal, 2) + "\n" + Math.Round(swift.MinHeal * 1.5f, 2) + " - " + Math.Round(swift.MaxHeal * 1.5f, 2) + "\n" + Math.Round(swift.CritPercent, 2) + "% Crit");
+            dictValues.Add("SM Regrowth Heal", swift.ToString());
             dictValues.Add("SM Regrowth HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Regrowth Lost Ticks", Math.Round(swift.regrowthTicksLost, 2).ToString());
             swift = new Swiftmend(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, BasicStats), new Regrowth(LocalCharacter, BasicStats));
-            dictValues.Add("SM Both Heal", Math.Round(swift.AverageHealing, 2) + "*" + Math.Round(swift.MinHeal, 2) + " - " + Math.Round(swift.MaxHeal, 2) + "\n" + Math.Round(swift.MinHeal * 1.5f, 2) + " - " + Math.Round(swift.MaxHeal * 1.5f, 2) + "\n" + Math.Round(swift.CritPercent, 2) + "% Crit");
+            dictValues.Add("SM Both Heal", swift.ToString());
             dictValues.Add("SM Both HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Both Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
             dictValues.Add("SM Both Regrowth Lost Ticks", Math.Round(swift.regrowthTicksLost, 2).ToString());

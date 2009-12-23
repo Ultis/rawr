@@ -431,7 +431,7 @@ namespace Rawr.Tree
 
     public class SustainedResult
     {
-        public SustainedResult(CharacterCalculationsTree calculatedStats, Stats stats, float latency)
+        public SustainedResult(CharacterCalculationsTree calculatedStats, Stats stats, float fightLength, float latency)
         {
             spellMix = new SpellMix(calculatedStats.LocalCharacter, stats, latency);
 
@@ -441,7 +441,7 @@ namespace Rawr.Tree
             Mana = stats.Mana;
             GearMPS = stats.Mp5 / 5f;
             SpiritInCombatFraction = stats.SpellCombatManaRegeneration;
-            ProcsMPS = stats.ManaRestore;
+            ProcsMPS = stats.ManaRestore / fightLength;
             #endregion
         }
 
@@ -599,7 +599,9 @@ namespace Rawr.Tree
     {
         public static SustainedResult SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, RotationSettings rotSettings)
         {
-            SustainedResult rot = new SustainedResult(calculatedStats, stats, rotSettings.latency);
+            SpellProfile profile = calcOpts.Current;
+
+            SustainedResult rot = new SustainedResult(calculatedStats, stats, profile.FightDuration, rotSettings.latency);
 
             #region Setup spell mix
             rot.spellMix.LifebloomStackType = rotSettings.lifeBloomType;
@@ -616,8 +618,6 @@ namespace Rawr.Tree
             rot.spellMix.CalculateNourishHPS(rotSettings.nourish0, rotSettings.nourish1,
                 rotSettings.nourish2, rotSettings.nourish3, rotSettings.nourish4);
             #endregion
-
-            SpellProfile profile = calcOpts.Current;
 
             rot.rotSettings = rotSettings;
 

@@ -262,10 +262,9 @@ applied and result is scaled down by 100)",
                         "Combat Stats:Spell Haste",
                         "Combat Stats:Global CD",
 
-
                         "Model:Total Time",
+                        "Model:Time until OOM (unreduced)",
                         "Model:Time until OOM",
-                        "Model:Time until OOM (reduced)",
                         "Model:Total healing done",
                         "Model:Sustained HPS",
                         "Model:Single Target HPS",

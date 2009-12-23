@@ -115,6 +115,11 @@ namespace Rawr.Tree {
             periodicTickTime = periodicTickTimeBeforeHaste / speed;
         }
 
+        public override string ToString()
+        {
+            return ""+Math.Round(AverageHealingwithCrit, 0) + "*" + Math.Round(MinHeal, 0) + " - " + Math.Round(MaxHeal, 0) + " normal\n" + Math.Round(MinHeal * CritModifier, 0) + " - " + Math.Round(MaxHeal * CritModifier, 0) + " crit\n" + Math.Round(CritPercent, 2) + "% crit chance\n" + (PeriodicTick>0?Math.Round(PeriodicTick, 0)+" every "+Math.Round(PeriodicTickTime, 2)+" s.":"");
+        }
+
     }
     public class HealingTouch : Spell {
         protected float manaCostModifier = 1f;
@@ -378,7 +383,6 @@ namespace Rawr.Tree {
         protected float stackSize = 1.0f;
         protected float manaRefund = 0.0f;
         private float manaCostModifier = 1f;
-        private float extraTicks = 0f;
         public override float PeriodicTick { get { return stackScaling * (periodicTick + (idolHoTBonus + spellPower) * coefHoT); } }
         public override float AverageHealing {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + spellPower * coefDH); } }
         public override float ManaCost {get { return (base.ManaCost - stackSize * manaRefund); }/*set { manaCost = value; }*/}
@@ -527,7 +531,9 @@ namespace Rawr.Tree {
         public int maxTargets;
         private float manaCostModifier = 1f;
         private float periodickTickModifier = 1f;
+        private float[] baseTick = new float[7];
         private float[] tick = new float[7];
+        public float[] BaseTick { get { return tick; } }
         public float[] Tick { get { return tick; } }
         public WildGrowth(Character character, Stats stats)
         {
@@ -558,8 +564,9 @@ namespace Rawr.Tree {
             float healing = 0f;
             for (int i = 0; i < 7; i++)
             {
-                tick[i] = 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
-                healing += 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
+                baseTick[i] = 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
+                tick[i] = baseTick[i] + coefHoT * spellPower;
+                healing += baseTick[i];
             }
             periodicTick = healing / 7;
             #endregion
