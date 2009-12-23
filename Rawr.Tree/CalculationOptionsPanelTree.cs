@@ -103,7 +103,7 @@ namespace Rawr.Tree {
                 }
                 else if (calcOpts.Current.ReduceOOMWildGrowthOrder == i)
                 {
-                    lbOOMspells.Items.Add("WildGrowth until " + calcOpts.Current.ReduceOOMWildGrowth + "%.");
+                    lbOOMspells.Items.Add("Wild Growth until " + calcOpts.Current.ReduceOOMWildGrowth + "%.");
                 }
             }
 
@@ -649,6 +649,7 @@ namespace Rawr.Tree {
 
             cbSpellProfiles.Items.Add(profile);
             cbSpellProfiles.SelectedItem = profile;
+            calcOpts.Current = profile;
             btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
             btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
         }
@@ -683,7 +684,7 @@ namespace Rawr.Tree {
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
             btnSpellProfileDelete.Enabled = cbSpellProfiles.SelectedItem != null;
-            calcOpts.Current = (SpellProfile)((SpellProfile)cbSpellProfiles.SelectedItem).Clone();
+            calcOpts.Current = (SpellProfile)cbSpellProfiles.SelectedItem;
 
             loading = true;
             RefreshProfile();

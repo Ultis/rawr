@@ -32,14 +32,14 @@ namespace Rawr.Tree {
         {
             name = "Custom";
 
-            FightDuration = 240; // 4 Minutes
-            Latency = 100; // milliseconds
-            ReplenishmentUptime = 90;
+            FightDuration = 300; // 5 Minutes
+            Latency = 0; // milliseconds
+            ReplenishmentUptime = 80;
             Innervates = 1;
 
             IdleCastTimePercent = 0;
 
-            RejuvFrac = 40;
+            RejuvFrac = 50;
             RegrowthFrac = 0;
             LifebloomFrac = 10;
             NourishFrac = 40;
@@ -47,13 +47,13 @@ namespace Rawr.Tree {
             RejuvAmount = 0;
             RegrowthAmount = 0;
             LifebloomStackType = 2;
-            Nourish1 = 40;
-            Nourish2 = 20;
+            Nourish1 = 60;
+            Nourish2 = 10;
             Nourish3 = 0;
             Nourish4 = 0;
-            WildGrowthPerMinute = 2;
+            WildGrowthPerMinute = 4;
             SwiftmendPerMinute = 2;
-            LivingSeedEfficiency = 50;
+            LivingSeedEfficiency = 40;
             AdjustRejuv = true;
             AdjustRegrowth = true;
             AdjustLifebloom = true;
@@ -61,7 +61,7 @@ namespace Rawr.Tree {
 
             ReduceOOMRejuv = 40;
             ReduceOOMNourish = 80;
-            ReduceOOMLifebloom = 50;
+            ReduceOOMLifebloom = 100;
             ReduceOOMRegrowth = 100;
             ReduceOOMWildGrowth = 40;
 
@@ -74,7 +74,7 @@ namespace Rawr.Tree {
             IgnoreNaturesGrace = true;
             IgnoreAllHasteEffects = true;
 
-            revitalizePPM = 80;
+            revitalizePPM = 5;
         }
         public SpellProfile Clone()
         {
@@ -169,7 +169,8 @@ namespace Rawr.Tree {
 
             current = new SpellProfile();
             profiles = new List<SpellProfile>();
-            profiles.Add(new SpellProfile());
+            profiles.Add(current);
+            current.Name = "Default";
         }
         public string GetXml() {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));
