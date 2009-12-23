@@ -642,9 +642,10 @@ namespace Rawr.Tree {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
 
-            if (!isUniqueName(calcOpts.Current.Name)) return;
+            if (!isUniqueName(tbSpellProfileName.Text)) return;
 
             SpellProfile profile = (SpellProfile)calcOpts.Current.Clone();
+            profile.Name = tbSpellProfileName.Text;
             calcOpts.Profiles.Add(profile);
 
             cbSpellProfiles.Items.Add(profile);
@@ -675,7 +676,7 @@ namespace Rawr.Tree {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             btnSpellProfileAdd.Enabled = tbSpellProfileName.Text.Length > 0 && isUniqueName(tbSpellProfileName.Text);
-            calcOpts.Current.Name = tbSpellProfileName.Text;
+            //calcOpts.Current.Name = ;
         }
 
         private void cbSpellProfiles_SelectedIndexChanged(object sender, EventArgs e)
