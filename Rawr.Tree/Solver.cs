@@ -644,6 +644,7 @@ namespace Rawr.Tree
             rot.NourishCF_unreduced = rot.spellMix.NourishCF;
             rot.WildGrowthCF_unreduced = rot.spellMix.WildGrowthCF;
             rot.SwiftmendCF_unreduced = rot.spellMix.SwiftmendCF;
+            rot.LifebloomStackCF_unreduced = rot.spellMix.LifebloomStackCF;
 
             // Priority:
             // 1. Maintained Hots
