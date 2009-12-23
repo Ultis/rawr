@@ -41,20 +41,19 @@ namespace Rawr.Retribution
             string path = SaveFilePath();
             if (File.Exists(path))
             {
-                using (TextReader reader = new StreamReader(path, Encoding.UTF8))
+                try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
-#if !DEBUG
-                    try
+                    using (TextReader reader = new StreamReader(path, Encoding.UTF8))
                     {
-#endif
+                        XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
                         sols = (SerializableDictionary<RotationParameters, RotationSolution>)serializer.Deserialize(reader);
-#if !DEBUG
                     }
-                    catch (InvalidOperationException e)
-                    {
-                        MessageBox.Show(":(");
-                    }
+
+                }
+                catch (Exception)
+                {
+#if DEBUG
+                    MessageBox.Show(":(");
 #endif
                 }
             }
@@ -70,15 +69,15 @@ namespace Rawr.Retribution
 #else
             lock (sols)
             {
-                using (TextWriter writer = new StreamWriter(SaveFilePath(), false, Encoding.UTF8))
+                try
                 {
-                    try
+                    using (TextWriter writer = new StreamWriter(SaveFilePath(), false, Encoding.UTF8))
                     {
                         XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
                         serializer.Serialize(writer, sols);
                     }
-                    catch (InvalidOperationException) { }
                 }
+                catch (Exception) { }
             }
 #endif
         }
@@ -94,7 +93,7 @@ namespace Rawr.Retribution
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = rot.T10_Speed > 0 ? 2000000 : 10000;
+            sol.FightLength = 2000000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
 
@@ -111,7 +110,7 @@ namespace Rawr.Retribution
 
             bool gcdUsed;
             float minNext, tryUse, timeElapsed = 0;
-            //Random rand = new Random(6021987);
+            Random rand = new Random(6021987);
 
             while (currentTime < sol.FightLength)
             {
@@ -124,13 +123,6 @@ namespace Rawr.Retribution
                         timeElapsed = tryUse - currentTime;
                         currentTime = tryUse;
                         gcdUsed = true;
-						//if (rot.T10_Speed > 0)
-						//{
-						//    if (ability == Ability.CrusaderStrike || ability == Ability.Judgement)
-						//    { //Seriously? You thought it'd be OK to use a Random? /facepalm
-						//        if (rand.NextDouble() < 0.4) abilities[(int)Ability.DivineStorm].ResetCD();
-						//    }
-						//}
                         break;
                     }
                 }
@@ -144,10 +136,10 @@ namespace Rawr.Retribution
                     timeElapsed = minNext - currentTime;
                     currentTime = minNext;
                 }
-                //if (rot.T10_Speed > 0)
-                //{
-                //    if (rand.NextDouble() < (0.4 * timeElapsed / rot.T10_Speed)) abilities[(int)Ability.DivineStorm].ResetCD();
-                //}
+                if (rot.T10_Speed > 0)
+                {
+                    if (rand.NextDouble() < (0.4 * timeElapsed / rot.T10_Speed)) abilities[(int)Ability.DivineStorm].ResetCD();
+                }
             }
 
             sol.Judgement = abilities[(int)Ability.Judgement].Uses;
