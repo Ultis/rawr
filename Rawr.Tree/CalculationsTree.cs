@@ -586,6 +586,7 @@ applied and result is scaled down by 100)",
             for (k = 0; k < nPasses; k++) {
                 // Create new stats instance with procs
                 stats = GetCharacterStats(character, additionalItem);
+                stats.ManaRestore /= profile.FightDuration;
                 HandleSpecialEffects(character, stats,
                     rot.TotalTime, 60f / rot.TotalCastsPerMinute,
                     60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
