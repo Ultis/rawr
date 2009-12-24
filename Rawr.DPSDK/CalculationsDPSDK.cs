@@ -443,13 +443,19 @@ namespace Rawr.DPSDK
                 #endregion
 
                 #region Cinderglacier
-                {
-                    float shadowFrostAbilitiesPerSecond = ((temp.DeathCoil + temp.FrostStrike +
+                {                    
+                    if (stats.CinderglacierProc > 0f && combatTable.MH != null)
+                    {
+                        float shadowFrostAbilitiesPerSecond = ((temp.DeathCoil + temp.FrostStrike +
                             temp.ScourgeStrike + temp.IcyTouch + temp.HowlingBlast) /
                             combatTable.realDuration);
+                        float CGPercentChance = 1.5f / (60f / combatTable.MH.baseSpeed);
+                        float CGPPM = ((60f / combatTable.MH.hastedSpeed) * CGPercentChance) * 1f - combatTable.totalMHMiss; // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
+                        CGPPM += (1.5f / (60f / combatTable.MH.baseSpeed)) * ((combatTable.totalMeleeAbilities * (1f - combatTable.missedSpecial) + combatTable.totalSpellAbilities * (1f - combatTable.spellResist)) * 60f / combatTable.realDuration);
+                        float ProcsPerAbility = CGPPM / (shadowFrostAbilitiesPerSecond * 60f);
+                        CinderglacierMultiplier = 1f + 2f * 0.2f * (ProcsPerAbility);
 
-                    CinderglacierMultiplier *= 1f + (0.2f / (shadowFrostAbilitiesPerSecond / stats.CinderglacierProc));
-
+                    }
                 }
                 #endregion
 
@@ -561,10 +567,10 @@ namespace Rawr.DPSDK
                     {
                         float PSCD = combatTable.realDuration / temp.PlagueStrike;
                         float PSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) *
-                                        combatTable.normalizationFactor)) * 0.5f + 189f;
+                                        combatTable.normalizationFactor) + 378f) * 0.5f;
                         float PSDmgOH = 0f;
                         if (DW) PSDmgOH = (combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-                                        combatTable.normalizationFactor)) * 0.5f + 189f;
+                                        combatTable.normalizationFactor) + 378f) * 0.5f;
                         PSDmgOH *= (talents.ThreatOfThassarian * 0.333333333f);
                         PSDmgOH *= OHMult;
                         dpsPlagueStrike = (PSDmg + PSDmgOH) / PSCD;
@@ -750,14 +756,14 @@ namespace Rawr.DPSDK
                     if (talents.FrostStrike > 0 && temp.FrostStrike > 0f)
                     {
                         float addedCritFromKM = KMProcsPerRotation;
-                        float FSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) *
-                                combatTable.normalizationFactor)) * .55f +
-                                110.55f + stats.BonusFrostStrikeDamage;
+                        float FSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) *
+                                combatTable.normalizationFactor))  +
+                                250f) * 0.55f + stats.BonusFrostStrikeDamage;
 
 
                         float FSDmgOH = 0f;
                         if (DW) FSDmgOH = (((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-                                combatTable.normalizationFactor)) * 0.55f + 110.55f) * 0.5f) + stats.BonusFrostStrikeDamage;
+                                combatTable.normalizationFactor)) + 250f) * 0.55f * 0.5f) + stats.BonusFrostStrikeDamage;
                         FSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
                         FSDmgOH *= (talents.ThreatOfThassarian * 0.33333333f);
 
@@ -837,23 +843,22 @@ namespace Rawr.DPSDK
                 #endregion
 
 
-
                 #region Obliterate
                 {
                     if (temp.Obliterate > 0f)
                     {
                         float OblitCD = combatTable.realDuration / temp.Obliterate;
-                        float OblitDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-                            0.8f) + stats.BonusObliterateDamage + 467.2f;
+                        float OblitDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor) + 584f) *
+                            0.8f) + stats.BonusObliterateDamage;
 
                         float OblitDmgOH = 0f;
-                        if (DW) OblitDmgOH = ((((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-                            0.8f) + 467.2f) * 0.5f) + stats.BonusObliterateDamage;
+                        if (DW) OblitDmgOH = ((((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor) + 584f) *
+                            0.8f)) * 0.5f) + stats.BonusObliterateDamage;
                         OblitDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
                         OblitDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.33333333333f*/));
 
                         dpsObliterate = (OblitDmg + OblitDmgOH) / OblitCD;
-                        dpsObliterate *= 1f + 0.125f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
+                        dpsObliterate *= 1f + (talents.GlyphofObliterate ? 0.1f : 0.125f) * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                         float OblitCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
                         float OblitCrit = 1f + ((combatTable.physCrits +
                             (0.03f * (float)talents.Subversion) +
@@ -871,11 +876,11 @@ namespace Rawr.DPSDK
                     {
                         float DSCD = combatTable.realDuration / temp.DeathStrike;
                         // TODO: This should be changed to make use of the new glyph stats:
-                        float DSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) * 0.75f) + 222.75f + stats.BonusDeathStrikeDamage;
+                        float DSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor) + 297) * 0.75f) + stats.BonusDeathStrikeDamage;
                         if (DW)
                         {
                             float DSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-                            combatTable.normalizationFactor)) * 0.75f) + 222.75f;
+                            combatTable.normalizationFactor) + 297f) * 0.75f);
                             DSDmgOH *= 0.5f;
                             DSDmgOH += stats.BonusDeathStrikeDamage;
                             DSDmgOH *= 1f + 0.05f * talents.NervesOfColdSteel;
@@ -899,19 +904,19 @@ namespace Rawr.DPSDK
                     if (temp.BloodStrike > 0f)
                     {
                         float BSCD = combatTable.realDuration / temp.BloodStrike;
-                        float BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-                            0.4f) + 305.6f + stats.BonusBloodStrikeDamage;
+                        float BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor) + 764f) *
+                            0.4f) + stats.BonusBloodStrikeDamage;
                         if (DW)
                         {
                             float BSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-                            combatTable.normalizationFactor)) * 0.4f) + 305.6f;
+                            combatTable.normalizationFactor) + 764f) * 0.4f);
                             BSDmgOH *= 0.5f;
                             BSDmgOH += stats.BonusBloodStrikeDamage;
                             BSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
                             BSDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.3333333333333333f*/));
                             BSDmg += BSDmgOH;
                         }
-                        BSDmg *= 1f + 0.12f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
+                        BSDmg *= 1f + 0.125f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
                         dpsBloodStrike = BSDmg / BSCD;
                         float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                         BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
@@ -928,8 +933,8 @@ namespace Rawr.DPSDK
                     if (talents.HeartStrike > 0 && temp.HeartStrike > 0f)
                     {
                         float HSCD = combatTable.realDuration / temp.HeartStrike;
-                        float HSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-                            0.5f) + 368f + stats.BonusHeartStrikeDamage;
+                        float HSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor) + 736f) *
+                            0.5f) + stats.BonusHeartStrikeDamage;
                         HSDmg *= 1f + 0.1f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
                         dpsHeartStrike = HSDmg / HSCD;
                         //float HSCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
