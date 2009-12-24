@@ -2496,10 +2496,67 @@
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lord Marrowgar</Name>
+                      <Pattern>Lord Marrowgar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lady Deathwhisper</Name>
+                      <Pattern>Lady Deathwhisper</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Gunship Battle</Name>
+                      <Pattern>Gunship</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Deathbringer Saurfang</Name>
+                      <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lord Marrowgar</Name>
-                  <Pattern>Lord Marrowgar</Pattern>
+                  <Name>The Lower Spire</Name>
+                  <Pattern>Lord Marrowgar|Lady Deathwhisper|Gunship|Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2510,10 +2567,53 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Festergut</Name>
+                      <Pattern>Festergut</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Rotface</Name>
+                      <Pattern>Rotface</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Professor Putricide</Name>
+                      <Pattern>Professor Putricide</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lady Deathwhisper</Name>
-                  <Pattern>Lady Deathwhisper</Pattern>
+                  <Name>The Plagueworks</Name>
+                  <Pattern>Festergut|Rotface|Professor Putricide</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2524,10 +2624,39 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood Prince Council</Name>
+                      <Pattern>Prince Valanar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood-Queen Lana'thel</Name>
+                      <Pattern>Blood-Queen Lana'thel</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Gunship Battle</Name>
-                  <Pattern>Gunship</Pattern>
+                  <Name>The Crimson Hall</Name>
+                  <Pattern>Prince Valanar|Blood-Queen Lana'thel</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2538,10 +2667,68 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Valithria Dreamwalker</Name>
+                      <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Sindragosa</Name>
+                      <Pattern>Sindragosa</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                  <Name>The Frostwing Hall</Name>
+                  <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa</Pattern>
+                  <MinItemLevel>0</MinItemLevel>
+                  <MaxItemLevel>1000</MaxItemLevel>
+                  <MinItemQuality>Temp</MinItemQuality>
+                  <MaxItemQuality>Heirloom</MaxItemQuality>
+                  <AdditiveFilter>true</AdditiveFilter>
+                  <AppliesToItems>true</AppliesToItems>
+                  <AppliesToGems>true</AppliesToGems>
+                  <Enabled>true</Enabled>
+                </ItemFilterRegex>
+                <ItemFilterRegex>
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>The Lich King</Name>
+                      <Pattern>The Lich King</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
+                  <Name>The Frozen Throne</Name>
+                  <Pattern>The Lich King</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2567,10 +2754,67 @@
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lord Marrowgar</Name>
+                      <Pattern>Lord Marrowgar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lady Deathwhisper</Name>
+                      <Pattern>Lady Deathwhisper</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Gunship Battle</Name>
+                      <Pattern>Gunship</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Deathbringer Saurfang</Name>
+                      <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lord Marrowgar</Name>
-                  <Pattern>Lord Marrowgar</Pattern>
+                  <Name>The Lower Spire</Name>
+                  <Pattern>Lord Marrowgar|Lady Deathwhisper|Gunship|Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2581,10 +2825,53 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Festergut</Name>
+                      <Pattern>Festergut</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Rotface</Name>
+                      <Pattern>Rotface</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Professor Putricide</Name>
+                      <Pattern>Professor Putricide</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lady Deathwhisper</Name>
-                  <Pattern>Lady Deathwhisper</Pattern>
+                  <Name>The Plagueworks</Name>
+                  <Pattern>Festergut|Rotface|Professor Putricide</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2595,10 +2882,39 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood Prince Council</Name>
+                      <Pattern>Prince Valanar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood-Queen Lana'thel</Name>
+                      <Pattern>Blood-Queen Lana'thel</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Gunship Battle</Name>
-                  <Pattern>Gunship</Pattern>
+                  <Name>The Crimson Hall</Name>
+                  <Pattern>Prince Valanar|Blood-Queen Lana'thel</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2609,10 +2925,68 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Valithria Dreamwalker</Name>
+                      <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Sindragosa</Name>
+                      <Pattern>Sindragosa</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                  <Name>The Frostwing Hall</Name>
+                  <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa</Pattern>
+                  <MinItemLevel>0</MinItemLevel>
+                  <MaxItemLevel>1000</MaxItemLevel>
+                  <MinItemQuality>Temp</MinItemQuality>
+                  <MaxItemQuality>Heirloom</MaxItemQuality>
+                  <AdditiveFilter>true</AdditiveFilter>
+                  <AppliesToItems>true</AppliesToItems>
+                  <AppliesToGems>true</AppliesToGems>
+                  <Enabled>true</Enabled>
+                </ItemFilterRegex>
+                <ItemFilterRegex>
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>The Lich King</Name>
+                      <Pattern>The Lich King</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
+                  <Name>The Frozen Throne</Name>
+                  <Pattern>The Lich King</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2653,10 +3027,67 @@
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lord Marrowgar</Name>
+                      <Pattern>Lord Marrowgar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lady Deathwhisper</Name>
+                      <Pattern>Lady Deathwhisper</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Gunship Battle</Name>
+                      <Pattern>Gunship</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Deathbringer Saurfang</Name>
+                      <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lord Marrowgar</Name>
-                  <Pattern>Lord Marrowgar</Pattern>
+                  <Name>The Lower Spire</Name>
+                  <Pattern>Lord Marrowgar|Lady Deathwhisper|Gunship|Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2667,10 +3098,53 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Festergut</Name>
+                      <Pattern>Festergut</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Rotface</Name>
+                      <Pattern>Rotface</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Professor Putricide</Name>
+                      <Pattern>Professor Putricide</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lady Deathwhisper</Name>
-                  <Pattern>Lady Deathwhisper</Pattern>
+                  <Name>The Plagueworks</Name>
+                  <Pattern>Festergut|Rotface|Professor Putricide</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2681,10 +3155,39 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood Prince Council</Name>
+                      <Pattern>Prince Valanar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood-Queen Lana'thel</Name>
+                      <Pattern>Blood-Queen Lana'thel</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Gunship Battle</Name>
-                  <Pattern>Gunship</Pattern>
+                  <Name>The Crimson Hall</Name>
+                  <Pattern>Prince Valanar|Blood-Queen Lana'thel</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2695,10 +3198,68 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Valithria Dreamwalker</Name>
+                      <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Sindragosa</Name>
+                      <Pattern>Sindragosa</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                  <Name>The Frostwing Hall</Name>
+                  <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa</Pattern>
+                  <MinItemLevel>0</MinItemLevel>
+                  <MaxItemLevel>1000</MaxItemLevel>
+                  <MinItemQuality>Temp</MinItemQuality>
+                  <MaxItemQuality>Heirloom</MaxItemQuality>
+                  <AdditiveFilter>true</AdditiveFilter>
+                  <AppliesToItems>true</AppliesToItems>
+                  <AppliesToGems>true</AppliesToGems>
+                  <Enabled>true</Enabled>
+                </ItemFilterRegex>
+                <ItemFilterRegex>
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>The Lich King</Name>
+                      <Pattern>The Lich King</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
+                  <Name>The Frozen Throne</Name>
+                  <Pattern>The Lich King</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2711,7 +3272,7 @@
               </RegexList>
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Normal</Name>
-              <Pattern>(?&lt;! Heroic )Icecrown Citadel \(25</Pattern>
+              <Pattern>(?&lt;! Heroic )Icecrown Citadel</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2724,10 +3285,67 @@
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lord Marrowgar</Name>
+                      <Pattern>Lord Marrowgar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Lady Deathwhisper</Name>
+                      <Pattern>Lady Deathwhisper</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Gunship Battle</Name>
+                      <Pattern>Gunship</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Deathbringer Saurfang</Name>
+                      <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lord Marrowgar</Name>
-                  <Pattern>Lord Marrowgar</Pattern>
+                  <Name>The Lower Spire</Name>
+                  <Pattern>Lord Marrowgar|Lady Deathwhisper|Gunship|Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2738,10 +3356,53 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Festergut</Name>
+                      <Pattern>Festergut</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Rotface</Name>
+                      <Pattern>Rotface</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Professor Putricide</Name>
+                      <Pattern>Professor Putricide</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Lady Deathwhisper</Name>
-                  <Pattern>Lady Deathwhisper</Pattern>
+                  <Name>The Plagueworks</Name>
+                  <Pattern>Festergut|Rotface|Professor Putricide</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2752,10 +3413,39 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood Prince Council</Name>
+                      <Pattern>Prince Valanar</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Blood-Queen Lana'thel</Name>
+                      <Pattern>Blood-Queen Lana'thel</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Gunship Battle</Name>
-                  <Pattern>Gunship</Pattern>
+                  <Name>The Crimson Hall</Name>
+                  <Pattern>Prince Valanar|Blood-Queen Lana'thel</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2766,10 +3456,68 @@
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
-                  <RegexList />
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Valithria Dreamwalker</Name>
+                      <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>Sindragosa</Name>
+                      <Pattern>Sindragosa</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
+                  <Name>The Frostwing Hall</Name>
+                  <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa</Pattern>
+                  <MinItemLevel>0</MinItemLevel>
+                  <MaxItemLevel>1000</MaxItemLevel>
+                  <MinItemQuality>Temp</MinItemQuality>
+                  <MaxItemQuality>Heirloom</MaxItemQuality>
+                  <AdditiveFilter>true</AdditiveFilter>
+                  <AppliesToItems>true</AppliesToItems>
+                  <AppliesToGems>true</AppliesToGems>
+                  <Enabled>true</Enabled>
+                </ItemFilterRegex>
+                <ItemFilterRegex>
+                  <RegexList>
+                    <ItemFilterRegex>
+                      <RegexList />
+                      <OtherRegexEnabled>true</OtherRegexEnabled>
+                      <Name>The Lich King</Name>
+                      <Pattern>The Lich King</Pattern>
+                      <MinItemLevel>0</MinItemLevel>
+                      <MaxItemLevel>1000</MaxItemLevel>
+                      <MinItemQuality>Temp</MinItemQuality>
+                      <MaxItemQuality>Heirloom</MaxItemQuality>
+                      <AdditiveFilter>true</AdditiveFilter>
+                      <AppliesToItems>true</AppliesToItems>
+                      <AppliesToGems>true</AppliesToGems>
+                      <Enabled>true</Enabled>
+                    </ItemFilterRegex>
+                  </RegexList>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
+                  <Name>The Frozen Throne</Name>
+                  <Pattern>The Lich King</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2782,7 +3530,7 @@
               </RegexList>
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Heroic</Name>
-              <Pattern>Heroic Icecrown Citadel \(25</Pattern>
+              <Pattern>Heroic Icecrown Citadel</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
