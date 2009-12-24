@@ -238,8 +238,8 @@ namespace Rawr {
                 // Elemental Focus Stone
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { HasteRating = 522 }, 10f, 45f, 0.1f));
             }
-			else if (line.StartsWith("When struck in combat has a chance of"))
-			{ // Essence of Gossamer
+            else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140."))
+			{ // Essence of Gossamer - probably not quite right?!
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -0.01f }, 10, 1, 0.05f));
 			}
             else if (line.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
@@ -1290,8 +1290,8 @@ namespace Rawr {
             }
             else if ((match = Regex.Match(line, @"You gain (?<mana>\d+) mana each time you heal a target with one of your spells.")).Success)
             {
-                // Epheremal Snowflake - assume iCD of 0.25 sec
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ManaRestore = int.Parse(match.Groups["mana"].Value) }, 0f, 0.25f, 1f));
+                // Epheremal Snowflake - assume iCD of 0.33 sec (wowhead)
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ManaRestore = int.Parse(match.Groups["mana"].Value) }, 0f, 0.33f, 1f));
             }
             else if ((match = new Regex(@"Your spell casts have a chance to grant (?<amount>\d\d*) mana per 5 sec for 15 sec").Match(line)).Success)
             {
@@ -1305,6 +1305,39 @@ namespace Rawr {
                 float max = (float)int.Parse(match.Groups["max"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = min+(max-min)/2f }, 0f, 45f, 0.3f));
             }
+            #endregion
+            #region 3.3 rings
+            else if ((match = new Regex(@"Your helpful spells have a chance to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
+            {
+                // Ashen Band of Wisdom - seems to be 60 sec iCD (wowhead)
+                float spellpower = (float)int.Parse(match.Groups["power"].Value);
+                float time = (float)int.Parse(match.Groups["time"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { SpellPower = spellpower }, time, 60f, 0.1f));
+            }
+            else if ((match = new Regex(@"Your offensive spells have a chance on hit to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
+            {
+                // Ashen Band of Destruction - seems to be 60 sec iCD (wowhead)
+                float spellpower = (float)int.Parse(match.Groups["power"].Value);
+                float time = (float)int.Parse(match.Groups["time"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellpower }, time, 60f, 0.1f));
+            }
+            else if ((match = new Regex(@"Chance on hit to increase your attack power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
+            {
+                // Ashen Band of Vengeance - seems to be 60 sec iCD (wowhead)
+                float power = (float)int.Parse(match.Groups["power"].Value);
+                float time = (float)int.Parse(match.Groups["time"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = power }, time, 60f, 0.1f));
+            }
+            else if ((match = new Regex(@"When struck in combat has a chance of increasing your armor by (?<ar,pr>\d+) for (?<time>\d+) sec").Match(line)).Success)
+            { 
+                // Ashen Band of Courage - seems to be 60 sec iCD (wowhead)
+                // Wowhead says 3% chance to proc (!!), let's assume it's 10%
+                float armor = (float)int.Parse(match.Groups["armor"].Value);
+                float time = (float)int.Parse(match.Groups["time"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Armor = armor }, time, 60f, 0.1f));
+            }
+
+
             #endregion
             else
             {
