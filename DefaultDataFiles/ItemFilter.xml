@@ -2541,7 +2541,7 @@
                   <RegexList />
                   <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang</Pattern>
+                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2554,7 +2554,7 @@
               </RegexList>
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Normal</Name>
-              <Pattern>Heroic Icecrown Citadel</Pattern>
+              <Pattern>(?&lt;! Heroic )Icecrown Citadel</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2612,7 +2612,7 @@
                   <RegexList />
                   <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang</Pattern>
+                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2698,7 +2698,7 @@
                   <RegexList />
                   <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang</Pattern>
+                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
@@ -2769,7 +2769,7 @@
                   <RegexList />
                   <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Deathbringer Saurfang</Name>
-                  <Pattern>Deathbringer Saurfang</Pattern>
+                  <Pattern>Deathbringer Saurfang|Deathbringer's Cache</Pattern>
                   <MinItemLevel>0</MinItemLevel>
                   <MaxItemLevel>1000</MaxItemLevel>
                   <MinItemQuality>Temp</MinItemQuality>
