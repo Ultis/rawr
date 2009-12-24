@@ -575,6 +575,7 @@ applied and result is scaled down by 100)",
 
             #region Rotations
             Stats stats = calculationResult.BasicStats;
+            stats.ManaRestore /= profile.FightDuration;
             float ExtraHealing = 0f;
             RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calculationResult);
 
