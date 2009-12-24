@@ -2596,18 +2596,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f) // SerpentWyvernStings do damage
                 };
                 float[] petattemptedAtksInterval = {
-                    calculatedStats.pet.PetCompInterval, // All
-                    calculatedStats.pet.PetWhiteInterval, // White
-                    calculatedStats.pet.PetYellowInterval, // Yellow
-                    calculatedStats.pet.PetClawBiteSmackInterval // ClawBiteSmack
+                    Math.Max(0f, calculatedStats.pet.PetCompInterval), // All
+                    Math.Max(0f, calculatedStats.pet.PetWhiteInterval), // White
+                    Math.Max(0f, calculatedStats.pet.PetYellowInterval), // Yellow
+                    Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval) // ClawBiteSmack
                 };
                 float bleedHitInterval = talents.PiercingShots > 0 ? 1f : 0f;
-                float dmgDoneInterval = 1f / (totalShotsPerSecond + (bleedHitInterval > 0 ? 1f / bleedHitInterval : 0f));
+                float dmgDoneInterval = Math.Max(0f, 1f / (totalShotsPerSecond + (bleedHitInterval > 0 ? 1f / bleedHitInterval : 0f)));
 
                 float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
                 float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
                 float[] hitRates  = { (1f - ChanceToMiss), calculatedStats.pet.WhAtkTable.AnyLand };
-                float[] critRates = { statsTotal.PhysicalCrit, calculatedStats.pet.WhAtkTable.Crit };
+                float[] critRates = { Math.Max(0f, statsTotal.PhysicalCrit), Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit) };
 
                 statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval,
                                 hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, null);
