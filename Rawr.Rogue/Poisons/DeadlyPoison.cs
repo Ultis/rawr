@@ -3,7 +3,7 @@ using Rawr.Rogue.ClassAbilities;
 
 namespace Rawr.Rogue.Poisons
 {
-#if (SILVERLIGHT == false)
+#if !SILVERLIGHT
     [Serializable]
 #endif
     public class DeadlyPoison : PoisonBase

@@ -374,6 +374,7 @@ namespace Rawr.Rogue {
             float bothHitInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond);
             //float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
             float dmgDoneInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond /*+ (calcOpts.FuryStance ? 1f : 4f / 3f)*/);
+            float poisonHitInterval = 1f;
 
             SpecialEffect bersMainHand = null;
             SpecialEffect bersOffHand = null;
@@ -425,6 +426,9 @@ namespace Rawr.Rogue {
                             break;*/
                         case Trigger.DamageDone: // physical and dots
                             statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors.MHSpeed, fightDuration);
+                            break;
+                        case Trigger.SpellHit:
+                            statsProcs += effect.GetAverageStats(poisonHitInterval, 1f, combatFactors.MHSpeed, fightDuration);
                             break;
                     }
                     effect.Stats.ArmorPenetrationRating = oldArp;
@@ -511,10 +515,8 @@ namespace Rawr.Rogue {
             if (!buff.AllowedClasses.Contains(CharacterClass.Rogue)) { return false; }
             if (buff.Name == "Focus Magic") { return false; }
 
-            if (buff.Group == "Set Bonuses") {
-                if (buff.SetName == "Strength of the Clefthoof") { return false; }
-                if (buff.SetName == "Skyshatter Regalia") { return false; }
-            }
+            if (buff.SetName == "Strength of the Clefthoof") { return false; }
+            if (buff.SetName == "Skyshatter Regalia") { return false; }
 
             return base.IsBuffRelevant(buff);
         }
@@ -687,7 +689,7 @@ namespace Rawr.Rogue {
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
                 || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone)
+                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellHit)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -761,9 +763,14 @@ namespace Rawr.Rogue {
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone)
+                if (effect.Trigger == Trigger.Use
+                    || effect.Trigger == Trigger.MeleeHit
+                    || effect.Trigger == Trigger.MeleeCrit
+                    || effect.Trigger == Trigger.PhysicalHit
+                    || effect.Trigger == Trigger.PhysicalCrit
+                    || effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.DamageDone
+                    || effect.Trigger == Trigger.SpellHit) // For Poison Hits
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) { break; }
