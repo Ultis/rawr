@@ -337,34 +337,34 @@ namespace Rawr
     
     public class PvpItem : ItemLocation
     {
-        public string PointType{get;set;}
-        public int Points{get;set;}
-        public string TokenType{get;set;}
-        public int TokenCount{get;set;}
+        public string PointType { get; set; }
+        public int Points { get; set; }
+        public string TokenType { get; set; }
+        public int TokenCount { get; set; }
+        public string PointTypeA { get; set; }
+        public int PointsA { get; set; }
+        public int RequiredArenaRating { get; set; }
 
-        public PvpItem()
-        {
+        public PvpItem() {
             Source = ItemSource.PVP;
         }
 
         [XmlIgnore]
-        public override string Description
-        {
-            get
-            {
-                string points = string.Format("Purchasable for {0} {1} Points", Points, PointType);
-                if (TokenCount > 0)
-                {
-                    if (Points > 0)
-                    {
-                        return string.Format("{0} and {1} [{2}]", points, TokenCount, TokenType);
-                    }
-                    else
-                    {
-                        return string.Format("Purchasable for {1} [{2}]", points, TokenCount, TokenType);
-                    }
+        public override string Description {
+            get {
+                string RAR = RequiredArenaRating > 0 ? string.Format(" and Requires an Arena Rating of {0}", RequiredArenaRating) : "";
+                if (TokenCount > 0 && PointsA > 0 && Points > 0) {
+                    return string.Format("Purchasable for {0} {1} Points, {2} {3} Points and {4} [{5}]" + RAR, Points, PointType, PointsA, PointTypeA, TokenCount, TokenType);
+                } else if (TokenCount > 0 && Points > 0) {
+                    return string.Format("Purchasable for {0} {1} Points and {1} [{2}]" + RAR, Points, PointType, TokenCount, TokenType);
+                } else if (TokenCount > 0) {
+                    return string.Format("Purchasable for {0} [{1}]" + RAR, TokenCount, TokenType);
+                } else if (PointsA > 0 && Points > 0) {
+                    return string.Format("Purchasable for {0} {1} Points and {2} {3} Points" + RAR, Points, PointType, PointsA, PointTypeA);
+                } else if (Points > 0) {
+                    return string.Format("Purchasable for {0} {1} Points" + RAR, Points, PointType);
                 }
-                return points;
+                return "Purchasable PvP Item" + RAR;
             }
         }
 
@@ -374,25 +374,25 @@ namespace Rawr
             XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
 
             string TokenId;
-            XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/@honor");
+            XmlNode subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/@honor");
+            XmlNode subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
+            XmlNode subNodeRAR = node.SelectSingleNode("page/itemTooltips/itemTooltip/requiredPersonalArenaRating/@personalArenaRating");
 
-            if (subNode != null)
-            {
-                Points = int.Parse(subNode.InnerText);
+            if (subNodeRAR != null) {
+                RequiredArenaRating = int.Parse(subNodeRAR.InnerText);
+            }
+
+            if (subNodeH != null && subNodeA != null) {
+                Points = int.Parse(subNodeH.InnerText);
                 PointType = "Honor";
-                subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token/@count");
-                if(subNode != null)
-                {
-                    
-                    TokenCount = int.Parse(subNode.InnerText);
+                subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/token/@count");
+                if (subNodeH != null) {
+                    TokenCount = int.Parse(subNodeH.InnerText);
                     TokenId = doc.SelectSingleNode("/page/itemInfo/item/cost/token").Attributes["id"].Value;
 
-                    if (_tokenMap.ContainsKey(TokenId))
-                    {
+                    if (_tokenMap.ContainsKey(TokenId)) {
                         TokenType = _tokenMap[TokenId];
-                    }
-                    else
-                    {
+                    } else {
                         wrw = new WebRequestWrapper();
                         doc = wrw.DownloadItemInformation(int.Parse(TokenId));
 
@@ -401,17 +401,40 @@ namespace Rawr
                         _tokenMap[TokenId] = TokenType;
                     }
                 }
+                subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
+                if (subNodeA != null) {
+                    PointsA = int.Parse(subNodeA.InnerText);
+                    PointTypeA = "Arena";
+                }
             }
-            else
+            else if (subNodeH != null)
             {
-                subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
-                if(subNode != null)
-                {
-                    Points = int.Parse(subNode.InnerText);
+                Points = int.Parse(subNodeH.InnerText);
+                PointType = "Honor";
+                subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/token/@count");
+                if(subNodeH != null) {
+                    TokenCount = int.Parse(subNodeH.InnerText);
+                    TokenId = doc.SelectSingleNode("/page/itemInfo/item/cost/token").Attributes["id"].Value;
+
+                    if (_tokenMap.ContainsKey(TokenId)) {
+                        TokenType = _tokenMap[TokenId];
+                    } else {
+                        wrw = new WebRequestWrapper();
+                        doc = wrw.DownloadItemInformation(int.Parse(TokenId));
+
+                        TokenType = doc.SelectSingleNode("/page/itemInfo/item").Attributes["name"].Value;
+
+                        _tokenMap[TokenId] = TokenType;
+                    }
+                }
+            } else {
+                subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
+                if(subNodeA != null) {
+                    Points = int.Parse(subNodeA.InnerText);
                     PointType = "Arena";
                 }
             }
-
+            if (string.IsNullOrEmpty(PointType)) { PointType = "Honor"; }
             return this;
         }
         public static new ItemLocation Construct()
@@ -755,7 +778,6 @@ namespace Rawr
     }
 
     [XmlRoot("dictionary")]
-    
     public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation[]>
     {
     }
