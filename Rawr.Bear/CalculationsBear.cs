@@ -803,8 +803,10 @@ the Threat Scale defined on the Options tab.",
 			Stats statsBuffs = GetBuffsStats(character, calcOpts);
 			Stats statsTalents = new Stats()
 			{
-				PhysicalCrit = 0.02f * talents.SharpenedClaws + (character.ActiveBuffsContains("Leader of the Pack") ?
-					0f : 0.05f * talents.LeaderOfThePack),
+				PhysicalCrit = 0.02f * talents.SharpenedClaws
+                             + ((character.ActiveBuffsContains("Leader of the Pack")
+                                 || character.ActiveBuffsContains("Rampage"))
+                                ? 0f : 0.05f * talents.LeaderOfThePack),
 				Dodge = 0.02f * talents.FeralSwiftness + 0.02f * talents.NaturalReaction,
 				BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
 				BonusAgilityMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,

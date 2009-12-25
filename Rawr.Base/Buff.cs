@@ -2584,7 +2584,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreamwalker Battlegear 2 Piece Bonus",
+                Name = "Dreamwalker Battlegear (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusRipDuration = 4f, BonusLacerateDamageMultiplier = 0.05f },
@@ -2594,7 +2594,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreamwalker Battlegear 4 Piece Bonus",
+                Name = "Dreamwalker Battlegear (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { TigersFuryCooldownReduction = 3f, WeaponDamage = 1.778f /*Increased Barkskin Duration*/ },
@@ -2606,7 +2606,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreamwalker Garb 2 Piece Bonus",
+                Name = "Dreamwalker Garb (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusInsectSwarmDamage = 0.1f },
@@ -2616,7 +2616,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreamwalker Garb 4 Piece Bonus",
+                Name = "Dreamwalker Garb (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusNukeCritChance = 0.05f },
@@ -2628,7 +2628,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreamwalker Regalia 2 Piece Bonus",
+                Name = "Dreamwalker Regalia (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { LifebloomCostReduction = 0.05f },
@@ -2638,7 +2638,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreamwalker Regalia 4 Piece Bonus",
+                Name = "Dreamwalker Regalia (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { NourishBonusPerHoT = 0.05f },
@@ -2652,7 +2652,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
 			{
-			    Name = "Nightsong Battlegear 2 Piece Bonus",
+                Name = "Nightsong Battlegear (T8) 2 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
 			    Stats = { ClearcastOnBleedChance = 0.02f },
@@ -2662,7 +2662,7 @@ namespace Rawr
 			});
 			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
 			{
-				Name = "Nightsong Battlegear 4 Piece Bonus",
+                Name = "Nightsong Battlegear (T8) 4 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
 			    Stats = { BonusSavageRoarDuration = 8f },
@@ -2674,7 +2674,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-                Name = "Nightsong Garb 2 Piece Bonus",
+                Name = "Nightsong Garb (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { EclipseBonus = 0.07f },
@@ -2684,7 +2684,7 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Nightsong Garb 4 Piece Bonus",
+                Name = "Nightsong Garb (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
@@ -2697,7 +2697,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Nightsong Regalia 2 Piece Bonus",
+                Name = "Nightsong Regalia (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { SwiftmendBonus = 0.1f },
@@ -2708,7 +2708,7 @@ namespace Rawr
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Nightsong Regalia 4 Piece Bonus",
+                Name = "Nightsong Regalia (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RejuvenationInstantTick = 0.5f },
@@ -2722,7 +2722,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff()
 			{
-				Name = "Malfurion's Battlegear 2 Piece Bonus",
+                Name = "Malfurion's Battlegear (T9) 2 Piece Bonus",
 				Group = "Set Bonuses",
 				ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
@@ -2732,7 +2732,7 @@ namespace Rawr
 			});
 			defaultBuffs.Add(new Buff()
 			{
-				Name = "Malfurion's Battlegear 4 Piece Bonus",
+                Name = "Malfurion's Battlegear (T9) 4 Piece Bonus",
 				Group = "Set Bonuses",
 				ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
@@ -2744,7 +2744,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Malfurion's Regalia 2 Piece Bonus",
+                Name = "Malfurion's Regalia (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonfireDotCrit = 1f },
@@ -2754,7 +2754,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-				Name = "Malfurion's Regalia 4 Piece Bonus",
+                Name = "Malfurion's Regalia (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusMoonkinNukeDamage = 0.04f },
@@ -2766,7 +2766,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-				Name = "Malfurion's Garb 2 Piece Bonus",
+                Name = "Malfurion's Garb (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { NourishCritBonus = 0.05f },
@@ -2776,7 +2776,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-				Name = "Malfurion's Garb 4 Piece Bonus",
+                Name = "Malfurion's Garb (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RejuvenationCrit = 1.0f },
@@ -2790,7 +2790,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Lasherweave Battlegear 2 Piece Bonus",
+                Name = "Lasherweave Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
 				ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { RipCostReduction = 10f, BonusLacerateDamageMultiplier = 0.20f, BonusBearSwipeDamageMultiplier = 0.20f },
@@ -2800,7 +2800,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lasherweave Battlegear 4 Piece Bonus",
+                Name = "Lasherweave Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { BonusRakeCrit = 1f, DamageTakenMultiplier = -0.02f},
@@ -2812,7 +2812,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Lasherweave's Regalia 2 Piece Bonus",
+                Name = "Lasherweave's Regalia (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
@@ -2823,7 +2823,7 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lasherweave's Regalia 4 Piece Bonus",
+                Name = "Lasherweave's Regalia (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonkinT10CritDot = 0.07f },
@@ -2835,7 +2835,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Lasherweave Garb 2 Piece Bonus",
+                Name = "Lasherweave Garb (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { WildGrowthLessReduction = 0.3f },
@@ -2846,7 +2846,7 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lasherweave Garb 4 Piece Bonus",
+                Name = "Lasherweave Garb (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RejuvJumpChance = 0.02f },
