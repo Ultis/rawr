@@ -3599,7 +3599,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Onyxia's Lair (10/25)</Name>
-      <Pattern>Onyxia's Lair|Onyxia in $|Onyxia</Pattern>
+      <Pattern>Onyxia's Lair|Onyxia in $|Onyxia|Summon.*Thunderstrike</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
