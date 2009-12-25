@@ -363,6 +363,11 @@ namespace Rawr.Mage
                             chance = 1;
                             interval = CastTime / DamageProcs;
                             break;
+                        case Trigger.SpellCast:
+                        case Trigger.DamageSpellCast:
+                            chance = 1;
+                            interval = CastTime / CastProcs;
+                            break;
                     }
                     float effectsPerSecond = effect.GetAverageProcsPerSecond(interval, chance, 3f, CastingState.CalculationOptions.FightDuration);
                     if (effect.Stats.ArcaneDamage > 0)
@@ -377,12 +382,12 @@ namespace Rawr.Mage
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.FireThreatMultiplier;
                     }
-                    /*if (effect.Stats.FrostDamage > 0)
+                    if (effect.Stats.FrostDamage > 0)
                     {
                         float boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond;
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.FrostThreatMultiplier;
-                    }*/
+                    }
                     if (effect.Stats.ShadowDamage > 0)
                     {
                         float boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond;
@@ -395,12 +400,12 @@ namespace Rawr.Mage
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                     }
-                    /*if (effect.Stats.HolyDamage > 0)
+                    if (effect.Stats.HolyDamage > 0)
                     {
                         float boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
-                    }*/
+                    }
                 }
             }
             /*if (baseStats.LightningCapacitorProc > 0)
@@ -699,6 +704,11 @@ namespace Rawr.Mage
                             chance = 1;
                             interval = CastTime / DamageProcs;
                             break;
+                        case Trigger.SpellCast:
+                        case Trigger.DamageSpellCast:
+                            chance = 1;
+                            interval = CastTime / CastProcs;
+                            break;
                     }
                     float effectsPerSecond = effect.GetAverageProcsPerSecond(interval, chance, 3f, CastingState.CalculationOptions.FightDuration);
                     float boltDps = 0f;
@@ -712,11 +722,11 @@ namespace Rawr.Mage
                         boltDps = CastingState.FireAverageDamage * effect.Stats.FireDamage * effectsPerSecond;
                         name = "Fire Damage Proc";
                     }
-                    /*if (effect.Stats.FrostDamage > 0)
+                    if (effect.Stats.FrostDamage > 0)
                     {
                         boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond;
                         name = "Frost Damage Proc";
-                    }*/
+                    }
                     if (effect.Stats.ShadowDamage > 0)
                     {
                         boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond;
@@ -727,11 +737,11 @@ namespace Rawr.Mage
                         boltDps = CastingState.NatureAverageDamage * effect.Stats.NatureDamage * effectsPerSecond;
                         name = "Nature Damage Proc";
                     }
-                    /*if (effect.Stats.HolyDamage > 0)
+                    if (effect.Stats.HolyDamage > 0)
                     {
                         boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
                         name = "Holy Damage Proc";
-                    }*/
+                    }
                     if (!dict.TryGetValue(name, out contrib))
                     {
                         contrib = new SpellContribution() { Name = name };

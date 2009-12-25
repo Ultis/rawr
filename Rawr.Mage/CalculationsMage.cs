@@ -2019,6 +2019,10 @@ namespace Rawr.Mage
                 BonusSpellPowerDemonicPactMultiplier = stats.BonusSpellPowerDemonicPactMultiplier,
                 SpellsManaReduction = stats.SpellsManaReduction,
                 Mage4T8 = stats.Mage4T8,
+                Mage2T9 = stats.Mage2T9,
+                Mage4T9 = stats.Mage4T9,
+                Mage2T10 = stats.Mage2T10,
+                Mage4T10 = stats.Mage4T10,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -2032,9 +2036,9 @@ namespace Rawr.Mage
                             continue;
                         }
                     }
-                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage /*+ effect.Stats.FrostDamage*/ + effect.Stats.NatureDamage + effect.Stats.ShadowDamage/* + effect.Stats.HolyDamage*/ > 0)
+                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage > 0)
                     {
-                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone)
+                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                         {
                             s.AddSpecialEffect(effect);
                             continue;
@@ -2141,9 +2145,9 @@ namespace Rawr.Mage
                             return true;
                         }
                     }
-                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage /*+ effect.Stats.FrostDamage*/ + effect.Stats.NatureDamage + effect.Stats.ShadowDamage/* + effect.Stats.HolyDamage*/ > 0)
+                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage > 0)
                     {
-                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone)
+                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                         {
                             return true;
                         }
