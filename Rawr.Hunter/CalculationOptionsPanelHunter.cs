@@ -130,6 +130,7 @@ namespace Rawr.Hunter
                         break;
                     }
                 }
+                isLoading = true;
 
                 // Hiding Gear based on Bad Stats
                 CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
@@ -147,11 +148,11 @@ namespace Rawr.Hunter
                 CK_MultipleTargets.Checked = CalcOpts.MultipleTargets;
                 NUD_MultiTargsUptime.Enabled = CalcOpts.MultipleTargets;
                 NUD_MultiTargsUptime.Value = (int)(CalcOpts.MultipleTargetsPerc * 100f);
-
+                isLoading = true;
                 CB_PetFamily.Items.Clear();
                 foreach (PetFamily f in Enum.GetValues(typeof(PetFamily))) CB_PetFamily.Items.Add(f);
                 CB_PetFamily.SelectedItem = CalcOpts.PetFamily;
-
+                isLoading = true;
                 CB_Duration.Value = CalcOpts.Duration;
                 NUD_Time20.Value = CalcOpts.timeSpentSub20;
                 NUD_35.Value = CalcOpts.timeSpent35To20;
@@ -161,7 +162,7 @@ namespace Rawr.Hunter
 
                 NUD_Time20.Maximum = CB_Duration.Value;
                 NUD_35.Maximum = CB_Duration.Value;
-
+                isLoading = true;
                 if (CalcOpts.selectedAspect == Aspect.None) CB_Aspect.SelectedIndex = 0;
                 if (CalcOpts.selectedAspect == Aspect.Beast) CB_Aspect.SelectedIndex = 1;
                 if (CalcOpts.selectedAspect == Aspect.Hawk) CB_Aspect.SelectedIndex = 2;
@@ -172,14 +173,14 @@ namespace Rawr.Hunter
                 if (CalcOpts.aspectUsage == AspectUsage.None) CB_AspectUsage.SelectedIndex = 0;
                 if (CalcOpts.aspectUsage == AspectUsage.ViperToOOM) CB_AspectUsage.SelectedIndex = 1;
                 if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
-
+                isLoading = true;
                 CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBeastialWrath;
                 CK_UseRotation.Checked = CalcOpts.useRotationTest;
                 CK_RandomProcs.Enabled = CK_UseRotation.Checked;
                 CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
-
+                isLoading = true;
                 PopulateAbilities();
-
+                isLoading = true;
                 CB_PetPrio_01.SelectedItem = CalcOpts.PetPriority1;
                 CB_PetPrio_02.SelectedItem = CalcOpts.PetPriority2;
                 CB_PetPrio_03.SelectedItem = CalcOpts.PetPriority3;
@@ -187,10 +188,10 @@ namespace Rawr.Hunter
                 CB_PetPrio_05.SelectedItem = CalcOpts.PetPriority5;
                 CB_PetPrio_06.SelectedItem = CalcOpts.PetPriority6;
                 CB_PetPrio_07.SelectedItem = CalcOpts.PetPriority7;
-
+                isLoading = true;
                 CalcOpts.PetTalents = new PetTalentTree(CalcOpts.petTalents);
                 populatePetTalentCombos();
-
+                isLoading = true;
                 // set up shot priorities
                 CB_ShotPriority_01.SelectedIndex = CalcOpts.PriorityIndex1;
                 CB_ShotPriority_02.SelectedIndex = CalcOpts.PriorityIndex2;
@@ -566,7 +567,7 @@ namespace Rawr.Hunter
         #endregion
         #region Pet
         private void initTalentImages() {
-            PetTalentTree pt = (CalcOpts == null ? new PetTalentTree() : CalcOpts.PetTalents);
+            /*PetTalentTree pt = (CalcOpts == null ? new PetTalentTree() : CalcOpts.PetTalents);
             int currentId = 0;
             try {
                 // Cunning
@@ -645,7 +646,7 @@ namespace Rawr.Hunter
                     "Current ID: " + currentId.ToString() + "\r\nCurrent Talent: " + pt.TalentTree[currentId].Name,
                     ex.StackTrace);
                 eb.Show();
-            }
+            }*/
         }
         private void comboPetFamily_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -657,6 +658,7 @@ namespace Rawr.Hunter
                 PopulateAbilities();
                 updateTalentDisplay();
                 resetTalents();
+                isLoading = false; // force it
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -722,7 +724,10 @@ namespace Rawr.Hunter
             GB_PetTalents_Ferocity.Visible = tree == PetFamilyTree.Ferocity;
             GB_PetTalents_Tenacity.Visible = tree == PetFamilyTree.Tenacity;
         }
-        private void resetTalents() { CalcOpts.PetTalents.Reset(); populatePetTalentCombos(); }
+        private void resetTalents() {
+            CalcOpts.PetTalents.Reset();
+            populatePetTalentCombos();
+        }
         private void talentComboChanged(object sender, EventArgs e)
         {
             if (isLoading) { return; }
@@ -892,6 +897,7 @@ namespace Rawr.Hunter
                     "Error Populating Pet Talent ComboBoxes", ex.Message,
                     "populatePetTalentCombos", "Line: " + line.ToString(), ex.StackTrace);
             }
+            isLoading = false;
         }
         #endregion
         #region Details Tab
