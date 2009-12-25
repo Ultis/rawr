@@ -596,7 +596,15 @@ namespace Rawr
             Stats mongoose = new Stats();
             mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, PhysicalHaste = 0.02f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(2673, "Mongoose", ItemSlot.OneHand, mongoose));
-            
+
+            Stats icebreaker = new Stats();
+            icebreaker.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
+                new Stats() { // the .85 and .15 are simming spell hits vs spell crits
+                    FireDamage = ((209f + 234f) / 2f) * 0.85f + ((317f + 340f) / 2f) * 0.15f
+                },
+                1f, 0f, 0.05f));
+            defaultEnchants.Add(new Enchant(3790, "Icebreaker", ItemSlot.OneHand, icebreaker));
+
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", ItemSlot.Hands, new Stats() { ShadowResistance = 8 }));
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", ItemSlot.Feet, new Stats() { ShadowResistance = 8 }));
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", ItemSlot.Chest, new Stats() { ShadowResistance = 8 }));
