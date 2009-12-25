@@ -539,9 +539,11 @@ namespace Rawr.Cat
 			DruidTalents talents = character.DruidTalents;
 			Stats statsTalents = new Stats()
 			{
-				PhysicalCrit = 0.02f * talents.SharpenedClaws + ((character.ActiveBuffsContains("Leader of the Pack") ||
-				character.ActiveBuffsContains("Rampage"))?
-					0 : 0.05f * talents.LeaderOfThePack) + 0.02f * talents.MasterShapeshifter,
+				PhysicalCrit = 0.02f * talents.SharpenedClaws
+                             + 0.02f * talents.MasterShapeshifter
+                             + ((character.ActiveBuffsContains("Leader of the Pack") ||
+				                 character.ActiveBuffsContains("Rampage"))
+                                 ? 0 : 0.05f * talents.LeaderOfThePack),
 				Dodge = 0.02f * talents.FeralSwiftness,
 				BonusStaminaMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
 				BonusAgilityMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
@@ -647,7 +649,20 @@ namespace Rawr.Cat
 			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger)))
 			{
-				statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration), effect.Stats.DeathbringerProc > 0 ? 1f/3f : 1f);
+                // JOTHAY's NOTE: The following is an ugly hack to add Recursive Effects to Cat
+                // so Victor's Call and similar trinkets can be given more appropriate value
+                if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectDataSize == 1) {
+                    float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger],
+                        triggerChances[effect.Trigger], 1f, calcOpts.Duration);
+				    statsProcs.Accumulate(effect.Stats._rawSpecialEffectData[0].GetAverageStats(
+                        triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
+                        triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
+                        upTime);
+                }else{
+                    statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger],
+                        triggerChances[effect.Trigger], 1f, calcOpts.Duration),
+                        effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
+                }
 			}
 
 			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon + statsProcs.DeathbringerProc;

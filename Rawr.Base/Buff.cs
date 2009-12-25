@@ -1947,7 +1947,20 @@ namespace Rawr
                         }
                     }
             });
-            defaultBuffs.Add(new Buff()
+            /* This potion has several effects that could individually randomly proc on use:
+             * 
+             * Wild Magic - Spell critical rating increased by 60 and spell power increased by 180. 15 seconds
+             * Nightmare Slumber - like Dreamless Sleep potion (health and mana back over 6 seconds, ~5k both)
+             * Healing Potion - like a healing potion
+             * Nothing - Does nothing
+             * Haste - Increased haste rating by 500 for 15 seconds
+             * Nightmare slumber:
+             *   Puts an undispellable debuff on you that regens
+             *   2520 mana and health every second for 3 seconds (with the alchemist stone on)
+             *   This thing always seems to happen when you are lower on health and mana then
+             *   when on full health and mana.
+             */
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Crazy Alchemist's Potion (proc not included)",
                 Group = "Potion",
