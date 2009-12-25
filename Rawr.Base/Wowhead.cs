@@ -262,10 +262,34 @@ namespace Rawr
                 json1 = json1.Remove(0, end);
             }
             // Remove Level Requirement, if you aren't 80+ you shouldn't be using Rawr
-            {int start = json1.IndexOf(",reqlevel:");
-             if (start != -1) { json1 = json1.Remove(start, (",reqlevel:").Length + 2); }}
-            {int start = json2.IndexOf(",reqlevel:");
-             if (start != -1) { json2 = json2.Remove(start, (",reqlevel:").Length + 2); }}
+            {
+                int start = json1.IndexOf(",reqlevel:");
+                if (start != -1) {
+                    int count = (",reqlevel:").Length;
+                    if (start + count < json1.Length) {
+                        string Short = json1.Substring(start + count);
+                        if (Short.IndexOf(",") != -1) {
+                            count += Short.IndexOf(",");
+                        }
+                    }
+                    json1 = json1.Remove(start, count);
+                }
+            }
+            {   
+                int start = json2.IndexOf(",reqlevel:");
+                if (start != -1) {
+                    int count = (",reqlevel:").Length;
+                    if (start + count < json2.Length)
+                    {
+                        string Short = json2.Substring(start + count);
+                        if (Short.IndexOf(",") != -1)
+                        {
+                            count += Short.IndexOf(",");
+                        }
+                    }
+                    json2 = json2.Remove(start, count);
+                }
+            }
             // Change the reference for subclass so it combines with
             // class, as that is how we are handling it
             json1 = json1.Replace(",subclass:", ".");
@@ -1507,6 +1531,10 @@ namespace Rawr
                     switch (zoneId)
                     {
                         #region Old World
+                        case "12": return "Elwynn Forest";
+                        case "38": return "Loch Modan";
+                        case "40": return "Westfall";
+                        case "2597": return "Alterac Valley";
                         case "2367": return "Old Hillsbrad Foothills";
                         case "1519": return "Stormwind City";
                         case "2677": return "Blackwing Lair";
@@ -1514,18 +1542,19 @@ namespace Rawr
                         case "2159": return "Onyxia's Lair";
                         #endregion
                         #region TBC
-                        case "4080": return "Isle of Quel'Danas";
-                        case "3703": return "Shattrath City";
+                        case "2562": return "Karazhan";
                         case "3520": return "Shadowmoon Valley";
-                        case "4075": return "Sunwell Plateau";
-                        case "3959": return "Black Temple";
+                        case "3523": return "Netherstorm";
                         case "3606": return "Hyjal Summit";
                         case "3607": return "Serpentshrine Cavern";
                         case "3618": return "Gruul's Lair";
-                        case "3836": return "Magtheridon's Lair";
-                        case "2562": return "Karazhan";
-                        case "3842": return "The Eye";
                         case "3805": return "Zul'Aman";
+                        case "3836": return "Magtheridon's Lair";
+                        case "3842": return "The Eye";
+                        case "3703": return "Shattrath City";
+                        case "3959": return "Black Temple";
+                        case "4075": return "Sunwell Plateau";
+                        case "4080": return "Isle of Quel'Danas";
                         #endregion
                         #region WotLK
                         case "65": return "Dragonblight";
