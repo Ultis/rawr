@@ -799,7 +799,17 @@ namespace Rawr.Cat
 			}
 		}
 
-		public override bool IsItemRelevant(Item item)
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            string name = enchant.Name;
+            if (name.Contains("Rune of"))
+            {
+                return false; // Bad DK Enchant, Bad!
+            }
+            return base.IsEnchantRelevant(enchant);
+        }
+
+        public override bool IsItemRelevant(Item item)
 		{
 			if (item.Slot == ItemSlot.OffHand || 
 				(item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol)) 

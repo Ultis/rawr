@@ -714,6 +714,16 @@ namespace Rawr.Retribution
             return wantedStats;
         }
 
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            string name = enchant.Name;
+            if (name.Contains("Rune of"))
+            {
+                return false; // Bad DK Enchant, Bad!
+            }
+            return base.IsEnchantRelevant(enchant);
+        }
+
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()

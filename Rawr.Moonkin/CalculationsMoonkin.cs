@@ -244,6 +244,16 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            string name = enchant.Name;
+            if (name.Contains("Rune of"))
+            {
+                return false; // Bad DK Enchant, Bad!
+            }
+            return base.IsEnchantRelevant(enchant);
+        }
+
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs()
         {

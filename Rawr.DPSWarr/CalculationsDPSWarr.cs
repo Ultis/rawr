@@ -632,7 +632,7 @@ These numbers to do not include racial bonuses.",
 
         public override bool IsEnchantRelevant(Enchant enchant) {
             string name = enchant.Name;
-            if (name.Contains("Rune of the Fallen Crusader")) {
+            if (name.Contains("Rune of")) {
                 return false; // Bad DK Enchant, Bad!
             }
             return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));

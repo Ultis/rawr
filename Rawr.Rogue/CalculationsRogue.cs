@@ -519,6 +519,16 @@ namespace Rawr.Rogue {
             return base.IsBuffRelevant(buff);
         }
 
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            string name = enchant.Name;
+            if (name.Contains("Rune of"))
+            {
+                return false; // Bad DK Enchant, Bad!
+            }
+            return base.IsEnchantRelevant(enchant);
+        }
+
         public Stats GetBuffsStats(Character character, CalculationOptionsRogue calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
