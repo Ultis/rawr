@@ -288,6 +288,17 @@ namespace Rawr {
                 // Illustration of the Dragon Soul and similar
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["maxStack"].Value)));
             }
+            else if ((match = new Regex(@"Sends a shadowy bolt at the enemy causing (?<min>\d\d*) to (?<max>\d\d*) Shadow damage.*").Match(line)).Success)
+            {
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
+                { 
+                    ShadowDamage = (float)(min+max)/2f,
+                    ProcdShadowDamageMin = min,
+                    ProcdShadowDamageMax = max,
+                }, 1f, 0f, 0.09f));
+            }
             else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 25 spell power for the next 10 sec, stacking up to 5 times."))
             {
                 // Eye of the Broodmother

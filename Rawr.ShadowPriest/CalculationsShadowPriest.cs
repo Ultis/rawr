@@ -793,8 +793,10 @@ namespace Rawr.ShadowPriest
         {
             bool isRelevant = _HasRelevantStats(stats);
 
-            foreach (SpecialEffect se in stats.SpecialEffects())
+            foreach (SpecialEffect se in stats.SpecialEffects()) {
                 isRelevant |= RelevantTrinket(se);
+                if (isRelevant) { break; }
+            }
             return isRelevant;
         }
 

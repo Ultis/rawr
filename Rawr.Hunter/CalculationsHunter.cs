@@ -520,7 +520,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Special
                 stats.ScopeDamage +
                 stats.BonusManaPotion +
-                stats.BonusPetCritChance +
+                stats.BonusPetCritChance
             ) != 0;
 
             foreach (SpecialEffect e in stats.SpecialEffects())

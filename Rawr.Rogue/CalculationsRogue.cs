@@ -682,8 +682,33 @@ namespace Rawr.Rogue {
                SpellHit = stats.SpellHit,
                SpellCrit = stats.SpellCrit,
                SpellCritOnTarget = stats.SpellCritOnTarget,
-               BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier
-           };
+
+                // Damage Procs
+               ShadowDamage = stats.ShadowDamage,
+               ArcaneDamage = stats.ArcaneDamage,
+               HolyDamage = stats.HolyDamage,
+               NatureDamage = stats.NatureDamage,
+               FrostDamage = stats.FrostDamage,
+               FireDamage = stats.FireDamage,
+               ProcdShadowDamageMin = stats.ProcdShadowDamageMin,
+               ProcdArcaneDamageMin = stats.ProcdArcaneDamageMin,
+               ProcdHolyDamageMin = stats.ProcdHolyDamageMin,
+               ProcdNatureDamageMin = stats.ProcdNatureDamageMin,
+               ProcdFrostDamageMin = stats.ProcdFrostDamageMin,
+               ProcdFireDamageMin = stats.ProcdFireDamageMin,
+               ProcdShadowDamageMax = stats.ProcdShadowDamageMax,
+               ProcdArcaneDamageMax = stats.ProcdArcaneDamageMax,
+               ProcdHolyDamageMax = stats.ProcdHolyDamageMax,
+               ProcdNatureDamageMax = stats.ProcdNatureDamageMax,
+               ProcdFrostDamageMax = stats.ProcdFrostDamageMax,
+               ProcdFireDamageMax = stats.ProcdFireDamageMax,
+               BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+               BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+               BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+               BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+               BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+               BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+            };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -759,7 +784,32 @@ namespace Rawr.Rogue {
                     stats.SpellHit +
                     stats.SpellCrit +
                     stats.SpellCritOnTarget +
-                    stats.BonusNatureDamageMultiplier
+
+                    // Damage Procs
+                    stats.ShadowDamage +
+                    stats.ArcaneDamage +
+                    stats.HolyDamage +
+                    stats.NatureDamage +
+                    stats.FrostDamage +
+                    stats.FireDamage +
+                    stats.ProcdShadowDamageMin +
+                    stats.ProcdArcaneDamageMin +
+                    stats.ProcdHolyDamageMin +
+                    stats.ProcdNatureDamageMin +
+                    stats.ProcdFrostDamageMin +
+                    stats.ProcdFireDamageMin +
+                    stats.ProcdShadowDamageMax +
+                    stats.ProcdArcaneDamageMax +
+                    stats.ProcdHolyDamageMax +
+                    stats.ProcdNatureDamageMax +
+                    stats.ProcdFrostDamageMax +
+                    stats.ProcdFireDamageMax +
+                    stats.BonusShadowDamageMultiplier +
+                    stats.BonusArcaneDamageMultiplier +
+                    stats.BonusHolyDamageMultiplier +
+                    stats.BonusNatureDamageMultiplier +
+                    stats.BonusFrostDamageMultiplier +
+                    stats.BonusFireDamageMultiplier
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
