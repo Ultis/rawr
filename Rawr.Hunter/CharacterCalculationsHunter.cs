@@ -14,6 +14,7 @@ namespace Rawr.Hunter
         private float _autoshotDPS;
         private float _BonusAttackProcsDPS;
         private float _wildQuiverDPS;
+        public float SpecProcDPS;
         private float _customDPS;
         public Character character = null;
         public CalculationOptionsHunter calcOpts = null;
@@ -233,7 +234,6 @@ namespace Rawr.Hunter
             set { _wildQuiverDPS = value; }
         }
 
-        //Drizz: Added 27-10-2009
         public double PiercingShotsDPS
         {
             get { return _piercingShotsDPS; }
@@ -257,7 +257,6 @@ namespace Rawr.Hunter
             get { return _piercingShotsDPSChimeraShot; }
             set { _piercingShotsDPSChimeraShot = value; }
         }
-
 
         public float CustomDPS
         {
@@ -490,6 +489,7 @@ namespace Rawr.Hunter
                             "Steady Shot: " + PiercingShotsDPSSteadyShot.ToString("F2") + "\n" +
                             "Aimed Shot: " + PiercingShotsDPSAimedShot.ToString("F2") + "\n" +
                             "Chimera Shot: " + PiercingShotsDPSChimeraShot.ToString("F2") + "\n");
+            dictValues.Add("Special DMG Procs DPS", SpecProcDPS.ToString("F2"));
 
             // Combined DPS
             string zod = (BonusAttackProcsDPS != 0 ? string.Format("*Includes:\r\nZod's Proc: {0:0.0}", BonusAttackProcsDPS) : "");

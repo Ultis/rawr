@@ -187,6 +187,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Hunter DPS:Kill Shot low HP gain",
                         "Hunter DPS:Aspect Loss",
                         "Hunter DPS:Piercing Shots DPS",
+                        "Hunter DPS:Special DMG Procs DPS*Like Bandit's Insignia or Hand-Mounted Pyro Rockets",
 
 				        "Combined DPS:Hunter DPS",
 				        "Combined DPS:Pet DPS",
@@ -1145,7 +1146,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.priorityRotation.calculateFrequencySums();
             }
         }
-        private void GenRotation(Character character, Stats stats, CharacterCalculationsHunter calculatedStats,
+        private static void GenRotation(Character character, Stats stats, CharacterCalculationsHunter calculatedStats,
             CalculationOptionsHunter calcOpts, HunterTalents talents,
             out float rangedWeaponSpeed, out float rangedAmmoDPS, out float rangedWeaponDamage, out float autoShotSpeed,
             out float autoShotsPerSecond, out float specialShotsPerSecond, out float totalShotsPerSecond, out float shotsPerSecondWithoutHawk,
@@ -2317,12 +2318,34 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             #endregion
 
+            #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+            CalculateTriggers(character, calculatedStats, stats, calcOpts, triggerIntervals, triggerChances);
+            DamageProcs.SpecialDamageProcs SDP;
+            calculatedStats.SpecProcDPS = 0f;
+            if (stats._rawSpecialEffectData != null)
+            {
+                SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
+                    calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
+                    triggerIntervals, triggerChances, calcOpts.Duration, combatFactors.DamageReduction);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Arcane);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Nature);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Fire);
+                calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);
+            }
+            #endregion
+
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS
                                                     + calculatedStats.WildQuiverDPS
                                                     + calculatedStats.CustomDPS
                                                     + calculatedStats.killShotSub20FinalGain
                                                     + calculatedStats.aspectBeastLostDPS
-                                                    + calculatedStats.BonusAttackProcsDPS);
+                                                    + calculatedStats.BonusAttackProcsDPS
+                                                    + calculatedStats.SpecProcDPS);
             calculatedStats.HunterSurvPoints = calcOpts.SurvScale *
                                                (0 // TotalHPSOnHunter
                                                 + Health2SurvHunter
@@ -2566,8 +2589,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #endregion
 
                 #region Handle Special Effects
-                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, statsTotal, GetBuffsStats(calcOpts.petActiveBuffs));
+                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, statsTotal,
+                    GetBuffsStats(calcOpts.petActiveBuffs));
                 calculatedStats.pet.GenPetStats();
+
+                Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+                Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+
+                CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, triggerIntervals, triggerChances);
+
+
 
                 if (calcOpts.PetFamily == PetFamily.Wolf
                     && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
@@ -2578,7 +2609,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     statsTotal.AddSpecialEffect(FuriousHowl);
                 }
                 
-                float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
+                /*float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
                 float autoShotSpeed = 0;
                 float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
                 RotationTest rotationTest;
@@ -2587,30 +2618,38 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                     out rotationTest);
 
-                float[] attemptedAtksInterval = { 
-                    1f / totalShotsPerSecond,      // All
-                    1f / autoShotsPerSecond,       // White
-                    1f / specialShotsPerSecond,    // Yellow
-                    1f / autoShotsPerSecond,       // AutoShot
-                    calculatedStats.steadyShot.Cd, // SteadyShot
-                    (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f) // SerpentWyvernStings do damage
-                };
-                float[] petattemptedAtksInterval = {
-                    Math.Max(0f, calculatedStats.pet.PetCompInterval), // All
-                    Math.Max(0f, calculatedStats.pet.PetWhiteInterval), // White
-                    Math.Max(0f, calculatedStats.pet.PetYellowInterval), // Yellow
-                    Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval) // ClawBiteSmack
-                };
-                float bleedHitInterval = talents.PiercingShots > 0 ? 1f : 0f;
-                float dmgDoneInterval = Math.Max(0f, 1f / (totalShotsPerSecond + (bleedHitInterval > 0 ? 1f / bleedHitInterval : 0f)));
+                triggerIntervals.Add(Trigger.Use, 0f);
+                triggerIntervals.Add(Trigger.MeleeHit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
+                triggerIntervals.Add(Trigger.RangedHit, 1f / totalShotsPerSecond);
+                triggerIntervals.Add(Trigger.PhysicalHit, 1f / totalShotsPerSecond);
+                triggerIntervals.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
+                triggerIntervals.Add(Trigger.RangedCrit, 1f / totalShotsPerSecond);
+                triggerIntervals.Add(Trigger.PhysicalCrit, 1f / totalShotsPerSecond);
+                triggerIntervals.Add(Trigger.DoTTick, talents.PiercingShots > 0 ? 1f : 0f);
+                triggerIntervals.Add(Trigger.DamageDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))));
+                triggerIntervals.Add(Trigger.HunterAutoShotHit, 1f / autoShotsPerSecond);
+                triggerIntervals.Add(Trigger.SteadyShotHit, calculatedStats.steadyShot.Cd);
+                triggerIntervals.Add(Trigger.PetClawBiteSmackCrit, Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
+                triggerIntervals.Add(Trigger.SerpentWyvernStingsDoDamage, (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f));
 
                 float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
                 float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
-                float[] hitRates  = { (1f - ChanceToMiss), calculatedStats.pet.WhAtkTable.AnyLand };
-                float[] critRates = { Math.Max(0f, statsTotal.PhysicalCrit), Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit) };
 
-                statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, petattemptedAtksInterval,
-                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, null);
+                triggerChances.Add(Trigger.Use, 0f);
+                triggerChances.Add(Trigger.MeleeHit, calculatedStats.pet.WhAtkTable.AnyLand);
+                triggerChances.Add(Trigger.RangedHit, (1f - ChanceToMiss));
+                triggerChances.Add(Trigger.PhysicalHit, (1f - ChanceToMiss));
+                triggerChances.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
+                triggerChances.Add(Trigger.RangedCrit, Math.Max(0f, statsTotal.PhysicalCrit));
+                triggerChances.Add(Trigger.PhysicalCrit, Math.Max(0f, statsTotal.PhysicalCrit));
+                triggerChances.Add(Trigger.DoTTick, 1f);
+                triggerChances.Add(Trigger.DamageDone, 1f);
+                triggerChances.Add(Trigger.HunterAutoShotHit, (1f - ChanceToMiss));
+                triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
+                triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
+                triggerChances.Add(Trigger.SerpentWyvernStingsDoDamage, 1f);*/
+
+                statsProcs += GetSpecialEffectsStats(character, triggerIntervals, triggerChances, statsTotal, null);
 
                 #region Handle Results of Special Effects
                 // Base Stats
@@ -2662,9 +2701,57 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
         }
 
+        private static void CalculateTriggers(Character character, CharacterCalculationsHunter calculatedStats, Stats statsTotal,
+            CalculationOptionsHunter calcOpts,
+            Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
+        {
+            int levelDif = calcOpts.TargetLevel - character.Level;
+            HunterTalents talents = character.HunterTalents;
+            float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
+            float autoShotSpeed = 0;
+            float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
+            RotationTest rotationTest;
+            GenRotation(character, statsTotal, calculatedStats, calcOpts, talents,
+                out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
+                out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
+                out rotationTest);
+
+            triggerIntervals.Add(Trigger.Use, 0f);
+            triggerIntervals.Add(Trigger.MeleeHit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
+            triggerIntervals.Add(Trigger.RangedHit, 1f / totalShotsPerSecond);
+            triggerIntervals.Add(Trigger.PhysicalHit, 1f / totalShotsPerSecond);
+            triggerIntervals.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
+            triggerIntervals.Add(Trigger.RangedCrit, 1f / totalShotsPerSecond);
+            triggerIntervals.Add(Trigger.PhysicalCrit, 1f / totalShotsPerSecond);
+            triggerIntervals.Add(Trigger.DoTTick, talents.PiercingShots > 0 ? 1f : 0f);
+            triggerIntervals.Add(Trigger.DamageDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))));
+            triggerIntervals.Add(Trigger.HunterAutoShotHit, 1f / autoShotsPerSecond);
+            triggerIntervals.Add(Trigger.SteadyShotHit, calculatedStats.steadyShot.Cd);
+            triggerIntervals.Add(Trigger.PetClawBiteSmackCrit, Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
+            triggerIntervals.Add(Trigger.SerpentWyvernStingsDoDamage, (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f));
+
+            float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
+            float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
+
+            triggerChances.Add(Trigger.Use, 1f);
+            triggerChances.Add(Trigger.MeleeHit, calculatedStats.pet.WhAtkTable.AnyLand);
+            triggerChances.Add(Trigger.RangedHit, (1f - ChanceToMiss));
+            triggerChances.Add(Trigger.PhysicalHit, (1f - ChanceToMiss));
+            triggerChances.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
+            triggerChances.Add(Trigger.RangedCrit, Math.Max(0f, statsTotal.PhysicalCrit));
+            triggerChances.Add(Trigger.PhysicalCrit, Math.Max(0f, statsTotal.PhysicalCrit));
+            triggerChances.Add(Trigger.DoTTick, 1f);
+            triggerChances.Add(Trigger.DamageDone, 1f);
+            triggerChances.Add(Trigger.HunterAutoShotHit, (1f - ChanceToMiss));
+            triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
+            triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
+            triggerChances.Add(Trigger.SerpentWyvernStingsDoDamage, 1f);
+        }
+
         private Stats GetSpecialEffectsStats(Character Char,
-            float[] attemptedAtkInterval, float[] petattemptedAtksInterval,
-            float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval,
+            Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
+            //float[] attemptedAtkInterval, float[] petattemptedAtksInterval,
+            //float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             cacheChar = Char;
@@ -2698,8 +2785,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                             float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
                             _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                             Stats _stats2 = GetSpecialEffectsStats(Char,
-                                attemptedAtkInterval, petattemptedAtksInterval,
-                                hitRates, critRates, bleedHitInterval, dmgDoneInterval, statsTotal, _stats);
+                                triggerIntervals, triggerChances,
+                                //attemptedAtkInterval, petattemptedAtksInterval,
+                                //hitRates, critRates, bleedHitInterval, dmgDoneInterval,
+                                statsTotal, _stats);
                             _stats = _stats2 * uptime;
                         } else {
                             _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
@@ -2707,73 +2796,73 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         statsProcs.Accumulate(_stats);
                         break;
                     case Trigger.MeleeHit: // Pets Only
-                        if (petattemptedAtksInterval[0] > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[0], hitRates[1], speed, fightDuration);
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             statsProcs += add;
                         }
                         break;
                     case Trigger.RangedHit:
                     case Trigger.PhysicalHit:
-                        if (attemptedAtkInterval[0] > 0f) {
+                        if (triggerIntervals[effect.Trigger] > 0f) {
                             Stats add = new Stats();
                             float weight = 1.0f;
                             if (effect.Stats.DeathbringerProc > 0) {
-                                add = effect.GetAverageStats(attemptedAtkInterval[0], hitRates[0], speed, fightDuration);
+                                add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                 add.ArmorPenetrationRating = Math.Min(DbpArPValue / effect.Stats.DeathbringerProc * add.DeathbringerProc, add.DeathbringerProc);
                                 add.CritRating = add.DeathbringerProc;
                                 add.Strength = add.DeathbringerProc;
                                 add.DeathbringerProc = 0f;
                                 weight = 1f / 3f;
                             } else {
-                                add = effect.GetAverageStats(attemptedAtkInterval[0], hitRates[0], speed, fightDuration);
+                                add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             }
                             statsProcs.Accumulate(add, weight);
                         }
                         break;
                     case Trigger.MeleeCrit: // Pets Only
-                        if (petattemptedAtksInterval[0] > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[0], Math.Min(1f, critRates[1]), speed, fightDuration);
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             statsProcs.Accumulate(add);
                         }
                         break;
                     case Trigger.RangedCrit:
                     case Trigger.PhysicalCrit:
-                        if (attemptedAtkInterval[0] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval[0], Math.Min(1f, critRates[0]), speed, fightDuration);
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             statsProcs.Accumulate(add);
                         }
                         break;
                     case Trigger.DoTTick:
-                        if (bleedHitInterval > 0f) {
-                            statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, speed, fightDuration);
-                        } // 1/sec DeepWounds, 1/3sec Rend
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                        }
                         break;
                     case Trigger.DamageDone: // physical and dots
-                        if (dmgDoneInterval > 0f) {
-                            statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, speed, fightDuration);
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                         }
                         break;
                     case Trigger.HunterAutoShotHit:
-                        if (attemptedAtkInterval[3] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval[3], hitRates[0], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs.Accumulate(add);
                         }
                         break;
                     case Trigger.SteadyShotHit:
-                        if (attemptedAtkInterval[4] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval[4], hitRates[0], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs.Accumulate(add);
                         }
                         break;
                     case Trigger.PetClawBiteSmackCrit:
-                        if (petattemptedAtksInterval[3] > 0f) {
-                            Stats add = effect.GetAverageStats(petattemptedAtksInterval[3], Math.Min(1f, critRates[1]), speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs.Accumulate(add);
                         }
                         break;
                     case Trigger.SerpentWyvernStingsDoDamage:
-                        if (attemptedAtkInterval[5] > 0f) {
-                            Stats add = effect.GetAverageStats(attemptedAtkInterval[5], 1f, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
                             statsProcs.Accumulate(add);
                         }
                         break;
