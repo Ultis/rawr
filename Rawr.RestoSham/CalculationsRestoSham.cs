@@ -307,6 +307,7 @@ namespace Rawr.RestoSham
         }
         #region Calculations Variables to be Carried Over
         public float HealPerSec { get; set; }
+        public float HealHitPerSec { get; set; }
         public float CritPerSec { get; set; }
         public float FightSeconds { get; set; }
         public float ELWHPS { get; set; }
@@ -498,6 +499,7 @@ namespace Rawr.RestoSham
             CritsPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
             HealPerSec = HealsPerSec;
             CritPerSec = CritsPerSec;
+            HealHitPerSec = (RTPerSec * 2f) + LHWPerSec + HWPerSec + (CHPerSec * 2.5f);
             FightSeconds = options.FightLength * 60f;
             if (RTPerSec > 0)
                 stats.SpellHaste += stats.RestoSham2T10 * (.2f / 6f);
@@ -512,6 +514,9 @@ namespace Rawr.RestoSham
                 {
                     case (Trigger.HealingSpellCast):
                         effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case (Trigger.HealingSpellHit):
+                        effect.AccumulateAverageStats(statsProcs2, (1f / HealHitPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case (Trigger.HealingSpellCrit):
                         effect.AccumulateAverageStats(statsProcs2, (1f / CritPerSec), effect.Chance, 0f, FightSeconds);
@@ -537,7 +542,7 @@ namespace Rawr.RestoSham
             #endregion
             #endregion
             #region Calculate Sequence HPS/MPS
-            calcStats.HSTHeals = (((stats.SpellPower * .044f) + 25) * (1f + (character.ShamanTalents.RestorativeTotems * .15f)) * (1f + (character.ShamanTalents.GlyphofHealingStreamTotem ? .2f : 0))) / 2;
+            calcStats.HSTHeals = ((((stats.SpellPower * .044f) + 25) * (1f + (character.ShamanTalents.RestorativeTotems * .15f)) * (1f + (character.ShamanTalents.GlyphofHealingStreamTotem ? .2f : 0))) / 2) + (calcStats.BasicStats.Healed);
             calcStats.BurstSequence = options.BurstStyle;
             if (options.BurstStyle.Equals("CH Spam"))
                 calcStats.BurstHPS = (calcStats.CHSpamHPS);
@@ -621,7 +626,7 @@ namespace Rawr.RestoSham
             float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS)), 1);
             calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + ESHPS;
             calcStats.SustainedHPS = ((SustHPS * Converter) * MAPSConvert) + ESHPS;
-            calcStats.Survival = calcStats.BasicStats.Health * (options.SurvivalPerc * .01f);
+            calcStats.Survival = (calcStats.BasicStats.Health + calcStats.BasicStats.Hp5) * (options.SurvivalPerc * .01f);
             calcStats.OverallPoints = calcStats.BurstHPS + calcStats.SustainedHPS + calcStats.Survival;
             calcStats.SubPoints[0] = calcStats.BurstHPS;
             calcStats.SubPoints[1] = calcStats.SustainedHPS;
@@ -686,6 +691,9 @@ namespace Rawr.RestoSham
                 {
                     case (Trigger.HealingSpellCast):
                         effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), effect.Chance, 0f, FightSeconds);
+                        break;
+                    case (Trigger.HealingSpellHit):
+                        effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), effect.Chance, 0f, FightSeconds);
                         break;
                     case (Trigger.HealingSpellCrit):
                         effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), effect.Chance, 0f, FightSeconds);
