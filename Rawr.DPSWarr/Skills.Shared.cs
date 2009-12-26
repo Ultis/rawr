@@ -854,8 +854,14 @@ namespace Rawr.DPSWarr.Skills
             {
                 if (StatS.ShadowDamage == 0) return 0f;
                 float dmg;
-                if (Char.MainHand.Item.Stats._rawSpecialEffectDataSize != 0) dmg = Char.MainHand.Item.Stats._rawSpecialEffectData[0].Stats.ShadowDamage;
-                else if (Char.OffHand != null && Char.OffHand.Item.Stats._rawSpecialEffectDataSize != 0) dmg = Char.OffHand.Item.Stats._rawSpecialEffectData[0].Stats.ShadowDamage;
+                if (Char.MainHand != null
+                    && Char.MainHand.Item.Stats._rawSpecialEffectDataSize != 0
+                    && Char.MainHand.Item.Stats._rawSpecialEffectData[0] != null)
+                    dmg = Char.MainHand.Item.Stats._rawSpecialEffectData[0].Stats.ShadowDamage;
+                else if (Char.OffHand != null
+                    && Char.OffHand.Item.Stats._rawSpecialEffectDataSize != 0
+                    && Char.OffHand.Item.Stats._rawSpecialEffectData[0] != null)
+                    dmg = Char.OffHand.Item.Stats._rawSpecialEffectData[0].Stats.ShadowDamage;
                 else return 0f;
                 dmg *= 1f + StatS.BonusDamageMultiplier;
 

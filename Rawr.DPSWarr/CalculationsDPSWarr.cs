@@ -169,6 +169,7 @@ These numbers to do not include racial bonuses.",
                         "DPS Breakdown (General):White DPS",
                         "DPS Breakdown (General):Execute*<20% Spamming only",
                         "DPS Breakdown (General):Spell Damage Procs*Such as from Bryntroll or Shadowmourne",
+                        "DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia or Hand Mounted Pyro Rocket",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
                       
@@ -389,7 +390,6 @@ These numbers to do not include racial bonuses.",
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
-                ArcaneDamage = stats.ArcaneDamage,
                 // Bonuses
                 BonusArmor = stats.BonusArmor,
                 WeaponDamage = stats.WeaponDamage,
@@ -409,10 +409,34 @@ These numbers to do not include racial bonuses.",
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
-                ManaorEquivRestore = stats.ManaorEquivRestore,
                 DeathbringerProc = stats.DeathbringerProc,
+                ManaorEquivRestore = stats.ManaorEquivRestore,
+                // Damage Procs
                 ShadowDamage = stats.ShadowDamage,
-                // Multipliers
+                ArcaneDamage = stats.ArcaneDamage,
+                HolyDamage = stats.HolyDamage,
+                NatureDamage = stats.NatureDamage,
+                FrostDamage = stats.FrostDamage,
+                FireDamage = stats.FireDamage,
+                ProcdShadowDamageMin = stats.ProcdShadowDamageMin,
+                ProcdArcaneDamageMin = stats.ProcdArcaneDamageMin,
+                ProcdHolyDamageMin = stats.ProcdHolyDamageMin,
+                ProcdNatureDamageMin = stats.ProcdNatureDamageMin,
+                ProcdFrostDamageMin = stats.ProcdFrostDamageMin,
+                ProcdFireDamageMin = stats.ProcdFireDamageMin,
+                ProcdShadowDamageMax = stats.ProcdShadowDamageMax,
+                ProcdArcaneDamageMax = stats.ProcdArcaneDamageMax,
+                ProcdHolyDamageMax = stats.ProcdHolyDamageMax,
+                ProcdNatureDamageMax = stats.ProcdNatureDamageMax,
+                ProcdFrostDamageMax = stats.ProcdFrostDamageMax,
+                ProcdFireDamageMax = stats.ProcdFireDamageMax,
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                    // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -478,7 +502,6 @@ These numbers to do not include racial bonuses.",
                 stats.HasteRating +
                 stats.ExpertiseRating +
                 stats.ArmorPenetrationRating +
-                stats.ArcaneDamage +
                 // Bonuses
                 stats.BonusArmor +
                 stats.WeaponDamage +
@@ -498,9 +521,33 @@ These numbers to do not include racial bonuses.",
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
                 stats.Paragon +
-                stats.ManaorEquivRestore +
                 stats.DeathbringerProc +
+                stats.ManaorEquivRestore +
+                // Damage Procs
                 stats.ShadowDamage +
+                stats.ArcaneDamage +
+                stats.HolyDamage +
+                stats.NatureDamage +
+                stats.FrostDamage +
+                stats.FireDamage +
+                stats.ProcdShadowDamageMin +
+                stats.ProcdArcaneDamageMin +
+                stats.ProcdHolyDamageMin +
+                stats.ProcdNatureDamageMin +
+                stats.ProcdFrostDamageMin +
+                stats.ProcdFireDamageMin +
+                stats.ProcdShadowDamageMax +
+                stats.ProcdArcaneDamageMax +
+                stats.ProcdHolyDamageMax +
+                stats.ProcdNatureDamageMax +
+                stats.ProcdFrostDamageMax +
+                stats.ProcdFireDamageMax +
+                stats.BonusShadowDamageMultiplier +
+                stats.BonusArcaneDamageMultiplier +
+                stats.BonusHolyDamageMultiplier +
+                stats.BonusNatureDamageMultiplier +
+                stats.BonusFrostDamageMultiplier +
+                stats.BonusFireDamageMultiplier +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusStrengthMultiplier +
@@ -1067,6 +1114,28 @@ These numbers to do not include racial bonuses.",
 
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
+                // Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
+                Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+                Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+                CalculateTriggers(character, Rot, combatFactors, calcOpts, triggerIntervals, triggerChances);
+                DamageProcs.SpecialDamageProcs SDP;
+                calculatedStats.SpecProcDPS = 0f;
+                if (stats._rawSpecialEffectData != null)
+                {
+                    SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
+                        calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
+                        triggerIntervals, triggerChances, calcOpts.Duration, combatFactors.DamageReduction);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Arcane);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Nature);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Fire);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);
+                }
+                calculatedStats.TotalDPS += calculatedStats.SpecProcDPS;
+
+                // Survivability
                 if (stats.HealthRestoreFromMaxHealth > 0) {
                     stats.HealthRestore += stats.HealthRestoreFromMaxHealth * stats.Health * calcOpts.Duration;
                 }
@@ -1689,7 +1758,7 @@ These numbers to do not include racial bonuses.",
                     }
                     else
                     {
-                        int j = 0;
+                        //int j = 0;
                     }
                 }
 
@@ -1710,8 +1779,9 @@ These numbers to do not include racial bonuses.",
 
             float upTime = 0f;
             //float avgStack = 1f;
-            if (effect.Stats.ArmorPenetration > 0f || effect.Stats.ArmorPenetrationRating > 0f)
-            { int j = 0; }
+            if (effect.Stats.ArmorPenetration > 0f || effect.Stats.ArmorPenetrationRating > 0f) {
+                //int j = 0;
+            }
             if (effect.Trigger == Trigger.Use)
             {
                     if (effect.Stats._rawSpecialEffectDataSize == 1) {

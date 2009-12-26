@@ -68,6 +68,7 @@ namespace Rawr.DPSWarr {
         public float WhiteDmg { get; set; }
         public float WhiteDPSMH { get; set; }
         public float WhiteDPSOH { get; set; }
+        public float SpecProcDPS { get; set; }
         public float TotalDamagePerSecond { get; set; }
         #endregion
         #region Abilities
@@ -252,7 +253,8 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Execute",               string.Format(format,Rot._EX_DPS, EX.DamageOnUse, Rot._EX_GCDs) + EX.GenTooltip(Rot._EX_GCDs, Rot._EX_DPS / TotalDPS));
             //*/
             dictValues.Add("White DPS", string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
-            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS",Rot.DW.TickSize     ,Rot.DW.TickSize/TotalDPS));
+            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize,Rot.DW.TickSize/TotalDPS));
+            dictValues.Add("Special DMG Procs",     string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS / TotalDPS));
             dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:0000}";

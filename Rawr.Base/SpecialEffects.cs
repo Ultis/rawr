@@ -693,7 +693,7 @@ namespace Rawr {
             }
             else if (line == "Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.")
             {   //Bandit's Insignia
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880 }, 0f, 45f, 0.15f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880, ProcdArcaneDamageMin = 1504f, ProcdArcaneDamageMax = 2256f, }, 0f, 45f, 0.15f));
             }
             else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
             {
@@ -955,19 +955,34 @@ namespace Rawr {
             {
                 // Pendulum of Telluric Currents
                 stats.PendulumOfTelluricCurrentsProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { ShadowDamage = 1460 }, 0f, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats()
+                {
+                    ShadowDamage = 1460,
+                    ProcdShadowDamageMin = 1168,
+                    ProcdShadowDamageMax = 1752,
+                }, 0f, 45f, .1f));
             }
             else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
             {
                 // Extract of Necromantic Power
                 stats.ExtractOfNecromanticPowerProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { ShadowDamage = 1050f }, 0f, 45f, .1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats()
+                { 
+                    ShadowDamage = 1050f,
+                    ProcdShadowDamageMin = 788,
+                    ProcdShadowDamageMax = 1312,
+                }, 0f, 45f, .1f));
             }
             else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage."))
             {
                 // Darkmoon Card: Death
                 stats.DarkmoonCardDeathProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { ShadowDamage = 2000f }, 0f, 45f, .35f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats()
+                {
+                    ShadowDamage = 2000f,
+                    ProcdShadowDamageMin = 1750,
+                    ProcdShadowDamageMax = 2250,
+                }, 0f, 45f, .35f));
             }
             else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
             {
@@ -1027,7 +1042,12 @@ namespace Rawr {
             }
             else if ((match = new Regex("Steals (?<amount1>\\d\\d*) to (?<amount2>\\d\\d*) life from target enemy\\.").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ShadowDamage = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f }, 0f, 0f, 0.15f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
+                {
+                    ShadowDamage = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f,
+                    ProcdShadowDamageMin = int.Parse(match.Groups["amount1"].Value),
+                    ProcdShadowDamageMax = int.Parse(match.Groups["amount2"].Value),
+                }, 0f, 0f, 0.15f));
             }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {

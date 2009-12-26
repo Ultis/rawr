@@ -161,6 +161,9 @@
     <Compile Include="..\..\Rawr.Base\SerializableDictionary.cs">
       <Link>SerializableDictionary.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialDamageProcs.cs">
+      <Link>SpecialDamageProcs.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\SpecialEffect.cs">
       <Link>SpecialEffect.cs</Link>
     </Compile>

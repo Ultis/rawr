@@ -1249,7 +1249,8 @@ namespace Rawr
                             name.Contains("Hyperspeed Accelerators")   ||
                             name.Contains("Reticulated Armor Webbing") ||
                             name.Contains("Nitro Boosts") ||
-                            name.Contains("Springy Arachnoweave"))
+                            name.Contains("Springy Arachnoweave") ||
+                            name.Contains("Hand-Mounted"))
                         {
                             return false;
                         }

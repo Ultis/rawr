@@ -600,7 +600,9 @@ namespace Rawr
             Stats icebreaker = new Stats();
             icebreaker.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
                 new Stats() { // the .85 and .15 are simming spell hits vs spell crits
-                    FireDamage = ((209f + 234f) / 2f) * 0.85f + ((317f + 340f) / 2f) * 0.15f
+                    FireDamage = ((209f + 234f) / 2f) * 0.85f + ((317f + 340f) / 2f) * 0.15f,
+                    ProcdFireDamageMin = 185f,
+                    ProcdFireDamageMax = 215f,
                 },
                 1f, 0f, 0.05f));
             defaultEnchants.Add(new Enchant(3790, "Icebreaker", ItemSlot.OneHand, icebreaker));
@@ -747,7 +749,12 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(3855, "Spellpower (Staff)", ItemSlot.TwoHand, new Stats() { SpellPower = 69 }));
 
             Stats rockets = new Stats();
-            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1837f }, 0f, 45f));
+            rockets.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats()
+            { 
+                FireDamage = 1837f,
+                ProcdFireDamageMin = 1654f,
+                ProcdFireDamageMax = 2020f,
+            }, 0f, 45f));
             defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", ItemSlot.Hands, rockets));
             return defaultEnchants;
         }

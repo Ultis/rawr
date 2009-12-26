@@ -155,7 +155,7 @@ namespace Rawr.DPSWarr {
         public float BonusWhiteCritDmg {
             get {
                 if (_BonusWhiteCritDmg == -1f) {
-                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f)* 
+                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) * 
                         (1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
                 }
                 return _BonusWhiteCritDmg;
