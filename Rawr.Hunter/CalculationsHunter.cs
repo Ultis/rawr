@@ -341,10 +341,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc,
-                FireDamage   = stats.FireDamage,
-                ArcaneDamage = stats.ArcaneDamage,
-                ShadowDamage = stats.ShadowDamage,
-                NatureDamage = stats.NatureDamage,
                 MovementSpeed = stats.MovementSpeed,
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
@@ -388,15 +384,34 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
-
-                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
-                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
-                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
-                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
-                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+
+                // Damage Procs
+                ShadowDamage = stats.ShadowDamage,
+                ArcaneDamage = stats.ArcaneDamage,
+                HolyDamage = stats.HolyDamage,
+                NatureDamage = stats.NatureDamage,
+                FrostDamage = stats.FrostDamage,
+                FireDamage = stats.FireDamage,
+                ProcdShadowDamageMin = stats.ProcdShadowDamageMin,
+                ProcdArcaneDamageMin = stats.ProcdArcaneDamageMin,
+                ProcdHolyDamageMin = stats.ProcdHolyDamageMin,
+                ProcdNatureDamageMin = stats.ProcdNatureDamageMin,
+                ProcdFrostDamageMin = stats.ProcdFrostDamageMin,
+                ProcdFireDamageMin = stats.ProcdFireDamageMin,
+                ProcdShadowDamageMax = stats.ProcdShadowDamageMax,
+                ProcdArcaneDamageMax = stats.ProcdArcaneDamageMax,
+                ProcdHolyDamageMax = stats.ProcdHolyDamageMax,
+                ProcdNatureDamageMax = stats.ProcdNatureDamageMax,
+                ProcdFrostDamageMax = stats.ProcdFrostDamageMax,
+                ProcdFireDamageMax = stats.ProcdFireDamageMax,
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -455,6 +470,31 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.Paragon +
                 stats.ManaorEquivRestore +
                 stats.DeathbringerProc +
+                // Damage Procs
+                stats.ShadowDamage +
+                stats.ArcaneDamage +
+                stats.HolyDamage +
+                stats.NatureDamage +
+                stats.FrostDamage +
+                stats.FireDamage +
+                stats.ProcdShadowDamageMin +
+                stats.ProcdArcaneDamageMin +
+                stats.ProcdHolyDamageMin +
+                stats.ProcdNatureDamageMin +
+                stats.ProcdFrostDamageMin +
+                stats.ProcdFireDamageMin +
+                stats.ProcdShadowDamageMax +
+                stats.ProcdArcaneDamageMax +
+                stats.ProcdHolyDamageMax +
+                stats.ProcdNatureDamageMax +
+                stats.ProcdFrostDamageMax +
+                stats.ProcdFireDamageMax +
+                stats.BonusShadowDamageMultiplier +
+                stats.BonusArcaneDamageMultiplier +
+                stats.BonusHolyDamageMultiplier +
+                stats.BonusNatureDamageMultiplier +
+                stats.BonusFrostDamageMultiplier +
+                stats.BonusFireDamageMultiplier +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusAttackPowerMultiplier +
@@ -481,13 +521,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.ScopeDamage +
                 stats.BonusManaPotion +
                 stats.BonusPetCritChance +
-                // Special Damage Type Effectors
-                stats.FireDamage   + stats.BonusFireDamageMultiplier +
-                stats.ArcaneDamage + stats.BonusArcaneDamageMultiplier +
-                stats.ShadowDamage + stats.BonusShadowDamageMultiplier +
-                stats.FrostDamage  + stats.BonusFrostDamageMultiplier +
-                stats.HolyDamage   + stats.BonusHolyDamageMultiplier +
-                stats.NatureDamage + stats.BonusNatureDamageMultiplier
             ) != 0;
 
             foreach (SpecialEffect e in stats.SpecialEffects())
