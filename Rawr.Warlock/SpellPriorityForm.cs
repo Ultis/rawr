@@ -1,32 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Rawr.Warlock {
-    public partial class SpellPriorityForm : Form {
-        public List<string> SpellPriority { get; protected set; }
-        private ListBox MirrowList { get; set; }
-        private Character character;
+    public partial class SpellPriorityForm : Form 
+    {
+        private readonly ListBox _spellPriority;
+        private readonly List<string> _warlockSpells;
 
-        public SpellPriorityForm(List<string> spells, ListBox mirrowList, Character _character) {
-            SpellPriority = spells;
-            MirrowList = mirrowList;
-            character = _character;
-
+        public SpellPriorityForm(List<string> warlockSpells, ListBox spellPriority) 
+        {
             InitializeComponent();
-            foreach (string spell in spells) {
-                if (Spell.SpellList.Contains(spell)) { lsSpellPriority.Items.Add(spell); }
-            }
-            foreach (string spell in Spell.SpellList) {
-                if (!spells.Contains(spell)) { cmbSpells.Items.Add(spell); }
+
+            _warlockSpells = warlockSpells;
+            _spellPriority = spellPriority;
+
+            //populate the listbox with the spells to be used for combat
+            lsSpellPriority.Items.AddRange(spellPriority.Items);
+
+            //populate the combobox with all other spells known by the warlock
+            foreach (string spell in warlockSpells)
+            {
+                if (!spellPriority.Items.Contains(spell))
+                {
+                    cmbSpells.Items.Add(spell);
+                }
             }
         }
 
-        private void bAdd_Click(object sender, EventArgs e) {
+        private void bAdd_Click(object sender, EventArgs e) 
+        {
             if (cmbSpells.SelectedItem == null) { return; }
 
             lsSpellPriority.Items.Add(cmbSpells.SelectedItem);
@@ -34,43 +37,41 @@ namespace Rawr.Warlock {
             cmbSpells.SelectedText = "";
         }
 
-        private void bUp_Click(object sender, EventArgs e) {
+        private void bUp_Click(object sender, EventArgs e) 
+        {
             if (lsSpellPriority.SelectedItem == null || lsSpellPriority.SelectedIndex == 0) { return; }
 
             lsSpellPriority.Items.Insert(lsSpellPriority.SelectedIndex - 1, lsSpellPriority.SelectedItem);
             lsSpellPriority.Items.RemoveAt(lsSpellPriority.SelectedIndex);
         }
 
-        private void bDown_Click(object sender, EventArgs e) {
+        private void bDown_Click(object sender, EventArgs e) 
+        {
             if (lsSpellPriority.SelectedItem == null || lsSpellPriority.SelectedIndex == lsSpellPriority.Items.Count - 1) { return; }
 
             lsSpellPriority.Items.Insert(lsSpellPriority.SelectedIndex + 2, lsSpellPriority.SelectedItem);
             lsSpellPriority.Items.RemoveAt(lsSpellPriority.SelectedIndex);
         }
 
-        private void bRemove_Click(object sender, EventArgs e) {
+        private void bRemove_Click(object sender, EventArgs e) 
+        {
             if (lsSpellPriority.SelectedItem == null) { return; }
 
             cmbSpells.Items.Add(lsSpellPriority.SelectedItem);
             lsSpellPriority.Items.RemoveAt(lsSpellPriority.SelectedIndex);
         }
 
-        private void bClear_Click(object sender, EventArgs e) {
-            if (lsSpellPriority.Items.Count == 0) { return; }
-
-            foreach (Object o in lsSpellPriority.Items) { cmbSpells.Items.Add(o); }
-
+        private void bClear_Click(object sender, EventArgs e) 
+        {
             lsSpellPriority.Items.Clear();
+            cmbSpells.Items.Clear();
+            cmbSpells.Items.AddRange(_warlockSpells.ToArray());
         }
 
-        private void bSave_Click(object sender, EventArgs e) {
-            SpellPriority.Clear();
-            MirrowList.Items.Clear();
-            foreach (Object o in lsSpellPriority.Items) {
-                SpellPriority.Add(o.ToString());
-                MirrowList.Items.Add(o);
-            }
-            character.OnCalculationsInvalidated();
+        private void bSave_Click(object sender, EventArgs e) 
+        {
+            _spellPriority.Items.Clear();
+            _spellPriority.Items.AddRange(lsSpellPriority.Items);
             Hide();
         }
     }

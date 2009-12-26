@@ -1,32 +1,60 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Diagnostics;
 
 namespace Rawr.Warlock 
 {
-    public class CharacterCalculationsWarlock : CharacterCalculationsBase 
+    public class CharacterCalculationsWarlock : CharacterCalculationsBase
     {
-        #region Variables
-        private Stats basicStats;
-        private Character character;
+        #region priority queues
+        private readonly PriorityQueue<Spell> _warlockAbilities = new PriorityQueue<Spell>();
+        private readonly PriorityQueue<Spell> _petAbilities = new PriorityQueue<Spell>();
+        #endregion
 
-        public float SpiritRegen { get; set; }
-        public float RegenInFSR { get; set; }
-        public float RegenOutFSR { get; set; }
-        public CharacterRace Race { get; set; }
+        #region properties
+        private Character Character { get; set; }
+        private Stats TotalStats { get; set; }
+        private CalculationOptionsWarlock Options { get; set; }
+        #endregion
 
-        public Character Character 
-        {
-            get { return character; }
-            set { character = value; }
-        }
+        //replaced by a generic dictionary<string, double> type
+        //public class ManaSource
+        //{
+        //    public string Name { get; set; }
+        //    public float Value { get; set; }
+
+        //    public ManaSource(string name, float value)
+        //    {
+        //        Name = name;
+        //        Value = value;
+        //    }
+        //}
+        //public List<ManaSource> ManaSources { get; set; }
+        public Dictionary<string, double> ManaSources = new Dictionary<string, double>();
+
+        /// <summary>
+        /// A collection of spells that will be used during combat.
+        /// </summary>
+        public List<Spell> SpellPriority { get; protected set; }
+
+
+        #region combat auras
+        public Backdraft Backdraft = new Backdraft();
+        public Decimation Decimation = new Decimation();
+        public ShadowEmbrace ShadowEmbrace = new ShadowEmbrace();
+        public Pyroclasm Pyroclasm = new Pyroclasm();
+        #endregion
+
+
+        /// <summary>
+        /// The events that occurred during combat.
+        /// </summary>
+        public ArrayList Events = new ArrayList();
+
+        public string Name { get; protected set; }
+        public string Abilities { get; protected set; }
         
-        public Stats BasicStats 
-        {
-            get { return basicStats; }
-            set { basicStats = value; }
-        }
-
         public override float OverallPoints 
         {
             get 
@@ -38,7 +66,7 @@ namespace Rawr.Warlock
             set { }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new[] { 0f, 0f };
         public override float[] SubPoints 
         {
             get { return _subPoints; }
@@ -56,149 +84,379 @@ namespace Rawr.Warlock
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
         }
-        #endregion
 
-        public Solver GetSolver(Character character, Stats stats) 
-        { 
-            return new Solver(stats, character); 
+        public float OverallDamage { get; protected set; }
+        public float TotalManaCost { get; protected set; }
+
+        public float Time
+        {
+            get
+            {
+                return (Options.FightLength * 60);
+            }
+        }
+        public float ActiveTime { get; set; }
+
+        #region constructors
+        public CharacterCalculationsWarlock( )
+        {
+            Name = "Priority-based";
+            Abilities = "Abilities:";
+            SpellPriority = new List<Spell>();
         }
 
+        public CharacterCalculationsWarlock( Character character, Stats stats ) : this()
+        {
+            Character = character;
+            TotalStats = stats;
+
+            if (Character.CalculationOptions == null)
+            {
+                Character.CalculationOptions = new CalculationOptionsWarlock();
+            }
+
+            Options = (CalculationOptionsWarlock)Character.CalculationOptions;
+            if (Options.SpellPriority.Count > 0)
+            {
+                _warlockAbilities.Clear();
+
+                foreach (string s in Options.SpellPriority)
+                {
+                    Abilities += "\r\n- " + s;
+
+                    Spell spell = SpellFactory.CreateSpell(s, stats, character);
+                    if (spell == null) continue;    //i.e. skip over the following lines if null
+                    SpellPriority.Add(spell);       //used by "DPS Sources" comparison calcs
+                    _warlockAbilities.Enqueue(spell);
+
+                    //wire up the event handlers
+                    #region backdraft notifications
+                    if (character.WarlockTalents.Backdraft > 0)
+                    {
+                        if (spell.SpellTree == SpellTree.Destruction)
+                        {
+                            Backdraft.AuraUpdate += spell.BackdraftAuraHandler;
+                            spell.SpellCast += Backdraft.SpellCastHandler;
+                        }
+                    }
+                    #endregion
+                    
+                }
+            }
+        }
+        #endregion
+
+        #region methods
+        public void Calculate()
+        {
+            //SpecialEffect eradication = new SpecialEffect(Trigger.DamageDone);
+
+            if (_warlockAbilities.Count > 0)
+            {
+                SimulateCombat(_warlockAbilities);
+            }
+            
+            //if (_petAbilities.Count > 0)
+            //{
+            //    SimulateCombat(_petAbilities);    
+            //}
+
+            //calculate totals 
+            foreach (Spell spell in SpellPriority)
+            {
+                OverallDamage += (float)spell.SpellStatistics.OverallDamage;
+                TotalManaCost += (float)spell.SpellStatistics.ManaUsed;
+            }
+
+            DpsPoints = (OverallDamage / Time);
+            Trace.WriteLine(string.Format("thread:[{0}] | ActiveTime={1}", System.Threading.Thread.CurrentThread.ManagedThreadId, ActiveTime));
+
+            //StringBuilder sb =  new StringBuilder();
+            //foreach (Spell spell in Events)
+            //{
+            //    sb.AppendLine(string.Format("{0:0.00} {1} casts {2} [damage: {3:0}]", spell.ScheduledTime, Character.Name, spell.Name, spell.MaxDamage));
+            //}
+
+            //Options.castseq = sb.ToString();
+        }
+
+        /// <summary>
+        /// A discrete event simulation of combat over time.
+        /// </summary>
+        private void SimulateCombat(PriorityQueue<Spell> queue)
+        {
+            int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+
+            double timer = 0;
+            double timelimit = (Options.FightLength * 60);  //in seconds
+            double latency = (Options.Latency / 1000);      //in milliseconds
+
+            DateTime start = DateTime.Now;
+
+            List<string> scheduledTicks = new List<string>();
+
+            Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation starts [timelimit: {2:0.00}]", threadID, timer, timelimit));
+
+            while (queue.Count != 0)
+            {
+                #region a quick sanity-check to ensure that the simulation never runs longer than the timelimit
+                if (timer >= timelimit)
+                {
+                    //flush the queue & terminate
+                    queue.Clear();
+                    break;
+                }
+                #endregion
+
+                //get the spell at the front of the queue
+                Spell spell = queue.Dequeue();
+
+                //get the casttime (and take latency into account)
+                double casttime = spell.CastTime();
+                if (casttime == 0)
+                {
+                    //instant cast spell, so we have to add the GCD
+                    casttime += spell.GlobalCooldown();
+                }
+                casttime += latency;
+
+                //There could be some occassions where the spell is not actually ready for casting,
+                //for example, it might still be on cooldown, or perhaps its duration has not expired.
+                //[ or perhaps the rawr user forgot to add a filler spell ... doh! /facepalm ]
+                //In this situation we advance the simulation timer forward to achieve the effect of the spell becoming ready for casting.
+                if (timer < (spell.ScheduledTime))
+                {
+                    timer = (spell.ScheduledTime);
+                }
+
+                //check if there is enough time left to cast this spell
+                if ((timer + casttime) < timelimit)
+                {
+                    Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - begins casting: {2} [{3:0.00}s cast, {4:0.00}s latency] - finish casting @ {5:0.00}s", threadID, timer, spell.Name, spell.CastTime(), latency, (timer + casttime)));
+
+                    //the casttime is the time spent waving your hands around in the air
+                    timer += (casttime);
+
+                    //TODO: check if any dot spells ticked while we were busy casting this spell
+                    //TODO: recalculate stats to account for all combat effects (e.g. +spell, +haste, +spi, +crit bonuses etc)
+                    //spell.Stats = updatedStats;
+                    //or
+                    //spell.Execute(updatedStats);
+
+                    //how long to wait before this spell can be re-cast?
+                    double delay = spell.GetTimeDelay();
+
+                    //we are using a PriorityQueue in this time-based event simulation
+                    //add the delay to the timer - this becomes the spell's new priority in the priorityqueue
+                    //(the priorityqueue is a min-heap queue, i.e. items are removed in ascending order of priority)
+                    //however, in cases where items have the same priority value, they are treated as FIFO.
+                    spell.ScheduledTime = timer + delay;
+
+                    Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - finished casting: {2} - re-cast @ approximately {3:0.00}s", threadID, timer, spell.Name, spell.ScheduledTime));
+
+                    //the spell lands on the target, so calculate damage and trigger any related effects
+                    spell.Execute();
+
+                    //append to the events history
+                    Events.Add(spell);
+
+                    if (spell.ScheduledTime < timelimit)
+                    {
+                        //this spell can be re-cast before the simulation ends, so add it back to the queue
+                        queue.Enqueue(spell);
+                    }
+                    else
+                    {
+                        //the simulation will end before this spell can be re-cast, so we wont bother adding it to the queue
+                        Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - removing {2} spell - the simulation ends before it can be re-casted", threadID, timer, spell.Name));
+                    }
+                }
+                else
+                {
+                    //There is still some simulation time left, but not enough to cast the current spell.
+                    //This means that the simulation is almost finished.
+                    //However, there might be enough time to cast the next spell in the queue ...
+                    if (queue.Count > 0)
+                    {
+                        Spell next = queue.Peek();
+                        Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - not enough time to cast {2} [{3:0.00}s cast, {4:0.00}s lat] - trying next spell: {5}", threadID, timer, spell.Name, spell.CastTime(), latency, next.Name));
+                    }
+                    else
+                    {
+                        Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - not enough time to cast {2} - [this was the last spell in the queue]", threadID, timer, spell.Name));
+                    }
+                }
+            }
+
+            Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation ends [no spells left in the queue]", threadID, timer));
+            DateTime stop = DateTime.Now;
+            Trace.WriteLine(String.Format("thread:[{0}] | simulation time: {1} seconds", threadID, (stop - start).Seconds));
+            Trace.WriteLine("-------------------");
+        }
+
+        private double GetManaRegenFromSpiritAndIntellect()
+        {
+            return (Math.Floor(5f * StatConversion.GetSpiritRegenSec(TotalStats.Spirit, TotalStats.Intellect)));
+        }
+
+        private double GetManaRegenInCombat()
+        {
+            return (GetManaRegenFromSpiritAndIntellect() * TotalStats.SpellCombatManaRegeneration + TotalStats.Mp5);
+        }
+
+        private double GetManaRegenOutOfCombat()
+        {
+            return (GetManaRegenFromSpiritAndIntellect() + TotalStats.Mp5);
+        }
+        #endregion
+
+        /// <summary>
+        /// Builds a dictionary containing the values to display for each of the calculations defined in 
+        /// CharacterDisplayCalculationLabels. The key should be the Label of each display calculation, 
+        /// and the value should be the value to display, optionally appended with '*' followed by any 
+        /// string you'd like displayed as a tooltip on the value.
+        /// </summary>
+        /// <returns>A Dictionary<string, string> containing the values to display for each of the 
+        /// calculations defined in CharacterDisplayCalculationLabels.</returns>
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() 
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            CalculationOptionsWarlock calcOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
-            float Hit = calcOptions.TargetHit;
-            float BonusHit = BasicStats.SpellHit * 100f;
-            float RacialHit = 0;
+            float targetHit = Options.TargetHit;
+            float bonusHit = TotalStats.SpellHit * 100f;
 
-            if (character.Race == CharacterRace.Draenei)
-            {
-                RacialHit = 1;
-                if (!character.ActiveBuffsContains("Heroic Presence")) 
-                { 
-                    BonusHit += 1; 
-                }
-            }
-            float RHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
-            float TalentHit = character.WarlockTalents.Suppression * 1f;
-            float TotalHit = Hit + BonusHit;
-
-            Solver solver = GetSolver(character, BasicStats);
-            solver.Calculate(this);
+            float onePercentOfHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
+            float talentHit = Character.WarlockTalents.Suppression * 1f;
+            float totalHit = targetHit + bonusHit;
 
             #region Simulation stats
-            dictValues.Add("Rotation", String.Format(CultureInfo.InvariantCulture, "{0}*{1}", solver.Name, solver.Rotation));
-            dictValues.Add("DPS", String.Format(CultureInfo.InvariantCulture, "{0}", solver.DPS.ToString("0", CultureInfo.InvariantCulture)));
-            dictValues.Add("Pet DPS", String.Format(CultureInfo.InvariantCulture, "{0}", solver.PetDPS.ToString("0", CultureInfo.InvariantCulture)));
-            dictValues.Add("Total DPS", String.Format(CultureInfo.InvariantCulture, "{0}", solver.TotalDPS.ToString("0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Rotation", String.Format("{0}*{1}", Name, Abilities));
+            dictValues.Add("Warlock DPS", String.Format("{0:0}", DpsPoints));
+            dictValues.Add("Pet DPS", String.Format("{0:0}", PetDPSPoints));
+            dictValues.Add("Total DPS", String.Format("{0:0}", OverallPoints));
+            dictValues.Add("Damage Done", String.Format("{0:0}", OverallDamage));
+            dictValues.Add("Mana Used", String.Format("{0:0}", TotalManaCost));
             #endregion
+
             #region HP/Mana stats
-            dictValues.Add("Health", BasicStats.Health.ToString("0", CultureInfo.InvariantCulture));
-            dictValues.Add("Mana", BasicStats.Mana.ToString("0", CultureInfo.InvariantCulture));
+            dictValues.Add("Health", String.Format("{0:0}", TotalStats.Health));
+            dictValues.Add("Mana", String.Format("{0:0}", TotalStats.Mana));
             #endregion
+
             #region Base stats
-            dictValues.Add("Strength", BasicStats.Strength.ToString(CultureInfo.InvariantCulture));
-            dictValues.Add("Agility", BasicStats.Agility.ToString(CultureInfo.InvariantCulture));
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString(CultureInfo.InvariantCulture));
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString(CultureInfo.InvariantCulture));
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString(CultureInfo.InvariantCulture));
-            dictValues.Add("Armor", BasicStats.Armor.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Strength", String.Format("{0}", TotalStats.Strength));
+            dictValues.Add("Agility", String.Format("{0}", TotalStats.Agility));
+            dictValues.Add("Stamina", String.Format("{0}", TotalStats.Stamina));
+            dictValues.Add("Intellect", String.Format("{0}", TotalStats.Intellect));
+            dictValues.Add("Spirit", String.Format("{0}", TotalStats.Spirit));
+            dictValues.Add("Armor", String.Format("{0}", TotalStats.Armor));
             #endregion
+
             #region Spell stats
-            dictValues.Add("Bonus Damage", String.Format(CultureInfo.InvariantCulture, "{0}*Shadow Damage\t{1}\r\nFire Damage\t{2}\r\n\r\nYour Fire Damage increases your pet's Attack Power by {3} and Spell Damage by {4}.",
-                BasicStats.SpellPower,
-                BasicStats.SpellPower + BasicStats.SpellShadowDamageRating,
-                BasicStats.SpellPower + BasicStats.SpellFireDamageRating,
-                Math.Round((BasicStats.SpellPower + BasicStats.SpellFireDamageRating) * 0.57f, 0),
-                Math.Round((BasicStats.SpellPower + BasicStats.SpellFireDamageRating) * 0.15f, 0)
+            //pet scaling consts: http://www.wowwiki.com/Warlock_minions
+            const float petInheritedAttackPowerPercentage = 0.57f;
+            const float petInheritedSpellPowerPercentage = 0.15f;
+
+            dictValues.Add("Bonus Damage", String.Format("{0}*Shadow Damage\t{1}\r\nFire Damage\t{2}\r\n\r\nYour Fire Damage increases your pet's Attack Power by {3} and Spell Damage by {4}.",
+                TotalStats.SpellPower,
+                TotalStats.SpellPower + TotalStats.SpellShadowDamageRating,
+                TotalStats.SpellPower + TotalStats.SpellFireDamageRating,
+                Math.Round((TotalStats.SpellPower + TotalStats.SpellFireDamageRating) * petInheritedAttackPowerPercentage, 0),
+                Math.Round((TotalStats.SpellPower + TotalStats.SpellFireDamageRating) * petInheritedSpellPowerPercentage, 0)
                 ));
 
-            dictValues.Add("Hit Rating", String.Format("{0}", BasicStats.HitRating));
+            dictValues.Add("Hit Rating", String.Format("{0}", TotalStats.HitRating));
 
-            dictValues.Add("Miss Chance", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}% Total Hit Chance\r\n\r\n{2}%\tfrom {3} Hit Rating\r\n{4}%\tfrom {5} points in Suppression\r\n{6}%\tfrom Buffs\r\n\r\n{7}",
-                Math.Max(0, 100 - TotalHit).ToString("0.00", CultureInfo.InvariantCulture),
-                BonusHit.ToString("0.00", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                BasicStats.HitRating,
-                TalentHit,
-                character.WarlockTalents.Suppression,
-                (BonusHit - StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f - RacialHit - TalentHit).ToString("0.00", CultureInfo.InvariantCulture),
-                (TotalHit > 100f) ? String.Format(CultureInfo.InvariantCulture, "{0} hit rating above cap", Math.Floor((TotalHit - 100f) * RHitRating)) : String.Format(CultureInfo.InvariantCulture, "{0} hit rating below cap", Math.Ceiling((100f - TotalHit) * RHitRating))));
+            dictValues.Add("Miss Chance", String.Format("{0}%*{1}% Total Hit Chance\r\n\r\n{2}%\tfrom {3} Hit Rating\r\n{4}%\tfrom {5} points in Suppression\r\n{6}%\tfrom Buffs\r\n\r\n{7}",
+                Math.Max(0, 100 - totalHit).ToString("0.00"),
+                bonusHit.ToString("0.00"),
+                (StatConversion.GetSpellHitFromRating(TotalStats.HitRating) * 100f).ToString("0.00"),
+                TotalStats.HitRating,
+                talentHit,
+                Character.WarlockTalents.Suppression,
+                (bonusHit - StatConversion.GetSpellHitFromRating(TotalStats.HitRating) * 100f - talentHit).ToString("0.00"),
+                (totalHit > 100f) ? String.Format("{0} hit rating above cap", Math.Floor((totalHit - 100f) * onePercentOfHitRating)) : String.Format("{0} hit rating below cap", Math.Ceiling((100f - totalHit) * onePercentOfHitRating))));
             
-            dictValues.Add("Crit", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}%\tfrom {2} Spell Crit rating\r\n{3}%\tfrom Intellect\r\n{4}%\tfrom Base Crit\r\n{5}%\tfrom Demonic Tactics\r\n{6}%\tfrom Backlash",
-                    (BasicStats.SpellCrit * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                    (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                    BasicStats.CritRating.ToString("0", CultureInfo.InvariantCulture),
-                    (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                    "1.701",
-                    ((character.WarlockTalents.DemonicTactics * 0.02f) * 100f).ToString("0", CultureInfo.InvariantCulture),
-                    ((character.WarlockTalents.Backlash * 0.01f) * 100f).ToString("0", CultureInfo.InvariantCulture)
+            dictValues.Add("Crit", String.Format("{0:0.00%}*" 
+                                                + "{1:0.00%}\tfrom {2:0} Spell Crit rating\r\n" 
+                                                + "{3:0.00%}\tfrom Intellect\r\n" 
+                                                + "{4:0.00}%\tfrom Warlock Class Bonus\r\n" 
+                                                + "{5:0%}\tfrom Talent: Demonic Tactics\r\n" 
+                                                + "{6:0%}\tfrom Talent: Backlash",
+                    TotalStats.SpellCrit,
+                    StatConversion.GetSpellCritFromRating(TotalStats.CritRating),
+                    TotalStats.CritRating,
+                    StatConversion.GetSpellCritFromIntellect(TotalStats.Intellect),
+                    1.701,
+                    (Character.WarlockTalents.DemonicTactics * 0.02f),
+                    (Character.WarlockTalents.Backlash * 0.01f) 
                 ));
 
-            dictValues.Add("Haste", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}%\tfrom {2} Haste rating\r\n{3}%\tfrom Buffs\r\n{4}s\tGlobal Cooldown",
-                (BasicStats.SpellHaste * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                BasicStats.HasteRating.ToString(CultureInfo.InvariantCulture),
-                (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00", CultureInfo.InvariantCulture)));
+            dictValues.Add("Haste", String.Format("{0}%*{1}%\tfrom {2} Haste rating\r\n{3}%\tfrom Buffs\r\n{4}s\tGlobal Cooldown",
+                (TotalStats.SpellHaste * 100f).ToString("0.00"),
+                (StatConversion.GetSpellHasteFromRating(TotalStats.HasteRating) * 100f).ToString("0.00"),
+                TotalStats.HasteRating,
+                (TotalStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(TotalStats.HasteRating) * 100f).ToString("0.00"),
+                Math.Max(1.0f, 1.5f / (1 + TotalStats.SpellHaste)).ToString("0.00")));
 
-            dictValues.Add("Mana Regen", String.Format(CultureInfo.InvariantCulture, "{0}*{1} mana regenerated every 5 seconds while not casting\r\n{2} mana regenerated every 5 seconds while casting", 
-                RegenOutFSR.ToString(CultureInfo.InvariantCulture),
-                RegenOutFSR.ToString(CultureInfo.InvariantCulture), 
-                RegenInFSR.ToString(CultureInfo.InvariantCulture)));
+            dictValues.Add("Mana Regen", String.Format("{0}*{0} mana regenerated every 5 seconds while not casting\r\n{1} mana regenerated every 5 seconds while casting", 
+                GetManaRegenOutOfCombat(),
+                GetManaRegenInCombat()));
             #endregion
+
             #region Shadow school
-            dictValues.Add("Shadow Bolt", new ShadowBolt(BasicStats, character).ToString());
-            if (character.WarlockTalents.Haunt > 0)
-                dictValues.Add("Haunt", new Haunt(BasicStats, character).ToString());
+            dictValues.Add("Shadow Bolt", new ShadowBolt(TotalStats, Character).ToString());
+            if (Character.WarlockTalents.Haunt > 0)
+                dictValues.Add("Haunt", new Haunt(TotalStats, Character).ToString());
             else
                 dictValues.Add("Haunt", "- *Required talent not available");
-            dictValues.Add("Corruption", new Corruption(BasicStats, character).ToString());
-            dictValues.Add("Curse of Agony", new CurseOfAgony(BasicStats, character).ToString());
-            dictValues.Add("Curse of Doom", new CurseOfDoom(BasicStats, character).ToString());
-            if (character.WarlockTalents.UnstableAffliction > 0)
-                dictValues.Add("Unstable Affliction", new UnstableAffliction(BasicStats, character).ToString());
+            dictValues.Add("Corruption", new Corruption(TotalStats, Character).ToString());
+            dictValues.Add("Curse of Agony", new CurseOfAgony(TotalStats, Character).ToString());
+            dictValues.Add("Curse of Doom", new CurseOfDoom(TotalStats, Character).ToString());
+            if (Character.WarlockTalents.UnstableAffliction > 0)
+                dictValues.Add("Unstable Affliction", new UnstableAffliction(TotalStats, Character).ToString());
             else
                 dictValues.Add("Unstable Affliction", "- *Required talent not available");
-            dictValues.Add("Death Coil", new DeathCoil(BasicStats, character).ToString());
-            dictValues.Add("Drain Life", new DrainLife(BasicStats, character).ToString());
-            dictValues.Add("Drain Soul", new DrainSoul(BasicStats, character).ToString());
-            dictValues.Add("Seed of Corruption", new SeedOfCorruption(BasicStats, character).ToString());
-            dictValues.Add("Shadowflame", new Shadowflame(BasicStats, character).ToString());
-            if (character.WarlockTalents.Shadowburn > 0)
-                dictValues.Add("Shadowburn", new Shadowburn(BasicStats, character).ToString());
+            dictValues.Add("Death Coil", new DeathCoil(TotalStats, Character).ToString());
+            dictValues.Add("Drain Life", new DrainLife(TotalStats, Character).ToString());
+            dictValues.Add("Drain Soul", new DrainSoul(TotalStats, Character).ToString());
+            dictValues.Add("Seed of Corruption", new SeedOfCorruption(TotalStats, Character).ToString());
+            dictValues.Add("Shadowflame", new Shadowflame(TotalStats, Character).ToString());
+            if (Character.WarlockTalents.Shadowburn > 0)
+                dictValues.Add("Shadowburn", new Shadowburn(TotalStats, Character).ToString());
             else
                 dictValues.Add("Shadowburn", "- *Required talent not available");
-            if (character.WarlockTalents.Shadowfury > 0)
-                dictValues.Add("Shadowfury", new Shadowfury(BasicStats, character).ToString());
+            if (Character.WarlockTalents.Shadowfury > 0)
+                dictValues.Add("Shadowfury", new Shadowfury(TotalStats, Character).ToString());
             else
                 dictValues.Add("Shadowfury", "- *Required talent not available");
-            /*
-            dictValues.Add("Life Tap", new LifeTap(BasicStats, character).ToString());
-            if (character.WarlockTalents.DarkPact > 0)
-                dictValues.Add("Dark Pact", new DarkPact(BasicStats, character).ToString());
+            dictValues.Add("Life Tap", new LifeTap(TotalStats, Character).ToString());
+            if (Character.WarlockTalents.DarkPact > 0)
+                dictValues.Add("Dark Pact", new DarkPact(TotalStats, Character).ToString());
             else
-            dictValues.Add("Dark Pact", "- *Required talent not available");
-            */
+                dictValues.Add("Dark Pact", "- *Required talent not available");
+            
             #endregion
+
             #region Fire school
-            dictValues.Add("Incinerate", new Incinerate(BasicStats, character).ToString());
-            dictValues.Add("Immolate", new Immolate(BasicStats, character).ToString());
-            if (character.WarlockTalents.Conflagrate > 0)
-                dictValues.Add("Conflagrate", new Conflagrate(BasicStats, character).ToString());
+            dictValues.Add("Incinerate", new Incinerate(TotalStats, Character).ToString());
+            dictValues.Add("Immolate", new Immolate(TotalStats, Character).ToString());
+            if (Character.WarlockTalents.Conflagrate > 0)
+                dictValues.Add("Conflagrate", new Conflagrate(TotalStats, Character).ToString());
             else
                 dictValues.Add("Conflagrate", "- *Required talent not available");
-            if (character.WarlockTalents.ChaosBolt > 0)
-                dictValues.Add("Chaos Bolt", new ChaosBolt(BasicStats, character).ToString());
+            if (Character.WarlockTalents.ChaosBolt > 0)
+                dictValues.Add("Chaos Bolt", new ChaosBolt(TotalStats, Character).ToString());
             else
                 dictValues.Add("Chaos Bolt", "- *Required talent not available");
-            dictValues.Add("Rain of Fire", new RainOfFire(BasicStats, character).ToString());
-            dictValues.Add("Hellfire", new Hellfire(BasicStats, character).ToString());
-            dictValues.Add("Searing Pain", new SearingPain(BasicStats, character).ToString());
-            dictValues.Add("Soul Fire", new SoulFire(BasicStats, character).ToString());
+            dictValues.Add("Rain of Fire", new RainOfFire(TotalStats, Character).ToString());
+            dictValues.Add("Hellfire", new Hellfire(TotalStats, Character).ToString());
+            dictValues.Add("Searing Pain", new SearingPain(TotalStats, Character).ToString());
+            dictValues.Add("Soul Fire", new SoulFire(TotalStats, Character).ToString());
             #endregion
+
             return dictValues;
         }
+
     }
 }

@@ -30,6 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -90,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aura.cs" />
     <Compile Include="CalculationOptionsPanelWarlock.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -100,8 +102,9 @@
     <Compile Include="CalculationsWarlock.cs" />
     <Compile Include="CharacterCalculationsWarlock.cs" />
     <Compile Include="ComparisonCalculationWarlock.cs" />
+    <Compile Include="Pet.cs" />
     <Compile Include="PetCalculations.cs" />
-    <Compile Include="Solver.cs" />
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="SpellPriorityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +129,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -136,6 +140,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Spell.cs" />
+    <Compile Include="SpellStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

@@ -1,213 +1,151 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Data;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
-using System.Windows.Forms;
-using System.Globalization;
 
 namespace Rawr.Warlock 
 {
     public partial class CalculationOptionsPanelWarlock : CalculationOptionsPanelBase 
     {
+        private CalculationOptionsWarlock _options;
+        private bool _loading;
+
         public CalculationOptionsPanelWarlock() 
         {
             InitializeComponent();
         }
-        
-        private bool loading;
+
         protected override void LoadCalculationOptions() 
         {
-            loading = true;
             if (Character.CalculationOptions == null) { Character.CalculationOptions = new CalculationOptionsWarlock(); }
 
-            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-
+            _options = (CalculationOptionsWarlock)Character.CalculationOptions;
+            _loading = true;
+            
             // Adding this switch to handle target level transition from relative to actual
-            switch(calcOpts.TargetLevel)
+            switch (_options.TargetLevel)
             {
-                case 0:case 1:case 2:case 3: { calcOpts.TargetLevel += 80; break; }
+                case 0:
+                case 1:
+                case 2:
+                case 3: { _options.TargetLevel += 80; break; }
                 default: { break; } // Do nothing if it's already transitioned
             }
 
-            cbTargetLevel.Text = calcOpts.TargetLevel.ToString(CultureInfo.InvariantCulture);
+            cbTargetLevel.Text = _options.TargetLevel.ToString();
 
-            trkFightLength.Value = (int)calcOpts.FightLength;
-            lblFightLength.Text = trkFightLength.Value + " minute fight.";
+            chkPTRMode.Checked = _options.PTRMode;
+            chkPTRMode.Text = "PTR Mode (Patch 3.3 - Build 10956)";
 
-            trkDelay.Value = (int)calcOpts.Delay;
-            lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
+            updFightLength.Value = _options.FightLength;
+            updAfflictionEffects.Value = _options.AffEffectsNumber;
+            updLatency.Value = (int)_options.Latency;
 
-            trkReplenishment.Value = (int)calcOpts.Replenishment;
+            trkReplenishment.Value = (int)_options.Replenishment;
             lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
 
-            trkJoW.Value = (int)calcOpts.JoW;
+            trkJoW.Value = (int)_options.JoW;
             lblJoW.Text = trkJoW.Value + "% effect from JoW.";
 
-            cbManaAmt.SelectedIndex = calcOpts.ManaPot;
+            cbManaAmt.SelectedIndex = _options.ManaPot;
 
-            if (calcOpts.SpellPriority == null) { calcOpts.SpellPriority = new List<string>() { "Shadow Bolt" }; }
+            if (_options.SpellPriority == null)
+            {
+                _options.SpellPriority = new List<String> { "Shadow Bolt" };
+            }
             lsSpellPriority.Items.Clear();
-            lsSpellPriority.Items.AddRange(calcOpts.SpellPriority.ToArray());
+            lsSpellPriority.Items.AddRange(_options.SpellPriority.ToArray());
 
-            tbAffEffects.Text = calcOpts.AffEffectsNumber.ToString(CultureInfo.InvariantCulture);
 
-            cbPet.SelectedItem = calcOpts.Pet;
+            //pet options
+            //TODO: add pet buffs
+            cbPet.SelectedItem = _options.Pet;
+            chbUseInfernal.Checked = _options.UseInfernal;
 
-            chbUseInfernal.Checked = calcOpts.UseInfernal;
-            chbImmoAura.Checked = calcOpts.UseImmoAura;
-
-            chbDecimation.Checked = calcOpts.UseDecimation;
-            trk35Health.Value = (int)calcOpts.Health35Perc;
-            lbl35Health.Text = trk35Health.Value + "% of Time Boss < 35% Health."; 
-
-            loading = false;
+            _loading = false;
         }
 
         private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e) 
         {
-            if (!loading) {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.ManaPot = cbManaAmt.SelectedIndex;
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.ManaPot = cbManaAmt.SelectedIndex;
+            Character.OnCalculationsInvalidated();
         }
-
-        private void bChangePriority_Click(object sender, EventArgs e) 
-        {
-            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriority, Character);
-            priority.ShowDialog();
-        }
-
+ 
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e) 
         {
-            if (!loading) {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.TargetLevel = int.Parse(cbTargetLevel.Text, CultureInfo.InvariantCulture);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trkFightLength_Scroll(object sender, EventArgs e) 
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.FightLength = trkFightLength.Value;
-                lblFightLength.Text = trkFightLength.Value + " minute fight.";
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trkDelay_Scroll(object sender, EventArgs e) 
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.Delay = trkDelay.Value;
-                lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.TargetLevel = Convert.ToInt32(cbTargetLevel.Text);
+            Character.OnCalculationsInvalidated();
         }
 
         private void trkReplenishment_Scroll(object sender, EventArgs e) 
         {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.Replenishment = trkReplenishment.Value;
-                lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.Replenishment = trkReplenishment.Value;
+            lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
+            Character.OnCalculationsInvalidated();
         }
 
         private void trkJoW_Scroll(object sender, EventArgs e) 
         {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.JoW = trkJoW.Value;
-                lblJoW.Text = trkJoW.Value + "% effect from JoW.";
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.JoW = trkJoW.Value;
+            lblJoW.Text = trkJoW.Value + "% effect from JoW.";
+            Character.OnCalculationsInvalidated();
         }
 
         private void cbPet_SelectedIndexChanged(object sender, EventArgs e) 
         {
-            if (!loading) {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.Pet = (String)cbPet.SelectedItem;
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.Pet = (String)cbPet.SelectedItem;
+            Character.OnCalculationsInvalidated();
         }
 
         private void chbUseInfernal_CheckedChanged(object sender, EventArgs e) 
         {
-            if (!loading) {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.UseInfernal = chbUseInfernal.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbAffEffects_Changed(object sender, EventArgs e) 
-        {
-            if (!loading) {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.AffEffectsNumber = System.Convert.ToInt32(tbAffEffects.Text, CultureInfo.InvariantCulture);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbAffEffects_KeyPress(object sender, KeyPressEventArgs e) 
-        {
-            if (!loading) {
-                if (char.IsNumber(e.KeyChar) == false && char.IsControl(e.KeyChar) == false) {
-                    e.Handled = true;
-                }
-            }
-        }
-
-        private void chbImmoAura_CheckedChanged(object sender, EventArgs e) 
-        {
-            if (!loading) {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.UseImmoAura = chbImmoAura.Checked;
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.UseInfernal = chbUseInfernal.Checked;
+            Character.OnCalculationsInvalidated();
         }
 
         private void textEvents_DoubleClick(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                textEvents.Text = calcOpts.castseq;
-            }
+            if (_loading) return;
+            if (_options != null) textEvents.Text = _options.castseq;
         }
 
-        private void trk35Health_Scroll(object sender, EventArgs e)
+        private void btnChangePriority_Click(object sender, EventArgs e)
         {
-            if (!loading)
+            SpellPriorityForm f = new SpellPriorityForm(_options.WarlockSpells, lsSpellPriority);
+            f.ShowDialog();
+
+            _options.SpellPriority.Clear();
+            foreach (string s in lsSpellPriority.Items)
             {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.Health35Perc = trk35Health.Value;
-                lbl35Health.Text = trk35Health.Value + "% of Time Boss < 35% Health.";
-                Character.OnCalculationsInvalidated();
+                _options.SpellPriority.Add(s);
             }
+            
+            Character.OnCalculationsInvalidated();
         }
 
-        private void chbDecimation_CheckedChanged(object sender, EventArgs e)
+        private void updFightLength_ValueChanged(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.UseDecimation = chbDecimation.Checked;
-                Character.OnCalculationsInvalidated();
-            }
+            if (_loading) return;
+            if (_options != null) _options.FightLength = (int)updFightLength.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void updAfflictionEffects_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading) return;
+            if (_options != null) _options.AffEffectsNumber = (int)updAfflictionEffects.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void updLatency_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading) return;
+            if (_options != null) _options.Latency = (int)updLatency.Value;
+            Character.OnCalculationsInvalidated();
         }
     }
 }

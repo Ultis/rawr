@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.Warlock
 {
@@ -21,22 +22,50 @@ namespace Rawr.Warlock
 			t.GetProperty(name).SetValue(this, value, null);
 		}
 
-		public String castseq { get; set; }
-
 		public int TargetLevel { get; set; }
 		public int AffEffectsNumber { get; set; }
-		public float FightLength { get; set; }
-		public float Delay { get; set; }
+		public int FightLength { get; set; }
+
+		public float Latency { get; set; }
 		public float Replenishment { get; set; }
 		public float JoW { get; set; }
 		public float LTUsePercent { get; set; }
-        public float Health35Perc { get; set; }
+
 		public String Pet { get; set; }
 		public bool UseInfernal { get; set; }
 		public bool UseImmoAura { get; set; }
         public bool UseDecimation { get; set; }
+        public bool PTRMode { get; set; }
 
-		public List<string> SpellPriority { get; set; }
+        public List<string> SpellPriority { get; set; }
+        
+        [XmlIgnore]
+        public List<string> WarlockSpells = new List<string> { 
+            "Chaos Bolt" ,
+            "Corruption", 
+            "Conflagrate",
+            "Curse of Agony", 
+            "Curse of Doom", 
+            "Death Coil", 
+            "Drain Life", 
+            "Drain Soul", 
+            "Haunt", 
+            "Hellfire", 
+            "Incinerate", 
+            "Immolate", 
+            "Rain of Fire", 
+            "Searing Pain", 
+            "Seed of Corruption", 
+            "Shadow Bolt", 
+            "Shadowburn", 
+            "Shadowflame", 
+            "Shadowfury", 
+            "Soul Fire", 
+            "Unstable Affliction", 
+        };
+
+        [XmlIgnore]
+        public String castseq { get; set; }
 
 		private static readonly List<int> targetHit = new List<int>() { 100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39 };
 		public int TargetHit { get { return targetHit[TargetLevel - 80]; } }
@@ -48,21 +77,19 @@ namespace Rawr.Warlock
 		public CalculationOptionsWarlock()
 		{
 			TargetLevel = 83;
-			FightLength = 5f;
+			FightLength = 5;
+			Latency = 100;
+            Replenishment = 100f;
+            JoW = 100f;
 
-			Delay = 100f;
-			Replenishment = 100f;
-			JoW = 100f;
-            Health35Perc = 35f;
 			Pet = "None";
 
-			SpellPriority = null;
 			ManaPot = 4;
 		}
 
 		public string GetXml()
 		{
-			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsWarlock));
+			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsWarlock));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml, System.Globalization.CultureInfo.InvariantCulture);
 			serializer.Serialize(writer, this);

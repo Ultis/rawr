@@ -8,7 +8,6 @@ using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
-using Rawr;
 
 namespace Rawr.Warlock 
 {
@@ -19,71 +18,145 @@ namespace Rawr.Warlock
         {
             get 
             {
-				////Relevant Gem IDs for Warlocks
+				//Relevant Gem IDs for Warlocks
 				//Red
-				int[] runed = { 39911, 39998, 40113, 42144 };
+                int[] runed = {39911, 39998, 40113, 42144};
 
-				//Purple
-				int[] purified = { 39941, 40026, 40133 };
+                //Purple
+				int[] purified = {39941, 40026, 40133};
 
 				//Orange
-				int[] reckless = { 39959, 40051, 40155 };
-				int[] veiled = { 39957, 40049, 40153 };
+				int[] reckless = {39959, 40051, 40155};
+				int[] veiled = {39957, 40049, 40153};
 
 				//Meta
-				int ember = 41333;
-				int chaotic = 41285;
+				const int ember = 41333;
+				const int chaotic = 41285;
 
-				return new List<GemmingTemplate>() 
+				return new List<GemmingTemplate>
                 {
-				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //Max SP - Ember
-				        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Hit - Ember
-				        RedId = runed[0], YellowId = veiled[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Haste - Ember
-				        RedId = runed[0], YellowId = reckless[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //Max SP - Chaotic
-				        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Hit - Chaotic
-				        RedId = runed[0], YellowId = veiled[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Haste - Chaotic
-				        RedId = runed[0], YellowId = reckless[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic },
-						
-				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", //Max SP - Ember
-				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", //SP/Hit - Ember
-				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", //SP/Haste - Ember
-				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", //Max SP - Chaotic
-				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", //SP/Hit - Chaotic
-				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", //SP/Haste - Chaotic
-				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic },
-						
-				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
-				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
-				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Ember
-				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Chaotic
-				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Chaotic
-				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Chaotic
-				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic },
-						
-				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //Max SP - Ember
-				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //SP/Hit - Ember
-				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = ember },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //Max SP - Chaotic
-				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = chaotic },
-				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //SP/Hit - Chaotic
-				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = chaotic },
-				};
+                    #region uncommon
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Uncommon", //Max SP - Ember
+                        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = ember
+                    },
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Uncommon", //SP/Hit - Ember
+                        RedId = runed[0], YellowId = veiled[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember
+                    },
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Uncommon", //SP/Haste - Ember
+                        RedId = runed[0], YellowId = reckless[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember
+                    },
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Uncommon", //Max SP - Chaotic
+                        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = chaotic
+                    },
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Uncommon", //SP/Hit - Chaotic
+                        RedId = runed[0], YellowId = veiled[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic
+                    },
+                    new GemmingTemplate
+                    {
+                        Model = "Warlock", Group = "Uncommon", //SP/Haste - Chaotic
+                        RedId = runed[0], YellowId = reckless[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic
+                    },
+                    #endregion
+
+                    #region rare
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Rare", //Max SP - Ember
+				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Rare", //SP/Hit - Ember
+				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Rare", //SP/Haste - Ember
+				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Rare", //Max SP - Chaotic
+				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = chaotic
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Rare", //SP/Hit - Chaotic
+				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Rare", //SP/Haste - Chaotic
+				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic
+                    },
+                    #endregion
+
+                    #region epic
+                    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
+				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
+				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Ember
+				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Chaotic
+				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = chaotic
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Chaotic
+				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Chaotic
+				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic
+                    },
+                    #endregion
+
+                    #region jeweler
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Jeweler", //Max SP - Ember
+				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Jeweler", //SP/Hit - Ember
+				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = ember
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Jeweler", //Max SP - Chaotic
+				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = chaotic
+                    },
+				    new GemmingTemplate
+				    {
+                        Model = "Warlock", Group = "Jeweler", //SP/Hit - Chaotic
+				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = chaotic
+                    },
+                    #endregion
+                };
             }
         }
 
@@ -100,8 +173,8 @@ namespace Rawr.Warlock
                 _subPointNameColors = new Dictionary<string, Color>();
                 switch (_currentChartName) 
                 {
+                    case "DPS Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS Sources ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 255, 0, 0)); break;
 					case "Mana Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Sources ({0} Total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 0, 0, 255)); break;
-					case "DPS Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS Sources ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 255, 0, 0)); break;
 					case "Mana Usage": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Usage ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 0, 0, 255)); break;
 					case "Haste Rating Gain": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS"), Color.FromArgb(255, 255, 0, 0)); break;
                     default:
@@ -120,11 +193,13 @@ namespace Rawr.Warlock
             get 
             {
                 if (_characterDisplayCalculationLabels == null)
-                    _characterDisplayCalculationLabels = new string[] {
+                    _characterDisplayCalculationLabels = new[] {
                     "Simulation:Rotation",
-                    "Simulation:DPS",
+                    "Simulation:Warlock DPS",
                     "Simulation:Pet DPS",
                     "Simulation:Total DPS",
+                    "Simulation:Damage Done",
+                    "Simulation:Mana Used",
                     "HP/Mana Stats:Health",
                     "HP/Mana Stats:Mana",
                     "Base Stats:Strength",
@@ -152,6 +227,8 @@ namespace Rawr.Warlock
                     "Shadow School:Shadowflame",
                     "Shadow School:Shadowburn",
                     "Shadow School:Shadowfury",
+                    "Shadow School:Life Tap",
+                    "Shadow School:Dark Pact",
                     "Fire School:Incinerate",
                     "Fire School:Immolate",
                     "Fire School:Conflagrate",
@@ -169,7 +246,7 @@ namespace Rawr.Warlock
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		private CalculationOptionsPanelBase _calculationOptionsPanel;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
         {
@@ -189,12 +266,12 @@ namespace Rawr.Warlock
 	    /// </summary>
 	    public override string[] OptimizableCalculationLabels 
         {
-                get 
-                {
-                    if (_optimizableCalculationLabels == null)
-                        _optimizableCalculationLabels = new string[] {"Miss chance",};
-                    return _optimizableCalculationLabels;
-                }
+            get 
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new[] {"Miss chance",};
+                return _optimizableCalculationLabels;
+            }
 	    }
 
         private string[] _customChartNames;
@@ -202,13 +279,13 @@ namespace Rawr.Warlock
         {
             get 
             {
-                if (_customChartNames == null) 
+                if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] 
+                    _customChartNames = new[] 
                     { 
                         "DPS Sources", 
                         "Mana Sources", 
-                        "Mana Usage", 
+                        "Mana Usage",
                         //*"Glyphs",
                         "Haste Rating Gain" 
                     };
@@ -227,7 +304,7 @@ namespace Rawr.Warlock
             {
                 if (_relevantItemTypes == null) 
                 {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[] 
+                    _relevantItemTypes = new List<ItemType>(new[] 
                     {
                         ItemType.None,
                         ItemType.Cloth,
@@ -251,78 +328,88 @@ namespace Rawr.Warlock
 
             switch (chartName) 
             {
-                case "Mana Sources":
-                    CharacterCalculationsWarlock mscalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    Solver mssolver = mscalcs.GetSolver(character, mscalcs.BasicStats);
-                    mssolver.Calculate(mscalcs);
-                    foreach (Solver.ManaSource Source in mssolver.ManaSources) 
-                    {
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = Source.Name;
-                        comparison.SubPoints[0] = (float)Source.Value;
-                        _currentChartTotal += comparison.SubPoints[0];
-                        comparison.OverallPoints = comparison.SubPoints[0];
-                        comparison.Equipped = false;
-                        comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();
                 case "DPS Sources":
-                    CharacterCalculationsWarlock dpscalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    Solver dpssolver = dpscalcs.GetSolver(character, dpscalcs.BasicStats);
-                    dpssolver.Calculate(dpscalcs);
-                    foreach (Spell spell in dpssolver.SpellPriority)
+                    CharacterCalculationsWarlock dpscalcs = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
+                    if (dpscalcs != null)
                     {
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = spell.Name;
-                        comparison.SubPoints[0] = spell.SpellStatistics.DamageDone / (float)dpssolver.time;
-                        _currentChartTotal += comparison.SubPoints[0];
-                        comparison.OverallPoints = comparison.SubPoints[0];
-                        comparison.Equipped = false;
-                        comparisonList.Add(comparison);
+                        dpscalcs.Calculate();
+                        foreach (Spell spell in dpscalcs.SpellPriority)
+                        {
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = spell.Name;
+                            comparison.SubPoints[0] = (float)(spell.SpellStatistics.OverallDamage / dpscalcs.Time);
+                            _currentChartTotal += comparison.SubPoints[0];
+                            comparison.OverallPoints = comparison.SubPoints[0];
+                            comparison.Equipped = false;
+                            comparisonList.Add(comparison);
+                        }
                     }
-                    if (dpssolver.CalculationOptions.Pet != "None")
+                    //if (dpssolver.CalculationOptions.Pet != "None")
+                    //{
+                    //    comparison = CreateNewComparisonCalculation();
+                    //    comparison.Name = dpssolver.CalculationOptions.Pet;
+                    //    comparison.SubPoints[0] = dpssolver.PetDPS;
+                    //    _currentChartTotal += comparison.SubPoints[0];
+                    //    comparison.OverallPoints = comparison.SubPoints[0];
+                    //    comparison.Equipped = false;
+                    //    comparisonList.Add(comparison);
+                    //}
+                    //if (dpssolver.TotalDPS - _currentChartTotal > 1)
+                    //{
+                    //    comparison = CreateNewComparisonCalculation();
+                    //    comparison.Name = "Other";
+                    //    comparison.SubPoints[0] = dpssolver.TotalDPS - _currentChartTotal;
+                    //    _currentChartTotal += comparison.SubPoints[0];
+                    //    comparison.OverallPoints = comparison.SubPoints[0];
+                    //    comparison.Equipped = false;
+                    //    comparisonList.Add(comparison);
+                    //}
+                    return comparisonList.ToArray();
+
+                case "Mana Sources":
+                    CharacterCalculationsWarlock mscalcs = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
+                    if (mscalcs != null)
                     {
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = dpssolver.CalculationOptions.Pet;
-                        comparison.SubPoints[0] = dpssolver.PetDPS;
-                        _currentChartTotal += comparison.SubPoints[0];
-                        comparison.OverallPoints = comparison.SubPoints[0];
-                        comparison.Equipped = false;
-                        comparisonList.Add(comparison);
-                    }
-                    if (dpssolver.TotalDPS - _currentChartTotal > 1)
-                    {
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = "Other";
-                        comparison.SubPoints[0] = dpssolver.TotalDPS - _currentChartTotal;
-                        _currentChartTotal += comparison.SubPoints[0];
-                        comparison.OverallPoints = comparison.SubPoints[0];
-                        comparison.Equipped = false;
-                        comparisonList.Add(comparison);
+                        mscalcs.Calculate();
+                        foreach (KeyValuePair<string, double> source in mscalcs.ManaSources)
+                        {
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = source.Key;
+                            comparison.SubPoints[0] = (float)source.Value;
+                            _currentChartTotal += comparison.SubPoints[0];
+                            comparison.OverallPoints = comparison.SubPoints[0];
+                            comparison.Equipped = false;
+                            comparisonList.Add(comparison);
+                        }
                     }
                     return comparisonList.ToArray();
+
                 case "Mana Usage":
-                    CharacterCalculationsWarlock mucalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    Solver musolver = mucalcs.GetSolver(character, mucalcs.BasicStats);
-                    musolver.Calculate(mucalcs);
-                    foreach (Spell spell in musolver.SpellPriority)
+                    CharacterCalculationsWarlock mucalcs = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
+                    mucalcs.Calculate();
+                    foreach (Spell spell in mucalcs.SpellPriority)
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = spell.Name;
-                        comparison.SubPoints[0] = spell.SpellStatistics.ManaUsed;
+                        comparison.SubPoints[0] = (float)(spell.SpellStatistics.ManaUsed);
                         _currentChartTotal += comparison.SubPoints[0];
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
+
                     return comparisonList.ToArray();
+
                 case "Haste Rating Gain":
-                    CharacterCalculationsWarlock hrbase = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    for (int x = 0; x < 100; x++)
+                    CharacterCalculationsWarlock hrbase = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
+                    for (int x = 0; x <= 20; x++)
                     {
-                        CharacterCalculationsWarlock hrnew = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = x } }) as CharacterCalculationsWarlock;
+                        //calculate the value of extra 0-200 haste rating (in increments of 10)
+                        int y = (x*10);
+                        Item additionalItem = new Item {Stats = new Stats {HasteRating = y}};
+                        CharacterCalculationsWarlock hrnew = (CharacterCalculationsWarlock)GetCharacterCalculations(character, additionalItem);
                         comparison = CreateNewComparisonCalculation();
-                        comparison.Name = String.Format(CultureInfo.InvariantCulture, "{0} Haste Rating", x);
+                        comparison.Name = String.Format(CultureInfo.InvariantCulture, "{0} Haste Rating", y);
                         comparison.SubPoints[0] = hrnew.DpsPoints - hrbase.DpsPoints;
                         comparison.SubPoints[1] = hrnew.PetDPSPoints - hrbase.PetDPSPoints;
 						comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
@@ -330,6 +417,7 @@ namespace Rawr.Warlock
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
+
                 default:
                     //_customChartNames = null;
                     _currentChartName = null;
@@ -340,23 +428,19 @@ namespace Rawr.Warlock
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
         {
             cacheChar = character;
+
             Stats stats = GetCharacterStats(character, additionalItem);
-            CharacterCalculationsWarlock calculatedStats = new CharacterCalculationsWarlock();
+            CharacterCalculationsWarlock results = new CharacterCalculationsWarlock(character, stats);
+            
+            if ((character.Name != null) && (character.Class == CharacterClass.Warlock))
+            {
+                results.Calculate();
+            }
 
-            calculatedStats.Race = character.Race;
-            calculatedStats.BasicStats = stats;
-            calculatedStats.Character = character;
-
-            calculatedStats.SpiritRegen = (float)Math.Floor(5f * StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
-            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
-            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
-
-            Solver solver = calculatedStats.GetSolver(character, stats);
-            solver.Calculate(calculatedStats);
-
-            return calculatedStats;
+            return results;
         }
 
+        //public Stats GetBuffStats(Character character) { return GetBuffsStats(character.ActiveBuffs); }
         public Stats GetBuffsStats(Character character, CalculationOptionsWarlock calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
@@ -449,19 +533,48 @@ namespace Rawr.Warlock
             }
 
             return statsBuffs;
-        }
+        }        
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) 
         {
-            cacheChar = character;
+        	cacheChar = character;
             WarlockTalents talents = character.WarlockTalents;
-            CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
 
             Stats statsBase = BaseStats.GetBaseStats(character);
             Stats statsItem = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            Stats statsTalents = new Stats() 
+            ////Potion of Speed is a consumable that can only be used once per fight even tho its tooltip / wowhead info indicates it has a 1 min cooldown.
+            ////This means that its actual cooldown is equal to the length of the fight.
+            ////At the moment, it has been hardcoded [in Buff.cs (rawr.base)] for a 20min fight, so we have to correct it here to get the appropriate +haste bonus effect.
+            //if (character.ActiveBuffsContains("Potion of Speed"))
+            //{
+            //    //get the fight length
+            //    CalculationOptionsWarlock options = (CalculationOptionsWarlock)character.CalculationOptions;
+            //    float fightLength = (options.FightLength * 60); //i.e. in seconds
+
+            //    //remove the existing speedpotion buff (which has the incorrect cooldown)
+            //    Buff speedpotion = Buff.GetBuffByName("Potion of Speed");
+            //    character.ActiveBuffs.Remove(speedpotion);
+
+            //    //redefine its stats (this time using the correct cooldown)
+            //    speedpotion.Stats = new Stats();
+            //    speedpotion.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats { HasteRating = 500f }, 15f, fightLength));
+            //    character.ActiveBuffs.Add(speedpotion);
+
+            //    //now repeat the process with the if the pot trick buff had been selected
+            //    if (character.ActiveBuffsContains("Potion of Speed (Double Pot Trick)"))
+            //    {
+            //        speedpotion = Buff.GetBuffByName("Potion of Speed (Double Pot Trick)");
+            //        character.ActiveBuffs.Remove(speedpotion);
+            //        speedpotion.Stats = new Stats();
+            //        speedpotion.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats { HasteRating = 500f }, (15f - 1f), fightLength));
+            //        character.ActiveBuffs.Add(speedpotion);
+            //    }
+            //}
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            Stats statsTalents = new Stats 
             {
                 //Demonic Embrace: increases your stamina by 4/7/10%
                 BonusStaminaMultiplier      = (talents.DemonicEmbrace == 1) ? 0.04f : (talents.DemonicEmbrace == 2) ? 0.07f : (talents.DemonicEmbrace == 3) ? 0.10f : 0f,
@@ -470,16 +583,14 @@ namespace Rawr.Warlock
                 BonusHealthMultiplier       = (talents.FelVitality    * 0.01f),
                 BonusManaMultiplier         = (talents.FelVitality    * 0.01f),
                 
-                //Malediction: increases your spell damage by 1/2/3%
-                BonusSpellPowerMultiplier   = (talents.Malediction    * 0.01f),
-                
+                //Suppression: increases your chance to hit with spells by 1/2/3%
+                SpellHit                    = (talents.Suppression * 0.01f),
+
                 //Demonic Tactics: increases your spell crit chance by 2/4/6/8/10%
                 //Backlash: increases your spell crit chance by 1/2/3%
                 BonusCritChance             = (talents.DemonicTactics * 0.02f)
-                                            + (talents.Backlash       * 0.01f),
+                                            + (talents.Backlash * 0.01f),
 
-                //Suppression: increases your chance to hit with spells by 1/2/3%
-                SpellHit                    = (talents.Suppression * 0.01f),
             };
             
             Stats statsTotal = statsBase + statsItem + statsBuffs + statsTalents;
@@ -491,7 +602,7 @@ namespace Rawr.Warlock
             statsTotal.Strength     = (float)Math.Floor(statsTotal.Strength  * (1f + statsTotal.BonusStrengthMultiplier ));
             statsTotal.Agility      = (float)Math.Floor(statsTotal.Agility   * (1f + statsTotal.BonusAgilityMultiplier  ));
             statsTotal.Armor        = (float)Math.Floor(statsTotal.Armor     * (1f + statsTotal.BonusArmorMultiplier    ));
-
+            
             // Agility increases Armor by 2 per point (http://www.wowwiki.com/Agility#Agility)
             statsTotal.BonusArmor  += (statsTotal.Agility * 2);
             statsTotal.Armor       += statsTotal.BonusArmor;
@@ -534,8 +645,8 @@ namespace Rawr.Warlock
             
             if (talents.DemonicKnowledge > 0) 
             {
-                PetCalculations pet = new PetCalculations(statsTotal, character);
-                statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * talents.DemonicKnowledge * 0.04f;
+                //PetCalculations pet = new PetCalculations(statsTotal, character);
+                //statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * talents.DemonicKnowledge * 0.04f;
             }
 
             return statsTotal;
@@ -543,150 +654,175 @@ namespace Rawr.Warlock
 
         public override Stats GetRelevantStats(Stats stats) 
         {
-            Stats s = new Stats() 
+            Stats s = new Stats 
             {
-                Stamina = stats.Stamina,
-                Health = stats.Health,
-                Intellect = stats.Intellect,
-                Mana = stats.Mana,
-                Spirit = stats.Spirit,
-                Mp5 = stats.Mp5,
+                //primary stats
                 SpellPower = stats.SpellPower,
-                SpellShadowDamageRating = stats.SpellShadowDamageRating,
-                SpellFireDamageRating = stats.SpellFireDamageRating,
-                SpellCritRating = stats.SpellCritRating,
-                CritRating = stats.CritRating,
-                SpellCritOnTarget = stats.SpellCritOnTarget,
-                SpellCrit = stats.SpellCrit,
-                SpellHitRating = stats.SpellHitRating,
+                Intellect = stats.Intellect,
+                Spirit = stats.Spirit,
                 HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
-                SpellHasteRating = stats.SpellHasteRating,
-                SpellHaste = stats.SpellHaste,
+                SpellHitRating = stats.SpellHitRating,
                 HasteRating = stats.HasteRating,
-                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                SpellHaste = stats.SpellHaste,
+                SpellHasteRating = stats.SpellHasteRating,
+                CritRating = stats.CritRating,
+                SpellCrit = stats.SpellCrit,
+                SpellCritRating = stats.SpellCritRating,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
+
+                ShadowDamage = stats.ShadowDamage,
+                SpellShadowDamageRating = stats.SpellShadowDamageRating,
+                FireDamage = stats.FireDamage,
+                SpellFireDamageRating = stats.SpellFireDamageRating,
+
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusManaPotion = stats.BonusManaPotion,
-                ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+
+                //set bonuses
                 Warlock2T7 = stats.Warlock2T7,
                 Warlock4T7 = stats.Warlock4T7,
                 Warlock2T8 = stats.Warlock2T8,
                 Warlock4T8 = stats.Warlock4T8,
                 Warlock2T9 = stats.Warlock2T9,
-                Warlock4T9 = stats.Warlock4T9
+                Warlock4T9 = stats.Warlock4T9,
+                Warlock2T10 = stats.Warlock2T10,
+                Warlock4T10 = stats.Warlock4T10,
+
+                //These stats can be used by warlocks, but they dont affect our dps calculations at all.
+                //Included for display purposes only.
+                Stamina = stats.Stamina,
+                //Health = stats.Health,
+                //Mana = stats.Mana,
+                //Mp5 = stats.Mp5,
+
+                //The following are custom stat properties belonging to buffs, items (or procs) that can be used/applied to warlocks.
+                HighestStat = stats.HighestStat,                                    //trinket - darkmoon card: greatness
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,      //paladin buff: judgement of wisdom
+                BonusManaPotion = stats.BonusManaPotion,                            //triggered when a mana pot is consumed
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier,        //Bracing Eathsiege Diamond (metagem) effect
+                ManaRestore = stats.ManaRestore,                                    //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
+                SpellsManaReduction = stats.SpellsManaReduction,                    //spark of hope -> http://www.wowhead.com/?item=45703
             };
             
             foreach (SpecialEffect effect in stats.SpecialEffects()) 
             {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.DamageSpellCast ||
-                    effect.Trigger == Trigger.DamageSpellCrit ||
-                    effect.Trigger == Trigger.DamageSpellHit ||
-                    effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellCrit ||
-                    effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.SpellMiss ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
+                if (RelevantTrinket(effect))
                 {
-                    if (effect.Stats.SpellPower > 0 ||
-                        effect.Stats.CritRating > 0 ||
-                        effect.Stats.HasteRating > 0 ||
-                        effect.Stats.HighestStat > 0 ||
-                        effect.Stats.ShadowDamage > 0 ||
-                        effect.Stats.Spirit > 0 ||
-                        effect.Stats.Mp5 > 0)
-                    {
-                        s.AddSpecialEffect(effect);
-                    }
+                    s.AddSpecialEffect(effect);
                 }
             }
             return s;
         }
 
-        public override bool HasRelevantStats(Stats stats) 
+        protected bool RelevantTrinket(SpecialEffect effect)
         {
-            foreach (SpecialEffect effect in stats.SpecialEffects()) 
+            if (effect.Trigger == Trigger.Use ||
+                effect.Trigger == Trigger.DamageSpellCast ||
+                effect.Trigger == Trigger.DamageSpellCrit ||
+                effect.Trigger == Trigger.DamageSpellHit ||
+                effect.Trigger == Trigger.SpellCast ||
+                effect.Trigger == Trigger.SpellCrit ||
+                effect.Trigger == Trigger.SpellHit ||
+                effect.Trigger == Trigger.SpellMiss ||
+                effect.Trigger == Trigger.DoTTick ||
+                effect.Trigger == Trigger.DamageDone)
             {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.DamageSpellCast ||
-                    effect.Trigger == Trigger.DamageSpellCrit ||
-                    effect.Trigger == Trigger.DamageSpellHit ||
-                    effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellCrit ||
-                    effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.SpellMiss ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
-                {
-                    if (effect.Stats.SpellPower > 0 ||
-                        effect.Stats.CritRating > 0 ||
-                        effect.Stats.HasteRating > 0 ||
-                        effect.Stats.HighestStat > 0 ||
-                        effect.Stats.ShadowDamage > 0 ||
-                        effect.Stats.Spirit > 0 ||
-                        effect.Stats.Mp5 > 0)
-                    {
-                        return true;
-                    }
-                }
+                return _HasRelevantStats(effect.Stats);
             }
-            return (
-                stats.ArmorPenetration
-                + stats.BonusAttackPower
-                + stats.AttackPower
-                + stats.BonusAttackPowerMultiplier
-                + stats.BonusCritChance
-                + stats.BonusPhysicalDamageMultiplier
-                + stats.Agility
-                + stats.Strength
-                + stats.Stamina
-                + stats.Health
+            return false;
+        }
+
+        public override bool HasRelevantStats(Stats stats)
+        {
+            bool isRelevant = _HasRelevantStats(stats);
+
+            foreach (SpecialEffect se in stats.SpecialEffects())
+            {
+                isRelevant |= RelevantTrinket(se);
+            }
+            return isRelevant;
+        }
+
+        protected bool _HasRelevantStats(Stats stats)
+        {
+            bool yes = (
+                //our primary stats
+                stats.SpellPower
                 + stats.Intellect
-                + stats.Mana
                 + stats.Spirit
-                + stats.Mp5
-                + stats.SpellPower
-                + stats.SpellShadowDamageRating
-                + stats.SpellFireDamageRating
-                + stats.SpellCritRating
-                + stats.CritRating
-                + stats.SpellCrit
-                + stats.SpellHitRating
-                + stats.HitRating
-                + stats.SpellHit
-                + stats.SpellHasteRating
-                + stats.SpellHaste
-                + stats.HasteRating
-                + stats.BonusSpiritMultiplier
-                + stats.SpellDamageFromSpiritPercentage
+                + stats.HitRating + stats.SpellHit + stats.SpellHitRating
+                + stats.HasteRating + stats.SpellHaste + stats.SpellHasteRating
+                + stats.CritRating + stats.SpellCrit + stats.SpellCritRating
+                + stats.ShadowDamage + stats.SpellShadowDamageRating
+                + stats.FireDamage + stats.SpellFireDamageRating
+
+                //multipliers
                 + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion
-                + stats.ThreatReductionMultiplier
-                + stats.BonusDamageMultiplier
-                + stats.BonusShadowDamageMultiplier
-                + stats.BonusFireDamageMultiplier
+                + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
+                + stats.BonusSpellCritMultiplier
+                + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
+
+                //warlock class buffs
                 + stats.WarlockFelArmor
                 + stats.WarlockDemonArmor
                 + stats.WarlockSpellstoneDotDamageMultiplier
                 + stats.WarlockSpellstoneHasteRating
                 + stats.WarlockFirestoneDirectDamageMultiplier
                 + stats.WarlockFirestoneSpellCritRating
-                + stats.ManaRestoreFromBaseManaPPM
-                + stats.BonusSpellCritMultiplier
+                
+                //set bonuses
                 + stats.Warlock2T7
                 + stats.Warlock4T7
                 + stats.Warlock2T8
                 + stats.Warlock4T8
                 + stats.Warlock2T9
                 + stats.Warlock4T9
-                ) > 0;
+                + stats.Warlock2T10
+                + stats.Warlock4T10
+            ) > 0;
+
+            bool maybe = (
+                //can be used by warlocks, but it does not affect our DPS calculations
+                stats.Stamina 
+
+                //miscellaneous stats belonging to items (or trinket procs) that can be used/applied to warlocks
+                //these stats are listed here so that those items (which supply them) can be listed
+                //(these are terrible trinkets anyway - I should probably just remove them...)
+                + stats.HighestStat                     //darkmoon card: greatness
+                + stats.SpellsManaReduction             //spark of hope -> http://www.wowhead.com/?item=45703
+
+                + stats.BonusManaPotion                 //triggered when a mana pot is consumed
+                + stats.ManaRestoreFromBaseManaPPM      //judgement of wisdom
+                + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
+            ) > 0;
+
+            bool no = (
+                //ignore items with any of these stats
+                stats.Health 
+                + stats.Mana + stats.Mp5
+                + stats.Resilience
+                + stats.Armor + stats.BonusArmor + stats.Agility
+                + stats.ArmorPenetration + stats.ArmorPenetrationRating
+                + stats.Strength + stats.AttackPower
+                + stats.Expertise + stats.ExpertiseRating
+                + stats.Dodge + stats.DodgeRating
+                + stats.Parry + stats.ParryRating
+                + stats.Defense + stats.DefenseRating
+                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
+                + stats.FireResistance + stats.FireResistanceBuff
+                + stats.FrostResistance + stats.FrostResistanceBuff
+                + stats.NatureResistance + stats.NatureResistanceBuff
+                + stats.ShadowResistance + stats.ShadowResistanceBuff
+                + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
+            ) > 0;
+
+            return yes || (maybe && !no);
         }
 
         #region RelevantGlyphs
@@ -695,23 +831,26 @@ namespace Rawr.Warlock
         {
             if (_relevantGlyphs == null) 
             {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Chaos Bolt");
-                _relevantGlyphs.Add("Glyph of Conflagrate");
-                _relevantGlyphs.Add("Glyph of Corruption");
-                _relevantGlyphs.Add("Glyph of Curse of Agony");
-                _relevantGlyphs.Add("Glyph of Felguard");
-                _relevantGlyphs.Add("Glyph of Haunt");
-                _relevantGlyphs.Add("Glyph of Immolate");
-                _relevantGlyphs.Add("Glyph of Imp");
-                _relevantGlyphs.Add("Glyph of Incinerate");
-                _relevantGlyphs.Add("Glyph of Life Tap");
-                _relevantGlyphs.Add("Glyph of Metamorphosis");
-                _relevantGlyphs.Add("Glyph of Searing Pain");
-                _relevantGlyphs.Add("Glyph of Shadowbolt");
-                _relevantGlyphs.Add("Glyph of Shadowburn");
-                _relevantGlyphs.Add("Glyph of Siphon Life");
-                _relevantGlyphs.Add("Glyph of Unstable Affliction");
+                _relevantGlyphs = new List<string>
+                                      {
+                                          "Glyph of Chaos Bolt",
+                                          "Glyph of Conflagrate",
+                                          "Glyph of Corruption",
+                                          "Glyph of Curse of Agony",
+                                          "Glyph of Felguard",
+                                          "Glyph of Haunt",
+                                          "Glyph of Immolate",
+                                          "Glyph of Imp",
+                                          "Glyph of Incinerate",
+                                          "Glyph of Life Tap",
+                                          "Glyph of Metamorphosis",
+                                          "Glyph of Quick Decay",
+                                          "Glyph of Searing Pain",
+                                          "Glyph of Shadowbolt",
+                                          "Glyph of Shadowburn",
+                                          "Glyph of Siphon Life",
+                                          "Glyph of Unstable Affliction"
+                                      };
             }
             return _relevantGlyphs;
         }

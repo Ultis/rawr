@@ -1,37 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Rawr.Warlock 
+﻿namespace Rawr.Warlock 
 {
-    public class ComparisonCalculationWarlock : ComparisonCalculationBase 
+    public sealed class ComparisonCalculationWarlock : ComparisonCalculationBase 
     {
-        public ComparisonCalculationWarlock() : base() {}
-
-        public ComparisonCalculationWarlock(string name) : base() { _name = name; }
-
-        private string _name = String.Empty;
-        public override string Name 
+        public ComparisonCalculationWarlock()
         {
-            get { return _name; }
-            set { _name = value; }
         }
 
-        private string _desc = string.Empty;
-        public override string Description
+        public ComparisonCalculationWarlock(string name)
         {
-            get { return _desc; }
-            set { _desc = value; }
+            Name = name;
         }
 
-        private float _overallPoints;
-        public override float OverallPoints 
-        {
-			get { return _overallPoints; }
-			set { _overallPoints = value; }
-        }
+        public override string Name { get; set; }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        public override string Description { get; set; }
+
+        public override float OverallPoints { get; set; }
+
+        private float[] _subPoints = new[] { 0f, 0f };
         public override float[] SubPoints 
         {
             get 
@@ -70,31 +56,10 @@ namespace Rawr.Warlock
             set { _subPoints[1] = (value < 0f) ? 0f : value; }
         }
 
-        /*public float SurvivalPoints
-        {
-            get { return _subPoints[2]; }
-            set { _subPoints[2] = (value < 0f)?0f:value; }
-        }*/
+        public override Item Item { get; set; }
 
-        private Item _item;
-        public override Item Item 
-        {
-            get { return _item; }
-            set { _item = value; }
-        }
+        public override ItemInstance ItemInstance { get; set; }
 
-        private ItemInstance _itemInstance;
-        public override ItemInstance ItemInstance 
-        {
-            get { return _itemInstance; }
-            set { _itemInstance = value; }
-        }
-
-        private bool _equipped;
-        public override bool Equipped 
-        {
-            get { return _equipped; }
-            set { _equipped = value; }
-        }
+        public override bool Equipped { get; set; }
     }
 }
