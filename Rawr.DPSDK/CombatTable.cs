@@ -146,12 +146,11 @@ namespace Rawr.DPSDK
                 // Total physical misses
                 totalMHMiss = calcs.DodgedMHAttacks + whiteMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + whiteMiss;
-                float minDuration = totalMeleeAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1f) +
-                    totalSpellAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? (1.5f / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste)) < 1f ? 1f : 1.5f / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))) : 1f);
-                minDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
-                    ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))))))); //still need to implement spellhaste here
-            
+                double spellGCD = (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5d / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1d + stats.SpellHaste)) < 1d ? 1d : 1.5d / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1d + stats.SpellHaste)): 1d);
+                double physicalGCD = (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5d : 1d);
+                float minDuration = totalMeleeAbilities * (float) physicalGCD +
+                    totalSpellAbilities * (float) spellGCD;
+
                 if (minDuration > calcOpts.rotation.CurRotationDuration)
                 {
                     realDuration = minDuration;
@@ -160,6 +159,13 @@ namespace Rawr.DPSDK
                 {
                     realDuration = calcOpts.rotation.CurRotationDuration;
                 }
+
+                float dodgeMissPerRotation = (totalMeleeAbilities - calcOpts.rotation.FrostStrike);
+                chanceAvoided = chanceDodged + chanceMiss;
+                double ProbableGCDLossPerRotation = dodgeMissPerRotation * physicalGCD * (chanceAvoided + chanceAvoided * chanceAvoided + chanceAvoided * chanceAvoided * chanceAvoided + chanceAvoided * chanceAvoided * chanceAvoided * chanceAvoided) +
+                                calcOpts.rotation.IcyTouch * spellGCD * (spellResist + spellResist * spellResist + spellResist * spellResist * spellResist + spellResist * spellResist * spellResist * spellResist);
+
+                realDuration += (float)(((minDuration + ProbableGCDLossPerRotation) / realDuration < 1 ? (minDuration + ProbableGCDLossPerRotation) / realDuration : 1) * ProbableGCDLossPerRotation);
                 }
             #endregion
         }

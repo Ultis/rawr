@@ -1060,7 +1060,7 @@ namespace Rawr.DPSDK
                         dpsGhoul = 0;
                 }
                 #endregion
-
+                
                 float BCBMult = 1f;
                 float BloodPlagueMult = 1f;
                 float BloodStrikeMult = 1f;
