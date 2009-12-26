@@ -512,7 +512,13 @@ namespace Rawr.Healadin
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 SpellsManaReduction = stats.SpellsManaReduction,
                 SacredShieldICDReduction = stats.SacredShieldICDReduction,
-                HolyShockHoTOnCrit = stats.HolyShockHoTOnCrit
+                HolyShockHoTOnCrit = stats.HolyShockHoTOnCrit,
+                // Ony Shiny Shard of the Flame
+                FireDamage = stats.FireDamage,
+                ProcdFireDamageMin = stats.ProcdFireDamageMin,
+                ProcdFireDamageMax = stats.ProcdFireDamageMax,
+                Healed = stats.Healed,
+                Hp5 = stats.Hp5,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -558,7 +564,9 @@ namespace Rawr.Healadin
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction
-                + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit + stats.MovementSpeed) > 0;
+                + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit + stats.MovementSpeed +
+                stats.FireDamage + stats.ProcdFireDamageMin + stats.ProcdFireDamageMax + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
+                ) > 0;
         }
 
         private bool HasMaybeStats(Stats stats)

@@ -828,8 +828,13 @@ namespace Rawr.RestoSham
                 RestoSham2T10 = stats.RestoSham2T10,
                 RestoSham4T10 = stats.RestoSham4T10,
                 RestoShamRelicT9 = stats.RestoShamRelicT9,
-                RestoShamRelicT10 = stats.RestoShamRelicT10
-
+                RestoShamRelicT10 = stats.RestoShamRelicT10,
+                // Ony Shiny Shard of the Flame
+                FireDamage = stats.FireDamage,
+                ProcdFireDamageMin = stats.ProcdFireDamageMin,
+                ProcdFireDamageMax = stats.ProcdFireDamageMax,
+                Healed = stats.Healed,
+                Hp5 = stats.Hp5,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -858,7 +863,9 @@ namespace Rawr.RestoSham
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
                 stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost +
                 stats.TotemHWSpellpower + stats.TotemLHWSpellpower + stats.TotemThunderhead + stats.RestoSham2T9 + stats.RestoSham4T9 +
-                stats.RestoSham2T10 + stats.RestoSham4T10 + stats.RestoShamRelicT9 + stats.RestoShamRelicT10) > 0;
+                stats.RestoSham2T10 + stats.RestoSham4T10 + stats.RestoShamRelicT9 + stats.RestoShamRelicT10 +
+                stats.FireDamage + stats.ProcdFireDamageMin + stats.ProcdFireDamageMax + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
+                ) > 0;
         }
         public Stats GetBuffsStats(Character character, CalculationOptionsRestoSham calcOpts)
         {
