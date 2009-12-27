@@ -325,6 +325,7 @@ namespace Rawr
 				ItemCache.AddItem(_item, false);
 			}*/
 			ItemCache.OnItemsChanged();
+            _character.OnCalculationsInvalidated();
 		}
 
 		void _menuItemRefreshWowhead_Click(object sender, EventArgs e)
@@ -343,6 +344,7 @@ namespace Rawr
 			}*/
             Item newItem = Item.LoadFromId(_item.Id, true, true, true);
 			ItemCache.OnItemsChanged();
+            _character.OnCalculationsInvalidated();
 		}
 
 		void _menuItemWowhead_Click(object sender, EventArgs e)
@@ -388,7 +390,8 @@ namespace Rawr
 				itemEditor.ShowDialog(FormMain.Instance);
                 itemEditor.Dispose();
 				ItemCache.OnItemsChanged();
-				//FormMain.Instance.OpenItemEditor(_item);
+                _character.OnCalculationsInvalidated();
+                //FormMain.Instance.OpenItemEditor(_item);
 			}
 			else
 			{

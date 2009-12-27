@@ -795,13 +795,7 @@ namespace Rawr
             foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
 			{
 				bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
-				if (isEquipped)
-				{
-					calcsEquipped = currentCalcs;
-				}
-				else
-				{
-					if (equippedOnly) continue;
+				if (isEquipped || !equippedOnly) {
 					Character charEquipped = character.Clone();
 					charEquipped.SetEnchantBySlot(slot, enchant);
 					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
