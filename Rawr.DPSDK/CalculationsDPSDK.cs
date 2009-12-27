@@ -402,8 +402,9 @@ namespace Rawr.DPSDK
                 temp.PTRCalcs = calcOpts.rotation.PTRCalcs || PTR;
                 temp.RP = calcOpts.rotation.RP;
                 temp.ScourgeStrike = calcOpts.rotation.ScourgeStrike;
-                temp.HowlingBlast += talents.Rime * calcOpts.rotation.Obliterate * 0.05f;
-
+                temp.HowlingBlast += talents.Rime * calcOpts.rotation.Obliterate * 0.05f + 
+                    (combatTable.DW ? (talents.ThreatOfThassarian / 3) * talents.Rime * calcOpts.rotation.Obliterate * .05f * (1 - talents.Rime * .05f) : 0);
+                    //OH Oblit hits can proc rime as well
                 if (temp.ManagedRP)
                 {
                     temp.getRP(talents, character);

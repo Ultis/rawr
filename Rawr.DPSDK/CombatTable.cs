@@ -162,10 +162,13 @@ namespace Rawr.DPSDK
 
                 float dodgeMissPerRotation = (totalMeleeAbilities - calcOpts.rotation.FrostStrike);
                 chanceAvoided = chanceDodged + chanceMiss;
-                double ProbableGCDLossPerRotation = dodgeMissPerRotation * physicalGCD * (chanceAvoided + chanceAvoided * chanceAvoided + chanceAvoided * chanceAvoided * chanceAvoided + chanceAvoided * chanceAvoided * chanceAvoided * chanceAvoided) +
-                                calcOpts.rotation.IcyTouch * spellGCD * (spellResist + spellResist * spellResist + spellResist * spellResist * spellResist + spellResist * spellResist * spellResist * spellResist);
+                double GChanceAvoided = (1 / (1 - chanceAvoided)) - 1;
+                double GSpellResist = (1 / (1 - spellResist)) - 1;
+                double ProbableGCDLossPerRotation = dodgeMissPerRotation * physicalGCD * GChanceAvoided +
+                                                    (calcOpts.rotation.IcyTouch + calcOpts.rotation.Pestilence) * spellGCD * GSpellResist;
 
                 realDuration += (float)(((minDuration + ProbableGCDLossPerRotation) / realDuration < 1 ? (minDuration + ProbableGCDLossPerRotation) / realDuration : 1) * ProbableGCDLossPerRotation);
+                // This last line is a bit hackish, but basically the extra GCD is more inconvenient the closer we are to having a GCD-capped rotation; once we're GCD-capped, they cost the full value.
                 }
             #endregion
         }
