@@ -890,6 +890,7 @@ namespace Rawr.Enhance
                     BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                     BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                     BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                    BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                     BonusHealthMultiplier = stats.BonusHealthMultiplier,
                     BonusManaMultiplier = stats.BonusManaMultiplier,
                     Health = stats.Health,
@@ -1002,7 +1003,7 @@ namespace Rawr.Enhance
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.BonusHealthMultiplier + stats.BonusManaMultiplier + stats.DeathbringerProc +
-                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon +
+                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + stats.BonusShadowDamageMultiplier +
                 stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.Enhance4T8 + stats.Enhance4T7 + stats.BonusWFAttackPower + 
                 stats.Enhance2T9 + stats.Enhance4T9 + +stats.Enhance2T10 + stats.Enhance4T10 + 
