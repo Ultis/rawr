@@ -788,24 +788,22 @@ namespace Rawr
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
-			foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
+            // only need to get unequipped value once not every time around the loop
+            Character charUnequipped = character.Clone();
+            charUnequipped.SetEnchantBySlot(slot, null);
+            calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+            foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
 			{
 				bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
 				if (isEquipped)
 				{
 					calcsEquipped = currentCalcs;
-					Character charUnequipped = character.Clone();
-					charUnequipped.SetEnchantBySlot(slot, null);
-					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
 				}
 				else
 				{
 					if (equippedOnly) continue;
-					Character charUnequipped = character.Clone();
 					Character charEquipped = character.Clone();
-					charUnequipped.SetEnchantBySlot(slot, null);
 					charEquipped.SetEnchantBySlot(slot, enchant);
-					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
 					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
 				}
 				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
