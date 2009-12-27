@@ -1581,7 +1581,7 @@ These numbers to do not include racial bonuses.",
             float avoidedAttacks = combatFactors.StatS.Dodge + combatFactors.StatS.Parry;
 
             float dwbleed = 0;
-            if (Char.WarriorTalents.DeepWounds > 0) dwbleed = fightDuration * (float)Math.Floor(fightDuration / crit) / (fightDuration / crit);
+            if (Char.WarriorTalents.DeepWounds > 0 && crit != 0f) dwbleed = fightDuration * (float)Math.Floor(fightDuration / crit) / (fightDuration / crit);
 
             float bleed = dwbleed + fightDuration * (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
 
@@ -1594,11 +1594,16 @@ These numbers to do not include racial bonuses.",
             float dmgDoneInterval = fightDuration / (land + bleed);
             float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
-            float hitRate = land / attempted;
-            float hitRateMH = landMH / attemptedMH;
-            float hitRateOH = landOH / attemptedOH;
-
-            float critRate = crit / attempted;
+            float hitRate = 1, hitRateMH = 1, hitRateOH = 1, critRate = 1;
+            if (attempted != 0f)
+            {
+                hitRate = land / attempted;
+                critRate = crit / attempted;
+            }
+            if (attemptedMH != 0f)
+                hitRateMH = landMH / attemptedMH;
+            if (attemptedOH != 0f)
+                hitRateOH = landOH / attemptedOH;
 
             triggerIntervals[Trigger.Use] = 0f;
             triggerChances[Trigger.Use] = 1f;
