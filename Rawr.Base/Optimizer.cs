@@ -1452,28 +1452,31 @@ namespace Rawr.Optimizer
 
             if (emptyList.Count + tooManyList.Count > 0)
             {
-                if (emptyList.Count > 5)
-                {
+                if (emptyList.Count > 5) {
                     emptyList.RemoveRange(5, emptyList.Count - 5);
                     emptyList.Add("...");
                 }
-                if (tooManyList.Count > 5)
-                {
+                if (tooManyList.Count > 5) {
                     tooManyList.RemoveRange(5, tooManyList.Count - 5);
                     tooManyList.Add("...");
                 }
-                if (tooManyList.Count == 0)
-                {
+                if (tooManyList.Count == 0) {
                     // good sizes but some are empty
-                    return "You have not selected any of the following:" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", emptyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?";
-                }
-                else if (emptyList.Count == 0)
-                {
-                    return "The following slots have a very large number of items selected :" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", tooManyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?";
-                }
-                else
-                {
-                    return "You have not selected any of the following:" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", emptyList.ToArray()) + Environment.NewLine + Environment.NewLine + "The following slots have a very large number of items selected :" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", tooManyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?";
+                    return "You have not selected any of the following:\r\n\r\n\t"
+                        + string.Join("\r\n\t", emptyList.ToArray())
+                        + "\r\n\r\nTo select the items, go to their related slot charts and mark them with a Green Diamond. For more information, see the Rawr Documenation pages at rawr.codeplex.com"
+                        + "\r\n\r\nDo you want to continue with the optimization?";
+                } else if (emptyList.Count == 0) {
+                    return "The following slots have a very large number of items selected:\r\n\r\n\t"
+                        + string.Join("\r\n\t", tooManyList.ToArray())
+                        + "\r\n\r\nDo you want to continue with the optimization?";
+                } else {
+                    return "You have not selected any of the following:\r\n\r\n\t"
+                        + string.Join("\r\n\t", emptyList.ToArray())
+                        + "\r\n\r\nTo select the items, go to their related slot charts and mark them with a Green Diamond. For more information, see the Rawr Documenation pages at rawr.codeplex.com"
+                        + "\r\n\r\nThe following slots have a very large number of items selected:\r\n\r\n\t"
+                        + string.Join("\r\n\t", tooManyList.ToArray())
+                        + "\r\n\r\nDo you want to continue with the optimization?";
                 }
             }
             return null;
