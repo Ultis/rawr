@@ -12,63 +12,9 @@ namespace Rawr
 
     public partial class SpecialEffect
     {
-        //private Dictionary<float, Interpolator> interpolator = new Dictionary<float, Interpolator>();
-        //private List<SpecialEffect> effects;
-
-        /*private class UptimeInterpolator : Interpolator
-        {
-            protected List<SpecialEffect> effect;
-
-            public UptimeInterpolator(SpecialEffectCombination effect, float fightDuration)
-                : base(fightDuration, true)
-            {
-                this.effect = effect.effects;
-            }
-
-            protected override float Evaluate(float[] procChance, float[] interval)
-            {
-                double d = effect.Duration / interval;
-                double d2 = d * 0.5;
-                double n = fightDuration / interval;
-                double p = procChance;
-
-                double c = effect.Cooldown / interval;
-                if (discretizationCorrection)
-                {
-                    c += 0.5;
-                }
-                if (c < 1.0) c = 1.0;
-                double x = n;
-
-                const double w1 = 5.0 / 9.0;
-                const double w2 = 8.0 / 9.0;
-                const double k = 0.77459666924148337703585307995648;  //Math.Sqrt(3.0 / 5.0);
-                double dx = k * d2;
-
-                double averageUptime = 0.0;
-                int r = 1;
-                while (x > 0)
-                {
-                    // integrate_t=(x-duration)..x Ibeta(r, t, p) dt
-                    if (x - d > 0)
-                    {
-                        double tmid = x - d2;
-                        averageUptime += (w1 * SpecialFunction.Ibeta(r, tmid - dx, p) + w2 * SpecialFunction.Ibeta(r, tmid, p) + w1 * SpecialFunction.Ibeta(r, tmid + dx, p)) * d2;
-                    }
-                    else //if (x > 0)
-                    {
-                        double tmid = x * 0.5;
-                        double dt = k * tmid;
-                        averageUptime += (w1 * SpecialFunction.Ibeta(r, tmid - dt, p) + w2 * SpecialFunction.Ibeta(r, tmid, p) + w1 * SpecialFunction.Ibeta(r, tmid + dt, p)) * tmid;
-                    }
-                    r++;
-                    x -= c;
-                }
-                return (float)(averageUptime / n);
-            }
-        }*/
-
         private delegate float Ibeta(int a, float b, float x);
+
+        const int maxRecursionDepth = 20;
 
         private class Parameters
         {
@@ -78,6 +24,7 @@ namespace Rawr
             public float[] c; /*in*/
             public float[] o; /*in*/
             public float[] k; /*in*/
+            public float[] v; /*in*/
             public float[] triggerInterval; /*in*/
             public float[] uptime; /*out*/
             public float[,] combinedUptime; /*out*/
@@ -85,20 +32,25 @@ namespace Rawr
             public int N;
             public int NC;
             public Ibeta Ibeta;
+            public int I;
 
-            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed) : this(effects, triggerInterval, triggerChance, offset, attackSpeed, null)
+            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed) : this(effects, triggerInterval, triggerChance, offset, attackSpeed, null, null, 0.0f)
             {
             }
 
-            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float[] scale)
+            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float[] scale, float[] value, float fightDuration)
             {
-                this.effects = effects;
-                this.triggerInterval = triggerInterval;
+                //this.effects = effects;
+                //this.triggerInterval = triggerInterval;
                 d = new float[effects.Length];
                 p = new float[effects.Length];
                 c = new float[effects.Length];
                 o = new float[effects.Length];
-                k = scale;
+                k = new float[effects.Length];
+                v = new float[effects.Length];
+                this.effects = new SpecialEffect[effects.Length];
+                this.triggerInterval = new float[effects.Length];
+                /*k = scale;
                 if (scale == null)
                 {
                     k = new float[effects.Length];
@@ -106,21 +58,63 @@ namespace Rawr
                     {
                         k[i] = 1.0f;
                     }
-                }
+                }*/
 
                 bool discretizationCorrection = true;
 
+                // sort it so that we have nonstationary effects first
+                int j = 0;
                 for (int i = 0; i < effects.Length; i++)
                 {
-                    d[i] = effects[i].Duration / triggerInterval[i];
-                    p[i] = triggerChance[i] * effects[i].GetChance(attackSpeed);
-                    c[i] = effects[i].Cooldown / triggerInterval[i];
-                    if (discretizationCorrection)
+                    if (effects[i].Cooldown > effects[i].Duration)
                     {
-                        c[i] += 0.5f;
+                        I = i;
+                        this.effects[j] = effects[i];
+                        this.triggerInterval[j] = triggerInterval[i];
+                        if (scale == null)
+                        {
+                            k[j] = 1.0f;
+                        }
+                        else
+                        {
+                            k[j] = scale[i];
+                        }
+                        if (value != null)
+                        {
+                            v[j] = value[i];
+                        }
+                        d[j] = effects[i].Duration / triggerInterval[i];
+                        p[j] = triggerChance[i] * effects[i].GetChance(attackSpeed);
+                        c[j] = effects[i].Cooldown / triggerInterval[i];
+                        if (discretizationCorrection)
+                        {
+                            c[j] += 0.5f;
+                        }
+                        if (c[j] < 1.0f) c[j] = 0.0f; // no cooldown model, WARNING: we currently don't support the case where 0 < cooldown < duration
+                        o[j] = offset[i] / triggerInterval[i];
+                        j++;
                     }
-                    if (c[i] < 1.0f) c[i] = 0.0f; // no cooldown model, WARNING: we currently don't support the case where 0 < cooldown < duration
-                    o[i] = offset[i] / triggerInterval[i];
+                }
+
+                N = j;
+                NC = (1 << N);
+
+                uptime = new float[effects.Length];
+                combinedUptime = new float[5 + 2 * maxRecursionDepth, NC];
+                partialIntegral = new float[5 + 2 * maxRecursionDepth, NC];
+
+                for (int i = 0; i < effects.Length; i++)
+                {
+                    if (effects[i].Cooldown <= effects[i].Duration)
+                    {
+                        this.effects[j] = effects[i];
+                        if (value != null)
+                        {
+                            v[j] = value[i];
+                        }
+                        uptime[j] = effects[i].GetAverageUptime(triggerInterval[i], triggerChance[i], attackSpeed, fightDuration);
+                        j++;
+                    }
                 }
 
                 switch (Properties.GeneralSettings.Default.CombinationEffectMode)
@@ -212,27 +206,49 @@ namespace Rawr
             // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
 
             // initialize data, translate into interval time
-            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed, scale);
-            p.uptime = new float[effects.Length];
-            const int maxRecursionDepth = 20;
-            p.N = effects.Length;
-            p.NC = 1 << effects.Length;
-            p.combinedUptime = new float[5 + 2 * maxRecursionDepth, p.NC];
-            p.partialIntegral = new float[5 + 2 * maxRecursionDepth, p.NC];
+            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed, scale, value, fightDuration);
 
             // integrate using adaptive Simspon's method
-            AdaptiveSimpsonsMethodCombinations(p, fightDuration, 0.001f, maxRecursionDepth);
+            // if there's only one nonstationary use noncombination solution for efficiency
+            if (p.N > 1)
+            {
+                AdaptiveSimpsonsMethodCombinations(p, fightDuration, 0.001f, maxRecursionDepth);
+            }
+            else if (p.N == 1)
+            {
+                p.partialIntegral[0, 1] = fightDuration * p.effects[0].GetAverageUptime(triggerInterval[p.I], triggerChance[p.I], attackSpeed, fightDuration);
+                p.partialIntegral[0, 0] = fightDuration - p.partialIntegral[0, 1];
+            }
 
             WeightedStat[] result = new WeightedStat[1 << effects.Length];
 
+            int mask = p.NC - 1;
             for (int i = 0; i < (1 << effects.Length); i++)
             {
-                result[i].Chance = p.partialIntegral[0, i] / fightDuration;
+                if (p.N > 0)
+                {
+                    result[i].Chance = p.partialIntegral[0, i & mask] / fightDuration;
+                }
+                else
+                {
+                    result[i].Chance = 1.0f;
+                }
                 for (int j = 0; j < effects.Length; j++)
                 {
                     if ((i & (1 << j)) != 0)
                     {
-                        result[i].Value += value[j];
+                        result[i].Value += p.v[j];
+                        if (j >= p.N)
+                        {
+                            result[i].Chance *= p.uptime[j];
+                        }
+                    }
+                    else
+                    {
+                        if (j >= p.N)
+                        {
+                            result[i].Chance *= (1.0f - p.uptime[j]);
+                        }
                     }
                 }
             }
