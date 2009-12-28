@@ -203,7 +203,7 @@ namespace Rawr.DPSWarr {
                      (percTimeUnder20 > 0
                         && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f) ||
                      (Talents.SwordSpecialization > 0
-                        && CombatFactors._c_mhItemType == ItemType.TwoHandSword
+                        && (CombatFactors._c_mhItemType == ItemType.TwoHandSword || CombatFactors._c_mhItemType == ItemType.OneHandSword)
                         && Math.Abs(SS.numActivates - oldSSActs) > 0.1f)
                     )
                   )
@@ -413,6 +413,7 @@ namespace Rawr.DPSWarr {
                     availRage -= SD.Rage;
                 }
                 SDspace = (SD.numActivates / NumGCDs) * (SD.ability.UseTime / LatentGCD);
+
                 // Slam for remainder of GCDs
                 if (SL.ability.Validated && PercFailRage == 1f)
                 {
@@ -425,6 +426,14 @@ namespace Rawr.DPSWarr {
                 } else { SL.numActivates = 0f; }
                 WhiteAtks.Slam_Freq = SL.numActivates;
                 SLspace = SL.numActivates / NumGCDs * SL.ability.UseTime / LatentGCD;
+
+                // Sword Spec Procs
+                if (SS.ability.Validated) {
+                    Swordspec _SS = SS.ability as Swordspec;
+                    SS.numActivates = _SS.GetActivates(LandedYellowsOverDur, WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur);
+                    availRage -= SS.Rage;
+                }
+
                 float TotalSpace = (RDspace + BLSspace + MSspace + OPspace + TFBspace + SDspace + SLspace);
                 repassAvailRage = availRage; // check for not enough rage to maintain rotation
                 InvalidateCache();

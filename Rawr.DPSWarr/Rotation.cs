@@ -369,7 +369,9 @@ namespace Rawr.DPSWarr {
                    return 0f;
             }
         }
+
         public float AttemptedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.Both, AttackType.Both); } }
+        public float AttemptedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.Both, AttackType.Yellow); } }
         public float LandedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Land, Hand.Both, AttackType.Both); } }
         public float CriticalAtksOverDur { get { return GetAttackOverDuration(SwingResult.Crit, Hand.Both, AttackType.Both); } }
 
@@ -384,7 +386,6 @@ namespace Rawr.DPSWarr {
 
         public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(SwingResult.Crit, Hand.MH, AttackType.Yellow); } }
         public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(SwingResult.Crit, Hand.OH, AttackType.Yellow); } }
-        
         
         public float DodgedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Dodge, Hand.Both, AttackType.Yellow); } }
         public float ParriedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Parry, Hand.Both, AttackType.Yellow); } }

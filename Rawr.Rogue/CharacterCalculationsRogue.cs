@@ -28,6 +28,8 @@ namespace Rawr.Rogue {
             set { _dictValues[DisplayValue.TotalDps].Stat = Round(value); }
         }
 
+
+
         //---------------------------------------------------------------------
         // Hack/Workaround
         // the base class is looking for the display values in a dictionary 
@@ -52,6 +54,8 @@ namespace Rawr.Rogue {
             }
             _dictValues[key].Stat = value;
         }
+
+        public float SpecProcDPS { get; set; }
 
         public void AddRoundedDisplayValue(DisplayValue key, float value) { AddDisplayValue(key, Round(value)); }
 

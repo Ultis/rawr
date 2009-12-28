@@ -193,8 +193,29 @@ namespace Rawr.Rogue {
 
             var swordSpecDps = new SwordSpec().CalcDps(calcOpts, combatFactors, whiteAttacks, cycleTime);
             var poisonDps = PoisonBase.CalcPoisonDps(calcOpts, combatFactors, stats, whiteAttacks, displayedValues, cycleTime);
-            
 
+            // Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
+            /*Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+            CalculateTriggers(character, Rot, combatFactors, calcOpts, triggerIntervals, triggerChances);
+            DamageProcs.SpecialDamageProcs SDP;
+            displayedValues.SpecProcDPS = 0f;
+            if (stats._rawSpecialEffectData != null)
+            {
+                SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
+                    calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
+                    triggerIntervals, triggerChances, calcOpts.Duration, combatFactors.ArmorDamageReduction);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Arcane);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Nature);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Fire);
+                displayedValues.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);
+            }
+            displayedValues.TotalDPS += displayedValues.SpecProcDPS;
+            */
+            
             displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDps() + whiteAttacks.CalcOhWhiteDps() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
             displayedValues.OverallPoints = displayedValues.TotalDPS;
 

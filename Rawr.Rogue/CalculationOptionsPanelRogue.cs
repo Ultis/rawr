@@ -23,39 +23,39 @@ namespace Rawr.Rogue
             _armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Mob");
             _armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Ulduar Bosses");
 
-            comboBoxArmorBosses.DisplayMember = "Key";
-            comboBoxArmorBosses.DataSource = new BindingSource(_armorBosses, null);
+            CB_TargArmor.DisplayMember = "Key";
+            CB_TargArmor.DataSource = new BindingSource(_armorBosses, null);
 
-            comboBoxTargetLevel.DataSource = new[] {83, 82, 81, 80};
+            CB_TargLevel.DataSource = new[] {83, 82, 81, 80};
 
-            comboBoxComboPoints1.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
-            comboBoxComboPoints2.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
-            comboBoxComboPoints3.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
+            CB_ComboPoints1.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
+            CB_ComboPoints2.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
+            CB_ComboPoints3.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
 
-            comboBoxFinisher1.DisplayMember = "Name";
-            comboBoxFinisher1.ValueMember = "Id";
-            comboBoxFinisher1.DataSource = new Finishers();
-            comboBoxComboPoints1.SelectedIndex = 4;
-            comboBoxFinisher1.SelectedIndex = comboBoxFinisher1.FindString(SnD.NAME);
+            CB_Finisher1.DisplayMember = "Name";
+            CB_Finisher1.ValueMember = "Id";
+            CB_Finisher1.DataSource = new Finishers();
+            CB_ComboPoints1.SelectedIndex = 4;
+            CB_Finisher1.SelectedIndex = CB_Finisher1.FindString(SnD.NAME);
 
-            comboBoxFinisher2.DisplayMember = "Name";
-            comboBoxFinisher2.ValueMember = "Id";
-            comboBoxFinisher2.DataSource = new Finishers();
-            comboBoxComboPoints2.SelectedIndex = 5;
-            comboBoxFinisher2.SelectedIndex = comboBoxFinisher2.FindString(Rupture.NAME);
+            CB_Finisher2.DisplayMember = "Name";
+            CB_Finisher2.ValueMember = "Id";
+            CB_Finisher2.DataSource = new Finishers();
+            CB_ComboPoints2.SelectedIndex = 5;
+            CB_Finisher2.SelectedIndex = CB_Finisher2.FindString(Rupture.NAME);
 
-            comboBoxFinisher3.DisplayMember = "Name";
-            comboBoxFinisher3.ValueMember = "Id";
-            comboBoxFinisher3.DataSource = new Finishers();
+            CB_Finisher3.DisplayMember = "Name";
+            CB_Finisher3.ValueMember = "Id";
+            CB_Finisher3.DataSource = new Finishers();
 
-            comboBoxMHPoison.DisplayMember = "Name"; 
-            comboBoxMHPoison.DataSource = new PoisonList();
+            CB_PoisonMH.DisplayMember = "Name"; 
+            CB_PoisonMH.DataSource = new PoisonList();
 
-            comboBoxOHPoison.DisplayMember = "Name";
-            comboBoxOHPoison.DataSource = new PoisonList();
+            CB_PoisonOH.DisplayMember = "Name";
+            CB_PoisonOH.DataSource = new PoisonList();
 
-            ComboBoxCpGenerator.DisplayMember = "Name";
-            ComboBoxCpGenerator.DataSource = new ComboPointGeneratorList();
+            CB_CpGenerator.DisplayMember = "Name";
+            CB_CpGenerator.DataSource = new ComboPointGeneratorList();
         }
 
         protected override void LoadCalculationOptions()
@@ -72,6 +72,7 @@ namespace Rawr.Rogue
 
                 _calcOpts.TargetLevel = loadOpts.TargetLevel;
                 _calcOpts.TargetArmor = loadOpts.TargetArmor;
+                _calcOpts.Duration   = loadOpts.Duration;
                 _calcOpts.CpGenerator = loadOpts.CpGenerator;
                 _calcOpts.DpsCycle = loadOpts.DpsCycle;
                 _calcOpts.TempMainHandEnchant = loadOpts.TempMainHandEnchant;
@@ -81,9 +82,10 @@ namespace Rawr.Rogue
                 _calcOpts.TurnTheTablesUptime = loadOpts.TurnTheTablesUptime;
                 _calcOpts.TargetIsValidForMurder = loadOpts.TargetIsValidForMurder;
 
-                comboBoxTargetLevel_SelectedIndexChanged(this, null);
-                comboBoxArmorBosses_SelectedIndexChanged(this, null);
-                ComboBoxCpGenerator_SelectedIndexChanged(this, null);
+                CB_TargLevel_SelectedIndexChanged(this, null);
+                CB_TargArmor_SelectedIndexChanged(this, null);
+                NUD_Duration_ValueChanged(this, null);
+                CB_CpGenerator_SelectedIndexChanged(this, null);
                 CycleChanged(this, null);
                 OnMHPoisonChanged(this, null);
                 OnOHPoisonChanged(this, null);
@@ -92,21 +94,17 @@ namespace Rawr.Rogue
                 MurderTalentCheckBox_CheckedChanged(this, null);
 
                 UpdateCalculations();
-        }
+            }
 
             m_bLoading = false;
         }
 
-        private void OnMHPoisonChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-            _calcOpts.TempMainHandEnchant = PoisonList.Get(((ComboBox)sender).Text);
-            UpdateCalculations();
-        }
-            else
-            {
-                comboBoxMHPoison.Text = _calcOpts.TempMainHandEnchant.Name;
+        private void OnMHPoisonChanged(object sender, EventArgs e) {
+            if (!m_bLoading) {
+                _calcOpts.TempMainHandEnchant = PoisonList.Get(((ComboBox)sender).Text);
+                UpdateCalculations();
+            } else {
+                CB_PoisonMH.Text = _calcOpts.TempMainHandEnchant.Name;
             }
         }
 
@@ -114,41 +112,39 @@ namespace Rawr.Rogue
         {
             if (!m_bLoading)
             {
-            _calcOpts.TempOffHandEnchant = PoisonList.Get(((ComboBox)sender).Text);
-            UpdateCalculations();
-        }
+                _calcOpts.TempOffHandEnchant = PoisonList.Get(((ComboBox)sender).Text);
+                UpdateCalculations();
+            }
             else
             {
-                comboBoxOHPoison.Text = _calcOpts.TempOffHandEnchant.Name;
+                CB_PoisonOH.Text = _calcOpts.TempOffHandEnchant.Name;
             }
         }
 
-        private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
+        private void CB_TargArmor_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!m_bLoading)
             {
-            var targetArmor = int.Parse(comboBoxArmorBosses.Text);
-            labelTargetArmorDescription.Text = _armorBosses[targetArmor];
-            _calcOpts.TargetArmor = targetArmor;
-            UpdateCalculations();
-        }
+                var targetArmor = int.Parse(CB_TargArmor.Text);
+                _calcOpts.TargetArmor = targetArmor;
+                UpdateCalculations();
+            }
             else
             {
-                comboBoxArmorBosses.Text = _calcOpts.TargetArmor.ToString();
-                labelTargetArmorDescription.Text = _armorBosses[_calcOpts.TargetArmor];
+                CB_TargArmor.Text = _calcOpts.TargetArmor.ToString();
             }
         }
 
-        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void CB_TargLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!m_bLoading)
             {
-            _calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.Text);
-            UpdateCalculations();
-        }
+                _calcOpts.TargetLevel = int.Parse(CB_TargLevel.Text);
+                UpdateCalculations();
+            }
             else
             {
-                comboBoxTargetLevel.Text = _calcOpts.TargetLevel.ToString();
+                CB_TargLevel.Text = _calcOpts.TargetLevel.ToString();
             }
         }
 
@@ -166,20 +162,20 @@ namespace Rawr.Rogue
             if (!m_bLoading)
             {
             var cycle = new Cycle();
-            cycle.Components.Add(GetCycleComponent(comboBoxComboPoints1, comboBoxFinisher1));
-            cycle.Components.Add(GetCycleComponent(comboBoxComboPoints2, comboBoxFinisher2));
-            cycle.Components.Add(GetCycleComponent(comboBoxComboPoints3, comboBoxFinisher3));
+            cycle.Components.Add(GetCycleComponent(CB_ComboPoints1, CB_Finisher1));
+            cycle.Components.Add(GetCycleComponent(CB_ComboPoints2, CB_Finisher2));
+            cycle.Components.Add(GetCycleComponent(CB_ComboPoints3, CB_Finisher3));
             _calcOpts.DpsCycle = cycle;
             UpdateCalculations();
         }
             else
             {
-                comboBoxComboPoints1.Text   = _calcOpts.DpsCycle.Components[0].Rank.ToString();
-                comboBoxFinisher1.Text      = _calcOpts.DpsCycle.Components[0].Finisher.Name;
-                comboBoxComboPoints2.Text   = _calcOpts.DpsCycle.Components[1].Rank.ToString();
-                comboBoxFinisher2.Text      = _calcOpts.DpsCycle.Components[1].Finisher.Name;
-                comboBoxComboPoints3.Text   = _calcOpts.DpsCycle.Components[2].Rank.ToString();
-                comboBoxFinisher3.Text      = _calcOpts.DpsCycle.Components[2].Finisher.Name;
+                CB_ComboPoints1.Text   = _calcOpts.DpsCycle.Components[0].Rank.ToString();
+                CB_Finisher1.Text      = _calcOpts.DpsCycle.Components[0].Finisher.Name;
+                CB_ComboPoints2.Text   = _calcOpts.DpsCycle.Components[1].Rank.ToString();
+                CB_Finisher2.Text      = _calcOpts.DpsCycle.Components[1].Finisher.Name;
+                CB_ComboPoints3.Text   = _calcOpts.DpsCycle.Components[2].Rank.ToString();
+                CB_Finisher3.Text      = _calcOpts.DpsCycle.Components[2].Finisher.Name;
             }
         }
 
@@ -194,11 +190,11 @@ namespace Rawr.Rogue
             return component;
         }
 
-        private void ComboBoxCpGenerator_SelectedIndexChanged(object sender, EventArgs e)
+        private void CB_CpGenerator_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!m_bLoading)
             {
-                if (ComboBoxCpGenerator.Text == new HonorAmongThieves(0f, 0f).Name)
+                if (CB_CpGenerator.Text == new HonorAmongThieves(0f, 0f).Name)
                 {
                 SetHatVisibility(true);
                 HatStepper_ValueChanged(sender, e);
@@ -207,14 +203,14 @@ namespace Rawr.Rogue
 
             SetHatVisibility(false);
 
-            _calcOpts.CpGenerator = ComboPointGeneratorList.Get(ComboBoxCpGenerator.Text);
+            _calcOpts.CpGenerator = ComboPointGeneratorList.Get(CB_CpGenerator.Text);
             UpdateCalculations();
         }
             else
             {
-                ComboBoxCpGenerator.Text = _calcOpts.CpGenerator.Name;
+                CB_CpGenerator.Text = _calcOpts.CpGenerator.Name;
 
-                if (ComboBoxCpGenerator.Text == new HonorAmongThieves().Name)
+                if (CB_CpGenerator.Text == new HonorAmongThieves().Name)
                 {
                     SetHatVisibility(true);
 
@@ -232,33 +228,33 @@ namespace Rawr.Rogue
         {
             if (!m_bLoading)
             {
-                _calcOpts.CpGenerator = new HonorAmongThieves((float)HatStepper.Value, (float)HemoPerCycle.Value);
+                _calcOpts.CpGenerator = new HonorAmongThieves((float)NUD_Hat.Value, (float)NUD_HemoPerCycle.Value);
             UpdateCalculations();
         }
         }
 
         private void SetHatVisibility(bool visible)
         {
-            HemoPerCycleLabel.Visible = visible;
-            CpPerSecLabel.Visible = visible;
-            HatStepper.Visible = visible;
-            HemoPerCycle.Visible = visible;
+            LB_HemoPerCycle.Visible = visible;
+            LB_CPperSec.Visible = visible;
+            NUD_Hat.Visible = visible;
+            NUD_HemoPerCycle.Visible = visible;
         }
 
         private void Feint_CheckedChanged(object sender, EventArgs e)
         {
             if (!m_bLoading)
             {
-            FeintDelayStepper.Visible = FeintDelayLabel.Visible = Feint.Checked;
-            _calcOpts.Feint = Feint.Checked ? new Feint((float)FeintDelayStepper.Value) : new Feint(0);
+            NUD_FeintDelay.Visible = LB_FeintDelay.Visible = CK_UseFeint.Checked;
+            _calcOpts.Feint = CK_UseFeint.Checked ? new Feint((float)NUD_FeintDelay.Value) : new Feint(0);
             UpdateCalculations();
         }
             else
             {
-                Feint.Checked = _calcOpts.Feint.IsNeedFeint();
+                CK_UseFeint.Checked = _calcOpts.Feint.IsNeedFeint();
 
-                FeintDelayStepper.Visible   = Feint.Checked;
-                FeintDelayLabel.Visible     = Feint.Checked;
+                NUD_FeintDelay.Visible   = CK_UseFeint.Checked;
+                LB_FeintDelay.Visible     = CK_UseFeint.Checked;
 
                 FeintDelayStepper_ValueChanged(sender, e);
             }
@@ -268,12 +264,12 @@ namespace Rawr.Rogue
         {
             if (!m_bLoading)
             {
-            _calcOpts.Feint = Feint.Checked ? new Feint((float)FeintDelayStepper.Value) : new Feint(0);
+            _calcOpts.Feint = CK_UseFeint.Checked ? new Feint((float)NUD_FeintDelay.Value) : new Feint(0);
             UpdateCalculations();
         }
             else
             {
-                FeintDelayStepper.Text = _calcOpts.Feint.Delay().ToString();
+                NUD_FeintDelay.Text = _calcOpts.Feint.Delay().ToString();
             }
         }
 
@@ -281,16 +277,16 @@ namespace Rawr.Rogue
         {
             if (!m_bLoading)
             {
-            TurnTheTablesUptimePercent.Visible = TurnTheTablesNumericStepperLabel.Visible = UseTurnTheTables.Checked;
-                _calcOpts.TurnTheTablesUptime = UseTurnTheTables.Checked ? (float)TurnTheTablesUptimePercent.Value / 100f : 0f;
+            NUD_TurnTheTablesUptimePerc.Visible = LB_TurnTheTables.Visible = CK_UseTurnTheTables.Checked;
+                _calcOpts.TurnTheTablesUptime = CK_UseTurnTheTables.Checked ? (float)NUD_TurnTheTablesUptimePerc.Value / 100f : 0f;
             UpdateCalculations();
         }
             else
             {
-                UseTurnTheTables.Checked = (_calcOpts.TurnTheTablesUptime > 0) ? true : false;
+                CK_UseTurnTheTables.Checked = (_calcOpts.TurnTheTablesUptime > 0) ? true : false;
 
-                TurnTheTablesUptimePercent.Visible          = UseTurnTheTables.Checked;
-                TurnTheTablesNumericStepperLabel.Visible    = UseTurnTheTables.Checked;
+                NUD_TurnTheTablesUptimePerc.Visible          = CK_UseTurnTheTables.Checked;
+                LB_TurnTheTables.Visible    = CK_UseTurnTheTables.Checked;
 
                 TurnTheTablesUptimePercent_ValueChanged(sender, e);
             }
@@ -300,14 +296,14 @@ namespace Rawr.Rogue
         {
             if (!m_bLoading)
             {
-                _calcOpts.TurnTheTablesUptime = (float)TurnTheTablesUptimePercent.Value / 100f;
+                _calcOpts.TurnTheTablesUptime = (float)NUD_TurnTheTablesUptimePerc.Value / 100f;
             UpdateCalculations();
         }
             else
             {
                 int value = (int)(_calcOpts.TurnTheTablesUptime * 100.0f);
                 
-                TurnTheTablesUptimePercent.Text = value.ToString();
+                NUD_TurnTheTablesUptimePerc.Text = value.ToString();
             }
         }
 
@@ -315,12 +311,25 @@ namespace Rawr.Rogue
         {
             if (!m_bLoading)
             {
-            _calcOpts.TargetIsValidForMurder = MurderTalentCheckBox.Checked;
-            UpdateCalculations();
-        }
+                _calcOpts.TargetIsValidForMurder = CK_MurderValid.Checked;
+                UpdateCalculations();
+            }
             else
             {
-                MurderTalentCheckBox.Checked = _calcOpts.TargetIsValidForMurder;
+                CK_MurderValid.Checked = _calcOpts.TargetIsValidForMurder;
+            }
+        }
+
+        private void NUD_Duration_ValueChanged(object sender, EventArgs e)
+        {
+            if (!m_bLoading)
+            {
+                _calcOpts.Duration = (float)NUD_Duration.Value;
+                UpdateCalculations();
+            }
+            else
+            {
+                NUD_Duration.Value = (int)_calcOpts.Duration;
             }
         }
     }
