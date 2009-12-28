@@ -86,7 +86,10 @@ namespace Rawr
             if (string.IsNullOrEmpty(_pattern)
                 || (!string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description))
                 || (!string.IsNullOrEmpty(item.LocationInfo[0].Note) && Regex.IsMatch(item.LocationInfo[0].Note))
-                || (item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description))
+                //|| (item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description))
+                || ((item.LocationInfo[0] != null && item.LocationInfo[1] != null)
+                    && (!string.IsNullOrEmpty(item.LocationInfo[0].Description) && !string.IsNullOrEmpty(item.LocationInfo[1].Description))
+                    && Regex.IsMatch(item.LocationInfo[0].Description + " and" + item.LocationInfo[1].Description.Replace("Purchasable with","")))
             )
             {
                 if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
