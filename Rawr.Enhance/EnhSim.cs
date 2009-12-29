@@ -159,6 +159,7 @@ namespace Rawr.Enhance
             sb.AppendLine("reverberation                   " + character.ShamanTalents.Reverberation + "/5");
             sb.AppendLine("elemental_focus                 " + character.ShamanTalents.ElementalFocus + "/1");
             sb.AppendLine("elemental_fury                  " + character.ShamanTalents.ElementalFury + "/5");
+            sb.AppendLine("improved_fire_nova              " + character.ShamanTalents.ImprovedFireNova + "/2");
             sb.AppendLine("call_of_thunder                 " + character.ShamanTalents.CallOfThunder + "/1");
             sb.AppendLine("unrelenting_storm               " + character.ShamanTalents.UnrelentingStorm + "/3");
             sb.AppendLine("elemental_precision             " + character.ShamanTalents.ElementalPrecision + "/3");
@@ -187,7 +188,7 @@ namespace Rawr.Enhance
 			catch { }
             if(Clipboard.Success)
                 MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.4.1 or higher, to import it\n" +
+                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.5.0 or higher, to import it\n" +
                     "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                     "Enhance Module", MessageBoxButton.OK);
         }
@@ -200,7 +201,7 @@ namespace Rawr.Enhance
 			}
 			catch { }
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.4.1 or higher, to import it\n" +
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.5.0 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
