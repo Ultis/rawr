@@ -313,8 +313,18 @@ namespace Rawr.Warlock
 
             damage *= BaseMultiplier;
 
-            //add bonus from sanctified ret / ferocious inspiration / arcane empowerment
+            //add buffs category: Damage(%) [sanctified ret / ferocious inspiration / arcane empowerment]
             damage *= (1 + Stats.BonusDamageMultiplier);
+
+            //add buffs category: Spell Damage Taken [curse of the elements / ebon plaguebringer / earth & moon]
+            if (MagicSchool == MagicSchool.Shadow)
+            {
+                damage *= (1 + Stats.BonusShadowDamageMultiplier);
+            }
+            else if (MagicSchool == MagicSchool.Fire)
+            {
+                damage *= (1 + Stats.BonusFireDamageMultiplier);
+            }
 
             return damage;
         }
@@ -602,7 +612,10 @@ namespace Rawr.Warlock
             BaseDirectDamageCoefficient = (BaseCastTime / 3.5);
             BaseMultiplier *= (1 + (character.WarlockTalents.ShadowAndFlame * 0.04));
             BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05) + stats.Warlock4T8;
+            BaseCritChance = stats.SpellCrit 
+                           + (character.WarlockTalents.Devastation * 0.05) 
+                           + stats.Warlock4T8 
+                           + stats.Warlock2T10;
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
             BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
         }
@@ -670,8 +683,9 @@ namespace Rawr.Warlock
                                  + (character.WarlockTalents.GlyphIncinerate ? 0.05 : 0));
 
             BaseCritChance  = stats.SpellCrit 
-                        + (character.WarlockTalents.Devastation * 0.05) 
-                        + stats.Warlock4T8;
+                            + (character.WarlockTalents.Devastation * 0.05) 
+                            + stats.Warlock4T8
+                            + stats.Warlock2T10;
 
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) 
             //            * (1f + (character.WarlockTalents.Ruin * 0.2f)) 
@@ -793,7 +807,8 @@ namespace Rawr.Warlock
             BaseMultiplier *= (1 + (character.WarlockTalents.SiphonLife * 0.05));
 
             BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Malediction * 0.03f);
+                           + (character.WarlockTalents.Malediction * 0.03f)
+                           + stats.Warlock2T10;
 
             if (character.WarlockTalents.Pandemic > 0)
             {
@@ -1384,7 +1399,10 @@ namespace Rawr.Warlock
             BaseCastTime = 6;
             BaseDirectDamageCoefficient = 1.15;
             BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05);
+            BaseCritChance = stats.SpellCrit 
+                           + (character.WarlockTalents.Devastation * 0.05)
+                           + stats.Warlock2T10;
+
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
             BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
         }

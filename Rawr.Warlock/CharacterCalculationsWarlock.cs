@@ -322,13 +322,6 @@ namespace Rawr.Warlock
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
 
-            float targetHit = Options.TargetHit;
-            float bonusHit = TotalStats.SpellHit * 100f;
-
-            float onePercentOfHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
-            float talentHit = Character.WarlockTalents.Suppression * 1f;
-            float totalHit = targetHit + bonusHit;
-
             #region Simulation stats
             dictValues.Add("Rotation", String.Format("{0}*{1}", Name, Abilities));
             dictValues.Add("Warlock DPS", String.Format("{0:0}", DpsPoints));
@@ -365,34 +358,64 @@ namespace Rawr.Warlock
                 Math.Round((TotalStats.SpellPower + TotalStats.SpellFireDamageRating) * petInheritedSpellPowerPercentage, 0)
                 ));
 
-            dictValues.Add("Hit Rating", String.Format("{0}", TotalStats.HitRating));
+            #region Hit / Miss chance
+            //float bonusHit = TotalStats.SpellHit;
+            float onePercentOfHitRating = (1 / StatConversion.GetSpellHitFromRating(1));
+            float hitFromRating = StatConversion.GetSpellHitFromRating(TotalStats.HitRating);
+            float hitFromTalents = (Character.WarlockTalents.Suppression * 0.01f);
+            float hitFromBuffs = (TotalStats.SpellHit - hitFromRating - hitFromTalents);
+            float targetHit = (Options.TargetHit / 100f);
+            float totalHit = (targetHit + TotalStats.SpellHit);
+            float missChance = (totalHit > 1 ? 0 : (1 - totalHit));
 
-            dictValues.Add("Miss Chance", String.Format("{0}%*{1}% Total Hit Chance\r\n\r\n{2}%\tfrom {3} Hit Rating\r\n{4}%\tfrom {5} points in Suppression\r\n{6}%\tfrom Buffs\r\n\r\n{7}",
-                Math.Max(0, 100 - totalHit).ToString("0.00"),
-                bonusHit.ToString("0.00"),
-                (StatConversion.GetSpellHitFromRating(TotalStats.HitRating) * 100f).ToString("0.00"),
-                TotalStats.HitRating,
-                talentHit,
-                Character.WarlockTalents.Suppression,
-                (bonusHit - StatConversion.GetSpellHitFromRating(TotalStats.HitRating) * 100f - talentHit).ToString("0.00"),
-                (totalHit > 100f) ? String.Format("{0} hit rating above cap", Math.Floor((totalHit - 100f) * onePercentOfHitRating)) : String.Format("{0} hit rating below cap", Math.Ceiling((100f - totalHit) * onePercentOfHitRating))));
-            
-            dictValues.Add("Crit", String.Format("{0:0.00%}*" 
-                                                + "{1:0.00%}\tfrom {2:0} Spell Crit rating\r\n" 
-                                                + "{3:0.00%}\tfrom Intellect\r\n" 
-                                                + "{4:0.00}%\tfrom Warlock Class Bonus\r\n" 
-                                                + "{5:0%}\tfrom Talent: Demonic Tactics\r\n" 
-                                                + "{6:0%}\tfrom Talent: Backlash",
-                    TotalStats.SpellCrit,
-                    StatConversion.GetSpellCritFromRating(TotalStats.CritRating),
-                    TotalStats.CritRating,
-                    StatConversion.GetSpellCritFromIntellect(TotalStats.Intellect),
-                    1.701,
-                    (Character.WarlockTalents.DemonicTactics * 0.02f),
-                    (Character.WarlockTalents.Backlash * 0.01f) 
+            dictValues.Add("Hit Rating", String.Format("{0}*{1:0.00%} Hit Chance (max 100%) | {2:0.00%} Miss Chance \r\n\r\n" 
+                + "{3:0.00%}\t Base Hit Chance on a Level {4:0} target\r\n" 
+                + "{5:0.00%}\t from {6:0} Hit Rating [gear, food and/or flasks]\r\n" 
+                + "{7:0.00%}\t from Talent: Suppression\r\n" 
+                + "{8:0.00%}\t from Buffs: Racial and/or Spell Hit Chance Taken\r\n\r\n" 
+                + "{9}\r\n\r\n" 
+                + "Hit Rating soft caps:\r\n" 
+                + "420 - Heroic Presence\r\n" 
+                + "368 - Suppression\r\n" 
+                + "342 - Suppression and Heroic Presence\r\n"
+                + "289 - Suppression, Improved Faerie Fire / Misery\r\n" 
+                + "263 - Suppression, Improved Faerie Fire / Misery and  Heroic Presence",
+                TotalStats.HitRating, totalHit, missChance,
+                targetHit, Options.TargetLevel,
+                hitFromRating, TotalStats.HitRating,
+                hitFromTalents,
+                hitFromBuffs,
+                (totalHit > 1) ? String.Format("You are {0} hit rating above the 446 hard cap [no hit from gear, talents or buffs]", Math.Floor((totalHit - 1) * onePercentOfHitRating))
+                               : String.Format("You are {0} hit rating below the 446 hard cap [no hit from gear, talents or buffs]", Math.Ceiling((1 - totalHit) * onePercentOfHitRating))
                 ));
+            #endregion
+            
+            #region Crit %
+            Stats statsBase = BaseStats.GetBaseStats(Character);
+            float critFromRating = StatConversion.GetSpellCritFromRating(TotalStats.CritRating);
+            float critFromIntellect = StatConversion.GetSpellCritFromIntellect(TotalStats.Intellect);
+            float critFromBuffs = TotalStats.SpellCrit - statsBase.SpellCrit - critFromRating - critFromIntellect 
+                                - (Character.WarlockTalents.DemonicTactics * 0.02f) 
+                                - (Character.WarlockTalents.Backlash * 0.01f);
 
-            dictValues.Add("Haste", String.Format("{0}%*{1}%\tfrom {2} Haste rating\r\n{3}%\tfrom Buffs\r\n{4}s\tGlobal Cooldown",
+            dictValues.Add("Crit Chance", String.Format("{0:0.00%}*" 
+                                                + "{1:0.00%}\tfrom {2:0} Spell Crit rating\r\n" 
+                                                + "{3:0.00%}\tfrom {4:0} Intellect\r\n" 
+                                                + "{5:0.000%}\tfrom Warlock Class Bonus\r\n" 
+                                                + "{6:0%}\tfrom Talent: Demonic Tactics\r\n" 
+                                                + "{7:0%}\tfrom Talent: Backlash\r\n" 
+                                                + "{8:0%}\tfrom Buffs",
+                    TotalStats.SpellCrit,
+                    critFromRating, TotalStats.CritRating,
+                    critFromIntellect, TotalStats.Intellect,
+                    statsBase.SpellCrit,
+                    (Character.WarlockTalents.DemonicTactics * 0.02f),
+                    (Character.WarlockTalents.Backlash * 0.01f),
+                    critFromBuffs
+                ));
+            #endregion
+
+            dictValues.Add("Haste Rating", String.Format("{0}%*{1}%\tfrom {2} Haste rating\r\n{3}%\tfrom Buffs\r\n{4}s\tGlobal Cooldown",
                 (TotalStats.SpellHaste * 100f).ToString("0.00"),
                 (StatConversion.GetSpellHasteFromRating(TotalStats.HasteRating) * 100f).ToString("0.00"),
                 TotalStats.HasteRating,

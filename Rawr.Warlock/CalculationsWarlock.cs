@@ -210,9 +210,9 @@ namespace Rawr.Warlock
                     "Base Stats:Armor",
                     "Spell:Bonus Damage",
                     "Spell:Hit Rating",
-                    "Spell:Miss Chance",
-                    "Spell:Crit",
-                    "Spell:Haste",
+                    //"Spell:Miss Chance",
+                    "Spell:Crit Chance",
+                    "Spell:Haste Rating",
                     "Spell:Mana Regen",
                     "Shadow School:Shadow Bolt",
                     "Shadow School:Haunt",
@@ -624,7 +624,7 @@ namespace Rawr.Warlock
 
             //Haste rating - the MasterConjuror talent improves the spellstone
             statsTotal.HasteRating += statsTotal.WarlockSpellstoneHasteRating * (1f + (talents.MasterConjuror * 1.5f));
-            statsTotal.SpellHaste  +=  StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            statsTotal.SpellHaste  += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
             
             //Hit rating 
             statsTotal.SpellHit    += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
@@ -662,13 +662,10 @@ namespace Rawr.Warlock
                 Spirit = stats.Spirit,
                 HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
-                SpellHitRating = stats.SpellHitRating,
                 HasteRating = stats.HasteRating,
                 SpellHaste = stats.SpellHaste,
-                SpellHasteRating = stats.SpellHasteRating,
                 CritRating = stats.CritRating,
                 SpellCrit = stats.SpellCrit,
-                SpellCritRating = stats.SpellCritRating,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
 
                 ShadowDamage = stats.ShadowDamage,
@@ -756,9 +753,9 @@ namespace Rawr.Warlock
                 stats.SpellPower
                 + stats.Intellect
                 + stats.Spirit
-                + stats.HitRating + stats.SpellHit + stats.SpellHitRating
-                + stats.HasteRating + stats.SpellHaste + stats.SpellHasteRating
-                + stats.CritRating + stats.SpellCrit + stats.SpellCritRating
+                + stats.HitRating + stats.SpellHit
+                + stats.HasteRating + stats.SpellHaste
+                + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget
                 + stats.ShadowDamage + stats.SpellShadowDamageRating
                 + stats.FireDamage + stats.SpellFireDamageRating
 
