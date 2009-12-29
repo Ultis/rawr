@@ -1531,6 +1531,7 @@ namespace Rawr
                     switch (zoneId)
                     {
                         #region Old World
+                        case "-364": return "Darkmoon Faire";
                         case "12": return "Elwynn Forest";
                         case "38": return "Loch Modan";
                         case "40": return "Westfall";

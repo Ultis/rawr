@@ -262,6 +262,16 @@ namespace Rawr
         public static float GetArmorPenetrationFromRating(float Rating) {
             return Rating / RATING_PER_ARMORPENETRATION;
         }
+        public static float GetRatingFromArmorPenetration(float Rating, CharacterClass Class) { return GetRatingFromArmorPenetration(Rating); }
+        /// <summary>
+        /// Returns a Value (1 = 1 Armor Penetration Rating)
+        /// </summary>
+        /// <param name="Rating">Percent</param>
+        /// <returns>A Value (1 = 1 Armor Penetration Rating)</returns>
+        public static float GetRatingFromArmorPenetration(float Rating)
+        {
+            return Rating * RATING_PER_ARMORPENETRATION;
+        }
 
         public static float GetBlockFromRating(float Rating, CharacterClass Class) { return GetBlockFromRating(Rating); }
         /// <summary>
@@ -348,6 +358,16 @@ namespace Rawr
         /// <param name="Rating">Crit Rating</param>
         /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
         public static float GetPhysicalCritFromRating(float Rating) { return Rating / RATING_PER_PHYSICALCRIT; }
+
+        public static float GetRatingFromCrit(float Rating, CharacterClass Class) { return GetRatingFromPhysicalCrit(Rating); }
+        public static float GetRatingFromCrit(float Rating) { return GetRatingFromPhysicalCrit(Rating); }
+        public static float GetRatingFromPhysicalCrit(float Rating, CharacterClass Class) { return GetRatingFromPhysicalCrit(Rating); }
+        /// <summary>
+        /// Returns a Value (1 = 1 Crit Rating)
+        /// </summary>
+        /// <param name="Rating">Crit Percent</param>
+        /// <returns>A Value (1 = 1 Crit Rating)</returns>
+        public static float GetRatingFromPhysicalCrit(float Rating) { return Rating * RATING_PER_PHYSICALCRIT; }
 
         // Returns a Percentage
         public static float GetHasteFromRating(float Rating, CharacterClass Class) { return GetPhysicalHasteFromRating(Rating, Class); }

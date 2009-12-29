@@ -9,6 +9,7 @@ namespace Rawr.DPSWarr {
         public Stats MaximumStats { get; set; }
         public Stats UnbuffedStats { get; set; }
         public Stats BuffedStats { get; set; }
+        public Stats BuffsStats { get; set; } // The actual stats that come from Buffs
         public CombatFactors combatFactors { get; set; }
         public Rotation Rot { get; set; }
         #endregion
@@ -49,6 +50,7 @@ namespace Rawr.DPSWarr {
         public float OhCrit { get; set; }
         #endregion
         #region Offensive
+        public float BonusCritPercPoleAxeSpec { get; set; }
         public float ArmorPenetrationMaceSpec { get; set; }
         public float ArmorPenetrationStance { get; set; }
         public float ArmorPenetrationRating { get; set; }
@@ -98,68 +100,208 @@ namespace Rawr.DPSWarr {
         #endregion
         #endregion
 
+        private string GenFormattedString(string[] passiveContrs) { return GenFormattedString(passiveContrs, false, false, false); }
+        private string GenFormattedString(string[] passiveContrs, bool hasCap, bool unprocisOverCap, bool procisOverCap)
+        {
+            int formIter = 2;
+            string theFormat = "";
+
+            theFormat += "{0:00.00%} : {1}*"; // Averaged % and Averaged Rating
+            theFormat += "The Pane shows Averaged Values";
+            theFormat += "\r\n";
+            if (passiveContrs.Length > 0) {
+                theFormat += "\r\n= Your Passive Contributions =";
+                foreach (string passiveContr in passiveContrs) {
+                    theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : " + passiveContr;
+                    formIter++;
+                }
+                theFormat += "\r\n";
+            }
+            theFormat += "\r\n= UnProc'd =";
+            theFormat += "\r\n{" + formIter.ToString() + ":0.#} : Rating"; formIter++;
+            theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : Percent"; formIter++;
+            if (hasCap) { theFormat += "\r\n" + (unprocisOverCap ? "{" + formIter.ToString() + ":0.#} Rating Over Cap"
+                                                                 : "{" + formIter.ToString() + ":0.#} Rating Under Cap"); formIter++; }
+            theFormat += "\r\n";
+            theFormat += "\r\n= Proc'd =";
+            theFormat += "\r\n{" + formIter.ToString() + ":0.#} : Rating"; formIter++;
+            theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : Percent"; formIter++;
+            if (hasCap) { theFormat += "\r\n" + (procisOverCap ? "{" + formIter.ToString() + ":0.#} Rating Over Cap"
+                                                               : "{" + formIter.ToString() + ":0.#} Rating Under Cap"); formIter++; }
+
+            return theFormat;
+        }
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             string format = "";
 
             // Base Stats
-            dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
-                                Environment.NewLine + "{3:00,000} : Stam Bonus",
+            dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*" +
+                                "{2:00,000} : Base Health" +
+                                "\r\n{3:00,000} : Stam Bonus",
                                 AverageStats.Health, AverageStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(AverageStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",AverageStats.Strength,AverageStats.Strength*2f));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)AverageStats.AttackPower,AverageStats.AttackPower/14f));
-            dictValues.Add("Agility",string.Format("{0}*3.192% : Base Crit at lvl 80"+
-                                Environment.NewLine + "{1:0.000%} : Crit Increase"+
-                                Environment.NewLine + "{2:0.000%} : Total Crit Increase"+
-                                Environment.NewLine + "Increases Armor by {3:0}",
-                                AverageStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f,
-                                StatConversion.GetArmorFromAgility(AverageStats.Agility)));
-            dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*" +
-                                                      "{2:00.00%} : Rating " +
-                                Environment.NewLine + "{3:00.00%} : MH Crit" +
-                                Environment.NewLine + "{4:00.00%} : OH Crit",
-                                CritPercent, AverageStats.CritRating,
-                                StatConversion.GetCritFromRating(AverageStats.CritRating),
-                                MhCrit, OhCrit));
-            dictValues.Add("Haste", string.Format("{0:00.00%} : {1}*" +
-                                "The percentage is affected both by Haste Rating and Blood Frenzy talent",
-                                HastePercent, (float)Math.Floor(AverageStats.HasteRating)));
+            #region Agility
+            {
+                int formIter = 1;
+                string theFormat = "";
 
-            string theFormat = "";
-            theFormat += "{0:00.00%} : {1}*"; // Averaged % and Averaged Rating
-            theFormat += "The Pane shows Averaged Values";
-            theFormat += "\r\n";
-            theFormat += "\r\n= Passive Contributions =";
-            theFormat += "\r\n{2:00.00%} : Battle Stance";
-            theFormat += "\r\n{3:00.00%} : T9 2P Set Bonus";
-            theFormat += "\r\n{4:00.00%} : Mace Specialization";
-            theFormat += "\r\n";
-            theFormat += "\r\n= UnProc'd =";
-            theFormat += "\r\n{5} : Rating";
-            theFormat += "\r\n{6:00.00%} : Percent";
-            theFormat += "\r\n";
-            theFormat += "\r\n= Proc'd =";
-            theFormat += "\r\n{7} : Rating";
-            theFormat += "\r\n{8:00.00%} : Percent";
-            dictValues.Add("Armor Penetration", string.Format(theFormat,
-                                ArmorPenetration, AverageStats.ArmorPenetrationRating,
-                                (!combatFactors.CalcOpts.FuryStance ? 0.10f : 0f),
-                                (!combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_ArP : 0f),
-                                ArmorPenetrationMaceSpec,
+                float[] passiveContrsVals = new float[] {
+                    BuffsStats.Agility,
+                    BuffsStats.BonusAgilityMultiplier,
+                };
 
-                                BuffedStats.ArmorPenetrationRating,
-                                Math.Min(1f, (!combatFactors.CalcOpts.FuryStance ? 0.10f + AverageStats.BonusWarrior_T9_2P_ArP : 0f)
-                                    + StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating)),
+                string[] passiveContrs = new string[] { "Buffs : Simple", "Buffs : Multi" };
 
-                                MaximumStats.ArmorPenetrationRating,
-                                Math.Min(1f, (!combatFactors.CalcOpts.FuryStance ? 0.10f + AverageStats.BonusWarrior_T9_2P_ArP : 0f)
-                                    + StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating))
-                                /*,
+                theFormat += "{0:0.#}*"; // Averaged % and Averaged Rating
+                theFormat += "The Pane shows Averaged Values";
+                theFormat += "\r\n";
+                theFormat += "\r\n= Your Passive Contributions =";
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} : " + passiveContrs[0]; formIter++;
+                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[1]; formIter++;
+                theFormat += "\r\n";
+                theFormat += "\r\n= UnProc'd =";
+                theFormat += "\r\nIncreases Crit by {" + formIter.ToString() + ":0.#%}"; formIter++;
+                theFormat += "\r\nIncreases Armor by {" + formIter.ToString() + ":0.#}"; formIter++;
+                theFormat += "\r\n";
+                theFormat += "\r\n= Proc'd =";
+                theFormat += "\r\nIncreases Crit by {" + formIter.ToString() + ":0.#%}"; formIter++;
+                theFormat += "\r\nIncreases Armor by {" + formIter.ToString() + ":0.#}"; formIter++;
 
-                                MaxArmorPenetration,
-                                ArmorPenetrationRating2Perc,
-                                BuffedStats.ArmorPenetrationRating*/));
+                dictValues.Add("Agility", string.Format(theFormat,
+                    // Averaged Stats
+                    AverageStats.Agility,
+                    // Passive Contributions
+                    passiveContrsVals[0], passiveContrsVals[1],
+                    // UnProc'd Stats
+                    StatConversion.GetCritFromAgility(BuffedStats.Agility, CharacterClass.Warrior),
+                    StatConversion.GetArmorFromAgility(BuffedStats.Agility),
+                    // Proc'd Stats
+                    StatConversion.GetCritFromAgility(MaximumStats.Agility, CharacterClass.Warrior),
+                    StatConversion.GetArmorFromAgility(MaximumStats.Agility)
+                    ));
+            }
+            #endregion
+            #region Crit
+            {
+                float[] passiveContrsVals = new float[] {
+                    0.03192f,
+                    AgilityCritBonus,
+                    combatFactors.Char.WarriorTalents.Cruelty * 0.01f,
+                    (combatFactors.CalcOpts.FuryStance ? 0.03f : 0f),
+                    (combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_Crit : 0f),
+                    BonusCritPercPoleAxeSpec,
+                    BuffsStats.PhysicalCrit,
+                };
+                float passiveContrsTtlVal = passiveContrsVals[0] + passiveContrsVals[1] + passiveContrsVals[2]
+                                          + passiveContrsVals[3] + passiveContrsVals[4] + passiveContrsVals[5]
+                                          + passiveContrsVals[6];
+                string[] passiveContrs = new string[] { "Base Crit", "From Agility", "Cruelty",
+                                                        "Berserker Stance", "T9 2P Set Bonus", "Poleaxe Specialization",
+                                                        "Buffs" };
+                float UnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
+                float ProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc);
+                bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdCrit > 1f;
+                bool isProcdOverCap = passiveContrsTtlVal + ProcdCrit > 1f;
+                float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(1f - (passiveContrsTtlVal + UnProcdCrit)));
+                float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(1f - (passiveContrsTtlVal + ProcdCrit)));
+                string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
+
+
+                dictValues.Add("Crit", string.Format(theFormat,
+                    // Averaged Stats
+                    CritPercent, AverageStats.CritRating,
+                    // Passive Contributions
+                    passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
+                    passiveContrsVals[3], passiveContrsVals[4], passiveContrsVals[5],
+                    passiveContrsVals[6],
+                    // UnProc'd Stats
+                    BuffedStats.CritRating + BuffedStats.DeathbringerProc,
+                    Math.Min(1f, passiveContrsTtlVal + UnProcdCrit),
+                    amountUnProcdOverCap,
+                    // Proc'd Stats
+                    MaximumStats.CritRating + MaximumStats.DeathbringerProc,
+                    Math.Min(1f, passiveContrsTtlVal + ProcdCrit),
+                    amountProcdOverCap
+                    ));
+            }
+            #endregion
+            #region Armor Penetration
+            {
+                float[] passiveContrsVals = new float[] {
+                    (!combatFactors.CalcOpts.FuryStance ? 0.10f : 0f),
+                    (!combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_ArP : 0f),
+                    ArmorPenetrationMaceSpec
+                };
+                float passiveContrsTtlVal = passiveContrsVals[0] + passiveContrsVals[1] + passiveContrsVals[2];
+                string[] passiveContrs = new string[] { "Battle Stance", "T9 2P Set Bonus", "Mace Specialization" };
+                float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating + BuffedStats.DeathbringerProc);
+                float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating + MaximumStats.DeathbringerProc);
+                bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > 1f;
+                bool isProcdOverCap = passiveContrsTtlVal + ProcdArP > 1f;
+                float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(1f - (passiveContrsTtlVal + UnProcdArP)));
+                float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(1f - (passiveContrsTtlVal + ProcdArP)));
+                string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
+                dictValues.Add("Armor Penetration", string.Format(theFormat,
+                    // Averaged Stats
+                    ArmorPenetration, AverageStats.ArmorPenetrationRating,
+                    // Passive Contributions
+                    passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
+                    // UnProc'd Stats
+                    BuffedStats.ArmorPenetrationRating + BuffedStats.DeathbringerProc,
+                    Math.Min(1f, passiveContrsTtlVal + UnProcdArP),
+                    amountUnProcdOverCap,
+                    // Proc'd Stats
+                    MaximumStats.ArmorPenetrationRating + MaximumStats.DeathbringerProc,
+                    Math.Min(1f, passiveContrsTtlVal + ProcdArP),
+                    amountProcdOverCap
+                    ));
+            }
+            #endregion
+            #region Haste
+            {
+                float heroism = 0f;
+                if (BuffsStats._rawSpecialEffectData != null)
+                {
+                    foreach (SpecialEffect effect in BuffsStats._rawSpecialEffectData)
+                    {
+                        if (effect != null && effect.Stats.PhysicalHaste > 0) {
+                            heroism = effect.GetAverageStats().PhysicalHaste;
+                        }
+                    }
+                }
+                float[] passiveContrsVals = new float[] {
+                    combatFactors.Char.WarriorTalents.BloodFrenzy * 0.05f,
+                    BuffsStats.PhysicalHaste,
+                    heroism,
+                };
+                float passiveContrsTtlVal = (1f + passiveContrsVals[0])
+                                          * (1f + passiveContrsVals[1])
+                                          * (1f + passiveContrsVals[2])
+                                          - 1f;
+                string[] passiveContrs = new string[] { "Blood Frenzy", "Buffs", "Heroism (Averaged)" };
+                float UnProcdHaste = StatConversion.GetHasteFromRating(BuffedStats.HasteRating, CharacterClass.Warrior);
+                float ProcdHaste = StatConversion.GetHasteFromRating(MaximumStats.HasteRating, CharacterClass.Warrior);
+                string theFormat = GenFormattedString(passiveContrs);
+
+                dictValues.Add("Haste", string.Format(theFormat,
+                    // Averaged Stats
+                    HastePercent, AverageStats.HasteRating,
+                    // Passive Contributions
+                    passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
+                    // UnProc'd Stats
+                    BuffedStats.HasteRating,
+                    (1f + passiveContrsTtlVal) * (1f + UnProcdHaste) - 1f,
+                    // Proc'd Stats
+                    MaximumStats.HasteRating,
+                    (1f + passiveContrsTtlVal) * (1f + ProcdHaste) - 1f
+                    ));
+            }
+            #endregion
+            #region Hit
             // old
             float HitPercent = StatConversion.GetHitFromRating(HitRating);
             float HitPercBonus = AverageStats.PhysicalHit;
@@ -175,11 +317,11 @@ namespace Rawr.DPSWarr {
             //float lastNumA2   = StatConversion.GetRatingFromExpertise((sec2lastNumA2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Hit",
                 string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
-                                Environment.NewLine + "{3:0.00%} : Total Hit % Bonus" +
-                                Environment.NewLine + Environment.NewLine + "White Two-Hander Cap: " +
+                                "\r\n{3:0.00%} : Total Hit % Bonus" +
+                                "\r\n\r\nWhite Two-Hander Cap: " +
                                 (sec2lastNumA1 > 0 ? "You can free {4:0} Rating"
                                                    : "You need {4:0} more Rating") +
-                                Environment.NewLine + "White Dual Wield Cap: " +
+                                "\r\nWhite Dual Wield Cap: " +
                                 (sec2lastNumA2 > 0 ? "You can free {5:0} Rating"
                                                    : "You need {5:0} more Rating"),
                                 StatConversion.GetHitFromRating(AverageStats.HitRating),
@@ -189,6 +331,8 @@ namespace Rawr.DPSWarr {
                                 (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1),
                                 (sec2lastNumA2 > 0 ? sec2lastNumA2 : sec2lastNumA2 * -1)
                             ));
+            #endregion
+            #region Expertise
             // Dodge Cap ratings check, how far from it, uses lesser of MH and OH
             // Also factors in Weapon Mastery
             float capB1         = StatConversion.YELLOW_DODGE_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level] - WeapMastPerc;
@@ -203,13 +347,13 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Expertise",
                 string.Format("{0:00.00%} : {1:00.00} : {2}*" +
                                       "Following includes Racial bonus and Strength of Arms" +
-                Environment.NewLine + "{3:00.00%} Weapon Mastery (Dodge Only)" +
-                Environment.NewLine + "{4:00.00%} : {5:00.00} : MH" +
-                Environment.NewLine + "{6:00.00%} : {7:00.00} : OH" +
-                Environment.NewLine + Environment.NewLine + "Dodge Cap: " +
+                "\r\n" + "{3:00.00%} Weapon Mastery (Dodge Only)" +
+                "\r\n" + "{4:00.00%} : {5:00.00} : MH" +
+                "\r\n" + "{6:00.00%} : {7:00.00} : OH" +
+                "\r\n" + "\r\n" + "Dodge Cap: " +
                 (lastNumB1 > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
                              : "You need {8:0} more Expertise ({9:0} Rating)") +
-                Environment.NewLine + "Parry Cap: " +
+                "\r\n" + "Parry Cap: " +
                 (lastNumB2 > 0 ? "You can free {10:0} Expertise ({11:0} Rating)"
                              : "You need {10:0} more Expertise ({11:0} Rating)"),
                 StatConversion.GetDodgeParryReducFromExpertise(Expertise),
@@ -221,67 +365,26 @@ namespace Rawr.DPSWarr {
                 (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
                 (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
             ));
+            #endregion
 
             dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
-            // DPS Fury
+            // DPS Abilities
             format = "{0:0000} : {1:0000} : {2:000.00}";
-
-            if (TotalDPS < 0f) TotalDPS = 0f;
-            foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList())
-            {
-                if (!aw.ability.Name.Equals("Invalid")) dictValues.Add(aw.ability.Name, string.Format(format, aw.DPS, aw.ability.DamageOnUse, aw.numActivates) + aw.ability.GenTooltip(aw.numActivates, aw.DPS / TotalDPS));
+            if (TotalDPS < 0f) { TotalDPS = 0f; }
+            foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList()) {
+                if (!aw.ability.Name.Equals("Invalid")) {
+                    dictValues.Add(aw.ability.Name, string.Format(format, aw.DPS, aw.ability.DamageOnUse, aw.numActivates)
+                                                    + aw.ability.GenTooltip(aw.numActivates, aw.DPS / TotalDPS));
+                }
             }
-            /*
-            if (Rot.GetType() == typeof(FuryRotation)) {
-                FuryRotation fr = (FuryRotation)Rot;
-                dictValues.Add("Bloodsurge",  string.Format(format, fr._BS_DPS, BS.DamageOnUse, fr._BS_GCDs) + BS.GenTooltip(fr._BS_GCDs, fr._BS_DPS / TotalDPS));
-                dictValues.Add("Bloodthirst", string.Format(format, fr._BT_DPS, BT.DamageOnUse, fr._BT_GCDs) + BT.GenTooltip(fr._BT_GCDs, fr._BT_DPS / TotalDPS));
-                dictValues.Add("Whirlwind",   string.Format(format, fr._WW_DPS, WW.DamageOnUse, fr._WW_GCDs) + WW.GenTooltip(fr._WW_GCDs, fr._WW_DPS / TotalDPS));
-            } else {
-                dictValues.Add("Bloodsurge",  string.Format(format, 0, 0, 0));
-                dictValues.Add("Bloodthirst", string.Format(format, 0, 0, 0));
-                dictValues.Add("Whirlwind",   string.Format(format, 0, 0, 0));
-            }
-            // DPS Arms
-            format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";
-            if (Rot.GetType() == typeof(ArmsRotation)) {
-                ArmsRotation ar = (ArmsRotation)Rot;
-                dictValues.Add("Bladestorm",        string.Format(format,ar._BLS_DPS,BLS.DamageOnUse/7f,ar._BLS_GCDs)+BLS.GenTooltip(ar._BLS_GCDs,ar._BLS_DPS/TotalDPS));
-                dictValues.Add("Mortal Strike",     string.Format(format,ar._MS_DPS ,MS.DamageOnUse    ,ar._MS_GCDs )+MS.GenTooltip( ar._MS_GCDs, ar._MS_DPS /TotalDPS));
-                dictValues.Add("Rend",              string.Format(format,ar._RD_DPS ,RD.TickSize       ,ar._RD_GCDs )+RD.GenTooltip( ar._RD_GCDs, ar._RD_DPS /TotalDPS));
-                dictValues.Add("Overpower",         string.Format(format,ar._OP_DPS ,OP.DamageOnUse    ,ar._OP_GCDs )+OP.GenTooltip( ar._OP_GCDs, ar._OP_DPS /TotalDPS));
-                dictValues.Add("Taste for Blood",   string.Format(format,ar._TB_DPS ,TB.DamageOnUse    ,ar._TB_GCDs )+TB.GenTooltip( ar._TB_GCDs, ar._TB_DPS /TotalDPS));
-                dictValues.Add("Sudden Death",      string.Format(format,ar._SD_DPS ,SD.DamageOnUse    ,ar._SD_GCDs )+SD.GenTooltip( ar._SD_GCDs, ar._SD_DPS /TotalDPS));
-                dictValues.Add("Slam",              string.Format(format,ar._SL_DPS ,SL.DamageOnUse    ,Rot._SL_GCDs)+SL.GenTooltip( ar._SL_GCDs, ar._SL_DPS /TotalDPS));
-                dictValues.Add("Sword Spec",        string.Format(format,ar._SS_DPS ,SS.DamageOnUse    ,ar._SS_Acts )+SS.GenTooltip( ar._SS_Acts, ar._SS_DPS /TotalDPS));
-            } else {
-                dictValues.Add("Bladestorm",        string.Format(format, 0, 0, 0));
-                dictValues.Add("Mortal Strike",     string.Format(format, 0, 0, 0));
-                dictValues.Add("Rend",              string.Format(format, 0, 0, 0));
-                dictValues.Add("Overpower",         string.Format(format, 0, 0, 0));
-                dictValues.Add("Taste for Blood",   string.Format(format, 0, 0, 0));
-                dictValues.Add("Sudden Death",      string.Format(format, 0, 0, 0));
-                dictValues.Add("Slam",              string.Format(format, 0, 0, 0));
-                dictValues.Add("Sword Spec",        string.Format(format, 0, 0, 0));
-            }
-            // DPS Maintenance
-            format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";
-            dictValues.Add("Thunder Clap",          string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs)+TH.GenTooltip(Rot._Thunder_GCDs, Rot._TH_DPS /TotalDPS));
-            dictValues.Add("Shattering Throw",      string.Format(format,Rot._Shatt_DPS,ST.DamageOnUse,Rot._Shatt_GCDs )+ST.GenTooltip(Rot._Shatt_GCDs, Rot._Shatt_DPS/TotalDPS));
             // DPS General
-            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS",Rot._DW_DPS     ,Rot._DW_DPS/TotalDPS));
-            dictValues.Add("Heroic Strike",         string.Format(format, Rot._HS_DPS, Rot._HS_PerHit, Rot._HS_Acts, Rot._HS_DPS / TotalDPS)+HS.GenTooltip(Rot._HS_Acts,Rot._HS_DPS/TotalDPS));
-            dictValues.Add("Cleave",                string.Format(format, Rot._CL_DPS, Rot._CL_PerHit, Rot._CL_Acts, Rot._CL_DPS / TotalDPS)+CL.GenTooltip(Rot._CL_Acts,Rot._CL_DPS/TotalDPS));
             dictValues.Add("White DPS",             string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
-            dictValues.Add("Execute",               string.Format(format,Rot._EX_DPS, EX.DamageOnUse, Rot._EX_GCDs) + EX.GenTooltip(Rot._EX_GCDs, Rot._EX_DPS / TotalDPS));
-            //*/
-            dictValues.Add("White DPS", string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
             dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize,Rot.DW.TickSize/TotalDPS));
             dictValues.Add("Special DMG Procs",     string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS / TotalDPS));
             dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:0000}";
-            dictValues.Add("Total Generated Rage",      string.Format("{0:00} = {1:0} + {2:0}",WhiteRage+OtherRage,WhiteRage,OtherRage));
+            dictValues.Add("Total Generated Rage",      string.Format("{0:00} = {1:0} + {2:0}", WhiteRage + OtherRage, WhiteRage, OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
 #if (!RAWR3 && DEBUG)

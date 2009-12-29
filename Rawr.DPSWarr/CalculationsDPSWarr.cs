@@ -1071,9 +1071,11 @@ These numbers to do not include racial bonuses.",
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
 
-                calculatedStats.Duration = calcOpts.Duration; 
-                calculatedStats.AverageStats = stats;
+                calculatedStats.Duration = calcOpts.Duration;
+                calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);
                 calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts);
+                calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts);
+                calculatedStats.AverageStats = stats;
                 calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
                 calculatedStats.combatFactors = combatFactors; 
                 calculatedStats.Rot = Rot; 
@@ -1096,6 +1098,7 @@ These numbers to do not include racial bonuses.",
                 } 
                 // Offensive
                 calculatedStats.TeethBonus = (stats.Armor * talents.ArmoredToTheTeeth / 108f);
+                calculatedStats.BonusCritPercPoleAxeSpec = ((character.MainHand != null && (combatFactors._c_mhItemType == ItemType.TwoHandAxe || combatFactors._c_mhItemType == ItemType.Polearm)) ? character.WarriorTalents.PoleaxeSpecialization * 0.01f : 0.00f);
                 calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
                 calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
