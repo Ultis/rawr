@@ -203,6 +203,7 @@ These numbers to do not include racial bonuses.",
                         "% Chance to be Dodged",
                         "% Chance to be Parried",
                         "% Chance to be Avoided (Yellow/Dodge)",
+                        "Respect Highest ArP Proc Cap",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -1071,7 +1072,9 @@ These numbers to do not include racial bonuses.",
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
 
                 calculatedStats.Duration = calcOpts.Duration; 
-                calculatedStats.AverageStats = stats; 
+                calculatedStats.AverageStats = stats;
+                calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts);
+                calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
                 calculatedStats.combatFactors = combatFactors; 
                 calculatedStats.Rot = Rot; 
                 calculatedStats.TargetLevel = calcOpts.TargetLevel; 
@@ -1368,27 +1371,19 @@ These numbers to do not include racial bonuses.",
             // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
             //combatFactors.StatS = statsTotal;
             Stats bersStats = new Stats();
-            foreach (SpecialEffect e in bersMainHand)
-            {
-                if (e.Duration == 0)
-                {
+            foreach (SpecialEffect e in bersMainHand) {
+                if (e.Duration == 0) {
                     bersStats.ShadowDamage = e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
-                }
-                else
-                {
+                } else {
                     // berserker enchant id
                     float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                     bersStats.Accumulate(e.Stats, f);
                 }
             }
-            foreach (SpecialEffect e in bersOffHand)
-            {
-                if (e.Duration == 0)
-                {
+            foreach (SpecialEffect e in bersOffHand) {
+                if (e.Duration == 0) {
                     bersStats.ShadowDamage += e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
-                }
-                else
-                {
+                } else {
                     float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                     bersStats.Accumulate(e.Stats, f);
                 }
@@ -1397,8 +1392,6 @@ These numbers to do not include racial bonuses.",
             combatFactors.InvalidateCache();
             return combatFactors.StatS;
         }
-
-        
 
         private void DoSpecialEffects(Character Char, Rotation Rot, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts,
             List<SpecialEffect> bersMainHand, List<SpecialEffect> bersOffHand,
@@ -1576,7 +1569,6 @@ These numbers to do not include racial bonuses.",
             float land = landMH + landOH;
 
             float crit = Rot.CriticalAtksOverDur;
-
 
             float avoidedAttacks = combatFactors.StatS.Dodge + combatFactors.StatS.Parry;
 
@@ -1945,31 +1937,23 @@ These numbers to do not include racial bonuses.",
                                      - 1f;
 
             // If we're adding two, then return the .Accumulate
-            if (retVal != null)
-            {
+            if (retVal != null) {
                 retVal.Accumulate(statsToAdd);
 
                 // Paragon and its friends
-                if (retVal.Paragon > 0f || retVal.HighestStat > 0f)
-                {
+                if (retVal.Paragon > 0f || retVal.HighestStat > 0f) {
                     float paragonValue = retVal.Paragon + retVal.HighestStat; // how much paragon to add
                     retVal.Paragon = retVal.HighestStat = 0f; // remove Paragon stat, since it's not needed
                     if (retVal.Strength > retVal.Agility) // Now that we've added the two stats, we run UpdateStatsAndAdd again for paragon
                     {
                         return UpdateStatsAndAdd(new Stats { Strength = paragonValue }, retVal, character);
-                    }
-                    else
-                    {
+                    } else {
                         return UpdateStatsAndAdd(new Stats { Agility = paragonValue }, retVal, character);
                     }
-                }
-                else
-                {
+                } else {
                     return retVal;
                 }
-            }
-            else // Just processing one, not adding two
-            {
+            } else { // Just processing one, not adding two
                 return statsToAdd;
             }
         }

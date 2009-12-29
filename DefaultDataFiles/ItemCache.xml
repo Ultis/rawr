@@ -169,23 +169,6 @@
     <Slot>Shirt</Slot>
   </Item>
   <Item>
-    <ItemLevel>25</ItemLevel>
-    <DisplayId>7557</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_lantern_01</IconPath>
-    <Stats>
-      <Spirit>3</Spirit>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2</Speed>
-    <SocketBonus />
-    <Name>Everglow Lantern</Name>
-    <Id>5323</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
     <ItemLevel>1</ItemLevel>
     <DisplayId>20621</DisplayId>
     <DisplaySlot>19</DisplaySlot>
@@ -198,22 +181,6 @@
     <Name>Guild Tabard</Name>
     <Id>5976</Id>
     <Slot>Tabard</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>11</ItemLevel>
-    <DisplayId>10535</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
-    <IconPath>inv_gauntlets_05</IconPath>
-    <Stats>
-      <Armor>12</Armor>
-    </Stats>
-    <Quality>Common</Quality>
-    <Type>Cloth</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Fingerless Gloves</Name>
-    <Id>6202</Id>
-    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>40</ItemLevel>
@@ -244,39 +211,6 @@
     <Slot>Shirt</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
-    <DisplayId>23716</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_jewelry_talisman_07</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Argent Dawn Commission</Name>
-    <Id>12846</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>63</ItemLevel>
-    <DisplayId>24778</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_jewelry_talisman_09</IconPath>
-    <Stats>
-      <BonusArmor>180</BonusArmor>
-      <DodgeRating>12</DodgeRating>
-      <ArcaneResistance>10</ArcaneResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Mark of Tyranny</Name>
-    <Id>13966</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
     <ItemLevel>20</ItemLevel>
     <DisplayId>26683</DisplayId>
     <DisplaySlot>4</DisplaySlot>
@@ -289,107 +223,6 @@
     <Name>Common Brown Shirt</Name>
     <Id>16059</Id>
     <Slot>Shirt</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>63</ItemLevel>
-    <DisplayId>26950</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
-    <IconPath>inv_jewelry_talisman_11</IconPath>
-    <Stats>
-      <Stamina>10</Stamina>
-      <FireResistance>15</FireResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Drakefire Amulet</Name>
-    <Id>16309</Id>
-    <Slot>Neck</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>76</ItemLevel>
-    <DisplayId>30546</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
-    <IconPath>inv_shoulder_07</IconPath>
-    <Stats>
-      <Armor>192</Armor>
-      <Stamina>14</Stamina>
-      <Intellect>21</Intellect>
-      <Spirit>10</Spirit>
-      <SpellPower>15</SpellPower>
-      <Mp5>5</Mp5>
-      <FireResistance>10</FireResistance>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Stormrage Raiment</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Stormrage Pauldrons</Name>
-    <Id>16902</Id>
-    <Slot>Shoulders</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>76</ItemLevel>
-    <DisplayId>30548</DisplayId>
-    <DisplaySlot>9</DisplaySlot>
-    <IconPath>inv_bracer_03</IconPath>
-    <Stats>
-      <Armor>112</Armor>
-      <Stamina>11</Stamina>
-      <Intellect>15</Intellect>
-      <Spirit>12</Spirit>
-      <SpellPower>18</SpellPower>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Stormrage Raiment</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Stormrage Bracers</Name>
-    <Id>16904</Id>
-    <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>71</ItemLevel>
-    <DisplayId>26374</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_monsterscales_15</IconPath>
-    <Stats>
-      <Mp5>20</Mp5>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Shard of the Gods</SetName>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Shard of the Scale</Name>
-    <Id>17064</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>60</ItemLevel>
-    <DisplayId>31484</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_jewelry_stormpiketrinket_05</IconPath>
-    <Stats>
-      <DodgeRating>24</DodgeRating>
-      <Hp5>8</Hp5>
-      <FrostResistance>10</FrostResistance>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Stormpike Insignia Rank 6</Name>
-    <Id>17904</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
@@ -465,129 +298,6 @@
     <Slot>Shirt</Slot>
   </Item>
   <Item>
-    <ItemLevel>112</ItemLevel>
-    <DisplayId>35313</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_50naxxramas</IconPath>
-    <Stats>
-      <BonusArmor>190</BonusArmor>
-      <FrostResistance>10</FrostResistance>
-      <NatureResistance>10</NatureResistance>
-      <FireResistance>10</FireResistance>
-      <ShadowResistance>10</ShadowResistance>
-      <ArcaneResistance>10</ArcaneResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Band of Many Prisms</Name>
-    <Id>27895</Id>
-    <Slot>Finger</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>123</ItemLevel>
-    <DisplayId>47172</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_30</IconPath>
-    <Stats>
-      <Armor>316</Armor>
-      <BonusArmor>40</BonusArmor>
-      <Agility>20</Agility>
-      <Stamina>45</Stamina>
-      <Strength>33</Strength>
-      <Intellect>19</Intellect>
-      <SpellPower>25</SpellPower>
-      <Resilience>24</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Sanctuary</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Meta</SocketColor1>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketBonus>
-      <Resilience>4</Resilience>
-    </SocketBonus>
-    <Name>Gladiator's Dragonhide Helm</Name>
-    <Id>28127</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>115</ItemLevel>
-    <DisplayId>35430</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
-    <IconPath>inv_misc_cape_naxxramas_01</IconPath>
-    <Stats>
-      <Armor>78</Armor>
-      <BonusArmor>156</BonusArmor>
-      <FrostResistance>12</FrostResistance>
-      <NatureResistance>12</NatureResistance>
-      <FireResistance>12</FireResistance>
-      <ShadowResistance>12</ShadowResistance>
-      <ArcaneResistance>12</ArcaneResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Syrannis' Mystic Sheen</Name>
-    <Id>28301</Id>
-    <Slot>Back</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>123</ItemLevel>
-    <DisplayId>27088</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
-    <IconPath>inv_misc_cape_07</IconPath>
-    <Stats>
-      <Armor>104</Armor>
-      <Stamina>27</Stamina>
-      <AttackPower>38</AttackPower>
-      <CritRating>19</CritRating>
-      <Resilience>19</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Sergeant's Heavy Cloak</Name>
-    <Id>28380</Id>
-    <Slot>Back</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>115</ItemLevel>
-    <DisplayId>43431</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_pocketwatch_02</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <DodgeRating>300</DodgeRating>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <DodgeRating>38</DodgeRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Moroes' Lucky Pocket Watch</Name>
-    <Id>28528</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
     <ItemLevel>60</ItemLevel>
     <DisplayId>35396</DisplayId>
     <DisplaySlot>19</DisplaySlot>
@@ -601,240 +311,6 @@
     <Name>Tabard of the Protector</Name>
     <Id>28788</Id>
     <Slot>Tabard</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>120</ItemLevel>
-    <DisplayId>41383</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
-    <IconPath>inv_gauntlets_25</IconPath>
-    <Stats>
-      <Armor>237</Armor>
-      <Agility>32</Agility>
-      <Stamina>28</Stamina>
-      <Strength>32</Strength>
-      <Intellect>12</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Malorne Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Gauntlets of Malorne</Name>
-    <Id>29097</Id>
-    <Slot>Hands</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>120</ItemLevel>
-    <DisplayId>46214</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_15</IconPath>
-    <Stats>
-      <Armor>308</Armor>
-      <Agility>33</Agility>
-      <Stamina>39</Stamina>
-      <Strength>41</Strength>
-      <Intellect>19</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Malorne Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketColor2>Meta</SocketColor2>
-    <SocketBonus>
-      <Agility>4</Agility>
-    </SocketBonus>
-    <Name>Stag-Helm of Malorne</Name>
-    <Id>29098</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>120</ItemLevel>
-    <DisplayId>40833</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
-    <IconPath>inv_pants_mail_15</IconPath>
-    <Stats>
-      <Armor>332</Armor>
-      <Agility>42</Agility>
-      <Stamina>39</Stamina>
-      <Strength>42</Strength>
-      <Intellect>26</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Malorne Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Greaves of Malorne</Name>
-    <Id>29099</Id>
-    <Slot>Legs</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>120</ItemLevel>
-    <DisplayId>40642</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
-    <IconPath>inv_shoulder_14</IconPath>
-    <Stats>
-      <Armor>284</Armor>
-      <Agility>31</Agility>
-      <Stamina>25</Stamina>
-      <Strength>33</Strength>
-      <Intellect>9</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Malorne Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketColor2>Blue</SocketColor2>
-    <SocketBonus>
-      <CritRating>3</CritRating>
-    </SocketBonus>
-    <Name>Mantle of Malorne</Name>
-    <Id>29100</Id>
-    <Slot>Shoulders</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>130</ItemLevel>
-    <DisplayId>40518</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_62</IconPath>
-    <Stats>
-      <BonusArmor>392</BonusArmor>
-      <Stamina>37</Stamina>
-      <DefenseRating>19</DefenseRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Violet Signet of the Great Protector</Name>
-    <Id>29279</Id>
-    <Slot>Finger</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <DisplayId>43095</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_54</IconPath>
-    <Stats>
-      <Agility>25</Agility>
-      <Stamina>37</Stamina>
-      <AttackPower>50</AttackPower>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Band of Eternity</Name>
-    <Id>29298</Id>
-    <Slot>Finger</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>133</ItemLevel>
-    <DisplayId>43623</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
-    <IconPath>inv_pants_mail_15</IconPath>
-    <Stats>
-      <Armor>367</Armor>
-      <Agility>48</Agility>
-      <Stamina>42</Stamina>
-      <Strength>46</Strength>
-      <Intellect>17</Intellect>
-      <HitRating>18</HitRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Nordrassil Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketBonus>
-      <Agility>2</Agility>
-    </SocketBonus>
-    <Name>Nordrassil Feral-Kilt</Name>
-    <Id>30229</Id>
-    <Slot>Legs</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <DisplayId>43579</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_herb_nightmarevine</IconPath>
-    <Stats>
-      <Strength>32</Strength>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Living Root of the Wildheart</Name>
-    <Id>30664</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>108</ItemLevel>
-    <DisplayId>42437</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_49</IconPath>
-    <Stats>
-      <Armor>108</Armor>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>Cloth</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>X-52 Rocket Helmet</Name>
-    <Id>30847</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>146</ItemLevel>
-    <DisplayId>45664</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
-    <IconPath>inv_gauntlets_58</IconPath>
-    <Stats>
-      <Armor>287</Armor>
-      <Agility>32</Agility>
-      <Stamina>48</Stamina>
-      <Strength>39</Strength>
-      <Intellect>20</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Thunderheart Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketBonus />
-    <Name>Thunderheart Gauntlets</Name>
-    <Id>31034</Id>
-    <Slot>Hands</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>115</ItemLevel>
-    <DisplayId>31029</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>spell_holy_mindsooth</IconPath>
-    <Stats>
-      <Stamina>36</Stamina>
-      <ArcaneResistance>45</ArcaneResistance>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Violet Badge</Name>
-    <Id>31113</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>145</ItemLevel>
@@ -867,280 +343,6 @@
     <Name>Scryers Tabard</Name>
     <Id>31780</Id>
     <Slot>Tabard</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>136</ItemLevel>
-    <DisplayId>45996</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
-    <IconPath>inv_shoulder_12</IconPath>
-    <Stats>
-      <Armor>321</Armor>
-      <BonusArmor>56</BonusArmor>
-      <Agility>21</Agility>
-      <Stamina>39</Stamina>
-      <Strength>30</Strength>
-      <Intellect>14</Intellect>
-      <SpellPower>16</SpellPower>
-      <Resilience>21</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Sanctuary</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Red</SocketColor1>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketBonus />
-    <Name>Merciless Gladiator's Dragonhide Spaulders</Name>
-    <Id>31971</Id>
-    <Slot>Shoulders</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>141</ItemLevel>
-    <DisplayId>45315</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
-    <IconPath>inv_qirajidol_alabaster</IconPath>
-    <Stats>
-      <AttackPower>94</AttackPower>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Idol</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Idol of the White Stag</Name>
-    <Id>32257</Id>
-    <Slot>Ranged</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>115</ItemLevel>
-    <DisplayId>45754</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
-    <IconPath>inv-mount_raven_54</IconPath>
-    <Stats>
-      <SpellPower>44</SpellPower>
-      <CritRating>40</CritRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Idol</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Idol of the Raven Goddess</Name>
-    <Id>32387</Id>
-    <Slot>Ranged</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>70</ItemLevel>
-    <DisplayId>43430</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>spell_nature_giftofthewaterspirit</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Charm of Swift Flight</Name>
-    <Id>32481</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>115</ItemLevel>
-    <DisplayId>45197</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_armorkit_12</IconPath>
-    <Stats>
-      <BonusArmor>308</BonusArmor>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Badge of Tenacity</Name>
-    <Id>32658</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>49974</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_04</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>1</MinDamage>
-    <MaxDamage>2</MaxDamage>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Filled Blue Brewfest Stein</Name>
-    <Id>33018</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <DisplayId>39640</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
-    <IconPath>ability_druid_demoralizingroar</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>MangleCatHit</Trigger>
-          <Stats>
-            <Agility>65</Agility>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.65</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
-          <Trigger>MangleBearHit</Trigger>
-          <Stats>
-            <Agility>65</Agility>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.45</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>2</SpecialEffectCount>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Idol</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Idol of Terror</Name>
-    <Id>33509</Id>
-    <Slot>Ranged</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <DisplayId>47060</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
-    <IconPath>inv_belt_22</IconPath>
-    <Stats>
-      <Armor>227</Armor>
-      <Agility>28</Agility>
-      <Stamina>37</Stamina>
-      <Strength>29</Strength>
-      <HitRating>18</HitRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketColor2>Red</SocketColor2>
-    <SocketBonus />
-    <Name>Waistguard of the Great Beast</Name>
-    <Id>33583</Id>
-    <Slot>Waist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <DisplayId>47069</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
-    <IconPath>inv_misc_cape_18</IconPath>
-    <Stats>
-      <Armor>108</Armor>
-      <BonusArmor>238</BonusArmor>
-      <Stamina>37</Stamina>
-      <DodgeRating>25</DodgeRating>
-      <DefenseRating>16</DefenseRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Slikk's Cloak of Placation</Name>
-    <Id>33593</Id>
-    <Slot>Back</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>146</ItemLevel>
-    <DisplayId>48262</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_94</IconPath>
-    <Stats>
-      <Armor>373</Armor>
-      <BonusArmor>56</BonusArmor>
-      <Agility>31</Agility>
-      <Stamina>58</Stamina>
-      <Strength>32</Strength>
-      <ArmorPenetrationRating>12</ArmorPenetrationRating>
-      <Intellect>23</Intellect>
-      <CritRating>27</CritRating>
-      <HitRating>12</HitRating>
-      <Resilience>25</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Sanctuary</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Meta</SocketColor1>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketBonus>
-      <Resilience>4</Resilience>
-    </SocketBonus>
-    <Name>Vengeful Gladiator's Dragonhide Helm</Name>
-    <Id>33672</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>146</ItemLevel>
-    <DisplayId>46945</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
-    <IconPath>inv_chest_leather_15</IconPath>
-    <Stats>
-      <Armor>459</Armor>
-      <BonusArmor>70</BonusArmor>
-      <Agility>31</Agility>
-      <Stamina>54</Stamina>
-      <Strength>30</Strength>
-      <ArmorPenetrationRating>12</ArmorPenetrationRating>
-      <Intellect>22</Intellect>
-      <CritRating>19</CritRating>
-      <HitRating>12</HitRating>
-      <Resilience>26</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Sanctuary</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Red</SocketColor1>
-    <SocketColor2>Red</SocketColor2>
-    <SocketColor3>Yellow</SocketColor3>
-    <SocketBonus>
-      <CritRating>4</CritRating>
-    </SocketBonus>
-    <Name>Vengeful Gladiator's Dragonhide Tunic</Name>
-    <Id>33675</Id>
-    <Slot>Chest</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>115</ItemLevel>
-    <DisplayId>47051</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_31</IconPath>
-    <Stats>
-      <Armor>127</Armor>
-      <Stamina>40</Stamina>
-      <Spirit>40</Spirit>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Cloth</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Weather-Beaten Fishing Hat</Name>
-    <Id>33820</Id>
-    <Slot>Head</Slot>
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
@@ -1231,75 +433,6 @@
     <Slot>Prismatic</Slot>
   </Item>
   <Item>
-    <ItemLevel>154</ItemLevel>
-    <DisplayId>48311</DisplayId>
-    <DisplaySlot>9</DisplaySlot>
-    <IconPath>inv_bracer_09</IconPath>
-    <Stats>
-      <Armor>211</Armor>
-      <Agility>28</Agility>
-      <Stamina>39</Stamina>
-      <Strength>29</Strength>
-      <ArmorPenetrationRating>13</ArmorPenetrationRating>
-      <Intellect>13</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Thunderheart Harness</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketColor1>Red</SocketColor1>
-    <SocketBonus />
-    <Name>Thunderheart Wristguards</Name>
-    <Id>34444</Id>
-    <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>141</ItemLevel>
-    <DisplayId>49005</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_79</IconPath>
-    <Stats>
-      <Agility>29</Agility>
-      <Stamina>28</Stamina>
-      <AttackPower>58</AttackPower>
-      <ArmorPenetrationRating>18</ArmorPenetrationRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Angelista's Revenge</Name>
-    <Id>34887</Id>
-    <Slot>Finger</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>49966</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
-    <IconPath>inv_gauntlets_25</IconPath>
-    <Stats>
-      <Armor>312</Armor>
-      <BonusArmor>56</BonusArmor>
-      <Agility>36</Agility>
-      <Stamina>48</Stamina>
-      <Strength>35</Strength>
-      <Intellect>25</Intellect>
-      <HitRating>13</HitRating>
-      <Resilience>22</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Sanctuary</SetName>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Brutal Gladiator's Dragonhide Gloves</Name>
-    <Id>34998</Id>
-    <Slot>Hands</Slot>
-  </Item>
-  <Item>
     <ItemLevel>20</ItemLevel>
     <DisplayId>48576</DisplayId>
     <DisplaySlot>19</DisplaySlot>
@@ -1344,84 +477,6 @@
     <Name>Eternal Earthstorm Diamond</Name>
     <Id>35501</Id>
     <Slot>Meta</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>175</ItemLevel>
-    <DisplayId>55003</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
-    <IconPath>inv_gauntlets_01</IconPath>
-    <Stats>
-      <Armor>1247</Armor>
-      <Stamina>51</Stamina>
-      <Strength>55</Strength>
-      <HitRating>43</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Plate Claws of the Dragon</Name>
-    <Id>35651</Id>
-    <Slot>Hands</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>163</ItemLevel>
-    <DisplayId>51717</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_mace_59</IconPath>
-    <Stats>
-      <Agility>18</Agility>
-      <HasteRating>39</HasteRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>OneHandMace</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>116</MinDamage>
-    <MaxDamage>217</MaxDamage>
-    <Speed>1.6</Speed>
-    <SocketBonus />
-    <Name>Unknown Archaeologist's Hammer</Name>
-    <Id>35664</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>163</ItemLevel>
-    <DisplayId>51718</DisplayId>
-    <DisplaySlot>9</DisplaySlot>
-    <IconPath>inv_bracer_08</IconPath>
-    <Stats>
-      <Armor>203</Armor>
-      <Stamina>25</Stamina>
-      <Intellect>33</Intellect>
-      <Spirit>22</Spirit>
-      <SpellPower>27</SpellPower>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Soothing Lichen Wraps</Name>
-    <Id>35665</Id>
-    <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>183</ItemLevel>
-    <DisplayId>61307</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_123</IconPath>
-    <Stats>
-      <Armor>1681</Armor>
-      <Stamina>60</Stamina>
-      <Strength>52</Strength>
-      <CritRating>92</CritRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Brann's Lost Mining Helmet</Name>
-    <Id>35670</Id>
-    <Slot>Head</Slot>
   </Item>
   <Item>
     <ItemLevel>183</ItemLevel>
@@ -1625,8 +680,8 @@
   </Item>
   <Item>
     <ItemLevel>183</ItemLevel>
-    <DisplayId>51458</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gizmo_hardenedadamantitetube</IconPath>
     <Stats>
       <Stamina>54</Stamina>
@@ -1641,37 +696,6 @@
     <Name>Palladium Ring</Name>
     <Id>35683</Id>
     <Slot>Finger</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>125</ItemLevel>
-    <DisplayId>39918</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_jewelcrafting_rubyserpent</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <SpellPower>150</SpellPower>
-          </Stats>
-          <Duration>20</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <Stamina>49</Stamina>
-      <Intellect>33</Intellect>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Figurine - Crimson Serpent</Name>
-    <Id>35700</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>80</ItemLevel>
@@ -3036,8 +2060,8 @@
   </Item>
   <Item>
     <ItemLevel>187</ItemLevel>
-    <DisplayId>50507</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_chain_08</IconPath>
     <Stats>
       <Armor>1439</Armor>
@@ -5778,8 +4802,8 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>51708</DisplayId>
-    <DisplaySlot>25</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_coin_10</IconPath>
     <Stats>
       <Stamina>39</Stamina>
@@ -6672,8 +5696,8 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>23018</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_18</IconPath>
     <Stats>
       <Armor>145</Armor>
@@ -8135,26 +7159,6 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
-    <ItemLevel>170</ItemLevel>
-    <DisplayId>52459</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_73</IconPath>
-    <Stats>
-      <Stamina>35</Stamina>
-      <Intellect>21</Intellect>
-      <SpellPower>35</SpellPower>
-      <Mp5>16</Mp5>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Twisted Puzzle-Ring</Name>
-    <Id>37822</Id>
-    <Slot>Finger</Slot>
-  </Item>
-  <Item>
     <ItemLevel>200</ItemLevel>
     <DisplayId>52364</DisplayId>
     <DisplaySlot>10</DisplaySlot>
@@ -8675,24 +7679,6 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
-    <ItemLevel>128</ItemLevel>
-    <DisplayId>37840</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_jewelry_trinketpvp_01</IconPath>
-    <Stats>
-      <Resilience>45</Resilience>
-      <PVPTrinket>1</PVPTrinket>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Medallion of the Alliance</Name>
-    <Id>37864</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
     <ItemLevel>200</ItemLevel>
     <DisplayId>53625</DisplayId>
     <DisplaySlot>8</DisplaySlot>
@@ -9046,161 +8032,6 @@
     <Slot>Wrist</Slot>
   </Item>
   <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>50189</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_05</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Green Brewfest Stein</Name>
-    <Id>37892</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>59619</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_06</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Filled Green Brewfest Stein</Name>
-    <Id>37893</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>59619</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_06</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Filled Green Brewfest Stein</Name>
-    <Id>37894</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>59619</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_06</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Filled Green Brewfest Stein</Name>
-    <Id>37895</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>59619</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_06</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Filled Green Brewfest Stein</Name>
-    <Id>37896</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>5</ItemLevel>
-    <DisplayId>59619</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_misc_beer_06</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>2.5</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Filled Green Brewfest Stein</Name>
-    <Id>37897</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>138</ItemLevel>
-    <DisplayId>7371</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_pocketwatch_02</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <HasteRating>140</HasteRating>
-          </Stats>
-          <Duration>20</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <AttackPower>88</AttackPower>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>First Mate's Pocketwatch</Name>
-    <Id>38259</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>110</ItemLevel>
-    <DisplayId>50583</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_drink_03</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <AttackPower>278</AttackPower>
-          </Stats>
-          <Duration>20</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <AttackPower>72</AttackPower>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Empty Mug of Direbrew</Name>
-    <Id>38287</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
     <ItemLevel>1</ItemLevel>
     <DisplayId>50861</DisplayId>
     <DisplaySlot>19</DisplaySlot>
@@ -9373,22 +8204,6 @@
     <Name>Hammer of Grief</Name>
     <Id>38618</Id>
     <Slot>TwoHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>48007</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_rune_10</IconPath>
-    <Stats>
-      <SpellPower>62</SpellPower>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Futuresight Rune</Name>
-    <Id>38763</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -14879,27 +13694,6 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
-    <ItemLevel>171</ItemLevel>
-    <DisplayId>31899</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
-    <IconPath>inv_jewelry_necklace_17</IconPath>
-    <Stats>
-      <Stamina>36</Stamina>
-      <AttackPower>68</AttackPower>
-      <CritRating>23</CritRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketBonus>
-      <AttackPower>8</AttackPower>
-    </SocketBonus>
-    <Name>Choker of the Betrayer</Name>
-    <Id>39652</Id>
-    <Slot>Neck</Slot>
-  </Item>
-  <Item>
     <ItemLevel>187</ItemLevel>
     <DisplayId>51886</DisplayId>
     <DisplaySlot>9</DisplaySlot>
@@ -15780,25 +14574,6 @@
     <Name>Cowl of the Perished</Name>
     <Id>39768</Id>
     <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>51298</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
-    <IconPath>inv_shoulder_69</IconPath>
-    <Stats>
-      <Armor>1185</Armor>
-      <Stamina>60</Stamina>
-      <Strength>43</Strength>
-      <HitRating>34</HitRating>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Scourgebane Pauldrons</Name>
-    <Id>39888</Id>
-    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>70</ItemLevel>
@@ -17979,8 +16754,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>35358</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_necklace_29naxxramas</IconPath>
     <Stats>
       <Agility>38</Agility>
@@ -18039,8 +16814,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>35431</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_53naxxramas</IconPath>
     <Stats>
       <Agility>56</Agility>
@@ -18060,8 +16835,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>35423</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_48naxxramas</IconPath>
     <Stats>
       <Stamina>61</Stamina>
@@ -20552,8 +19327,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>35430</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_naxxramas_01</IconPath>
     <Stats>
       <Armor>154</Armor>
@@ -20687,8 +19462,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>35361</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_trinket_naxxramas04</IconPath>
     <Stats>
       <SpecialEffects>
@@ -23522,8 +22297,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>54790</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_75</IconPath>
     <Stats>
       <Armor>1723</Armor>
@@ -29428,23 +28203,6 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
-    <ItemLevel>150</ItemLevel>
-    <DisplayId>51913</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
-    <IconPath>inv_shield_56</IconPath>
-    <Stats>
-      <BonusIcyTouchDamage>111</BonusIcyTouchDamage>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Sigil</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Sigil of the Frozen Conscience</Name>
-    <Id>40822</Id>
-    <Slot>Ranged</Slot>
-  </Item>
-  <Item>
     <ItemLevel>213</ItemLevel>
     <DisplayId>55813</DisplayId>
     <DisplaySlot>1</DisplaySlot>
@@ -33857,23 +32615,6 @@
     <Name>Relentless Gladiator's Chain Armor</Name>
     <Id>41088</Id>
     <Slot>Chest</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>183</ItemLevel>
-    <DisplayId>45782</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_gizmo_newgoggles</IconPath>
-    <Stats>
-      <Armor>225</Armor>
-      <FrostResistance>20</FrostResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Cloth</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Mechanized Snow Goggles</Name>
-    <Id>41112</Id>
-    <Slot>Head</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -52534,14 +51275,16 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>56179</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_inscription_tarotdeath</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
           <Trigger>DamageDone</Trigger>
           <Stats>
+            <ProcdShadowDamageMin>1750</ProcdShadowDamageMin>
+            <ProcdShadowDamageMax>2250</ProcdShadowDamageMax>
             <ShadowDamage>2000</ShadowDamage>
           </Stats>
           <Duration>0</Duration>
@@ -52583,20 +51326,6 @@
     <Name>Royal Crest of Lordaeron</Name>
     <Id>43085</Id>
     <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>spell_frost_frozencore</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Frozen Orb</Name>
-    <Id>43102</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>187</ItemLevel>
@@ -52732,6 +51461,21 @@
     <Slot>Tabard</Slot>
   </Item>
   <Item>
+    <ItemLevel>75</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Tabard of the Kirin Tor</Name>
+    <Id>43157</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
     <ItemLevel>175</ItemLevel>
     <DisplayId>41951</DisplayId>
     <DisplaySlot>11</DisplaySlot>
@@ -52849,20 +51593,6 @@
     <Name>Gauntlets of Vigilance</Name>
     <Id>43213</Id>
     <Slot>Hands</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>1</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_platnumdisks</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Stone Keeper's Shard</Name>
-    <Id>43228</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>187</ItemLevel>
@@ -54897,28 +53627,6 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>47933</DisplayId>
-    <DisplaySlot>25</DisplaySlot>
-    <IconPath>inv_weapon_shortblade_24</IconPath>
-    <Stats>
-      <Agility>26</Agility>
-      <Stamina>22</Stamina>
-      <AttackPower>48</AttackPower>
-      <HitRating>25</HitRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Thrown</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>328</MinDamage>
-    <MaxDamage>493</MaxDamage>
-    <Speed>2.2</Speed>
-    <SocketBonus />
-    <Name>Spineslicer</Name>
-    <Id>43612</Id>
-    <Slot>Ranged</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>200</ItemLevel>
     <DisplayId>43846</DisplayId>
     <DisplaySlot>13</DisplaySlot>
     <IconPath>inv_weapon_shortblade_26</IconPath>
@@ -55039,60 +53747,6 @@
     <Name>Dreamwalker Raiments</Name>
     <Id>43822</Id>
     <Slot>Chest</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>6337</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_jewelry_talisman_01</IconPath>
-    <Stats>
-      <AttackPower>106</AttackPower>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Crusader's Locket</Name>
-    <Id>43829</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>56786</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_box_04</IconPath>
-    <Stats>
-      <AttackPower>53</AttackPower>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Chuchu's Tiny Box of Horrors</Name>
-    <Id>43838</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>51906</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
-    <IconPath>inv_belt_27</IconPath>
-    <Stats>
-      <Armor>889</Armor>
-      <Stamina>44</Stamina>
-      <Strength>39</Strength>
-      <CritRating>28</CritRating>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketBonus>
-      <Stamina>6</Stamina>
-    </SocketBonus>
-    <Name>Stability Girdle</Name>
-    <Id>43947</Id>
-    <Slot>Waist</Slot>
   </Item>
   <Item>
     <ItemLevel>187</ItemLevel>
@@ -55712,97 +54366,6 @@
     <Name>Leggings of the Honored</Name>
     <Id>44011</Id>
     <Slot>Legs</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>56513</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_datacrystal08</IconPath>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <SpellPower>281</SpellPower>
-          </Stats>
-          <Duration>20</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <Mp5>28</Mp5>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Cannoneer's Morale</Name>
-    <Id>44015</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>52571</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_sword_91</IconPath>
-    <Stats>
-      <Stamina>39</Stamina>
-      <AttackPower>50</AttackPower>
-      <ParryRating>26</ParryRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>OneHandSword</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>124</MinDamage>
-    <MaxDamage>231</MaxDamage>
-    <Speed>1.6</Speed>
-    <SocketBonus />
-    <Name>Quickblade of Cold Return</Name>
-    <Id>44029</Id>
-    <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>56518</DisplayId>
-    <DisplaySlot>9</DisplaySlot>
-    <IconPath>inv_bracer_17</IconPath>
-    <Stats>
-      <Armor>867</Armor>
-      <Stamina>48</Stamina>
-      <Strength>35</Strength>
-      <ArmorPenetrationRating>34</ArmorPenetrationRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Battlescar Spirebands</Name>
-    <Id>44038</Id>
-    <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>174</ItemLevel>
-    <DisplayId>56558</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_43</IconPath>
-    <Stats>
-      <Agility>24</Agility>
-      <Stamina>31</Stamina>
-      <AttackPower>68</AttackPower>
-      <CritRating>18</CritRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus>
-      <HasteRating>4</HasteRating>
-    </SocketBonus>
-    <Name>Signet of Bridenbrad</Name>
-    <Id>44039</Id>
-    <Slot>Finger</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -58707,22 +57270,6 @@
   </Item>
   <Item>
     <ItemLevel>183</ItemLevel>
-    <DisplayId>51904</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_helmet_105</IconPath>
-    <Stats>
-      <Armor>1681</Armor>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Corroded Faceguard</Name>
-    <Id>44695</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>183</ItemLevel>
     <DisplayId>56516</DisplayId>
     <DisplaySlot>9</DisplaySlot>
     <IconPath>inv_bracer_15</IconPath>
@@ -58754,28 +57301,6 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
-    <ItemLevel>187</ItemLevel>
-    <DisplayId>31265</DisplayId>
-    <DisplaySlot>17</DisplaySlot>
-    <IconPath>inv_gizmo_02</IconPath>
-    <Stats>
-      <Stamina>99</Stamina>
-      <AttackPower>114</AttackPower>
-      <ArmorPenetrationRating>59</ArmorPenetrationRating>
-      <CritRating>44</CritRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>TwoHandMace</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>412</MinDamage>
-    <MaxDamage>618</MaxDamage>
-    <Speed>3.3</Speed>
-    <SocketBonus />
-    <Name>Dirkee's Superstructure</Name>
-    <Id>44708</Id>
-    <Slot>TwoHand</Slot>
-  </Item>
-  <Item>
     <ItemLevel>183</ItemLevel>
     <DisplayId>57302</DisplayId>
     <DisplaySlot>1</DisplaySlot>
@@ -58789,57 +57314,6 @@
     <SocketBonus />
     <Name>Azure Dragonleather Helm</Name>
     <Id>44732</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>183</ItemLevel>
-    <DisplayId>45782</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_gizmo_newgoggles</IconPath>
-    <Stats>
-      <Armor>423</Armor>
-      <FrostResistance>20</FrostResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Mechanized Snow Goggles</Name>
-    <Id>44740</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>183</ItemLevel>
-    <DisplayId>45782</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_gizmo_newgoggles</IconPath>
-    <Stats>
-      <Armor>940</Armor>
-      <FrostResistance>20</FrostResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Mail</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Mechanized Snow Goggles</Name>
-    <Id>44741</Id>
-    <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>183</ItemLevel>
-    <DisplayId>45782</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
-    <IconPath>inv_gizmo_newgoggles</IconPath>
-    <Stats>
-      <Armor>1681</Armor>
-      <FrostResistance>20</FrostResistance>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Mechanized Snow Goggles</Name>
-    <Id>44742</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -59562,24 +58036,6 @@
     <Name>Epic Purple Shirt</Name>
     <Id>45037</Id>
     <Slot>Shirt</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>55</ItemLevel>
-    <DisplayId>46626</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
-    <IconPath>inv_pants_12</IconPath>
-    <Stats>
-      <Armor>126</Armor>
-      <Agility>16</Agility>
-      <AttackPower>32</AttackPower>
-    </Stats>
-    <Quality>Uncommon</Quality>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Gruffscale Leggings</Name>
-    <Id>45052</Id>
-    <Slot>Legs</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -61186,8 +59642,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>39209</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_necklace_33</IconPath>
     <Stats>
       <Stamina>72</Stamina>
@@ -61650,8 +60106,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>51374</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_02</IconPath>
     <Stats>
       <Armor>157</Armor>
@@ -61671,8 +60127,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>61879</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate20</IconPath>
     <Stats>
       <Armor>2348</Armor>
@@ -63800,8 +62256,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59150</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_plate_09</IconPath>
     <Stats>
       <Armor>1596</Armor>
@@ -68754,8 +67210,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>45948</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_72</IconPath>
     <Stats>
       <Stamina>72</Stamina>
@@ -69378,8 +67834,8 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
-    <DisplayId>58880</DisplayId>
-    <DisplaySlot>26</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_weapon_crossbow_33</IconPath>
     <Stats>
       <Agility>40</Agility>
@@ -69392,7 +67848,7 @@
     <Type>Crossbow</Type>
     <Faction>Neutral</Faction>
     <MinDamage>465</MinDamage>
-    <MaxDamage>656</MaxDamage>
+    <MaxDamage>657</MaxDamage>
     <Speed>2.8</Speed>
     <SocketBonus />
     <Name>Skyforge Crossbow</Name>
@@ -69887,58 +68343,6 @@
     <Name>Starshard Edge</Name>
     <Id>45620</Id>
     <Slot>MainHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>24</ItemLevel>
-    <DisplayId>58419</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
-    <IconPath>inv_misc_cape_16</IconPath>
-    <Stats>
-      <Armor>21</Armor>
-      <Stamina>4</Stamina>
-      <SpellPower>4</SpellPower>
-      <HitRating>4</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Spidersilk Drape</Name>
-    <Id>45626</Id>
-    <Slot>Back</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>34</ItemLevel>
-    <DisplayId>9852</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
-    <IconPath>inv_jewelry_necklace_04</IconPath>
-    <Stats>
-      <HitRating>11</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Amulet of Truesight</Name>
-    <Id>45627</Id>
-    <Slot>Neck</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>54</ItemLevel>
-    <DisplayId>18155</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
-    <IconPath>inv_misc_spyglass_03</IconPath>
-    <Stats>
-      <HitRating>24</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>High-powered Flashlight</Name>
-    <Id>45631</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
@@ -71454,151 +69858,6 @@
     <Name>Legwraps of the Master Conjurer</Name>
     <Id>45848</Id>
     <Slot>Legs</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>55956</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_book_11</IconPath>
-    <Stats>
-      <Stamina>25</Stamina>
-      <SpellPower>41</SpellPower>
-      <HasteRating>25</HasteRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Twilight Tome</Name>
-    <Id>45849</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>55265</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_book_07</IconPath>
-    <Stats>
-      <Stamina>37</Stamina>
-      <CritRating>36</CritRating>
-      <HitRating>25</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Rituals of the New Moon</Name>
-    <Id>45850</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>55265</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_book_07</IconPath>
-    <Stats>
-      <Stamina>37</Stamina>
-      <CritRating>36</CritRating>
-      <HitRating>25</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Rituals of the New Moon</Name>
-    <Id>45851</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>55265</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_book_07</IconPath>
-    <Stats>
-      <Stamina>37</Stamina>
-      <CritRating>36</CritRating>
-      <HitRating>25</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Rituals of the New Moon</Name>
-    <Id>45852</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>55265</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_book_07</IconPath>
-    <Stats>
-      <Stamina>37</Stamina>
-      <CritRating>36</CritRating>
-      <HitRating>25</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Rituals of the New Moon</Name>
-    <Id>45853</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>159</ItemLevel>
-    <DisplayId>55265</DisplayId>
-    <DisplaySlot>23</DisplaySlot>
-    <IconPath>inv_misc_book_07</IconPath>
-    <Stats>
-      <Stamina>37</Stamina>
-      <CritRating>36</CritRating>
-      <HitRating>25</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Rituals of the New Moon</Name>
-    <Id>45854</Id>
-    <Slot>OffHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>20</ItemLevel>
-    <DisplayId>20619</DisplayId>
-    <DisplaySlot>17</DisplaySlot>
-    <IconPath>inv_fishingpole_01</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>42</MinDamage>
-    <MaxDamage>63</MaxDamage>
-    <Speed>3</Speed>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Nat's Lucky Fishing Pole</Name>
-    <Id>45858</Id>
-    <Slot>TwoHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>206</ItemLevel>
-    <DisplayId>31616</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
-    <IconPath>inv_jewelry_ring_35</IconPath>
-    <Stats>
-      <Stamina>55</Stamina>
-      <CritRating>55</CritRating>
-      <HitRating>55</HitRating>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>The 5 Ring</Name>
-    <Id>45859</Id>
-    <Slot>Finger</Slot>
   </Item>
   <Item>
     <ItemLevel>80</ItemLevel>
@@ -78092,8 +76351,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>58899</DisplayId>
-    <DisplaySlot>26</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_weapon_rifle_33</IconPath>
     <Stats>
       <Stamina>51</Stamina>
@@ -78156,8 +76415,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59552</DisplayId>
-    <DisplaySlot>15</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_weapon_bow_51</IconPath>
     <Stats>
       <Agility>33</Agility>
@@ -81656,8 +79915,8 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>60528</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
       <Armor>2241</Armor>
@@ -83140,20 +81399,6 @@
     <Name>Gloves of Bitter Reprisal</Name>
     <Id>47240</Id>
     <Slot>Hands</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>spell_holy_summonchampion</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Emblem of Triumph</Name>
-    <Id>47241</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -87201,8 +85446,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>39162</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_necklace_36</IconPath>
     <Stats>
       <Agility>42</Agility>
@@ -87221,8 +85466,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>60555</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_27</IconPath>
     <Stats>
       <Armor>2032</Armor>
@@ -115782,20 +114027,6 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_frostemblem_01</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Emblem of Frost</Name>
-    <Id>49426</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>232</ItemLevel>
     <DisplayId>62972</DisplayId>
     <DisplaySlot>13</DisplaySlot>
@@ -116398,8 +114629,8 @@
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
-    <DisplayId>9860</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_necklace_09</IconPath>
     <Stats>
       <Agility>76</Agility>
@@ -116832,20 +115063,6 @@
     <Name>Black Knight's Rondel</Name>
     <Id>49682</Id>
     <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>1</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_hammer_09</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>The Forgemaster's Hammer</Name>
-    <Id>49723</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
@@ -118852,20 +117069,6 @@
     <Name>Boots of Kingly Upheaval</Name>
     <Id>49907</Id>
     <Slot>Feet</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>spell_fire_felflamebreath</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Primordial Saronite</Name>
-    <Id>49908</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
@@ -122594,20 +120797,6 @@
     <Slot>Feet</Slot>
   </Item>
   <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>spell_deathknight_bloodboil</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Festergut's Acidic Blood</Name>
-    <Id>50226</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>232</ItemLevel>
     <DisplayId>64766</DisplayId>
     <DisplaySlot>21</DisplaySlot>
@@ -122694,20 +120883,6 @@
     <Name>Malykriss Vambraces</Name>
     <Id>50230</Id>
     <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>spell_shadow_bloodboil</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Rotface's Acidic Blood</Name>
-    <Id>50231</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -123278,20 +121453,6 @@
     <Name>Engraved Gargoyle Femur</Name>
     <Id>50273</Id>
     <Slot>TwoHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_enchant_shardshadowfrostlarge</IconPath>
-    <Stats />
-    <Quality>Legendary</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Shadowfrost Shard</Name>
-    <Id>50274</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
@@ -124064,36 +122225,6 @@
     <Slot>MainHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_bag_26_spellfire</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Papa's Brand New Bag</Name>
-    <Id>50316</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_bag_26_spellfire</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Papa's New Bag</Name>
-    <Id>50317</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>232</ItemLevel>
     <DisplayId>64373</DisplayId>
     <DisplaySlot>9</DisplaySlot>
@@ -124807,8 +122938,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64244</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_trinket_04</IconPath>
     <Stats>
       <SpecialEffects>
@@ -124952,8 +123083,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>63958</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_81</IconPath>
     <Stats>
       <Agility>80</Agility>
@@ -125057,8 +123188,8 @@
   </Item>
   <Item>
     <ItemLevel>259</ItemLevel>
-    <DisplayId>63958</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_81</IconPath>
     <Stats>
       <Agility>86</Agility>
@@ -129885,8 +128016,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64321</DisplayId>
-    <DisplaySlot>17</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_axe_115</IconPath>
     <Stats>
       <Stamina>164</Stamina>
@@ -129963,8 +128094,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64523</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
       <Armor>2526</Armor>
@@ -130012,8 +128143,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64174</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_81</IconPath>
     <Stats>
       <Agility>72</Agility>
@@ -133031,34 +131162,6 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_gem_pearl_14</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Crystalline Essence of Sindragosa</Name>
-    <Id>51026</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_gem_pearl_14</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Crystalline Essence of Sindragosa</Name>
-    <Id>51027</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>264</ItemLevel>
     <DisplayId>64706</DisplayId>
     <DisplaySlot>3</DisplaySlot>
@@ -135321,8 +133424,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64622</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_129</IconPath>
     <Stats>
       <Armor>1980</Armor>
@@ -135346,8 +133449,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64572</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_32</IconPath>
     <Stats>
       <Armor>2310</Armor>
@@ -135372,8 +133475,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64570</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_158</IconPath>
     <Stats>
       <Armor>2145</Armor>
@@ -135398,8 +133501,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64571</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_86</IconPath>
     <Stats>
       <Armor>1650</Armor>
@@ -135423,8 +133526,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64569</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
       <Armor>2641</Armor>
@@ -141240,8 +139343,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64174</DisplayId>
-    <DisplaySlot>11</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_ring_81</IconPath>
     <Stats>
       <Agility>82</Agility>
@@ -141254,7 +139357,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
+    <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Saurfang's Cold-Forged Band</Name>
     <Id>51900</Id>
@@ -141286,8 +139389,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64592</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_26</IconPath>
     <Stats>
       <Armor>2641</Armor>
@@ -141363,8 +139466,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64320</DisplayId>
-    <DisplaySlot>17</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_axe_115</IconPath>
     <Stats>
       <Stamina>185</Stamina>
@@ -142153,22 +140256,6 @@
     <Slot>OneHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>167</ItemLevel>
-    <DisplayId>64735</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
-    <IconPath>inv_chest_fur</IconPath>
-    <Stats>
-      <Armor>477</Armor>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Leather</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Pristine Glowbear Pelt</Name>
-    <Id>51958</Id>
-    <Slot>Chest</Slot>
-  </Item>
-  <Item>
     <ItemLevel>230</ItemLevel>
     <DisplayId>64870</DisplayId>
     <DisplaySlot>24</DisplaySlot>
@@ -142201,95 +140288,5 @@
     <Name>Iceblade Arrow</Name>
     <Id>52021</Id>
     <Slot>Projectile</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>ability_paladin_shieldofthetemplar</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Rogue|Death Knight|Mage|Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Vanquisher's Mark of Sanctification</Name>
-    <Id>52025</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>ability_paladin_shieldofthetemplar</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Warrior|Hunter|Shaman</RequiredClasses>
-    <SocketBonus />
-    <Name>Protector's Mark of Sanctification</Name>
-    <Id>52026</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>ability_paladin_shieldofthetemplar</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Paladin|Priest|Warlock</RequiredClasses>
-    <SocketBonus />
-    <Name>Conqueror's Mark of Sanctification</Name>
-    <Id>52027</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>ability_paladin_judgementsofthejust</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Rogue|Death Knight|Mage|Druid</RequiredClasses>
-    <SocketBonus />
-    <Name>Vanquisher's Mark of Sanctification</Name>
-    <Id>52028</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>ability_paladin_judgementsofthejust</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Warrior|Hunter|Shaman</RequiredClasses>
-    <SocketBonus />
-    <Name>Protector's Mark of Sanctification</Name>
-    <Id>52029</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>ability_paladin_judgementsofthejust</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Paladin|Priest|Warlock</RequiredClasses>
-    <SocketBonus />
-    <Name>Conqueror's Mark of Sanctification</Name>
-    <Id>52030</Id>
-    <Slot>None</Slot>
   </Item>
 </ArrayOfItem>

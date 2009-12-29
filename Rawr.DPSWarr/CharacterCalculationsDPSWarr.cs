@@ -125,18 +125,41 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1}*" +
                                 "The percentage is affected both by Haste Rating and Blood Frenzy talent",
                                 HastePercent, (float)Math.Floor(AverageStats.HasteRating)));
-            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {2}*" +
-                                                      "With Procs: {1:00.00%}" +
-                                Environment.NewLine + 
-                                Environment.NewLine + "Average Breakdown:" +
-                                Environment.NewLine + "{3:0.00%} : Rating (including proc averages)" +
-                                Environment.NewLine + "{4:0.00%} : Arms Stance" +
-                                Environment.NewLine + "{5:0.00%} : Mace Spec",
-                                ArmorPenetration,
+
+            string theFormat = "";
+            theFormat += "{0:00.00%} : {1}*"; // Averaged % and Averaged Rating
+            theFormat += "The Pane shows Averaged Values";
+            theFormat += "\r\n";
+            theFormat += "\r\n= Passive Contributions =";
+            theFormat += "\r\n{2:00.00%} : Battle Stance";
+            theFormat += "\r\n{3:00.00%} : T9 2P Set Bonus";
+            theFormat += "\r\n{4:00.00%} : Mace Specialization";
+            theFormat += "\r\n";
+            theFormat += "\r\n= UnProc'd =";
+            theFormat += "\r\n{5} : Rating";
+            theFormat += "\r\n{6:00.00%} : Percent";
+            theFormat += "\r\n";
+            theFormat += "\r\n= Proc'd =";
+            theFormat += "\r\n{7} : Rating";
+            theFormat += "\r\n{8:00.00%} : Percent";
+            dictValues.Add("Armor Penetration", string.Format(theFormat,
+                                ArmorPenetration, AverageStats.ArmorPenetrationRating,
+                                (!combatFactors.CalcOpts.FuryStance ? 0.10f : 0f),
+                                (!combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_ArP : 0f),
+                                ArmorPenetrationMaceSpec,
+
+                                BuffedStats.ArmorPenetrationRating,
+                                Math.Min(1f, (!combatFactors.CalcOpts.FuryStance ? 0.10f + AverageStats.BonusWarrior_T9_2P_ArP : 0f)
+                                    + StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating)),
+
+                                MaximumStats.ArmorPenetrationRating,
+                                Math.Min(1f, (!combatFactors.CalcOpts.FuryStance ? 0.10f + AverageStats.BonusWarrior_T9_2P_ArP : 0f)
+                                    + StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating))
+                                /*,
+
                                 MaxArmorPenetration,
-                                AverageStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
-                                ArmorPenetrationStance,
-                                ArmorPenetrationMaceSpec));
+                                ArmorPenetrationRating2Perc,
+                                BuffedStats.ArmorPenetrationRating*/));
             // old
             float HitPercent = StatConversion.GetHitFromRating(HitRating);
             float HitPercBonus = AverageStats.PhysicalHit;
@@ -282,6 +305,45 @@ namespace Rawr.DPSWarr {
                 case "% Chance to be Dodged": return combatFactors._c_mhdodge * 100f;
                 case "% Chance to be Parried": return combatFactors._c_mhparry * 100f;
                 case "% Chance to be Avoided (Yellow/Dodge)": return combatFactors._c_ymiss * 100f + combatFactors._c_mhdodge * 100f;
+                case "Respect Highest ArP Proc Cap":
+                    float highestProc = 0f;
+                    float gapWeCanFill = 0f;
+                    try {
+                        int LevelDif = combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level;
+
+                        if (BuffedStats._rawSpecialEffectData != null)
+                        {
+                            foreach (SpecialEffect effect in BuffedStats._rawSpecialEffectData)
+                            {
+                                if (effect == null) { continue; }
+                                float value = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc;
+                                if (value > 0 && value > highestProc)
+                                {
+                                    highestProc = value;
+                                }
+                            }
+                        }
+                        if (highestProc <= 0f) { return 0f; } // There's no ArP procs so skip the rest
+
+                        float arpenBuffs =
+                            ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? combatFactors.Char.WarriorTalents.MaceSpecialization * 0.03f : 0.00f) +
+                            (!combatFactors.CalcOpts.FuryStance ? (0.10f + BuffedStats.BonusWarrior_T9_2P_ArP) : 0.0f);
+
+                        float RealRatingCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - arpenBuffs);
+
+                        gapWeCanFill = Math.Max(0f, RealRatingCap - highestProc);
+
+                        float ArPRatingWeHave = BuffedStats.ArmorPenetrationRating;
+
+                        return ArPRatingWeHave - gapWeCanFill;
+                    } catch (Exception ex) {
+                        Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Problem with Respect ArP Proc Cap Req",
+                            ex.Message,
+                            "GetOptimizableCalculationValue(...)",
+                            "No Additional Info",
+                            ex.StackTrace);
+                    }
+                    return gapWeCanFill;
             }
             return 0.0f;
         }

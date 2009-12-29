@@ -1601,7 +1601,7 @@ namespace Rawr
 			StatusMessaging.UpdateStatus("Update All Items from Armory", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
-            ItemUpdater updater = new ItemUpdater(true, true, false, 1);
+            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading, true, false, 1);
             int skippedItems = 0;
             Item[] allItems = ItemCache.AllItems;
             for (int i = 0; i < allItems.Length; i++)
@@ -1662,7 +1662,8 @@ namespace Rawr
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
 
-            ItemUpdater updater = new ItemUpdater(true, false, usePTRDataToolStripMenuItem.Checked, 20);
+            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading,
+                false, usePTRDataToolStripMenuItem.Checked, 20);
             int skippedItems = 0;
             Item[] allItems = ItemCache.AllItems;
             for (int i = 0; i < allItems.Length; i++)
