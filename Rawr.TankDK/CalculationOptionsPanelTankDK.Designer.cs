@@ -53,6 +53,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.btnStatsGraph = new System.Windows.Forms.Button();
             this.cb_AdditiveMitigation = new System.Windows.Forms.CheckBox();
+            this.cbExperimental = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
@@ -409,18 +410,28 @@
             // cb_AdditiveMitigation
             // 
             this.cb_AdditiveMitigation.AutoSize = true;
-            this.cb_AdditiveMitigation.Enabled = false;
-            this.cb_AdditiveMitigation.Location = new System.Drawing.Point(6, 399);
+            this.cb_AdditiveMitigation.Location = new System.Drawing.Point(6, 408);
             this.cb_AdditiveMitigation.Name = "cb_AdditiveMitigation";
-            this.cb_AdditiveMitigation.Size = new System.Drawing.Size(118, 17);
+            this.cb_AdditiveMitigation.Size = new System.Drawing.Size(180, 17);
             this.cb_AdditiveMitigation.TabIndex = 63;
-            this.cb_AdditiveMitigation.Text = "Additive Mitigation?";
+            this.cb_AdditiveMitigation.Text = "Additive Mitigation (experimental)";
             this.cb_AdditiveMitigation.UseVisualStyleBackColor = true;
-            this.cb_AdditiveMitigation.Visible = false;
             this.cb_AdditiveMitigation.CheckedChanged += new System.EventHandler(this.cb_AdditiveMitigation_CheckedChanged);
+            // 
+            // cbExperimental
+            // 
+            this.cbExperimental.AutoSize = true;
+            this.cbExperimental.Location = new System.Drawing.Point(6, 385);
+            this.cbExperimental.Name = "cbExperimental";
+            this.cbExperimental.Size = new System.Drawing.Size(150, 17);
+            this.cbExperimental.TabIndex = 64;
+            this.cbExperimental.Text = "Enable Experimental Code";
+            this.cbExperimental.UseVisualStyleBackColor = true;
+            this.cbExperimental.CheckedChanged += new System.EventHandler(this.cbExperimental_CheckedChanged);
             // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.cbExperimental);
             this.Controls.Add(this.cb_AdditiveMitigation);
             this.Controls.Add(this.btnStatsGraph);
             this.Controls.Add(this.comboChartType);
@@ -485,5 +496,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnStatsGraph;
         private System.Windows.Forms.CheckBox cb_AdditiveMitigation;
+        private System.Windows.Forms.CheckBox cbExperimental;
     }
 }

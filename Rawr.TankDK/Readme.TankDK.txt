@@ -3,6 +3,10 @@
 Currently targeting: 
 * Wow version 3.3.0
 
+2.3.5:
+* Exposed Experimental switch via options panel in Rawr2.
+* Fix for Defect 15640: Display option values were not all persisting.
+
 2.3.4:
 * Adding in the experimental work in prep for Bosshandler.
 

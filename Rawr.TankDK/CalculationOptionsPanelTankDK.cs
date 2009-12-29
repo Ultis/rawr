@@ -35,6 +35,14 @@ namespace Rawr.TankDK {
 
             numThreatWeight.Value = (decimal)options.ThreatWeight;
             numSurvivalWeight.Value = (decimal)options.SurvivalWeight;
+            cb_AdditiveMitigation.Checked = options.AdditiveMitigation;
+            cbExperimental.Checked = options.bExperimental;
+            numBossAttackSpeed.Value = (decimal)options.BossAttackSpeed;
+            numIncomingDamage.Value = options.IncomingDamage;
+            numPercIncFromMagic.Value = (decimal)options.PercentIncomingFromMagic;
+            nudTargetArmor.Value = (decimal)options.BossArmor;
+            tbFightLength.Value = (int)options.FightLength;
+            numTargets.Value = (int)options.uNumberTargets;
 
             _loadingCalculationOptions = false;
         }
@@ -116,28 +124,17 @@ namespace Rawr.TankDK {
         private Stats[] BuildStatsList()
         {
             List<Stats> statsList = new List<Stats>();
-//            if (chkStatsStrength.Checked)
                 statsList.Add(new Stats() { Strength = 1f });
-//            if (chkStatsAgility.Checked)
                 statsList.Add(new Stats() { Agility = 1f });
-//            if (chkStatsAP.Checked)
                 statsList.Add(new Stats() { AttackPower = 2f });
-//            if (chkStatsCrit.Checked)
                 statsList.Add(new Stats() { CritRating = 1f });
-//            if (chkStatsHit.Checked)
                 statsList.Add(new Stats() { HitRating = 1f });
-//            if (chkStatsExp.Checked)
                 statsList.Add(new Stats() { ExpertiseRating = 1f });
-//            if (chkStatsHaste.Checked)
                 statsList.Add(new Stats() { HasteRating = 1f });
-//            if (chkStatsArP.Checked)
                 statsList.Add(new Stats() { ArmorPenetrationRating = 1f });
-//            if (chkStatsSP.Checked)
                 statsList.Add(new Stats() { DefenseRating = 1f });
-//            if (chkStatsInt.Checked)
                 statsList.Add(new Stats() { DodgeRating = 1f });
                 statsList.Add(new Stats() { ParryRating = 1f });
-
             return statsList.ToArray();
         }
 
@@ -157,6 +154,15 @@ namespace Rawr.TankDK {
             if (!_loadingCalculationOptions)
             {
                 options.AdditiveMitigation = cb_AdditiveMitigation.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cbExperimental_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.bExperimental = cbExperimental.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
