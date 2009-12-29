@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tipRestoSham = new System.Windows.Forms.ToolTip(this.components);
-            this.cboManaPotAmount = new System.Windows.Forms.ComboBox();
             this.chkManaTide = new System.Windows.Forms.CheckBox();
             this.cboBurstStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -52,7 +51,6 @@
             this.tbBurst_Label = new System.Windows.Forms.Label();
             this.tbBurst = new System.Windows.Forms.TrackBar();
             this.chkWaterShield = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
@@ -63,27 +61,10 @@
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cboManaPotAmount
-            // 
-            this.cboManaPotAmount.FormattingEnabled = true;
-            this.cboManaPotAmount.Items.AddRange(new object[] {
-            "0",
-            "2400",
-            "3200",
-            "4300"});
-            this.cboManaPotAmount.Location = new System.Drawing.Point(81, 58);
-            this.cboManaPotAmount.Name = "cboManaPotAmount";
-            this.cboManaPotAmount.Size = new System.Drawing.Size(75, 21);
-            this.cboManaPotAmount.TabIndex = 10;
-            this.tipRestoSham.SetToolTip(this.cboManaPotAmount, "The average amount of mana restored by a mana potion");
-            this.cboManaPotAmount.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
-            this.cboManaPotAmount.Validated += new System.EventHandler(this.numericTextBox_Validated);
-            this.cboManaPotAmount.TextChanged += new System.EventHandler(this.cboManaPotAmount_TextChanged);
-            // 
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(81, 212);
+            this.chkManaTide.Location = new System.Drawing.Point(81, 185);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(184, 17);
             this.chkManaTide.TabIndex = 14;
@@ -99,12 +80,11 @@
             "RT+HW",
             "RT+LHW",
             "RT+CH",
-            "RT+CH+LHW",
             "HW Spam",
             "LHW Spam",
             "CH Spam",
             "Auto"});
-            this.cboBurstStyle.Location = new System.Drawing.Point(81, 85);
+            this.cboBurstStyle.Location = new System.Drawing.Point(81, 58);
             this.cboBurstStyle.Name = "cboBurstStyle";
             this.cboBurstStyle.Size = new System.Drawing.Size(75, 21);
             this.cboBurstStyle.TabIndex = 28;
@@ -138,12 +118,11 @@
             "RT+HW",
             "RT+LHW",
             "RT+CH",
-            "RT+CH+LHW",
             "HW Spam",
             "LHW Spam",
             "CH Spam",
             "Auto"});
-            this.cboSustStyle.Location = new System.Drawing.Point(81, 112);
+            this.cboSustStyle.Location = new System.Drawing.Point(81, 85);
             this.cboSustStyle.Name = "cboSustStyle";
             this.cboSustStyle.Size = new System.Drawing.Size(75, 21);
             this.cboSustStyle.TabIndex = 31;
@@ -157,7 +136,7 @@
             "No",
             "Yes",
             "Me"});
-            this.cboHeroism.Location = new System.Drawing.Point(81, 139);
+            this.cboHeroism.Location = new System.Drawing.Point(81, 112);
             this.cboHeroism.Name = "cboHeroism";
             this.cboHeroism.Size = new System.Drawing.Size(75, 21);
             this.cboHeroism.TabIndex = 47;
@@ -185,7 +164,7 @@
             // chkMT
             // 
             this.chkMT.AutoSize = true;
-            this.chkMT.Location = new System.Drawing.Point(81, 189);
+            this.chkMT.Location = new System.Drawing.Point(81, 162);
             this.chkMT.Name = "chkMT";
             this.chkMT.Size = new System.Drawing.Size(138, 17);
             this.chkMT.TabIndex = 24;
@@ -214,8 +193,6 @@
             this.GeneralPage.Controls.Add(this.chkMT);
             this.GeneralPage.Controls.Add(this.chkWaterShield);
             this.GeneralPage.Controls.Add(this.chkManaTide);
-            this.GeneralPage.Controls.Add(this.cboManaPotAmount);
-            this.GeneralPage.Controls.Add(this.label7);
             this.GeneralPage.Controls.Add(this.label2);
             this.GeneralPage.Controls.Add(this.label1);
             this.GeneralPage.Location = new System.Drawing.Point(4, 22);
@@ -229,7 +206,7 @@
             // chkEarthShield
             // 
             this.chkEarthShield.AutoSize = true;
-            this.chkEarthShield.Location = new System.Drawing.Point(81, 166);
+            this.chkEarthShield.Location = new System.Drawing.Point(81, 139);
             this.chkEarthShield.Name = "chkEarthShield";
             this.chkEarthShield.Size = new System.Drawing.Size(156, 17);
             this.chkEarthShield.TabIndex = 50;
@@ -240,7 +217,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(27, 142);
+            this.label14.Location = new System.Drawing.Point(27, 115);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(48, 13);
             this.label14.TabIndex = 46;
@@ -249,7 +226,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 115);
+            this.label4.Location = new System.Drawing.Point(21, 88);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(60, 13);
             this.label4.TabIndex = 30;
@@ -258,7 +235,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 88);
+            this.label3.Location = new System.Drawing.Point(21, 61);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 29;
@@ -270,7 +247,7 @@
             this.groupBox1.Controls.Add(this.tbSurvival);
             this.groupBox1.Controls.Add(this.tbBurst_Label);
             this.groupBox1.Controls.Add(this.tbBurst);
-            this.groupBox1.Location = new System.Drawing.Point(6, 258);
+            this.groupBox1.Location = new System.Drawing.Point(6, 231);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(280, 151);
             this.groupBox1.TabIndex = 27;
@@ -316,22 +293,13 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(81, 235);
+            this.chkWaterShield.Location = new System.Drawing.Point(81, 208);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
             this.chkWaterShield.Text = "Water Shield";
             this.chkWaterShield.UseVisualStyleBackColor = true;
             this.chkWaterShield.CheckedChanged += new System.EventHandler(this.chkWaterShield_CheckedChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 61);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(75, 13);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "Mana Potions:";
             // 
             // label1
             // 
@@ -388,8 +356,6 @@
         private System.Windows.Forms.CheckBox chkMT;
         private System.Windows.Forms.CheckBox chkWaterShield;
         private System.Windows.Forms.CheckBox chkManaTide;
-        private System.Windows.Forms.ComboBox cboManaPotAmount;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtFightLength;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;

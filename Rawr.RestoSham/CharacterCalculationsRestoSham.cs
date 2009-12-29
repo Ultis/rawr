@@ -29,7 +29,6 @@ namespace Rawr.RestoSham
         }
 
 
-        public float Mp5OutsideFSR { get; set; }
         public float SpellCrit { get; set; }
         public float SpellHaste { get; set; }
         public float TotalManaPool { get; set; }
@@ -49,8 +48,6 @@ namespace Rawr.RestoSham
         public float RTHWMPS { get; set; }
         public float RTLHWHPS { get; set; }
         public float RTLHWMPS { get; set; }
-        public float RTCHLHW2HPS { get; set; }
-        public float RTCHLHW2MPS { get; set; }
         public float RTCHHPS { get; set; }
         public float RTCHMPS { get; set; }
         public float BurstHPS { get; set; }
@@ -86,7 +83,6 @@ namespace Rawr.RestoSham
             values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
             values.Add("RT+LHW HPS", Math.Round(RTLHWHPS, 0).ToString());
             values.Add("RT+CH HPS", Math.Round(RTCHHPS, 0).ToString());
-            values.Add("RT+CH+LHW HPS", Math.Round(RTCHLHW2HPS, 0).ToString());
             values.Add("HW Spam HPS", Math.Round(HWSpamHPS, 0).ToString());
             values.Add("LHW Spam HPS", Math.Round(LHWSpamHPS, 0).ToString());
             values.Add("CH Spam HPS", Math.Round(CHSpamHPS, 0).ToString());

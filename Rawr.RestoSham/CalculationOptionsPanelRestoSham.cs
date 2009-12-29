@@ -20,7 +20,6 @@ namespace Rawr.RestoSham
 
 			txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
 			txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
-			cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 4300f, true);
 			tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
 			tbSurvival.Tag = new NumericField("SurvivalPerc", 0f, 100f, true);
 		}
@@ -35,7 +34,6 @@ namespace Rawr.RestoSham
 
 			#region General tab page:
 			txtFightLength.Text = options.FightLength.ToString();
-			cboManaPotAmount.Text = options.ManaPotAmount.ToString();
 			chkManaTide.Checked = options.ManaTideEveryCD;
 			chkWaterShield.Checked = options.WaterShield;
 			chkMT.Checked = options.TankHeal;
@@ -245,18 +243,6 @@ namespace Rawr.RestoSham
 			{
 				this["Heroism"] = cboHeroism.Text;
 				Character.OnCalculationsInvalidated();
-			}
-		}
-		private void cboManaPotAmount_TextChanged(object sender, EventArgs e)
-		{
-			if (!_bLoading)
-			{
-				float manaPot;
-				if (float.TryParse(cboManaPotAmount.Text, out manaPot))
-				{
-					this["ManaPotAmount"] = manaPot;
-					Character.OnCalculationsInvalidated();
-				}
 			}
 		}
 		#endregion

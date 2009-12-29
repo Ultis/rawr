@@ -45,16 +45,6 @@ namespace Rawr.RestoSham
 		public float FightLength = 5.0f;
 
 		/// <summary>
-		/// Percentage of time during the fight spent outside the FSR.
-		/// </summary>
-		public float OutsideFSRPct = 0.0f;
-
-		/// <summary>
-		/// Average amount restored by a mana potion.
-		/// </summary>
-		public float ManaPotAmount = 0f;
-
-		/// <summary>
 		/// Whether a Mana Tide totem is placed every time the cooldown is up.
 		/// </summary>
 		public bool ManaTideEveryCD = true;
