@@ -2014,7 +2014,9 @@ namespace Rawr {
                 childEffect.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = int.Parse(match.Groups["hasteRating"].Value) }, float.PositiveInfinity, 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, childEffect, int.Parse(match.Groups["duration"].Value), cooldown, 1f));
             }
-            else if ((match = Regex.Match(line, @"Each time you are struck by an attack, you gain (?<bonusArmor>\d+) armor\. .*Stacks up to (?<stacks>\d+) times\. .*Entire effect lasts (?<duration>\d+) sec\.( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
+            // Wowhead: "Each time you are struck by an attack, you gain 1265 armor. Stacks up to 5 times. Entire effect lasts 20 sec (2 Min Cooldown)"
+            // Armory:  "Each time you are struck by an attack, you gain 1265 armor. Stacks up to 5 times. Entire effect lasts 20 sec."
+            else if ((match = Regex.Match(line, @"Each time you are struck by an attack, you gain (?<bonusArmor>\d+) armor\.\s+Stacks up to (?<stacks>\d+) times\.\s+Entire effect lasts (?<duration>\d+) sec(\.\s+\((?<cooldown>\d+) Min Cooldown\))?")).Success)
             {
                 // Fervor of the Frostborn / Eitrigg's Oath
                 // armory doesn't give cooldown info

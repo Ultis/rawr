@@ -348,7 +348,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
             // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
-            if (null == calcs) { return null; }
+            if (null == calcs) 
+            { 
+#if DEBUG
+                throw new Exception("Could not generate new CharacterCalculationsTankDK.");
+#else
+                return null;
+#endif
+            }
 
             // Ok, this is the initial gathering of our information... we haven't processed the multipliers or anything.
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -481,6 +488,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             Stats statSE = new Stats();
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
+                // There are some multi-level special effects that need to be factored in.
+                foreach (SpecialEffect ee in e.Stats.SpecialEffects())
+                {
+                    e.Stats = sse.getSpecialEffects(opts, ee);
+                }
                 statSE.Accumulate(sse.getSpecialEffects(opts, e));
             }
             // Any Modifiers from stats need to be applied to statSE
@@ -571,7 +583,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // TODO: Change this to a Special Effect.
             float bsDR = 0.0f;
             float bsUptime = 0f;
-            if (character.DeathKnightTalents.BoneShield > 0) {
+            if (character.DeathKnightTalents.BoneShield > 0) 
+            {
                 uint BSStacks = 3;  // The number of bones by default.
                 if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
 
@@ -586,6 +599,32 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 bsDR = 0.2f * bsUptime;
             }
             stats.DamageTakenMultiplier -= bsDR;
+
+            #region Talent: Vampiric Blood
+            // Talent: Vampiric Blood
+            /*
+            if (character.DeathKnightTalents.VampiricBlood > 0)
+            {
+                Stats VBStats = new Stats()
+                {
+                    Health = (stats.Health * 0.15f),
+                    HealingReceivedMultiplier = 0.35f,
+                };
+
+                float fVB_CD = 60f;
+                if (m_bT9_4PC) fVB_CD -= 10f;
+                float fVB_Dur = 10f;
+                if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
+                {
+                    fVB_Dur += 5f;
+                }
+                SpecialEffect SE = new SpecialEffect(Trigger.Use, VBStats, fVB_Dur, fVB_CD);
+                SE.AccumulateAverageStats(stats);
+            }
+             */
+            #endregion
+
+
             #endregion
 
             // Assuming the Boss has no ArPen
@@ -631,7 +670,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 bParryHaste = hCurrentBoss.UseParryHaste;
             }
             #endregion
-
 
             #region ***** Survival Rating *****
             // For right now Survival Rating == Effective Health will be HP + Armor/Resistance mitigation values.
@@ -1337,14 +1375,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 newStats = new Stats();
                 float fCD = 60f;
                 newStats.Healed = (fHealth * .1f);
-                if (character.DeathKnightTalents.ImprovedRuneTap > 0)
-                {
-                    // Improved Rune Tap.
-                    // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-                    fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                    newStats.Healed += (newStats.Healed * (0.33f * character.DeathKnightTalents.ImprovedRuneTap));
-                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
-                }
+                // Improved Rune Tap.
+                // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
+                fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
+                newStats.Healed += (newStats.Healed * (character.DeathKnightTalents.ImprovedRuneTap / 3f));
                 FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
             }
 
@@ -1466,6 +1500,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // 1 min CD. as of 3.2.2
             if (character.DeathKnightTalents.VampiricBlood > 0)
             {
+                // Also copy above, but it's commented out.
                 newStats = new Stats();
                 // TODO: need to figure out how to factor this back in.
                 newStats.Health = (fHealth * 0.15f);
