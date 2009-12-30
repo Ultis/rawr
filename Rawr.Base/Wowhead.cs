@@ -560,10 +560,16 @@ namespace Rawr
                                         string tokentext = costtext.Substring(tokenIndex + 1, tokenEnd - tokenIndex);
                                         if (tokentext.Length > 10)
                                         {
-                                            string[] token1 = tokentext.Substring(1, 8).Split(',');
+                                            string[] tokens = tokentext.Split(',');
+                                            tokenIds[0] = tokens[0].Trim('[');
+                                            tokenCounts[0] = int.Parse(tokens[1].Trim(']'));
+
+                                            tokenIds[1] = tokens[2].Trim('[');
+                                            tokenCounts[1] = int.Parse(tokens[3].Trim(']'));
+                                            /*string[] token1 = tokentext.Substring(1, 8).Split(',');
                                             string[] token2 = tokentext.Substring(12, 8).Split(',');
                                             tokenIds[0] = token1[0]; tokenCounts[0] = int.Parse(token1[1].Trim('[').Trim(']'));
-                                            tokenIds[1] = token2[0]; tokenCounts[1] = int.Parse(token2[1].Trim('[').Trim(']'));
+                                            tokenIds[1] = token2[0]; tokenCounts[1] = int.Parse(token2[1].Trim('[').Trim(']'));*/
                                         }
                                         else
                                         {

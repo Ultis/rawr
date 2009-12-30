@@ -168,7 +168,6 @@ These numbers to do not include racial bonuses.",
                         "DPS Breakdown (General):Cleave",
                         "DPS Breakdown (General):White DPS",
                         "DPS Breakdown (General):Execute*<20% Spamming only",
-                        "DPS Breakdown (General):Spell Damage Procs*Such as from Bryntroll or Shadowmourne",
                         "DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia or Hand Mounted Pyro Rocket",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
@@ -1129,15 +1128,17 @@ These numbers to do not include racial bonuses.",
                 if (stats._rawSpecialEffectData != null)
                 {
                     SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
-                        calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
+                        calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats.SpecialEffects()),
                         triggerIntervals, triggerChances, calcOpts.Duration, combatFactors.DamageReduction);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
+
+                    calculatedStats.SpecProcDPS = SDP.CalculateAll();
+                    /*calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
                     calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
                     calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
                     calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Arcane);
                     calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Nature);
                     calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Fire);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);
+                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);*/
                 }
                 calculatedStats.TotalDPS += calculatedStats.SpecProcDPS;
 
@@ -1343,7 +1344,9 @@ These numbers to do not include racial bonuses.",
 
             if (character.MainHandEnchant != null/* && character.MainHandEnchant.Id == 3789*/) { // 3789 = Berserker Enchant ID, but now supporting other proc effects as well
                 Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
-                if (mhEffects.MoveNext()) { bersMainHand.Add(mhEffects.Current); }
+                if (mhEffects.MoveNext()) {
+                    bersMainHand.Add(mhEffects.Current); 
+                }
             }
             if (character.MainHand != null && character.MainHand.Item.Stats._rawSpecialEffectData != null)
             {
@@ -1400,6 +1403,7 @@ These numbers to do not include racial bonuses.",
             List<SpecialEffect> bersMainHand, List<SpecialEffect> bersOffHand,
             Stats statsTotal)
         {
+            
             #region Initialize Triggers
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
             Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();

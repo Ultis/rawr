@@ -350,7 +350,6 @@ namespace Rawr.DPSWarr
  
             calcDeepWounds();
             DPS_TTL += DW.DPS;
-            DPS_TTL += GetWrapper<SpellDamageEffect>().DPS;
             if (_needDisplayCalcs) GCDUsage += "\nAvail: " + availGCDs.ToString();
 
             // Return result

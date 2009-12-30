@@ -28,6 +28,30 @@ namespace Rawr.DamageProcs
             FightDuration = fightDuration;
             ArmorDmgReduc = armorDmgReduc;
             CreateDictionaries();
+            if (TriggerIntervals.ContainsKey(Trigger.OffHandHit) || TriggerIntervals.ContainsKey(Trigger.MainHandHit))
+            {
+                if (c.MainHandEnchant != null)
+                {
+                    Stats.SpecialEffectEnumerator e = c.MainHandEnchant.Stats.SpecialEffects();
+                    while (e.MoveNext()) MainHandEffects.Add(e.Current);
+                }
+                if (c.MainHand != null && c.MainHand.Item != null)
+                {
+                    Stats.SpecialEffectEnumerator e = c.MainHand.Item.Stats.SpecialEffects();
+                    while (e.MoveNext()) MainHandEffects.Add(e.Current);
+                }
+                if (c.OffHandEnchant != null)
+                {
+                    Stats.SpecialEffectEnumerator e = c.OffHandEnchant.Stats.SpecialEffects();
+                    while (e.MoveNext()) OffHandEffects.Add(e.Current);
+                }
+                if (c.OffHand != null && c.OffHand.Item != null)
+                {
+                    Stats.SpecialEffectEnumerator e = c.OffHand.Item.Stats.SpecialEffects();
+                    while (e.MoveNext()) OffHandEffects.Add(e.Current);
+                }
+            }
+
         }
         #endregion
         #region Variables
@@ -48,6 +72,10 @@ namespace Rawr.DamageProcs
         public Dictionary<ItemDamageType, float> TotalDamagePerSec = new Dictionary<ItemDamageType, float>();
         public Dictionary<ItemDamageType, float> TotalNumProcs = new Dictionary<ItemDamageType, float>();
         public Dictionary<ItemDamageType, float> TotalNumProcsPerSec = new Dictionary<ItemDamageType, float>();
+
+        private List<SpecialEffect> MainHandEffects = new List<SpecialEffect>();
+        private List<SpecialEffect> OffHandEffects = new List<SpecialEffect>();
+        private bool dualWieldProcs = false;
         #endregion
         #region Functions
         /// <summary>
@@ -63,6 +91,7 @@ namespace Rawr.DamageProcs
             TotalDamagePerSec.Clear();
             TotalNumProcs.Clear();
             TotalNumProcsPerSec.Clear();
+            dualWieldProcs = false;
         }
         /// <summary>
         /// Generates the necessary Damage Multipliers and Attack Tables.
@@ -206,15 +235,51 @@ namespace Rawr.DamageProcs
             }
             return retVal;
         }
+
+        /// <summary>
+        /// Functional equivalent of calling Calculate() over all possible ItemDamageTypes, with less perf implication.  Note that you should only call this on a new object or after calling reset
+        /// </summary>
+        /// <returns>Total DPS from all procs</returns>
+        public float CalculateAll()
+        {
+            float retVal = 0f;
+
+            foreach (SpecialEffect effect in EffectsList)
+            {
+                if (!TriggerChances.ContainsKey(effect.Trigger) || effect.Stats == null) continue;
+                if (effect.Stats.ProcdPhysicalDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdPhysicalDamageMin, effect.Stats.ProcdPhysicalDamageMax, ItemDamageType.Physical);
+                if (effect.Stats.ProcdArcaneDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdArcaneDamageMin, effect.Stats.ProcdArcaneDamageMax, ItemDamageType.Arcane);
+                if (effect.Stats.ProcdHolyDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdHolyDamageMin, effect.Stats.ProcdHolyDamageMax, ItemDamageType.Holy);
+                if (effect.Stats.ProcdNatureDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdNatureDamageMin, effect.Stats.ProcdNatureDamageMax, ItemDamageType.Nature);
+                if (effect.Stats.ProcdShadowDamageMin> 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdShadowDamageMin, effect.Stats.ProcdShadowDamageMax, ItemDamageType.Shadow);
+                if (effect.Stats.ProcdFireDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdFireDamageMin, effect.Stats.ProcdFireDamageMax, ItemDamageType.Fire);
+                if (effect.Stats.ProcdFrostDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdFrostDamageMin, effect.Stats.ProcdFrostDamageMax, ItemDamageType.Frost);
+            }
+
+            return retVal;
+        }
+
         private float CalculateTotalDamagePerSecond(SpecialEffect effect, float MinDmg, float MaxDmg, ItemDamageType type) {
             float totalDamage = 0f;
             float totalDamagePerSec = 0f;
             float totalNumProcs = 0f;
             float totalNumProcsPerSec = 0f;
-
             try {
+                float triggerInterval = TriggerIntervals[effect.Trigger];
+                float triggerChance = TriggerChances[effect.Trigger];
+                if (TriggerChances.ContainsKey(Trigger.MainHandHit) && MainHandEffects.Contains(effect) && (!OffHandEffects.Contains(effect) || !dualWieldProcs))
+                {
+                    triggerInterval = TriggerIntervals[Trigger.MainHandHit];
+                    triggerChance = TriggerChances[Trigger.MainHandHit];
+                    if (OffHandEffects.Contains(effect)) dualWieldProcs = true;
+                }
+                else if (TriggerChances.ContainsKey(Trigger.OffHandHit) && OffHandEffects.Contains(effect))
+                {
+                    triggerInterval = TriggerIntervals[Trigger.OffHandHit];
+                    triggerChance = TriggerChances[Trigger.OffHandHit];
+                }
                 // Process the Effects
-                totalNumProcsPerSec = effect.GetAverageProcsPerSecond(TriggerIntervals[effect.Trigger], TriggerChances[effect.Trigger], 2, FightDuration);
+                totalNumProcsPerSec = effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, Char.MainHand.Speed, FightDuration);
                 totalNumProcs = totalNumProcsPerSec * FightDuration;
                 totalDamage = totalNumProcs * CalculateThisDamage(type, MinDmg, MaxDmg);
                 totalDamagePerSec = totalDamage / FightDuration;
@@ -267,6 +332,7 @@ namespace Rawr.DamageProcs
         // Equip: Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.
         // Hand-Mounted Pyro Rocket
         // Use: Deal 1654 to 2020 Fire damage to an enemy at long range. The rocket can only be fired once every 45 sec.
+
     }
 
     #region Combat Table
@@ -346,9 +412,9 @@ namespace Rawr.DamageProcs
 
             // Miss
             if (useSpellHit) {
-                Miss = Math.Min(1f - tableSize, Math.Max(0f, StatConversion.GetSpellMiss(LevelDelta, false) - StatS.SpellHit));
+                Miss = Math.Min(1f - tableSize, Math.Max(0f, StatConversion.GetSpellMiss(-LevelDelta, false) - StatS.SpellHit - StatConversion.GetSpellHitFromRating(StatS.HitRating)));
             } else {
-                Miss = Math.Min(1f - tableSize, Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[LevelDelta] - StatS.PhysicalHit));
+                Miss = Math.Min(1f - tableSize, Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[LevelDelta] - StatS.PhysicalHit - StatConversion.GetSpellHitFromRating(StatS.HitRating)));
             }
             tableSize += Miss;
             // Dodge
