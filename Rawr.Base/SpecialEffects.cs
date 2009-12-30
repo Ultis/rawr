@@ -1464,37 +1464,10 @@ namespace Rawr {
                     }
                 }
                 /*
+                 * Sigil of the Hanged Man
                  * Equip: Your Obliterate, Scourge Strike, and Death Strike abilities grants 73 Strength for 15 sec.  Stacks up to 3 times.
                  * 		line	"Your Obliterate, Scourge Strike, and Death Strike abilities grants 73 Strength for 15 sec.  Stacks up to 3 times."	string
-
                  * */
-                regex = new Regex(@"Your (?<ability>\w+\s*\w*), (?<ability2>\w+\s*\w*), and (?<ability3>\w+\s*\w*) (abilities )?grants (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec Stacks up to (?<stacks>\d*) times.");
-                match = regex.Match(line);
-                if (match.Success)
-                {
-                    string statName = match.Groups["stat"].Value;
-                    float amount = int.Parse(match.Groups["amount"].Value);
-                    float duration = int.Parse(match.Groups["duration"].Value);
-                    int stacks = int.Parse(match.Groups["stacks"].Value);
-                    string ability = match.Groups["ability"].Value;
-                    string ability2 = match.Groups["ability2"].Value;
-                    string ability3 = match.Groups["ability3"].Value;
-
-                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f, 1f, stacks);
-                    stats.AddSpecialEffect(SE1);
-                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 0f, 1f, stacks);
-                    SpecialEffect SE3 = EvalRegex(statName, amount, duration, ability3, 0f, 1f, stacks);
-                    if (SE1.ToString() != SE2.ToString())
-                    {
-                        stats.AddSpecialEffect(SE2);
-                    }
-                    if (SE3.ToString() != SE2.ToString() && SE3.ToString() != SE1.ToString())
-                    {
-                        stats.AddSpecialEffect(SE3);
-                    }
-                }
-                //		line	"Your Obliterate, Scourge Strike, and Death Strike abilities grants 73 Strength for 15 sec  Stacks up to 3 times."	string
-
                 regex = new Regex(@"Your (?<ability>\w+\s*\w*), (?<ability2>\w+\s*\w*), and (?<ability3>\w+\s*\w*) (abilities )?grants (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec Stacks up to (?<stacks>\d*) times.");
                 match = regex.Match(line);
                 if (match.Success)
