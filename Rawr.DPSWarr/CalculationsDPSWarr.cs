@@ -1076,11 +1076,16 @@ These numbers to do not include racial bonuses.",
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
 
                 calculatedStats.Duration = calcOpts.Duration;
-                calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);
-                calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts);
-                calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts);
+                
                 calculatedStats.AverageStats = stats;
-                calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
+                if (needsDisplayCalculations)
+                {
+                    calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);
+                    calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts);
+                    calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts);
+                    calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
+                }
+                
                 calculatedStats.combatFactors = combatFactors; 
                 calculatedStats.Rot = Rot; 
                 calculatedStats.TargetLevel = calcOpts.TargetLevel; 
@@ -1883,7 +1888,7 @@ These numbers to do not include racial bonuses.",
 
             // Deal with the deathbringer proc before doing anything with mults -- Crit and Arp are handled separately due to being capped
             statsToAdd.Strength += statsToAdd.DeathbringerProc;
-            statsToAdd.DeathbringerProc = 0f;
+            //statsToAdd.DeathbringerProc = 0f;
 
             #region Base Stats
             statsToAdd.Stamina  *= newStaMult;
