@@ -282,10 +282,14 @@ namespace Rawr.Enhance
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
-            float magmaSearingSpeed = firstPass ? (_calcOpts.Magma ? 20f : 60f) :
-                    (_calcOpts.Magma ? AbilityCooldown(EnhanceAbility.MagmaTotem) : AbilityCooldown(EnhanceAbility.SearingTotem));
             float fireNovaSpeed = firstPass ? BaseFireNovaSpeed : AbilityCooldown(EnhanceAbility.FireNova);
-            fireTotemUptime = _calcOpts.Magma ? 20f / magmaSearingSpeed : 60f / magmaSearingSpeed;
+            if (_calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem))
+                fireTotemUptime = firstPass ? 1.0f : 20f / AbilityCooldown(EnhanceAbility.MagmaTotem);
+            else if (_calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
+                fireTotemUptime = firstPass ? 1.0f : 60f / AbilityCooldown(EnhanceAbility.SearingTotem);
+            else if (_calcOpts.PriorityInUse(EnhanceAbility.RefreshTotems)) // if no Searing or Magma totem use refresh of Flametongue totem.
+                fireTotemUptime = firstPass ? 1.0f : 300f / AbilityCooldown(EnhanceAbility.RefreshTotems); 
+            
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.Enhance4T7;
             float edCritBonus = .03f * _talents.ElementalDevastation;
@@ -360,7 +364,7 @@ namespace Rawr.Enhance
                 staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
                 flameTongueHitsPerSecond = (_calcOpts.MainhandImbue == "Flametongue" ? HitsPerSMH : 0f) +
                     ((_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1) ? HitsPerSOH : 0f);
-                spellAttacksPerSec = (1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond + flameTongueHitsPerSecond)
+                spellAttacksPerSec = (1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond) // + flameTongueHitsPerSecond)
                                    * (1f - chanceSpellMiss);
                 float couldCritSpellsPerS = spellAttacksPerSec - staticShocksPerSecond; // LS procs from Static Shock cannot crit
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);

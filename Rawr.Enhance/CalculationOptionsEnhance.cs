@@ -37,6 +37,7 @@ namespace Rawr.Enhance
         private bool _useMana = true;
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList = SetPriorityDefaults();
+        private List<KeyValuePair<EnhanceAbility, Priority>> _sortedList;
 
         #region Getter/Setter
         public string BossName { get { return _bossName; } set { _bossName = value; OnPropertyChanged("BossName"); } }
@@ -107,11 +108,16 @@ namespace Rawr.Enhance
 
         public int GetAbilityPriorityValue(EnhanceAbility abilityType)
         {
-            Priority p = new Priority();
-            _priorityList.TryGetValue(abilityType, out p);
-            if (p == null)
-                return -1;
-            return p.Checked ? p.PriorityValue : 0;  // return 0 if priority not in use
+            int priority = 0;
+            foreach (KeyValuePair<EnhanceAbility, Priority> kvp in _sortedList)
+            {
+                Priority p = kvp.Value;
+                if (p.Checked && p.PriorityValue > 0) 
+                    priority++;
+                if (p.AbilityType == abilityType)
+                    return p.Checked ? priority : 0;
+            }
+            return -1;
         }
 
         public void SetAbilityPriority(EnhanceAbility abilityType, Priority priority)
@@ -133,7 +139,18 @@ namespace Rawr.Enhance
             return activePriorities;
         }
 
-        private static SerializableDictionary<EnhanceAbility, Priority> SetPriorityDefaults()
+        public void SortPriorities()
+        {
+            _sortedList = new List<KeyValuePair<EnhanceAbility, Priority>>(_priorityList);
+            _sortedList.Sort(
+                delegate(KeyValuePair<EnhanceAbility, Priority> firstPair, KeyValuePair<EnhanceAbility, Priority> nextPair)
+                {
+                    return firstPair.Value.PriorityValue.CompareTo(nextPair.Value.PriorityValue);
+                }
+            );
+        }
+
+        public static SerializableDictionary<EnhanceAbility, Priority> SetPriorityDefaults()
         {
             SerializableDictionary<EnhanceAbility, Priority> priorityList = new SerializableDictionary<EnhanceAbility, Priority>();
             if (priorityList.Count == 0)

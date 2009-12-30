@@ -36,6 +36,7 @@ namespace Rawr.Enhance
             float fireElementalCD = _talents.GlyphofFireElementalTotem ? 300f : 600f;
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
 
+            _calcOpts.SortPriorities(); // call sort before processing priorities
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0 && _talents.ShamanisticRage == 1)
                 abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, 1.5f, 0f, priority, false, true));

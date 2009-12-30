@@ -351,7 +351,7 @@ namespace Rawr.Enhance
             _loadingCalculationOptions = true;
             btnUp.Enabled = false;
             btnDown.Enabled = false;
-            _calcOpts.PriorityList = new SerializableDictionary<EnhanceAbility, Priority>();
+            _calcOpts.PriorityList = CalculationOptionsEnhance.SetPriorityDefaults();
             LoadPriorities();
             _loadingCalculationOptions = false;
             Character.OnCalculationsInvalidated();
