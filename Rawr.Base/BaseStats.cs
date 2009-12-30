@@ -732,5 +732,43 @@ namespace Rawr
                 return S;
             }
         }
+
+        public static float GetRacialExpertise(Character character, ItemSlot weaponSlot)
+        {
+            ItemType weaponType;
+            CharacterRace characterRace = character.Race;
+
+            if (weaponSlot == ItemSlot.MainHand && character.MainHand != null)
+                weaponType = character.MainHand.Item.Type;
+            else if (weaponSlot == ItemSlot.OffHand && character.OffHand != null)
+                weaponType = character.OffHand.Item.Type;
+            else
+                return 0.0f;
+
+            switch (characterRace)
+            {
+                case CharacterRace.Human:
+                    if (weaponType == ItemType.OneHandSword || weaponType == ItemType.TwoHandSword
+                        || weaponType == ItemType.OneHandMace || weaponType == ItemType.TwoHandMace)
+                    {
+                        return 3.0f;
+                    }
+                    break;
+                case CharacterRace.Dwarf:
+                    if (weaponType == ItemType.OneHandMace || weaponType == ItemType.TwoHandMace)
+                    {
+                        return 5.0f;
+                    }
+                    break;
+                case CharacterRace.Orc:
+                    if (weaponType == ItemType.OneHandAxe || weaponType == ItemType.TwoHandAxe)
+                    {
+                        return 5.0f;
+                    }
+                    break;
+            }
+
+            return 0.0f;
+        }
     }
 }

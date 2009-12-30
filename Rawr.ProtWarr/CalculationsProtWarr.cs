@@ -463,34 +463,6 @@ threat and limited threat scaled by the threat scale.",
             return GetCharacterStats(character, additionalItem, options);
         }
 
-        private float GetRacialExpertiseFromWeaponType(Character character) {
-            if (character == null
-                || character.Race == null
-                || character.MainHand == null
-                || character.MainHand.Item == null
-                || character.MainHand.Item.Type == null) { return 0f; }
-            ItemType weapon = character.MainHand.Item.Type;
-            CharacterRace r = character.Race;
-            if (weapon != ItemType.None) {
-                if (r == CharacterRace.Human) {
-                    if (weapon == ItemType.OneHandSword || weapon == ItemType.OneHandMace
-                        || weapon == ItemType.TwoHandSword || weapon == ItemType.TwoHandMace)
-                    {
-                        return 3f;
-                    }
-                } else if (r == CharacterRace.Dwarf) {
-                    if (weapon == ItemType.OneHandMace || weapon == ItemType.TwoHandMace) {
-                        return 5f;
-                    }
-                } else if (r == CharacterRace.Orc) {
-                    if (weapon == ItemType.OneHandAxe || weapon == ItemType.TwoHandAxe) {
-                        return 5f;
-                    }
-                }
-            }
-            return 0f;
-        }
-
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtWarr options)
         {
             WarriorTalents talents = character.WarriorTalents;
@@ -504,6 +476,7 @@ threat and limited threat scaled by the threat scale.",
 
             // Race Stats
             Stats statsRace  = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
+            statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
             statsTotal.Accumulate(statsRace);
 
             // Talents
@@ -538,9 +511,6 @@ threat and limited threat scaled by the threat scale.",
 
             };
             statsTotal.Accumulate(statsTalents);
-
-            // Racial Expertise Bonuses
-            statsTotal.Expertise += GetRacialExpertiseFromWeaponType(character);
 
             // Base Stats
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
