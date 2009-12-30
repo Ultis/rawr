@@ -260,9 +260,9 @@
             this.groupBox5.Controls.Add(this.label1);
             this.groupBox5.Controls.Add(this.txtFightLength);
             this.groupBox5.Controls.Add(this.label2);
-            this.groupBox5.Location = new System.Drawing.Point(6, 6);
+            this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(280, 75);
+            this.groupBox5.Size = new System.Drawing.Size(286, 69);
             this.groupBox5.TabIndex = 55;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Settings";
@@ -289,9 +289,9 @@
             // 
             this.groupBox4.Controls.Add(this.tbOverhealing_Label);
             this.groupBox4.Controls.Add(this.tbSurvival);
-            this.groupBox4.Location = new System.Drawing.Point(6, 488);
+            this.groupBox4.Location = new System.Drawing.Point(3, 450);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(280, 85);
+            this.groupBox4.Size = new System.Drawing.Size(286, 85);
             this.groupBox4.TabIndex = 55;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Miscellaneous";
@@ -310,7 +310,7 @@
             this.tbSurvival.Location = new System.Drawing.Point(6, 32);
             this.tbSurvival.Maximum = 100;
             this.tbSurvival.Name = "tbSurvival";
-            this.tbSurvival.Size = new System.Drawing.Size(268, 45);
+            this.tbSurvival.Size = new System.Drawing.Size(274, 45);
             this.tbSurvival.TabIndex = 4;
             this.tbSurvival.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
@@ -321,9 +321,9 @@
             this.groupBox3.Controls.Add(this.label14);
             this.groupBox3.Controls.Add(this.txtCleanse);
             this.groupBox3.Controls.Add(this.label16);
-            this.groupBox3.Location = new System.Drawing.Point(6, 407);
+            this.groupBox3.Location = new System.Drawing.Point(3, 369);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(280, 75);
+            this.groupBox3.Size = new System.Drawing.Size(286, 75);
             this.groupBox3.TabIndex = 53;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Utility";
@@ -345,9 +345,9 @@
             this.groupBox2.Controls.Add(this.tbBurst_Label);
             this.groupBox2.Controls.Add(this.txtInnervates);
             this.groupBox2.Controls.Add(this.chkManaTide);
-            this.groupBox2.Location = new System.Drawing.Point(6, 244);
+            this.groupBox2.Location = new System.Drawing.Point(3, 206);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(280, 157);
+            this.groupBox2.Size = new System.Drawing.Size(286, 157);
             this.groupBox2.TabIndex = 28;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana";
@@ -374,10 +374,10 @@
             // 
             // tbBurst
             // 
-            this.tbBurst.Location = new System.Drawing.Point(7, 104);
+            this.tbBurst.Location = new System.Drawing.Point(6, 104);
             this.tbBurst.Maximum = 100;
             this.tbBurst.Name = "tbBurst";
-            this.tbBurst.Size = new System.Drawing.Size(267, 45);
+            this.tbBurst.Size = new System.Drawing.Size(274, 45);
             this.tbBurst.TabIndex = 0;
             this.tbBurst.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
@@ -399,9 +399,9 @@
             this.groupBox1.Controls.Add(this.cboSustStyle);
             this.groupBox1.Controls.Add(this.cboBurstStyle);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(6, 86);
+            this.groupBox1.Location = new System.Drawing.Point(3, 78);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(280, 152);
+            this.groupBox1.Size = new System.Drawing.Size(286, 122);
             this.groupBox1.TabIndex = 27;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Healing";

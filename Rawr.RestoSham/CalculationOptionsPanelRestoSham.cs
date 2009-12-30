@@ -45,6 +45,7 @@ namespace Rawr.RestoSham
 			cboHeroism.Text = options.Heroism.ToString();
             txtInnervates.Text = options.Innervates.ToString();
             cboTargets.Text = options.Targets.ToString();
+            txtLatency.Text = options.Latency.ToString();
             #region The track bars
 			tbBurst.Value = (Int32)options.BurstPercentage;
 			UpdateTrackBarLabel(tbBurst);
