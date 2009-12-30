@@ -1508,7 +1508,7 @@ These numbers to do not include racial bonuses.",
             else if (tempArPenEffects.Count == 1)
             { //Only one, add it to
                 SpecialEffect effect = tempArPenEffects[0];
-                float uptime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], combatFactors._c_mhItemSpeed, (calcOpts.SE_UseDur ? calcOpts.Duration : 0f)) * tempArPenEffectScales[0];
+                float uptime = effect.GetAverageStackSize(tempArPenEffectIntervals[0], tempArPenEffectChances[0], combatFactors._c_mhItemSpeed, (calcOpts.SE_UseDur ? calcOpts.Duration : 0f)) * tempArPenEffectScales[0];
                 tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc);
                 tempArPenRatingUptimes.Add(uptime);
                 tempArPenRatings.Add(0.0f);
@@ -1516,20 +1516,15 @@ These numbers to do not include racial bonuses.",
             }
             else if (tempArPenEffects.Count > 1)
             {
-                float[] intervals = new float[tempArPenEffects.Count];
-                float[] chances = new float[tempArPenEffects.Count];
-                float[] offset = new float[tempArPenEffects.Count];
                 for (int i = 0; i < tempArPenEffects.Count; i++)
                 {
-                    intervals[i] = triggerIntervals[tempArPenEffects[i].Trigger];
-                    chances[i] = triggerChances[tempArPenEffects[i].Trigger];
                     if (tempArPenEffects[i].Stats.DeathbringerProc > 0) tempArPenEffects[i].Stats.ArmorPenetrationRating = tempArPenEffects[i].Stats.DeathbringerProc;
                 }
                 //if (tempArPenEffects.Count >= 2)
                 //{
                 //    offset[0] = calcOpts.TrinketOffset;
                 //}
-                WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, tempArPenEffectScales.ToArray(), combatFactors._c_mhItemSpeed, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
+                WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), tempArPenEffectIntervals.ToArray(), tempArPenEffectChances.ToArray(), new float[tempArPenEffectChances.Count], tempArPenEffectScales.ToArray(), combatFactors._c_mhItemSpeed, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
                 for (int i = 0; i < arPenWeights.Length; i++)
                 {
                     tempArPenRatings.Add(arPenWeights[i].Value);
