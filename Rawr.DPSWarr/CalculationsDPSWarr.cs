@@ -374,6 +374,25 @@ These numbers to do not include racial bonuses.",
         internal static bool HidingBadStuff_Spl { get; set; }
         internal static bool HidingBadStuff_PvP { get; set; }
 
+        internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> RelevantTriggers {
+            get {
+                return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                    Trigger.Use,
+                    Trigger.MeleeCrit,
+                    Trigger.MeleeHit,
+                    Trigger.PhysicalCrit,
+                    Trigger.PhysicalHit,
+                    Trigger.DoTTick,
+                    Trigger.DamageDone,
+                    Trigger.DamageTaken,
+                    Trigger.DamageAvoided,
+                    Trigger.HSorSLHit,
+                });
+            }
+            set { _RelevantTriggers = value; }
+        }
+
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
                 // Base Stats
@@ -468,17 +487,8 @@ These numbers to do not include racial bonuses.",
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if ((effect.Trigger == Trigger.Use ||
-                     effect.Trigger == Trigger.MeleeCrit ||
-                     effect.Trigger == Trigger.MeleeHit ||
-                     effect.Trigger == Trigger.PhysicalCrit ||
-                     effect.Trigger == Trigger.PhysicalHit ||
-                     effect.Trigger == Trigger.DoTTick ||
-                     effect.Trigger == Trigger.DamageDone ||
-                     effect.Trigger == Trigger.DamageTaken ||
-                     effect.Trigger == Trigger.DamageAvoided ||
-                     effect.Trigger == Trigger.HSorSLHit)
-                    && HasRelevantStats(effect.Stats)) {
+                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
+                {
                     relevantStats.AddSpecialEffect(effect);
                 }
             }
@@ -576,16 +586,8 @@ These numbers to do not include racial bonuses.",
                 stats.BonusRageOnCrit
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageTaken ||
-                    effect.Trigger == Trigger.DamageAvoided ||
-                    effect.Trigger == Trigger.HSorSLHit) {
+                if (RelevantTriggers.Contains(effect.Trigger))
+                {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;
                 }
@@ -605,16 +607,7 @@ These numbers to do not include racial bonuses.",
                 retVal = true;
             }
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageTaken ||
-                    effect.Trigger == Trigger.DamageAvoided ||
-                    effect.Trigger == Trigger.HSorSLHit)
+                if (RelevantTriggers.Contains(effect.Trigger))
                 {
                     retVal |= HasSurvivabilityStats(effect.Stats);
                     if (retVal) break;
@@ -625,9 +618,10 @@ These numbers to do not include racial bonuses.",
 
         private bool HasIgnoreStats(Stats stats) {
             if (!HidingBadStuff) { return false; }
-            return (
+            bool retVal = false;
+            retVal = (
                 // Remove Spellcasting Stuff
-                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit
+                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.ManaRestore + stats.Spirit
                                     + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
                                     + stats.SpellPenetration + stats.BonusManaMultiplier
                                     : 0f)
@@ -638,6 +632,17 @@ These numbers to do not include racial bonuses.",
                 // Remove PvP Items
                 + (HidingBadStuff_PvP ? stats.Resilience : 0f)
                 ) > 0;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                //if (RelevantTriggers.Contains(effect.Trigger))
+                //{
+                    retVal |= !RelevantTriggers.Contains(effect.Trigger);
+                    retVal |= HasIgnoreStats(effect.Stats);
+                    if (retVal) break;
+                //}
+            }
+
+            return retVal;
         }
 
         public override bool IsItemRelevant(Item item) {
