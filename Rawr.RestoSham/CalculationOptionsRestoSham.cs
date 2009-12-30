@@ -48,32 +48,38 @@ namespace Rawr.RestoSham
 		/// Whether a Mana Tide totem is placed every time the cooldown is up.
 		/// </summary>
 		public bool ManaTideEveryCD = true;
-		/// <summary>
+
+        /// <summary>
+        /// Count of Innervates you get.
+        /// </summary>
+        public float Innervates = 0f;
+
+        /// <summary>
 		/// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
 		/// </summary>
 		public bool WaterShield = true;
 
 		/// <summary>
-		/// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-		/// </summary>
-		public bool TankHeal = true;
-
-		/// <summary>
-		/// Interval of time between Earth Shield casts, in seconds.  Minimum in Calculations of 32.
+		/// Earth shield use.
 		/// </summary>
 		public bool EarthShield = true;
 
 		/// <summary>
 		/// Your style of healing.
 		/// </summary>
-		public string BurstStyle = "CH Spam";
+		public string BurstStyle = "RT+HW";
 
 		/// <summary>
 		/// Your style of healing.
 		/// </summary>
-		public string SustStyle = "CH Spam";
+		public string SustStyle = "RT+CH";
 
-		/// <summary>
+        /// <summary>
+        /// Targets.
+        /// </summary>
+        public string Targets = "Raid";
+
+        /// <summary>
 		/// Will you or someone else use heroism?
 		/// </summary>
 		public string Heroism = "Me";
@@ -87,6 +93,11 @@ namespace Rawr.RestoSham
 		/// The percentage of fight you are active.
 		/// </summary>
 		public float Decurse = 0f;
+
+        /// <summary>
+        /// The latency in milliseconds.
+        /// </summary>
+        public float Latency = 60f;
 
 		/// <summary>
 		/// The percentage of usefulness survival is to you.

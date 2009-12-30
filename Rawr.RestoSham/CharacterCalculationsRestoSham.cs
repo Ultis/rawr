@@ -54,8 +54,6 @@ namespace Rawr.RestoSham
         public float SustainedHPS { get; set; }
         public float MUPS { get; set; }
         public float Survival { get; set; }
-        public float HealPerSec { get; set; }
-        public float CritPerSec { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {

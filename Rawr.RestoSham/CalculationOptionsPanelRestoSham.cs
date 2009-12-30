@@ -18,9 +18,11 @@ namespace Rawr.RestoSham
 		{
 			InitializeComponent();
 
-			txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
-			txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
-			tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
+            txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
+            txtLatency.Tag = new NumericField("Latency", 0f, 500f, true);
+            txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
+            txtInnervates.Tag = new NumericField("Innervates", 0f, 100f, true);
+            tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
 			tbSurvival.Tag = new NumericField("SurvivalPerc", 0f, 100f, true);
 		}
 
@@ -34,15 +36,16 @@ namespace Rawr.RestoSham
 
 			#region General tab page:
 			txtFightLength.Text = options.FightLength.ToString();
-			chkManaTide.Checked = options.ManaTideEveryCD;
+            chkManaTide.Checked = options.ManaTideEveryCD;
 			chkWaterShield.Checked = options.WaterShield;
-			chkMT.Checked = options.TankHeal;
 			chkEarthShield.Checked = options.EarthShield;
 			txtCleanse.Text = options.Decurse.ToString();
 			cboBurstStyle.Text = options.BurstStyle.ToString();
 			cboSustStyle.Text = options.SustStyle.ToString();
 			cboHeroism.Text = options.Heroism.ToString();
-			#region The track bars
+            txtInnervates.Text = options.Innervates.ToString();
+            cboTargets.Text = options.Targets.ToString();
+            #region The track bars
 			tbBurst.Value = (Int32)options.BurstPercentage;
 			UpdateTrackBarLabel(tbBurst);
 			tbSurvival.Value = (Int32)options.SurvivalPerc;
@@ -160,15 +163,6 @@ namespace Rawr.RestoSham
 				Character.OnCalculationsInvalidated();
 			}
 		}
-
-		private void chkMT_CheckedChanged(object sender, EventArgs e)
-		{
-			if (!_bLoading)
-			{
-				this["TankHeal"] = chkMT.Checked;
-				Character.OnCalculationsInvalidated();
-			}
-		}
 		#endregion
 
 		#region Trackbar Handling
@@ -245,7 +239,15 @@ namespace Rawr.RestoSham
 				Character.OnCalculationsInvalidated();
 			}
 		}
-		#endregion
+        private void cboDamageReceivers_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["Targets"] = cboTargets.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        #endregion
 
 
 	}
