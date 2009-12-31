@@ -249,7 +249,7 @@ namespace Rawr.ProtWarr
             modelCrits  += damageShield.CritPercentage * attackerHits;
 
             // Deep Wounds
-            AbilityModel deepWounds = Abilities[Ability.DamageShield];
+            AbilityModel deepWounds = Abilities[Ability.DeepWounds];
             modelThreat += deepWounds.Threat * modelCrits;
             modelDamage += deepWounds.Damage * modelCrits;
 
