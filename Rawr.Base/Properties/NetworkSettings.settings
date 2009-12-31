@@ -81,7 +81,7 @@
       <Value Profile="(Default)">http://{0}.wowhead.com/?items&amp;filter={1}</Value>
     </Setting>
     <Setting Name="ArmoryTalentIconURI" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}</Value>
+      <Value Profile="(Default)">http://www.wowarmory.com/wow-icons/_images/_talents31x31/{0}</Value>
     </Setting>
     <Setting Name="QuestWowheadURI" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://www.wowhead.com/?quest={0}&amp;xml</Value>

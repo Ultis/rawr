@@ -125,7 +125,7 @@ namespace Rawr
         }
 
         private Image _icon;
-        private void UpdateIcon() { _icon = ItemIcons.GetTalentIcon(_talentTree.CharacterClass, _talentTree.TreeName, _talentName + (_currentRank == 0 ? "-off" : ""), (_currentRank == 0 ? "grey/" : "") + _iconName + ".gif"); }
+        private void UpdateIcon() { _icon = ItemIcons.GetTalentIcon(_talentTree.CharacterClass, _talentTree.TreeName, _talentName + (_currentRank == 0 ? "-off" : ""), (_currentRank == 0 ? "grey/" : "") + _iconName + ".jpg"); }
 
         private Image _overlay;
         private void UpdateOverlay()
@@ -167,7 +167,11 @@ namespace Rawr
             else if (_talentTree.TotalPoints() >= _row * 5 && (_prereq == null || _prereq._currentRank == _prereq._maxRank)) brush = Brushes.Lime;
             else brush = Brushes.White;
 
-            g.DrawImageUnscaled(_icon, x, y);
+            //It seems that the recent armory update changed the size of the talent icons from 43x43 down to 31x31!
+            //This results in talent icons that are too small for the current layout :/
+            //The simplest fix is to scale the (new) talent icons from 31x31 up to 43x43 via DrawImage().
+            //g.DrawImageUnscaled(_icon, x, y);
+            g.DrawImage(_icon, x, y, 43, 43);
             g.DrawImageUnscaled(_overlay, x, y);
             g.DrawString(rank, font, brush, x + 31, y + 39);
 

@@ -487,7 +487,7 @@ namespace Rawr
                     string imageName = icon;
                     fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName.Replace("/", "_"));
                     uri = string.Format(NetworkSettingsProvider.ArmoryTalentIconURI, icon);
-                    DownloadFile(uri, fullPathToSave, CONTENT_GIF);
+                    DownloadFile(uri, fullPathToSave, CONTENT_JPG);
                 } else {
                     //codepath = "icon == null";
                     string imageName = talentName + ".jpg";

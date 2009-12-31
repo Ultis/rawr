@@ -440,7 +440,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             try{
                 _icon = ItemIconsPet.GetTalentIcon(CharacterClass.Hunter, "Pet",
                     Name + (Value == 0 ? "-off" : ""),
-                    (Value == 0 ? "grey/" : "") + Icon + ".gif");
+                    (Value == 0 ? "grey/" : "") + Icon + ".jpg");
             }catch(Exception ex){
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error setting the Icon",
                     ex.Message, "UpdateIcon()", "No Additional Info", ex.StackTrace);
