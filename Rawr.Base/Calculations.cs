@@ -786,38 +786,39 @@ namespace Rawr
 		{
 			ClearCache();
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
-			CharacterCalculationsBase calcsEquipped = null;
-			CharacterCalculationsBase calcsUnequipped = null;
-            // only need to get unequipped value once not every time around the loop
-            Character charUnequipped = character.Clone();
-            charUnequipped.SetEnchantBySlot(slot, null);
-            calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
-            foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
-			{
-				bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
-				if (isEquipped || !equippedOnly) {
-					Character charEquipped = character.Clone();
-					charEquipped.SetEnchantBySlot(slot, enchant);
-					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
-				}
-				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
-				enchantCalc.Name = enchant.Name;
-				enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None, 
-					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null, 
-                    false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
-                    0, 0, ItemDamageType.Physical, 0, null);
-				enchantCalc.Item.Name = enchant.Name;
-				enchantCalc.Item.Stats = enchant.Stats;
-				enchantCalc.Equipped = isEquipped;
-				enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-				float[] subPoints = new float[calcsEquipped.SubPoints.Length];
-				for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
-				{
-					subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
-				}
-				enchantCalc.SubPoints = subPoints;
-				enchantCalcs.Add(enchantCalc);
-			}
+            if (!equippedOnly)
+            {
+                CharacterCalculationsBase calcsEquipped = null;
+                CharacterCalculationsBase calcsUnequipped = null;
+                // only need to get unequipped value once not every time around the loop
+                Character charUnequipped = character.Clone();
+                charUnequipped.SetEnchantBySlot(slot, null);
+                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
+                {
+                    bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
+                    Character charEquipped = character.Clone();
+                    charEquipped.SetEnchantBySlot(slot, enchant);
+                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                    ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
+                    enchantCalc.Name = enchant.Name;
+                    enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
+                        -1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null,
+                        false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                        0, 0, ItemDamageType.Physical, 0, null);
+                    enchantCalc.Item.Name = enchant.Name;
+                    enchantCalc.Item.Stats = enchant.Stats;
+                    enchantCalc.Equipped = isEquipped;
+                    enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+                    }
+                    enchantCalc.SubPoints = subPoints;
+                    enchantCalcs.Add(enchantCalc);
+                }
+            }
 			return enchantCalcs;
 		}
 

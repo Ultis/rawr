@@ -197,9 +197,9 @@ namespace Rawr
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {
-                    return model.IsEnchantRelevant(enchant) &&
-                        (enchant.FitsInSlot(slot, character) || slot == ItemSlot.None)
-                        || enchant.Slot == ItemSlot.None;
+                    return enchant.Slot == ItemSlot.None ||
+                        model.IsEnchantRelevant(enchant) &&
+                        (slot == ItemSlot.None || enchant.FitsInSlot(slot, character));
                 }
             ));
         }
@@ -216,8 +216,8 @@ namespace Rawr
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {
-                    return (enchant.FitsInSlot(slot, character) || slot == ItemSlot.None)
-                        || enchant.Slot == ItemSlot.None;
+                    return enchant.Slot == ItemSlot.None ||
+                        (slot == ItemSlot.None || enchant.FitsInSlot(slot, character));
                 }
             ));
         }
@@ -232,10 +232,10 @@ namespace Rawr
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {
-                    return ((model.IsEnchantRelevant(enchant) &&
-                        (enchant.FitsInSlot(slot, character) || slot == ItemSlot.None) || enchant.Slot == ItemSlot.None)
-                        && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
-                        || enchant.Id == 0;
+                    return enchant.Id == 0 || 
+                        ((enchant.Slot == ItemSlot.None || 
+                        model.IsEnchantRelevant(enchant) && (slot == ItemSlot.None || enchant.FitsInSlot(slot, character)))
+                        && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()));
                 }
             ));
         }
