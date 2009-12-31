@@ -30,16 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.trkJoW = new System.Windows.Forms.TrackBar();
-            this.trkReplenishment = new System.Windows.Forms.TrackBar();
             this.chbUseInfernal = new System.Windows.Forms.CheckBox();
             this.lblAfflictionEffects = new System.Windows.Forms.Label();
             this.chkPTRMode = new System.Windows.Forms.CheckBox();
             this.updAfflictionEffects = new System.Windows.Forms.NumericUpDown();
+            this.updLatency = new System.Windows.Forms.NumericUpDown();
             this.tabEvents = new System.Windows.Forms.TabPage();
             this.textEvents = new System.Windows.Forms.TextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabFight = new System.Windows.Forms.TabPage();
+            this.updJudgementOfWisdom = new System.Windows.Forms.NumericUpDown();
+            this.updReplenishment = new System.Windows.Forms.NumericUpDown();
             this.updFightLength = new System.Windows.Forms.NumericUpDown();
             this.lblDelay = new System.Windows.Forms.Label();
             this.lblJoW = new System.Windows.Forms.Label();
@@ -56,43 +57,18 @@
             this.tabPet = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.cbPet = new System.Windows.Forms.ComboBox();
-            this.updLatency = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updAfflictionEffects)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updLatency)).BeginInit();
             this.tabEvents.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabFight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updJudgementOfWisdom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updFightLength)).BeginInit();
             this.tabChar.SuspendLayout();
             this.gbSpellPriority.SuspendLayout();
             this.tabPet.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updLatency)).BeginInit();
             this.SuspendLayout();
-            // 
-            // trkJoW
-            // 
-            this.trkJoW.BackColor = System.Drawing.SystemColors.Window;
-            this.trkJoW.Location = new System.Drawing.Point(9, 308);
-            this.trkJoW.Maximum = 100;
-            this.trkJoW.Name = "trkJoW";
-            this.trkJoW.Size = new System.Drawing.Size(270, 45);
-            this.trkJoW.TabIndex = 66;
-            this.trkJoW.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkJoW, "Uptime of Judgment of Wisdom on Target.");
-            this.trkJoW.Scroll += new System.EventHandler(this.trkJoW_Scroll);
-            // 
-            // trkReplenishment
-            // 
-            this.trkReplenishment.BackColor = System.Drawing.SystemColors.Window;
-            this.trkReplenishment.Location = new System.Drawing.Point(9, 260);
-            this.trkReplenishment.Maximum = 100;
-            this.trkReplenishment.Name = "trkReplenishment";
-            this.trkReplenishment.Size = new System.Drawing.Size(270, 45);
-            this.trkReplenishment.TabIndex = 64;
-            this.trkReplenishment.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkReplenishment, "How much uptime do you expect on Replenishment?");
-            this.trkReplenishment.Scroll += new System.EventHandler(this.trkReplenishment_Scroll);
             // 
             // chbUseInfernal
             // 
@@ -110,7 +86,7 @@
             // lblAfflictionEffects
             // 
             this.lblAfflictionEffects.AutoSize = true;
-            this.lblAfflictionEffects.Location = new System.Drawing.Point(6, 69);
+            this.lblAfflictionEffects.Location = new System.Drawing.Point(6, 89);
             this.lblAfflictionEffects.Name = "lblAfflictionEffects";
             this.lblAfflictionEffects.Size = new System.Drawing.Size(148, 13);
             this.lblAfflictionEffects.TabIndex = 73;
@@ -120,7 +96,7 @@
             // chkPTRMode
             // 
             this.chkPTRMode.AutoSize = true;
-            this.chkPTRMode.Location = new System.Drawing.Point(9, 104);
+            this.chkPTRMode.Location = new System.Drawing.Point(9, 556);
             this.chkPTRMode.Name = "chkPTRMode";
             this.chkPTRMode.Size = new System.Drawing.Size(77, 17);
             this.chkPTRMode.TabIndex = 75;
@@ -131,7 +107,7 @@
             // 
             // updAfflictionEffects
             // 
-            this.updAfflictionEffects.Location = new System.Drawing.Point(179, 69);
+            this.updAfflictionEffects.Location = new System.Drawing.Point(180, 87);
             this.updAfflictionEffects.Maximum = new decimal(new int[] {
             15,
             0,
@@ -148,6 +124,27 @@
             0,
             0});
             this.updAfflictionEffects.ValueChanged += new System.EventHandler(this.updAfflictionEffects_ValueChanged);
+            // 
+            // updLatency
+            // 
+            this.updLatency.Location = new System.Drawing.Point(180, 187);
+            this.updLatency.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.updLatency.Name = "updLatency";
+            this.updLatency.Size = new System.Drawing.Size(100, 20);
+            this.updLatency.TabIndex = 78;
+            this.updLatency.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.toolTip1.SetToolTip(this.updLatency, "Change this value to adjust how much lag from latency, finger twitching and gener" +
+                    "al brain farts you expect to have.");
+            this.updLatency.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.updLatency.ValueChanged += new System.EventHandler(this.updLatency_ValueChanged);
             // 
             // tabEvents
             // 
@@ -190,16 +187,16 @@
             // 
             // tabFight
             // 
+            this.tabFight.Controls.Add(this.updJudgementOfWisdom);
+            this.tabFight.Controls.Add(this.updReplenishment);
             this.tabFight.Controls.Add(this.updLatency);
             this.tabFight.Controls.Add(this.updAfflictionEffects);
             this.tabFight.Controls.Add(this.updFightLength);
             this.tabFight.Controls.Add(this.chkPTRMode);
             this.tabFight.Controls.Add(this.lblAfflictionEffects);
             this.tabFight.Controls.Add(this.lblDelay);
-            this.tabFight.Controls.Add(this.trkJoW);
             this.tabFight.Controls.Add(this.lblJoW);
             this.tabFight.Controls.Add(this.lblManaPotions);
-            this.tabFight.Controls.Add(this.trkReplenishment);
             this.tabFight.Controls.Add(this.cbManaAmt);
             this.tabFight.Controls.Add(this.lblReplenishment);
             this.tabFight.Controls.Add(this.lblTargetLevel);
@@ -213,11 +210,41 @@
             this.tabFight.Text = "Fight";
             this.tabFight.UseVisualStyleBackColor = true;
             // 
+            // updJudgementOfWisdom
+            // 
+            this.updJudgementOfWisdom.DecimalPlaces = 2;
+            this.updJudgementOfWisdom.Location = new System.Drawing.Point(180, 287);
+            this.updJudgementOfWisdom.Name = "updJudgementOfWisdom";
+            this.updJudgementOfWisdom.Size = new System.Drawing.Size(99, 20);
+            this.updJudgementOfWisdom.TabIndex = 80;
+            this.updJudgementOfWisdom.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.updJudgementOfWisdom.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.updJudgementOfWisdom.ValueChanged += new System.EventHandler(this.updJudgementOfWisdom_ValueChanged);
+            // 
+            // updReplenishment
+            // 
+            this.updReplenishment.DecimalPlaces = 2;
+            this.updReplenishment.Location = new System.Drawing.Point(180, 237);
+            this.updReplenishment.Name = "updReplenishment";
+            this.updReplenishment.Size = new System.Drawing.Size(99, 20);
+            this.updReplenishment.TabIndex = 79;
+            this.updReplenishment.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.updReplenishment.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.updReplenishment.ValueChanged += new System.EventHandler(this.updReplenishment_ValueChanged);
+            // 
             // updFightLength
             // 
-            this.updFightLength.Location = new System.Drawing.Point(179, 144);
+            this.updFightLength.Location = new System.Drawing.Point(180, 137);
             this.updFightLength.Maximum = new decimal(new int[] {
-            10,
+            300,
             0,
             0,
             0});
@@ -226,7 +253,7 @@
             this.updFightLength.TabIndex = 76;
             this.updFightLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.updFightLength.Value = new decimal(new int[] {
-            5,
+            300,
             0,
             0,
             0});
@@ -235,7 +262,7 @@
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(6, 195);
+            this.lblDelay.Location = new System.Drawing.Point(6, 189);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(113, 13);
             this.lblDelay.TabIndex = 70;
@@ -244,11 +271,11 @@
             // lblJoW
             // 
             this.lblJoW.AutoSize = true;
-            this.lblJoW.Location = new System.Drawing.Point(6, 292);
+            this.lblJoW.Location = new System.Drawing.Point(8, 287);
             this.lblJoW.Name = "lblJoW";
-            this.lblJoW.Size = new System.Drawing.Size(126, 13);
+            this.lblJoW.Size = new System.Drawing.Size(166, 13);
             this.lblJoW.TabIndex = 65;
-            this.lblJoW.Text = "% Judgement of Wisdom:";
+            this.lblJoW.Text = "Judgement of Wisdom uptime (%):";
             // 
             // lblManaPotions
             // 
@@ -279,11 +306,11 @@
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(6, 244);
+            this.lblReplenishment.Location = new System.Drawing.Point(6, 239);
             this.lblReplenishment.Name = "lblReplenishment";
-            this.lblReplenishment.Size = new System.Drawing.Size(91, 13);
+            this.lblReplenishment.Size = new System.Drawing.Size(131, 13);
             this.lblReplenishment.TabIndex = 63;
-            this.lblReplenishment.Text = "% Replenishment:";
+            this.lblReplenishment.Text = "Replenishment uptime (%):";
             // 
             // lblTargetLevel
             // 
@@ -312,11 +339,11 @@
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
-            this.lblFightLength.Location = new System.Drawing.Point(6, 146);
+            this.lblFightLength.Location = new System.Drawing.Point(6, 139);
             this.lblFightLength.Name = "lblFightLength";
-            this.lblFightLength.Size = new System.Drawing.Size(114, 13);
+            this.lblFightLength.Size = new System.Drawing.Size(118, 13);
             this.lblFightLength.TabIndex = 59;
-            this.lblFightLength.Text = "Fight Length: (minutes)";
+            this.lblFightLength.Text = "Fight Length: (seconds)";
             // 
             // tabChar
             // 
@@ -399,27 +426,6 @@
             this.cbPet.TabIndex = 61;
             this.cbPet.SelectedIndexChanged += new System.EventHandler(this.cbPet_SelectedIndexChanged);
             // 
-            // updLatency
-            // 
-            this.updLatency.Location = new System.Drawing.Point(179, 193);
-            this.updLatency.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.updLatency.Name = "updLatency";
-            this.updLatency.Size = new System.Drawing.Size(100, 20);
-            this.updLatency.TabIndex = 78;
-            this.updLatency.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.toolTip1.SetToolTip(this.updLatency, "Change this value to adjust how much lag from latency, finger twitching and gener" +
-                    "al brain farts you expect to have.");
-            this.updLatency.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.updLatency.ValueChanged += new System.EventHandler(this.updLatency_ValueChanged);
-            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -427,20 +433,20 @@
             this.Controls.Add(this.tabControl);
             this.Name = "CalculationOptionsPanelWarlock";
             this.Size = new System.Drawing.Size(300, 605);
-            ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updAfflictionEffects)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updLatency)).EndInit();
             this.tabEvents.ResumeLayout(false);
             this.tabEvents.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabFight.ResumeLayout(false);
             this.tabFight.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updJudgementOfWisdom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updFightLength)).EndInit();
             this.tabChar.ResumeLayout(false);
             this.gbSpellPriority.ResumeLayout(false);
             this.tabPet.ResumeLayout(false);
             this.tabPet.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updLatency)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -451,10 +457,8 @@
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabFight;
         private System.Windows.Forms.Label lblDelay;
-        private System.Windows.Forms.TrackBar trkJoW;
         private System.Windows.Forms.Label lblJoW;
         private System.Windows.Forms.Label lblManaPotions;
-        private System.Windows.Forms.TrackBar trkReplenishment;
         private System.Windows.Forms.ComboBox cbManaAmt;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.Label lblTargetLevel;
@@ -475,5 +479,7 @@
         private System.Windows.Forms.NumericUpDown updAfflictionEffects;
         private System.Windows.Forms.NumericUpDown updFightLength;
         private System.Windows.Forms.NumericUpDown updLatency;
+        private System.Windows.Forms.NumericUpDown updJudgementOfWisdom;
+        private System.Windows.Forms.NumericUpDown updReplenishment;
     }
 }

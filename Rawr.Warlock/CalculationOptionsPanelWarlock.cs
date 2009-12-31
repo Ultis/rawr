@@ -32,18 +32,14 @@ namespace Rawr.Warlock
 
             cbTargetLevel.Text = _options.TargetLevel.ToString();
 
-            chkPTRMode.Checked = _options.PTRMode;
+            chkPTRMode.Checked = _options.PTR;
             chkPTRMode.Text = "PTR Mode (Patch 3.3 - Build 10956)";
 
-            updFightLength.Value = _options.FightLength;
+            updFightLength.Value = _options.Duration;
             updAfflictionEffects.Value = _options.AffEffectsNumber;
             updLatency.Value = (int)_options.Latency;
-
-            trkReplenishment.Value = (int)_options.Replenishment;
-            lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
-
-            trkJoW.Value = (int)_options.JoW;
-            lblJoW.Text = trkJoW.Value + "% effect from JoW.";
+            updReplenishment.Value = (int)_options.Replenishment;
+            updJudgementOfWisdom.Value = (int)_options.JoW;
 
             cbManaAmt.SelectedIndex = _options.ManaPot;
 
@@ -53,7 +49,6 @@ namespace Rawr.Warlock
             }
             lsSpellPriority.Items.Clear();
             lsSpellPriority.Items.AddRange(_options.SpellPriority.ToArray());
-
 
             //pet options
             //TODO: add pet buffs
@@ -74,22 +69,6 @@ namespace Rawr.Warlock
         {
             if (_loading) return;
             if (_options != null) _options.TargetLevel = Convert.ToInt32(cbTargetLevel.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void trkReplenishment_Scroll(object sender, EventArgs e) 
-        {
-            if (_loading) return;
-            if (_options != null) _options.Replenishment = trkReplenishment.Value;
-            lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void trkJoW_Scroll(object sender, EventArgs e) 
-        {
-            if (_loading) return;
-            if (_options != null) _options.JoW = trkJoW.Value;
-            lblJoW.Text = trkJoW.Value + "% effect from JoW.";
             Character.OnCalculationsInvalidated();
         }
 
@@ -130,7 +109,7 @@ namespace Rawr.Warlock
         private void updFightLength_ValueChanged(object sender, EventArgs e)
         {
             if (_loading) return;
-            if (_options != null) _options.FightLength = (int)updFightLength.Value;
+            if (_options != null) _options.Duration = (int)updFightLength.Value;
             Character.OnCalculationsInvalidated();
         }
 
@@ -145,6 +124,20 @@ namespace Rawr.Warlock
         {
             if (_loading) return;
             if (_options != null) _options.Latency = (int)updLatency.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void updReplenishment_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading) return;
+            if (_options != null) _options.Replenishment = (float)updReplenishment.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void updJudgementOfWisdom_ValueChanged(object sender, EventArgs e)
+        {
+            if (_loading) return;
+            if (_options != null) _options.JoW = (float)updJudgementOfWisdom.Value;
             Character.OnCalculationsInvalidated();
         }
     }

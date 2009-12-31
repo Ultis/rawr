@@ -533,7 +533,38 @@ namespace Rawr.Warlock
             }
 
             return statsBuffs;
-        }        
+        }
+
+        public override void SetDefaults(Character character)
+        {
+            //class buffs
+            character.ActiveBuffsAdd(("Fel Armor"));
+
+            //contagion should be present in all good affliction builds
+            //[spellstone for affliction specs, firestone for destro/demo specs]
+            if (character.WarlockTalents.Contagion > 0)
+            {
+                character.ActiveBuffsAdd(("Grand Spellstone"));
+            }
+            else
+            {
+                character.ActiveBuffsAdd(("Grand Firestone"));
+            }
+
+            //flasks & food
+            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
+            {
+                character.ActiveBuffsAdd(("Flask of Frost Wyrm (Mixology)"));
+            }
+
+            //replenishment
+            if (character.WarlockTalents.ImprovedSoulLeech > 0)
+            {
+                character.ActiveBuffsAdd(("Improved Soul Leech"));
+            }
+        }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) 
         {
@@ -550,7 +581,7 @@ namespace Rawr.Warlock
             //{
             //    //get the fight length
             //    CalculationOptionsWarlock options = (CalculationOptionsWarlock)character.CalculationOptions;
-            //    float fightLength = (options.FightLength * 60); //i.e. in seconds
+            //    float fightLength = (options.Duration * 60); //i.e. in seconds
 
             //    //remove the existing speedpotion buff (which has the incorrect cooldown)
             //    Buff speedpotion = Buff.GetBuffByName("Potion of Speed");
@@ -701,6 +732,7 @@ namespace Rawr.Warlock
                 //The following are custom stat properties belonging to buffs, items (or procs) that can be used/applied to warlocks.
                 HighestStat = stats.HighestStat,                                    //trinket - darkmoon card: greatness
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,      //paladin buff: judgement of wisdom
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,    //replenishment
                 BonusManaPotion = stats.BonusManaPotion,                            //triggered when a mana pot is consumed
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,        //Bracing Eathsiege Diamond (metagem) effect
                 ManaRestore = stats.ManaRestore,                                    //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
@@ -796,6 +828,7 @@ namespace Rawr.Warlock
 
                 + stats.BonusManaPotion                 //triggered when a mana pot is consumed
                 + stats.ManaRestoreFromBaseManaPPM      //judgement of wisdom
+                + stats.ManaRestoreFromMaxManaPerSecond //replenishment sources
                 + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
             ) > 0;
 

@@ -92,7 +92,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return (Options.FightLength * 60);
+                return (Options.Duration);
             }
         }
         public float ActiveTime { get; set; }
@@ -188,7 +188,7 @@ namespace Rawr.Warlock
             int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
             double timer = 0;
-            double timelimit = (Options.FightLength * 60);  //in seconds
+            double timelimit = Options.Duration;  //in seconds
             double latency = (Options.Latency / 1000);      //in milliseconds
 
             DateTime start = DateTime.Now;

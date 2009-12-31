@@ -10,33 +10,45 @@ namespace Rawr.Warlock
 #endif
 	public class CalculationOptionsWarlock : ICalculationOptionBase
 	{
-		public bool GetGlyphByName(string name)
-		{
-			Type t = typeof(CalculationOptionsWarlock);
-			return (bool)t.GetProperty(name).GetValue(this, null);
-		}
-
-		public void SetGlyphByName(string name, bool value)
-		{
-			Type t = typeof(CalculationOptionsWarlock);
-			t.GetProperty(name).SetValue(this, value, null);
-		}
-
+        /// <summary>
+        /// The boss target level - should always be 83.
+        /// </summary>
 		public int TargetLevel { get; set; }
+        /// <summary>
+        /// The number of affliction effects (excluding your own) on the target.
+        /// </summary>
 		public int AffEffectsNumber { get; set; }
-		public int FightLength { get; set; }
-
+        /// <summary>
+        /// The duration (in seconds) of the combat simulation.
+        /// </summary>
+		public int Duration { get; set; }
+        /// <summary>
+        /// The latency (in milliseconds) to be applied to spell casting during the combat simulation.
+        /// </summary>
 		public float Latency { get; set; }
+        /// <summary>
+        /// The expected uptime (percentage) that Replenishment will be active during the combat simulation.
+        /// </summary>
 		public float Replenishment { get; set; }
+        /// <summary>
+        /// The expected uptime (percentage) that Judgement Of Wisdom will be active during the combat simulation.
+        /// </summary>
 		public float JoW { get; set; }
-		public float LTUsePercent { get; set; }
-
+        /// <summary>
+        /// The pet that will be active during combat.
+        /// </summary>
 		public String Pet { get; set; }
+        public float LTUsePercent { get; set; }
 		public bool UseInfernal { get; set; }
 		public bool UseImmoAura { get; set; }
         public bool UseDecimation { get; set; }
-        public bool PTRMode { get; set; }
-
+        /// <summary>
+        /// Allows the user to test changes from the PTR.
+        /// </summary>
+        public bool PTR { get; set; }
+        /// <summary>
+        /// The prioritized list of spells to be used during combat.
+        /// </summary>
         public List<string> SpellPriority { get; set; }
         
         [XmlIgnore]
@@ -77,7 +89,7 @@ namespace Rawr.Warlock
 		public CalculationOptionsWarlock()
 		{
 			TargetLevel = 83;
-			FightLength = 5;
+			Duration = 300;
 			Latency = 100;
             Replenishment = 100f;
             JoW = 100f;
