@@ -27,19 +27,19 @@ namespace Rawr.ProtWarr
         public float SurvivalPoints
         {
             get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
+            set { _subPoints[0] = Math.Min(value, float.MaxValue); }
         }
 
         public float MitigationPoints
         {
             get { return _subPoints[1]; }
-            set { _subPoints[1] = value; }
+            set { _subPoints[1] = Math.Min(value, float.MaxValue); }
         }
 
         public float ThreatPoints
         {
             get { return _subPoints[2]; }
-            set { _subPoints[2] = value; }
+            set { _subPoints[2] = Math.Min(value, float.MaxValue); }
         }
 
         public int TargetLevel { get; set; }
