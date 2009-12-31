@@ -407,63 +407,71 @@ focus on Survival Points.",
             calculatedStats.ThreatPoints = calcOpts.ThreatScale * calculatedStats.ThreatPerSecond;
             
             float scale = 0.0f;
+
+            float VALUE_CAP = 1000000000f;
+
             switch (calcOpts.RankingMode)
             {
                 #region Alternative Ranking Modes
                 case 2:
                     // Tank Points Mode
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth);
-                    calculatedStats.ThreatPoints *= 3.0f;
+                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.MitigationPoints = Math.Min(dm.TankPoints - dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints * 3.0f, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 3:
                     // Burst Time Mode
                     float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
-                    calculatedStats.SurvivalPoints = (dm.BurstTime * 100.0f);
+                    calculatedStats.SurvivalPoints = Math.Min(dm.BurstTime * 100.0f, VALUE_CAP);
                     calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = (calculatedStats.ThreatPoints / threatScale) * 2.0f;
+                    calculatedStats.ThreatPoints = Math.Min((calculatedStats.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 4:
                     // Damage Output Mode
                     calculatedStats.SurvivalPoints = 0.0f;
                     calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = calculatedStats.TotalDamagePerSecond;
+                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.TotalDamagePerSecond, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 5:
                     // ProtWarr Model (Average damage mitigated - EvanM Model)
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
+                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
                     scale = (calcOpts.MitigationScale / 17000.0f) * 0.125f * 100.0f;
-                    calculatedStats.MitigationPoints = dm.Mitigation * calcOpts.BossAttackValue * scale;
+                    calculatedStats.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * scale, VALUE_CAP);
+                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 6:
                     // Damage Taken of Boss Attack Value Mode
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
+                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
                     scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
-                    calculatedStats.MitigationPoints = dm.DamageTaken * calcOpts.BossAttackValue * scale;
+                    calculatedStats.MitigationPoints = Math.Min(dm.DamageTaken * calcOpts.BossAttackValue * scale, VALUE_CAP);
+                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
                     calculatedStats.OverallPoints = -calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 7:
                     // Damage Taken of Boss Attack Value Mode
                     // Note: Will crash Rawr when you optimize for Mitigation Points
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = -dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale);
+                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.MitigationPoints = Math.Min(-dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale), VALUE_CAP);
+                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 case 8:
                     // Model 8 Placeholder
                     calculatedStats.SurvivalPoints = 0.0f;
                     calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints;
+                    calculatedStats.ThreatPoints = 0.0f;
+                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
                 #endregion
                 default:
                     // Mitigation Scale Mode (Bear Model)
-                    calculatedStats.SurvivalPoints = dm.EffectiveHealth;
-                    calculatedStats.MitigationPoints = dm.DamageTaken == 0.0f ? 0.0f : (calcOpts.MitigationScale / dm.DamageTaken);
+                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
+                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
                     break;
             }
