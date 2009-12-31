@@ -583,27 +583,27 @@ threat and limited threat scaled by the threat scale.",
                             if (childEffect.Trigger == Trigger.DamageTaken)
                             {
                                 statsSpecialEffects.Accumulate(childEffect.Stats * (effect.GetAverageUptime(0.0f, 1.0f) *
-                                    childEffect.GetAverageStackSize((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed, effect.Duration)));
+                                    childEffect.GetAverageStackSize((1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond), weaponSpeed, effect.Duration)));
                             }
                         }
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttacksPerSecond), 1.0f, weaponSpeed);
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.CritsPerSecond), 1.0f, weaponSpeed);
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.CritsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
                     case Trigger.DoTTick:
                         if (character.WarriorTalents.DeepWounds > 0)
                             effect.AccumulateAverageStats(statsSpecialEffects, 2.0f, 1.0f, weaponSpeed);
                         break;
                     case Trigger.DamageDone:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttacksPerSecond), 1.0f, weaponSpeed);
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
                     case Trigger.DamageTaken:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed);
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond), weaponSpeed);
                         break;
                 }
             }

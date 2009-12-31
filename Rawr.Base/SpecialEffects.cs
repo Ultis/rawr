@@ -1010,7 +1010,7 @@ namespace Rawr {
                     stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
             }
-            else if ((match = Regex.Match(line, @"When active, grants the wielder (?<defenseRating>\d+) defense rating and (?<bonusArmor>\d+) armor for 10 sec")).Success)
+            else if ((match = Regex.Match(line, @"Grants the wielder (?<defenseRating>\d+) defense rating and (?<bonusArmor>\d+) armor for 10 sec")).Success)
             {
                 // Quel'Serrar Sanctuary proc (all versions)
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DefenseRating = int.Parse(match.Groups["defenseRating"].Value), BonusArmor = int.Parse(match.Groups["bonusArmor"].Value) }, 10f, 0f, -2f));
@@ -1278,14 +1278,6 @@ namespace Rawr {
             {
                 // Black Bruise
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = .09f }, 10f, 0f, 0.01f));
-            }
-            else if (  line.Contains("Grants the wielder 110 defense rating and 1550 armor for 10 sec")
-                    || line.Contains("Grants the wielder 100 defense rating and 1400 armor for 10 sec"))
-            {
-                // Burnished/Gleaming Quel'Serrar | 2PPM = (2/60)*2.4 = 8% Chance to proc
-                float val1 = int.Parse(line.Substring(line.IndexOf("1"    ), 3));
-                float val2 = int.Parse(line.Substring(line.IndexOf("1", 30), 4));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DefenseRating = val1, BonusArmor = val2 }, 10f, 0f, 0.08f));
             }
             #endregion
             #region 3.3 Trinkets
