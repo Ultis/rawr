@@ -101,7 +101,7 @@ namespace Rawr.Mage
                     "Spell Stats:Crit Rate",
                     "Spell Stats:Hit Rate",
                     "Spell Stats:Spell Penetration",
-                    "Spell Stats:Casting Speed",
+                    "Spell Stats:Haste",
                     "Spell Stats:Arcane Damage",
                     "Spell Stats:Fire Damage",
                     "Spell Stats:Frost Damage",
