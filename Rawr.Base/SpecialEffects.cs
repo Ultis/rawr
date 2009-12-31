@@ -861,25 +861,6 @@ namespace Rawr {
             {
                 stats.HolyLightSpellPower += (float)int.Parse(match.Groups["amount"].Value);
             }
-            else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
-            {
-                line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
-                float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
-                line = line.Substring(line.IndexOf(" for") + " for ".Length);
-                int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
-
-                //switch (duration)
-                //{
-                //    case 10:
-                //        if (name == "Band of the Eternal Defender")
-                //        {
-                //The buff is up about 1/6 the time, so 800/6 = 133 armor
-                //Bonus Armor is not affected by armor multipliers.
-                stats.BonusArmor += (float)Math.Round(value / 6f);
-                //        }
-                //        break;
-                //}
-            }
             else if (line.StartsWith("Increases your pet's critical strike chance by "))
             {
                 string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
@@ -1349,10 +1330,10 @@ namespace Rawr {
             else if ((match = new Regex(@"When struck in combat has a chance of increasing your armor by (?<armor>\d+) for (?<time>\d+) sec").Match(line)).Success)
             { 
                 // Ashen Band of Courage - seems to be 60 sec iCD (wowhead)
-                // Wowhead says 3% chance to proc (!!), let's assume it's 10%
+                // Apparently confirmed as 3% chance to proc -> http://maintankadin.failsafedesign.com/forum/index.php?f=21&t=27115&rb_v=viewtopic
                 float armor = (float)int.Parse(match.Groups["armor"].Value);
                 float time = (float)int.Parse(match.Groups["time"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Armor = armor }, time, 60f, 0.1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Armor = armor }, time, 60f, 0.03f));
             }
 
 
