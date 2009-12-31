@@ -113,6 +113,10 @@ namespace Rawr
                             v[j] = value[i];
                         }
                         uptime[j] = effects[i].GetAverageUptime(triggerInterval[i], triggerChance[i], attackSpeed, fightDuration);
+                        if (scale != null)
+                        {
+                            uptime[j] *= scale[i];
+                        }
                         j++;
                     }
                 }
@@ -216,7 +220,7 @@ namespace Rawr
             }
             else if (p.N == 1)
             {
-                p.partialIntegral[0, 1] = fightDuration * p.effects[0].GetAverageUptime(triggerInterval[p.I], triggerChance[p.I], attackSpeed, fightDuration);
+                p.partialIntegral[0, 1] = fightDuration * p.k[0] * p.effects[0].GetAverageUptime(triggerInterval[p.I], triggerChance[p.I], attackSpeed, fightDuration);
                 p.partialIntegral[0, 0] = fightDuration - p.partialIntegral[0, 1];
             }
 
