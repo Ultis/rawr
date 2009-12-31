@@ -121,6 +121,11 @@ namespace Rawr.Enhance
                 sb.AppendLine("cloak_enchant                   swordguard_embroidery");
             else
                 sb.AppendLine("cloak_enchant                   -");
+            if (character.Finger1.Id == 50401 || character.Finger2.Id == 50401 ||
+                character.Finger1.Id == 50402 || character.Finger2.Id == 50402)
+                sb.AppendLine("ring_proc                       ashen_verdict");
+            else
+                sb.AppendLine("ring_proc                       -");
             addGlyphs(character, sb);
             sb.AppendLine();
             sb.AppendLine("glyph_minor1                    -");
