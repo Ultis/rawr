@@ -22,21 +22,13 @@ namespace Rawr.Warlock
         /// </summary>
         public int HitCount { get; set; }
         /// <summary>
-        /// The average damage for each hit.
-        /// </summary>
-        public double HitAverage { get; set; }
-        /// <summary>
-        /// The cumulative hit damage.
+        /// The cumulative damage total for direct hits.
         /// </summary>
         public double HitDamage { get; set; }
         /// <summary>
         /// The number of successful crits on the target.
         /// </summary>
         public int CritCount { get; set; }
-        /// <summary>
-        /// The average damage infliced by each crit.
-        /// </summary>
-        public double CritAverage { get; set; }
         /// <summary>
         /// The cumulative damage total for crits.
         /// </summary>
@@ -46,27 +38,57 @@ namespace Rawr.Warlock
         /// </summary>
         public int TickCount { get; set; }
         /// <summary>
-        /// The average tick damage inflicted.
-        /// </summary>
-        public double TickAverage { get; set; }
-        /// <summary>
         /// The total tick damage inflicted.
         /// </summary>
         public double TickDamage { get; set; }
         /// <summary>
-        /// The total direct damage inflicted.
-        /// </summary>
-        public double DirectDamage { get; set; }
-        /// <summary>
-        /// The total damage that hit, crit or ticked on the target.
-        /// </summary>
-        public double OverallDamage { get; set; }
-        /// <summary>
         /// The total mana consumed.
         /// </summary>
         public double ManaUsed { get; set; }
+        /// <summary>
+        /// The amount of time that a spell was active.
+        /// </summary>
+        public double ActiveTime { get; set; }
 
-        //public double HitChance { get; set; }
-        //public double CooldownReset { get; set; }
+        #region calculation methods
+        /// <summary>
+        /// The average damage for each hit.
+        /// </summary>
+        public double HitAverage()
+        {
+            return (HitDamage / HitCount);
+        } 
+
+        /// <summary>
+        /// The average damage infliced by each crit.
+        /// </summary>
+        public double CritAverage()
+        {
+            return (CritDamage / CritCount);
+        }
+
+        /// <summary>
+        /// The average tick damage inflicted.
+        /// </summary>
+        public double TickAverage()
+        {
+            return (TickDamage / TickCount);
+        }
+
+        /// <summary>
+        /// The total direct (hits + crits) damage inflicted.
+        /// </summary>
+        public double DirectDamage()
+        {
+            return (HitDamage + CritDamage);
+        }
+        /// <summary>
+        /// The total damage that hit, crit or ticked on the target.
+        /// </summary>
+        public double OverallDamage()
+        {
+            return (DirectDamage() + TickDamage);
+        }
+        #endregion
     }
 }

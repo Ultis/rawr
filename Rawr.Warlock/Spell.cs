@@ -65,10 +65,10 @@ namespace Rawr.Warlock
         {
             public int Rank { get; protected set; }
             public int Level { get; protected set; }
-            public double BaseMinDamage { get; protected set; }
-            public double BaseMaxDamage { get; protected set; }
-            public double BaseTickDamage { get; protected set; }
-            public double BaseCost { get; protected set; }
+            public float BaseMinDamage { get; protected set; }
+            public float BaseMaxDamage { get; protected set; }
+            public float BaseTickDamage { get; protected set; }
+            public float BaseCost { get; protected set; }
 
             /// <summary>
             /// 
@@ -80,7 +80,7 @@ namespace Rawr.Warlock
             /// <param name="baseTickDamage">The base damage that is inflicted per tick.</param>
             /// <param name="baseCost">The percentage of base mana that it will cost to cast this spell.</param>
             /// <remarks>Only the highest rank of spell data is used at the moment.</remarks>
-            public SpellRank(int rank, int level, double baseMinDamage, double baseMaxDamage, double baseTickDamage, double baseCost) 
+            public SpellRank(int rank, int level, float baseMinDamage, float baseMaxDamage, float baseTickDamage, float baseCost) 
             {
                 Rank = rank;
                 Level = level;
@@ -158,22 +158,22 @@ namespace Rawr.Warlock
         /// <summary>
         /// The base mana cost percentage. 
         /// </summary>
-        public double BaseCost { get; protected set; }
-        public double BaseCastTime { get; protected set; }
-        public double BaseGlobalCooldown { get; protected set; }
-        public double BaseMinDamage { get; protected set; }
-        public double BaseMaxDamage { get; protected set; }
-        public double BaseTickDamage { get; protected set; }
-        public double BaseTickTime { get; protected set; }
-        public double BaseDirectDamageCoefficient { get; protected set; }
-        public double BaseTickDamageCoefficient { get; protected set; }
-        public double BaseMultiplier { get; protected set; }
-        public double BaseCritChance { get; set; }
-        public double BaseCritMultiplier { get; protected set; }
-        public double BaseCritBonusMultiplier { get; protected set; }
+        public float BaseCost { get; protected set; }
+        public float BaseCastTime { get; protected set; }
+        public float BaseGlobalCooldown { get; protected set; }
+        public float BaseMinDamage { get; protected set; }
+        public float BaseMaxDamage { get; protected set; }
+        public float BaseTickDamage { get; protected set; }
+        public float BaseTickTime { get; protected set; }
+        public float BaseDirectDamageCoefficient { get; protected set; }
+        public float BaseTickDamageCoefficient { get; protected set; }
+        public float BaseMultiplier { get; protected set; }
+        public float BaseCritChance { get; protected set; }
+        public float BaseCritMultiplier { get; protected set; }
+        public float BaseCritBonusMultiplier { get; protected set; }
         public int BaseRange { get; protected set; }
-        public double Duration { get; protected set; }
-        public double Cooldown { get; protected set; }
+        public float Duration { get; protected set; }
+        public float Cooldown { get; protected set; }
         public int NumberOfTicks { get; protected set; }
         #endregion
 
@@ -185,7 +185,7 @@ namespace Rawr.Warlock
         /// <summary>
         /// Calculates the CastTime including haste.
         /// </summary>
-        public virtual double CastTime()
+        public virtual float CastTime()
         {
             if (BaseCastTime > 0)
             {
@@ -197,13 +197,13 @@ namespace Rawr.Warlock
         /// <summary>
         /// Calculates the GCD including haste.
         /// </summary>
-        public virtual double GlobalCooldown()
+        public virtual float GlobalCooldown()
         {
             if (BaseGlobalCooldown == 1.0)
             {
-                return Math.Max(0.5, (BaseGlobalCooldown / (1 + Stats.SpellHaste)));
+                return Math.Max(0.5f, (BaseGlobalCooldown / (1 + Stats.SpellHaste)));
             }
-            return Math.Max(1.0, (BaseGlobalCooldown / (1 + Stats.SpellHaste)));
+            return Math.Max(1.0f, (BaseGlobalCooldown / (1 + Stats.SpellHaste)));
         }
 
         /// <summary>
@@ -225,24 +225,24 @@ namespace Rawr.Warlock
         /// <summary>
         /// Calculates the Cost (percentage) from BaseCost (percentage) and any talent modifiers.
         /// </summary>
-        public virtual double Cost()
+        public virtual float Cost()
         {
             if (SpellTree == SpellTree.Destruction)
             {
-                double cataclysm;
+                float cataclysm;
                 switch (Character.WarlockTalents.Cataclysm)
                 {
-                    case 1: cataclysm = 0.04; break;
-                    case 2: cataclysm = 0.07; break;
-                    case 3: cataclysm = 0.10; break;
+                    case 1: cataclysm = 0.04f; break;
+                    case 2: cataclysm = 0.07f; break;
+                    case 3: cataclysm = 0.10f; break;
                     default:
-                        cataclysm = 0.00; break;
+                        cataclysm = 0.00f; break;
                 }
-                return (BaseCost * (1 - cataclysm));
+                return (BaseCost * (1f - cataclysm));
             }
             if (SpellTree == SpellTree.Affliction)
             {
-                return (BaseCost * (1 - (Character.WarlockTalents.Suppression * 0.02)));
+                return (BaseCost * (1f - (Character.WarlockTalents.Suppression * 0.02f)));
             }
             //demonology spells do not have any mana cost reductions at the moment
             return BaseCost;
@@ -251,45 +251,39 @@ namespace Rawr.Warlock
         /// <summary>
         /// Calculate the mana required to cast the spell.
         /// </summary>
-        public virtual double Mana()
+        public virtual float Mana()
         {
             Stats statsBase = BaseStats.GetBaseStats(Character);
-            return Math.Floor(statsBase.Mana * Cost());
+            return (float)Math.Floor(statsBase.Mana * Cost());
         }
 
         /// <summary>
         /// Calculates the minimum (non-critical) spell damage hit.
         /// </summary>
-        public virtual double MinDamage()
+        public virtual float MinDamage()
         {
-            double minDamage = CalculateDamage(BaseMinDamage, BaseDirectDamageCoefficient);
+            float minDamage = CalculateDamage(BaseMinDamage, BaseDirectDamageCoefficient);
             //firestone increases direct damage by 1%
-            minDamage *= (1 + Stats.WarlockFirestoneDirectDamageMultiplier);
-
-            return minDamage;
+            return (minDamage * (1 + Stats.WarlockFirestoneDirectDamageMultiplier));
         }
         /// <summary>
         /// Calculates the maximum (non-critical) spell damage hit.
         /// </summary>
-        public virtual double MaxDamage()
+        public virtual float MaxDamage()
         {
-            double maxDamage = CalculateDamage(BaseMaxDamage, BaseDirectDamageCoefficient);
+            float maxDamage = CalculateDamage(BaseMaxDamage, BaseDirectDamageCoefficient);
             //firestone increases direct damage by 1%
-            maxDamage *= (1 + Stats.WarlockFirestoneDirectDamageMultiplier);
-
-            return maxDamage;
+            return (maxDamage * (1 + Stats.WarlockFirestoneDirectDamageMultiplier));
         }
 
         /// <summary>
         /// Calculates the (non-critical) damage per tick
         /// </summary>
-        public virtual double TickDamage()
+        public virtual float TickDamage()
         {
-            double tickDamage = CalculateDamage(BaseTickDamage, BaseTickDamageCoefficient);
+            float tickDamage = CalculateDamage(BaseTickDamage, BaseTickDamageCoefficient);
             //spellstone increases periodic damage by 1%
-            tickDamage *= (1 + Stats.WarlockSpellstoneDotDamageMultiplier);
-
-            return tickDamage;
+            return (tickDamage * (1 + Stats.WarlockSpellstoneDotDamageMultiplier));
         }
 
         /// <summary>
@@ -298,20 +292,19 @@ namespace Rawr.Warlock
         /// <param name="baseValue"></param>
         /// <param name="coefficient"></param>
         /// <returns></returns>
-        protected double CalculateDamage(double baseValue, double coefficient)
+        protected float CalculateDamage(float baseValue, float coefficient)
         {
-            double spellpower = Stats.SpellPower;
-            double additional = (MagicSchool == MagicSchool.Shadow)
+            float spellpower = Stats.SpellPower;
+            float additional = (MagicSchool == MagicSchool.Shadow)
                               ? Stats.SpellShadowDamageRating
                               : Stats.SpellFireDamageRating;
 
             spellpower += additional;
 
-            double damage = (baseValue + (spellpower * BaseDirectDamageCoefficient));
-
-            BaseMultiplier *= (1 + (Character.WarlockTalents.Malediction * 0.01));
-
-            damage *= BaseMultiplier;
+            float damage = (baseValue + (spellpower * BaseDirectDamageCoefficient));
+            
+            //malediction increases spell damage by 1/2/3%
+            damage *= (1 + (Character.WarlockTalents.Malediction * 0.01f));
 
             //add buffs category: Damage(%) [sanctified ret / ferocious inspiration / arcane empowerment]
             damage *= (1 + Stats.BonusDamageMultiplier);
@@ -332,55 +325,55 @@ namespace Rawr.Warlock
         /// <summary>
         /// Returns the average damage per (non-critical) hit.
         /// </summary>
-        public double AvgHit { get { return (MinDamage() + MaxDamage()) / 2; } }
+        public float AvgHit { get { return (MinDamage() + MaxDamage()) / 2; } }
         /// <summary>
         /// Returns the average damage per hit (including crits).
         /// </summary>
-        public double AvgDamage { get { return (AvgHit * (1 - BaseCritChance)) + (AvgCrit * BaseCritChance) + (TickDamage() * NumberOfTicks); } }
+        public float AvgDamage { get { return (AvgHit * (1 - BaseCritChance)) + (AvgCrit * BaseCritChance) + (TickDamage() * NumberOfTicks); } }
         /// <summary>
         /// Returns the average direct damage per hit (including crits)
         /// </summary>
-        public double AvgDirectDamage { get { return (AvgHit * (1 - BaseCritChance)) + (AvgCrit * BaseCritChance); } }
+        public float AvgDirectDamage { get { return (AvgHit * (1 - BaseCritChance)) + (AvgCrit * BaseCritChance); } }
         /// <summary>
         /// Returns the average dot damage per hit (including crits).
         /// </summary>
-        public double AvgDotDamage { get { return ((TickDamage() * NumberOfTicks) * (1 - BaseCritChance)) + ((TickDamage() * NumberOfTicks) * BaseCritChance * BaseCritBonusMultiplier); } }
+        public float AvgDotDamage { get { return ((TickDamage() * NumberOfTicks) * (1 - BaseCritChance)) + ((TickDamage() * NumberOfTicks) * BaseCritChance * BaseCritBonusMultiplier); } }
         /// <summary>
         /// Returns the damage per casttime. The GCD is used as the casttime for instant-cast spells.
         /// </summary>
-        public double DpCT { get { return AvgDamage / (CastTime() > 0 ? CastTime() : GlobalCooldown()); } }
+        public float DpCT { get { return AvgDamage / (CastTime() > 0 ? CastTime() : GlobalCooldown()); } }
         /// <summary>
         /// Returns the damage per second.
         /// </summary>
-        public double DpS { get { return AvgDamage / (Duration > 0 ? (Duration + CastTime()) : (CastTime() > 0 ? CastTime() : GlobalCooldown())); } }
+        public float DpS { get { return AvgDamage / (Duration > 0 ? (Duration + CastTime()) : (CastTime() > 0 ? CastTime() : GlobalCooldown())); } }
         /// <summary>
         /// Returns the damage per mana.
         /// </summary>
-        public double DpM { get { return AvgDamage / Mana(); } }
+        public float DpM { get { return AvgDamage / Mana(); } }
         /// <summary>
         /// Returns the minimum crit damage.
         /// </summary>
-        public double MinCrit { get { return MinDamage() * BaseCritBonusMultiplier; } }
+        public float MinCrit { get { return MinDamage() * BaseCritBonusMultiplier; } }
         /// <summary>
         /// Returns the maximum crit damage.
         /// </summary>
-        public double MaxCrit { get { return MaxDamage() * BaseCritBonusMultiplier; } }
+        public float MaxCrit { get { return MaxDamage() * BaseCritBonusMultiplier; } }
         /// <summary>
         /// Returns the average crit damage.
         /// </summary>
-        public double AvgCrit { get { return (MinCrit + MaxCrit) / 2; } }
+        public float AvgCrit { get { return (MinCrit + MaxCrit) / 2; } }
         #endregion
 
         #region Combat simulation helpers
         /// <summary>
         /// Stores the time offset (in the combat simulation) when this spell is scheduled to be re-cast.
         /// </summary>
-        public double ScheduledTime { get; set; }
+        public float ScheduledTime { get; set; }
 
         /// <summary>
         /// Returns the time delay (in seconds) before this spell can be re-cast.
         /// </summary>
-        public double GetTimeDelay()
+        public float GetTimeDelay()
         {
             //if the spell has a cooldown, return it.
             //if there is no cooldown, return its duration instead.
@@ -391,19 +384,90 @@ namespace Rawr.Warlock
 
         /// <summary>
         /// This method contains the logic which decides if a spell missed, hit or crit the target and updates tracked statistics accordingly.
-        /// An event will be raised to notify subscribers to trigger additional procs & effects only if the spell cast was successful.
+        /// The logic attempts to mimick the 2-roll system that is used in the game - i.e. first roll determines if the spell hit or missed, and 
+        /// if its a hit, a 2nd roll to determine if it should crit, or not.
+        /// I am deliberately not using RNG - because for accurate results, you would have to perform 10000+ simulations to smooth out the effects of RNG.
+        /// Instead, I'm using the miss chance and observed hit rate to determine hit-or-miss, followed by expected vs actual crit rate.
+        /// This method will also raise an event (on successful hits) which will notify subscribers to trigger additional procs and effects.
+        /// Classic Example: Conflagrate triggers Backdraft aura
         /// </summary>
+        /// <remarks>Direct damage spells suffer from partial resists - but thats not implemented here because its RNG based</remarks>
         public void Execute()
         {
-            SpellStatistics.CastCount += 1; 
-            SpellStatistics.HitCount += 1; 
-            SpellStatistics.DirectDamage += MaxDamage();
-            SpellStatistics.TickDamage += TickDamage();
-            SpellStatistics.OverallDamage += (MaxDamage() + (TickDamage() * NumberOfTicks));
-            SpellStatistics.ManaUsed += Mana();
+            // always increment the cast counter whenever a spell is cast 
+            SpellStatistics.CastCount += 1;
 
-            //raise an event so that subscribers can be notified whenever this spell has been cast
-            OnSpellCast();
+            #region Hit or Miss? [or, the first roll ...]
+            //a level 80 warlock has an 83% base chance to hit a level 83 target
+            //todo: retrieve the correct value from CalculationOptionsWarlock.TargetHit
+            float totalHitChance = (Stats.SpellHit + 0.83f);
+            float missChance = (totalHitChance >= 1) ? 0: (1 - totalHitChance);
+            bool missed = false;
+
+            if (missChance > 0)
+            {
+                //ok - there's a small chance to miss, so calculate the actual missRate and compare it to the expected missChance
+                float hitRate = 0f;
+                float totalHitAndCrits = SpellStatistics.HitCount + SpellStatistics.CritCount;
+                if (totalHitAndCrits > 0)
+                {
+                    hitRate = (totalHitAndCrits / SpellStatistics.CastCount);
+                }
+                
+                if (hitRate > totalHitChance)
+                {
+                    //we've had enough hits - time to let a spell miss
+                    missed = true;
+                }
+            }
+            #endregion
+
+            if (missed)
+            {
+                //boo! it missed :/
+                SpellStatistics.MissCount += 1;             //let's track the number of misses
+                SpellStatistics.MissTotal += AvgDamage;     //and also the potential damage that was lost
+            }
+            else
+            {
+                //yay! its a hit :) 
+                #region now to see our directdamage spells should crit or not [a.k.a. the 2nd roll ...]
+                //The effect of Hit chance on Critical Hit chance -> http://www.wowwiki.com/Spell_hit
+                float expectedCritRate = (totalHitChance * Stats.SpellCrit);
+                
+                float actualCritRate = 0f;
+                if (SpellStatistics.CritCount > 0)
+                {
+                    actualCritRate = (SpellStatistics.CritCount / (float)(SpellStatistics.CastCount - SpellStatistics.CritCount));
+                }
+
+                if (actualCritRate < expectedCritRate)
+                {
+                    //its a crit!
+                    SpellStatistics.CritCount += 1;
+                    SpellStatistics.CritDamage += AvgCrit;    //((MinCrit+MaxCrit)/2)  
+                }
+                else
+                {
+                    //normal hit
+                    SpellStatistics.HitCount += 1;
+                    SpellStatistics.HitDamage += AvgHit;    //((MinDmg+MaxDmg)/2)  [excludes crit damage]
+                }
+                #endregion
+
+                //and finally, dont forget to account for DoT spells
+                if (NumberOfTicks > 0)
+                {
+                    SpellStatistics.TickCount += NumberOfTicks;
+                    SpellStatistics.TickDamage += (TickDamage() * NumberOfTicks);
+                }
+
+                //raise an event so that subscribers can be notified whenever this spell has been cast
+                OnSpellCast();
+            }
+
+            SpellStatistics.ManaUsed += Mana();             //track mana consumption
+            SpellStatistics.ActiveTime += GetTimeDelay();   //and spell activity
         }
 
         /// <summary>
@@ -491,21 +555,21 @@ namespace Rawr.Warlock
             //all properties default to zero, except for the following:
             BaseCastTime = 3;
             BaseTickTime = 3;
-            
-            BaseMultiplier = 1;
-            BaseCritMultiplier = BaseCritBonusMultiplier = 1;
+            //BaseCritMultiplier = 1;
+            //BaseCritBonusMultiplier = 1;
+            //BaseMultiplier = 1;
             BaseRange = 30;
             Harmful = true;
             
             SpellStatistics = new SpellStatistics();
 
-            if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of", StringComparison.Ordinal)) 
+            if ( (character.WarlockTalents.AmplifyCurse > 0) && Name.StartsWith("Curse of", StringComparison.Ordinal) ) 
             {
-                BaseGlobalCooldown = 1.0;
+                BaseGlobalCooldown = 1.0f;
             } 
             else 
             {
-                BaseGlobalCooldown = 1.5;
+                BaseGlobalCooldown = 1.5f;
             }
         }
         #endregion
@@ -601,7 +665,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank> 
         { 
-            new SpellRank(13, 79, 690, 770, 0, 0.17) 
+            new SpellRank(13, 79, 690, 770, 0, 0.17f) 
         };
 
         public ShadowBolt(Stats stats, Character character)
@@ -609,26 +673,26 @@ namespace Rawr.Warlock
         {
             MayCrit = true;
             BaseCastTime = 3;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowAndFlame * 0.04));
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
+                           * (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
             BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Devastation * 0.05) 
+                           + (character.WarlockTalents.Devastation * 0.05f) 
                            + stats.Warlock4T8 
                            + stats.Warlock2T10;
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
 
-        public override double CastTime()
+        public override float CastTime()
         {
-            return Math.Max(1.0, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.1)) / (1 + Stats.SpellHaste)));
+            return Math.Max(1.0f, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.1f)) / (1 + Stats.SpellHaste)));
         }
 
-        public override double Cost()
+        public override float Cost()
         {
-            double cost = base.Cost();
-            cost *= (1 - (Character.WarlockTalents.GlyphSB ? 0.10 : 0));
+            float cost = base.Cost();
+            cost *= (1f - (Character.WarlockTalents.GlyphSB ? 0.10f : 0f));
             return cost;
         }
 
@@ -669,33 +733,34 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(4, 80, 582, 676, 0, 0.14)
+            new SpellRank(4, 80, 582, 676, 0, 0.14f)
         };
 
         public Incinerate(Stats stats, Character character)
             : base("Incinerate", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
             MayCrit = true;
-            BaseCastTime = 2.5;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowAndFlame * 0.04));
-            BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03)
-                                 + (character.WarlockTalents.GlyphIncinerate ? 0.05 : 0));
+            BaseCastTime = 2.5f;
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
+                           * (1 + (character.WarlockTalents.Emberstorm * 0.03f)
+                                + (character.WarlockTalents.GlyphIncinerate ? 0.05f : 0f)
+                             );
 
             BaseCritChance  = stats.SpellCrit 
-                            + (character.WarlockTalents.Devastation * 0.05) 
+                            + (character.WarlockTalents.Devastation * 0.05f) 
                             + stats.Warlock4T8
                             + stats.Warlock2T10;
 
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) 
             //            * (1f + (character.WarlockTalents.Ruin * 0.2f)) 
             //            + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
 
-        public override double CastTime()
+        public override float CastTime()
         {
-            return Math.Max(1.0, ((BaseCastTime - (Character.WarlockTalents.Emberstorm * 0.05)) / (1 + Stats.SpellHaste)));
+            return Math.Max(1.0f, ((BaseCastTime - (Character.WarlockTalents.Emberstorm * 0.05f)) / (1f + Stats.SpellHaste)));
         }
 
         public override string ToString()
@@ -726,7 +791,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(9, 79, 0, 0, 145, 0.10)
+            new SpellRank(9, 79, 0, 0, 145, 0.10f)
         };
 
         public CurseOfAgony(Stats stats, Character character)
@@ -745,12 +810,12 @@ namespace Rawr.Warlock
 
             //The coefficient is capped at 120% (10% per tick), which is an exception to the general rule (for DoT spells) of : C = Duration / 15
             //http://www.wowwiki.com/Spell_damage_and_healing#Exceptions
-            BaseTickDamageCoefficient = 0.10;
+            BaseTickDamageCoefficient = 0.10f;
 
-            BaseMultiplier *= (1 + (character.WarlockTalents.ImprovedCurseOfAgony * 0.05)
-                                 + (character.WarlockTalents.ShadowMastery * 0.03) 
-                                 + (character.WarlockTalents.Contagion * 0.01)
-                               );
+            BaseMultiplier = (1 + (character.WarlockTalents.ImprovedCurseOfAgony * 0.05f)
+                                + (character.WarlockTalents.ShadowMastery * 0.03f) 
+                                + (character.WarlockTalents.Contagion * 0.01f)
+                             );
         }
     }
 
@@ -761,7 +826,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(3, 80, 0, 0, 7300, 0.15)
+            new SpellRank(3, 80, 0, 0, 7300, 0.15f)
         };
 
         public CurseOfDoom(Stats stats, Character character)
@@ -773,7 +838,7 @@ namespace Rawr.Warlock
 
             //The CoD spell coefficient has been capped at 200%, so its also an exception to the general spell coeff formula for DoT spells
             BaseTickDamageCoefficient = 2;
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
         }
     }
 
@@ -784,7 +849,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(10, 77, 0, 0, 180, 0.14)
+            new SpellRank(10, 77, 0, 0, 180, 0.14f)
         };
 
         public Corruption(Stats stats, Character character)
@@ -796,15 +861,15 @@ namespace Rawr.Warlock
             Duration = 18;
 
             BaseTickDamageCoefficient = (BaseTickTime / 15f);    //i.e. 20% per tick
-            BaseTickDamageCoefficient += (character.WarlockTalents.EmpoweredCorruption * 0.02 ); //each talent point increases damage by 12/24/36%, which must be divided by numberofticks
-            BaseTickDamageCoefficient += (character.WarlockTalents.EverlastingAffliction * 0.01);
+            BaseTickDamageCoefficient += (character.WarlockTalents.EmpoweredCorruption * 0.02f ); //each talent point increases damage by 12/24/36%, which must be divided by numberofticks
+            BaseTickDamageCoefficient += (character.WarlockTalents.EverlastingAffliction * 0.01f);
 
-            BaseMultiplier *= (1 + (character.WarlockTalents.ImprovedCorruption * 0.02)
-                                 + (character.WarlockTalents.ShadowMastery * 0.03)
-                                 + (character.WarlockTalents.Contagion * 0.01)
-                                 + stats.Warlock4T9
-                               );
-            BaseMultiplier *= (1 + (character.WarlockTalents.SiphonLife * 0.05));
+            BaseMultiplier = (1 + (character.WarlockTalents.ImprovedCorruption * 0.02f)
+                                + (character.WarlockTalents.ShadowMastery * 0.03f)
+                                + (character.WarlockTalents.Contagion * 0.01f)
+                                + stats.Warlock4T9
+                              ) 
+                           * (1 + (character.WarlockTalents.SiphonLife * 0.05f));
 
             BaseCritChance = stats.SpellCrit 
                            + (character.WarlockTalents.Malediction * 0.03f)
@@ -838,25 +903,25 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank> 
         {
-            new SpellRank(5, 80, 0, 0, 230, 0.15)
+            new SpellRank(5, 80, 0, 0, 230, 0.15f)
         };
 
         public UnstableAffliction(Stats stats, Character character) 
             : base("Unstable Affliction", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            BaseCastTime = 1.5;
+            BaseCastTime = 1.5f;
             BaseTickTime = 3;
             NumberOfTicks = 5;
             Duration = 15;
 
             BaseTickDamageCoefficient = (BaseTickTime / 15);
-            BaseTickDamageCoefficient += (character.WarlockTalents.EverlastingAffliction * 0.01);
+            BaseTickDamageCoefficient += (character.WarlockTalents.EverlastingAffliction * 0.01f);
 
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03)
-                                 + stats.Warlock2T8
-                                 + stats.Warlock4T9
-                              ); 
-            BaseMultiplier *= (1 + (character.WarlockTalents.SiphonLife * 0.05));
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f)
+                                + stats.Warlock2T8
+                                + stats.Warlock4T9
+                             )
+                           * (1 + (character.WarlockTalents.SiphonLife * 0.05f));
 
             BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Malediction * 0.03f);
 
@@ -867,12 +932,12 @@ namespace Rawr.Warlock
             }
         }
 
-        public override double CastTime()
+        public override float CastTime()
         {
-            double castTime = base.CastTime();
+            float castTime = base.CastTime();
             if (Character.WarlockTalents.GlyphUA)
             {
-                castTime -= 0.2;
+                castTime -= 0.2f;
             }
 
             return castTime;
@@ -907,7 +972,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(6, 78, 790, 790, 0, 0.23)
+            new SpellRank(6, 78, 790, 790, 0, 0.23f)
         };
 
         public DeathCoil(Stats stats, Character character)
@@ -920,11 +985,11 @@ namespace Rawr.Warlock
             Duration = 3;
             if (character.WarlockTalents.GlyphDeathCoil )
             {
-                Duration += 0.5;
+                Duration += 0.5f;
             }
-            BaseDirectDamageCoefficient = ((1.5 / 3.5) / 2);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseDirectDamageCoefficient = ((1.5f / 3.5f) / 2);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
     }
 
@@ -935,7 +1000,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(9, 78, 0, 0, 133, 0.17)
+            new SpellRank(9, 78, 0, 0, 133, 0.17f)
         };
 
         public DrainLife(Stats stats, Character character)
@@ -947,8 +1012,8 @@ namespace Rawr.Warlock
             Duration = 5;
             Channeled = true;
             Binary = true;
-            BaseTickDamageCoefficient = ((BaseTickTime / 3.5) / 2);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseTickDamageCoefficient = ((BaseTickTime / 3.5f) / 2);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
         }
     }
 
@@ -961,7 +1026,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(6, 77, 0, 0, 142, 0.14)
+            new SpellRank(6, 77, 0, 0, 142, 0.14f)
         };
 
         public DrainSoul(Stats stats, Character character)
@@ -974,7 +1039,7 @@ namespace Rawr.Warlock
             NumberOfTicks = 5;
             Duration = 15;
             BaseDirectDamageCoefficient = ((BaseTickTime / 3.5f) / 2f);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
         }
     }
 
@@ -987,18 +1052,18 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(4, 80, 645, 753, 0, 0.12)
+            new SpellRank(4, 80, 645, 753, 0, 0.12f)
         };
 
         public Haunt(Stats stats, Character character)
             : base("Haunt", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            BaseCastTime = 1.5;
+            BaseCastTime = 1.5f;
             Duration = 12;
             Cooldown = 8;
             MayCrit = true;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
             BaseCritBonusMultiplier = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
         }
     }
@@ -1013,7 +1078,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(3, 80, 1633, 1897, 1518, 0.34)
+            new SpellRank(3, 80, 1633, 1897, 1518, 0.34f)
         };
 
         public SeedOfCorruption(Stats stats, Character character)
@@ -1024,7 +1089,7 @@ namespace Rawr.Warlock
             NumberOfTicks = 6;
             Duration = 18;
 
-            double avgBaseDirectDamage = ((BaseMinDamage + BaseMaxDamage) / 2);
+            float avgBaseDirectDamage = ((BaseMinDamage + BaseMaxDamage) / 2);
 
             // coefficients derived as follows: 
             //    dd portion = \frac{2}{3.5}*\frac{x}{x+y}
@@ -1038,15 +1103,15 @@ namespace Rawr.Warlock
             BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (avgBaseDirectDamage / (avgBaseDirectDamage + BaseTickDamage));
             BaseTickDamageCoefficient = (Duration / 15f) * (BaseTickDamage / (avgBaseDirectDamage + BaseTickDamage));
 
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03)
-                                 + (character.WarlockTalents.Contagion * 0.01)
-                              );
-            BaseMultiplier *= (1 + (character.WarlockTalents.SiphonLife * 0.05));
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f)
+                                + (character.WarlockTalents.Contagion * 0.01f)
+                             )
+                           * (1 + (character.WarlockTalents.SiphonLife * 0.05f));
 
             BaseCritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.ImprovedCorruption * 0.01f);
+                           + (character.WarlockTalents.ImprovedCorruption * 0.01f);
             
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
 
         public override string ToString()
@@ -1079,7 +1144,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-           new SpellRank(2, 80,  615, 671, 161, 0.25)
+           new SpellRank(2, 80,  615, 671, 161, 0.25f)
         };
 
         public Shadowflame(Stats stats, Character character)
@@ -1121,16 +1186,16 @@ namespace Rawr.Warlock
 
             BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (avgBaseDirectDamage / (avgBaseDirectDamage + BaseTickDamage));
             //shadowmastery applies to shadow spells, which is the directdamage portion of shadowflame
-            BaseDirectDamageCoefficient *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseDirectDamageCoefficient *= (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
 
             BaseTickDamageCoefficient = (Duration / 15f) * (BaseTickDamage / (avgBaseDirectDamage + BaseTickDamage));
             //emberstorm applies to fire spells, which is the dot portion of shadowflame
-            BaseTickDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
+            BaseTickDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03f));
 
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
 
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05);
+            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
         }
 
         public override string ToString()
@@ -1163,7 +1228,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(10, 80, 775, 865, 0, 0.20)
+            new SpellRank(10, 80, 775, 865, 0, 0.20f)
         };
 
         public Shadowburn(Stats stats, Character character)
@@ -1173,13 +1238,12 @@ namespace Rawr.Warlock
             BaseRange = 20;
             Cooldown = 15;
             MayCrit = true;
-            BaseDirectDamageCoefficient = (1.5 / 3.5);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowAndFlame * 0.04));
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
-            BaseCritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f);
+            BaseDirectDamageCoefficient = (1.5f / 3.5f);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
+                           * (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1 + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
     }
 
@@ -1191,7 +1255,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(5, 80, 968, 1152, 0, 0.27)
+            new SpellRank(5, 80, 968, 1152, 0, 0.27f)
         };
 
         public Shadowfury(Stats stats, Character character)
@@ -1201,11 +1265,11 @@ namespace Rawr.Warlock
             MayCrit = true;
             Cooldown = Duration = 20;
             BaseRange = 8;
-            BaseDirectDamageCoefficient = (1.5 / 3.5);
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowMastery * 0.03));
+            BaseDirectDamageCoefficient = (1.5f / 3.5f);
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
             BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
     }
 
@@ -1216,7 +1280,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-           new SpellRank(11, 80,  460, 460, 157, 0.17)
+           new SpellRank(11, 80,  460, 460, 157, 0.17f)
         };
 
         public Immolate(Stats stats, Character character) 
@@ -1230,30 +1294,30 @@ namespace Rawr.Warlock
 
             //immolate coefficients were hotfixed to base 20% (before talents & other bonuses) in patch 3.0
             //so this is another exception to the spell coeff formula for hybrid spells
-            BaseDirectDamageCoefficient = 0.20;
-            BaseDirectDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03)
-                                              + (character.WarlockTalents.ImprovedImmolate * 0.1)
+            BaseDirectDamageCoefficient = 0.20f;
+            BaseDirectDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03f)
+                                              + (character.WarlockTalents.ImprovedImmolate * 0.1f)
                                               + (stats.Warlock2T8 / 2)
                                               + stats.Warlock4T9
                                            );
 
-            BaseTickDamageCoefficient = 0.20;
-            BaseTickDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03)
-                                            + (character.WarlockTalents.Aftermath * 0.03)
-                                            + (character.WarlockTalents.ImprovedImmolate * 0.10)
-                                            + (character.WarlockTalents.GlyphImmolate ? 0.10 : 0)
+            BaseTickDamageCoefficient = 0.20f;
+            BaseTickDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03f)
+                                            + (character.WarlockTalents.Aftermath * 0.03f)
+                                            + (character.WarlockTalents.ImprovedImmolate * 0.10f)
+                                            + (character.WarlockTalents.GlyphImmolate ? 0.10f : 0f)
                                             + (stats.Warlock2T8 / 2)
                                             + stats.Warlock4T9
                                          );
-
-            //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            
             BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+            //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
 
-        public override double CastTime()
+        public override float CastTime()
         {
-            return Math.Max(1.0, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.1)) / (1 + Stats.SpellHaste)));
+            return Math.Max(1, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.1f)) / (1 + Stats.SpellHaste)));
         }
 
         public override string ToString()
@@ -1296,7 +1360,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(7, 79, 0, 0, 675, 0.57)
+            new SpellRank(7, 79, 0, 0, 675, 0.57f)
         };
 
         public RainOfFire(Stats stats, Character character)
@@ -1310,10 +1374,10 @@ namespace Rawr.Warlock
             AreaOfEffect = true;
             MayCrit = true;
             BaseTickDamageCoefficient = ((Duration / 7) / NumberOfTicks);
-            BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
+            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
             BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
     }
 
@@ -1329,7 +1393,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(5, 78, 0, 0, 451, 0.64)
+            new SpellRank(5, 78, 0, 0, 451, 0.64f)
         };
 
         public Hellfire(Stats stats, Character character)
@@ -1343,7 +1407,7 @@ namespace Rawr.Warlock
             AreaOfEffect = true;
             BaseRange = 10;
             BaseTickDamageCoefficient = ((Duration / 7) / NumberOfTicks);
-            BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
+            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
         }
     }
 
@@ -1357,21 +1421,21 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(10, 79, 343, 405, 0, 0.08)
+            new SpellRank(10, 79, 343, 405, 0, 0.08f)
         };
 
         public SearingPain(Stats stats, Character character)
             : base("Searing Pain", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
-            BaseCastTime = 1.5;
+            BaseCastTime = 1.5f;
             MayCrit = true;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5);
-            BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
+            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
             BaseCritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f)
-                       + (character.WarlockTalents.ImprovedSearingPain > 0 ? 0.01f + 0.03f * character.WarlockTalents.ImprovedSearingPain: 0);
+                           + (character.WarlockTalents.Devastation * 0.05f)
+                           + (character.WarlockTalents.ImprovedSearingPain > 0 ? 0.01f + 0.03f * character.WarlockTalents.ImprovedSearingPain: 0);
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f + (character.WarlockTalents.GlyphSearingPain ? 0.2f : 0)) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
     }
 
@@ -1389,7 +1453,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(6, 80, 1323, 1657, 0, 0.09)
+            new SpellRank(6, 80, 1323, 1657, 0, 0.09f)
         };
 
         public SoulFire(Stats stats, Character character)
@@ -1397,19 +1461,19 @@ namespace Rawr.Warlock
         {
             MayCrit = true;
             BaseCastTime = 6;
-            BaseDirectDamageCoefficient = 1.15;
-            BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
+            BaseDirectDamageCoefficient = 1.15f;
+            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
             BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Devastation * 0.05)
+                           + (character.WarlockTalents.Devastation * 0.05f)
                            + stats.Warlock2T10;
 
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
 
-        public override double CastTime()
+        public override float CastTime()
         {
-            return Math.Max(1.0, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.4)) / (1 + Stats.SpellHaste)));
+            return Math.Max(1, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.4f)) / (1 + Stats.SpellHaste)));
         }
     }
 
@@ -1420,7 +1484,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(8, 80, 0, 0, 0, 0.16)
+            new SpellRank(8, 80, 0, 0, 0, 0.16f)
         };
 
         public Conflagrate(Stats stats, Character character)
@@ -1435,42 +1499,42 @@ namespace Rawr.Warlock
             TicksMayCrit = true;    //TODO: need to re-check this - wowhead say no, simcraft say yes ..
 
             BaseCritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f)
-                       + (character.WarlockTalents.FireAndBrimstone * 0.05f);
+                           + (character.WarlockTalents.Devastation * 0.05f)
+                           + (character.WarlockTalents.FireAndBrimstone * 0.05f);
 
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
         }
 
         /// <summary>
         /// The direct damage portion of Conflag instantly hits for 60% of Immolate or Shadowflame damage.
         /// </summary>
         /// TODO: check for immolate or shadowflame buff
-        public override double MinDamage()
+        public override float MinDamage()
         {
             Spell immolate = new Immolate(Stats, Character);
-            double damage = immolate.MinDamage() + (immolate.TickDamage() * immolate.NumberOfTicks);
-            return (damage * 0.60);
+            float damage = immolate.MinDamage() + (immolate.TickDamage() * immolate.NumberOfTicks);
+            return (damage * 0.60f);
         }
 
         /// <summary>
         /// The direct damage portion of Conflag instantly hits for 60% of Immolate or Shadowflame damage.
         /// </summary>
-        public override double MaxDamage()
+        public override float MaxDamage()
         {
             Spell immolate = new Immolate(Stats, Character);
-            double damage = immolate.MaxDamage() + (immolate.TickDamage() * immolate.NumberOfTicks);
-            return (damage * 0.60);
+            float damage = immolate.MaxDamage() + (immolate.TickDamage() * immolate.NumberOfTicks);
+            return (damage * 0.60f);
         }
 
         /// <summary>
         /// The dot portion of Conflag deals 20% of Immolate or Shadowflame damage over 6 seconds [3 ticks]...
         /// </summary>
-        public override double TickDamage()
+        public override float TickDamage()
         {
             Spell immolate = new Immolate(Stats, Character);
-            double damage = immolate.MaxDamage() + (immolate.TickDamage() * immolate.NumberOfTicks);
-            double tickDamage = ((damage * 0.20) / NumberOfTicks);
+            float damage = immolate.MaxDamage() + (immolate.TickDamage() * immolate.NumberOfTicks);
+            float tickDamage = ((damage * 0.20f) / NumberOfTicks);
             return tickDamage; 
         }
 
@@ -1501,7 +1565,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(4, 80, 1429, 1813, 0, 0.07)
+            new SpellRank(4, 80, 1429, 1813, 0, 0.07f)
         };
 
         public ChaosBolt(Stats stats, Character character)
@@ -1510,29 +1574,29 @@ namespace Rawr.Warlock
             Binary = true;
             MayCrit = true;
             Cooldown = 12;
-            BaseCastTime = 2.5;
-            BaseDirectDamageCoefficient = BaseCastTime / 3.5;
-            BaseMultiplier *= (1 + (character.WarlockTalents.ShadowAndFlame * 0.04));
-            BaseMultiplier *= (1 + (character.WarlockTalents.Emberstorm * 0.03));
+            BaseCastTime = 2.5f;
+            BaseDirectDamageCoefficient = BaseCastTime / 3.5f;
+            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
+                           * (1 + (character.WarlockTalents.Emberstorm * 0.03f));
             BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
             //BaseCritBonusMultiplier = (BaseCritMultiplier * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
-            BaseCritBonusMultiplier *= (1 + (character.WarlockTalents.Ruin * 0.20));
+            BaseCritBonusMultiplier = (1 + (character.WarlockTalents.Ruin * 0.20f));
             if (character.WarlockTalents.GlyphChaosBolt)
             {
                 Cooldown -= 2f;
             }
         }
 
-        public override double CastTime()
+        public override float CastTime()
         {
-            return Math.Max(1.0, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.1)) / (1 + Stats.SpellHaste)));
+            return Math.Max(1, ((BaseCastTime - (Character.WarlockTalents.Bane * 0.1f)) / (1 + Stats.SpellHaste)));
         }
 
         public override string ToString()
         {
-            double spellpowerBonus = (Stats.SpellPower * BaseDirectDamageCoefficient);
-            double burstTotal = (AvgHit + spellpowerBonus) * (1 + (Character.WarlockTalents.Emberstorm * 0.03));
-            double talentBonus = (burstTotal - (AvgHit + spellpowerBonus));
+            float spellpowerBonus = (Stats.SpellPower * BaseDirectDamageCoefficient);
+            float burstTotal = (AvgHit + spellpowerBonus) * (1 + (Character.WarlockTalents.Emberstorm * 0.03f));
+            float talentBonus = (burstTotal - (AvgHit + spellpowerBonus));
 
             return String.Format("{0:0}*{1} (Rank {2})\r\n" + 
                                  "{3:0} sec cast [{4:0} sec cooldown]\r\n" + 
@@ -1549,7 +1613,7 @@ namespace Rawr.Warlock
                                  burstTotal,
                                  AvgHit,
                                  spellpowerBonus, BaseDirectDamageCoefficient,
-                                 talentBonus, (Character.WarlockTalents.Emberstorm * 0.03)
+                                 talentBonus, (Character.WarlockTalents.Emberstorm * 0.03f)
                                 );
         }
     }
@@ -1570,15 +1634,15 @@ namespace Rawr.Warlock
             Harmful = false;
         }
 
-        public override double Mana()
+        public override float Mana()
         {
-            return Math.Floor((1490 + (Stats.Spirit * 3)) * (1 + (Character.WarlockTalents.ImprovedLifeTap * 0.10)));
+            return (float)Math.Floor((1490 + (Stats.Spirit * 3)) * (1 + (Character.WarlockTalents.ImprovedLifeTap * 0.10f)));
         }
 
         public override string ToString()
         {
-            double lifetapFromSpirit = (Stats.Spirit*3);
-            double lifetapFromTalent = (Mana() - lifetapFromSpirit - 1490);
+            float lifetapFromSpirit = (Stats.Spirit * 3);
+            float lifetapFromTalent = (Mana() - lifetapFromSpirit - 1490);
 
             return String.Format("{0}*{1} (Rank {2})\r\nInstant\r\nConverts {0} health into {0} mana.\r\n\r\nBreakdown:\r\n{3}\tfrom base health\r\n{4}\tfrom Spirit (multiplied by 3)\r\n{5}\tfrom Talent: Improved Life Tap",
                 Mana(), 
@@ -1612,14 +1676,14 @@ namespace Rawr.Warlock
         /// Calculates the amount of mana returned by DarkPact.
         /// This scales with spellpower from patch 3.3.
         /// </summary>
-        public override double Mana()
+        public override float Mana()
         {
-            return Math.Floor(1200 + (Stats.SpellPower + Stats.SpellShadowDamageRating) * BaseDirectDamageCoefficient);
+            return (float)Math.Floor(1200 + (Stats.SpellPower + Stats.SpellShadowDamageRating) * BaseDirectDamageCoefficient);
         }
 
         public override string ToString()
         {
-            double darkpactFromSpellpower = ((Stats.SpellPower + Stats.SpellShadowDamageRating) * BaseDirectDamageCoefficient);
+            float darkpactFromSpellpower = ((Stats.SpellPower + Stats.SpellShadowDamageRating) * BaseDirectDamageCoefficient);
 
             return String.Format("{0:0}*{1} (Rank {2})\r\nInstant\r\nDrains {0:0} of your summoned demon's Mana, returning 100% to you.\r\n\r\nBreakdown:\r\n{3:0}\tfrom base mana\r\n{4:0}\tfrom {5:0} Spellpower [{6:0%} coefficient]",
                 Mana(), 

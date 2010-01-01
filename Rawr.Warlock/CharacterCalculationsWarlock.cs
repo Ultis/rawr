@@ -161,15 +161,25 @@ namespace Rawr.Warlock
             //    SimulateCombat(_petAbilities);    
             //}
 
+            int threadid = System.Threading.Thread.CurrentThread.ManagedThreadId;
+
             //calculate totals 
             foreach (Spell spell in SpellPriority)
             {
-                OverallDamage += (float)spell.SpellStatistics.OverallDamage;
+                OverallDamage += (float)spell.SpellStatistics.OverallDamage();
                 TotalManaCost += (float)spell.SpellStatistics.ManaUsed;
+
+                Trace.WriteLine(String.Format("thread:[{0}] | - {1}: #Hits={2} [Damage={3:0}, Average={4:0}], #Crits={5} [Damage={6:0}, Average={7:0}], #Misses={8}", 
+                                              threadid, spell.Name, 
+                                              spell.SpellStatistics.HitCount, spell.SpellStatistics.HitDamage ,spell.SpellStatistics.HitAverage(),
+                                              spell.SpellStatistics.CritCount, spell.SpellStatistics.CritDamage, spell.SpellStatistics.CritAverage(),
+                                              spell.SpellStatistics.MissCount
+                                             )
+                               );
             }
 
-            DpsPoints = (OverallDamage / Time);
-            Trace.WriteLine(string.Format("thread:[{0}] | ActiveTime={1}", System.Threading.Thread.CurrentThread.ManagedThreadId, ActiveTime));
+            DpsPoints = (OverallDamage / ActiveTime);
+            Trace.WriteLine(string.Format("thread:[{0}] | ActiveTime={1}", threadid, ActiveTime));
 
             //StringBuilder sb =  new StringBuilder();
             //foreach (Spell spell in Events)
@@ -187,14 +197,15 @@ namespace Rawr.Warlock
         {
             int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
-            double timer = 0;
-            double timelimit = Options.Duration;  //in seconds
-            double latency = (Options.Latency / 1000);      //in milliseconds
+            float timer = 0;
+            float timelimit = Options.Duration;  //in seconds
+            float latency = (Options.Latency / 1000);      //in milliseconds
 
             DateTime start = DateTime.Now;
 
             List<string> scheduledTicks = new List<string>();
 
+            Trace.WriteLine("-------------------");
             Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation starts [timelimit: {2:0.00}]", threadID, timer, timelimit));
 
             while (queue.Count != 0)
@@ -212,7 +223,7 @@ namespace Rawr.Warlock
                 Spell spell = queue.Dequeue();
 
                 //get the casttime (and take latency into account)
-                double casttime = spell.CastTime();
+                float casttime = spell.CastTime();
                 if (casttime == 0)
                 {
                     //instant cast spell, so we have to add the GCD
@@ -244,7 +255,7 @@ namespace Rawr.Warlock
                     //spell.Execute(updatedStats);
 
                     //how long to wait before this spell can be re-cast?
-                    double delay = spell.GetTimeDelay();
+                    float delay = spell.GetTimeDelay();
 
                     //we are using a PriorityQueue in this time-based event simulation
                     //add the delay to the timer - this becomes the spell's new priority in the priorityqueue
@@ -256,6 +267,7 @@ namespace Rawr.Warlock
 
                     //the spell lands on the target, so calculate damage and trigger any related effects
                     spell.Execute();
+                    //Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - {2} spell hits the target for {3:0} damage", threadID, timer, spell.Name, spell.MaxDamage() ));
 
                     //append to the events history
                     Events.Add(spell);
@@ -288,10 +300,10 @@ namespace Rawr.Warlock
                 }
             }
 
+            ActiveTime = timer;
             Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation ends [no spells left in the queue]", threadID, timer));
             DateTime stop = DateTime.Now;
             Trace.WriteLine(String.Format("thread:[{0}] | simulation time: {1} seconds", threadID, (stop - start).Seconds));
-            Trace.WriteLine("-------------------");
         }
 
         private double GetManaRegenFromSpiritAndIntellect()

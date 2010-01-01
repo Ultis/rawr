@@ -337,7 +337,7 @@ namespace Rawr.Warlock
                         {
                             comparison = CreateNewComparisonCalculation();
                             comparison.Name = spell.Name;
-                            comparison.SubPoints[0] = (float)(spell.SpellStatistics.OverallDamage / dpscalcs.Time);
+                            comparison.SubPoints[0] = (float)(spell.SpellStatistics.OverallDamage() / dpscalcs.Time);
                             _currentChartTotal += comparison.SubPoints[0];
                             comparison.OverallPoints = comparison.SubPoints[0];
                             comparison.Equipped = false;
