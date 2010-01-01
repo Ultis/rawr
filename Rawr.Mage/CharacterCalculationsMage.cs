@@ -204,6 +204,9 @@ namespace Rawr.Mage
 
         #region Base State Stats
         public float BaseSpellHit { get; set; }
+        public float RawArcaneHitRate { get; set; }
+        public float RawFireHitRate { get; set; }
+        public float RawFrostHitRate { get; set; }
         public float BaseArcaneHitRate { get; set; }
         public float BaseFireHitRate { get; set; }
         public float BaseFrostHitRate { get; set; }
@@ -977,6 +980,20 @@ namespace Rawr.Mage
         public Dictionary<string, float> ManaSources { get; private set; }
         public Dictionary<string, float> ManaUsage { get; private set; }
 
+        private string GetHitRatingDescription(float hitRate)
+        {
+            float diff = (hitRate - 1) * 800 / CalculationOptions.LevelScalingFactor;
+            if (diff >= 1)
+            {
+                return " (" + (int)Math.Floor(diff) + " hit rating over cap)";
+            }
+            else if (diff <= -1)
+            {
+                return " (" + (int)Math.Ceiling(-diff) + " hit rating to cap)";
+            }
+            return string.Empty;
+        }
+
         internal Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal(bool computeReconstruction)
         {
             Dictionary<string, string> dictValues = DisplayCalculationValues = new Dictionary<string, string>();
@@ -987,9 +1004,9 @@ namespace Rawr.Mage
             dictValues.Add("Health", BaseStats.Health.ToString());
             dictValues.Add("Mana", BaseStats.Mana.ToString());
             dictValues.Add("Crit Rate", String.Format("{0:F}%*{1} Crit Rating", 100 * Math.Max(0, BaseState.CritRate), BaseStats.CritRating));
-            float levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (CalculationOptions.PlayerLevel - 70) / 10f));
+            float levelScalingFactor = CalculationOptions.LevelScalingFactor;
             // hit rating = hitrate * 800 / levelScalingFactor
-            dictValues.Add("Hit Rate", String.Format("{0:F}%*{1} Hit Rating\r\nArcane\t{2:F}%{3}\r\nFire\t{4:F}%{5}\r\nFrost\t{6:F}%{7}", 100 * BaseState.SpellHit, BaseStats.HitRating, 100 * BaseState.ArcaneHitRate, (BaseState.ArcaneHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.ArcaneHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : "", 100 * BaseState.FireHitRate, (BaseState.FireHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.FireHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : "", 100 * BaseState.FrostHitRate, (BaseState.FrostHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.FrostHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : ""));
+            dictValues.Add("Hit Rate", String.Format("{0:F}%*{1} Hit Rating\r\nArcane\t{2:F}%{3}\r\nFire\t{4:F}%{5}\r\nFrost\t{6:F}%{7}", 100 * BaseState.SpellHit, BaseStats.HitRating, 100 * BaseState.ArcaneHitRate, GetHitRatingDescription(RawArcaneHitRate), 100 * BaseState.FireHitRate, GetHitRatingDescription(RawFireHitRate), 100 * BaseState.FrostHitRate, GetHitRatingDescription(RawFrostHitRate)));
             dictValues.Add("Spell Penetration", BaseStats.SpellPenetration.ToString());
             dictValues.Add("Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * (BaseState.CastingSpeed - 1f), BaseState.SpellHasteRating));
             dictValues.Add("Arcane Damage", BaseState.ArcaneSpellPower.ToString());

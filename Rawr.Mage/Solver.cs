@@ -1305,10 +1305,13 @@ namespace Rawr.Mage
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
 
-            calculationResult.BaseArcaneHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit + 0.01f * talents.ArcaneFocus);
-            calculationResult.BaseFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
-            calculationResult.BaseFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
-            calculationResult.BaseFrostHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.RawArcaneHitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit + 0.01f * talents.ArcaneFocus;
+            calculationResult.RawFireHitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit;
+            calculationResult.RawFrostHitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit;
+
+            calculationResult.BaseArcaneHitRate = Math.Min(Spell.MaxHitRate, calculationResult.RawArcaneHitRate);
+            calculationResult.BaseFireHitRate = Math.Min(Spell.MaxHitRate, calculationResult.RawFireHitRate);
+            calculationResult.BaseFrostHitRate = Math.Min(Spell.MaxHitRate, calculationResult.RawFrostHitRate);
             calculationResult.BaseNatureHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
             calculationResult.BaseShadowHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
             calculationResult.BaseFrostFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
