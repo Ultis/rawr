@@ -68,7 +68,7 @@ namespace Rawr
 			}
 			if (error.Contains("Configuration system failed"))
 			{
-				return "Rawr encountered a serious error caused by a corrupted user settings file. Please try clearing your local settings by closing Rawr, and then deleting any folders whose name starts with 'Rawr' at C:\Documents and Settings\[User]\AppData\Local\ or C:\Users\[User]\AppData\Local\. You will need to display hidden folders to find those folders. " +
+				return "Rawr encountered a serious error caused by a corrupted user settings file. Please try clearing your local settings by closing Rawr, and then deleting any folders whose name starts with 'Rawr' at C:\\Documents and Settings\\[User]\\AppData\\Local\\ or C:\\Users\\[User]\\AppData\\Local\\. You will need to display hidden folders to find those folders. " +
 					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
 			}
 			return "Rawr encountered a serious error. Please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
