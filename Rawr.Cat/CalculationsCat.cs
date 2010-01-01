@@ -651,7 +651,9 @@ namespace Rawr.Cat
 			{
                 // JOTHAY's NOTE: The following is an ugly hack to add Recursive Effects to Cat
                 // so Victor's Call and similar trinkets can be given more appropriate value
-                if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectDataSize == 1) {
+                if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectDataSize == 1
+					&& triggerIntervals.ContainsKey(effect.Stats._rawSpecialEffectData[0].Trigger))
+				{
                     float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger],
                         triggerChances[effect.Trigger], 1f, calcOpts.Duration);
 				    statsProcs.Accumulate(effect.Stats._rawSpecialEffectData[0].GetAverageStats(

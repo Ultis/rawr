@@ -56,34 +56,23 @@ namespace Rawr
 				return "Rawr encounted a serious error caused by an old version of the .NET Framework. Please download and install the latest version of the .NET Framework from Microsoft (http://www.microsoft.com/Net/Download.aspx)." +
 					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
 			}
+			if (error.Contains("Verdana"))
+			{
+				return "Rawr encountered a serious error caused by a corrupted copy of the 'Verdana' font. Try reinstalling .NET Framework 3.5SP1 (http://www.microsoft.com/Net/Download.aspx), or getting a copy from a friend. " +
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+			}
+			if (error.Contains("Segou UI"))
+			{
+				return "Rawr encountered a serious error caused by a corrupted copy of the 'Segou UI' font. Try reinstalling .NET Framework 3.5SP1 (http://www.microsoft.com/Net/Download.aspx), or getting a copy from a friend. " +
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+			}
+			if (error.Contains("Configuration system failed"))
+			{
+				return "Rawr encountered a serious error caused by a corrupted user settings file. Please try clearing your local settings by closing Rawr, and then deleting any folders whose name starts with 'Rawr' at C:\Documents and Settings\[User]\AppData\Local\ or C:\Users\[User]\AppData\Local\. You will need to display hidden folders to find those folders. " +
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+			}
 			return "Rawr encountered a serious error. Please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
 		}
-
-		//private static void RawrCatIntro()
-		//{
-		//    if (!System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml")))
-		//    { //If they don't have a BuffCache, this is probably the first run, so display an intro to b10 message
-		//        string message = "Welcome to Rawr b10!\r\n\r\n" +
-		//            " Rawr b10 is probably the biggest update to Rawr in a while. " +
-		//            "There's tons of new stuff, including (finally) Cat support! " +
-		//            "It's also got several holes where there are features that I " +
-		//            "haven't had a chance to finish, but I thought weren't worth " +
-		//            "delaying the release of b10 further for. Since this is the " +
-		//            "first release with Cat support, and a major upgrade as well, " +
-		//            "I expect there to be a few bugs, which I hope to fix quickly. " +
-		//            "\r\n\r\n I strongly encourage you to read the ReadMe in order " +
-		//            "to see what's new, what's incomplete, etc. Would you like to " +
-		//            "view the ReadMe now?";
-		//        if (MessageBox.Show(message, "Welcome to Rawr b10!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-		//        {
-		//            try
-		//            {
-		//                System.Diagnostics.Process.Start(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "ReadMe.txt"));
-		//            }
-		//            catch { }
-		//        }
-		//    }
-		//} 
     }
 }
 
