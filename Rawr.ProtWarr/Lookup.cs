@@ -137,10 +137,11 @@ namespace Rawr.ProtWarr
                 case Ability.ThunderClap:
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;
                     break;
-                case Ability.SunderArmor:
-                case Ability.ShieldBash:
-                case Ability.Rend:
+                case Ability.DamageShield:
                 case Ability.DeepWounds:
+                case Ability.Rend:
+                case Ability.ShieldBash:
+                case Ability.SunderArmor:
                     abilityCritChance = 0.0f;
                     break;
             }
