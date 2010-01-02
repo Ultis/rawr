@@ -46,9 +46,9 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.lblSerendipity = new System.Windows.Forms.Label();
             this.cbModelProcs = new System.Windows.Forms.CheckBox();
             this.trkRapture = new System.Windows.Forms.TrackBar();
+            this.lblSerendipity = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblShadowfiend = new System.Windows.Forms.Label();
             this.lblSurvivability = new System.Windows.Forms.Label();
@@ -289,15 +289,6 @@
             this.toolTip1.SetToolTip(this.label17, "To convert from a Minute:Seconds format, please multiply the minute part by 60, a" +
                     "nd add on the Seconds part.");
             // 
-            // lblSerendipity
-            // 
-            this.lblSerendipity.AutoSize = true;
-            this.lblSerendipity.Location = new System.Drawing.Point(3, 205);
-            this.lblSerendipity.Name = "lblSerendipity";
-            this.lblSerendipity.Size = new System.Drawing.Size(92, 13);
-            this.lblSerendipity.TabIndex = 31;
-            this.lblSerendipity.Text = "% T5 2 Set Bonus";
-            // 
             // cbModelProcs
             // 
             this.cbModelProcs.AutoSize = true;
@@ -320,6 +311,15 @@
             this.toolTip1.SetToolTip(this.trkRapture, "Effectiveness of Rapture. 75% means you expect 75% of the shields to be entirely " +
                     "consumed or dispelled.");
             this.trkRapture.Scroll += new System.EventHandler(this.trkRapture_Scroll);
+            // 
+            // lblSerendipity
+            // 
+            this.lblSerendipity.AutoSize = true;
+            this.lblSerendipity.Location = new System.Drawing.Point(3, 205);
+            this.lblSerendipity.Name = "lblSerendipity";
+            this.lblSerendipity.Size = new System.Drawing.Size(92, 13);
+            this.lblSerendipity.TabIndex = 31;
+            this.lblSerendipity.Text = "% T5 2 Set Bonus";
             // 
             // lblReplenishment
             // 

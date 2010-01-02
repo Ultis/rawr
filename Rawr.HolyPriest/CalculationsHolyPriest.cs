@@ -776,6 +776,7 @@ namespace Rawr.HolyPriest
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 PriestInnerFire = stats.PriestInnerFire,
+                Healed = stats.Healed,
 
                 ManaRestore = stats.ManaRestore,
                 SpellsManaReduction = stats.SpellsManaReduction,
@@ -867,6 +868,7 @@ namespace Rawr.HolyPriest
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
                 + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
+                + stats.Healed
 
                 + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
                 + stats.PrayerOfHealingExtraCrit + stats.PWSBonusSpellPowerProc

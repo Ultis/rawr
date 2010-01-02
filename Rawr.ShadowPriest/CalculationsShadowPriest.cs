@@ -678,6 +678,11 @@ namespace Rawr.ShadowPriest
                 ManaRestore = stats.ManaRestore,
                 SpellsManaReduction = stats.SpellsManaReduction,
                 HighestStat = stats.HighestStat,
+                ArcaneDamage = stats.ArcaneDamage,
+                FireDamage = stats.FireDamage,
+                FrostDamage = stats.FrostDamage,
+                HolyDamage = stats.HolyDamage,
+                NatureDamage = stats.NatureDamage,
                 ShadowDamage = stats.ShadowDamage,
 
                 /*ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
@@ -757,7 +762,8 @@ namespace Rawr.ShadowPriest
                 + stats.PriestDPS_T10_2pc + stats.PriestDPS_T10_4pc
                 + stats.ManaRestoreFromBaseManaPPM + stats.BonusSpellCritMultiplier
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
-                + stats.ShadowDamage
+                + stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage
+                + stats.HolyDamage + stats.NatureDamage + stats.ShadowDamage
 
                 /*+ stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min

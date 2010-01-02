@@ -416,7 +416,7 @@ namespace Rawr.HolyPriest
                 manacost += mcost;
                 //metareductiontot += metaSpellCostReduction;
             }
-
+         
             // Real Cyclelen also has time for FSR. To get 80% FSR, a cycle of 20 seconds needs to include:
             // (20 + 5) / 0.8 = 31.25 seconds. (31.25 - 5 - 20 = 6.25 / 31.25 = 0.2 seconds of FSR regen).
             //float realcyclelen = (cyclelen + 5f) / (calculationOptions.FSRRatio / 100f);
@@ -481,9 +481,10 @@ namespace Rawr.HolyPriest
             regen += tmpregen;
             if (calculationOptions.ModelProcs)
             {
+                float heal = 0f;
                 foreach (SpecialEffect se in simstats.SpecialEffects())
                 {
-                    tmpregen = 0f;
+                    tmpregen = 0f;                  
                     if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
                     {
                         if (se.Trigger == Trigger.SpellCast
@@ -505,8 +506,8 @@ namespace Rawr.HolyPriest
                         }
                         else if (se.Trigger == Trigger.Use)
                         {
-                            tmpregen = se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
-                                + se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                            tmpregen = se.GetAverageStats().ManaRestore
+                                + se.GetAverageStats().Mp5 / 5;
 
                         }
                     }
@@ -515,7 +516,21 @@ namespace Rawr.HolyPriest
                         ManaSources.Add(new ManaSource(se.ToString(), tmpregen));
                         regen += tmpregen;
                     }
+                    if (se.Stats.Healed > 0f)
+                    {
+                        if (se.Trigger == Trigger.HealingSpellCast
+                            || se.Trigger == Trigger.SpellCast)
+                            heal += se.GetAverageStats(avgcastlen, 1f, 0f, calculationOptions.FightLengthSeconds).Healed;
+                        else if (se.Trigger == Trigger.HealingSpellHit)
+                            heal += se.GetAverageStats(avgcastlandlen, 1f, 0f, calculationOptions.FightLengthSeconds).Healed;
+                        else if (se.Trigger == Trigger.SpellCrit
+                            || se.Trigger == Trigger.HealingSpellCrit)
+                            heal += se.GetAverageStats(avgcastlen, avgcritcast / avgcastlen, 0f, calculationOptions.FightLengthSeconds).Healed;
+                        else if (se.Trigger == Trigger.Use)
+                            heal += se.GetAverageStats().Healed;
+                    }
                 }
+                healamount += heal * (1f + stats.SpellCrit * 0.5f) * healmultiplier * (1f + valanyrProc);
                 #region old procs
                 /*if (simstats.BangleProc > 0)
                 {
@@ -1065,6 +1080,7 @@ namespace Rawr.HolyPriest
 
                 if (calculationOptions.ModelProcs)
                 {
+                    float heal = 0f;
                     foreach (SpecialEffect se in simstats.SpecialEffects())
                     {
                         tmpregen = 0f;
@@ -1085,8 +1101,8 @@ namespace Rawr.HolyPriest
                             }
                             else if (se.Trigger == Trigger.Use)
                             {
-                                tmpregen = se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).ManaRestore
-                                    + se.GetAverageStats(0f, 0f, 0f, calculationOptions.FightLengthSeconds).Mp5 / 5;
+                                tmpregen = se.GetAverageStats().ManaRestore
+                                    + se.GetAverageStats().Mp5 / 5;
 
                             }
                         }
@@ -1095,7 +1111,22 @@ namespace Rawr.HolyPriest
                             ManaSources.Add(new ManaSource(se.ToString(), tmpregen));
                             regen += tmpregen;
                         }
+                        if (se.Stats.Healed > 0f)
+                        {
+                            if (se.Trigger == Trigger.HealingSpellCast
+                                || se.Trigger == Trigger.SpellCast
+                                || se.Trigger == Trigger.HealingSpellHit)
+                                heal += se.GetAverageStats(calculationOptions.FightLengthSeconds / TotalCasts, 1f, 0f, calculationOptions.FightLengthSeconds).Healed;
+                            else if (se.Trigger == Trigger.SpellCrit
+                                || se.Trigger == Trigger.HealingSpellCrit)
+                                heal += se.GetAverageStats(calculationOptions.FightLengthSeconds / TotalCasts, CritCounter / TotalCasts, 0f, calculationOptions.FightLengthSeconds).Healed;
+                            else if (se.Trigger == Trigger.Use)
+                                heal += se.GetAverageStats().Healed;
+                        }
                     }
+                    heal *= (1f + stats.SpellCrit * 0.5f) * healmultiplier;
+                    DirectHeal += heal;
+                    AbsorbHeal += heal * valanyrProc;
                     #region old procs
                     /*
                     // TODO: Trinkets here.

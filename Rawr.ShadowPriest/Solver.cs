@@ -1154,31 +1154,64 @@ namespace Rawr.ShadowPriest
 
             // Finalize Trinkets
            foreach (SpecialEffect se in simStats.SpecialEffects())
-            {
-                if (se.Trigger == Trigger.DoTTick)
-                {
-                    int dots = 0;
-                    foreach (Spell spell in SpellPriority)
-                        if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                    if (se.Stats.ShadowDamage > 0)
-                        DPS += se.GetAverageStats(dots / 3, 1f, 0f, CalculationOptions.FightLength * 60f).ShadowDamage
-                            * (1f + simStats.BonusShadowDamageMultiplier)
-                            * (1f + simStats.BonusDamageMultiplier)
-                            * (character.PriestTalents.ShadowWeaving > 0 ? 1.1f : 1.0f)
-                            * (1f + character.PriestTalents.Darkness * 0.02f)
-                            * (1f + character.PriestTalents.Shadowform * 0.15f);
-                }
-                else if (se.Trigger == Trigger.DamageSpellHit
-                    || se.Trigger == Trigger.SpellHit)
-                {
-                    if (se.Stats.ShadowDamage > 0)
-                        DPS += se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60f).ShadowDamage
-                            * (1f + simStats.BonusShadowDamageMultiplier)
-                            * (1f + simStats.BonusDamageMultiplier)
-                            * (character.PriestTalents.ShadowWeaving > 0 ? 1.1f : 1.0f)
-                            * (1f + character.PriestTalents.Darkness * 0.02f)
-                            * (1f + character.PriestTalents.Shadowform * 0.15f);
-                }
+           {
+               float dpr = 0f;
+               if (se.Trigger == Trigger.DoTTick)
+               {              
+                   int dots = 0;
+                   foreach (Spell spell in SpellPriority)
+                       if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                   if (se.Stats.ArcaneDamage > 0
+                       || se.Stats.FireDamage > 0
+                       || se.Stats.FrostDamage > 0
+                       || se.Stats.HolyDamage > 0
+                       || se.Stats.NatureDamage > 0
+                       || se.Stats.ShadowDamage > 0)
+                       dpr += (se.Stats.ArcaneDamage + se.Stats.FireDamage + se.Stats.FrostDamage
+                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage)
+                           * se.GetAverageProcsPerSecond(dots / 3, 1f, 0f, CalculationOptions.FightLength * 60f);
+               }
+               else if (se.Trigger == Trigger.DamageSpellHit
+                   || se.Trigger == Trigger.SpellHit)
+               {
+                   if (se.Stats.ArcaneDamage > 0
+                       || se.Stats.FireDamage > 0
+                       || se.Stats.FrostDamage > 0
+                       || se.Stats.HolyDamage > 0
+                       || se.Stats.NatureDamage > 0
+                       || se.Stats.ShadowDamage > 0)
+                       dpr += (se.Stats.ArcaneDamage + se.Stats.FireDamage + se.Stats.FrostDamage
+                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage)
+                           * se.GetAverageProcsPerSecond(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60f);
+               }
+               else if (se.Trigger == Trigger.DamageSpellCrit
+                   || se.Trigger == Trigger.SpellCrit)
+               {
+                   if (se.Stats.ArcaneDamage > 0
+                       || se.Stats.FireDamage > 0
+                       || se.Stats.FrostDamage > 0
+                       || se.Stats.HolyDamage > 0
+                       || se.Stats.NatureDamage > 0
+                       || se.Stats.ShadowDamage > 0)
+                       dpr += (se.Stats.ArcaneDamage + se.Stats.FireDamage + se.Stats.FrostDamage
+                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage)
+                           * se.GetAverageProcsPerSecond(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60f);
+               }
+               if (dpr > 0)
+               {
+                   dpr *= (1f + simStats.SpellCrit * 0.5f);
+                   if (se.Stats.ShadowDamage > 0)
+                   {
+                       dpr *= (character.PriestTalents.ShadowWeaving > 0 ? 1.1f : 1.0f)
+                           * (1f + character.PriestTalents.Darkness * 0.02f)
+                           * (1f + character.PriestTalents.Shadowform * 0.15f)
+                           * (ShadowHitChance / 100f);
+                   }
+                   else
+                       dpr *= (HitChance / 100f);
+                   // Should technically be one BonusXDamageMultiplier pr effect but REALLY REALLY REALLY!
+                   DPS += dpr * (1f + simStats.BonusDamageMultiplier) * (1f + simStats.BonusShadowDamageMultiplier);
+               }
             }
             #region old
                 /*
