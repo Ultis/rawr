@@ -312,15 +312,18 @@ applied and result is scaled down by 100)",
                         "Lifebloom:LB HPM",
                         "Lifebloom:LB HPCT",
 
-                        //"Lifebloom Stacked Blooms:LBx2 (fast stack) HPS",
-                        //"Lifebloom Stacked Blooms:LBx2 (fast stack) HPM",
-                        //"Lifebloom Stacked Blooms:LBx2 (fast stack) HPCT",
+                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx2 (fast stack) HPCT",
+
                         "Lifebloom Stacked Blooms:LBx3 (fast stack) HPS",
                         "Lifebloom Stacked Blooms:LBx3 (fast stack) HPM",
                         "Lifebloom Stacked Blooms:LBx3 (fast stack) HPCT",
-                        //"Lifebloom Stacked Blooms:LBx2 (slow stack) HPS",
-                        //"Lifebloom Stacked Blooms:LBx2 (slow stack) HPM",
-                        //"Lifebloom Stacked Blooms:LBx2 (slow stack) HPCT",
+
+                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPS",
+                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPM",
+                        "Lifebloom Stacked Blooms:LBx2 (slow stack) HPCT",
+
                         "Lifebloom Stacked Blooms:LBx3 (slow stack) HPS",
                         "Lifebloom Stacked Blooms:LBx3 (slow stack) HPM",
                         "Lifebloom Stacked Blooms:LBx3 (slow stack) HPCT",
@@ -481,11 +484,6 @@ applied and result is scaled down by 100)",
             settings.RegrowthFraction = (float)profile.RegrowthFrac / 100.0f;
             settings.NourishFraction = (float)profile.NourishFrac / 100.0f;
 
-            settings.adjustRejuv = profile.AdjustRejuv;
-            settings.adjustRegrowth = profile.AdjustRegrowth;
-            settings.adjustLifebloom = profile.AdjustLifebloom;
-            settings.adjustNourish = profile.AdjustNourish;
-
             settings.nourish1 = (float)profile.Nourish1 / 100f;
             settings.nourish2 = (float)profile.Nourish2 / 100f;
             settings.nourish3 = (float)profile.Nourish3 / 100f;
@@ -495,14 +493,6 @@ applied and result is scaled down by 100)",
             settings.healTarget = HealTargetTypes.RaidHealing;
 
             settings.livingSeedEfficiency = (float)profile.LivingSeedEfficiency / 100f;
-
-            settings.latency = 0;// (float)calcOpts.Latency / 1000f;
-
-            settings.reduceOOMRejuv = (float)profile.ReduceOOMRejuv / 100f;
-            settings.reduceOOMRegrowth = (float)profile.ReduceOOMRegrowth / 100f;
-            settings.reduceOOMLifebloom = (float)profile.ReduceOOMLifebloom / 100f;
-            settings.reduceOOMNourish = (float)profile.ReduceOOMNourish / 100f;
-            settings.reduceOOMWildGrowth = (float)profile.ReduceOOMWildGrowth / 100f;
 
             return settings;
         }
@@ -576,6 +566,10 @@ applied and result is scaled down by 100)",
             #region Rotations
             Stats stats = calculationResult.BasicStats;
             stats.ManaRestore /= profile.FightDuration;
+            float replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
+            stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
+            stats.ManaRestoreFromMaxManaPerSecond = replenish;
+            
             float ExtraHealing = 0f;
             RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calculationResult);
 
@@ -591,6 +585,9 @@ applied and result is scaled down by 100)",
                     rot.TotalTime, 60f / rot.TotalCastsPerMinute,
                     60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
                     60 / rot.spellMix.RejuvenationHealsPerMinute);
+                replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
+                stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
+                stats.ManaRestoreFromMaxManaPerSecond = replenish;
 
                 ExtraHealing = stats.Healed;
 
@@ -781,6 +778,28 @@ applied and result is scaled down by 100)",
                             (calculationResult.Sustained.RegrowthCF_unreduced - calculationResult.Sustained.RegrowthCF_unreducedOOM) * 100}
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree managedrejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.ManagedRejuvCF_unreduced * 100,
+                            SubPoints = new float[] { 
+                                calculationResult.Sustained.spellMix.ManagedRejuvCF * 100,
+                                (calculationResult.Sustained.ManagedRejuvCF_unreducedOOM - calculationResult.Sustained.spellMix.ManagedRejuvCF) * 100f,
+                                (calculationResult.Sustained.ManagedRejuvCF_unreduced - calculationResult.Sustained.ManagedRejuvCF_unreducedOOM) * 100
+                            }
+                        };
+                        comparisonList.Add(managedrejuv);
+                        ComparisonCalculationTree managedregrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.ManagedRegrowthCF_unreduced * 100,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthCF * 100,
+                            (calculationResult.Sustained.ManagedRegrowthCF_unreducedOOM - calculationResult.Sustained.spellMix.ManagedRegrowthCF) * 100f,
+                            (calculationResult.Sustained.ManagedRegrowthCF_unreduced - calculationResult.Sustained.ManagedRegrowthCF_unreducedOOM) * 100}
+                        };
+                        comparisonList.Add(managedregrowth);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
@@ -829,7 +848,7 @@ applied and result is scaled down by 100)",
                             (calculationResult.Sustained.NourishCF_unreduced - calculationResult.Sustained.NourishCF_unreducedOOM) * 100 }
                         };
                         comparisonList.Add(nourish);
-                        ComparisonCalculationTree idle = new ComparisonCalculationTree()
+                        /*ComparisonCalculationTree idle = new ComparisonCalculationTree()
                         {
                             Name = "Idle",
                             Equipped = false,
@@ -838,7 +857,7 @@ applied and result is scaled down by 100)",
                                 (calculationResult.Sustained.spellMix.IdleCF - calculationResult.Sustained.IdleCF_unreducedOOM) * 100f,
                             (calculationResult.Sustained.IdleCF_unreducedOOM - calculationResult.Sustained.IdleCF_unreduced) * 100f }
                         };
-                        comparisonList.Add(idle);
+                        comparisonList.Add(idle);*/
                     }
                     return comparisonList.ToArray();
                 #endregion
@@ -862,6 +881,22 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthMPS }
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree managedrejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRejuvMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRejuvMPS }
+                        };
+                        comparisonList.Add(managedrejuv);
+                        ComparisonCalculationTree managedregrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthMPS,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthMPS }
+                        };
+                        comparisonList.Add(managedregrowth);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",
@@ -925,22 +960,54 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthHPS }
                         };
                         comparisonList.Add(regrowth);
+                        ComparisonCalculationTree managedrejuv = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Rejuvenation",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRejuvHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRejuvHPS }
+                        };
+                        comparisonList.Add(managedrejuv);
+                        ComparisonCalculationTree managedregrowth = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Regrowth",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthHPS,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthHPS }
+                        };
+                        comparisonList.Add(managedregrowth);
                         ComparisonCalculationTree regrowthDH = new ComparisonCalculationTree()
                         { // RegrowthAvg * regrowth.HPSHoT + RegrowthCPS * regrowth.AverageHealingwithCrit
                             Name = "Regrowth (DH)",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthCPS * calculationResult.Sustained.spellMix.regrowth.AverageHealingwithCrit,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthCPS * calculationResult.Sustained.spellMix.regrowth.AverageHealingwithCrit }
+                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthCPS * calculationResult.Sustained.spellMix.RegrowthSpell.AverageHealingwithCrit,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthCPS * calculationResult.Sustained.spellMix.RegrowthSpell.AverageHealingwithCrit }
                         };
                         comparisonList.Add(regrowthDH);
                         ComparisonCalculationTree regrowthHoT = new ComparisonCalculationTree()
-                        { 
+                        {
                             Name = "Regrowth (HoT)",
                             Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthAvg * calculationResult.Sustained.spellMix.regrowth.HPS_HOT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthAvg * calculationResult.Sustained.spellMix.regrowth.HPS_HOT }
+                            OverallPoints = calculationResult.Sustained.spellMix.RegrowthAvg * calculationResult.Sustained.spellMix.RegrowthSpell.HPS_HOT,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.RegrowthAvg * calculationResult.Sustained.spellMix.RegrowthSpell.HPS_HOT }
                         };
                         comparisonList.Add(regrowthHoT);
+                        ComparisonCalculationTree managedregrowthDH = new ComparisonCalculationTree()
+                        { // RegrowthAvg * regrowth.HPSHoT + RegrowthCPS * regrowth.AverageHealingwithCrit
+                            Name = "Maintained Regrowth (DH)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthCPS * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.AverageHealingwithCrit,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthCPS * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.AverageHealingwithCrit }
+                        };
+                        comparisonList.Add(managedregrowthDH);
+                        ComparisonCalculationTree managedregrowthHoT = new ComparisonCalculationTree()
+                        {
+                            Name = "Maintained Regrowth (HoT)",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.ManagedRegrowthAvg * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.HPS_HOT,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.ManagedRegrowthAvg * calculationResult.Sustained.spellMix.ManagedRegrowthSpell.HPS_HOT }
+                        };
+                        comparisonList.Add(managedregrowthHoT);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
                         {
                             Name = "Lifebloom",

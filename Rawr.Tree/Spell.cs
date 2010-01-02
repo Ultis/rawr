@@ -13,14 +13,13 @@ namespace Rawr.Tree {
         protected int numberOfCasts = 1;
         public float NumberOfCasts { get { return numberOfCasts; } }
 
-        public float latency = 0f;
         public float castTime = 0f;
         public float castTimeBeforeHaste = 0f;
         public float CastTime { 
             get {
-                if (castTime > gcd) { return numberOfCasts * (latency + castTime);
-                } else if (gcd > 1) { return numberOfCasts * (latency + gcd);
-                } else {              return numberOfCasts * (1f + latency); }
+                if (castTime > gcd) { return numberOfCasts * castTime;
+                } else if (gcd > 1) { return numberOfCasts * gcd;
+                } else {              return numberOfCasts; }
             }
         }
         public float gcd            = 1.5f;
@@ -198,7 +197,7 @@ namespace Rawr.Tree {
         {
             InitializeRegrowth(character, stats); 
         }
-        public Regrowth(Character character, Stats stats, bool withRegrowthActive)
+        public Regrowth(Character character, Stats stats, bool withRegrowthActive, bool clipIfGlyphed)
         {
             InitializeRegrowth(character, stats);
 
@@ -209,6 +208,11 @@ namespace Rawr.Tree {
                 periodicTick *= 1.2f;
                 coefDH *= 1.2f;
                 coefHoT *= 1.2f;
+
+                if (clipIfGlyphed)
+                {
+                    periodicTicks--;
+                }
             }
         }
         private void InitializeRegrowth(Character character, Stats stats) {

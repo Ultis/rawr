@@ -11,7 +11,6 @@ namespace Rawr.Tree {
     {
         private string name;
         private int fightDuration; // In seconds
-        private int latency; // in milliseconds
         private int replenishmentUptime;
         private int wildGrowthPerMinute;
         private int innervates;
@@ -22,8 +21,17 @@ namespace Rawr.Tree {
         private int lifebloomStackType;
         private int nourish1, nourish2, nourish3, nourish4;
         private int livingSeedEfficiency;
-        private bool adjustRejuv, adjustRegrowth, adjustLifebloom, adjustNourish;
         private int revitalizePPM;
+
+        private int adjTimeRejuv, adjTimeRegrowth, adjTimeNourish, adjTimeLifebloom;
+        private int adjTimeSwiftmend, adjTimeWildGrowth, adjTimeIdle;
+        private int adjTimeManagedRejuv, adjTimeManagedRegrowth, adjTimeManagerLifebloomStack;
+
+        private int adjTimeRejuvOrder, adjTimeRegrowthOrder, adjTimeNourishOrder, adjTimeLifebloomOrder;
+        private int adjTimeSwiftmendOrder, adjTimeWildGrowthOrder, adjTimeIdleOrder;
+        private int adjTimeManagedRejuvOrder, adjTimeManagedRegrowthOrder, adjTimeManagerLifebloomStackOrder;
+
+        // Adjust for mana
         private int reduceOOMRejuv, reduceOOMRegrowth, reduceOOMLifebloom, reduceOOMNourish, reduceOOMWildGrowth;
         private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder, reduceOOMNourishOrder, reduceOOMWildGrowthOrder;
 
@@ -32,7 +40,6 @@ namespace Rawr.Tree {
             name = "Custom";
 
             FightDuration = 300; // 5 Minutes
-            Latency = 0; // milliseconds
             ReplenishmentUptime = 80;
             Innervates = 1;
 
@@ -53,10 +60,28 @@ namespace Rawr.Tree {
             WildGrowthPerMinute = 4;
             SwiftmendPerMinute = 2;
             LivingSeedEfficiency = 40;
-            AdjustRejuv = true;
-            AdjustRegrowth = true;
-            AdjustLifebloom = true;
-            AdjustNourish = true;
+                      
+            AdjustTimeRejuv = 100;
+            AdjustTimeRegrowth = 100;
+            AdjustTimeNourish = 100;
+            AdjustTimeLifebloom = 100;
+            AdjustTimeSwiftmend = 100;
+            AdjustTimeWildGrowth = 100;
+            AdjustTimeIdle = 100;
+            AdjustTimeManagedRejuv = 100;
+            AdjustTimeManagedRegrowth = 100;
+            AdjustTimeManagedLifebloomStack = 100;
+            
+            AdjustTimeRejuvOrder = 0;
+            AdjustTimeRegrowthOrder = 0;
+            AdjustTimeNourishOrder = 0;
+            AdjustTimeLifebloomOrder = 0;
+            AdjustTimeSwiftmendOrder = 2;
+            AdjustTimeWildGrowthOrder = 1;
+            AdjustTimeIdleOrder = 4;
+            AdjustTimeManagedRejuvOrder = 3;
+            AdjustTimeManagedRegrowthOrder = 3;
+            AdjustTimeManagedLifebloomStackOrder = 3;
 
             ReduceOOMRejuv = 40;
             ReduceOOMNourish = 80;
@@ -98,7 +123,6 @@ namespace Rawr.Tree {
 
         public string Name { get { return name; } set { name = value; OnPropertyChanged("Name"); } }
         public int FightDuration { get { return fightDuration; } set { fightDuration = value; OnPropertyChanged("FightDuration"); } }
-        public int Latency { get { return latency; } set { latency = value; OnPropertyChanged("Latency"); } }
         public int ReplenishmentUptime { get { return replenishmentUptime; } set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime" ); } }
         public int WildGrowthPerMinute { get { return wildGrowthPerMinute; } set { wildGrowthPerMinute = value; OnPropertyChanged("WildGrowthPerMinute" ); } }
         public int Innervates          { get { return innervates;          } set { innervates          = value; OnPropertyChanged("Innervates"          ); } }
@@ -119,10 +143,27 @@ namespace Rawr.Tree {
         public int Nourish3 { get { return nourish3; } set { nourish3 = value; OnPropertyChanged("Nourish3"); } }
         public int Nourish4 { get { return nourish4; } set { nourish4 = value; OnPropertyChanged("Nourish4"); } }
 
-        public bool AdjustRejuv { get { return adjustRejuv; } set { adjustRejuv = value; OnPropertyChanged("AdjustRejuv"); } }
-        public bool AdjustRegrowth { get { return adjustRegrowth; } set { adjustRegrowth = value; OnPropertyChanged("AdjustRegrowth"); } }
-        public bool AdjustLifebloom { get { return adjustLifebloom; } set { adjustLifebloom = value; OnPropertyChanged("AdjustLifebloom"); } }
-        public bool AdjustNourish { get { return adjustNourish; } set { adjustNourish = value; OnPropertyChanged("AdjustNourish"); } }
+        public int AdjustTimeRejuv { get { return adjTimeRejuv; } set { adjTimeRejuv = value; OnPropertyChanged("AdjustTimeRejuv"); } }
+        public int AdjustTimeRegrowth { get { return adjTimeRegrowth; } set { adjTimeRegrowth = value; OnPropertyChanged("AdjustTimeRegrowth"); } }
+        public int AdjustTimeNourish { get { return adjTimeNourish; } set { adjTimeNourish = value; OnPropertyChanged("AdjustTimeNourish"); } }
+        public int AdjustTimeLifebloom { get { return adjTimeLifebloom; } set { adjTimeLifebloom = value; OnPropertyChanged("AdjustTimeLifebloom"); } }
+        public int AdjustTimeSwiftmend { get { return adjTimeSwiftmend; } set { adjTimeSwiftmend = value; OnPropertyChanged("AdjustTimeSwiftmend"); } }
+        public int AdjustTimeWildGrowth { get { return adjTimeWildGrowth; } set { adjTimeWildGrowth = value; OnPropertyChanged("AdjustTimeWildGrowth"); } }
+        public int AdjustTimeIdle { get { return adjTimeIdle; } set { adjTimeIdle = value; OnPropertyChanged("AdjustTimeIdle"); } }
+        public int AdjustTimeManagedRejuv { get { return adjTimeManagedRejuv; } set { adjTimeManagedRejuv = value; OnPropertyChanged("AdjustTimeManagedRejuv"); } }
+        public int AdjustTimeManagedRegrowth { get { return adjTimeManagedRegrowth; } set { adjTimeManagedRegrowth = value; OnPropertyChanged("AdjustTimeManagedRegrowth"); } }
+        public int AdjustTimeManagedLifebloomStack { get { return adjTimeManagerLifebloomStack; } set { adjTimeManagerLifebloomStack = value; OnPropertyChanged("AdjustTimeManagedLifebloomStack"); } }
+
+        public int AdjustTimeRejuvOrder { get { return adjTimeRejuvOrder; } set { adjTimeRejuvOrder = value; OnPropertyChanged("AdjustTimeRejuvOrder"); } }
+        public int AdjustTimeRegrowthOrder { get { return adjTimeRegrowthOrder; } set { adjTimeRegrowthOrder = value; OnPropertyChanged("AdjustTimeRegrowthOrder"); } }
+        public int AdjustTimeNourishOrder { get { return adjTimeNourishOrder; } set { adjTimeNourishOrder = value; OnPropertyChanged("AdjustTimeNourishOrder"); } }
+        public int AdjustTimeLifebloomOrder { get { return adjTimeLifebloomOrder; } set { adjTimeLifebloomOrder = value; OnPropertyChanged("AdjustTimeLifebloomOrder"); } }
+        public int AdjustTimeSwiftmendOrder { get { return adjTimeSwiftmendOrder; } set { adjTimeSwiftmendOrder = value; OnPropertyChanged("AdjustTimeSwiftmendOrder"); } }
+        public int AdjustTimeWildGrowthOrder { get { return adjTimeWildGrowthOrder; } set { adjTimeWildGrowthOrder = value; OnPropertyChanged("AdjustTimeWildGrowthOrder"); } }
+        public int AdjustTimeIdleOrder { get { return adjTimeIdleOrder; } set { adjTimeIdleOrder = value; OnPropertyChanged("AdjustTimeIdleOrder"); } }
+        public int AdjustTimeManagedRejuvOrder { get { return adjTimeManagedRejuvOrder; } set { adjTimeManagedRejuvOrder = value; OnPropertyChanged("AdjustTimeManagedRejuvOrder"); } }
+        public int AdjustTimeManagedRegrowthOrder { get { return adjTimeManagedRegrowthOrder; } set { adjTimeManagedRegrowthOrder = value; OnPropertyChanged("AdjustTimeManagedRegrowthOrder"); } }
+        public int AdjustTimeManagedLifebloomStackOrder { get { return adjTimeManagerLifebloomStackOrder; } set { adjTimeManagerLifebloomStackOrder = value; OnPropertyChanged("AdjustTimeManagedLifebloomStackOrder"); } }
 
         public int ReduceOOMRejuv { get { return reduceOOMRejuv; } set { reduceOOMRejuv = value; OnPropertyChanged("ReduceOOMRejuv"); } }
         public int ReduceOOMRegrowth { get { return reduceOOMRegrowth; } set { reduceOOMRegrowth = value; OnPropertyChanged("ReduceOOMRegrowth"); } }

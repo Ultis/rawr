@@ -12,7 +12,7 @@ namespace Rawr.Tree {
             tbModuleNotes.Text =
                 "The module is currently undergoing lots of work.\r\n\r\n" +
                 "You're welcome to send feedback via the CodePlex site.\r\n\r\n" +
-                "A small list of things I plan to do:\r\n- Fix haste trinkets to give better values.\r\n- Add a much simpler interface, including preset fight profiles (e.g. Tank heal, Raid heal, Hybrid healing, WG+RJ all out et cetera).\r\n- Add Healing Touch in spell rotations.\r\n- Lifebloom x2 stacks.\r\n- A custom chart that shows HPM for single target rotations.\r\n Update Main Stats statistics to show healing without crit, healing with crit and crit chance.";
+                "A small list of things I plan to do:\r\n- Fix haste trinkets.\r\n- Improve UI (e.g. better profiles).\r\n- Add Healing Touch in spell rotations.\r\n- Lifebloom x2 stacks.\r\n- Fix custom chart problems (custom colors)";
         }
         protected void RefreshProfile()
         {
@@ -24,10 +24,6 @@ namespace Rawr.Tree {
             int m = trkFightLength.Value / 12;
             int s = calcOpts.Current.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: " + m + ":" + (s < 10 ? "0" : "") + s;
-
-            calcOpts.Current.Latency = 0;
-            tbLatency.Value = calcOpts.Current.Latency / 10;
-            lblLatency.Text = "Latency: " + calcOpts.Current.Latency + " ms.";
 
             tkReplenishment.Value = calcOpts.Current.ReplenishmentUptime;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
@@ -44,7 +40,7 @@ namespace Rawr.Tree {
             tbLifebloomStackAmount.Value = calcOpts.Current.LifebloomStackAmount;
             tbRejuvAmount.Value = calcOpts.Current.RejuvAmount;
             tbRegrowthAmount.Value = calcOpts.Current.RegrowthAmount;
-            lblLifebloomStackAmount.Text = "Number of maintained Lifebloom stacks: " + tbLifebloomStackAmount.Value;
+            lblLifebloomStackAmount.Text = "Number of maintained Lifebloom Stacks: " + tbLifebloomStackAmount.Value;
             lblRejuvAmount.Text = "Number of maintained Rejuvenations: " + tbRejuvAmount.Value;
             lblRegrowthAmount.Text = "Number of maintained Regrowths: " + tbRegrowthAmount.Value;
 
@@ -58,11 +54,6 @@ namespace Rawr.Tree {
             lblNourish2.Text = "Nourish on 2 hots: " + tbNourish2.Value + "%.";
             lblNourish3.Text = "Nourish on 3 hots: " + tbNourish3.Value + "%.";
             lblNourish4.Text = "Nourish on 4 hots: " + tbNourish4.Value + "%.";
-
-            calcOpts.Current.AdjustRejuv = cbRejuvAdjust.Checked;
-            calcOpts.Current.AdjustRegrowth = cbRegrowthAdjust.Checked;
-            calcOpts.Current.AdjustLifebloom = cbLifebloomAdjust.Checked;
-            calcOpts.Current.AdjustNourish = cbNourishAdjust.Checked;
 
             tbLivingSeed.Value = calcOpts.Current.LivingSeedEfficiency;
             lblLivingSeed.Text = "Living Seed effectiveness: " + (float)tbLivingSeed.Value + "%.";
@@ -84,32 +75,11 @@ namespace Rawr.Tree {
             tbRevitalize.Value = calcOpts.Current.RevitalizePPM;
             lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.Current.RevitalizePPM;
 
-            lbOOMspells.Items.Clear();
-            for (int i = 0; i < 5; i++)
-            {
-                if (calcOpts.Current.ReduceOOMRejuvOrder == i)
-                {
-                    lbOOMspells.Items.Add("Rejuvenation until " + calcOpts.Current.ReduceOOMRejuv + "%.");
-                }
-                else if (calcOpts.Current.ReduceOOMRegrowthOrder == i)
-                {
-                    lbOOMspells.Items.Add("Regrowth until " + calcOpts.Current.ReduceOOMRegrowth + "%.");
-                }
-                else if (calcOpts.Current.ReduceOOMLifebloomOrder == i)
-                {
-                    lbOOMspells.Items.Add("Lifebloom until " + calcOpts.Current.ReduceOOMLifebloom + "%.");
-                }
-                else if (calcOpts.Current.ReduceOOMNourishOrder == i)
-                {
-                    lbOOMspells.Items.Add("Nourish until " + calcOpts.Current.ReduceOOMNourish + "%.");
-                }
-                else if (calcOpts.Current.ReduceOOMWildGrowthOrder == i)
-                {
-                    lbOOMspells.Items.Add("Wild Growth until " + calcOpts.Current.ReduceOOMWildGrowth + "%.");
-                }
-            }
+            adjustTimeRedrawAndSelect("", calcOpts.Current);
+            tbTimeAdjust.Enabled = false;
 
-            tbOOMpercentage.Enabled = false;
+            adjustManaRedrawAndSelect("", calcOpts.Current);
+            tbManaAdjust.Enabled = false;
         }
         protected override void LoadCalculationOptions() {
             loading = true;
@@ -143,7 +113,6 @@ namespace Rawr.Tree {
                 {
                     Name = "Tank Healing",
                     FightDuration = 300,
-                    Latency = 0,
                     ReplenishmentUptime = 90,
                     WildGrowthPerMinute = 0,
                     Innervates = 1,
@@ -161,10 +130,6 @@ namespace Rawr.Tree {
                     Nourish2 = 0,
                     Nourish3 = 100,
                     Nourish4 = 0,
-                    AdjustRejuv = false,
-                    AdjustRegrowth = true,
-                    AdjustLifebloom = true,
-                    AdjustNourish = true,
                     ReduceOOMNourish = 100,
                     ReduceOOMRejuv = 0,
                     ReduceOOMRegrowth = 50,
@@ -183,7 +148,6 @@ namespace Rawr.Tree {
                 {
                     Name = "Tank Healing (no Lifebloom)",
                     FightDuration = 300,
-                    Latency = 0,
                     ReplenishmentUptime = 90,
                     WildGrowthPerMinute = 0,
                     Innervates = 1,
@@ -201,10 +165,6 @@ namespace Rawr.Tree {
                     Nourish2 = 0,
                     Nourish3 = 100,
                     Nourish4 = 0,
-                    AdjustRejuv = false,
-                    AdjustRegrowth = true,
-                    AdjustLifebloom = true,
-                    AdjustNourish = true,
                     ReduceOOMNourish = 100,
                     ReduceOOMRejuv = 0,
                     ReduceOOMRegrowth = 50,
@@ -223,7 +183,6 @@ namespace Rawr.Tree {
                 {
                     Name = "Raid Healing (RJ/LB/SM/WG/N)",
                     FightDuration = 300,
-                    Latency = 0,
                     ReplenishmentUptime = 90,
                     WildGrowthPerMinute = 8,
                     Innervates = 1,
@@ -241,10 +200,6 @@ namespace Rawr.Tree {
                     Nourish2 = 0,
                     Nourish3 = 0,
                     Nourish4 = 0,
-                    AdjustRejuv = false,
-                    AdjustRegrowth = true,
-                    AdjustLifebloom = true,
-                    AdjustNourish = true,
                     ReduceOOMNourish = 100,
                     ReduceOOMRejuv = 0,
                     ReduceOOMRegrowth = 100,
@@ -263,7 +218,6 @@ namespace Rawr.Tree {
                 {
                     Name = "Raid Healing (only WG/RJ)",
                     FightDuration = 300,
-                    Latency = 0,
                     ReplenishmentUptime = 90,
                     WildGrowthPerMinute = 10,
                     Innervates = 1,
@@ -281,10 +235,6 @@ namespace Rawr.Tree {
                     Nourish2 = 0,
                     Nourish3 = 0,
                     Nourish4 = 0,
-                    AdjustRejuv = false,
-                    AdjustRegrowth = true,
-                    AdjustLifebloom = true,
-                    AdjustNourish = true,
                     ReduceOOMNourish = 100,
                     ReduceOOMRejuv = 100,
                     ReduceOOMRegrowth = 100,
@@ -382,7 +332,7 @@ namespace Rawr.Tree {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.Current.LifebloomStackAmount = tbLifebloomStackAmount.Value;
-            lblLifebloomStackAmount.Text = "Number of maintained Lifebloom stacks: " + (float)tbLifebloomStackAmount.Value;
+            lblLifebloomStackAmount.Text = "Number of maintained Lifebloom Stacks: " + (float)tbLifebloomStackAmount.Value;
             Character.OnCalculationsInvalidated();
         }
 
@@ -523,15 +473,6 @@ namespace Rawr.Tree {
             Character.OnCalculationsInvalidated();
         }
 
-        private void tbLatency_Scroll(object sender, EventArgs e)
-        {
-            if (loading) { return; }
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.Latency = tbLatency.Value * 10;
-            lblLatency.Text = "Latency: " + calcOpts.Current.Latency + " ms.";
-            Character.OnCalculationsInvalidated();
-        }
-
         private void tbRejuvCF_Scroll(object sender, EventArgs e)
         {
             if (loading) { return; }
@@ -568,38 +509,6 @@ namespace Rawr.Tree {
             Character.OnCalculationsInvalidated();
         }
 
-        private void cbRejuvAdjust_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.AdjustRejuv = cbRejuvAdjust.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbRegrowthAdjust_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.AdjustRegrowth = cbRegrowthAdjust.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbLifebloomAdjust_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.AdjustLifebloom = cbLifebloomAdjust.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbNourishAdjust_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Current.AdjustNourish = cbNourishAdjust.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
         private void cbIgnoreNaturesGrace_CheckedChanged(object sender, EventArgs e)
         {
             if (loading) return;
@@ -623,178 +532,6 @@ namespace Rawr.Tree {
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.Current.RevitalizePPM = tbRevitalize.Value;
             lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.Current.RevitalizePPM;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private int currentSelection;
-        // 0 = rejuv
-        // 1 = regrowth
-        // 2 = lifebloom
-        // 3 = nourish
-        // 4 = wild growth
-
-        private void btnOOMup_Click(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            if (lbOOMspells.SelectedItem == null || lbOOMspells.SelectedIndex == 0) { return; }
-
-            int index = lbOOMspells.SelectedIndex - 1;
-            lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex - 1, lbOOMspells.SelectedItem);
-            lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-            lbOOMspells.SelectedIndex = index;
-
-            for (int i = 0; i < 5; i++)
-            {
-                if (((string)lbOOMspells.Items[i]).StartsWith("Rejuvenation"))
-                {
-                    calcOpts.Current.ReduceOOMRejuvOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Regrowth"))
-                {
-                    calcOpts.Current.ReduceOOMRegrowthOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Lifebloom"))
-                {
-                    calcOpts.Current.ReduceOOMLifebloomOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Nourish"))
-                {
-                    calcOpts.Current.ReduceOOMNourishOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Wild Growth"))
-                {
-                    calcOpts.Current.ReduceOOMWildGrowthOrder = i;
-                }
-            }
-
-        }
-
-        private void btnOOMdown_Click(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            if (lbOOMspells.SelectedItem == null || lbOOMspells.SelectedIndex == lbOOMspells.Items.Count - 1) { return; }
-
-            int index = lbOOMspells.SelectedIndex + 1;
-            lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 2, lbOOMspells.SelectedItem);
-            lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-            lbOOMspells.SelectedIndex = index;
-
-            for (int i = 0; i < 5; i++)
-            {
-                if (((string)lbOOMspells.Items[i]).StartsWith("Rejuvenation"))
-                {
-                    calcOpts.Current.ReduceOOMRejuvOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Regrowth"))
-                {
-                    calcOpts.Current.ReduceOOMRegrowthOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Lifebloom"))
-                {
-                    calcOpts.Current.ReduceOOMLifebloomOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Nourish"))
-                {
-                    calcOpts.Current.ReduceOOMNourishOrder = i;
-                }
-                else if (((string)lbOOMspells.Items[i]).StartsWith("Wild Growth"))
-                {
-                    calcOpts.Current.ReduceOOMWildGrowthOrder = i;
-                }
-            }
-        }
-
-        private void lbOOMspells_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            if (lbOOMspells.SelectedItem == null) { return; }
-
-            if (((string)lbOOMspells.SelectedItem).StartsWith("Rejuvenation"))
-            {
-                tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMRejuv;
-                currentSelection = 0;
-            }
-            else if (((string)lbOOMspells.SelectedItem).StartsWith("Regrowth"))
-            {
-                tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMRegrowth;
-                currentSelection = 1;
-            }
-            else if (((string)lbOOMspells.SelectedItem).StartsWith("Lifebloom"))
-            {
-                tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMLifebloom;
-                currentSelection = 2;
-            }
-            else if (((string)lbOOMspells.SelectedItem).StartsWith("Nourish"))
-            {
-                tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMNourish;
-                currentSelection = 3;
-            }
-            else if (((string)lbOOMspells.SelectedItem).StartsWith("Wild Growth"))
-            {
-                tbOOMpercentage.Enabled = true;
-                tbOOMpercentage.Value = calcOpts.Current.ReduceOOMWildGrowth;
-                currentSelection = 4;
-            }
-            else
-            {
-                tbOOMpercentage.Enabled = false;
-                currentSelection = 5;
-            }
-        }
-
-        private void tbOOMpercentage_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            String newText;
-            int index = lbOOMspells.SelectedIndex;
-            switch (currentSelection)
-            {
-                case 0:
-                    calcOpts.Current.ReduceOOMRejuv = tbOOMpercentage.Value;
-                    newText = "Rejuvenation until " + tbOOMpercentage.Value + "%.";
-                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
-                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-                    lbOOMspells.SelectedIndex = index;
-                    break;
-                case 1:
-                    calcOpts.Current.ReduceOOMRegrowth = tbOOMpercentage.Value;
-                    newText = "Regrowth until " + tbOOMpercentage.Value + "%.";
-                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
-                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-                    lbOOMspells.SelectedIndex = index;
-                    break;
-                case 2:
-                    calcOpts.Current.ReduceOOMLifebloom = tbOOMpercentage.Value;
-                    newText = "Lifebloom until " + tbOOMpercentage.Value + "%.";
-                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
-                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-                    lbOOMspells.SelectedIndex = index;
-                    break;
-                case 3:
-                    calcOpts.Current.ReduceOOMNourish = tbOOMpercentage.Value;
-                    newText = "Nourish until " + tbOOMpercentage.Value + "%.";
-                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
-                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-                    lbOOMspells.SelectedIndex = index;
-                    break;
-                case 4:
-                    calcOpts.Current.ReduceOOMWildGrowth = tbOOMpercentage.Value;
-                    newText = "Wild Growth until " + tbOOMpercentage.Value + "%.";
-                    lbOOMspells.Items.Insert(lbOOMspells.SelectedIndex + 1, newText);
-                    lbOOMspells.Items.RemoveAt(lbOOMspells.SelectedIndex);
-                    lbOOMspells.SelectedIndex = index;
-                    break;
-                default:
-                    break;
-            } 
             Character.OnCalculationsInvalidated();
         }
 
@@ -887,6 +624,620 @@ namespace Rawr.Tree {
 
             Character.OnCalculationsInvalidated();
         }
+        
+        private void btnOOMup_Click(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbOOMspells.SelectedItem == null) { return; }
 
+            if (oomItems[lbOOMspells.SelectedIndex].Equals("Rejuvenation"))
+            {
+                calcOpts.Current.ReduceOOMRejuvOrder = Math.Max(0, calcOpts.Current.ReduceOOMRejuvOrder - 1);
+                adjustManaRedrawAndSelect("Rejuvenation", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Regrowth"))
+            {
+                calcOpts.Current.ReduceOOMRegrowthOrder = Math.Max(0, calcOpts.Current.ReduceOOMRegrowthOrder - 1);
+                adjustManaRedrawAndSelect("Regrowth", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Lifebloom"))
+            {
+                calcOpts.Current.ReduceOOMLifebloomOrder = Math.Max(0, calcOpts.Current.ReduceOOMLifebloomOrder - 1);
+                adjustManaRedrawAndSelect("Lifebloom", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Nourish"))
+            {
+                calcOpts.Current.ReduceOOMNourishOrder = Math.Max(0, calcOpts.Current.ReduceOOMNourishOrder - 1);
+                adjustManaRedrawAndSelect("Nourish", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Wild Growth"))
+            {
+                calcOpts.Current.ReduceOOMWildGrowthOrder = Math.Max(0, calcOpts.Current.ReduceOOMWildGrowthOrder - 1);
+                adjustManaRedrawAndSelect("Wild Growth", calcOpts.Current);
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void btnOOMdown_Click(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbOOMspells.SelectedItem == null) { return; }
+
+            if (oomItems[lbOOMspells.SelectedIndex].Equals("Rejuvenation"))
+            {
+                calcOpts.Current.ReduceOOMRejuvOrder = Math.Min(4, calcOpts.Current.ReduceOOMRejuvOrder+1);
+                adjustManaRedrawAndSelect("Rejuvenation", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Regrowth"))
+            {
+                calcOpts.Current.ReduceOOMRegrowthOrder = Math.Min(4, calcOpts.Current.ReduceOOMRegrowthOrder + 1);
+                adjustManaRedrawAndSelect("Regrowth", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Lifebloom"))
+            {
+                calcOpts.Current.ReduceOOMLifebloomOrder = Math.Min(4, calcOpts.Current.ReduceOOMLifebloomOrder + 1);
+                adjustManaRedrawAndSelect("Lifebloom", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Nourish"))
+            {
+                calcOpts.Current.ReduceOOMNourishOrder = Math.Min(4, calcOpts.Current.ReduceOOMNourishOrder + 1);
+                adjustManaRedrawAndSelect("Nourish", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Wild Growth"))
+            {
+                calcOpts.Current.ReduceOOMWildGrowthOrder = Math.Min(4, calcOpts.Current.ReduceOOMWildGrowthOrder + 1);
+                adjustManaRedrawAndSelect("Wild Growth", calcOpts.Current);
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void lbOOMspells_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbOOMspells.SelectedItem == null) { return; }
+
+            if (oomItems[lbOOMspells.SelectedIndex].Equals("Rejuvenation"))
+            {
+                tbManaAdjust.Enabled = true;
+                tbManaAdjust.Value = calcOpts.Current.ReduceOOMRejuv;
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Regrowth"))
+            {
+                tbManaAdjust.Enabled = true;
+                tbManaAdjust.Value = calcOpts.Current.ReduceOOMRegrowth;
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Lifebloom"))
+            {
+                tbManaAdjust.Enabled = true;
+                tbManaAdjust.Value = calcOpts.Current.ReduceOOMLifebloom;
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Nourish"))
+            {
+                tbManaAdjust.Enabled = true;
+                tbManaAdjust.Value = calcOpts.Current.ReduceOOMNourish;
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Wild Growth"))
+            {
+                tbManaAdjust.Enabled = true;
+                tbManaAdjust.Value = calcOpts.Current.ReduceOOMWildGrowth;
+            }
+            else
+            {
+                tbManaAdjust.Enabled = false;
+            }
+        }
+
+        private void tbOOMpercentage_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbOOMspells.SelectedItem == null) { return; }
+
+            if (oomItems[lbOOMspells.SelectedIndex].Equals("Rejuvenation"))
+            {
+                calcOpts.Current.ReduceOOMRejuv = tbManaAdjust.Value;
+                adjustManaRedrawAndSelect("Rejuvenation", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Regrowth"))
+            {
+                calcOpts.Current.ReduceOOMRegrowth = tbManaAdjust.Value;
+                adjustManaRedrawAndSelect("Regrowth", calcOpts.Current);
+                tbManaAdjust.Enabled = true;
+                tbManaAdjust.Value = calcOpts.Current.ReduceOOMRegrowth;
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Lifebloom"))
+            {
+                calcOpts.Current.ReduceOOMLifebloom = tbManaAdjust.Value;
+                adjustManaRedrawAndSelect("Lifebloom", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Nourish"))
+            {
+                calcOpts.Current.ReduceOOMNourish = tbManaAdjust.Value;
+                adjustManaRedrawAndSelect("Nourish", calcOpts.Current);
+            }
+            else if (oomItems[lbOOMspells.SelectedIndex].Equals("Wild Growth"))
+            {
+                calcOpts.Current.ReduceOOMWildGrowth = tbManaAdjust.Value;
+                adjustManaRedrawAndSelect("Wild Growth", calcOpts.Current);
+            }
+            else
+            {
+                tbManaAdjust.Enabled = false;
+            } 
+            
+            Character.OnCalculationsInvalidated();
+        }
+
+        private List<String> oomItems;
+
+        private void adjustManaRedrawAndSelect(String spell, SpellProfile profile)
+        {
+            oomItems = new List<String>();
+            lbOOMspells.Items.Clear();
+            int index = -1;
+            for (int i = 1; i <= 5; i++)
+            {
+                int count = 0;
+                if (profile.ReduceOOMRejuvOrder == i - 1)
+                {
+                    lbOOMspells.Items.Add((i.ToString() + ". ") + " Rejuvenation until " + profile.ReduceOOMRejuv + "%.");
+                    oomItems.Add("Rejuvenation");
+                    count++;
+                    if (spell.Equals("Rejuvenation"))
+                    {
+                        index = lbOOMspells.Items.Count - 1;
+                        tbManaAdjust.Enabled = true;
+                        tbManaAdjust.Value = profile.ReduceOOMRejuv;
+                    }
+                }
+                if (profile.ReduceOOMRegrowthOrder == i - 1)
+                {
+                    lbOOMspells.Items.Add((i.ToString() + ". ") + " Regrowth until " + profile.ReduceOOMRegrowth + "%.");
+                    oomItems.Add("Regrowth");
+                    count++;
+                    if (spell.Equals("Regrowth"))
+                    {
+                        index = lbOOMspells.Items.Count - 1;
+                        tbManaAdjust.Enabled = true;
+                        tbManaAdjust.Value = profile.ReduceOOMRegrowth;
+                    }
+                }
+                if (profile.ReduceOOMLifebloomOrder == i - 1)
+                {
+                    lbOOMspells.Items.Add((i.ToString() + ". ") + " Lifebloom until " + profile.ReduceOOMLifebloom + "%.");
+                    oomItems.Add("Lifebloom");
+                    count++;
+                    if (spell.Equals("Lifebloom"))
+                    {
+                        index = lbOOMspells.Items.Count - 1;
+                        tbManaAdjust.Enabled = true;
+                        tbManaAdjust.Value = profile.ReduceOOMLifebloom;
+                    }
+                }
+                if (profile.ReduceOOMNourishOrder == i - 1)
+                {
+                    lbOOMspells.Items.Add((i.ToString() + ". ") + " Nourish until " + profile.ReduceOOMNourish + "%.");
+                    oomItems.Add("Nourish");
+                    count++;
+                    if (spell.Equals("Nourish"))
+                    {
+                        index = lbOOMspells.Items.Count - 1;
+                        tbManaAdjust.Enabled = true;
+                        tbManaAdjust.Value = profile.ReduceOOMNourish;
+                    }
+                }
+                if (profile.ReduceOOMWildGrowthOrder == i - 1)
+                {
+                    lbOOMspells.Items.Add((i.ToString() + ". ") + " Wild Growth until " + profile.ReduceOOMWildGrowth + "%.");
+                    oomItems.Add("Wild Growth");
+                    count++;
+                    if (spell.Equals("Wild Growth"))
+                    {
+                        index = lbOOMspells.Items.Count - 1;
+                        tbManaAdjust.Enabled = true;
+                        tbManaAdjust.Value = profile.ReduceOOMWildGrowth;
+                    }
+                }
+            }
+
+            if (index == -1)
+            {
+                tbManaAdjust.Enabled = false;
+            }
+            else
+            {
+                lbOOMspells.SelectedIndex = index;
+            }
+        }
+
+        private void lbTimeAdjust_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbTimeAdjust.SelectedItem == null) { return; }
+
+            if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Rejuvenation"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeRejuv;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Regrowth"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeRegrowth;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Nourish"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeNourish;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Lifebloom"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeLifebloom;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Swiftmend"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeSwiftmend;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Wild Growth"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeWildGrowth;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Idle Time"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeIdle;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Rejuvenation"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeManagedRejuv;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Regrowth"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeManagedRegrowth;
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Lifebloom Stack"))
+            {
+                tbTimeAdjust.Enabled = true;
+                tbTimeAdjust.Value = calcOpts.Current.AdjustTimeManagedLifebloomStack;
+            }
+        }
+
+        private void btnTimeUp_Click(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbTimeAdjust.SelectedItem == null) { return; }
+
+            if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Rejuvenation"))
+            {
+                calcOpts.Current.AdjustTimeRejuvOrder = Math.Max(0, calcOpts.Current.AdjustTimeRejuvOrder - 1);
+                adjustTimeRedrawAndSelect("Rejuvenation", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Regrowth"))
+            {
+                calcOpts.Current.AdjustTimeRegrowthOrder = Math.Max(0, calcOpts.Current.AdjustTimeRegrowthOrder - 1);
+                adjustTimeRedrawAndSelect("Regrowth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Nourish"))
+            {
+                calcOpts.Current.AdjustTimeNourishOrder = Math.Max(0, calcOpts.Current.AdjustTimeNourishOrder - 1);
+                adjustTimeRedrawAndSelect("Nourish", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Lifebloom"))
+            {
+                calcOpts.Current.AdjustTimeLifebloomOrder = Math.Max(0, calcOpts.Current.AdjustTimeLifebloomOrder - 1);
+                adjustTimeRedrawAndSelect("Lifebloom", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Swiftmend"))
+            {
+                calcOpts.Current.AdjustTimeSwiftmendOrder = Math.Max(0, calcOpts.Current.AdjustTimeSwiftmendOrder - 1);
+                adjustTimeRedrawAndSelect("Swiftmend", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Wild Growth"))
+            {
+                calcOpts.Current.AdjustTimeWildGrowthOrder = Math.Max(0, calcOpts.Current.AdjustTimeWildGrowthOrder - 1);
+                adjustTimeRedrawAndSelect("Wild Growth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Idle Time"))
+            {
+                calcOpts.Current.AdjustTimeIdleOrder = Math.Max(0, calcOpts.Current.AdjustTimeIdleOrder - 1);
+                adjustTimeRedrawAndSelect("Idle Time", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Rejuvenation"))
+            {
+                calcOpts.Current.AdjustTimeManagedRejuvOrder = Math.Max(0, calcOpts.Current.AdjustTimeManagedRejuvOrder - 1);
+                adjustTimeRedrawAndSelect("Managed Rejuvenation", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Regrowth"))
+            {
+                calcOpts.Current.AdjustTimeManagedRegrowthOrder = Math.Max(0, calcOpts.Current.AdjustTimeManagedRegrowthOrder - 1);
+                adjustTimeRedrawAndSelect("Managed Regrowth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Lifebloom Stack"))
+            {
+                calcOpts.Current.AdjustTimeManagedLifebloomStackOrder = Math.Max(0, calcOpts.Current.AdjustTimeManagedLifebloomStackOrder - 1);
+                adjustTimeRedrawAndSelect("Managed Lifebloom Stack", calcOpts.Current);
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void btnTimeDown_Click(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbTimeAdjust.SelectedItem == null) { return; }
+
+            if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Rejuvenation"))
+            {
+                calcOpts.Current.AdjustTimeRejuvOrder = Math.Min(9, calcOpts.Current.AdjustTimeRejuvOrder + 1);
+                adjustTimeRedrawAndSelect("Rejuvenation", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Regrowth"))
+            {
+                calcOpts.Current.AdjustTimeRegrowthOrder = Math.Min(9, calcOpts.Current.AdjustTimeRegrowthOrder + 1);
+                adjustTimeRedrawAndSelect("Regrowth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Nourish"))
+            {
+                calcOpts.Current.AdjustTimeNourishOrder = Math.Min(9, calcOpts.Current.AdjustTimeNourishOrder + 1);
+                adjustTimeRedrawAndSelect("Nourish", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Lifebloom"))
+            {
+                calcOpts.Current.AdjustTimeLifebloomOrder = Math.Min(9, calcOpts.Current.AdjustTimeLifebloomOrder + 1);
+                adjustTimeRedrawAndSelect("Lifebloom", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Swiftmend"))
+            {
+                calcOpts.Current.AdjustTimeSwiftmendOrder = Math.Min(9, calcOpts.Current.AdjustTimeSwiftmendOrder + 1);
+                adjustTimeRedrawAndSelect("Swiftmend", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Wild Growth"))
+            {
+                calcOpts.Current.AdjustTimeWildGrowthOrder = Math.Min(9, calcOpts.Current.AdjustTimeWildGrowthOrder + 1);
+                adjustTimeRedrawAndSelect("Wild Growth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Idle Time"))
+            {
+                calcOpts.Current.AdjustTimeIdleOrder = Math.Min(9, calcOpts.Current.AdjustTimeIdleOrder + 1);
+                adjustTimeRedrawAndSelect("Idle Time", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Rejuvenation"))
+            {
+                calcOpts.Current.AdjustTimeManagedRejuvOrder = Math.Min(9, calcOpts.Current.AdjustTimeManagedRejuvOrder + 1);
+                adjustTimeRedrawAndSelect("Managed Rejuvenation", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Regrowth"))
+            {
+                calcOpts.Current.AdjustTimeManagedRegrowthOrder = Math.Min(9, calcOpts.Current.AdjustTimeManagedRegrowthOrder + 1);
+                adjustTimeRedrawAndSelect("Managed Regrowth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Lifebloom Stack"))
+            {
+                calcOpts.Current.AdjustTimeManagedLifebloomStackOrder = Math.Min(9, calcOpts.Current.AdjustTimeManagedLifebloomStackOrder + 1);
+                adjustTimeRedrawAndSelect("Managed Lifebloom Stack", calcOpts.Current);
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbTimeAdjust_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            if (lbTimeAdjust.SelectedItem == null) { return; }
+
+            if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Rejuvenation"))
+            {
+                calcOpts.Current.AdjustTimeRejuv = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Rejuvenation", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Regrowth"))
+            {
+                calcOpts.Current.AdjustTimeRegrowth = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Regrowth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Nourish"))
+            {
+                calcOpts.Current.AdjustTimeNourish = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Nourish", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Lifebloom"))
+            {
+                calcOpts.Current.AdjustTimeLifebloom = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Lifebloom", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Swiftmend"))
+            {
+                calcOpts.Current.AdjustTimeSwiftmend = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Swiftmend", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Wild Growth"))
+            {
+                calcOpts.Current.AdjustTimeWildGrowth = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Wild Growth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Idle Time"))
+            {
+                calcOpts.Current.AdjustTimeIdle = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Idle Time", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Rejuvenation"))
+            {
+                calcOpts.Current.AdjustTimeManagedRejuv = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Managed Rejuvenation", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Regrowth"))
+            {
+                calcOpts.Current.AdjustTimeManagedRegrowth = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Managed Regrowth", calcOpts.Current);
+            }
+            else if (timeItems[lbTimeAdjust.SelectedIndex].Equals("Managed Lifebloom Stack"))
+            {
+                calcOpts.Current.AdjustTimeManagedLifebloomStack = tbTimeAdjust.Value;
+                adjustTimeRedrawAndSelect("Managed Lifebloom Stack", calcOpts.Current);
+            }
+            else
+            {
+                tbTimeAdjust.Enabled = false;
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private List<String> timeItems;
+
+        private void adjustTimeRedrawAndSelect(String spell, SpellProfile profile)
+        {
+            timeItems = new List<String>();
+            lbTimeAdjust.Items.Clear();
+            int index = -1;
+
+            for (int i = 1; i <= 10; i++)
+            {
+                int count = 0;
+                if (profile.AdjustTimeRejuvOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Rejuvenation until " + profile.AdjustTimeRejuv + "%.");
+                    timeItems.Add("Rejuvenation");
+                    count++;
+                    if (spell.Equals("Rejuvenation"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeRejuv;
+                    }
+                }
+                if (profile.AdjustTimeRegrowthOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Regrowth until " + profile.AdjustTimeRegrowth + "%.");
+                    timeItems.Add("Regrowth");
+                    count++;
+                    if (spell.Equals("Regrowth"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeRegrowth;
+                    }
+                }
+                if (profile.AdjustTimeNourishOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Nourish until " + profile.AdjustTimeNourish + "%.");
+                    timeItems.Add("Nourish");
+                    count++;
+                    if (spell.Equals("Nourish"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeNourish;
+                    }
+                }
+                if (profile.AdjustTimeLifebloomOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Lifebloom until " + profile.AdjustTimeLifebloom + "%.");
+                    timeItems.Add("Lifebloom");
+                    count++;
+                    if (spell.Equals("Lifebloom"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeLifebloom;
+                    }
+                }
+                if (profile.AdjustTimeSwiftmendOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Swiftmend until " + profile.AdjustTimeSwiftmend + "%.");
+                    timeItems.Add("Swiftmend");
+                    count++;
+                    if (spell.Equals("Swiftmend"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeSwiftmend;
+                    }
+                }
+                if (profile.AdjustTimeWildGrowthOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Wild Growth until " + profile.AdjustTimeWildGrowth + "%.");
+                    timeItems.Add("Wild Growth");
+                    count++;
+                    if (spell.Equals("Wild Growth"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeWildGrowth;
+                    }
+                }
+                if (profile.AdjustTimeIdleOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Idle Time until " + profile.AdjustTimeIdle + "%.");
+                    timeItems.Add("Idle Time");
+                    count++;
+                    if (spell.Equals("Idle Time"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeIdle;
+                    }
+                }
+                if (profile.AdjustTimeManagedRejuvOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Managed Rejuvenation until " + profile.AdjustTimeManagedRejuv + "%.");
+                    timeItems.Add("Managed Rejuvenation");
+                    count++;
+                    if (spell.Equals("Managed Rejuvenation"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeManagedRejuv;
+                    }
+                }
+                if (profile.AdjustTimeManagedRegrowthOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Managed Regrowth until " + profile.AdjustTimeManagedRegrowth + "%.");
+                    timeItems.Add("Managed Regrowth");
+                    count++;
+                    if (spell.Equals("Managed Regrowth"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeManagedRegrowth;
+                    }
+                }
+                if (profile.AdjustTimeManagedLifebloomStackOrder == i - 1)
+                {
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Managed Lifebloom Stack until " + profile.AdjustTimeManagedLifebloomStack + "%.");
+                    timeItems.Add("Managed Lifebloom Stack");
+                    count++;
+                    if (spell.Equals("Managed Lifebloom Stack"))
+                    {
+                        index = lbTimeAdjust.Items.Count - 1;
+                        tbTimeAdjust.Enabled = true;
+                        tbTimeAdjust.Value = profile.AdjustTimeManagedLifebloomStack;
+                    }
+                }
+            }
+
+            if (index == -1)
+            {
+                tbTimeAdjust.Enabled = false;
+            }
+            else
+            {
+                lbTimeAdjust.SelectedIndex = index;
+            }
+        }
     }
 }
