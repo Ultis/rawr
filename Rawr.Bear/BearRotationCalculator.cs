@@ -158,17 +158,6 @@ namespace Rawr.Bear
 			else strRotationName.Length--;
 
 			return new BearRotationCalculation() { Name = strRotationName.ToString(), DPS = attackDPS, TPS = attackTPS };
-
-			//List<string> rotationName = new List<string>();
-			//if (useMaul.HasValue && !useMaul.Value) rotationName.Add("Melee");
-			//if (useMaul.HasValue && useMaul.Value) rotationName.Add("Maul");
-			//if (useMangle) rotationName.Add("Mangle");
-			//if (useSwipe) rotationName.Add("Swipe");
-			//if (useLacerate) rotationName.Add("Lacerate");
-			//if (useFaerieFire) rotationName.Add("FaerieFire");
-			//if (rotationName.Count == 0) rotationName.Add("None");
-
-			//return new BearRotationCalculation() { Name = string.Join("+", rotationName.ToArray()), DPS = attackDPS, TPS = attackTPS };
 		}
 
 		public class BearRotationCalculation

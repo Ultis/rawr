@@ -1783,10 +1783,12 @@ the Threat Scale defined on the Options tab.",
 				DodgedAttacks.ToString("0.000%"), ParriedAttacks.ToString("0.000%"));
            
 			string rotationFormat = "{0} DPS, {1} TPS*{2}";
-			dictValues["Highest DPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestDPSRotation.DPS), Math.Round(HighestDPSRotation.TPS), HighestDPSRotation.Name);
-			dictValues["Highest TPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestTPSRotation.DPS), Math.Round(HighestTPSRotation.TPS), HighestTPSRotation.Name);
-			dictValues["Swipe Rotation"] = String.Format(rotationFormat, Math.Round(SwipeRotation.DPS), Math.Round(SwipeRotation.TPS), SwipeRotation.Name);
-			dictValues["Custom Rotation"] = String.Format(rotationFormat, Math.Round(CustomRotation.DPS), Math.Round(CustomRotation.TPS), CustomRotation.Name);
+
+
+			dictValues["Highest DPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestDPSRotation.DPS), Math.Round(HighestDPSRotation.TPS), GetRotationTooltip(HighestDPSRotation.Name));
+			dictValues["Highest TPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestTPSRotation.DPS), Math.Round(HighestTPSRotation.TPS), GetRotationTooltip(HighestTPSRotation.Name));
+			dictValues["Swipe Rotation"] = String.Format(rotationFormat, Math.Round(SwipeRotation.DPS), Math.Round(SwipeRotation.TPS), GetRotationTooltip(SwipeRotation.Name));
+			dictValues["Custom Rotation"] = String.Format(rotationFormat, Math.Round(CustomRotation.DPS), Math.Round(CustomRotation.TPS), GetRotationTooltip(CustomRotation.Name));
 
 			string attackFormat = "{0} Dmg, {1} Threat*Per Hit: {0} Damage, {1} Threat\r\nPer Average Swing: {2} Damage, {3} Threat";
 			string attackFormatWithRage = attackFormat + "\r\nThreat Per Rage: {4}\r\nDamage Per Rage: {5}";
@@ -1799,6 +1801,19 @@ the Threat Scale defined on the Options tab.",
 			dictValues["Lacerate DoT Tick"] = String.Format(attackFormat, LacerateDotDamageRaw, LacerateDotThreatRaw, LacerateDotDamageAverage, LacerateDotThreatAverage).Replace("Swing", "Tick");
 			
 			return dictValues;
+		}
+
+		private string GetRotationTooltip(string name)
+		{
+			StringBuilder tooltip = new StringBuilder("Ability Priority: \r\n");
+			if (name.Contains("Maul")) tooltip.Append("Maul>");
+			if (name.Contains("Mangle")) tooltip.Append("Mangle>");
+			if (name.Contains("Faerie")) tooltip.Append("Faerie Fire>");
+			if (name.Contains("Swipe") && name.Contains("Lacerate")) tooltip.Append("Lacerate(+)>Swipe\r\n(+) means to only stack and refresh the debuff.");
+			else if (name.Contains("Swipe")) tooltip.Append("Swipe");
+			else if (name.Contains("Lacerate")) tooltip.Append("Lacerate");
+			
+			return tooltip.ToString();
 		}
 
 		public override float GetOptimizableCalculationValue(string calculation)
