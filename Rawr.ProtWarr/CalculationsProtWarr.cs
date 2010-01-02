@@ -916,6 +916,15 @@ threat and limited threat scaled by the threat scale.",
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
+        {
+            // Only Displays Shields in Off-Hand Slot as Devastate is Shield-Only Post-3.2
+            if (slot == CharacterSlot.OffHand && item.Type != ItemType.Shield)
+                return false;
+
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+        }
+
         public override bool IsItemRelevant(Item item)
         {
             // Fishing Poles, they love to muck up the list!
@@ -1000,6 +1009,7 @@ threat and limited threat scaled by the threat scale.",
 
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
+                DeathbringerProc = stats.DeathbringerProc,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
                 BonusShockwaveDamage = stats.BonusShockwaveDamage,
                 DevastateCritIncrease = stats.DevastateCritIncrease,
@@ -1026,27 +1036,42 @@ threat and limited threat scaled by the threat scale.",
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool relevant =
-                (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
-                    stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
-                    stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
+            // Stats that will automatically mark the item as relevant
+            bool superRelevant =
+                (
+                    stats.BonusArmor + stats.BonusArmorMultiplier + 
                     stats.BonusStaminaMultiplier + stats.DefenseRating + stats.Dodge + stats.DodgeRating + stats.ParryRating +
-                    stats.BlockRating + stats.BlockValue + stats.Health + stats.BonusHealthMultiplier +
-                    stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
+                    stats.BlockRating + stats.BonusHealthMultiplier +
+                    stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.Miss +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
                     stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
+                    stats.ThreatIncreaseMultiplier + stats.BonusBlockValueMultiplier +
+                    stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
+                ) != 0;
+
+            // Stats which are potentially relevant
+            bool relevant =
+                (stats.Agility + stats.Armor + stats.AverageArmor +
+                    stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
+                    stats.Health + stats.Stamina + stats.Resilience + stats.AllResist + stats.BlockValue +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
-                    stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
+                    stats.BonusDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 
-                    stats.HighestStat + stats.Paragon + 
-                    stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
+                    stats.HighestStat + stats.Paragon + stats.DeathbringerProc +
+                    stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                 ) != 0;
 
-            if (!relevant) // No reason to check effects if it's already known as relevant
+            // Stats which mark the item as irrelevant if not super-relevant
+            bool notRelevant =
+                (stats.Mp5 + stats.SpellPower + stats.Mana + stats.SpellPenetration +
+                    stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusManaMultiplier
+                ) != 0;
+
+            if (!superRelevant) // No reason to check effects if it's already known as relevant
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
@@ -1065,7 +1090,7 @@ threat and limited threat scaled by the threat scale.",
                 }
             }
 
-            return relevant;
+            return (superRelevant || (relevant && !notRelevant));
         }
 
     }
