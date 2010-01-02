@@ -895,6 +895,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                 // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
                 fTotalMitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+                fTotalMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5 * fRotDuration);
+                fTotalMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
 
                 calcs.Mitigation = fTotalMitigation;
             }
@@ -1039,6 +1041,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
                 calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * (fIncPhysicalDamage - fPerShotPhysical);
                 calcs.Mitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+                fTotalMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5 * fRotDuration);
+                fTotalMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
             }
             #endregion
 
@@ -2023,6 +2027,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                 Healed = stats.Healed,
                 HealthRestore = stats.HealthRestore,
+                Hp5 = stats.Hp5,
 
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -2193,6 +2198,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             bResults |= (stats.Healed != 0);
             bResults |= (stats.HealthRestore != 0);
+            bResults |= (stats.Hp5 != 0);
 
             // Bonus to stats
             bResults |= (stats.BonusArmorMultiplier != 0);
