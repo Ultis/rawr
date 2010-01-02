@@ -197,7 +197,7 @@ namespace Rawr.Mage
             {
                 if (_customRenderedChartNames == null)
                 {
-					_customRenderedChartNames = new string[] { "Sequence Reconstruction", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
+					_customRenderedChartNames = new string[] { "Sequence Reconstruction", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
 				}
                 return _customRenderedChartNames;
             }
@@ -1044,6 +1044,19 @@ namespace Rawr.Mage
             height -= 2;
             switch (chartName)
             {
+                case "Stats Graph":
+                    Stats[] statsList = new Stats[] {
+                        new Stats() { SpellPower = 1.17f },
+                        new Stats() { Mp5 = 0.4f },
+                        new Stats() { CritRating = 1 },
+                        new Stats() { HasteRating = 1 },
+                        new Stats() { HitRating = 1 },
+                        new Stats() { Intellect = 1 },
+                        new Stats() { Spirit = 1 },
+                    };
+
+                    Base.Graph.RenderGraph(g, width, height, character, statsList, statColors, 100, "", "Dps Rating", Base.Graph.Style.Mage);
+                    break;
                 case "Sequence Reconstruction":
 
                     if (calculationOptions.SequenceReconstruction == null)

@@ -16,6 +16,12 @@ namespace Rawr.Base
         private int graphHeight = 750;
         private int graphWidth = 800;
 
+        public enum Style
+        {
+            DpsWarr,
+            Mage,
+        }
+
         public Graph()
         {
             bitGraph = new Bitmap(graphWidth, graphHeight);
@@ -38,11 +44,6 @@ namespace Rawr.Base
         {
             Cursor.Current = Cursors.WaitCursor;
             this.Text = "Graph of " + calculation;
-            CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
-            float baseFigure = GetCalculationValue(baseCalc, calculation);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            float graphOffset = 400f, graphStep = 350f / scale;
             Color[] colors = new Color[] {
                 Color.FromArgb(255,202,180,96), 
                 Color.FromArgb(255,101,225,240),
@@ -57,7 +58,18 @@ namespace Rawr.Base
                 Color.FromArgb(255,0,255,0), 
                 Color.FromArgb(255,0,0,255), 
             };
-            if (statsList.Length == 0 || statsList.Length > 12) return; // more than 12 elements for the array would run out of colours
+            RenderGraph(g, graphWidth, graphHeight, character, statsList, colors, scale, explanatoryText, calculation, Style.DpsWarr);
+            Cursor.Current = Cursors.Default;
+        }
+
+        public static void RenderGraph(Graphics g, int graphWidth, int graphHeight, Character character, Stats[] statsList, Color[] colors, int scale, string explanatoryText, string calculation, Style style)
+        {
+            CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
+            float baseFigure = GetCalculationValue(baseCalc, calculation);            
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            float graphOffset = graphWidth / 2.0f, graphStep = (graphWidth - 100) / 2.0f / scale;
+            if (statsList.Length == 0 || statsList.Length > colors.Length) return; // more than 12 elements for the array would run out of colours
             float minDpsChange = 0f, maxDpsChange = 0f;
             Point[][] points = new Point[statsList.Length][];
             for (int index = 0; index < statsList.Length; index++)
@@ -89,7 +101,15 @@ namespace Rawr.Base
                     points[index][count + scale].Y = (int)((maxDpsChange - points[index][count + scale].Y) * (graphHeight - 48) / DpsVariance) + 20;
                 }
                 Brush statBrush = new SolidBrush(colors[index]);
-                g.DrawLines(new Pen(statBrush, 3), points[index]);
+                switch (style)
+                {
+                    case Style.DpsWarr:
+                        g.DrawLines(new Pen(statBrush, 3), points[index]);
+                        break;
+                    case Style.Mage:
+                        g.DrawLines(new Pen(statBrush, 1), points[index]);
+                        break;
+                }
             }
 
             #region Graph X Ticks
@@ -107,6 +127,10 @@ namespace Rawr.Base
 							(float)Math.Round(graphStart + activeWidth * 0.875f)};
             Pen ZeroLine = new Pen(Color.FromArgb(100, 0, 0, 0), 3);
             Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
+            if (style == Style.Mage)
+            {
+                ZeroLine = black200;
+            }
             Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
             Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
             Pen black50 = new Pen(Color.FromArgb(50, 0, 0, 0));
@@ -140,7 +164,17 @@ namespace Rawr.Base
             g.DrawLine(black25, ticks[6], 21, ticks[6], graphHeight - 16);
             g.DrawLine(black200, graphStart - 4, graphHeight - 20, graphEnd + 4, graphHeight - 20);
 
-            Font tickFont = new Font("Calibri", 11);
+            Font tickFont;
+            switch (style)
+            {
+                case Style.Mage:
+                    tickFont = new Font("Verdana", 10f, GraphicsUnit.Pixel);
+                    break;
+                case Style.DpsWarr:
+                default:
+                    tickFont = new Font("Calibri", 11);
+                    break;
+            }
             g.DrawString((-scale).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
             g.DrawString((maxScale - scale).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
             g.DrawString((maxScale * 0.5f - scale).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
@@ -193,23 +227,38 @@ namespace Rawr.Base
             #endregion
 
             #region Key Legend 
-            Font nameFont = new Font("Calibri", 12, FontStyle.Bold);
-            int nameX = (int)(activeWidth * .667f + graphStart);
-            for (int index = 0; index < statsList.Length; index++)
+            switch (style)
             {
-                Brush nameBrush = new SolidBrush(colors[index]);
-                int nameY = (int)(graphHeight * .5f) + (int)(index * nameFont.Height);
-                g.DrawString(statsList[index].ToString(), nameFont, nameBrush, new PointF(nameX, nameY));
+                case Style.Mage:
+                    int legendY = (int)(graphHeight * 0.5f) + 16;
+                    for (int i = 0; i < statsList.Length; i++)
+                    {
+                        g.DrawLine(new Pen(colors[i]), new Point((int)graphOffset + 20, legendY + 7), new Point((int)graphOffset + 50, legendY + 7));
+                        g.DrawString(statsList[i].ToString(), tickFont, Brushes.Black, new Point((int)graphOffset + 60, legendY));
+
+                        legendY += 16;
+                    }
+                    break;
+                case Style.DpsWarr:
+                default:
+                    Font nameFont = new Font("Calibri", 12, FontStyle.Bold);
+                    int nameX = (int)(activeWidth * .667f + graphStart);
+                    for (int index = 0; index < statsList.Length; index++)
+                    {
+                        Brush nameBrush = new SolidBrush(colors[index]);
+                        int nameY = (int)(graphHeight * .5f) + (int)(index * nameFont.Height);
+                        g.DrawString(statsList[index].ToString(), nameFont, nameBrush, new PointF(nameX, nameY));
+                    }
+                    break;
             }
             #endregion
 
             #region Explanatory Text
             g.DrawString(explanatoryText, tickFont, black150brush, activeWidth * .1f, graphHeight * .05f);
             #endregion
-            Cursor.Current = Cursors.Default;
         }
 
-        private float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
+        private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
         {
             if (calculation == null || calculation == "Overall Rating")
                 return calcs.OverallPoints;
