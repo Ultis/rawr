@@ -2022,6 +2022,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 SpellHit = stats.SpellHit,
 
                 Healed = stats.Healed,
+                HealthRestore = stats.HealthRestore,
 
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -2191,6 +2192,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.SpellHit != 0);
 
             bResults |= (stats.Healed != 0);
+            bResults |= (stats.HealthRestore != 0);
 
             // Bonus to stats
             bResults |= (stats.BonusArmorMultiplier != 0);
