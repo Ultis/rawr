@@ -348,13 +348,9 @@ threat and limited threat scaled by the threat scale.",
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
             Stats stats = GetCharacterStats(character, additionalItem, options);
 
-            AttackModelMode amm = AttackModelMode.Basic;
+            AttackModelMode amm = AttackModelMode.FullProtection;
             if (character.WarriorTalents.UnrelentingAssault > 0)
                 amm = AttackModelMode.UnrelentingAssault;
-            else if (character.WarriorTalents.Shockwave > 0)
-                amm = AttackModelMode.FullProtection;
-            else if (character.WarriorTalents.Devastate > 0)
-                amm = AttackModelMode.Devastate;
 
             DefendModel dm = new DefendModel(character, stats, options);
             AttackModel am = new AttackModel(character, stats, options, amm);

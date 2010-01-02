@@ -80,7 +80,7 @@ namespace Rawr.ProtWarr
                         // Shield Slam -> Revenge -> Devastate -> Devastate
                         if (Character.WarriorTalents.Devastate == 1)
                         {
-                            Name        = "Devastate";
+                            Name = "Devastate";
                             Description = "Shield Slam -> Revenge -> Devastate -> Devastate";
                             modelLength = 6.0f;
                             modelThreat =
@@ -102,7 +102,10 @@ namespace Rawr.ProtWarr
                             modelWeaponAttacks = 4.0f;
                         }
                         else
+                        {
+                            AttackModelMode = AttackModelMode.Basic;
                             goto case AttackModelMode.Basic;
+                        }
                         break;
                     }
                 case AttackModelMode.SwordAndBoard:
@@ -115,14 +118,14 @@ namespace Rawr.ProtWarr
                         // The cycle length is 4.7844s, abilities per cycle is 3.1896
                         if (Character.WarriorTalents.SwordAndBoard == 3)
                         {
-                            Name        = "Sword And Board";
+                            Name = "Sword And Board";
                             Description = "Shield Slam > Revenge > Devastate";
                             modelLength = 4.7644f;
                             modelThreat =
                                 (1.0f * Abilities[Ability.ShieldSlam].Threat) +
                                 (0.73f * Abilities[Ability.Revenge].Threat) +
                                 (1.4596f * Abilities[Ability.Devastate].Threat);
-                            modelDamage = 
+                            modelDamage =
                                 (1.0f * Abilities[Ability.ShieldSlam].Damage) +
                                 (0.73f * Abilities[Ability.Revenge].Damage) +
                                 (1.4596f * Abilities[Ability.Devastate].Damage);
@@ -130,14 +133,17 @@ namespace Rawr.ProtWarr
                                 (1.0f * Abilities[Ability.ShieldSlam].HitPercentage) +
                                 (0.73f * Abilities[Ability.Revenge].HitPercentage) +
                                 (1.4596f * Abilities[Ability.Devastate].HitPercentage);
-                            modelCrits = 
+                            modelCrits =
                                 (1.0f * Abilities[Ability.ShieldSlam].CritPercentage) +
                                 (0.73f * Abilities[Ability.Revenge].CritPercentage) +
                                 (1.4596f * Abilities[Ability.Devastate].CritPercentage);
                             modelWeaponAttacks = 1.0f + 0.73f + 1.4596f;
                         }
                         else
-                            goto case AttackModelMode.Basic;
+                        {
+                            AttackModelMode = AttackModelMode.Devastate;
+                            goto case AttackModelMode.Devastate;
+                        }
                         break;
                     }
                 case AttackModelMode.FullProtection:
@@ -155,7 +161,7 @@ namespace Rawr.ProtWarr
                             AbilityModel devastate = Abilities[Ability.Devastate];
                             AbilityModel concussionBlow = Abilities[Ability.ConcussionBlow];
                             AbilityModel shockwave = Abilities[Ability.Shockwave];
-                            Name        = "Sword And Board + CB/SW";
+                            Name = "Sword And Board + CB/SW";
                             Description = "Shield Slam > Revenge > Devastate\n@ 3s Shield Slam Cooldown: Concussion Blow > Shockwave > Devastate";
                             modelLength = 4.7644f;
                             modelThreat =
@@ -197,7 +203,10 @@ namespace Rawr.ProtWarr
                             modelWeaponAttacks = 1.0f + 0.73f + 1.133f + 0.3266f;
                         }
                         else
-                            goto case AttackModelMode.Basic;
+                        {
+                            AttackModelMode = AttackModelMode.SwordAndBoard;
+                            goto case AttackModelMode.SwordAndBoard;
+                        }
                         break;
                     }
                 case AttackModelMode.UnrelentingAssault:
@@ -207,17 +216,20 @@ namespace Rawr.ProtWarr
                         // Shield Slam -> Revenge -> Revenge -> Revenge
                         if (Character.WarriorTalents.UnrelentingAssault == 2)
                         {
-                            Name        = "Unrelenting Assault";
+                            Name = "Unrelenting Assault";
                             Description = "Revenge";
                             modelLength = 1.0f;
                             modelThreat = Abilities[Ability.Revenge].Threat;
                             modelDamage = Abilities[Ability.Revenge].Damage;
-                            modelHits   = Abilities[Ability.Revenge].HitPercentage;
-                            modelCrits  = Abilities[Ability.Revenge].CritPercentage;
+                            modelHits = Abilities[Ability.Revenge].HitPercentage;
+                            modelCrits = Abilities[Ability.Revenge].CritPercentage;
                             modelWeaponAttacks = 1.0f;
                         }
                         else
-                            goto case AttackModelMode.Basic;
+                        {
+                            AttackModelMode = AttackModelMode.FullProtection;
+                            goto case AttackModelMode.FullProtection;
+                        }
                         break;
                     }
             }
