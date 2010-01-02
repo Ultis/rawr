@@ -302,18 +302,18 @@ namespace Rawr.Mage
                 if (effect.Cooldown >= effect.Duration)
                 {
                     // hasted casttime
-                    float speed = castingSpeed / (1 + spellHasteRating / 995f * levelScalingFactor) * (1 + (spellHasteRating + effect.Stats.HasteRating) / 995f * levelScalingFactor);
+                    float speed = castingSpeed / (1 + spellHasteRating / 1000f * levelScalingFactor) * (1 + (spellHasteRating + effect.Stats.HasteRating) / 995f * levelScalingFactor);
                     float gcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / speed);
                     float cast = baseCastTime / speed + latency;
                     cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
                     if (cast < gcd + calculationOptions.LatencyGCD) cast = gcd + calculationOptions.LatencyGCD;
 
-                    castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
+                    castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
                     float castsAffected = 0;
                     for (int c = 0; c < procs; c++) castsAffected += (float)Math.Ceiling((effect.Duration - c * castTime / procs) / cast) / procs;
                     spellHasteRating += effect.Stats.HasteRating * castsAffected * cast / (effect.Cooldown + castTime / procs / effect.Chance);
                     //Haste += castingState.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
-                    castingSpeed *= (1 + spellHasteRating / 995f * levelScalingFactor);
+                    castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
 
                     globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                     castTime = baseCastTime / castingSpeed + latency;
@@ -324,8 +324,8 @@ namespace Rawr.Mage
                 {
                     float rawHaste = spellHasteRating;
 
-                    castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
-                    float proccedSpeed = castingSpeed * (1 + (rawHaste + effect.Stats.HasteRating) / 995f * levelScalingFactor);
+                    castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
+                    float proccedSpeed = castingSpeed * (1 + (rawHaste + effect.Stats.HasteRating) / 1000f * levelScalingFactor);
                     float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / proccedSpeed);
                     float proccedCastTime = baseCastTime / proccedSpeed + latency;
                     proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
@@ -335,7 +335,7 @@ namespace Rawr.Mage
                     if (AreaEffect) chancesToProc *= calculationOptions.AoeTargets;
                     spellHasteRating = rawHaste + effect.Stats.HasteRating * (1 - (float)Math.Pow(1 - effect.Chance * critRate, chancesToProc));
                     //Haste = rawHaste + castingState.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
-                    castingSpeed *= (1 + spellHasteRating / 995f * levelScalingFactor);
+                    castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
                     globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                     castTime = baseCastTime / castingSpeed + latency;
                     castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
@@ -380,9 +380,9 @@ namespace Rawr.Mage
                                 effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
                             }
 
-                            castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
+                            castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
                             spellHasteRating += effectHasteRating;
-                            castingSpeed *= (1 + spellHasteRating / 995f * levelScalingFactor);
+                            castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
 
                             globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                             castTime = baseCastTime / castingSpeed + latency;
