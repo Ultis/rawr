@@ -1,22 +1,30 @@
-Rawr v2.3.4.0
+Rawr v2.3.5.0
 ------------
-Welcome to Rawr v2.3.4.0.
+Welcome to Rawr v2.3.5.0.
    
 Recent Changes:
- - More improvements to Wowhead/Armory parsing.
- - More special effect handling improvements.
- - Added an ilvl 259-276 filter group.
- - Added a warning if you have too many/few talent points allocated.
- - Fix for a couple enchants being missing, or mistagged as requiring a profession.
- - Rawr.ProtPaladin: Fix for DK rune enchants showing up.
- - Rawr.Hunter: Improved the UI of the options screen. Fix for DK rune enchants showing up. Fix for armor penetration debuffs applying to pets. Fix for happiness being applied twice to pets.
- - Rawr.DPSWarr: Fix for crit depression calculations. Displayed crit chance is now locked at your basic crit chance against equal level mobs (ie, should match character screen). Fix for a bug with very low amounts of armor penetration. Fix for DBW trinket calculations.
- - Rawr.RestoSham: Support for more special effects.
- - Rawr.Elemental: Updated T9 set bonuses.
- - Rawr.Tree: Added option to save/load spell profiles, and included several defaults. Added an MPS chart.
- - Rawr.Warlock: There's still a big updating coming, but it's still not quite ready. We're sorry that it keeps getting dragged out.
- - Rawr.Cat: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. NOTE: It's currently undervaluing Idol of the Crying Moon; this idol is indeed better than Mutilation for Cats, assuming you can keep the buff up for the fight duration.
- - Rawr.Bear: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. 
+ - Fixed a significant performance issue that was introduced in v2.3.4, and affected most models, but especially Cat. Sorry about those multi-hour optimizations for a build there.
+ - Improved and clarified the wording on a variety of error messages throughout Rawr to try to be more helpful.
+ - Many models now have better support for proc'd direct damage special effects (ie, chance on hit to deal 5000 fire damage, etc).
+ - Improved filters to include ICC bosses. Some bosses whose items come from chests are still problematic, but there's at least something there now.
+ - Added support for Black Magic in several models. IMPORTANT! Please note however that for models which allow dual weilding, Black Magic does *not* stack, and Rawr doesn't know this yet. It may show dual-Black Magic as the optimal weapon enchants, but really you should only enchant one weapon with it in that case. We're working on a fix for this.
+ - Improved handling of PvP gear filtering and source parsing.
+ - Fix for downloading talent images from the Armory.
+ - Adjusted the proc rate of Berserking and Executioner to match recent testing.
+ - Rawr.Warlock: WARLOCKS! The big stream of updates has finally began! Rebuilt the combat priority queue. All spells, talents, and glyphs should have the correct damage, coefficients, multipliers, and effects, updated for 3.3. 2T10 implemented. Improved stat display. Added support for the missing spell crit debuff. Added several default talent specs. Cleaned up the options panel.
+ - Rawr.Mage: Improved support for 2T10 to match the latest testing. Slight fix for haste calculations. Improved graph support.
+ - Rawr.Tree: Fixes and improvements for mana restore effects. Slight fix for WG healing value.
+ - Rawr.DPSDK: Remodelled Cinderglacier, improved handling of damage done-triggered special effects, and tweaked various ability calculations to match in-game testing. Improved valuing of hit and expertise based on their affect on your rotation. Fix for offhand OB hits not procing rime. Fix for parsing of Sigil of the Hanged Man.
+ - Rawr.Cat: Added handling for Victor's Call, and similar recursive special effects.
+ - Rawr.Hunter: Fix for a bug with changing pet options.
+ - Rawr.RestoSham: Fix for Shard of the Flame.
+ - Rawr.Healadin: Fix for Shard of the Flame.
+ - Rawr.DPSWarr: Fix for a performance issue with the optimizer and multiple ArPen trinkets. Fixed an issue with sword spec not procing if you only have white attacks selected. Added rage and glancing from sword spec. Added several more default talent specs. Improved tooltips on several of the stats on the Stats tab.
+ - Rawr.Rogue: Did a bit of cleanup to the options panel.
+ - Rawr.Enhance: Fix for an export to EnhSim issue. Slight fix for ED and fire totem uptimes.
+ - Rawr.TankDK: Fix for saving and loading of options tab data. Fix for parsing of Sigil of the Hanged Man. Fix for handling of recursive special effects.
+ - Rawr.ProtPaladin: Fix for a rare chart crash.
+ - Rawr.ProtWarr: Improvements to proc triggering chances. Several fixes for Deep Wounds calculations. Improved handling of partial talent specs, leading to better values on the talent point comparison chart.
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -125,6 +133,22 @@ Known Issues:
 OLDER VERSION HISTORY
 ---------------------
 v2.3.4.0
+ - More improvements to Wowhead/Armory parsing.
+ - More special effect handling improvements.
+ - Added an ilvl 259-276 filter group.
+ - Added a warning if you have too many/few talent points allocated.
+ - Fix for a couple enchants being missing, or mistagged as requiring a profession.
+ - Rawr.ProtPaladin: Fix for DK rune enchants showing up.
+ - Rawr.Hunter: Improved the UI of the options screen. Fix for DK rune enchants showing up. Fix for armor penetration debuffs applying to pets. Fix for happiness being applied twice to pets.
+ - Rawr.DPSWarr: Fix for crit depression calculations. Displayed crit chance is now locked at your basic crit chance against equal level mobs (ie, should match character screen). Fix for a bug with very low amounts of armor penetration. Fix for DBW trinket calculations.
+ - Rawr.RestoSham: Support for more special effects.
+ - Rawr.Elemental: Updated T9 set bonuses.
+ - Rawr.Tree: Added option to save/load spell profiles, and included several defaults. Added an MPS chart.
+ - Rawr.Warlock: There's still a big updating coming, but it's still not quite ready. We're sorry that it keeps getting dragged out.
+ - Rawr.Cat: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. NOTE: It's currently undervaluing Idol of the Crying Moon; this idol is indeed better than Mutilation for Cats, assuming you can keep the buff up for the fight duration.
+ - Rawr.Bear: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. 
+
+v2.3.3.0
  - Further improvements to parsing and calculations on many of the new trinkets and relics.
  - Lots of improvements and tweaks to the Item Cost handling.
  - Rawr.Tree: Keep bearing with us as we continue with significant Tree changes. Please keep giving feedback on our discussion forums. GotEM should be fixed now, along with many rating calculations updates. Many new or improved options. 
