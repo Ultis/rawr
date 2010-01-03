@@ -545,6 +545,22 @@
     <Tree3>18</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
+    <Name>Affliction-ImprovedFelhunter</Name>
+    <Class>Warlock</Class>
+    <Spec>235002200102351025350033115100000000000000000000000000055001005000000000000000000.00000010001010000</Spec>
+    <Tree1>55</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>16</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Affliction-DarkPact</Name>
+    <Class>Warlock</Class>
+    <Spec>235002200102351025351033115100000000000000000000000000055000005000000000000000000.00000010001010000</Spec>
+    <Tree1>56</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>15</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
     <Name>Affliction-DG</Name>
     <Class>Warlock</Class>
     <Spec>235002200102351005350033115100000000000000000000000000055001205000000000000000000.00000010001010000</Spec>
