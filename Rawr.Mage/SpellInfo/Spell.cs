@@ -106,9 +106,9 @@ namespace Rawr.Mage
     {
         public DotSpell(SpellTemplate template) : base(template) { }
 
-        public float DotDamagePerSecond;
-        public float DotThreatPerSecond;
-        public float DotDpsPerSpellPower;
+        public float DotAverageDamage;
+        public float DotAverageThreat;
+        public float DotDamagePerSpellPower;
 
         public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom)
         {
@@ -131,37 +131,31 @@ namespace Rawr.Mage
             TargetProcs = HitProcs;
             DotProcs = DotDuration / DotTickInterval;
 
+            Pom = pom;
             if (Instant) InterruptProtection = 1;
             if (castingState.IcyVeins) InterruptProtection = 1;
 
-            float channelReduction;
-            CastTime = SpellTemplate.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+            CastTime = SpellTemplate.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out ChannelReduction);
 
             if (Ticks > 0)
             {
                 if (!forceMiss)
                 {
-                    float damagePerSpellPower;
-                    float igniteDamage;
-                    float igniteDamagePerSpellPower;
-                    AverageDamage = CalculateDirectAverageDamage(castingState.Calculations, RawSpellDamage, forceHit, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
+                    AverageDamage = CalculateDirectAverageDamage(castingState.Calculations, RawSpellDamage, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
+                    AverageThreat = AverageDamage * ThreatMultiplier;
 
-                    DamagePerSecond = AverageDamage / CastTime;
-                    ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
-                    DpsPerSpellPower = damagePerSpellPower / CastTime;
-
-                    IgniteDamagePerSecond = igniteDamage / CastTime;
-                    IgniteDpsPerSpellPower = igniteDamagePerSpellPower / CastTime;
-
-                    float dotAverageDamage = CalculateDotAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out damagePerSpellPower);
-
-                    DotDamagePerSecond = dotAverageDamage / CastTime;
-                    DotThreatPerSecond = DotDamagePerSecond * ThreatMultiplier;
-                    DotDpsPerSpellPower = damagePerSpellPower / CastTime;
+                    DotAverageDamage = CalculateDotAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out DotDamagePerSpellPower);
+                    DotAverageThreat = DotAverageDamage * ThreatMultiplier;
                 }
             }
-            CastTime *= (1 - channelReduction);
-            CostPerSecond = CalculateCost(castingState.Calculations, round) / CastTime;
+            if (ChannelReduction > 0)
+            {
+                AverageDamage *= (1 - ChannelReduction);
+                AverageThreat *= (1 - ChannelReduction);
+                DamagePerSpellPower *= (1 - ChannelReduction);
+                CastTime *= (1 - ChannelReduction);
+            }
+            AverageCost = CalculateCost(castingState.Calculations, round);
 
             if (outOfFiveSecondRule)
             {
@@ -205,21 +199,52 @@ namespace Rawr.Mage
         public float InterruptProtection;
 
         // Variables that have to be initialized in CalculateDerivedStats and can be modified after
-        public float DamagePerSecond;
-        public float ThreatPerSecond;
-        public float CostPerSecond;
+        //public float DamagePerSecond;
+        //public float ThreatPerSecond;
+        //public float CostPerSecond;
         public bool SpammedDot;
+        public bool Pom;
         public float HitProcs;
         public float CritProcs;
         public float IgniteProcs;
         public float TargetProcs;
         public float DotProcs;
+        public float ChannelReduction;
         public float CastTime;
         public float OO5SR;
         public float AverageDamage;
-        public float IgniteDamagePerSecond;
-        public float IgniteDpsPerSpellPower;
-        public float DpsPerSpellPower;
+        public float AverageThreat;
+        public float AverageCost;
+        //public float IgniteDamagePerSecond;
+        //public float IgniteDpsPerSpellPower;
+        public float IgniteDamage;
+        public float IgniteDamagePerSpellPower;
+        //public float DpsPerSpellPower;
+        public float DamagePerSpellPower;
+
+        public float DamagePerSecond
+        {
+            get
+            {
+                return AverageDamage / CastTime;
+            }
+        }
+
+        public float ThreatPerSecond
+        {
+            get
+            {
+                return AverageThreat / CastTime;
+            }
+        }
+
+        public float CostPerSecond
+        {
+            get
+            {
+                return AverageCost / CastTime;
+            }
+        }
 
         public string Label { get; set; }
 
@@ -249,7 +274,7 @@ namespace Rawr.Mage
         public float ThreatMultiplier { get { return template.ThreatMultiplier; } }
         public float HitRate { get { return template.HitRate; } }
         public float PartialResistFactor { get { return template.PartialResistFactor; } }
-        public float Cooldown { get { return template.Cooldown; } }
+        public float Cooldown { get { return template.Cooldown; } }       
 
         public float Cost
         {
@@ -346,13 +371,13 @@ namespace Rawr.Mage
                 IgniteProcs = spell.IgniteProcs;
                 TargetProcs = spell.TargetProcs;
                 DamageProcs = spell.HitProcs + spell.DotProcs;
-                damagePerSecond = spell.DamagePerSecond;
-                threatPerSecond = spell.ThreatPerSecond;
-                costPerSecond = spell.CostPerSecond;
+                damagePerSecond = spell.AverageDamage / spell.CastTime;
+                threatPerSecond = spell.AverageDamage / spell.CastTime;
+                costPerSecond = spell.AverageCost / spell.CastTime;
                 AffectedByFlameCap = spell.AffectedByFlameCap;
                 OO5SR = spell.OO5SR;
                 AreaEffect = spell.AreaEffect;
-                DpsPerSpellPower = spell.DpsPerSpellPower;
+                DpsPerSpellPower = spell.DamagePerSpellPower / spell.CastTime;
                 if (AreaEffect) AoeSpell = spell;
             }
 
@@ -396,6 +421,45 @@ namespace Rawr.Mage
             {
                 return calculations.ArraySet.NewSpell(template);
             }
+        }
+
+        public static Spell NewFromReference(Spell reference, CastingState castingState)
+        {
+            Spell s = New(reference.template, castingState.Calculations);
+            s.castingState = castingState;
+
+            s.BaseCastTime = reference.BaseCastTime;
+            s.CostModifier = reference.CostModifier;
+            s.CostAmplifier = reference.CostAmplifier;
+            s.SpellModifier = reference.SpellModifier;
+            s.AdditiveSpellModifier = reference.AdditiveSpellModifier;
+            s.DirectDamageModifier = reference.DirectDamageModifier;
+            s.DotDamageModifier = reference.DotDamageModifier;
+            s.CritRate = reference.CritRate;
+            s.CritBonus = reference.CritBonus;
+            s.RawSpellDamage = reference.RawSpellDamage;
+            s.InterruptProtection = reference.InterruptProtection;
+
+            s.SpammedDot = reference.SpammedDot;
+            s.Pom = reference.Pom;
+            s.HitProcs = reference.HitProcs;
+            s.CritProcs = reference.CritProcs;
+            s.IgniteProcs = reference.IgniteProcs;
+            s.TargetProcs = reference.TargetProcs;
+            s.DotProcs = reference.DotProcs;
+            s.ChannelReduction = reference.ChannelReduction;
+            s.CastTime = reference.CastTime;
+            s.OO5SR = reference.OO5SR;
+            s.AverageDamage = reference.AverageDamage;
+            s.AverageThreat = reference.AverageThreat;
+            s.AverageCost = reference.AverageCost;
+            s.IgniteDamage = reference.IgniteDamage;
+            s.IgniteDamagePerSpellPower = reference.IgniteDamagePerSpellPower;
+            s.DamagePerSpellPower = reference.DamagePerSpellPower;
+
+            s.RecalculateCastTime(castingState);
+
+            return s;
         }
 
         public virtual void Calculate(CastingState castingState)
@@ -504,16 +568,15 @@ namespace Rawr.Mage
             }
             TargetProcs = HitProcs;
 
+            Pom = pom;
             if (Instant) InterruptProtection = 1;
-            if (castingState.IcyVeins) InterruptProtection = 1;
 
-            float channelReduction;
-            CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+            CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out ChannelReduction);
 
             // add crit rate for on use stacking crit effects (would be better if it was computed
             // on cycle level, but right now the architecture doesn't allow that too well)
             // we'd actually need some iterations of this as cast time can depend on crit etc, just ignore that for now
-            foreach (EffectCooldown effectCooldown in castingState.Calculations.ItemBasedEffectCooldowns)
+            foreach (EffectCooldown effectCooldown in castingState.Calculations.StackingNonHasteEffectCooldowns)
             {
                 if (castingState.EffectsActive(effectCooldown.Mask))
                 {
@@ -551,30 +614,25 @@ namespace Rawr.Mage
             SpammedDot = spammedDot;
             if (Ticks > 0 && !forceMiss)
             {
-                float damagePerSpellPower;
-                float igniteDamage;
-                float igniteDamagePerSpellPower;
-
-                AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
-
-                DamagePerSecond = AverageDamage / CastTime;
-                ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
-                DpsPerSpellPower = damagePerSpellPower / CastTime;
-
-                IgniteDamagePerSecond = igniteDamage / CastTime;
-                IgniteDpsPerSpellPower = igniteDamagePerSpellPower / CastTime;
+                AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
+                AverageThreat = AverageDamage * ThreatMultiplier;
             }
             else
             {
                 AverageDamage = 0;
-                DamagePerSecond = 0;
-                ThreatPerSecond = 0;
-                DpsPerSpellPower = 0;
-                IgniteDamagePerSecond = 0;
-                IgniteDpsPerSpellPower = 0;
+                AverageThreat = 0;
+                DamagePerSpellPower = 0;
+                IgniteDamage = 0;
+                IgniteDamagePerSpellPower = 0;
             }
-            CastTime *= (1 - channelReduction);
-            CostPerSecond = CalculateCost(castingState.Calculations, round) / CastTime;
+            if (ChannelReduction > 0)
+            {
+                AverageDamage *= (1 - ChannelReduction);
+                AverageThreat *= (1 - ChannelReduction);
+                DamagePerSpellPower *= (1 - ChannelReduction);
+                CastTime *= (1 - ChannelReduction);
+            }
+            AverageCost = CalculateCost(castingState.Calculations, round);
 
             if (outOfFiveSecondRule)
             {
@@ -583,6 +641,24 @@ namespace Rawr.Mage
             else
             {
                 OO5SR = 0;
+            }
+        }
+
+        public virtual void RecalculateCastTime(CastingState castingState)
+        {
+            if (ChannelReduction > 0)
+            {
+                AverageDamage /= (1 - ChannelReduction);
+                AverageThreat /= (1 - ChannelReduction);
+                DamagePerSpellPower /= (1 - ChannelReduction);
+            }
+            CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, Pom, BaseCastTime, out ChannelReduction);
+            if (ChannelReduction > 0)
+            {
+                AverageDamage *= (1 - ChannelReduction);
+                AverageThreat *= (1 - ChannelReduction);
+                DamagePerSpellPower *= (1 - ChannelReduction);
+                CastTime *= (1 - ChannelReduction);
             }
         }
 
@@ -717,7 +793,7 @@ namespace Rawr.Mage
                 // this is actually a PPM
                 cost -= template.BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
             }
-            CostPerSecond = cost / CastTime;
+            AverageCost = cost;
         }
 
         public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
@@ -729,9 +805,9 @@ namespace Rawr.Mage
                 dict[Name] = contrib;
             }
             float igniteContribution = 0;
-            if (IgniteDamagePerSecond > 0)
+            if (IgniteDamage > 0)
             {
-                igniteContribution = (IgniteDamagePerSecond + effectSpellPower * IgniteDpsPerSpellPower) * duration;
+                igniteContribution = (IgniteDamage + effectSpellPower * IgniteDamagePerSpellPower) / CastTime * duration;
                 SpellContribution igniteContrib;
                 if (!dict.TryGetValue("Ignite", out igniteContrib))
                 {
@@ -741,7 +817,7 @@ namespace Rawr.Mage
                 igniteContrib.Damage += igniteContribution;
             }
             contrib.Hits += HitProcs * duration / CastTime;
-            contrib.Damage += (DamagePerSecond + effectSpellPower * DpsPerSpellPower) * duration - igniteContribution;
+            contrib.Damage += (AverageDamage + effectSpellPower * DamagePerSpellPower) / CastTime * duration - igniteContribution;
             contrib.Range = Range;
         }
 
@@ -749,7 +825,7 @@ namespace Rawr.Mage
         {
             float contrib;
             dict.TryGetValue(Name, out contrib);
-            contrib += CostPerSecond * duration;
+            contrib += AverageCost / CastTime * duration;
             dict[Name] = contrib;
         }
     }

@@ -253,6 +253,7 @@ namespace Rawr.Mage
             float castingSpeed = castingState.CastingSpeed;
             float spellHasteRating = castingState.SpellHasteRating;
 
+            if (castingState.IcyVeins) interruptProtection = 1;
             // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
             float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
 
@@ -343,7 +344,7 @@ namespace Rawr.Mage
                 }
             }
             // on use stacking items
-            foreach (EffectCooldown effectCooldown in castingState.Calculations.ItemBasedEffectCooldowns)
+            foreach (EffectCooldown effectCooldown in castingState.Calculations.StackingHasteEffectCooldowns)
             {
                 if (castingState.EffectsActive(effectCooldown.Mask))
                 {

@@ -41,6 +41,7 @@ namespace Rawr.Mage
         public SpecialEffect SpecialEffect { get; set; }
         public float Cooldown { get; set; }
         public float Duration { get; set; }
+        public bool HasteEffect { get; set; }
         public int Row { get; set; }
         public List<SegmentConstraint> SegmentConstraints { get; set; }
         public string Name { get; set; }
@@ -912,17 +913,19 @@ namespace Rawr.Mage
             calculationResult.Mp5Effects = list.ToArray();
         }
 
-        private bool IsRelevantOnUseEffect(SpecialEffect effect)
+        private bool IsRelevantOnUseEffect(SpecialEffect effect, out bool hasteEffect, out bool stackingEffect)
         {
             // check if it is a stacking use effect
-            bool hasStackingEffect = false;
+            stackingEffect = false;
+            hasteEffect = false;
             foreach (SpecialEffect e in effect.Stats.SpecialEffects())
             {
                 if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
                 {
                     if (e.Stats.HasteRating > 0)
                     {
-                        hasStackingEffect = true;
+                        hasteEffect = true;
+                        stackingEffect = true;
                         break;
                     }
                 }
@@ -930,14 +933,18 @@ namespace Rawr.Mage
                 {
                     if (e.Stats.CritRating < 0 && effect.Stats.CritRating > 0)
                     {
-                        hasStackingEffect = true;
+                        stackingEffect = true;
                         break;
                     }
                 }
             }
-            if (hasStackingEffect)
+            if (stackingEffect)
             {
                 return true;
+            }
+            if (effect.Stats.HasteRating > 0)
+            {
+                hasteEffect = true;
             }
             return effect.Stats.SpellPower + effect.Stats.HasteRating > 0;
         }
@@ -1184,7 +1191,10 @@ namespace Rawr.Mage
             int mask = 1 << standardEffectCount;
 
             List<EffectCooldown> itemBasedEffectCooldowns = new List<EffectCooldown>();
+            List<EffectCooldown> stackingHasteEffectCooldowns = new List<EffectCooldown>();
+            List<EffectCooldown> stackingNonHasteEffectCooldowns = new List<EffectCooldown>();
             int itemBasedMask = 0;
+            bool hasteEffect, stackingEffect;
 
 #if !SILVERLIGHT
             int colorIndex = 0;
@@ -1202,10 +1212,11 @@ namespace Rawr.Mage
                         {
                             foreach (SpecialEffect effect in item.Stats.SpecialEffects())
                             {
-                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect))
+                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = new EffectCooldown();
                                     cooldown.SpecialEffect = effect;
+                                    cooldown.HasteEffect = hasteEffect;
                                     cooldown.Mask = mask;
                                     itemBasedMask |= mask;
                                     mask <<= 1;
@@ -1221,6 +1232,17 @@ namespace Rawr.Mage
 #endif
                                     cooldownList.Add(cooldown);
                                     itemBasedEffectCooldowns.Add(cooldown);
+                                    if (stackingEffect)
+                                    {
+                                        if (hasteEffect)
+                                        {
+                                            stackingHasteEffectCooldowns.Add(cooldown);
+                                        }
+                                        else
+                                        {
+                                            stackingNonHasteEffectCooldowns.Add(cooldown);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1229,11 +1251,12 @@ namespace Rawr.Mage
                         {
                             foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
                             {
-                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect))
+                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = new EffectCooldown();
                                     cooldown.SpecialEffect = effect;
                                     cooldown.Mask = mask;
+                                    cooldown.HasteEffect = hasteEffect;
                                     itemBasedMask |= mask;
                                     mask <<= 1;
                                     cooldownCount++;
@@ -1248,6 +1271,17 @@ namespace Rawr.Mage
 #endif
                                     cooldownList.Add(cooldown);
                                     itemBasedEffectCooldowns.Add(cooldown);
+                                    if (stackingEffect)
+                                    {
+                                        if (hasteEffect)
+                                        {
+                                            stackingHasteEffectCooldowns.Add(cooldown);
+                                        }
+                                        else
+                                        {
+                                            stackingNonHasteEffectCooldowns.Add(cooldown);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1256,6 +1290,8 @@ namespace Rawr.Mage
             }
 
             calculationResult.ItemBasedEffectCooldowns = itemBasedEffectCooldowns.ToArray();
+            calculationResult.StackingHasteEffectCooldowns = stackingHasteEffectCooldowns.ToArray();
+            calculationResult.StackingNonHasteEffectCooldowns = stackingNonHasteEffectCooldowns.ToArray();
 
             if (manaGemEffectAvailable)
             {
@@ -1640,6 +1676,8 @@ namespace Rawr.Mage
             calculationResult.ArraySet = lp.ArraySet;
 
             stateList = GetStateList(stateIndexList);
+
+            SetCalculationReuseReferences();
 
             double tps, mps, dps;
             if (needsSolutionVariables)
@@ -2632,7 +2670,7 @@ namespace Rawr.Mage
                     {
                         for (int buffset = 0; buffset < stateList.Length; buffset++)
                         {
-                            if ((calculationOptions.IncrementalSetStateIndexes[index] & stateList[buffset].Effects) == calculationOptions.IncrementalSetStateIndexes[index])
+                            if ((stateList[buffset].Effects & (int)StandardEffect.NonItemBasedMask) == calculationOptions.IncrementalSetStateIndexes[index])
                             {
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[calculationOptions.IncrementalSetSegments[index]], stateList[buffset]))
                                 {
@@ -2719,6 +2757,40 @@ namespace Rawr.Mage
                 #endregion
 
                 lp.EndUnsafe();
+            }
+        }
+
+        private void SetCalculationReuseReferences()
+        {
+            // determine which effects only cause a change in haste, thus allowing calculation reuse (only recalculating cast time)
+            int recalcCastTime = (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | (int)StandardEffect.PotionOfSpeed | (int)StandardEffect.Berserking | (int)StandardEffect.PowerInfusion;
+            foreach (var effect in calculationResult.ItemBasedEffectCooldowns)
+            {
+                if (effect.HasteEffect)
+                {
+                    recalcCastTime |= effect.Mask;
+                }
+            }
+            if (calculationResult.BaseStats.Mage4T10 == 0)
+            {
+                recalcCastTime |= (int)StandardEffect.MirrorImage; // for this it's actually identical, potential for further optimization
+            }
+            // states will be calculated in forward manner, see if some can reuse previous states
+            for (int i = 0; i < stateList.Length; i++)
+            {
+                CastingState si = stateList[i];
+                for (int j = 0; j < i; j++)
+                {
+                    CastingState sj = stateList[j];
+                    // check the difference
+                    int diff = si.Effects ^ sj.Effects;
+                    if ((diff & ~recalcCastTime) == 0)
+                    {
+                        // the only difference is in haste effects
+                        si.ReferenceCastingState = sj;
+                        break;
+                    }
+                }
             }
         }
 

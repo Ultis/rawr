@@ -145,7 +145,7 @@ namespace Rawr.Mage
             float realResistance = calculationOptions.FrostResist;
             float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
             multiplier *= partialResistFactor * (1 + 0.5f * spellCrit);
-            dpspBase = ((1f / 3f) * 5f / 6f) * multiplier / 2.5f;
+            dpspBase = ((1f / 3f) * 5f / 6f) * multiplier;
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -155,10 +155,10 @@ namespace Rawr.Mage
             float haste = castingState.Heroism ? baseHaste * 1.3f : baseHaste;
 
             spell.CastTime = 2.5f / haste;
-            spell.CostPerSecond = 0.0f;
-            spell.DamagePerSecond = (baseDamage + (castingState.FrostSpellPower / 3f + waterElementalBuffs.SpellPower + waterElementalBuffs.BonusSpellPowerDemonicPactMultiplier * castingState.CalculationOptions.WarlockSpellPower) * 5f / 6f) * multiplier / 2.5f * haste;
-            spell.ThreatPerSecond = 0.0f;
-            spell.DpsPerSpellPower = dpspBase * haste;
+            spell.AverageCost = 0.0f;
+            spell.AverageDamage = (baseDamage + (castingState.FrostSpellPower / 3f + waterElementalBuffs.SpellPower + waterElementalBuffs.BonusSpellPowerDemonicPactMultiplier * castingState.CalculationOptions.WarlockSpellPower) * 5f / 6f) * multiplier;
+            spell.AverageThreat = 0.0f;
+            spell.DamagePerSpellPower = dpspBase;
 
             return spell;
         }
@@ -197,7 +197,7 @@ namespace Rawr.Mage
             boltMultiplier = boltHitRate * (1 + mirrorImageBuffs.BonusDamageMultiplier) * (1 + mirrorImageBuffs.BonusFrostDamageMultiplier) * ((calculationOptions.FrostResist == 1) ? 0 : (1 - calculationOptions.FrostResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
             blastMultiplier = blastHitRate * (1 + mirrorImageBuffs.BonusDamageMultiplier) * (1 + mirrorImageBuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == 1) ? 0 : (1 - calculationOptions.FireResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
             castTime = (2 * 3.0f + 1.5f) / haste;
-            multiplier = (calculations.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 0.5f * spellCrit) / (2 * 3.0f + 1.5f) * haste;
+            multiplier = (calculations.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 0.5f * spellCrit);
             dpsp = multiplier * (2 * (1f / 3f * 0.3f) * boltMultiplier + (1f / 3f * 0.15f) * blastMultiplier);
         }
 
@@ -206,10 +206,10 @@ namespace Rawr.Mage
             Spell spell = Spell.New(this, castingState.Calculations);
 
             spell.CastTime = castTime;
-            spell.CostPerSecond = 0.0f;
-            spell.DamagePerSecond = multiplier * (2 * (baseDamageBolt + castingState.FrostSpellPower / 3f * 0.3f) * boltMultiplier + (baseDamageBlast + castingState.FireSpellPower / 3f * 0.15f) * blastMultiplier);
-            spell.ThreatPerSecond = 0.0f;
-            spell.DpsPerSpellPower = dpsp;
+            spell.AverageCost = 0.0f;
+            spell.AverageDamage = multiplier * (2 * (baseDamageBolt + castingState.FrostSpellPower / 3f * 0.3f) * boltMultiplier + (baseDamageBlast + castingState.FireSpellPower / 3f * 0.15f) * blastMultiplier);
+            spell.AverageThreat = 0.0f;
+            spell.DamagePerSpellPower = dpsp;
 
             return spell;
         }
@@ -267,12 +267,10 @@ namespace Rawr.Mage
             float igniteDamage;
             float igniteDamagePerSpellPower;
             spell.AverageDamage = spell.CalculateAverageDamage(castingState.Calculations, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
-
-            spell.DamagePerSecond = spell.AverageDamage / speed;
-            spell.ThreatPerSecond = spell.DamagePerSecond * ThreatMultiplier;
-            spell.IgniteDamagePerSecond = 0;
-            spell.IgniteDpsPerSpellPower = 0;
-            spell.CostPerSecond = 0;
+            spell.AverageThreat = spell.AverageDamage * ThreatMultiplier;
+            spell.IgniteDamage = 0;
+            spell.IgniteDamagePerSpellPower = 0;
+            spell.AverageCost = 0;
             spell.OO5SR = 1;
             return spell;
         }
@@ -460,7 +458,7 @@ namespace Rawr.Mage
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FireSpellPower;
             spell.Absorb = absorb;
-            spell.CostPerSecond -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire) / spell.CastTime;
+            spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             return spell;
         }
 
@@ -503,7 +501,7 @@ namespace Rawr.Mage
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FrostSpellPower;
             spell.Absorb = absorb;
-            spell.CostPerSecond -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFrost) / spell.CastTime;
+            spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
             return spell;
         }
 
@@ -896,8 +894,8 @@ namespace Rawr.Mage
                 if (castingState.Calculations.NeedsDisplayCalculations)
                 {
                     float igniteFactor = spell.SpellModifier * spell.HitRate * spell.PartialResistFactor * Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * castingState.FireCritBonus * (0.08f * castingState.MageTalents.Ignite) / (1 + 0.08f * castingState.MageTalents.Ignite);
-                    spell.IgniteDamagePerSecond += spell.BasePeriodicDamage * igniteFactor;
-                    spell.IgniteDpsPerSpellPower += spell.DotDamageCoefficient * igniteFactor;
+                    spell.IgniteDamage += spell.BasePeriodicDamage * igniteFactor;
+                    spell.IgniteDamagePerSpellPower += spell.DotDamageCoefficient * igniteFactor;
                 }
             }
             return spell;
@@ -1167,9 +1165,9 @@ namespace Rawr.Mage
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3)) / rawSpell.AdditiveSpellModifier;
-            cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
-            cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
-            cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
+            cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
+            cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
         }
 
         public void AddToCycle(CharacterCalculationsMage calculations, Cycle cycle, Spell rawSpell, float weight0, float weight1, float weight2, float weight3, float weight4)
@@ -1191,9 +1189,9 @@ namespace Rawr.Mage
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
-            cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
-            cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
-            cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
+            cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
+            cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
         }
 
         private float arcaneBlastDamageMultiplier;
@@ -1383,12 +1381,12 @@ namespace Rawr.Mage
             cycle.HitProcs += weight * rawSpell.HitProcs;
             cycle.CritProcs += weight * rawSpell.CritProcs;
             cycle.TargetProcs += weight * rawSpell.TargetProcs;
-            cycle.costPerSecond += weight * rawSpell.CastTime * rawSpell.CostPerSecond;
+            cycle.costPerSecond += weight * rawSpell.AverageCost;
             cycle.DamageProcs += weight * rawSpell.HitProcs;
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
-            cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
-            cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
-            cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
+            cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
+            cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
         }
 
         float tormentTheWeak;

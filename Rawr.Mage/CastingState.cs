@@ -25,8 +25,10 @@ namespace Rawr.Mage
         NonItemBasedMask = PowerInfusion | PotionOfSpeed | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | MirrorImage
     }
 
-    public sealed class CastingState
+    public class CastingState
     {
+        public CastingState ReferenceCastingState { get; set; } // state from where we take base spell calculations for adjusting
+
         public CharacterCalculationsMage Calculations { get; private set; }
 
         public CalculationOptionsMage CalculationOptions { get; set; }
@@ -245,6 +247,7 @@ namespace Rawr.Mage
                 {
                     tier10TwoPieceState = CastingState.New(Calculations, Effects, Frozen);
                     tier10TwoPieceState.CastingSpeed *= 1.12f;
+                    tier10TwoPieceState.ReferenceCastingState = this;
                 }
                 return tier10TwoPieceState;
             }
@@ -278,6 +281,7 @@ namespace Rawr.Mage
         {
             CastingState state = calculations.NeedsDisplayCalculations ? new CastingState() : calculations.ArraySet.NewCastingState();
             state.Calculations = calculations;
+            state.ReferenceCastingState = null;
             state.Effects = effects;
             state.buffLabel = null;
             state.SpellsCount = 0;
@@ -290,6 +294,7 @@ namespace Rawr.Mage
             frozenState = null;
             maintainSnareState = null;
             tier10TwoPieceState = null;
+            ReferenceCastingState = null;
 
             StateSpellPower = 0;
             StateAdditiveSpellModifier = 0;
@@ -764,7 +769,7 @@ namespace Rawr.Mage
             return c;
         }
 
-        public Spell GetSpell(SpellId spellId)
+        public virtual Spell GetSpell(SpellId spellId)
         {
             //Spell s = Spells[(int)spellId];
             //if (s != null) return s;
@@ -775,7 +780,6 @@ namespace Rawr.Mage
                 Spell spell = Spells[i];
                 if (spell.SpellId == spellId) return spell;
             }
-
             switch (spellId)
             {
                 case SpellId.Waterbolt:
@@ -784,202 +788,220 @@ namespace Rawr.Mage
                 case SpellId.MirrorImage:
                     s = Calculations.MirrorImageTemplate.GetSpell(this);
                     break;
-                case SpellId.FrostboltFOF:
-                    s = Calculations.FrostboltTemplate.GetSpell(this, false, false, false, true);
-                    break;
-                case SpellId.FrostfireBoltFOF:
-                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true, false);
-                    break;
-                case SpellId.ArcaneMissiles:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 0);
-                    break;
-                case SpellId.ArcaneMissiles1:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 1);
-                    break;
-                case SpellId.ArcaneMissiles2:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 2);
-                    break;
-                case SpellId.ArcaneMissiles3:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 3);
-                    break;
-                case SpellId.ArcaneMissiles4:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 4);
-                    break;
-                case SpellId.ArcaneMissilesMB:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 0);
-                    break;
-                case SpellId.ArcaneMissilesMB1:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 1);
-                    break;
-                case SpellId.ArcaneMissilesMB2:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 2);
-                    break;
-                case SpellId.ArcaneMissilesMB3:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 3);
-                    break;
-                case SpellId.ArcaneMissilesMB4:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 4);
-                    break;
-                case SpellId.ArcaneMissilesNoProc:
-                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, true, false, false, 0, 5);
-                    break;
-                case SpellId.Frostbolt:
-                    s = Calculations.FrostboltTemplate.GetSpell(this);
-                    break;
-                case SpellId.FrostboltNoCC:
-                    s = Calculations.FrostboltTemplate.GetSpell(this, true, false, false, false);
-                    break;
-                case SpellId.DeepFreeze:
-                    s = Calculations.DeepFreezeTemplate.GetSpell(this);
-                    break;
-                case SpellId.Fireball:
-                    s = Calculations.FireballTemplate.GetSpell(this, false, false);
-                    break;
-                case SpellId.FireballBF:
-                    s = Calculations.FireballTemplate.GetSpell(this, false, true);
-                    break;
-                case SpellId.FrostfireBolt:
-                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, false);
-                    break;
-                case SpellId.FrostfireBoltFC:
-                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, true);
-                    break;
-                case SpellId.Pyroblast:
-                    s = Calculations.PyroblastTemplate.GetSpell(this, false, false);
-                    break;
-                case SpellId.FireBlast:
-                    s = Calculations.FireBlastTemplate.GetSpell(this);
-                    break;
-                case SpellId.Scorch:
-                    s = Calculations.ScorchTemplate.GetSpell(this);
-                    break;
-                case SpellId.ScorchNoCC:
-                    s = Calculations.ScorchTemplate.GetSpell(this, false);
-                    break;
-                case SpellId.ArcaneBarrage:
-                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 0);
-                    break;
-                case SpellId.ArcaneBarrage1:
-                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 1);
-                    break;
-                case SpellId.ArcaneBarrage2:
-                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 2);
-                    break;
-                case SpellId.ArcaneBarrage3:
-                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 3);
-                    break;
-                case SpellId.ArcaneBarrage4:
-                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 4);
-                    break;
-                case SpellId.ArcaneBlast3:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3);
-                    break;
-                case SpellId.ArcaneBlast4:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 4);
-                    break;
-                case SpellId.ArcaneBlast3NoCC:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true, false, false);
-                    break;
-                case SpellId.ArcaneBlastRaw:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this);
-                    break;
-                case SpellId.ArcaneBlast0:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0);
-                    break;
-                case SpellId.ArcaneBlast0NoCC:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, true, false, false);
-                    break;
-                case SpellId.ArcaneBlast1:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1);
-                    break;
-                case SpellId.ArcaneBlast1NoCC:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, true, false, false);
-                    break;
-                case SpellId.ArcaneBlast2:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2);
-                    break;
-                case SpellId.ArcaneBlast2NoCC:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, true, false, false);
-                    break;
-                case SpellId.ArcaneBlast0Hit:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, true);
-                    break;
-                case SpellId.ArcaneBlast1Hit:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, true);
-                    break;
-                case SpellId.ArcaneBlast2Hit:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, true);
-                    break;
-                case SpellId.ArcaneBlast3Hit:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true);
-                    break;
-                case SpellId.ArcaneBlast0Miss:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, false);
-                    break;
-                case SpellId.ArcaneBlast1Miss:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, false);
-                    break;
-                case SpellId.ArcaneBlast2Miss:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, false);
-                    break;
-                case SpellId.ArcaneBlast3Miss:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, false);
-                    break;
-                case SpellId.IceLance:
-                    s = Calculations.IceLanceTemplate.GetSpell(this);
-                    break;
-                case SpellId.ArcaneExplosion:
-                    s = Calculations.ArcaneExplosionTemplate.GetSpell(this);
-                    break;
-                case SpellId.FlamestrikeSpammed:
-                    s = Calculations.FlamestrikeTemplate.GetSpell(this, true);
-                    break;
-                case SpellId.FlamestrikeSingle:
-                    s = Calculations.FlamestrikeTemplate.GetSpell(this, false);
-                    break;
-                case SpellId.Blizzard:
-                    s = Calculations.BlizzardTemplate.GetSpell(this);
-                    break;
-                case SpellId.BlastWave:
-                    s = Calculations.BlastWaveTemplate.GetSpell(this);
-                    break;
-                case SpellId.DragonsBreath:
-                    s = Calculations.DragonsBreathTemplate.GetSpell(this);
-                    break;
-                case SpellId.ConeOfCold:
-                    s = Calculations.ConeOfColdTemplate.GetSpell(this);
-                    break;
-                case SpellId.ArcaneBlast0POM:
-                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, false, false, true);
-                    break;
-                case SpellId.FireballPOM:
-                    s = Calculations.FireballTemplate.GetSpell(this, true, false);
-                    break;
-                case SpellId.Slow:
-                    s = Calculations.SlowTemplate.GetSpell(this);
-                    break;
-                case SpellId.FrostboltPOM:
-                    s = Calculations.FrostboltTemplate.GetSpell(this, false, false, true, false);
-                    break;
-                case SpellId.PyroblastPOM:
-                    s = Calculations.PyroblastTemplate.GetSpell(this, true, false);
-                    break;
-                case SpellId.PyroblastPOMSpammed:
-                    s = Calculations.PyroblastTemplate.GetSpell(this, true, true);
-                    break;
-                case SpellId.PyroblastPOMDotUptime:
-                    s = Calculations.PyroblastTemplate.GetSpell(this, true);
-                    break;
-                case SpellId.LivingBomb:
-                    s = Calculations.LivingBombTemplate.GetSpell(this);
-                    break;
-                case SpellId.FireWard:
-                    s = Calculations.FireWardTemplate.GetSpell(this);
-                    break;
-                case SpellId.FrostWard:
-                    s = Calculations.FrostWardTemplate.GetSpell(this);
-                    break;
             }
+            if (s == null && ReferenceCastingState != null)
+            {
+                // get base spell and recalculate cast time
+                Spell reference = ReferenceCastingState.GetSpell(spellId);
+                if (reference.GetType() == typeof(Spell))
+                {
+                    // we only do this for base spells for now, not aoe/dot/absorb variants
+                    // end solution should be merging all aoe/dot/absorb into single class
+                    s = Spell.NewFromReference(reference, this);
+                }
+            }
+            if (s == null)
+            {
+                switch (spellId)
+                {
+                    case SpellId.FrostboltFOF:
+                        s = Calculations.FrostboltTemplate.GetSpell(this, false, false, false, true);
+                        break;
+                    case SpellId.FrostfireBoltFOF:
+                        s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true, false);
+                        break;
+                    case SpellId.ArcaneMissiles:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 0);
+                        break;
+                    case SpellId.ArcaneMissiles1:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 1);
+                        break;
+                    case SpellId.ArcaneMissiles2:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 2);
+                        break;
+                    case SpellId.ArcaneMissiles3:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 3);
+                        break;
+                    case SpellId.ArcaneMissiles4:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 4);
+                        break;
+                    case SpellId.ArcaneMissilesMB:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 0);
+                        break;
+                    case SpellId.ArcaneMissilesMB1:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 1);
+                        break;
+                    case SpellId.ArcaneMissilesMB2:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 2);
+                        break;
+                    case SpellId.ArcaneMissilesMB3:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 3);
+                        break;
+                    case SpellId.ArcaneMissilesMB4:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 4);
+                        break;
+                    case SpellId.ArcaneMissilesNoProc:
+                        s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, true, false, false, 0, 5);
+                        break;
+                    case SpellId.Frostbolt:
+                        s = Calculations.FrostboltTemplate.GetSpell(this);
+                        break;
+                    case SpellId.FrostboltNoCC:
+                        s = Calculations.FrostboltTemplate.GetSpell(this, true, false, false, false);
+                        break;
+                    case SpellId.DeepFreeze:
+                        s = Calculations.DeepFreezeTemplate.GetSpell(this);
+                        break;
+                    case SpellId.Fireball:
+                        s = Calculations.FireballTemplate.GetSpell(this, false, false);
+                        break;
+                    case SpellId.FireballBF:
+                        s = Calculations.FireballTemplate.GetSpell(this, false, true);
+                        break;
+                    case SpellId.FrostfireBolt:
+                        s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, false);
+                        break;
+                    case SpellId.FrostfireBoltFC:
+                        s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, true);
+                        break;
+                    case SpellId.Pyroblast:
+                        s = Calculations.PyroblastTemplate.GetSpell(this, false, false);
+                        break;
+                    case SpellId.FireBlast:
+                        s = Calculations.FireBlastTemplate.GetSpell(this);
+                        break;
+                    case SpellId.Scorch:
+                        s = Calculations.ScorchTemplate.GetSpell(this);
+                        break;
+                    case SpellId.ScorchNoCC:
+                        s = Calculations.ScorchTemplate.GetSpell(this, false);
+                        break;
+                    case SpellId.ArcaneBarrage:
+                        s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 0);
+                        break;
+                    case SpellId.ArcaneBarrage1:
+                        s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 1);
+                        break;
+                    case SpellId.ArcaneBarrage2:
+                        s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 2);
+                        break;
+                    case SpellId.ArcaneBarrage3:
+                        s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 3);
+                        break;
+                    case SpellId.ArcaneBarrage4:
+                        s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 4);
+                        break;
+                    case SpellId.ArcaneBlast3:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3);
+                        break;
+                    case SpellId.ArcaneBlast4:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 4);
+                        break;
+                    case SpellId.ArcaneBlast3NoCC:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true, false, false);
+                        break;
+                    case SpellId.ArcaneBlastRaw:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this);
+                        break;
+                    case SpellId.ArcaneBlast0:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0);
+                        break;
+                    case SpellId.ArcaneBlast0NoCC:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, true, false, false);
+                        break;
+                    case SpellId.ArcaneBlast1:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1);
+                        break;
+                    case SpellId.ArcaneBlast1NoCC:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, true, false, false);
+                        break;
+                    case SpellId.ArcaneBlast2:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2);
+                        break;
+                    case SpellId.ArcaneBlast2NoCC:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, true, false, false);
+                        break;
+                    case SpellId.ArcaneBlast0Hit:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, true);
+                        break;
+                    case SpellId.ArcaneBlast1Hit:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, true);
+                        break;
+                    case SpellId.ArcaneBlast2Hit:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, true);
+                        break;
+                    case SpellId.ArcaneBlast3Hit:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true);
+                        break;
+                    case SpellId.ArcaneBlast0Miss:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, false);
+                        break;
+                    case SpellId.ArcaneBlast1Miss:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, false);
+                        break;
+                    case SpellId.ArcaneBlast2Miss:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, false);
+                        break;
+                    case SpellId.ArcaneBlast3Miss:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, false);
+                        break;
+                    case SpellId.IceLance:
+                        s = Calculations.IceLanceTemplate.GetSpell(this);
+                        break;
+                    case SpellId.ArcaneExplosion:
+                        s = Calculations.ArcaneExplosionTemplate.GetSpell(this);
+                        break;
+                    case SpellId.FlamestrikeSpammed:
+                        s = Calculations.FlamestrikeTemplate.GetSpell(this, true);
+                        break;
+                    case SpellId.FlamestrikeSingle:
+                        s = Calculations.FlamestrikeTemplate.GetSpell(this, false);
+                        break;
+                    case SpellId.Blizzard:
+                        s = Calculations.BlizzardTemplate.GetSpell(this);
+                        break;
+                    case SpellId.BlastWave:
+                        s = Calculations.BlastWaveTemplate.GetSpell(this);
+                        break;
+                    case SpellId.DragonsBreath:
+                        s = Calculations.DragonsBreathTemplate.GetSpell(this);
+                        break;
+                    case SpellId.ConeOfCold:
+                        s = Calculations.ConeOfColdTemplate.GetSpell(this);
+                        break;
+                    case SpellId.ArcaneBlast0POM:
+                        s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, false, false, true);
+                        break;
+                    case SpellId.FireballPOM:
+                        s = Calculations.FireballTemplate.GetSpell(this, true, false);
+                        break;
+                    case SpellId.Slow:
+                        s = Calculations.SlowTemplate.GetSpell(this);
+                        break;
+                    case SpellId.FrostboltPOM:
+                        s = Calculations.FrostboltTemplate.GetSpell(this, false, false, true, false);
+                        break;
+                    case SpellId.PyroblastPOM:
+                        s = Calculations.PyroblastTemplate.GetSpell(this, true, false);
+                        break;
+                    case SpellId.PyroblastPOMSpammed:
+                        s = Calculations.PyroblastTemplate.GetSpell(this, true, true);
+                        break;
+                    case SpellId.PyroblastPOMDotUptime:
+                        s = Calculations.PyroblastTemplate.GetSpell(this, true);
+                        break;
+                    case SpellId.LivingBomb:
+                        s = Calculations.LivingBombTemplate.GetSpell(this);
+                        break;
+                    case SpellId.FireWard:
+                        s = Calculations.FireWardTemplate.GetSpell(this);
+                        break;
+                    case SpellId.FrostWard:
+                        s = Calculations.FrostWardTemplate.GetSpell(this);
+                        break;
+                }
+            }
+
             if (s != null)
             {
                 s.SpellId = spellId;

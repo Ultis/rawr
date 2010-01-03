@@ -324,12 +324,12 @@ namespace Rawr.Mage
             if (CastingState.WaterElemental)
             {
                 Spell waterbolt = CastingState.GetSpell(SpellId.Waterbolt);
-                effectDamagePerSecond += waterbolt.DamagePerSecond + spellPower * waterbolt.DpsPerSpellPower;
+                effectDamagePerSecond += (waterbolt.AverageDamage + spellPower * waterbolt.DamagePerSpellPower) / waterbolt.CastTime;
             }
             if (CastingState.MirrorImage)
             {
                 Spell mirrorImage = CastingState.GetSpell(SpellId.MirrorImage);
-                effectDamagePerSecond += mirrorImage.DamagePerSecond + spellPower * mirrorImage.DpsPerSpellPower;
+                effectDamagePerSecond += (mirrorImage.AverageDamage + spellPower * mirrorImage.DamagePerSpellPower) / mirrorImage.CastTime;
             }
             if (Ticks > 0)
             {
@@ -658,7 +658,7 @@ namespace Rawr.Mage
                     dict[waterbolt.Name] = contrib;
                 }
                 contrib.Hits += duration / waterbolt.CastTime;
-                contrib.Damage += (waterbolt.DamagePerSecond + effectSpellPower * waterbolt.DpsPerSpellPower) * duration;
+                contrib.Damage += (waterbolt.AverageDamage + effectSpellPower * waterbolt.DamagePerSpellPower) / waterbolt.CastTime * duration;
             }
             if (CastingState.MirrorImage)
             {
@@ -669,7 +669,7 @@ namespace Rawr.Mage
                     dict["Mirror Image"] = contrib;
                 }
                 contrib.Hits += 3 * (CastingState.MageTalents.GlyphOfMirrorImage ? 4 : 3) * duration / mirrorImage.CastTime;
-                contrib.Damage += (mirrorImage.DamagePerSecond + effectSpellPower * mirrorImage.DpsPerSpellPower) * duration;
+                contrib.Damage += (mirrorImage.AverageDamage + effectSpellPower * mirrorImage.DamagePerSpellPower) / mirrorImage.CastTime * duration;
             }
             if (Ticks > 0)
             {
@@ -877,10 +877,10 @@ namespace Rawr.Mage
             IgniteProcs += spell.IgniteProcs;
             TargetProcs += spell.TargetProcs;
             DamageProcs += spell.HitProcs + spell.DotProcs;
-            damagePerSecond += spell.DamagePerSecond * spell.CastTime;
-            threatPerSecond += spell.ThreatPerSecond * spell.CastTime;
-            costPerSecond += spell.CostPerSecond * spell.CastTime;
-            DpsPerSpellPower += spell.DpsPerSpellPower * spell.CastTime;
+            damagePerSecond += spell.AverageDamage;
+            threatPerSecond += spell.AverageThreat;
+            costPerSecond += spell.AverageCost;
+            DpsPerSpellPower += spell.DamagePerSpellPower;
             AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
             spellList.Add(spell);
         }
@@ -900,10 +900,10 @@ namespace Rawr.Mage
             IgniteProcs += spell.IgniteProcs;
             TargetProcs += spell.TargetProcs;
             DamageProcs += spell.HitProcs + dotUptime * spell.DotProcs;
-            damagePerSecond += (spell.DamagePerSecond + dotUptime * spell.DotDamagePerSecond) * spell.CastTime;
-            threatPerSecond += (spell.ThreatPerSecond + dotUptime * spell.DotThreatPerSecond) * spell.CastTime;
-            costPerSecond += spell.CostPerSecond * spell.CastTime;
-            DpsPerSpellPower += (spell.DpsPerSpellPower + dotUptime * spell.DotDpsPerSpellPower) * spell.CastTime;
+            damagePerSecond += (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
+            threatPerSecond += (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
+            costPerSecond += spell.AverageCost;
+            DpsPerSpellPower += (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
             AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
             spellList.Add(spell);
         }
@@ -1023,10 +1023,10 @@ namespace Rawr.Mage
             IgniteProcs += weight * spell.IgniteProcs;
             TargetProcs += weight * spell.TargetProcs;
             DamageProcs += weight * (spell.HitProcs + spell.DotProcs);
-            costPerSecond += weight * spell.CastTime * spell.CostPerSecond;
-            damagePerSecond += weight * spell.CastTime * spell.DamagePerSecond;
-            threatPerSecond += weight * spell.CastTime * spell.ThreatPerSecond;
-            DpsPerSpellPower += weight * spell.CastTime * spell.DpsPerSpellPower;
+            costPerSecond += weight * spell.AverageCost;
+            damagePerSecond += weight * spell.AverageDamage;
+            threatPerSecond += weight * spell.AverageThreat;
+            DpsPerSpellPower += weight * spell.DamagePerSpellPower;
         }
 
         public void AddSpell(bool needsDisplayCalculations, DotSpell spell, float weight, float dotUptime)
@@ -1045,10 +1045,10 @@ namespace Rawr.Mage
             IgniteProcs += weight * spell.IgniteProcs;
             TargetProcs += weight * spell.TargetProcs;
             DamageProcs += weight * (spell.HitProcs + dotUptime * spell.DotProcs);
-            costPerSecond += weight * spell.CastTime * spell.CostPerSecond;
-            damagePerSecond += weight * spell.CastTime * (spell.DamagePerSecond + dotUptime * spell.DotDamagePerSecond);
-            threatPerSecond += weight * spell.CastTime * (spell.ThreatPerSecond + dotUptime * spell.DotThreatPerSecond);
-            DpsPerSpellPower += weight * spell.CastTime * (spell.DpsPerSpellPower + dotUptime * spell.DotDpsPerSpellPower);
+            costPerSecond += weight * spell.AverageCost;
+            damagePerSecond += weight * (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
+            threatPerSecond += weight * (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
+            DpsPerSpellPower += weight * (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
         }
 
         public void AddPause(float duration, float weight)

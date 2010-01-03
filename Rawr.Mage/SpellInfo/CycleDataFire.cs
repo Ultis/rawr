@@ -1274,7 +1274,7 @@ namespace Rawr.Mage
                 do
                 {
                     float expectedTimeWithBlast = Blast.CastTime + (int)((timeOnScorch - (blastCooldown > 0f ? blastCooldown : 0f) - Blast.CastTime - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / FB.CastTime) * FB.CastTime + averageScorchesNeeded * Sc.CastTime;
-                    if (expectedTimeWithBlast > Blast.Cooldown && (blastCooldown <= 0 || (Blast.DamagePerSecond * Blast.CastTime / (Blast.CastTime + blastCooldown) > FB.DamagePerSecond)))
+                    if (expectedTimeWithBlast > Blast.Cooldown && (blastCooldown <= 0 || (Blast.AverageDamage / (Blast.CastTime + blastCooldown) > FB.DamagePerSecond)))
                     {
                         if (blastCooldown > 0)
                         {

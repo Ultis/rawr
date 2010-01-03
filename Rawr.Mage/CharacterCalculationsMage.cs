@@ -201,6 +201,8 @@ namespace Rawr.Mage
         public SpecialEffect[] ManaRestoreEffects { get; set; }
         public SpecialEffect[] Mp5Effects { get; set; }
         public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
+        public EffectCooldown[] StackingHasteEffectCooldowns { get; set; }
+        public EffectCooldown[] StackingNonHasteEffectCooldowns { get; set; }
 
         #region Base State Stats
         public float BaseSpellHit { get; set; }

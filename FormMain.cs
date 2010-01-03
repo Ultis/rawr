@@ -826,8 +826,20 @@ namespace Rawr
         private void LoadCharacterIntoForm(Character character, bool unsavedChanges)
         {
 			string characterModel = character.CurrentModel;
-			Character = new Character();
-			LoadModel(characterModel);
+            // if the current character is already using the target model (majority case), then we can skip this whole mess
+            if (Character.CurrentModel != characterModel)
+            {
+                Character c = new Character();
+                // set the race/class/model of target character to minimize model swaps
+                c.Class = character.Class;
+                c.Race = character.Race;
+                c.CurrentModel = characterModel;
+                // now load blank character and force a model change
+                // TODO: this can probably be optimized still, don't need to do charts etc for the blank character
+                Character = c;
+                LoadModel(characterModel);
+            }
+            // now load the character without poluting it with previous model
 			Character = character;
             _unsavedChanges = unsavedChanges;
             SetTitle();
