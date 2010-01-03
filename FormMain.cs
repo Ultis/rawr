@@ -2260,7 +2260,7 @@ namespace Rawr
 						null,
 						null,
 						null,
-                        item.LocationInfo[0].Description.Split(',')[0] + (itemInstance.Item.LocationInfo[1] != null ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : ""),
+                        item.LocationInfo[0].Description.Split(',')[0] + (item.LocationInfo[1] != null ? "|" + item.LocationInfo[1].Description.Split(',')[0] : ""),
 						item.Id,
 						null,
 						comparisonCalculation.OverallPoints);
