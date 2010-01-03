@@ -34,10 +34,6 @@ namespace Rawr.DPSWarr {
         #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
-        //public float HitPercent { get; set; }
-        //public float HitPercBonus { get; set; }
-        //public float HitPercentTtl { get; set; }
-        //public float HitCanFree { get; set; }
         public float ExpertiseRating { get; set; }
         public float Expertise { get; set; }
         public float MhExpertise { get; set; }
@@ -131,19 +127,121 @@ namespace Rawr.DPSWarr {
 
             return theFormat;
         }
+        private string GenFormattedString(string[] passiveContrs, bool hasCap,
+            bool whunprocisOverCap, bool whprocisOverCap,
+            bool ywunprocisOverCap, bool ywprocisOverCap)
+        {
+            int formIter = 2;
+            string theFormat = "";
+
+            theFormat += "{0:00.00%} : {1}*"; // Averaged % and Averaged Rating
+            theFormat += "The Pane shows Averaged Values";
+            theFormat += "\r\n";
+            if (passiveContrs.Length > 0) {
+                theFormat += "\r\n= Your Passive Contributions =";
+                foreach (string passiveContr in passiveContrs) {
+                    theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : " + passiveContr;
+                    formIter++;
+                }
+                theFormat += "\r\n";
+            }
+            theFormat += "\r\n= UnProc'd =";
+            theFormat += "\r\n{" + formIter.ToString() + ":0.#} : Rating"; formIter++;
+            theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : Percent"; formIter++;
+            if (hasCap) {
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} Rating "
+                                     + (whunprocisOverCap ? "Over White Cap" : "Under White Cap");
+                formIter++;
+            }
+            theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : Percent"; formIter++;
+            if (hasCap) {
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} Rating "
+                                     + (ywunprocisOverCap ? "Over Yellow Cap" : "Under Yellow Cap");
+                formIter++;
+            }
+            theFormat += "\r\n";
+            theFormat += "\r\n= Proc'd =";
+            theFormat += "\r\n{" + formIter.ToString() + ":0.#} : Rating"; formIter++;
+            theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : Percent"; formIter++;
+            if (hasCap) {
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} Rating "
+                + (whprocisOverCap ? "Over White Cap" : "Under White Cap");
+                formIter++;
+            }
+            theFormat += "\r\n{" + formIter.ToString() + ":00.00%} : Percent"; formIter++;
+            if (hasCap) {
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} Rating "
+                    + (ywprocisOverCap ? "Over Yellow Cap" : "Under Yellow Cap");
+                formIter++;
+            }
+
+            return theFormat;
+        }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             string format = "";
+            int LevelDif = combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level;
 
             // Base Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*" +
                                 "{2:00,000} : Base Health" +
                                 "\r\n{3:00,000} : Stam Bonus",
-                                AverageStats.Health, AverageStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(AverageStats.Stamina)));
-            dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
-            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",AverageStats.Strength,AverageStats.Strength*2f));
-            dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)AverageStats.AttackPower,AverageStats.AttackPower/14f));
+                                AverageStats.Health, AverageStats.Stamina,
+                                BaseHealth,
+                                StatConversion.GetHealthFromStamina(AverageStats.Stamina)));
+            dictValues.Add("Armor", string.Format("{0}*Increases Attack Power by {1}", Armor, TeethBonus));
+            #region Strength
+            {
+                int formIter = 1;
+                string theFormat = "";
+
+                float[] passiveContrsVals = new float[] {
+                    combatFactors.Char.WarriorTalents.StrengthOfArms * 0.02f,
+                    (combatFactors.CalcOpts.FuryStance ? combatFactors.Char.WarriorTalents.ImprovedBerserkerStance * 0.04f : 0f),
+                    BuffsStats.Strength,
+                    BuffsStats.BonusStrengthMultiplier,
+                };
+
+                string[] passiveContrs = new string[] {
+                    "Strength of Arms",
+                    "Improved Berserker Stance",
+                    "Buffs : Simple",
+                    "Buffs : Multi",
+                };
+
+                theFormat += "{0:0.#}*"; // Averaged % and Averaged Rating
+                theFormat += "The Pane shows Averaged Values";
+                theFormat += "\r\n";
+                theFormat += "\r\n= Your Passive Contributions =";
+                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[0]; formIter++;
+                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[1]; formIter++;
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} : "   + passiveContrs[2]; formIter++;
+                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[3]; formIter++;
+                theFormat += "\r\n";
+                theFormat += "\r\n= UnProc'd =";
+                theFormat += "\r\nValue: {" + formIter.ToString() + ":0.#}"; formIter++;
+                theFormat += "\r\nIncreases Attack Power by {" + formIter.ToString() + ":0.#}"; formIter++;
+                theFormat += "\r\n";
+                theFormat += "\r\n= Proc'd =";
+                theFormat += "\r\nValue: {" + formIter.ToString() + ":0.#}"; formIter++;
+                theFormat += "\r\nIncreases Attack Power by {" + formIter.ToString() + ":0.#}"; formIter++;
+
+                dictValues.Add("Strength", string.Format(theFormat,
+                    // Averaged Stats
+                    AverageStats.Strength,
+                    // Passive Contributions
+                    passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2], passiveContrsVals[3],
+                    // UnProc'd Stats
+                    BuffedStats.Strength,
+                    BuffedStats.Strength * 2f,
+                    // Proc'd Stats
+                    MaximumStats.Strength,
+                    MaximumStats.Strength * 2f
+                    ));
+            }
+            #endregion
+            dictValues.Add("Attack Power", string.Format("{0}*Increases White DPS by {1:0.0}", (int)AverageStats.AttackPower, AverageStats.AttackPower / 14f));
             #region Agility
             {
                 int formIter = 1;
@@ -187,6 +285,15 @@ namespace Rawr.DPSWarr {
             #endregion
             #region Crit
             {
+                // sub to add neg number as pos, for overcapping to compensate
+                // for boss level on yellows (or whites, I dont remember which)
+                // Whites clip crit cap with glances, dodges, parries, misses
+                float WhCritCap = 1f - StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
+                WhCritCap -= (Whites.MHAtkTable.Glance + Whites.MHAtkTable.AnyNotLand);
+                // Yellows clip crit cap with dodges, parries, misses
+                float YwCritCap = 1f;// -StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
+                YwCritCap -= (new AttackTable(combatFactors.Char, BuffedStats, combatFactors, combatFactors.CalcOpts, FW, true, false, false)).AnyNotLand;
+
                 float[] passiveContrsVals = new float[] {
                     0.03192f,
                     AgilityCritBonus,
@@ -202,14 +309,24 @@ namespace Rawr.DPSWarr {
                 string[] passiveContrs = new string[] { "Base Crit", "From Agility", "Cruelty",
                                                         "Berserker Stance", "T9 2P Set Bonus", "Poleaxe Specialization",
                                                         "Buffs" };
-                float UnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
-                float ProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc);
-                bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdCrit > 1f;
-                bool isProcdOverCap = passiveContrsTtlVal + ProcdCrit > 1f;
-                float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(1f - (passiveContrsTtlVal + UnProcdCrit)));
-                float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(1f - (passiveContrsTtlVal + ProcdCrit)));
-                string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
 
+                float WhUnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
+                float WhProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc);
+                bool isWhUnProcdOverCap = passiveContrsTtlVal + WhUnProcdCrit > WhCritCap;
+                bool isWhProcdOverCap = passiveContrsTtlVal + WhProcdCrit > WhCritCap;
+                float amountWhUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(WhCritCap - (passiveContrsTtlVal + WhUnProcdCrit)));
+                float amountWhProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(WhCritCap - (passiveContrsTtlVal + WhProcdCrit)));
+
+                float YwUnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
+                float YwProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc);
+                bool isYwUnProcdOverCap = passiveContrsTtlVal + YwUnProcdCrit > YwCritCap;
+                bool isYwProcdOverCap = passiveContrsTtlVal + YwProcdCrit > YwCritCap;
+                float amountYwUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(YwCritCap - (passiveContrsTtlVal + YwUnProcdCrit)));
+                float amountYwProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(YwCritCap - (passiveContrsTtlVal + YwProcdCrit)));
+
+                string theFormat = GenFormattedString(passiveContrs, true,
+                    isWhUnProcdOverCap, isWhProcdOverCap,
+                    isYwUnProcdOverCap, isYwProcdOverCap);
 
                 dictValues.Add("Crit", string.Format(theFormat,
                     // Averaged Stats
@@ -220,17 +337,18 @@ namespace Rawr.DPSWarr {
                     passiveContrsVals[6],
                     // UnProc'd Stats
                     BuffedStats.CritRating + BuffedStats.DeathbringerProc,
-                    Math.Min(1f, passiveContrsTtlVal + UnProcdCrit),
-                    amountUnProcdOverCap,
+                    Math.Min(WhCritCap, passiveContrsTtlVal + WhUnProcdCrit), amountWhUnProcdOverCap,
+                    Math.Min(YwCritCap, passiveContrsTtlVal + YwUnProcdCrit), amountYwUnProcdOverCap,
                     // Proc'd Stats
                     MaximumStats.CritRating + MaximumStats.DeathbringerProc,
-                    Math.Min(1f, passiveContrsTtlVal + ProcdCrit),
-                    amountProcdOverCap
+                    Math.Min(WhCritCap, passiveContrsTtlVal + WhProcdCrit), amountWhProcdOverCap,
+                    Math.Min(YwCritCap, passiveContrsTtlVal + YwProcdCrit), amountYwProcdOverCap
                     ));
             }
             #endregion
             #region Armor Penetration
             {
+                float ArPCap = 1.00f;
                 float[] passiveContrsVals = new float[] {
                     (!combatFactors.CalcOpts.FuryStance ? 0.10f : 0f),
                     (!combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_ArP : 0f),
@@ -240,10 +358,10 @@ namespace Rawr.DPSWarr {
                 string[] passiveContrs = new string[] { "Battle Stance", "T9 2P Set Bonus", "Mace Specialization" };
                 float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating + BuffedStats.DeathbringerProc);
                 float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating + MaximumStats.DeathbringerProc);
-                bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > 1f;
-                bool isProcdOverCap = passiveContrsTtlVal + ProcdArP > 1f;
-                float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(1f - (passiveContrsTtlVal + UnProcdArP)));
-                float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(1f - (passiveContrsTtlVal + ProcdArP)));
+                bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > ArPCap;
+                bool isProcdOverCap = passiveContrsTtlVal + ProcdArP > ArPCap;
+                float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + UnProcdArP)));
+                float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + ProcdArP)));
                 string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
                 dictValues.Add("Armor Penetration", string.Format(theFormat,
                     // Averaged Stats
@@ -252,17 +370,20 @@ namespace Rawr.DPSWarr {
                     passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
                     // UnProc'd Stats
                     BuffedStats.ArmorPenetrationRating + BuffedStats.DeathbringerProc,
-                    Math.Min(1f, passiveContrsTtlVal + UnProcdArP),
+                    Math.Min(ArPCap, passiveContrsTtlVal + UnProcdArP),
                     amountUnProcdOverCap,
                     // Proc'd Stats
                     MaximumStats.ArmorPenetrationRating + MaximumStats.DeathbringerProc,
-                    Math.Min(1f, passiveContrsTtlVal + ProcdArP),
+                    Math.Min(ArPCap, passiveContrsTtlVal + ProcdArP),
                     amountProcdOverCap
                     ));
             }
             #endregion
             #region Haste
             {
+                // Haste has no cap? Shouldn't there be a 100% cap or something?
+                // We should also state the before/after effects of haste on white swings
+                // Maybe a good point to show how much swing time is lost to Slams too?
                 float heroism = 0f;
                 if (BuffsStats._rawSpecialEffectData != null)
                 {
@@ -302,69 +423,73 @@ namespace Rawr.DPSWarr {
             }
             #endregion
             #region Hit
-            // old
-            float HitPercent = StatConversion.GetHitFromRating(HitRating);
-            float HitPercBonus = AverageStats.PhysicalHit;
-            // Hit Soft Cap ratings check, how far from it
-            float capA1         = StatConversion.WHITE_MISS_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
-            float convcapA1     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
-            float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
-            //float lastNumA1    = StatConversion.GetRatingFromExpertise((convcapA1 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
-            // Hit Hard Cap ratings check, how far from it
-            float capA2         = StatConversion.WHITE_MISS_CHANCE_CAP_DW[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
-            float convcapA2     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA2));
-            float sec2lastNumA2 = (convcapA2 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
-            //float lastNumA2   = StatConversion.GetRatingFromExpertise((sec2lastNumA2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
-            dictValues.Add("Hit",
-                string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
-                                "\r\n{3:0.00%} : Total Hit % Bonus" +
-                                "\r\n\r\nWhite Two-Hander Cap: " +
-                                (sec2lastNumA1 > 0 ? "You can free {4:0} Rating"
-                                                   : "You need {4:0} more Rating") +
-                                "\r\nWhite Dual Wield Cap: " +
-                                (sec2lastNumA2 > 0 ? "You can free {5:0} Rating"
-                                                   : "You need {5:0} more Rating"),
-                                StatConversion.GetHitFromRating(AverageStats.HitRating),
-                                AverageStats.HitRating,
-                                HitPercBonus,
-                                HitPercent + HitPercBonus,
-                                (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1),
-                                (sec2lastNumA2 > 0 ? sec2lastNumA2 : sec2lastNumA2 * -1)
-                            ));
+            {
+                // old
+                float HitPercent = StatConversion.GetHitFromRating(HitRating);
+                float HitPercBonus = AverageStats.PhysicalHit;
+                // Hit Soft Cap ratings check, how far from it
+                float capA1         = StatConversion.WHITE_MISS_CHANCE_CAP[LevelDif];
+                float convcapA1     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
+                float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
+                //float lastNumA1    = StatConversion.GetRatingFromExpertise((convcapA1 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+                // Hit Hard Cap ratings check, how far from it
+                float capA2         = StatConversion.WHITE_MISS_CHANCE_CAP_DW[LevelDif];
+                float convcapA2     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA2));
+                float sec2lastNumA2 = (convcapA2 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
+                //float lastNumA2   = StatConversion.GetRatingFromExpertise((sec2lastNumA2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+                dictValues.Add("Hit",
+                    string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
+                                    "\r\n{3:0.00%} : Total Hit % Bonus" +
+                                    "\r\n\r\nWhite Two-Hander Cap: " +
+                                    (sec2lastNumA1 > 0 ? "You can free {4:0} Rating"
+                                                       : "You need {4:0} more Rating") +
+                                    "\r\nWhite Dual Wield Cap: " +
+                                    (sec2lastNumA2 > 0 ? "You can free {5:0} Rating"
+                                                       : "You need {5:0} more Rating"),
+                                    StatConversion.GetHitFromRating(AverageStats.HitRating),
+                                    AverageStats.HitRating,
+                                    HitPercBonus,
+                                    HitPercent + HitPercBonus,
+                                    (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1),
+                                    (sec2lastNumA2 > 0 ? sec2lastNumA2 : sec2lastNumA2 * -1)
+                                ));
+            }
             #endregion
             #region Expertise
-            // Dodge Cap ratings check, how far from it, uses lesser of MH and OH
-            // Also factors in Weapon Mastery
-            float capB1         = StatConversion.YELLOW_DODGE_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level] - WeapMastPerc;
-            float convcapB1     = (float)Math.Ceiling(StatConversion.GetExpertiseFromDodgeParryReduc(capB1));
-            float sec2lastNumB1 = (convcapB1 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
-            float lastNumB1     = StatConversion.GetRatingFromExpertise((convcapB1 - WeapMastPerc - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
-            // Parry Cap ratings check, how far from it, uses lesser of MH and OH
-            float capB2         = StatConversion.YELLOW_PARRY_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
-            float convcapB2     = (float)Math.Ceiling(StatConversion.GetExpertiseFromDodgeParryReduc(capB2));
-            float sec2lastNumB2 = (convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
-            float lastNumB2     = StatConversion.GetRatingFromExpertise((convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
-            dictValues.Add("Expertise",
-                string.Format("{0:00.00%} : {1:00.00} : {2}*" +
-                                      "Following includes Racial bonus and Strength of Arms" +
-                "\r\n" + "{3:00.00%} Weapon Mastery (Dodge Only)" +
-                "\r\n" + "{4:00.00%} : {5:00.00} : MH" +
-                "\r\n" + "{6:00.00%} : {7:00.00} : OH" +
-                "\r\n" + "\r\n" + "Dodge Cap: " +
-                (lastNumB1 > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
-                             : "You need {8:0} more Expertise ({9:0} Rating)") +
-                "\r\n" + "Parry Cap: " +
-                (lastNumB2 > 0 ? "You can free {10:0} Expertise ({11:0} Rating)"
-                             : "You need {10:0} more Expertise ({11:0} Rating)"),
-                StatConversion.GetDodgeParryReducFromExpertise(Expertise),
-                Expertise,
-                AverageStats.ExpertiseRating,
-                WeapMastPerc,
-                StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
-                StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
-                (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
-                (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
-            ));
+            {
+                // Dodge Cap ratings check, how far from it, uses lesser of MH and OH
+                // Also factors in Weapon Mastery
+                float capB1         = StatConversion.YELLOW_DODGE_CHANCE_CAP[LevelDif] - WeapMastPerc;
+                float convcapB1     = (float)Math.Ceiling(StatConversion.GetExpertiseFromDodgeParryReduc(capB1));
+                float sec2lastNumB1 = (convcapB1 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
+                float lastNumB1     = StatConversion.GetRatingFromExpertise((convcapB1 - WeapMastPerc - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+                // Parry Cap ratings check, how far from it, uses lesser of MH and OH
+                float capB2         = StatConversion.YELLOW_PARRY_CHANCE_CAP[LevelDif];
+                float convcapB2     = (float)Math.Ceiling(StatConversion.GetExpertiseFromDodgeParryReduc(capB2));
+                float sec2lastNumB2 = (convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
+                float lastNumB2     = StatConversion.GetRatingFromExpertise((convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+                dictValues.Add("Expertise",
+                    string.Format("{0:00.00%} : {1:00.00} : {2}*" +
+                    "Following includes Racial bonus and Strength of Arms" +
+                    "\r\n{3:00.00%} Weapon Mastery (Dodge Only)" +
+                    "\r\n{4:00.00%} : {5:00.00} : MH" +
+                    "\r\n{6:00.00%} : {7:00.00} : OH" +
+                    "\r\n\r\n" + "Dodge Cap: " +
+                    (lastNumB1 > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
+                                 : "You need {8:0} more Expertise ({9:0} Rating)") +
+                    "\r\n" + "Parry Cap: " +
+                    (lastNumB2 > 0 ? "You can free {10:0} Expertise ({11:0} Rating)"
+                                 : "You need {10:0} more Expertise ({11:0} Rating)"),
+                    StatConversion.GetDodgeParryReducFromExpertise(Expertise),
+                    Expertise,
+                    AverageStats.ExpertiseRating,
+                    WeapMastPerc,
+                    StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
+                    StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
+                    (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
+                    (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
+                ));
+            }
             #endregion
 
             dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
