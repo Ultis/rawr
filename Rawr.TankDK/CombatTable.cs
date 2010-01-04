@@ -171,9 +171,6 @@ namespace Rawr.TankDK
                     normalizationFactor = 3.3f;
                     MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
                     combinedSwingTime = MH.hastedSpeed;
-//                    calcs.OHAttackSpeed = 0f;
-//                    calcs.OHWeaponDamage = 0f;
-//                    calcs.OHExpertise = 0f;
                 }
                 else normalizationFactor = 2.4f;
             }
@@ -187,12 +184,8 @@ namespace Rawr.TankDK
                 OH.damage *= (.5f + OHMult);
 
                 //need this for weapon swing procs
-                //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
-                //combinedSwingTime = 1f / combinedSwingTime;
-                combinedSwingTime = (MH.hastedSpeed + OH.hastedSpeed) / 4;
-//                calcs.OHAttackSpeed = OH.hastedSpeed;
-//                calcs.OHWeaponDamage = OH.damage;
-//                calcs.OHExpertise = OH.effectiveExpertise;
+                // in DW situations, weapon swing procs should happen MORE often, not less.
+                combinedSwingTime = 1 / (1 / MH.hastedSpeed + 1 / OH.hastedSpeed);
             }
 
             if (character.MainHand == null && character.OffHand == null)

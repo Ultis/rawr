@@ -321,6 +321,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     "Target Dodge %",
                     "Armor",
                     "Health",
+                    "Hit Rating",
                     "Reaction Time",
                     "Burst Time"
                 }; 
@@ -716,6 +717,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 stats.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
             }
 
+            // Factor in damage procs.
+            float fDamageFromProcs = stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage + stats.ShadowDamage + stats.NatureDamage + stats.HolyDamage;
+            calcs.Threat += fDamageFromProcs;
 
             // Threat buffs.
             calcs.Threat *= 1f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
@@ -2094,6 +2098,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 NatureResistance = stats.NatureResistance,
                 ShadowResistance = stats.ShadowResistance,
 				
+                // Damage Procs
+                ArcaneDamage = stats.ArcaneDamage,
+                FireDamage = stats.FireDamage,
+                FrostDamage = stats.FrostDamage,
+                ShadowDamage = stats.ShadowDamage,
+                HolyDamage = stats.HolyDamage,
+                NatureDamage = stats.NatureDamage,
             };
 
             // Also bringing in the trigger events from DPSDK - 
@@ -2262,6 +2273,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.FrostResistance != 0);
             bResults |= (stats.NatureResistance != 0);
             bResults |= (stats.ShadowResistance != 0);
+
+            // Damage Procs
+            bResults |= (stats.ArcaneDamage != 0);
+            bResults |= (stats.FireDamage != 0);
+            bResults |= (stats.FrostDamage != 0);
+            bResults |= (stats.ShadowDamage != 0);
+            bResults |= (stats.HolyDamage != 0);
+            bResults |= (stats.NatureDamage != 0);
 
             return bResults;
         }

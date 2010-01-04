@@ -92,6 +92,7 @@ namespace Rawr.TankDK {
                 case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
                 case "Armor": return Armor; // Raw Armor
                 case "Health": return BasicStats.Health;
+                case "Hit Rating": return BasicStats.HitRating; // Raw Hit Rating
                 case "Burst Time": return BurstTime;
                 case "Reaction Time": return ReactionTime;
                 default: return 0.0f;
