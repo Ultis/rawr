@@ -982,6 +982,67 @@ namespace Rawr.Mage
         public Dictionary<string, float> ManaSources { get; private set; }
         public Dictionary<string, float> ManaUsage { get; private set; }
 
+        public void CalculateChanceToDie()
+        {
+            double ampMelee = IncomingDamageAmpMelee;
+            double ampPhysical = IncomingDamageAmpPhysical;
+            double ampArcane = IncomingDamageAmpArcane;
+            double ampFire = IncomingDamageAmpFire;
+            double ampFrost = IncomingDamageAmpFrost;
+            double ampNature = IncomingDamageAmpNature;
+            double ampShadow = IncomingDamageAmpShadow;
+            double ampHoly = IncomingDamageAmpHoly;
+
+            double melee = IncomingDamageDpsMelee;
+            double physical = IncomingDamageDpsPhysical;
+            double arcane = IncomingDamageDpsArcane;
+            double fire = IncomingDamageDpsFire;
+            double frost = IncomingDamageDpsFrost;
+            double nature = IncomingDamageDpsNature;
+            double shadow = IncomingDamageDpsShadow;
+            double holy = IncomingDamageDpsHoly;
+
+            double burstWindow = CalculationOptions.BurstWindow;
+            double burstImpacts = CalculationOptions.BurstImpacts;
+
+            // B(n, p) ~ N(np, np(1-p))
+            // n = burstImpacts
+            // Xi ~ ampi * (dpsi * (1 + B(n, criti) / n * critMulti) + doti)
+            //    ~ ampi * (dpsi * (1 + N(n * criti, n * criti * (1 - criti)) / n * critMulti) + doti)
+            //    ~ N(ampi * (doti + dpsi * (1 + critMulti * criti)), ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
+            // X = sum Xi ~ N(sum ampi * (doti + dpsi * (1 + critMulti * criti)), sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
+            // H = Health + hp5 / 5 * burstWindow
+            // P(burstWindow * sum Xi >= H) = 1 - P(burstWindow * sum Xi <= H) = 1 / 2 * (1 - Erf((H - mu) / (sigma * sqrt(2)))) =
+            //                = 1 / 2 * (1 - Erf((H / burstWindow - [sum ampi * (doti + dpsi * (1 + critMulti * criti))]) / sqrt(2 * [sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti)])))
+
+            double meleeVar = Math.Pow(ampMelee * CalculationOptions.MeleeDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.MeleeCrit / 100.0 - BaseState.PhysicalCritReduction) * (1 - Math.Max(0, CalculationOptions.MeleeCrit / 100.0 - BaseState.PhysicalCritReduction));
+            double physicalVar = Math.Pow(ampPhysical * CalculationOptions.PhysicalDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.PhysicalCrit / 100.0 - BaseState.PhysicalCritReduction) * (1 - Math.Max(0, CalculationOptions.PhysicalCrit / 100.0 - BaseState.PhysicalCritReduction));
+            double arcaneVar = Math.Pow(ampArcane * CalculationOptions.ArcaneDps * (1.75 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.ArcaneCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.ArcaneCrit / 100.0 - BaseState.SpellCritReduction));
+            double fireVar = Math.Pow(ampFire * CalculationOptions.FireDps * (2.1 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.FireCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.FireCrit / 100.0 - BaseState.SpellCritReduction));
+            double frostVar = Math.Pow(ampFrost * CalculationOptions.FrostDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.FrostCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.FrostCrit / 100.0 - BaseState.SpellCritReduction));
+            double holyVar = Math.Pow(ampHoly * CalculationOptions.HolyDps * (1.5 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.HolyCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.HolyCrit / 100.0 - BaseState.SpellCritReduction));
+            double natureVar = Math.Pow(ampNature * CalculationOptions.NatureDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.NatureCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.NatureCrit / 100.0 - BaseState.SpellCritReduction));
+            double shadowVar = Math.Pow(ampShadow * CalculationOptions.ShadowDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.ShadowCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.ShadowCrit / 100.0 - BaseState.SpellCritReduction));
+
+            double Xmean = melee + physical + arcane + fire + frost + holy + nature + shadow;
+            double Xvar = meleeVar + physicalVar + arcaneVar + fireVar + frostVar + holyVar + natureVar + shadowVar;
+
+            // T = healing response time ~ N(Tmean, Tvar)
+            // T * X ~ N(Tmean * Xmean, Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar)   // approximation reasonable for high Tmean / sqrt(Tvar)
+            // P(T * X >= H) = 1 / 2 * (1 - Erf((H - mean) / (sigma * sqrt(2)))) =
+            //               = 1 / 2 * (1 - Erf((H - mean) / sqrt(2 * var)))
+            //               = 1 / 2 * (1 - Erf((H - Tmean * Xmean) / sqrt(2 * (Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar))))
+
+            // Tvar := Tk * Tmean^2,   Tk <<< 1
+
+            // P(T * X >= H) = 1 / 2 * (1 - Erf((H / Tmean - Xmean) / sqrt(2 * (Xvar * (Tk + 1) + Xmean^2 * Tk))))
+
+            double Tk = 0.01;
+
+            ChanceToDie = (float)(0.5f * (1f - SpecialFunction.Erf((BaseStats.Health / burstWindow + BaseStats.Hp5 / 5 - Xmean) / Math.Sqrt(2 * (Xvar * (1 + Tk) + Xmean * Xmean * Tk)))));
+            MeanIncomingDps = (float)Xmean;
+        }
+
         private string GetHitRatingDescription(float hitRate)
         {
             float diff = (hitRate - 1) * 800 / CalculationOptions.LevelScalingFactor;
