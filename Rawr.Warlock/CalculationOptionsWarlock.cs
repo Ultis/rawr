@@ -65,6 +65,7 @@ namespace Rawr.Warlock
             "Hellfire", 
             "Incinerate", 
             "Immolate", 
+            "Immolation Aura",
             "Rain of Fire", 
             "Searing Pain", 
             "Seed of Corruption", 

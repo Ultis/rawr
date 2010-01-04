@@ -235,6 +235,7 @@ namespace Rawr.Warlock
                     "Fire School:Chaos Bolt",
                     "Fire School:Rain of Fire",
                     "Fire School:Hellfire",
+                    "Fire School:Immolation Aura",
                     "Fire School:Searing Pain",
                     "Fire School:Soul Fire"                    
 				};
@@ -537,33 +538,33 @@ namespace Rawr.Warlock
 
         public override void SetDefaults(Character character)
         {
-            //class buffs
-            character.ActiveBuffsAdd(("Fel Armor"));
+            ////class buffs
+            //character.ActiveBuffsAdd(("Fel Armor"));
 
-            //contagion should be present in all good affliction builds
-            //[spellstone for affliction specs, firestone for destro/demo specs]
-            if (character.WarlockTalents.Contagion > 0)
-            {
-                character.ActiveBuffsAdd(("Grand Spellstone"));
-            }
-            else
-            {
-                character.ActiveBuffsAdd(("Grand Firestone"));
-            }
+            ////contagion should be present in all good affliction builds
+            ////[spellstone for affliction specs, firestone for destro/demo specs]
+            //if (character.WarlockTalents.Contagion > 0)
+            //{
+            //    character.ActiveBuffsAdd(("Grand Spellstone"));
+            //}
+            //else
+            //{
+            //    character.ActiveBuffsAdd(("Grand Firestone"));
+            //}
 
-            //flasks & food
-            character.ActiveBuffsAdd(("Fish Feast"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
-            if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
-            {
-                character.ActiveBuffsAdd(("Flask of Frost Wyrm (Mixology)"));
-            }
+            ////flasks & food
+            //character.ActiveBuffsAdd(("Fish Feast"));
+            //character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            //if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
+            //{
+            //    character.ActiveBuffsAdd(("Flask of Frost Wyrm (Mixology)"));
+            //}
 
-            //replenishment
-            if (character.WarlockTalents.ImprovedSoulLeech > 0)
-            {
-                character.ActiveBuffsAdd(("Improved Soul Leech"));
-            }
+            ////replenishment
+            //if (character.WarlockTalents.ImprovedSoulLeech > 0)
+            //{
+            //    character.ActiveBuffsAdd(("Improved Soul Leech"));
+            //}
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) 

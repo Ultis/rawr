@@ -184,7 +184,7 @@ namespace Rawr.Warlock
             //StringBuilder sb =  new StringBuilder();
             //foreach (Spell spell in Events)
             //{
-            //    sb.AppendLine(string.Format("{0:0.00} {1} casts {2} [damage: {3:0}]", spell.ScheduledTime, Character.Name, spell.Name, spell.MaxDamage));
+            //    sb.AppendLine(string.Format("{0:0.00} {1} casts {2} [damage: {3:0}]", spell.ScheduledTime, Character.Name, spell.Name, spell.MaxHitDamage));
             //}
 
             //Options.castseq = sb.ToString();
@@ -267,7 +267,7 @@ namespace Rawr.Warlock
 
                     //the spell lands on the target, so calculate damage and trigger any related effects
                     spell.Execute();
-                    //Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - {2} spell hits the target for {3:0} damage", threadID, timer, spell.Name, spell.MaxDamage() ));
+                    //Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - {2} spell hits the target for {3:0} damage", threadID, timer, spell.Name, spell.MaxHitDamage() ));
 
                     //append to the events history
                     Events.Add(spell);
@@ -486,6 +486,12 @@ namespace Rawr.Warlock
                 dictValues.Add("Chaos Bolt", "- *Required talent not available");
             dictValues.Add("Rain of Fire", new RainOfFire(TotalStats, Character).ToString());
             dictValues.Add("Hellfire", new Hellfire(TotalStats, Character).ToString());
+
+            if (Character.WarlockTalents.Metamorphosis > 0)
+                dictValues.Add("Immolation Aura", new ImmolationAura(TotalStats, Character).ToString());
+            else 
+                dictValues.Add("Immolation Aura", "- *Required talent not available");
+
             dictValues.Add("Searing Pain", new SearingPain(TotalStats, Character).ToString());
             dictValues.Add("Soul Fire", new SoulFire(TotalStats, Character).ToString());
             #endregion
