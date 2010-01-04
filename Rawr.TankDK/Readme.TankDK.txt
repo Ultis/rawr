@@ -3,9 +3,19 @@
 Currently targeting: 
 * Wow version 3.3.0
 
+2.3.6:
+* No Defect: Factor in the DAMAGE procs, not just the healing procs of items.  This probably needs to be refactored.  Also the specials proc rate for OnMeleeHit was wrong.  
+* Defect 15682: Add in a Hit Rating option to the Optimizer list.
+* No Defect: I had the math all wrong for DW weapon speeds. It was increasing w/ 2 weapons rather than decreasing considering the white hits would occur more frequently rather than less in DW situations than 2H.
+* Defect 15212: Refactored ManageRP to just limit based on RP.  More work needs to be done to better reveal what kind of values we should be seeing when bringing in Avoidance #s and weapon speed. 
+* Defect 15671: I had Improved Icy Talons stacking with Normal IcyTalons for the tank's own haste.  It works out to only expand the effect from just the tank to the whole raid.  This suggests that we still need to find some way to include raid Utility into the value of effects/talents.
+
 2.3.5:
 * Exposed Experimental switch via options panel in Rawr2.
 * Fix for Defect 15640: Display option values were not all persisting.
+* Fix for Defect 14840: Fixed parser & internal evaluation of multi-tiered special effects.
+* No Defect: Bryntroll, the Bone Arbiter not properly modeled. - Healing not modeled as part of the life stealing.
+* No Defect: Implementing HealthRestore & HP5 effects in the model.  It's not great, but really I need to figure out what the time frame really looks like for any given value.
 
 2.3.4:
 * Adding in the experimental work in prep for Bosshandler.

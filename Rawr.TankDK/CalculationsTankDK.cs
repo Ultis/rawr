@@ -1611,7 +1611,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 newStats = new Stats();
                 newStats.PhysicalHaste += (0.04f * character.DeathKnightTalents.IcyTalons);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.FrostFeverHit, newStats, 20f, 0f));
             }
 
             // Lichborne
@@ -1675,9 +1675,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 FullCharacterStats.PhysicalHaste += 0.05f;
                 // TODO: Factor in raid utility by improving raid haste by 20%
-                newStats = new Stats();
-                newStats.PhysicalHaste += (0.2f * character.DeathKnightTalents.IcyTalons);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
+                // Effect does NOT stack w/ existing IcyTalons.  So this does not directly benefit
+                // the tank beyond the constant 5% haste.  Rather it has benefit for the rest of the raid.
+                // newStats = new Stats();
+                // newStats.PhysicalHaste += 0.2f;
+                // FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.FrostFeverHit, newStats, 20f, 0f));
             }
 
             // Merciless Combat

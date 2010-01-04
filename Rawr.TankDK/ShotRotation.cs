@@ -65,6 +65,7 @@ namespace Rawr.TankDK {
         {
             float temp;
             temp = PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike + BloodStrike + HeartStrike;
+            // As per Bloodysorc, BCB should probably be included in this.
             temp = temp / curRotationDuration;
             return temp;
         }
@@ -105,19 +106,26 @@ namespace Rawr.TankDK {
             return RP;
         }
 
+        /// <summary>
+        /// Use abilities that have Runic Power to dump the available RP per rotation.
+        /// Primarily focused on RuneStrike.
+        /// </summary>
+        /// <param name="talents">What are the given talents for this character?</param>
+        /// <param name="RP">How much RP generated per rotation?</param>
+        /// <returns>Amount of RP remaining after use.</returns>
         public float manageRPDumping(DeathKnightTalents talents, float RP)
         {
             // We need to get the # of boss attacks from the mitigation section to 
             // figure out what is the chance the # of RS we can see.
-            // MaxRSBySpeed = RotationDuration/MH.Speed
-            // MaxRSByRP = RP/20f;
             // PossibleRS = AverageBossAttacksPerRotation * (Dodge% + Parry%)
             // ActualRS = Math.Min(MaxRSBySpeed, PossibleRS);
-            /*RuneStrike = RP / 20f;
             // RuneStrikes count is also based on Dodge & Parry chance:
-            RuneStrike *= (m_FullStats.Dodge + m_FullStats.Parry);
+            // RuneStrike *= (m_FullStats.Dodge + m_FullStats.Parry);
             // Remove the RS shots from the pool of available RP.
-            RP -= (RuneStrike * 20f);*/            
+            // RP -= (RuneStrike * 20f);*/            
+
+            #region Old Code: using FS/DC for RP dumps.
+            /*
             if (talents.FrostStrike > 0f) 
             {
                 FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
@@ -132,6 +140,23 @@ namespace Rawr.TankDK {
                 RuneStrike = 0f;
                 RP = 0f;
             }
+            */
+            #endregion
+
+            // How many RS limited by RP.
+            float fMax_ByRP = RP / 20f;
+            // How many RS limited by weapon speed.
+            // TODO: figure out best way to get weapon speed into the rotation.
+            // float fMax_BySpeed = curRotationDuration / MH.Speed;
+
+            // So for right now, we just setup how many RS's we get, and 
+            // Zero out all the rest of the values.
+            RuneStrike = fMax_ByRP;
+            RP = 0;
+            FrostStrike = 0;
+            DeathCoil = 0;
+            RP = 0;
+
 
             return RP;
         }

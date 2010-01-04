@@ -6,13 +6,13 @@ namespace Rawr.TankDK
 {
     class StatsSpecialEffects
     {
-        //        public Character character;
+        public Character character;
         public Stats stats;
         public CombatTable combatTable;
         public StatsSpecialEffects(Character c, Stats s, CombatTable t)
         {
             // It doesn't actually use the character or stats object being passed in.
-            //character = c;
+            character = c;
             stats = s;
             combatTable = t;
         }
@@ -87,6 +87,12 @@ namespace Rawr.TankDK
                         break;
                     case Trigger.ScourgeStrikeHit:
                         trigger = rRotation.curRotationDuration / rRotation.ScourgeStrike;
+                        break;
+                    case Trigger.FrostFeverHit:
+                        // Icy Talons triggers off this.
+                        trigger = rRotation.curRotationDuration / rRotation.IcyTouch;
+                        if (character.DeathKnightTalents.GlyphofHowlingBlast)
+                            trigger += rRotation.curRotationDuration / rRotation.HowlingBlast;
                         break;
                 }
                 if (effect.MaxStack > 1)

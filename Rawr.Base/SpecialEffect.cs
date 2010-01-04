@@ -83,6 +83,7 @@ namespace Rawr
         PlagueStrikeHit,
         IcyTouchHit,
         RuneStrikeHit,
+        FrostFeverHit, // When FrostFever is Applied - not when it TICKs
         #endregion
         #region Added by Druid
         InsectSwarmTick,
