@@ -1194,7 +1194,7 @@ namespace Rawr.Tree {
                 }
                 if (profile.AdjustTimeManagedRejuvOrder == i - 1)
                 {
-                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Managed Rejuvenation until " + profile.AdjustTimeManagedRejuv + "%.");
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Maintained Rejuvenation until " + profile.AdjustTimeManagedRejuv + "%.");
                     timeItems.Add("Managed Rejuvenation");
                     count++;
                     if (spell.Equals("Managed Rejuvenation"))
@@ -1206,7 +1206,7 @@ namespace Rawr.Tree {
                 }
                 if (profile.AdjustTimeManagedRegrowthOrder == i - 1)
                 {
-                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Managed Regrowth until " + profile.AdjustTimeManagedRegrowth + "%.");
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Maintained Regrowth until " + profile.AdjustTimeManagedRegrowth + "%.");
                     timeItems.Add("Managed Regrowth");
                     count++;
                     if (spell.Equals("Managed Regrowth"))
@@ -1218,7 +1218,7 @@ namespace Rawr.Tree {
                 }
                 if (profile.AdjustTimeManagedLifebloomStackOrder == i - 1)
                 {
-                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Managed Lifebloom Stack until " + profile.AdjustTimeManagedLifebloomStack + "%.");
+                    lbTimeAdjust.Items.Add((i.ToString() + ". ") + " Maintained Lifebloom Stack until " + profile.AdjustTimeManagedLifebloomStack + "%.");
                     timeItems.Add("Managed Lifebloom Stack");
                     count++;
                     if (spell.Equals("Managed Lifebloom Stack"))
