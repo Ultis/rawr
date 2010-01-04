@@ -497,58 +497,182 @@ applied and result is scaled down by 100)",
             return settings;
         }
 
-        private void HandleSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval)
+        protected void CalculateTriggers(SustainedResult rot, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
+            float CastInterval = 60f / rot.TotalCastsPerMinute;
+            float HealInterval = 60f / rot.TotalHealsPerMinute;
+            float CritsRatio = rot.TotalCritsPerMinute / rot.TotalCastsPerMinute;
+            float RejuvInterval = 60 / rot.spellMix.RejuvenationHealsPerMinute;
+            
+            triggerIntervals[Trigger.Use] = 0f;
+            triggerChances[Trigger.Use] = 1f;
+
+            triggerIntervals[Trigger.SpellCast] = CastInterval;
+            triggerChances[Trigger.SpellCast] = 1f;
+
+            triggerIntervals[Trigger.HealingSpellCast] = CastInterval;
+            triggerChances[Trigger.HealingSpellCast] = 1f;
+
+            triggerIntervals[Trigger.HealingSpellHit] = HealInterval;
+            triggerChances[Trigger.HealingSpellHit] = 1f;
+
+            triggerIntervals[Trigger.SpellCrit] = CastInterval;
+            triggerChances[Trigger.SpellCrit] = CritsRatio;
+
+            triggerIntervals[Trigger.HealingSpellCrit] = CastInterval;
+            triggerChances[Trigger.HealingSpellCrit] = CritsRatio;
+
+            triggerIntervals[Trigger.RejuvenationTick] = RejuvInterval;
+            triggerChances[Trigger.RejuvenationTick] = 1f;
+        }
+
+        private void DoSpecialEffects(Character character, Stats stats, SustainedResult rot)
+        {
+            #region Initialize Triggers
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>(); ;
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>(); ;
+            CalculateTriggers(rot, triggerIntervals, triggerChances);
+            #endregion
+
+            #region Haste Lists (seperately handled)
+            List<SpecialEffect> tempHasteEffects = new List<SpecialEffect>();
+            List<float> tempHasteEffectIntervals = new List<float>();
+            List<float> tempHasteEffectChances = new List<float>();
+            List<float> tempHasteEffectOffsets = new List<float>();
+            List<float> tempHasteEffectScales = new List<float>();
+            #endregion
+
+            float offset = 0;
+
             List<SpecialEffect> effects = new List<SpecialEffect>();
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
+                effect.Stats.GenerateSparseData();
+
+                #region Filter out unhandled effects
+                if (!triggerIntervals.ContainsKey(effect.Trigger)) continue;
+                #endregion
+
+                #region Filter out Haste effects
+                if (effect.Stats.HasteRating > 0)
+                {
+                    tempHasteEffects.Add(effect);
+                    // PATCH for use effects
+                    if (effect.Trigger == Trigger.Use)
+                    {
+                        tempHasteEffectIntervals.Add(effect.Cooldown);
+                        tempHasteEffectChances.Add(1f);
+                        tempHasteEffectOffsets.Add(offset);
+                        offset += effect.Duration;
+                    }
+                    else
+                    {
+                        tempHasteEffectIntervals.Add(triggerIntervals[effect.Trigger]);
+                        tempHasteEffectChances.Add(triggerChances[effect.Trigger]);
+                        tempHasteEffectOffsets.Add(0f);
+                    }
+                    tempHasteEffectScales.Add(1f);
+                    continue;
+                }
+                #endregion
+
                 effects.Add(effect);
             }
 
-            AccumulateSpecialEffects(character, stats, FightDuration, CastInterval, HealInterval, CritsRatio, RejuvInterval, effects, 1f);
+            #region Calculate Haste Breakdown
+            List<float> tempHasteRatings = new List<float>();
+            List<float> tempHasteRatingUptimes = new List<float>();
 
-            // Clear special effects
+            if (tempHasteEffects.Count == 0)
+            {
+                tempHasteRatings.Add(0.0f);
+                tempHasteRatingUptimes.Add(1.0f);
+            }
+            else if (tempHasteEffects.Count == 1)
+            {   //Only one, add it to
+                SpecialEffect effect = tempHasteEffects[0];
+                float uptime = effect.GetAverageStackSize(tempHasteEffectIntervals[0], tempHasteEffectChances[0], 0, rot.TotalTime);
+                tempHasteRatings.Add(effect.Stats.HasteRating);
+                tempHasteRatingUptimes.Add(uptime);
+                tempHasteRatings.Add(0.0f);
+                tempHasteRatingUptimes.Add(1.0f - uptime);
+            }
+            else if (tempHasteEffects.Count > 1)
+            {
+                WeightedStat[] HasteRatingWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempHasteEffects.ToArray(), tempHasteEffectIntervals.ToArray(), tempHasteEffectChances.ToArray(), tempHasteEffectOffsets.ToArray(), tempHasteEffectScales.ToArray(), 0, rot.TotalTime, AdditiveStat.HasteRating);
+                for (int i = 0; i < HasteRatingWeights.Length; i++)
+                {
+                    tempHasteRatings.Add(HasteRatingWeights[i].Value);
+                    tempHasteRatingUptimes.Add(HasteRatingWeights[i].Chance);
+                }
+            }
+            #endregion
+
+            #region Calculate average Haste from effects (capped)
+            if (tempHasteRatings.Count > 0f)
+            {
+                float cap = (1.5f / (1f + stats.SpellHaste) - 1) * StatConversion.RATING_PER_SPELLHASTE - stats.HasteRating;
+
+                float HasteRatingFromProcs = 0f;
+                for (int i = 0; i < tempHasteRatings.Count; i++)
+                {
+                    float Haste = Math.Min(cap, tempHasteRatings[i]);
+                    HasteRatingFromProcs += tempHasteRatingUptimes[i] * Haste;
+                }
+
+                stats.HasteRating += HasteRatingFromProcs;                
+            }
+            #endregion
+
+            AccumulateSpecialEffects(character, ref stats, rot.TotalTime, triggerIntervals, triggerChances, effects, 1f);
+
+            #region Clear special effects from Stats
             for (int i = 0; i < stats._rawSpecialEffectDataSize; i++) stats._rawSpecialEffectData[i] = null;
             stats._rawSpecialEffectDataSize = 0;
+            #endregion
         }
 
-        protected void AccumulateSpecialEffects(Character character, Stats stats, float FightDuration, float CastInterval, float HealInterval, float CritsRatio, float RejuvInterval, List<SpecialEffect> effects, float weight) 
+        protected void AccumulateSpecialEffects(Character character, ref Stats stats, float FightDuration, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, List<SpecialEffect> effects, float weight) 
         {
-            foreach (SpecialEffect effect in effects) {
+            foreach (SpecialEffect effect in effects) 
+            {
+                Stats effectStats = effect.Stats;
+
+                float upTime = 0f;
+
+                #region Filter out Haste effects
+                if (effect.Stats.HasteRating > 0f) continue;
+                #endregion
+
                 if (effect.Trigger == Trigger.Use)
                 {
-                    float factor = effect.AccumulateAverageStats(stats, 0f, 1f, 2f, FightDuration, weight);
                     if (effect.Stats._rawSpecialEffectDataSize >= 1)
                     {
-                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
-                        for (int i = 0; i < effect.Stats._rawSpecialEffectDataSize; i++)
-                        {
-                            nestedEffect.Add(effect.Stats._rawSpecialEffectData[i]);
-                        }
-                        AccumulateSpecialEffects(character, stats, FightDuration, CastInterval, HealInterval, CritsRatio, RejuvInterval, nestedEffect, factor);
+                        upTime = effect.GetAverageUptime(0f, 1f, 0, FightDuration);
+                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>(effect.Stats.SpecialEffects());
+                        Stats _stats2 = effectStats.Clone();
+                        AccumulateSpecialEffects(character, ref _stats2, effect.Duration, triggerIntervals, triggerChances, nestedEffect, upTime);
+                        effectStats = _stats2;
+                    }
+                    else
+                    {
+                        upTime = effect.GetAverageStackSize(0f, 1f, 0, FightDuration);
                     }
                 }
-                else if (effect.Trigger == Trigger.SpellCast)
+                else if (effect.Duration == 0f)
                 {
-                    effect.AccumulateAverageStats(stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
+                    upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger],
+                                                             0, FightDuration);
                 }
-                else if (effect.Trigger == Trigger.HealingSpellCast)
+                else if (triggerIntervals.ContainsKey(effect.Trigger))
                 {
-                    // Same as SpellCast, but split to allow easier placement of breakpoints
-                    effect.AccumulateAverageStats(stats, CastInterval, 1.0f, CastInterval, FightDuration, weight);
+                    upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger],
+                                                             0, FightDuration);
                 }
-                else if (effect.Trigger == Trigger.HealingSpellHit)
+
+                if (upTime > 0f)
                 {
-                    // Heal interval measures time between HoTs as well, direct heals are a different interval
-                    effect.AccumulateAverageStats(stats, HealInterval, 1.0f, CastInterval, FightDuration, weight);
-                }
-                else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit)
-                {
-                    effect.AccumulateAverageStats(stats, CastInterval, CritsRatio, CastInterval, FightDuration, weight);
-                }
-                else if (effect.Trigger == Trigger.RejuvenationTick)
-                {
-                    effect.AccumulateAverageStats(stats, RejuvInterval, 1.0f, RejuvInterval, FightDuration, weight);
+                    stats.Accumulate(effectStats, upTime*weight);
                 }
             }
         }
@@ -576,15 +700,12 @@ applied and result is scaled down by 100)",
             // Initial run
             SustainedResult rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
 
-            int nPasses = 4, k;
+            int nPasses = 2, k;
             for (k = 0; k < nPasses; k++) {
                 // Create new stats instance with procs
                 stats = GetCharacterStats(character, additionalItem);
                 stats.ManaRestore /= profile.FightDuration;
-                HandleSpecialEffects(character, stats,
-                    rot.TotalTime, 60f / rot.TotalCastsPerMinute,
-                    60f / rot.TotalHealsPerMinute, rot.TotalCritsPerMinute / rot.TotalCastsPerMinute,
-                    60 / rot.spellMix.RejuvenationHealsPerMinute);
+                DoSpecialEffects(character, stats, rot);
                 replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
                 stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
                 stats.ManaRestoreFromMaxManaPerSecond = replenish;
