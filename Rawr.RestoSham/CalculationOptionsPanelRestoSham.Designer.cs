@@ -97,8 +97,7 @@
             "RT+CH",
             "HW Spam",
             "LHW Spam",
-            "CH Spam",
-            "Auto"});
+            "CH Spam"});
             this.cboBurstStyle.Location = new System.Drawing.Point(81, 19);
             this.cboBurstStyle.Name = "cboBurstStyle";
             this.cboBurstStyle.Size = new System.Drawing.Size(83, 21);
@@ -125,8 +124,7 @@
             "RT+CH",
             "HW Spam",
             "LHW Spam",
-            "CH Spam",
-            "Auto"});
+            "CH Spam"});
             this.cboSustStyle.Location = new System.Drawing.Point(81, 46);
             this.cboSustStyle.Name = "cboSustStyle";
             this.cboSustStyle.Size = new System.Drawing.Size(83, 21);
