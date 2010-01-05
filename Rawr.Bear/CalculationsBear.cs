@@ -939,7 +939,7 @@ the Threat Scale defined on the Options tab.",
 			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsProcs.AttackPower += statsProcs.Strength * 2f;
 			statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
+			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f) + (float)Math.Floor(statsProcs.BattlemasterHealth);
 			statsProcs.Health *= (1f + statsProcs.BonusHealthMultiplier);
 			statsProcs.Armor += 2f * (float)Math.Floor(statsProcs.Agility) + statsProcs.BonusArmor;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
@@ -1322,6 +1322,7 @@ the Threat Scale defined on the Options tab.",
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 Health = stats.Health,
+                BattlemasterHealth = stats.BattlemasterHealth,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
 				Miss = stats.Miss,
 				CritChanceReduction = stats.CritChanceReduction,
@@ -1383,7 +1384,7 @@ the Threat Scale defined on the Options tab.",
 		{
 			bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
-				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
+				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.Dodge +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +

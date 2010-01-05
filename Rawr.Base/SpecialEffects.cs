@@ -1731,6 +1731,28 @@ namespace Rawr {
 				// unfortunately for us the cooldown isn't listed, so guess 2min.
 				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
 			}
+            // Increases maximum health, shares cooldown with other Battlemaster's trinkets
+            else if (line.Contains("Battlemaster\'s trinkets."))
+            {
+                Regex r = new Regex("Increases maximum health by (?<health>\\d*) for (?<duration>\\d*) sec");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    float health = float.Parse(m.Groups["health"].Value);
+                    float duration = float.Parse(m.Groups["duration"].Value);
+                    float cooldown = 3.0f * 60.0f; // Default to 3 minute cooldown, if not otherwise known
+
+                    if (!isArmory)
+                    {
+                        Regex rCD = new Regex("\\((?<cooldown>\\d*) Min Cooldown\\)");
+                        Match mCD = rCD.Match(line);
+                        if (mCD.Success)
+                            cooldown = int.Parse(mCD.Groups["cooldown"].Value) * 60.0f;
+                    }
+
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BattlemasterHealth = health }, duration, cooldown));
+                }
+            }
 			// Increases maximum health by 183 for 20 sec.
 			else if (Regex.IsMatch(line, "Increases maximum health by (\\d{3}) for (\\d{2}) sec"))
 			{
@@ -1887,30 +1909,6 @@ namespace Rawr {
                         cd = 3.0f * 60.0f;
                     }
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = speed/100f }, dur, cd));
-                }
-            }
-            else if (line.StartsWith("Increases maximum health by "))
-            {
-                // Increases maximum health by 3385 for 15 sec. Shares cooldown with other Battlemaster's trinkets. (3 Min Cooldown)
-				Regex r = new Regex("Increases maximum health by (?<health>\\d*) for (?<dur>\\d*) sec Shares cooldown with (other )?Battlemaster\\'s trinkets\\."); // \\((?<cd>\\d*) Min Cooldown\\)");
-                Match m = r.Match(line);
-				if (m.Success)
-                {
-                    int health = int.Parse(m.Groups["health"].Value);
-                    int dur = int.Parse(m.Groups["dur"].Value);
-                    // Test again with the cd... Available only on wowhead.
-                    float cd;
-                    Regex rCD = new Regex("Increases maximum health by (?<health>\\d*) for (?<dur>\\d*) sec Shares cooldown with other Battlemaster\\'s trinkets\\. \\((?<cd>\\d*) Min Cooldown\\)");
-                    Match mCD = rCD.Match(line);
-                    if (mCD.Success)
-                    {
-                        cd = int.Parse(mCD.Groups["cd"].Value) * 60.0f;
-                    }
-                    else
-                    {
-                        cd = 3.0f * 60.0f;
-                    }
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, dur, cd));
                 }
             }
             else if (Regex.IsMatch(line, "When the shield is removed by any means, you regain (\\d{4}) mana."))

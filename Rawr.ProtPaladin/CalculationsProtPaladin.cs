@@ -660,7 +660,9 @@ focus on Survival Points.",
                             statsSpecialEffects.Accumulate(effect.Stats);
                         } else {
                             effectsToAdd.Accumulate(effect.GetAverageStats());
-                            effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
+                            // Health on Use Effects are never averaged.
+                            effectsToAdd.BattlemasterHealth = 0.0f;
+                            effectsToAdd.Health = 0.0f;
                             statsSpecialEffects.Accumulate(effectsToAdd);
                         }
                     }
@@ -729,7 +731,7 @@ focus on Survival Points.",
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
             statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f);
+            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f) + (float)Math.Floor(statsSpecialEffects.BattlemasterHealth);
 
             // Defensive Stats
             statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BaseArmorMultiplier + statsSpecialEffects.BaseArmorMultiplier));
@@ -1160,6 +1162,7 @@ focus on Survival Points.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 Health = stats.Health,
+                BattlemasterHealth = stats.BattlemasterHealth,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 Miss = stats.Miss,
@@ -1240,6 +1243,7 @@ focus on Survival Points.",
                 // Basic Stats
                 stats.Stamina +
                 stats.Health +
+                stats.BattlemasterHealth + 
                 stats.Strength +
                 stats.Agility +
 

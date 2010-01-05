@@ -608,7 +608,7 @@ threat and limited threat scaled by the threat scale.",
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
             statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Health += statsSpecialEffects.Stamina * 10.0f;
+            statsSpecialEffects.Health += (statsSpecialEffects.Stamina * 10.0f) + statsSpecialEffects.BattlemasterHealth;
             statsSpecialEffects.Health = (float)Math.Floor(statsSpecialEffects.Health * (1.0f + stats.BonusHealthMultiplier));
 
             return statsSpecialEffects;
@@ -971,6 +971,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 Health = stats.Health,
+                BattlemasterHealth = stats.BattlemasterHealth,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 PhysicalDamageTakenMultiplier = stats.PhysicalDamageTakenMultiplier,
@@ -1054,7 +1055,7 @@ threat and limited threat scaled by the threat scale.",
             bool relevant =
                 (stats.Agility + stats.Armor + stats.AverageArmor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
-                    stats.Health + stats.Stamina + stats.Resilience + stats.AllResist + stats.BlockValue +
+                    stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience + stats.AllResist + stats.BlockValue +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +

@@ -507,7 +507,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             float AgiArmor = StatConversion.GetArmorFromAgility(statSE.Agility); // Don't multiply the armor from agility.
             statSE.Armor += statSE.BonusArmor + AgiArmor;
-            statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina);
+            statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina) + statSE.BattlemasterHealth;
             StatConversion.ApplyMultiplier(statSE.Health, stats.BonusHealthMultiplier);
             if (character.DeathKnightTalents.BladedArmor > 0)
             {
@@ -2004,6 +2004,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Health = stats.Health,
+                BattlemasterHealth = stats.BattlemasterHealth,
 
                 DefenseRating = stats.DefenseRating,
                 ParryRating = stats.ParryRating,
@@ -2180,6 +2181,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
             bResults |= (stats.Health != 0);
+            bResults |= (stats.BattlemasterHealth != 0);
 
             // Defense stats
             bResults |= (stats.DodgeRating != 0);
