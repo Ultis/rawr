@@ -17,30 +17,126 @@ namespace Rawr.DPSWarr {
     public class CalculationsDPSWarr : CalculationsBase {
         #region Variables and Properties
 
-        public override List<GemmingTemplate> DefaultGemmingTemplates {
-            get {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
                 ///Relevant Gem IDs for DPSWarrs
-                //             uncom  rare    epic  jewel
-                //Red
-                int[] bold = { 39900, 39996, 40111, 42142 };
-                int[] frac = { 39909, 40002, 40117, 42153 };
-                //Purple
-                int[] svrn = { 39934, 40022, 40129 };
-                int[] pusn = { 39933, 40033, 40140 };
-                //Orange
-                int[] insc = { 39947, 40037, 40142 };
-                //Meta
-                int chaotic = 41285;
-                int relent = 41398;
+                //                rare    epic  jewel
+                //Red slots
+                int[] red_str = { 39996, 40111, 42142 };
+                int[] red_arp = { 40002, 40117, 42153 };
+                int[] red_exp = { 40003, 40118, 42154 };
+                //Blue slots -- All the stat+sta, No haste because str or arp should always be better
+                int[] blu_str = { 40022, 40129, 40129 };
+                int[] blu_arp = { 40033, 40140, 40140 };
+                int[] blu_exp = { 40034, 40141, 40141 };
+                int[] blu_hit = { 40088, 40166, 40166 };
+                //Yellow slots
+                int[] ylw_str = { 40037, 40142, 40142 }; // 10str/10crit
+                int[][] ylw_hit =  { new int[] { 40014, 40125, 42156 }, // 20hit
+                                     new int[] { 40038, 40143, 40143 }, // 10hit/10str
+                                     new int[] { 40058, 40162, 40162 } }; // 10hit/10exp
+                int[] ylw_has = { 40041, 40146, 40146 }; // 10haste/10str
 
-                return new List<GemmingTemplate>() {
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = insc[0], BlueId = svrn[0], PrismaticId = bold[0], MetaId = chaotic },// STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },// Max STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = relent  },// Max STR with All red Meta
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = frac[0], YellowId = insc[0], BlueId = pusn[0], PrismaticId = frac[0], MetaId = chaotic },// ArP
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = frac[0], YellowId = frac[0], BlueId = frac[0], PrismaticId = frac[0], MetaId = chaotic },// Max ArP
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = frac[0], YellowId = frac[0], BlueId = frac[0], PrismaticId = frac[0], MetaId = relent  },// Max ArP with All red Meta
-                    
+                string group; bool enabled;
+                List<GemmingTemplate> templates = new List<GemmingTemplate>();
+
+                #region Strength
+                enabled = true;
+                group = "Strength";
+                // Straight
+                AddTemplates(templates, red_str, red_str, red_str, red_str, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates, red_str, blu_str, ylw_str, red_str, group, enabled);
+                #endregion
+
+                #region Armor Pen
+                enabled = true;
+                group = "Armor Pen";
+                // Straight
+                AddTemplates(templates, red_arp, red_arp, red_arp, red_arp, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates, red_arp, blu_arp, ylw_str, red_arp, group, enabled);
+                #endregion
+
+                #region Hit/Exp-gemming
+                group = "Hit";
+                enabled = false;
+                // Hit
+                for (int k = 0; k < ylw_hit.Length - 1; k++) // not doing hit/exp here
+                {
+                    // Straight
+                    AddTemplates(templates, ylw_hit[k], ylw_hit[k], ylw_hit[k], ylw_hit[k], group, enabled);
+                    // Socket Bonus w/Str
+                    AddTemplates(templates, red_str, blu_hit, ylw_hit[k], red_str, group, enabled);
+                    // Socket Bonus w/Arp
+                    AddTemplates(templates, red_arp, blu_hit, ylw_hit[k], red_arp, group, enabled);
+                }
+                // Exp
+                group = "Exp";
+                enabled = false;
+                // Straight
+                AddTemplates(templates, red_exp, red_exp, red_exp, red_exp, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates, red_exp, blu_exp, ylw_hit[2], red_exp, group, enabled);
+                #endregion
+
+                #region Crit-capped
+                group = "Crit-capped";
+                enabled = false;                
+                // Strength
+                AddTemplates(templates, red_str, blu_str, ylw_has, red_str, group, enabled);
+                #endregion
+
+                /*foreach (GemmingTemplate gt in templates)
+                {
+                    List<GemmingTemplate> foo = templates.FindAll(t => (t.BlueId == gt.BlueId && t.RedId == gt.RedId && t.YellowId == gt.YellowId && t.MetaId == gt.MetaId));
+                    if (foo.Count > 1)
+                    {
+                        int j = 0; // break
+                    }
+                }*/
+                
+                templates.Sort(new Comparison<GemmingTemplate>(
+                    delegate(GemmingTemplate first, GemmingTemplate second) {
+                        string[] group1 = first.Group.Split(new char[] {' '},2);
+                        string[] group2 = second.Group.Split(new char[] {' '}, 2);
+                        int temp = group1[0].CompareTo(group2[0]);
+                        if (temp != 0) // they're not the same
+                        {
+                            if (group1[0] == "Rare") return -1; // r|e or r|j
+                            if (group2[0] == "Rare") return 1;  // e|r or j|r
+                            if (group1[0] == "Jewelcrafter") return 1; // e|j
+                            return -1; // j|e
+                        }
+                        else // they're the same
+                        {
+                            temp = group1[1].CompareTo(group2[1]);
+                            if (temp != 0)
+                            {
+                                // str > arp > hit > exp > crit-capped
+                                switch (group1[1])
+                                {
+                                    case "Strength": return -1;
+                                    case "Armor Pen": return (group2[1] == "Strength" ? 1 : -1);
+                                    case "Hit": return (group2[1] == "Strength" || group2[1] == "Armor Pen" ? 1 : -1);
+                                    case "Expertise": return (group2[1] != "Crit-capped" ? 1 : -1);
+                                    default: return 1;
+                                }
+                            }
+                            else
+                            {
+                                return 0; // Not exact, but i'll take it for now 
+                            }
+                        }
+                        
+                }));
+
+                
+
+                return templates;
+                /*return new List<GemmingTemplate>() {
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = insc[1], BlueId = svrn[1], PrismaticId = bold[1], MetaId = chaotic },// STR
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },// Max STR
 					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relent  },// Max STR with All red Meta
@@ -61,10 +157,77 @@ namespace Rawr.DPSWarr {
                     new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = insc[2], BlueId = pusn[2], PrismaticId = frac[3], MetaId = chaotic },// ArP
                     new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = chaotic },// Max ArP
                     new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = relent  },// Max ArP with All red Meta
-				};
+				};*/
             }
         }
 
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] blu, int[] ylw, int[] pris, string group, bool enabled)
+        {
+            //Meta
+            const int chaotic = 41285;
+            const int relent = 41398;
+            const int nightmare = 49110;
+            const string groupFormat = "{0} {1}";
+            string[] quality = new string[] { "Rare", "Epic", "Jewelcrafter" };
+            for (int j = 0; j < 3; j++)
+            {
+                // Check to make sure we're not adding the same gem template twice due to repeating JC gems
+                if (j != 2 || !(red[j] == red[j - 1] && blu[j] == blu[j - 1] && ylw[j] == ylw[j - 1]))
+                {
+                    string groupStr = String.Format(groupFormat, quality[j], group);
+                    templates.Add(new GemmingTemplate()
+                    {
+                        Model = "DPSWarr",
+                        Group = groupStr,
+                        RedId = red[j],
+                        BlueId = blu[j],
+                        YellowId = ylw[j],
+                        PrismaticId = pris[j],
+                        MetaId = chaotic,
+                        Enabled = (enabled && j == 1)
+                    });
+                    templates.Add(new GemmingTemplate()
+                    {
+                        Model = "DPSWarr",
+                        Group = groupStr,
+                        RedId = red[j],
+                        BlueId = blu[j],
+                        YellowId = ylw[j],
+                        PrismaticId = pris[j],
+                        MetaId = relent,
+                        Enabled = (enabled && j == 1)
+                    });
+                    // Nightmare tear, only when not going for the socket bonus
+                    if (red[j] != blu[j] && blu[j] != ylw[j])
+                    {
+                        templates.Add(new GemmingTemplate()
+                        {
+                            Model = "DPSWarr",
+                            Group = groupStr,
+                            RedId = red[j],
+                            BlueId = nightmare,
+                            YellowId = ylw[j],
+                            PrismaticId = pris[j],
+                            MetaId = chaotic,
+                            Enabled = (enabled && j == 1)
+                        });
+                        templates.Add(new GemmingTemplate()
+                        {
+                            Model = "DPSWarr",
+                            Group = groupStr,
+                            RedId = red[j],
+                            BlueId = nightmare,
+                            YellowId = ylw[j],
+                            PrismaticId = pris[j],
+                            MetaId = relent,
+                            Enabled = (enabled && j == 1)
+                        });
+                    }
+                }
+            }
+        }
+
+        
         #if RAWR3
             public ICalculationOptionsPanel _calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
