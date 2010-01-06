@@ -679,9 +679,19 @@ focus on Survival Points.",
                     switch (effect.Trigger) {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
-                            effectsToAdd.Accumulate(effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed));
-                            effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
-                            statsSpecialEffects.Accumulate(effectsToAdd);
+                            if (effect.Stats.DeathbringerProc > 0) {
+                                effectsToAdd = effect.GetAverageStats(intervalPhysical, 1.0f, weaponSpeed);
+                                effectsToAdd.Strength = effectsToAdd.DeathbringerProc;
+                                effectsToAdd.HasteRating = effectsToAdd.DeathbringerProc;
+                                effectsToAdd.CritRating = effectsToAdd.DeathbringerProc;
+                                effectsToAdd.DeathbringerProc = 0f;
+                                statsSpecialEffects.Accumulate(effectsToAdd, 1f / 3f);
+                            } else {
+                                effectsToAdd = new Stats();
+                                effectsToAdd.Accumulate(effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed));
+                                effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
+                                statsSpecialEffects.Accumulate(effectsToAdd);
+                            }
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
@@ -1178,6 +1188,7 @@ focus on Survival Points.",
                 FireResistanceBuff = stats.FireResistanceBuff,
                 FrostResistanceBuff = stats.FrostResistanceBuff,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                DeathbringerProc = stats.DeathbringerProc,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1283,6 +1294,7 @@ focus on Survival Points.",
                 stats.SpellHit +
                 stats.Expertise +
                 stats.ExpertiseRating +
+                stats.DeathbringerProc +
 
                 // Special Stats
                 stats.BonusShieldOfRighteousnessDamage +
