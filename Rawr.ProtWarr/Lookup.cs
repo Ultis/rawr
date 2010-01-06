@@ -6,6 +6,19 @@ namespace Rawr.ProtWarr
 {
     public static class Lookup
     {
+        public static float GlobalCooldownSpeed(Character character, bool withLatency)
+        {
+            float globalCooldownSpeed = 1.5f;
+            
+            if (character.WarriorTalents.UnrelentingAssault == 2)
+                globalCooldownSpeed -= 0.5f;
+
+            if (withLatency)
+                globalCooldownSpeed += 0.1f;
+
+            return globalCooldownSpeed;
+        }
+
         public static float LevelModifier(Character character, int targetLevel)
         {
             return (targetLevel - character.Level) * 0.2f;
@@ -37,6 +50,8 @@ namespace Rawr.ProtWarr
                     return StatConversion.YELLOW_PARRY_CHANCE_CAP[targetLevel - 80];
                 case HitResult.Glance:
                     return 0.06f + ((targetLevel - character.Level) * 0.06f);
+                case HitResult.Crit:
+                    return -StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]; // StatConversion returns as negative
                 default:
                     return 0.0f;
             }
@@ -112,7 +127,7 @@ namespace Rawr.ProtWarr
             return Math.Max(0.0f, Math.Min(1.0f, 
                 StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Warrior) + 
                 StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Warrior) +
-                stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]));
+                stats.PhysicalCrit));
         }
 
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel)
@@ -246,6 +261,7 @@ namespace Rawr.ProtWarr
                 case Ability.Devastate: return "Devastate";
                 case Ability.HeroicStrike: return "Heroic Strike";
                 case Ability.HeroicThrow: return "Heroic Throw";
+                case Ability.MockingBlow: return "Mocking Blow";
                 case Ability.Rend: return "Rend";
                 case Ability.Revenge: return "Revenge";
                 case Ability.ShieldBash: return "Shield Bash";

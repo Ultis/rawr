@@ -120,7 +120,7 @@ namespace Rawr.ProtWarr
                         {
                             Name = "Sword And Board";
                             Description = "Shield Slam > Revenge > Devastate";
-                            modelLength = 4.7644f;
+                            modelLength = 4.7844f;
                             modelThreat =
                                 (1.0f * Abilities[Ability.ShieldSlam].Threat) +
                                 (0.73f * Abilities[Ability.Revenge].Threat) +
@@ -163,7 +163,7 @@ namespace Rawr.ProtWarr
                             AbilityModel shockwave = Abilities[Ability.Shockwave];
                             Name = "Sword And Board + CB/SW";
                             Description = "Shield Slam > Revenge > Devastate\n@ 3s Shield Slam Cooldown: Concussion Blow > Shockwave > Devastate";
-                            modelLength = 4.7644f;
+                            modelLength = 4.7844f;
                             modelThreat =
                                 (1.0f * shieldSlam.Threat) +
                                 (0.73f * revenge.Threat) +
@@ -233,6 +233,9 @@ namespace Rawr.ProtWarr
                         break;
                     }
             }
+
+            // Simple GCD-Based Latency Adjustment
+            modelLength *= Lookup.GlobalCooldownSpeed(Character, true) / Lookup.GlobalCooldownSpeed(Character, false);
 
             // Weapon Swings/Heroic Strike
             float attackerSwings = (modelLength / ParryModel.BossAttackSpeed);
@@ -308,6 +311,7 @@ namespace Rawr.ProtWarr
             Abilities.Add(Ability.Devastate, character, stats, options);
             Abilities.Add(Ability.HeroicStrike, character, stats, options);
             Abilities.Add(Ability.HeroicThrow, character, stats, options);
+            Abilities.Add(Ability.MockingBlow, character, stats, options);
             Abilities.Add(Ability.Rend, character, stats, options);
             Abilities.Add(Ability.Revenge, character, stats, options);
             Abilities.Add(Ability.ShieldSlam, character, stats, options);

@@ -103,15 +103,24 @@ namespace Rawr.ProtWarr
                 Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, Options.TargetLevel) - bonusExpertise));
                 tableSize += Parry;
             }
-            // Glancing Blow
             if (Ability == Ability.None)
             {
+                // White Glancing Blow
                 Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, Options.TargetLevel)));
                 tableSize += Glance;
+
+                // White Critical Hits
+                Critical = Math.Max(0.0f, Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, Options.TargetLevel))
+                            - Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Crit, Options.TargetLevel));
+                tableSize += Critical;               
             }
-            // Critical Hit
-            Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, Options.TargetLevel));
-            tableSize += Critical;
+            else
+            {
+                // Yellow Critical Hits
+                Critical = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.BonusCritPercentage(Character, Stats, Ability, Options.TargetLevel) 
+                            - Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Crit, Options.TargetLevel)));
+                tableSize += Critical;
+            }
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
         }

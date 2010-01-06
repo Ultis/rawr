@@ -18,11 +18,12 @@ namespace Rawr.ProtWarr
 
         private void Calculate()
         {
+            float globalCooldownSpeed   = Lookup.GlobalCooldownSpeed(Character, true);
             float baseBossAttackSpeed   = Options.BossAttackSpeed / (1.0f + Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
-
+            
             BossAttackSpeed             = baseBossAttackSpeed;
             WeaponSpeed                 = baseWeaponSpeed;
 
@@ -32,11 +33,7 @@ namespace Rawr.ProtWarr
                 for (int j = 0; j < 4; j++)
                 {
                     weaponHaste = DefendTable.Parry * 0.24f * (WeaponSpeed / BossAttackSpeed);
-                    // Unrelenting Assault 'Revenge Spam' builds have 1.0s GCD instead of 1.5s
-                    if(Character.WarriorTalents.UnrelentingAssault == 2)
-                        bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.0f));
-                    else
-                        bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.5f));
+                    bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / globalCooldownSpeed));
                     
                     WeaponSpeed     = baseWeaponSpeed / (1.0f + weaponHaste);
                     BossAttackSpeed = baseBossAttackSpeed / (1.0f + bossAttackHaste);

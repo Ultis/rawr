@@ -14,6 +14,7 @@ namespace Rawr.ProtWarr
         DeepWounds,
         HeroicStrike,
         HeroicThrow,
+        MockingBlow,
         ShieldBash,
         ShieldSlam,
         Shockwave,

@@ -66,8 +66,15 @@ namespace Rawr.ProtWarr
                 case Ability.HeroicThrow:
                     baseDamage = 12.0f + (Stats.AttackPower * 0.5f);
                     break;
+                case Ability.MockingBlow:
+                    baseDamage = Lookup.WeaponDamage(Character, Stats, true);
+                    if(Talents.GlyphOfMockingBlow)
+                        DamageMultiplier *= 1.25f;
+                    break;
                 case Ability.Rend:
                     baseDamage = 380.0f + Lookup.WeaponDamage(Character, Stats, false);
+                    if (Talents.GlyphOfRending)
+                        baseDamage *= 1.4f;
                     DamageMultiplier *= (1.0f + Talents.ImprovedRend * 0.2f) * (1.0f + Stats.BonusBleedDamageMultiplier);
                     ArmorReduction = 0.0f;
                     break;
@@ -136,6 +143,12 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.HeroicThrow:
                     abilityThreat *= 1.5f;
+                    break;
+                case Ability.MockingBlow:
+                    if(Talents.GlyphOfBarbaricInsults)
+                        abilityThreat *= 6.0f;
+                    else
+                        abilityThreat *= 3.0f;
                     break;
                 case Ability.Revenge:
                     abilityThreat += 121.0f;

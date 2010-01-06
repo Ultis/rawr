@@ -327,6 +327,41 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffsAdd(("Fish Feast"));
         }
 
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Barbaric Insults");
+                _relevantGlyphs.Add("Glyph of Blocking");
+                _relevantGlyphs.Add("Glyph of Cleaving");
+                _relevantGlyphs.Add("Glyph of Devastate");
+                _relevantGlyphs.Add("Glyph of Enraged Regeneration");
+                _relevantGlyphs.Add("Glyph of Heroic Strike");
+                _relevantGlyphs.Add("Glyph of Intervene");
+                _relevantGlyphs.Add("Glyph of Last Stand");
+                _relevantGlyphs.Add("Glyph of Rapid Charge");
+                _relevantGlyphs.Add("Glyph of Rending");
+                _relevantGlyphs.Add("Glyph of Resonating Power");
+                _relevantGlyphs.Add("Glyph of Revenge");
+                _relevantGlyphs.Add("Glyph of Shield Wall");
+                _relevantGlyphs.Add("Glyph of Shockwave");
+                _relevantGlyphs.Add("Glyph of Spell Reflection");
+                _relevantGlyphs.Add("Glyph of Sunder Armor");
+                _relevantGlyphs.Add("Glyph of Taunt");
+                _relevantGlyphs.Add("Glyph of Vigilance");
+
+                _relevantGlyphs.Add("Glyph of Battle");
+                _relevantGlyphs.Add("Glyph of Bloodrage");
+                _relevantGlyphs.Add("Glyph of Charge");
+                _relevantGlyphs.Add("Glyph of Command");
+                _relevantGlyphs.Add("Glyph of Mocking Blow");
+                _relevantGlyphs.Add("Glyph of Thunder Clap");
+            }
+            return _relevantGlyphs;
+        }
+
         public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtWarr(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtWarr(); }
@@ -377,7 +412,7 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, options.TargetLevel));
                 calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, options.TargetLevel));
 
-                calculatedStats.Crit = Lookup.BonusCritPercentage(character, stats, options.TargetLevel);
+                calculatedStats.Crit = am.Abilities[Ability.None].AttackTable.Critical;
                 calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
                 calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
                 calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
@@ -599,7 +634,7 @@ threat and limited threat scaled by the threat scale.",
                         effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
                     case Trigger.DamageTaken:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond), weaponSpeed);
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond));
                         break;
                 }
             }
