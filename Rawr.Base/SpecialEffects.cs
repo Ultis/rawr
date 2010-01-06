@@ -1402,9 +1402,12 @@ namespace Rawr {
             Sigil of the Dark Rider
                 Increases the damage dealt by your Blood Strike and Heart Strike by 90.
              * Increases the damage dealt by your [ability] and [ability] by [amount].
+            Sigil of the Bone Gryphon
+                 * Your Rune Strike ability grants 44 dodge rating for 15 sec.  Stacks up to 5 times.
+                 * Your Rune Strike ability grants [Amount] [stat] for [duration] sec.  Stacks up to [stack] times.
             */
                 // Single Ability.
-                Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec");
+                Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec(\.\s*Stacks up to (?<stack>\d*) times)?");
                 match = regex.Match(line);
                 if (match.Success)
                 {
@@ -1412,8 +1415,13 @@ namespace Rawr {
                     float amount = int.Parse(match.Groups["amount"].Value);
                     float duration = int.Parse(match.Groups["duration"].Value);
                     string ability = match.Groups["ability"].Value;
-
-                    stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f));
+                    int stack = 0;
+                    if (match.Groups["stack"].Value != "")
+                    {
+                        stack = int.Parse(match.Groups["stack"].Value);
+                    }
+                    
+                    stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f, 1f, stack));
                 }
                 // ok... at this point with the way the code is written, this is really just for Sigil of the Unfaltering Knight, which grants a 
                 // 30 sec buff of 53 Def. Since it's a triggered event, and all, it's better to go off the trigger rather than a straight 
