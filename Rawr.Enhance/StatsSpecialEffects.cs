@@ -264,7 +264,7 @@ namespace Rawr.Enhance
             {
                 statsAverage.Agility += (statsAverage.DeathbringerProc * (1 + _stats.BonusAgilityMultiplier)) / 3f;
                 statsAverage.AttackPower += 2f * statsAverage.DeathbringerProc / 3f; // AP is double budget
-                statsAverage.ArmorPenetrationRating += statsAverage.DeathbringerProc /3f;
+                statsAverage.HasteRating += statsAverage.DeathbringerProc / 3f;
             }
         }
     }
