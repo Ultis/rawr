@@ -347,9 +347,9 @@ namespace Rawr
 
             foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))
             {   // apply profession buffs if max skill
-                if (profession.Attributes["name"].Value == "Mining" && profession.Attributes["value"].Value == "450")
+                if (profession.Attributes["name"].Value == "Mining" && profession.Attributes["value"].Value == "450" && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
                     character.ActiveBuffsAdd(("Toughness"));
-                if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450")
+                if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450" && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
                     character.ActiveBuffsAdd(("Master of Anatomy"));
                 if (profession.Attributes["name"].Value == "Blacksmithing" && int.Parse(profession.Attributes["value"].Value) >= 400)
                 {
