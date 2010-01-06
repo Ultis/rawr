@@ -2841,9 +2841,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                             float weight = 1.0f;
                             if (effect.Stats.DeathbringerProc > 0) {
                                 add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                                add.ArmorPenetrationRating = Math.Min(DbpArPValue / effect.Stats.DeathbringerProc * add.DeathbringerProc, add.DeathbringerProc);
+                                add.Agility = add.DeathbringerProc;
                                 add.CritRating = add.DeathbringerProc;
-                                add.Strength = add.DeathbringerProc;
+                                add.AttackPower = add.DeathbringerProc * 2f;
                                 add.DeathbringerProc = 0f;
                                 weight = 1f / 3f;
                             } else {
