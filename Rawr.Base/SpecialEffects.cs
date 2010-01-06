@@ -1308,6 +1308,18 @@ namespace Rawr {
                 float max = (float)int.Parse(match.Groups["max"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = min+(max-min)/2f }, 0f, 45f, 0.3f));
             }
+            else if ((match = new Regex(@"Your harmful spells have a chance to increase your spell power by (?<initialSP>\d+) and an additional (?<additionalSP>\d+) every (?<frequency>\d+) sec for (?<time>\d+) sec").Match(line)).Success)
+            {
+                // Dislodged Foreign Object - seems to be 45 sec iCD (wowhead)
+                float initialSP = (float)int.Parse(match.Groups["initialSP"].Value);
+                float additionalSP = (float)int.Parse(match.Groups["additionalSP"].Value);
+                float frequency = (float)int.Parse(match.Groups["frequency"].Value);
+                float time = (float)int.Parse(match.Groups["time"].Value);
+                float min = initialSP;
+                float max = initialSP + additionalSP * (time / frequency - 1f);
+                float averageSP = (min + max) / 2f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = averageSP }, time, 45f, 0.1f));
+            }
             #endregion
             #region 3.3 rings
             else if ((match = new Regex(@"Your helpful spells have a chance to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
