@@ -1221,11 +1221,15 @@ These numbers to do not include racial bonuses.",
             try {
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
                 if (calcOpts == null) calcOpts = new CalculationOptionsDPSWarr();
-                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts);
+                
+                CombatFactors combatFactors;
+                Skills.WhiteAttacks whiteAttacks;
+                Rotation Rot;
+                
+                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, out combatFactors, out whiteAttacks, out Rot);
                 WarriorTalents talents = character.WarriorTalents;
-                CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
-                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts);
-
+                //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
+                 
                 if (calcOpts.UseMarkov)
                 {
                     Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
@@ -1234,9 +1238,9 @@ These numbers to do not include racial bonuses.",
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
-                Rotation Rot;
+                /*Rotation Rot;
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
-                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
+                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);*/
 
                 calculatedStats.Duration = calcOpts.Duration;
                 
@@ -1340,9 +1344,9 @@ These numbers to do not include racial bonuses.",
                     //calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
 
                     float maxArp = calculatedStats.BuffedStats.ArmorPenetrationRating;
-                    foreach (SpecialEffect effect in calculatedStats.BuffedStats.SpecialEffects(s => s.Stats.ArmorPenetrationRating + s.Stats.DeathbringerProc > 0f))
+                    foreach (SpecialEffect effect in calculatedStats.BuffedStats.SpecialEffects(s => s.Stats.ArmorPenetrationRating > 0f))
                     {
-                        maxArp += effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc;
+                        maxArp += effect.Stats.ArmorPenetrationRating;
                     }
                     calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
                         + calculatedStats.ArmorPenetrationStance
@@ -1493,19 +1497,24 @@ These numbers to do not include racial bonuses.",
 
         private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts)
         {
+            CombatFactors temp; Skills.WhiteAttacks temp2; Rotation temp3;
+            return GetCharacterStats(character, additionalItem, statType, calcOpts, out temp, out temp2, out temp3);
+        }
+        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
+        {
             cacheChar = character;
             Stats statsTotal = GetCharacterStats_Buffed(character, additionalItem, calcOpts, statType != StatType.Unbuffed);
+            combatFactors = new CombatFactors(character, statsTotal, calcOpts);
+            whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts);
+            if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
+            else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
+            
             if (statType == (StatType.Buffed | StatType.Unbuffed))
             {
                 return statsTotal;
             }
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             WarriorTalents talents = character.WarriorTalents;
-            Rotation Rot;
-            CombatFactors combatFactors = new CombatFactors(character, statsTotal, calcOpts);
-            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts);
-            if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
-            else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
             Rot.Initialize();
             Rot.MakeRotationandDoDPS(false, false);
             Rot.AddValidatedSpecialEffects(statsTotal, talents);
@@ -1627,36 +1636,16 @@ These numbers to do not include racial bonuses.",
                     tempArPenEffectChances.Add(triggerChances[realTrigger]);
                     tempArPenEffectScales.Add(1f);
                 }
-                else if (effect.Stats.DeathbringerProc > 0f)
-                {
-                    firstPass.Add(effect);
-
-                    /*SpecialEffect dbproc =
-                        new SpecialEffect(effect.Trigger,
-                                          new Stats() { ArmorPenetrationRating = effect.Stats.DeathbringerProc + effect.Stats.ArmorPenetrationRating },
-                                          effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);*/
-                    tempArPenEffects.Add(effect);
-                    tempArPenEffectIntervals.Add(triggerIntervals[effect.Trigger]);
-                    tempArPenEffectChances.Add(triggerChances[effect.Trigger]);
-                    tempArPenEffectScales.Add(1f / 3f);
-                }
-                /*if (effect.Stats.DeathbringerProc > 0f)
-                {
-                    SpecialEffect proc1 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, Strength = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
-                    SpecialEffect proc2 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, CritRating = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
-                    SpecialEffect proc3 = new SpecialEffect(effect.Trigger, new Stats { DeathbringerProc = 1f, ArmorPenetrationRating = effect.Stats.DeathbringerProc }, effect.Duration, effect.Cooldown * 3f, effect.Chance, effect.MaxStack);
-                    secondPass.Add(proc1); // strength and arp go in second pass
-                    firstPass.Add(proc2); // crit rating goes in first pass
-                    secondPass.Add(proc3);
-                }*/
                 else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
-                   (effect.Stats.Agility > 0f ||
+                   (effect.Stats.DeathbringerProc > 0f ||
+                    effect.Stats.Agility > 0f ||
                     effect.Stats.HasteRating > 0f ||
                     effect.Stats.HitRating > 0f ||
                     effect.Stats.CritRating > 0f ||
                     effect.Stats.PhysicalHaste > 0f ||
                     effect.Stats.PhysicalCrit > 0f ||
-                    effect.Stats.PhysicalHit > 0f)) {
+                    effect.Stats.PhysicalHit > 0f)) 
+                {
                     firstPass.Add(effect);
                 } else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect)) {
                     secondPass.Add(effect);
@@ -1672,17 +1661,13 @@ These numbers to do not include racial bonuses.",
             { //Only one, add it to
                 SpecialEffect effect = tempArPenEffects[0];
                 float uptime = effect.GetAverageStackSize(tempArPenEffectIntervals[0], tempArPenEffectChances[0], combatFactors._c_mhItemSpeed, (calcOpts.SE_UseDur ? calcOpts.Duration : 0f)) * tempArPenEffectScales[0];
-                tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc);
+                tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
                 tempArPenRatingUptimes.Add(uptime);
                 tempArPenRatings.Add(0.0f);
                 tempArPenRatingUptimes.Add(1.0f - uptime);
             }
             else if (tempArPenEffects.Count > 1)
             {
-                for (int i = 0; i < tempArPenEffects.Count; i++)
-                {
-                    if (tempArPenEffects[i].Stats.DeathbringerProc > 0) tempArPenEffects[i].Stats.ArmorPenetrationRating = tempArPenEffects[i].Stats.DeathbringerProc;
-                }
                 //if (tempArPenEffects.Count >= 2)
                 //{
                 //    offset[0] = calcOpts.TrinketOffset;
@@ -1692,10 +1677,6 @@ These numbers to do not include racial bonuses.",
                 {
                     tempArPenRatings.Add(arPenWeights[i].Value);
                     tempArPenRatingUptimes.Add(arPenWeights[i].Chance);
-                }
-                foreach (SpecialEffect e in tempArPenEffects)
-                {
-                    if (e.Stats.DeathbringerProc > 0) e.Stats.ArmorPenetrationRating = 0f;
                 }
             }
             // Get the average Armor Pen Rating across all procs
@@ -2046,6 +2027,8 @@ These numbers to do not include racial bonuses.",
 
             // Deal with the deathbringer proc before doing anything with mults -- Crit and Arp are handled separately due to being capped
             statsToAdd.Strength += statsToAdd.DeathbringerProc;
+            statsToAdd.HasteRating += statsToAdd.DeathbringerProc;
+
             //statsToAdd.DeathbringerProc = 0f;
 
             #region Base Stats

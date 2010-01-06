@@ -356,8 +356,8 @@ namespace Rawr.DPSWarr {
                 };
                 float passiveContrsTtlVal = passiveContrsVals[0] + passiveContrsVals[1] + passiveContrsVals[2];
                 string[] passiveContrs = new string[] { "Battle Stance", "T9 2P Set Bonus", "Mace Specialization" };
-                float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating + BuffedStats.DeathbringerProc);
-                float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating + MaximumStats.DeathbringerProc);
+                float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating);
+                float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating);
                 bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > ArPCap;
                 bool isProcdOverCap = passiveContrsTtlVal + ProcdArP > ArPCap;
                 float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + UnProcdArP)));
@@ -369,11 +369,11 @@ namespace Rawr.DPSWarr {
                     // Passive Contributions
                     passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
                     // UnProc'd Stats
-                    BuffedStats.ArmorPenetrationRating + BuffedStats.DeathbringerProc,
+                    BuffedStats.ArmorPenetrationRating,
                     Math.Min(ArPCap, passiveContrsTtlVal + UnProcdArP),
                     amountUnProcdOverCap,
                     // Proc'd Stats
-                    MaximumStats.ArmorPenetrationRating + MaximumStats.DeathbringerProc,
+                    MaximumStats.ArmorPenetrationRating,
                     Math.Min(ArPCap, passiveContrsTtlVal + ProcdArP),
                     amountProcdOverCap
                     ));
@@ -544,7 +544,7 @@ namespace Rawr.DPSWarr {
                             foreach (SpecialEffect effect in BuffedStats._rawSpecialEffectData)
                             {
                                 if (effect == null) { continue; }
-                                float value = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc;
+                                float value = effect.Stats.ArmorPenetrationRating;
                                 if (value > 0 && value > highestProc)
                                 {
                                     highestProc = value;

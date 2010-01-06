@@ -201,6 +201,7 @@ namespace Rawr.DPSWarr {
         }
 
         protected virtual void initAbilities() {
+            AbilityList.Clear();
             // Whites
             //WhiteAtks = new Skills.WhiteAtks(Char, StatS, CombatFactors);
             // Anti-Debuff
