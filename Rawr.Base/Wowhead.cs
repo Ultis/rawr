@@ -1656,9 +1656,9 @@ namespace Rawr
                 case "3114": stats.AttackPower += 4; break;
                 case "2936": stats.AttackPower += 8; break;
                 case "1587": 
-                case "3356": 
-                case "3764": 
-                case "3877": stats.AttackPower += 12; break;
+                case "3356":
+                case "3764": stats.AttackPower += 12; break; 
+                case "3877":
                 case "1589": stats.AttackPower += 16; break;
                 case "1597": stats.AttackPower += 32; break;
                 #endregion
