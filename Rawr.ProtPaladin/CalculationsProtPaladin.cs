@@ -503,6 +503,7 @@ focus on Survival Points.",
             PaladinTalents talents = character.PaladinTalents;
 
             Stats statsBase = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
+            statsBase.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsItems = GetItemStats(character, additionalItem, calcOpts);
             Stats statsTalents = new Stats()
