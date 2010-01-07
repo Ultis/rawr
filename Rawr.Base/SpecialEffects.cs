@@ -1165,7 +1165,7 @@ namespace Rawr {
             }
             else if (line.StartsWith("The periodic damage from your Flame Shock spell grants"))
             {
-                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec  Stacks up to 5 times.");
+                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec Stacks up to 5 times.");
                 Match m = r.Match(line.Replace("nbsp;", " "));
                 if (m.Success) // 	Bizuri's Totem of Shattered Ice
                 {
