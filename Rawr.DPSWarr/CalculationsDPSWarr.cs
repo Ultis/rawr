@@ -1600,6 +1600,8 @@ These numbers to do not include racial bonuses.",
             List<float> tempArPenEffectIntervals = new List<float>();
             List<float> tempArPenEffectChances = new List<float>();
             List<float> tempArPenEffectScales = new List<float>();
+
+            List<SpecialEffect> critEffects = new List<SpecialEffect>(); 
             #endregion
 
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
@@ -1610,6 +1612,11 @@ These numbers to do not include racial bonuses.",
                 effect.Stats.GenerateSparseData();
 
                 if (!triggerIntervals.ContainsKey(effect.Trigger)) continue;
+                else if (effect.Stats.CritRating + effect.Stats.DeathbringerProc > 0f)
+                {
+                    critEffects.Add(effect);
+                    if (effect.Stats.DeathbringerProc > 0f) secondPass.Add(effect); // for strength only
+                }
                 else if (effect.Stats.ArmorPenetrationRating > 0f)
                 {
                     if (doubleExecutioner) continue;
@@ -1644,10 +1651,12 @@ These numbers to do not include racial bonuses.",
                     effect.Stats.CritRating > 0f ||
                     effect.Stats.PhysicalHaste > 0f ||
                     effect.Stats.PhysicalCrit > 0f ||
-                    effect.Stats.PhysicalHit > 0f)) 
+                    effect.Stats.PhysicalHit > 0f))
                 {
                     firstPass.Add(effect);
-                } else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect)) {
+                }
+                else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect))
+                {
                     secondPass.Add(effect);
                 }
             }
@@ -1707,8 +1716,8 @@ These numbers to do not include racial bonuses.",
                 originalStats.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);                
             }
 
-            IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, firstPass, triggerIntervals, triggerChances, true, new Stats(), combatFactors.StatS);
-            IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, secondPass, triggerIntervals, triggerChances, false, null, combatFactors.StatS);
+            IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, firstPass, critEffects, triggerIntervals, triggerChances, true, new Stats(), combatFactors.StatS);
+            IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, secondPass, critEffects, triggerIntervals, triggerChances, false, null, combatFactors.StatS);
         }
 
         private static void CalculateTriggers(Character Char, Rotation Rot, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
@@ -1787,7 +1796,7 @@ These numbers to do not include racial bonuses.",
         }
 
         private Stats IterativeSpecialEffectsStats(Character Char, Rotation Rot, CombatFactors combatFactors, 
-            CalculationOptionsDPSWarr calcOpts, List<SpecialEffect> specialEffects, 
+            CalculationOptionsDPSWarr calcOpts, List<SpecialEffect> specialEffects, List<SpecialEffect> critEffects,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
             bool iterate, Stats iterateOld, Stats originalStats) {
             
@@ -1806,10 +1815,17 @@ These numbers to do not include racial bonuses.",
                 float crit = Rot.CriticalAtksOverDur;
 
                 int LevelDif = calcOpts.TargetLevel - Char.Level;
-                List<SpecialEffect> critEffects = new List<SpecialEffect>();
                 List<Trigger> critTriggers = new List<Trigger>();
                 List<float> critWeights = new List<float>();
                 bool needsHitTableReset = false;
+                foreach (SpecialEffect effect in critEffects)
+                {
+                    needsHitTableReset = true;
+
+                    critTriggers.Add(effect.Trigger);
+                    critWeights.Add(1f / (effect.Stats.DeathbringerProc > 0f ? 3f : 1f));
+                        
+                }
                 foreach (SpecialEffect effect in specialEffects) {
                     /*if (effect.Stats.ArmorPenetrationRating > 0) {
                         float arpenBuffs =
@@ -1831,22 +1847,7 @@ These numbers to do not include racial bonuses.",
                         statsProcs.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);
                     } 
                     else */
-                    if (effect.Stats.CritRating + effect.Stats.DeathbringerProc > 0f)
-                    {
-                        needsHitTableReset = true;
-
-                        critEffects.Add(effect);
-                        critTriggers.Add(effect.Trigger);
-                        critWeights.Add(1f / (effect.Stats.DeathbringerProc > 0f ? 3f : 1f));
-                        if (effect.Stats.DeathbringerProc == 0f)
-                        {
-                            continue;
-                        }
-                        
-
-                        //if (effect.Stats.DeathbringerProc == 0f) continue;
-                    }
-
+                    
                     if (effect.Stats.ManaorEquivRestore > 0f) {
                         // effect.Duration = 0, so GetAverageStats won't work
                         float numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
@@ -1907,7 +1908,7 @@ These numbers to do not include racial bonuses.",
                         Rot.doIterations();
                         CalculateTriggers(Char, Rot, combatFactors, calcOpts, triggerIntervals, triggerChances);
                         return IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts,
-                            specialEffects, triggerIntervals, triggerChances, true, statsProcs, originalStats);
+                            specialEffects, critEffects, triggerIntervals, triggerChances, true, statsProcs, originalStats);
                     }
                     else
                     {
