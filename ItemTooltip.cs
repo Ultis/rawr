@@ -521,7 +521,7 @@ namespace Rawr
                             #region Sockets Section
                             if (hasSockets)
                             {
-                                int gemNameHeight = 0;
+                                int gemNameHeight = 0, gemUsedSlot = 0;
                                 for (int i = 0; i < 3; i++)
                                 {
                                     ItemSlot slotColor = (i == 0
@@ -534,7 +534,11 @@ namespace Rawr
                                     }
                                     if (slotColor != ItemSlot.None)
                                     {
-                                        Rectangle rectGemBorder = new Rectangle(3 + (103 * (i)), 25 + statHeight, 35, 35);
+                                        Rectangle rectGemBorder = new Rectangle(3 + (103 * (gemUsedSlot)), 25 + statHeight, 35, 35);
+
+                                        // seek to next one
+                                        gemUsedSlot++;
+
                                         Brush brushGemBorder = Brushes.Silver;
                                         switch (slotColor) {
                                             case ItemSlot.Red:      brushGemBorder = Brushes.Red;    break;
@@ -628,7 +632,7 @@ namespace Rawr
                                             if (Rawr.Properties.GeneralSettings.Default.DisplayGemNames && !CurrentItem.IsGem)
                                             {
                                                 SizeF gemNameSize = g.MeasureString("- " + gem.Name, _fontStats);
-                                                g.DrawString("- " + gem.Name, _fontStats, SystemBrushes.InfoText, 2, 63 + statHeight + i * ((int)gemNameSize.Height));
+                                                g.DrawString("- " + gem.Name, _fontStats, SystemBrushes.InfoText, 2, 63 + statHeight + gemNameHeight);
                                                 gemNameHeight += (int)gemNameSize.Height;
                                             }
                                         }
