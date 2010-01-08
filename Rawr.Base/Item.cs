@@ -66,6 +66,10 @@ namespace Rawr
 		[XmlElement("Unique")]
 		public bool _unique;
 
+        [DefaultValueAttribute(BindsOn.None)]
+        [XmlElement("Bind")]
+        public BindsOn _bind;
+
 		[DefaultValueAttribute(0)]
 		[XmlElement("SocketColor1")]
 		public ItemSlot _socketColor1;
@@ -353,6 +357,12 @@ namespace Rawr
 			set { _unique = value; }
 		}
 		[XmlIgnore]
+        public BindsOn Bind
+        {
+            get { return _bind; }
+            set { _bind = value; }
+        }
+        [XmlIgnore]
 		public ItemSlot SocketColor1
 		{
 			get { return _socketColor1; }
@@ -573,7 +583,9 @@ namespace Rawr
 
 		public override string ToString()
 		{
-			return (!string.IsNullOrEmpty(this.Name) ? this.Name : this.Id.ToString("00000")) + ": " + this.Stats.ToString();
+			return (!string.IsNullOrEmpty(this.Name) ? this.Name : this.Id.ToString("00000")) + ": " + 
+                (this.Bind != BindsOn.None ? (this.Bind + " ") : string.Empty) +
+                this.Stats.ToString();
 		}
 
 		public static bool GemMatchesSlot(Item gem, ItemSlot slotColor)

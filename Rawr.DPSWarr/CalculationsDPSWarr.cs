@@ -107,8 +107,8 @@ namespace Rawr.DPSWarr {
                 
                 templates.Sort(new Comparison<GemmingTemplate>(
                     delegate(GemmingTemplate first, GemmingTemplate second) {
-                        string[] group1 = first.Group.Split(new char[] {' '},2);
-                        string[] group2 = second.Group.Split(new char[] {' '}, 2);
+                        string[] group1 = first.Group.Split(new char[] {' '}, (System.StringSplitOptions)2);
+                        string[] group2 = second.Group.Split(new char[] { ' ' }, (System.StringSplitOptions)2);
                         int temp = group1[0].CompareTo(group2[0]);
                         if (temp != 0) // they're not the same
                         {

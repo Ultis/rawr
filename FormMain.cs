@@ -62,6 +62,9 @@ namespace Rawr
         private Color _defaultColor = Color.White;
 		private System.Threading.Timer _timerCheckForUpdates;
 
+        // we want this access so we can check cancel request from workers
+        public Status Status { get { return _statusForm;  } }
+
         private FormRelevantItemRefinement _itemRefinement;
         public FormRelevantItemRefinement ItemRefinement
         {
@@ -1089,12 +1092,24 @@ namespace Rawr
 			this.Close();
 		}
 
-		private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        public void SaveSettingsAndCaches()
+        {
+            try
+            {
+                Properties.Recent.Default.Save();
+                ItemCache.Save();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Rawr: " + ex.Message );
+            }
+        }
+
+	    private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			e.Cancel = !PromptToSaveBeforeClosing();
 			ConfigBounds = this.Bounds;
-			Properties.Recent.Default.Save();
-			ItemCache.Save();
+            SaveSettingsAndCaches();
 		}
 
 		private bool PromptToSaveBeforeClosing()
@@ -1467,32 +1482,42 @@ namespace Rawr
 			this.Cursor = Cursors.Default;
 		}
 
-		private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
-		{
+        public void RunPossibleUpgradesFromArmory( CharacterSlot slot )
+        {
             StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(bw_GetArmoryUpgrades);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
-            bw.RunWorkerAsync(Character);
+            bw.RunWorkerAsync(slot);
+        }
+
+	    private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+	        RunPossibleUpgradesFromArmory(CharacterSlot.None);
 		}
 
         void bw_GetArmoryUpgrades(object sender, DoWorkEventArgs e)
         {
-            this.GetArmoryUpgrades(e.Argument as Character);
+            this.GetArmoryUpgrades( (CharacterSlot)e.Argument );
         }
 
-        private void loadPossibleUpgradesFromWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+        public void RunPossibleUpgradesFromWowhead(CharacterSlot slot)
         {
             StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(bw_GetWowheadUpgrades);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
-            bw.RunWorkerAsync(Character);
+            bw.RunWorkerAsync(slot);
+        }
+
+	    private void loadPossibleUpgradesFromWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunPossibleUpgradesFromWowhead(CharacterSlot.None);
         }
 
         void bw_GetWowheadUpgrades(object sender, DoWorkEventArgs e)
         {
-            this.GetWowheadUpgrades(e.Argument as Character, usePTRDataToolStripMenuItem.Checked);
+            this.GetWowheadUpgrades((CharacterSlot)e.Argument, usePTRDataToolStripMenuItem.Checked);
         }
 
         public bool IsUsingPTR()
@@ -1534,16 +1559,21 @@ namespace Rawr
             this.Cursor = Cursors.Default;
         }
 
-        private void updateItemCacheArmoryToolStripMenuItem_Click(object sender, EventArgs e)
+        public void RunItemCacheArmoryUpdate(CharacterSlot slot)
         {
-			if (ConfirmUpdateItemCache())
-			{
-				StartProcessing();
-				BackgroundWorker bw = new BackgroundWorker();
-				bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheArmory);
-				bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
-				bw.RunWorkerAsync();
-			}
+			if (slot != CharacterSlot.None || ConfirmUpdateItemCache())
+            {
+                StartProcessing();
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheArmory);
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
+                bw.RunWorkerAsync( slot );
+            }
+        }
+
+	    private void updateItemCacheArmoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+	        RunItemCacheArmoryUpdate(CharacterSlot.None);
         }
 
 		private bool ConfirmUpdateItemCache()
@@ -1554,24 +1584,41 @@ namespace Rawr
 
         void bw_UpdateItemCacheArmory(object sender, DoWorkEventArgs e)
         {
-            this.UpdateItemCacheArmory();
+            // check for slot parameter
+            var slot = (e.Argument != null && e.Argument is CharacterSlot
+                                      ? (CharacterSlot) e.Argument
+                                      : CharacterSlot.None);
+
+            // fire 
+            this.UpdateItemCacheArmory(slot, (ModifierKeys & Keys.ShiftKey) != 0 );
         }
 
-		private void updateItemCacheWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+        public void RunItemCacheWowheadUpdate(CharacterSlot slot)
+        {
+			if (slot != CharacterSlot.None || ConfirmUpdateItemCache())
+            {
+                StartProcessing();
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheWowhead);
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
+                bw.RunWorkerAsync( slot );
+            }
+        }
+
+	    private void updateItemCacheWowheadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (ConfirmUpdateItemCache())
-			{
-				StartProcessing();
-				BackgroundWorker bw = new BackgroundWorker();
-				bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheWowhead);
-				bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
-				bw.RunWorkerAsync();
-			}
+            RunItemCacheWowheadUpdate( CharacterSlot.None );
 		}
 
 		void bw_UpdateItemCacheWowhead(object sender, DoWorkEventArgs e)
 		{
-			this.UpdateItemCacheWowhead();
+            // check for slot parameter
+            var slot = (e.Argument != null && e.Argument is CharacterSlot
+                                      ? (CharacterSlot)e.Argument
+                                      : CharacterSlot.None);
+
+            // fire 
+			this.UpdateItemCacheWowhead(slot, (ModifierKeys & Keys.Shift) != 0 );
 		}
 
         void bw_ImportWowheadFilter(object sender, DoWorkEventArgs e)
@@ -1607,21 +1654,37 @@ namespace Rawr
             optimize.Dispose();
 		}
 
-		public void UpdateItemCacheArmory()
+        public static string UpdateCacheStatusKey( CharacterSlot slot, bool bWowhead )
+        {
+            return string.Format("Update {0} from {1}",
+                                 slot == CharacterSlot.None ? "All Items" : slot.ToString(),
+                                 bWowhead ? "Wowhead" : "Armory"
+                );
+        }
+
+	    public void UpdateItemCacheArmory( CharacterSlot slot, bool bOnlyNonLocalized )
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
-			StatusMessaging.UpdateStatus("Update All Items from Armory", "Beginning Update");
+            StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, false), "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
-            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading, true, false, 1);
+            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading, true, false, 1, checkUpgradeCancel );
             int skippedItems = 0;
-            Item[] allItems = ItemCache.AllItems;
-            for (int i = 0; i < allItems.Length; i++)
+
+            // get list of the items to be updated
+            Item[] allItems = ItemsForUpdate(slot);
+
+			// an index of added items
+			var addedItems = 0;
+
+			foreach (Item item in allItems)
 			{
-                Item item = allItems[i];
                 if (item.Id < 90000)
                 {
-                    updater.AddItem(i, item);
+					if (!bOnlyNonLocalized || string.IsNullOrEmpty(item.LocalizedName))
+					{
+						updater.AddItem(addedItems++, item);
+					}
                 }
                 else
                 {
@@ -1633,7 +1696,7 @@ namespace Rawr
 
             while (!updater.Done)
             {
-                StatusMessaging.UpdateStatus("Update All Items from Armory", "Updating " + (skippedItems+updater.ItemsDone)  + " of " + updater.ItemsToDo + " items");
+                StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, false), "Updating " + (skippedItems + updater.ItemsDone) + " of " + updater.ItemsToDo + " items");
                 Thread.Sleep(1000);
             }
 
@@ -1661,29 +1724,62 @@ namespace Rawr
                 msgBox.Show(sbChanges.ToString());
             }
 #endif
-            StatusMessaging.UpdateStatusFinished("Update All Items from Armory");
+            StatusMessaging.UpdateStatusFinished(UpdateCacheStatusKey(slot, false));
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
             _character.InvalidateItemInstances();
-		}
 
-		public void UpdateItemCacheWowhead()
+            // save stuff
+	        SaveSettingsAndCaches();
+        }
+
+        public Item[] ItemsForUpdate( CharacterSlot slot )
+        {
+            // unknown? update everything
+            if (slot == CharacterSlot.None)
+                return ItemCache.AllItems;
+
+            // get relevant items
+            var list = Character.GetRelevantItems(slot);
+
+            // fix the currently equipped: it might be non-relevant...
+            var equipped = Character[slot];
+            if (equipped != null && equipped.Item != null)
+            {
+                // check if it is
+                if ( !list.Contains(equipped.Item) )
+                    list.Add( equipped.Item );
+            }
+
+            // retval
+            return list.ToArray();
+        }
+
+        public void UpdateItemCacheWowhead(CharacterSlot slot, bool bOnlyNonLocalized )
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
-			StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Beginning Update");
+            StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, true), "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
 
             ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading,
-                false, usePTRDataToolStripMenuItem.Checked, 20);
+				false, usePTRDataToolStripMenuItem.Checked, 20, checkUpgradeCancel);
             int skippedItems = 0;
-            Item[] allItems = ItemCache.AllItems;
-            for (int i = 0; i < allItems.Length; i++)
+
+            // get list of the items to be updated
+			var allItems = ItemsForUpdate( slot ); 
+
+			// an index of added items
+        	var addedItems = 0;
+
+            foreach (Item item in allItems )
             {
-                Item item = allItems[i];
                 if (item.Id < 90000)
                 {
-                    updater.AddItem(i, item);
+					if (!bOnlyNonLocalized || string.IsNullOrEmpty(item.LocalizedName))
+					{
+						updater.AddItem(addedItems++, item);
+					}
                 }
                 else
                 {
@@ -1695,7 +1791,7 @@ namespace Rawr
 
             while (!updater.Done)
             {
-                StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + (skippedItems + updater.ItemsDone) + " of " + updater.ItemsToDo + " items");
+                StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, true), "Updating " + (skippedItems + updater.ItemsDone) + " of " + updater.ItemsToDo + " items");
                 Thread.Sleep(1000);
             }
             
@@ -1723,10 +1819,13 @@ namespace Rawr
                 msgBox.Show(sbChanges.ToString());
             }
 #endif
-            StatusMessaging.UpdateStatusFinished("Update All Items from Wowhead");
+            StatusMessaging.UpdateStatusFinished(UpdateCacheStatusKey(slot, true));
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
             _character.InvalidateItemInstances();
+
+            // save stuff
+            SaveSettingsAndCaches();
         }
 
         public void ImportWowheadFilter(string filter, bool usePTR)
@@ -1738,22 +1837,35 @@ namespace Rawr
             StatusMessaging.UpdateStatusFinished("ImportWowheadFilter");
         }
 
-		public void GetArmoryUpgrades(Character currentCharacter)
+		public void GetArmoryUpgrades( CharacterSlot slot )
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
-			StatusMessaging.UpdateStatus("GetArmoryUpgrades", "Getting Armory Updates");
-			Armory.LoadUpgradesFromArmory(currentCharacter);
+            StatusMessaging.UpdateStatus(LoadUpgradesStatusKey(slot, false), "Getting Armory Updates");
+            Armory.LoadUpgradesFromArmory( Character, slot, checkUpgradeCancel );
 			ItemCache.OnItemsChanged();
-			StatusMessaging.UpdateStatusFinished("GetArmoryUpgrades");
+            StatusMessaging.UpdateStatusFinished(LoadUpgradesStatusKey(slot, false));
 		}
 
-        public void GetWowheadUpgrades(Character currentCharacter, bool usePTR)
+        private bool checkUpgradeCancel()
+        {
+            return Status != null && Status.CancelPending;
+        }
+
+        public static string LoadUpgradesStatusKey(CharacterSlot slot, bool bWowhead)
+        {
+            return string.Format("Loading {0} Upgrades from {1}",
+                                 slot == CharacterSlot.None ? "All Items" : slot.ToString(),
+                                 bWowhead ? "Wowhead" : "Armory"
+                );
+        }
+
+	    public void GetWowheadUpgrades(CharacterSlot slot, bool usePTR)
         {
             WebRequestWrapper.ResetFatalErrorIndicator();
-            StatusMessaging.UpdateStatus("GetWowheadUpgrades", "Getting Wowhead Updates");
-            Wowhead.LoadUpgradesFromWowhead(currentCharacter, usePTR);
+            StatusMessaging.UpdateStatus(LoadUpgradesStatusKey(slot,true), "Getting Wowhead Updates");
+            Wowhead.LoadUpgradesFromWowhead(Character, slot, usePTR, checkUpgradeCancel);
             ItemCache.OnItemsChanged();
-            StatusMessaging.UpdateStatusFinished("GetWowheadUpgrades");
+            StatusMessaging.UpdateStatusFinished(LoadUpgradesStatusKey(slot, true));
         }
 
         public Character ReloadCharacterFromArmory(Character character)
@@ -2594,6 +2706,41 @@ namespace Rawr
         private void loadEmblemOfFrostItemCostToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ItemCache.LoadTokenItemCost("Emblem of Frost");
+        }
+
+		private void txtFilterBox_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if(e.KeyChar == (char)Keys.Enter) {
+				// search next selected item
+				var sel = itemComparison1.ComparisonGraph.FindItem(txtFilterBox.Text, itemComparison1.ComparisonGraph.SelectedItemIndex + 1);
+
+				// change
+				itemComparison1.ComparisonGraph.SelectedItemIndex = sel;
+
+				// if N/A - ding
+                txtFilterBox.BackColor = (sel < 0) ? Color.LightPink : Color.Empty;
+
+                // Weird Focus issue
+                toolStripItemComparison.Focus();
+                //txtFilterBox.Focus();
+
+				// we handled it fine
+				e.Handled = true;
+			} else {
+				if (txtFilterBox.BackColor != Color.Empty)
+					txtFilterBox.BackColor = Color.Empty;
+                // Weird Focus issue
+                txtFilterBox.Focus();
+            }
+        }
+
+        private void txtFilterBox_Leave(object sender, EventArgs e)
+        {
+            EventArgs a = e;
+            // Weird Focus issue
+            toolStripItemComparison.Focus();
+            toolStripItemComparison.Focus();
+            //txtFilterBox.Focus();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Rawr
 
         public int ItemsDone { get { lock (lockObject) { return itemsDone; } } }
         public int ItemsToDo { get { lock (lockObject) { return itemsToDo; } } }
-        public bool Done { get { lock (lockObject) { return done; } } }
+        public bool Done { get { lock (lockObject) { return done || (cancel != null && cancel()); } } }
         public Item this[int id]
         {
             get
@@ -46,6 +46,7 @@ namespace Rawr
         private bool useArmory;
         private bool usePTR;
         private bool multiThreaded;
+    	private Wowhead.UpgradeCancelCheck cancel;
 
         private AutoResetEvent eventDone;
 
@@ -54,7 +55,7 @@ namespace Rawr
         private Queue<ItemToUpdate> itemQueue;
         private int itemsPerSecond;
 
-        public ItemUpdater(bool multiThreaded, bool useArmory, bool usePTR, int itemsPerSecond)
+        public ItemUpdater(bool multiThreaded, bool useArmory, bool usePTR, int itemsPerSecond, Wowhead.UpgradeCancelCheck check )
         {
             this.itemsDone = 0;
             this.itemsToDo = 0;
@@ -62,6 +63,7 @@ namespace Rawr
             this.done = false;
             this.newItems = new SortedDictionary<int, Item>();
             this.multiThreaded = multiThreaded;
+			this.cancel = check;
             this.useArmory = useArmory;
             this.usePTR = usePTR;
             this.eventDone = new AutoResetEvent(false);
@@ -71,12 +73,13 @@ namespace Rawr
 
             if (multiThreaded)
             {
-                Thread t = new Thread(new ThreadStart(Throttle));
-                t.Start();
+                // Thread t = new Thread(new ThreadStart(Throttle));
+				ThreadPool.QueueUserWorkItem(Throttle);
+                // t.Start();
             }
         }
 
-        private void Throttle()
+        private void Throttle(object e)
         {
             Stopwatch stopwatch = new Stopwatch(); ;
             stopwatch.Start();
@@ -87,7 +90,10 @@ namespace Rawr
 
                 for (int i = 0; i < itemsPerSecond || itemsPerSecond == 0; i++)
                 {
-                    ItemToUpdate info = null;
+					if (Done)
+					    return;
+
+                	ItemToUpdate info = null;
                     lock (lockObject)
                     {
                         if (itemQueue.Count == 0) break;
@@ -112,6 +118,11 @@ namespace Rawr
 
         private void LoadItem(object state)
         {
+            // check done status
+            if( Done )
+                return;
+
+            // continue updating
             ItemToUpdate info = state as ItemToUpdate;
             Item i = null;
 

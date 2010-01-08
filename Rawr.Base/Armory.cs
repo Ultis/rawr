@@ -426,6 +426,7 @@ namespace Rawr
                 ItemSlot socketColor3 = ItemSlot.None;
                 Stats socketStats = new Stats();
                 string name = string.Empty;
+                BindsOn bind = BindsOn.None;
 				string iconPath = string.Empty;
 				string setName = string.Empty;
 				ItemSlot slot = ItemSlot.None;
@@ -443,8 +444,9 @@ namespace Rawr
 
                 #region Basics
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonding")) { try {bind = (BindsOn)int.Parse(node.InnerText);} catch {} }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (ItemQuality)Enum.Parse(typeof(ItemQuality), node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/classId")) { classId = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { inventoryType = int.Parse(node.InnerText); }
@@ -964,6 +966,7 @@ namespace Rawr
                 {
 					Id = id,
                     Name = name,
+                    Bind = bind,
                     Quality = quality,
                     Type = type,
 					Faction = faction,
@@ -1213,7 +1216,7 @@ namespace Rawr
 			}
 		}
 
-		public static void LoadUpgradesFromArmory(Character character)
+		public static void LoadUpgradesFromArmory(Character character, CharacterSlot slot, Wowhead.UpgradeCancelCheck cancel )
 		{
 			if (!string.IsNullOrEmpty(character.Realm) && !string.IsNullOrEmpty(character.Name))
 			{
@@ -1249,42 +1252,57 @@ namespace Rawr
 				idealGems.Add(ItemSlot.None, 0);
 
 				#region status queuing
-				StatusMessaging.UpdateStatus(CharacterSlot.Head.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Neck.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Shoulders.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Back.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Chest.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Wrist.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Hands.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Waist.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Legs.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Feet.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Finger1.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Finger2.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Trinket1.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Trinket2.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.MainHand.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.OffHand.ToString(), "Queued");
-				StatusMessaging.UpdateStatus(CharacterSlot.Ranged.ToString(), "Queued");
+                if (slot != CharacterSlot.None)
+                {
+                    StatusMessaging.UpdateStatus(slot.ToString(), "Queued");
+                }
+                else
+                {
+                    StatusMessaging.UpdateStatus(CharacterSlot.Head.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Neck.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Shoulders.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Back.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Chest.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Wrist.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Hands.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Waist.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Legs.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Feet.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Finger1.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Finger2.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Trinket1.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Trinket2.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.MainHand.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.OffHand.ToString(), "Queued");
+                    StatusMessaging.UpdateStatus(CharacterSlot.Ranged.ToString(), "Queued");
+                }
+
 				#endregion
 				
-				LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems);
-				LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems);
+                if (slot != CharacterSlot.None)
+                {
+                    LoadUpgradesForSlot(character, slot, idealGems, cancel);
+                }
+                else
+                {
+                    LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems, cancel);
+                }
 			}
 			else
 			{
@@ -1292,8 +1310,11 @@ namespace Rawr
 			}
 		}
 
-		private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems)
+        private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems, Wowhead.UpgradeCancelCheck cancel)
 		{
+            if( cancel != null && cancel() )
+                return;
+
 			XmlDocument docUpgradeSearch = null;
 			try
 			{
@@ -1310,6 +1331,9 @@ namespace Rawr
 						XmlNodeList nodeList = docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item");
 						for (int i = 0; i < nodeList.Count; i++)
 						{
+                            if (cancel != null && cancel())
+                                break;
+
 							StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
 							string id = nodeList[i].Attributes["id"].Value;
                             if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))

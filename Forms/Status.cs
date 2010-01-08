@@ -20,6 +20,7 @@ namespace Rawr.Forms
         private List<StatusErrorEventArgs> _StatusErrors;
         private int _LastExpandedHeight;
         private bool _AllowedToClose;
+        public bool CancelPending { get; set; }
 
 		public Status()
 		{
@@ -180,6 +181,11 @@ namespace Rawr.Forms
             {
                 e.Cancel = true;
             }
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            CancelPending = true;
         }
 	}
 }

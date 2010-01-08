@@ -40,6 +40,8 @@ namespace Rawr
         None,
         BoP,
         BoE,
+        BoA,
+        BoU,
     };
 
     delegate ItemLocation Construct();

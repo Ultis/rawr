@@ -246,11 +246,30 @@ namespace Rawr
             foreach (XmlNode node in docItem.SelectNodes("wowhead/item/json")) { json1 = node.InnerText; }
             foreach (XmlNode node in docItem.SelectNodes("wowhead/item/jsonEquip")) { json2 = node.InnerText; }
             if (htmlTooltip.Contains("Unique")) item.Unique = true;
+
             #endregion
 
             // On Load items from Wowhead Filter, we don't want any
             // items that aren't at least Epic quality
             if (filter && (int)item.Quality < 2) { return null; }
+
+			#region Item Binding
+
+			// 06.jan.2010: Bind status check
+			if (htmlTooltip.Contains("Binds when picked up"))
+				item.Bind = BindsOn.BoP;
+			else
+				if (htmlTooltip.Contains("Binds when equipped"))
+					item.Bind = BindsOn.BoE;
+				else
+					if (htmlTooltip.Contains("Binds to account"))
+						item.Bind = BindsOn.BoA;
+					else
+						if (htmlTooltip.Contains("Binds when used"))
+							item.Bind = BindsOn.BoU;
+
+
+			#endregion
 
             #region Get json & jsonequip ready for processing
             // Remove Id as we've already processed it
@@ -836,7 +855,7 @@ namespace Rawr
             #endregion
 
             // If it's Craftable and Bings on Pickup, mark it as such
-            if (item.LocationInfo[0] is CraftedItem && htmlTooltip.Contains("Binds when picked up")) {
+            if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
                 (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
             }
 
@@ -2046,7 +2065,9 @@ namespace Rawr
             return retVal;
         }
 
-        public static void LoadUpgradesFromWowhead(Character character, bool usePTR)
+	    public delegate bool UpgradeCancelCheck();
+
+        public static void LoadUpgradesFromWowhead(Character character, CharacterSlot slot, bool usePTR, UpgradeCancelCheck cancel )
         {
             if (!string.IsNullOrEmpty(character.Name))
             {
@@ -2082,6 +2103,13 @@ namespace Rawr
                 idealGems.Add(ItemSlot.None, 0);
 
                 #region status queuing
+
+                if (slot != CharacterSlot.None)
+                {
+                    StatusMessaging.UpdateStatus(slot.ToString(), "Queued");
+                }
+                else
+                {
                 StatusMessaging.UpdateStatus(CharacterSlot.Head.ToString(), "Queued");
                 StatusMessaging.UpdateStatus(CharacterSlot.Neck.ToString(), "Queued");
                 StatusMessaging.UpdateStatus(CharacterSlot.Shoulders.ToString(), "Queued");
@@ -2099,25 +2127,34 @@ namespace Rawr
                 StatusMessaging.UpdateStatus(CharacterSlot.MainHand.ToString(), "Queued");
                 StatusMessaging.UpdateStatus(CharacterSlot.OffHand.ToString(), "Queued");
                 StatusMessaging.UpdateStatus(CharacterSlot.Ranged.ToString(), "Queued");
+                }
+
                 #endregion
 
-                LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems, usePTR);
-                LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems, usePTR);
+                if (slot != CharacterSlot.None)
+                {
+                    LoadUpgradesForSlot(character, slot, idealGems, usePTR, cancel);
+                }
+                else
+                {
+                    LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems, usePTR, cancel);
+                    LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems, usePTR, cancel);
+                }
             }
             else
             {
@@ -2175,8 +2212,11 @@ namespace Rawr
             }
         }
 
-        private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems, bool usePTR)
+        private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems, bool usePTR, UpgradeCancelCheck cancel )
         {
+            if (cancel != null && cancel())
+                return;
+
             XmlDocument docUpgradeSearch = null;
             try
             {
@@ -2205,6 +2245,9 @@ namespace Rawr
 
                             for (int i = 0; i < nodeList.Count; i++)
                             {
+                                if( cancel != null && cancel() )
+                                    break;
+
                                 StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
                                 string id = nodeList[i].Value.Substring(7);
                                 if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))

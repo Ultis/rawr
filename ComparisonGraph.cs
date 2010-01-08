@@ -20,6 +20,10 @@ namespace Rawr
             }
             set
             {
+				// cleanup selection
+            	_selItemIndex = -1;
+
+				// change data
                 if (value == null)
                 {
                     _itemCalculations = new ComparisonCalculationBase[0];
@@ -39,6 +43,7 @@ namespace Rawr
 
 		public void LoadItemCalculationsPreSorted(ComparisonCalculationBase[] itemCalculations)
 		{
+			_selItemIndex = -1;
 			_itemCalculations = itemCalculations;
 			if (_prerenderedGraph != null)
 				_prerenderedGraph.Dispose();
@@ -459,6 +464,15 @@ namespace Rawr
 
                             #region Item Name
                             Rectangle rectItemName = new Rectangle(10, 44 + itemNumber * 36, (int)(graphStart - 14), 36);
+
+							// check for selection frame
+							if( itemNumber == SelectedItemIndex )
+							{
+								Rectangle fullRow = new Rectangle(0, 44 + itemNumber * 36, (int)(graphEnd), 36);
+								g.DrawRectangle(new Pen(Color.Gray), fullRow);
+							}
+
+
                             Color bgColor = Color.Empty;
                             if (item.Equipped)
                             {
@@ -492,6 +506,8 @@ namespace Rawr
                                         bgColor = Color.FromArgb(64, Color.DarkGray);
                                         break;
                                 }
+
+
                             if (bgColor != Color.Empty)
                             {
                                 Rectangle rectBackground = new Rectangle(rectItemName.X, rectItemName.Y + 2, rectItemName.Width, rectItemName.Height - 4);
@@ -637,7 +653,6 @@ namespace Rawr
                                 }
                             }
                             #endregion
-
                         }
                         if (hasItemAvailabilty)
                         {
@@ -915,5 +930,88 @@ namespace Rawr
 			ScrollBar.Value = Math.Max(ScrollBar.Minimum, Math.Min(ScrollBar.Maximum - ScrollBar.LargeChange, ScrollBar.Value - e.Delta));
             _scrollBar_Scroll(this, null);
 		}
+
+		#region Selecting an Item: find, select, redraw, scroll to
+
+    	public int SelectedItemIndex
+    	{
+			get { return _selItemIndex; }
+			set
+			{
+				if (_selItemIndex != value )
+				{
+					// change
+					_selItemIndex = value;
+
+					// redraw
+					Redraw();
+
+					// scroll to 
+					ScrollTo( value );
     }
+}
+    	}
+    	private int _selItemIndex = -1;
+
+		public void Redraw()
+		{
+			// cleanup
+			if (_prerenderedGraph != null)
+				_prerenderedGraph.Dispose();
+			_prerenderedGraph = null;
+
+			// get it
+			PrerenderedGraph.ToString();
+
+			// mark for next update
+			this.Invalidate();
+		}
+
+		public int FindItem(string sText, int nStartIndex )
+		{
+			if( !string.IsNullOrEmpty(sText))
+			{
+				for (int i = nStartIndex; i < ItemCalculations.Length; i++)
+				{
+					if ( ItemCalculations[i].Name.IndexOf(sText, StringComparison.CurrentCultureIgnoreCase ) >= 0 )
+					{
+						return i;
+					}
+				}
+			}
+
+			// none
+			return -1;
+		}
+
+		public void ScrollTo( int nIndex )
+		{
+			if( nIndex >= 0 && nIndex < ItemCalculations.Length )
+			{
+				// offset in prerendered zone
+				var nOffset = 44 + nIndex * 36;
+
+				// viewport start/end Y
+				var start = ScrollBar.Value;
+				var end = start + this.Height;
+
+				// check if visible
+				if (nOffset < start || nOffset > end)
+				{
+					// nice delta
+					var nice = (this.Height/2) - (36/2);
+
+					// calc new offset
+					var scroll = Math.Max(nOffset - nice, ScrollBar.Minimum);
+					scroll = Math.Min(scroll, ScrollBar.Maximum);
+
+					// change it
+					ScrollBar.Value = scroll;
+					this.Invalidate();
+				}
+			}
+		}
+
+    	#endregion // Selecting an Item: find, select, redraw, scroll to
+	}
 }

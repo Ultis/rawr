@@ -37,9 +37,11 @@ namespace Rawr
 
     public enum BindsOn
     {
-        None,
-        BoP,
-        BoE,
+        None,   // 0: no soulbonding
+        BoP,    // 1:
+        BoE,    // 2:
+        BoA,    // 3: binds on account
+        BoU,    // 4: binds when used
     };
 
     delegate ItemLocation Construct();
@@ -890,14 +892,18 @@ namespace Rawr
 
 		public static void Add(string itemId, ItemLocation itemLocation)
 		{
-			if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
-			_allLocations.Add(itemId, new ItemLocation[] {itemLocation, null});
+            lock (_allLocations)
+		    {
+                _allLocations[itemId] = new ItemLocation[] { itemLocation, null };
+            }
 		}
 
         public static void Add(string itemId, ItemLocation[] itemLocation, bool allow2ndsource)
         {
-            if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
-            _allLocations.Add(itemId, itemLocation);
+            lock (_allLocations)
+            {
+                _allLocations[itemId] = itemLocation;
+            }
         }
 
         static SortedList<string, Construct> _LocationFactory = null;

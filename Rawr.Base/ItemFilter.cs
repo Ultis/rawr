@@ -44,6 +44,12 @@ namespace Rawr
             set { _pattern = value; _regex = null; }
         }
 
+        public bool BoA { get; set; }
+        public bool BoE { get; set; }
+        public bool BoP { get; set; }
+        public bool BoU { get; set; }
+        public bool BoN { get; set; }
+
         public int MinItemLevel { get; set; }
         public int MaxItemLevel { get; set; }
         public ItemQuality MinItemQuality { get; set; }
@@ -96,7 +102,24 @@ namespace Rawr
                 {
                     if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)
                     {
+                        // no bind specified - we fine
+                        if (!(BoA || BoE || BoP || BoU || BoN) || (!BoN && item.Bind == BindsOn.None) )
                         return true;
+
+                        if (BoA && item.Bind == BindsOn.BoA)
+                            return true;
+
+                        if (BoE && item.Bind == BindsOn.BoE)
+                            return true;
+
+                        if (BoP && item.Bind == BindsOn.BoP)
+                            return true;
+
+                        if (BoU && item.Bind == BindsOn.BoU)
+                            return true;
+
+                        if (BoN && item.Bind == BindsOn.None)
+                            return true;
                     }
                 }
             }

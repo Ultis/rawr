@@ -815,6 +815,12 @@ namespace Rawr
 		{
 			lock (_downloadRequests)
 			{
+				// check for same local file: means duplicate
+				foreach (DownloadRequest odl in _downloadRequests )
+					if( odl.localPath == dl.localPath )
+						return;
+
+				// no local patch match? download anew
 				_downloadRequests.Enqueue(dl);
 			}
 

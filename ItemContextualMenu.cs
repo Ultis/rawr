@@ -34,8 +34,16 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemEdit;
 		private ToolStripMenuItem _menuItemWowhead;
         private ToolStripMenuItem _menuItemArmory;
+
 		private ToolStripMenuItem _menuItemRefresh;
 		private ToolStripMenuItem _menuItemRefreshWowhead;
+
+        private ToolStripMenuItem _menuSlotSub;
+        private ToolStripMenuItem _menuSlotRefresh;
+        private ToolStripMenuItem _menuSlotRefreshWowhead;
+        private ToolStripMenuItem _menuSlotUpgrade;
+        private ToolStripMenuItem _menuSlotUpgradeWowhead;
+
 		private ToolStripMenuItem _menuItemEquip;
 		private ToolStripMenuItem _menuItemEquipAll;
 		private ToolStripMenuItem _menuItemRemoveFromUpgradeList;
@@ -65,6 +73,30 @@ namespace Rawr
 
 			_menuItemRefreshWowhead = new ToolStripMenuItem("Refresh Item Data from Wowhead");
 			_menuItemRefreshWowhead.Click += new EventHandler(_menuItemRefreshWowhead_Click);
+
+            _menuSlotRefresh = new ToolStripMenuItem("Refresh Relevants from Armory");
+            _menuSlotRefresh.Click += new EventHandler(_menuSlotRefresh_Click);
+
+            _menuSlotRefreshWowhead = new ToolStripMenuItem("Refresh Relevants from Wowhead");
+            _menuSlotRefreshWowhead.Click += new EventHandler(_menuSlotRefreshWowhead_Click);
+
+            _menuSlotUpgrade = new ToolStripMenuItem("Load Upgrades from Armory");
+            _menuSlotUpgrade.Click += new EventHandler(_menuSlotUpgrade_Click);
+
+            _menuSlotUpgradeWowhead = new ToolStripMenuItem("Load Upgrades from Wowhead");
+            _menuSlotUpgradeWowhead.Click += new EventHandler(_menuSlotUpgradeWowhead_Click);
+
+            _menuSlotSub = new ToolStripMenuItem("Character Slot ...");
+            _menuSlotSub.DropDownItems.AddRange(new ToolStripItem[]
+                                                    {
+                                                        _menuSlotRefresh,
+                                                        _menuSlotRefreshWowhead,
+                                                        _menuSlotUpgrade,
+                                                        _menuSlotUpgradeWowhead,
+                                                    }
+                );
+
+
 
 			_menuItemEquip = new ToolStripMenuItem("Equip");
 			_menuItemEquip.Click += new EventHandler(_menuItemEquip_Click);
@@ -97,6 +129,7 @@ namespace Rawr
             this.Items.Add(_menuItemArmory);
             this.Items.Add(_menuItemRefresh);
 			this.Items.Add(_menuItemRefreshWowhead);
+            this.Items.Add(_menuSlotSub);
 			this.Items.Add(_menuItemEquip);
 			this.Items.Add(_menuItemEquipAll);
 			this.Items.Add(_menuItemRemoveFromUpgradeList);
@@ -168,6 +201,8 @@ namespace Rawr
 		{
             if (character == null) { return; }
             Character = character;
+		    bool loaded = !string.IsNullOrEmpty(character.Name);
+
 			_item = item;
             _characterItems = characterItems;
             _menuItemEquipAll.Visible = _menuItemRemoveFromUpgradeList.Visible = (_characterItems != null);
@@ -177,6 +212,10 @@ namespace Rawr
 			_menuItemDelete.Enabled = allowDelete && _menuItemEquip.Enabled && Character.CustomItemInstances.Contains(item);
 			_menuItemDeleteDuplicates.Enabled = allowDelete;
 			_menuItemName.Text = item.Item.Name;
+
+            // upgrade is only shown for character already loaded
+		    _menuSlotUpgradeWowhead.Visible =
+		        _menuSlotUpgrade.Visible = loaded;
 
 			this.Show(Control.MousePosition);
 		}
@@ -346,6 +385,47 @@ namespace Rawr
 			ItemCache.OnItemsChanged();
             _character.OnCalculationsInvalidated();
 		}
+
+        void _menuSlotRefresh_Click(object sender, EventArgs e)
+        {
+            // get slot & check if we can update for it
+            var slot = Character.GetCharacterSlotByItemSlot( _item.Slot );
+
+            // fire update for it via Wowhead
+            if (slot != CharacterSlot.None)
+                FormMain.Instance.RunItemCacheArmoryUpdate( slot );
+        }
+
+
+	    void _menuSlotRefreshWowhead_Click(object sender, EventArgs e)
+        {
+            // get slot & check if we can update for it
+            var slot = Character.GetCharacterSlotByItemSlot(_item.Slot);
+
+            // fire update for it via Wowhead
+            if (slot != CharacterSlot.None )
+                FormMain.Instance.RunItemCacheWowheadUpdate( slot );
+        }
+
+        void _menuSlotUpgrade_Click(object sender, EventArgs e)
+        {
+            // get slot & check if we can update for it
+            var slot = Character.GetCharacterSlotByItemSlot(_item.Slot);
+
+            // fire update for it via Wowhead
+            if (slot != CharacterSlot.None)
+                FormMain.Instance.RunPossibleUpgradesFromArmory(slot);
+        }
+
+        void _menuSlotUpgradeWowhead_Click(object sender, EventArgs e)
+        {
+            // get slot & check if we can update for it
+            var slot = Character.GetCharacterSlotByItemSlot(_item.Slot);
+
+            // fire update for it via Wowhead
+            if (slot != CharacterSlot.None)
+                FormMain.Instance.RunPossibleUpgradesFromWowhead(slot);
+        }
 
 		void _menuItemWowhead_Click(object sender, EventArgs e)
 		{

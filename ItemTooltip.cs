@@ -188,6 +188,25 @@ namespace Rawr
 
         private static Graphics _dummyBitmap = Graphics.FromImage(new Bitmap(1, 1));
 
+        public static string Bind2Text( BindsOn bind )
+        {
+            // TODO: add localization here? or we better stick with invariant EN, so we'll use this function from XML parsing too
+            if (bind == BindsOn.BoA)
+                return "Binds to account";
+
+            if (bind == BindsOn.BoE)
+                return "Binds when equipped";
+
+            if (bind == BindsOn.BoP)
+                return "Binds when picked up";
+
+            if (bind == BindsOn.BoU)
+                return "Binds when used";
+
+            return string.Empty;
+        }
+
+
         protected Image CachedToolTipImage
         {
             get
@@ -228,6 +247,40 @@ namespace Rawr
 
                             int xPos = xGrid.initial;
                             int yPos = yGrid.initial;
+
+                            #region Item ID's Section
+
+                            // 8.jan.2010: all ID's (including binding info) goes separate line, as stats
+                            var typesText = string.Empty;
+
+                            if (Properties.GeneralSettings.Default.DisplayItemIds)
+                            {
+                                if( CurrentItem.ItemLevel > 0 )
+                                    typesText += string.Format("[{0}] ", CurrentItem.ItemLevel);
+
+                                typesText += string.Format("[{0}] ", CurrentItem.Id);
+                            }
+
+                            if (Properties.GeneralSettings.Default.DisplayItemType)
+                            {
+                                if (CurrentItem.Bind != BindsOn.None)
+                                    typesText += string.Format("[{0}] ", CurrentItem.Bind);
+
+                                if (!string.IsNullOrEmpty(CurrentItem.SlotString))
+                                    typesText += string.Format("[{0}] ", CurrentItem.SlotString);
+
+                                if (CurrentItem.Type != ItemType.None)
+                                    typesText += string.Format("[{0}] ", CurrentItem.Type);
+                            }
+
+                            // check if we added some and join the text for drawing
+                            if (!string.IsNullOrEmpty(typesText))
+                            {
+                                yPos += yGrid.step;
+                            }
+
+                            #endregion // Item ID's Section
+
 
                             List<string> statsList = new List<string>();
 
@@ -324,6 +377,7 @@ namespace Rawr
                                 }
                             }
                             #endregion
+
                             int statHeight = (xPos > xGrid.initial) ? yPos : Math.Max(0, yPos - yGrid.step);
 
                             #region Location Section
@@ -401,10 +455,12 @@ namespace Rawr
                                 }
                             }
                             #endregion
+
                             #endregion
 
                             _cachedToolTipImage = new Bitmap(309,
                                 (hasSockets ? 78 : 20) + statHeight                                   // Stats
+                                + (!string.IsNullOrEmpty(typesText) ? 13 : 0)                         // ID's info
                                 + (_currentItem.Quality != ItemQuality.Temp ? 13 + extraLocation : 0) // Location
                                 + (_currentItem.Quality != ItemQuality.Temp && !CurrentItem.IsGem ? 13 + extraEnchant  : 0) // Enchant
                                 + gemInfoSize + gemNamesSize                                          // Gems
@@ -464,27 +520,17 @@ namespace Rawr
                                 g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
                             }
 
-                            // item level drawing
-                            if (CurrentItem.ItemLevel > 0)
-                            {
-                                SizeF name_size = g.MeasureString(CurrentItem.Name, _fontName);
-                                Brush ilvlBrush = Brushes.Gray;
-                                string s = "";
-                                if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
-                                    s = string.Format("[{0}] ({1}) [{2}]", CurrentItem.ItemLevel, CurrentItem.Id, CurrentItem.SlotString);
-                                } else if (Properties.GeneralSettings.Default.DisplayItemType) {
-                                    s = string.Format("[{0}] [{1}]", CurrentItem.ItemLevel, CurrentItem.SlotString);
-                                } else if (Properties.GeneralSettings.Default.DisplayItemIds) {
-                                    s = string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id);
-                                } else {
-                                    s = string.Format("[{0}]", CurrentItem.ItemLevel);
-                                }
-                                g.DrawString(s, _fontName, ilvlBrush, name_size.Width + 2, 4);
-                            }
                             #endregion
 
                             xPos = xGrid.initial;
                             yPos = yGrid.initial;
+
+                            // draw item bind
+                            if (!string.IsNullOrEmpty(typesText))
+                            {
+                                g.DrawString(typesText, _fontName, SystemBrushes.GrayText, xPos, yPos);
+                                yPos += yGrid.step;
+                            }
 
                             #region Stats Section
                             foreach (string statText in statsList)
@@ -522,6 +568,7 @@ namespace Rawr
                             if (hasSockets)
                             {
                                 int gemNameHeight = 0, gemUsedSlot = 0;
+
                                 for (int i = 0; i < 3; i++)
                                 {
                                     ItemSlot slotColor = (i == 0
@@ -534,7 +581,7 @@ namespace Rawr
                                     }
                                     if (slotColor != ItemSlot.None)
                                     {
-                                        Rectangle rectGemBorder = new Rectangle(3 + (103 * (gemUsedSlot)), 25 + statHeight, 35, 35);
+                                        Rectangle rectGemBorder = new Rectangle(3 + (103 * (gemUsedSlot)), 20 + statHeight, 35, 35);
 
                                         // seek to next one
                                         gemUsedSlot++;
