@@ -470,6 +470,11 @@ namespace Rawr.Enhance
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    windfury_weapon");
             }
+            if (character.ShamanTalents.GlyphofFireElementalTotem)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    fire_elemental");
+            }
             while (glyphNumber < 3)
             {
                 glyphNumber += 1;
