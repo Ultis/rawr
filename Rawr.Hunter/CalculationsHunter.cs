@@ -2424,18 +2424,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #region From Gear/Buffs
                 Stats statsBuffs = GetBuffsStats(character, calcOpts);
                 Stats statsItems = GetItemStats(character, additionalItem);
-                /*if(statsItems._rawSpecialEffectData != null){
-                    foreach (SpecialEffect effect in statsItems._rawSpecialEffectData) {
-                        if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0) {
-                            statsItems.RemoveSpecialEffect(effect);
-                            List<SpecialEffect> new2add = SpecialEffects.GetDeathBringerEffects(character.Class, effect.Stats.DeathbringerProc);
-                            foreach (SpecialEffect e in new2add) {
-                                e.Stats.DeathbringerProc = 1;
-                                statsItems.AddSpecialEffect(e);
-                            }
-                        }
-                    }
-                }*/
                 #endregion
                 #region From Options
                 Stats statsOptionsPanel = new Stats() {
@@ -2798,8 +2786,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
                 float oldArp = effect.Stats.ArmorPenetrationRating;
-                float DbpArPValue = effect.Stats.DeathbringerProc;
-                if (effect.Stats.ArmorPenetrationRating > 0 || effect.Stats.DeathbringerProc > 0) {
+                if (effect.Stats.ArmorPenetrationRating > 0) {
                     float arpenBuffs = 0.0f;
                     float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating
                         + (statsToProcess != null ? statsToProcess.ArmorPenetrationRating : 0f));
@@ -2807,36 +2794,28 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     if (arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                         effect.Stats.ArmorPenetrationRating = arpToHardCap;
                     }
-                    if (effect.Stats.DeathbringerProc > 0 && arpToHardCap < effect.Stats.DeathbringerProc) {
-                        DbpArPValue = arpToHardCap;
-                    }
                 }
-                switch (effect.Trigger) {
-                    case Trigger.Use:
-                        Stats _stats = new Stats();
-                        if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
-                            float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
-                            _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
-                            Stats _stats2 = GetSpecialEffectsStats(Char,
-                                triggerIntervals, triggerChances,
-                                //attemptedAtkInterval, petattemptedAtksInterval,
-                                //hitRates, critRates, bleedHitInterval, dmgDoneInterval,
-                                statsTotal, _stats);
-                            _stats = _stats2 * uptime;
-                        } else {
-                            _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
-                        }
-                        statsProcs.Accumulate(_stats);
-                        break;
-                    case Trigger.MeleeHit: // Pets Only
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            statsProcs += add;
-                        }
-                        break;
-                    case Trigger.RangedHit:
-                    case Trigger.PhysicalHit:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
+                if (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use) {
+                    switch (effect.Trigger) {
+                        case Trigger.Use:
+                            Stats _stats = new Stats();
+                            if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
+                                float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
+                                _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
+                                Stats _stats2 = GetSpecialEffectsStats(Char,
+                                    triggerIntervals, triggerChances,
+                                    statsTotal, _stats);
+                                _stats = _stats2 * uptime;
+                            } else {
+                                _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
+                            }
+                            statsProcs.Accumulate(_stats);
+                            break;
+                        case Trigger.MeleeHit: // Pets Only
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            break;
+                        case Trigger.RangedHit:
+                        case Trigger.PhysicalHit:
                             Stats add = new Stats();
                             float weight = 1.0f;
                             if (effect.Stats.DeathbringerProc > 0) {
@@ -2850,55 +2829,35 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                 add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             }
                             statsProcs.Accumulate(add, weight);
-                        }
-                        break;
-                    case Trigger.MeleeCrit: // Pets Only
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            statsProcs.Accumulate(add);
-                        }
-                        break;
-                    case Trigger.RangedCrit:
-                    case Trigger.PhysicalCrit:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            statsProcs.Accumulate(add);
-                        }
-                        break;
-                    case Trigger.DoTTick:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            break;
+                        case Trigger.MeleeCrit: // Pets Only
                             statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                        }
-                        break;
-                    case Trigger.DamageDone: // physical and dots
-                        if (triggerIntervals[effect.Trigger] > 0f) {
+                            break;
+                        case Trigger.RangedCrit:
+                        case Trigger.PhysicalCrit:
                             statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                        }
-                        break;
-                    case Trigger.HunterAutoShotHit:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            statsProcs.Accumulate(add);
-                        }
-                        break;
-                    case Trigger.SteadyShotHit:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            statsProcs.Accumulate(add);
-                        }
-                        break;
-                    case Trigger.PetClawBiteSmackCrit:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            statsProcs.Accumulate(add);
-                        }
-                        break;
-                    case Trigger.SerpentWyvernStingsDoDamage:
-                        if (triggerIntervals[effect.Trigger] > 0f) {
-                            Stats add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            statsProcs.Accumulate(add);
-                        }
-                        break;
+                            break;
+                        case Trigger.DoTTick:
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            break;
+                        case Trigger.DamageDone: // physical and dots
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            break;
+                        case Trigger.HunterAutoShotHit:
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            break;
+                        case Trigger.SteadyShotHit:
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            break;
+                        case Trigger.PetClawBiteSmackCrit:
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            break;
+                        case Trigger.SerpentWyvernStingsDoDamage:
+                            if (triggerIntervals[effect.Trigger] > 0f) {
+                                statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            }
+                            break;
+                    }
                 }
                 effect.Stats.ArmorPenetrationRating = oldArp;
             }
