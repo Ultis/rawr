@@ -44,6 +44,7 @@ namespace Rawr.Elemental.Spells
             if (args.Talents.GlyphofLava)
                 spCoef += .1f;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
+            if (args.Stats.Elemental4T10 > 0) cooldown -= 1.5f;
 
             base.Initialize(args);
 
