@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
@@ -116,17 +113,17 @@ namespace Rawr
 
         public CharacterClass GetClass()
         {
-            if (this.GetType() == typeof(WarlockTalents)) return CharacterClass.Warlock;
-            else if (this.GetType() == typeof(MageTalents)) return CharacterClass.Mage;
-            else if (this.GetType() == typeof(PriestTalents)) return CharacterClass.Priest;
-            else if (this.GetType() == typeof(DruidTalents)) return CharacterClass.Druid;
-            else if (this.GetType() == typeof(RogueTalents)) return CharacterClass.Rogue;
-            else if (this.GetType() == typeof(HunterTalents)) return CharacterClass.Hunter;
-            else if (this.GetType() == typeof(ShamanTalents)) return CharacterClass.Shaman;
-            else if (this.GetType() == typeof(DeathKnightTalents)) return CharacterClass.DeathKnight;
-            else if (this.GetType() == typeof(PaladinTalents)) return CharacterClass.Paladin;
-            else return CharacterClass.Warrior;
-		}
+            if (GetType() == typeof(WarlockTalents)) return CharacterClass.Warlock;
+            if (GetType() == typeof(MageTalents)) return CharacterClass.Mage;
+            if (GetType() == typeof(PriestTalents)) return CharacterClass.Priest;
+            if (GetType() == typeof(DruidTalents)) return CharacterClass.Druid;
+            if (GetType() == typeof(RogueTalents)) return CharacterClass.Rogue;
+            if (GetType() == typeof(HunterTalents)) return CharacterClass.Hunter;
+            if (GetType() == typeof(ShamanTalents)) return CharacterClass.Shaman;
+            if (GetType() == typeof(DeathKnightTalents)) return CharacterClass.DeathKnight;
+            if (GetType() == typeof(PaladinTalents)) return CharacterClass.Paladin;
+            return CharacterClass.Warrior;
+        }
 
 #if RAWR3
 		public abstract TalentsBase Clone();
@@ -146,8 +143,8 @@ namespace Rawr
     //<talentTab classId="7" name="Shaman" url="c=Shaman"/>
     //<talentTab classId="5" name="Priest" url="c=Priest"/>
 
-            int[] classId = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 };
-            string[] className = new string[] { "Warrior", "Paladin", "Hunter", "Rogue", "Priest", "DeathKnight", "Shaman", "Mage", "Warlock", "Druid" };
+            int[] classId = new [] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 };
+            string[] className = new [] { "Warrior", "Paladin", "Hunter", "Rogue", "Priest", "DeathKnight", "Shaman", "Mage", "Warlock", "Druid" };
 
             for (int i = 0; i < classId.Length; i++)
             {
@@ -235,17 +232,21 @@ namespace Rawr
             code.Append("{\r\n");
             code.Append("LoadString(talents);\r\n");
             code.Append("}\r\n");
-            code.Append("public static string[] TreeNames = new string[] {");
+            code.Append("public static string[] TreeNames = new [] {");
             foreach (XmlNode tree in trees)
                 code.AppendFormat("\r\n@\"{0}\",", tree.Attributes["name"].Value);
             code.Append("};\r\n\r\n");
             foreach (TalentData talent in talents)
             {
                 code.Append(GenerateComment(talent));
-                code.AppendFormat("\r\n[TalentData({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, new string[] {{",
+                code.AppendFormat("\r\n[TalentData({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, new [] {{",
                     talent.Index, talent.Name, talent.MaxPoints, talent.Tree, talent.Column, talent.Row, talent.Prerequisite == null ? -1 : talentDictionary[talent.Prerequisite].Index);
                 foreach (string descRank in talent.Description)
-                    code.AppendFormat("\r\n@\"{0}\",", descRank);
+                {
+                    //strip html breaks from descriptions
+                    string description = descRank.Replace("<br/>", "\r\n");
+                    code.AppendFormat("\r\n@\"{0}\",", description);
+                }
                 code.Append("}, \"" + talent.Icon + "\")]\r\n");
                 code.AppendFormat("public int {0} {{ get {{ return _data[{1}]; }} set {{ _data[{1}] = value; }} }}\r\n",
                     PropertyFromName(talent.Name), talent.Index);
