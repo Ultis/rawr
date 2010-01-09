@@ -255,6 +255,51 @@ namespace Rawr.Elemental
             return new ComparisonCalculationBase[0];
         }
 
+        private string[] _customRenderedChartNames = null;
+        public override string[] CustomRenderedChartNames
+        {
+            get
+            {
+                if (_customRenderedChartNames == null)
+                {
+                    _customRenderedChartNames = new string[] { "Stats Graph" };
+                }
+                return _customRenderedChartNames;
+            }
+        }
+
+#if !RAWR3
+        public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
+        {
+
+            height -= 2;
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    Stats[] statsList = new Stats[] {
+                        new Stats() { SpellPower = 1 },
+                        new Stats() { Mp5 = 1 },
+                        new Stats() { CritRating = 1 },
+                        new Stats() { HasteRating = 1 },
+                        new Stats() { Intellect = 1 },
+                        new Stats() { Spirit = 1 },
+                    };
+
+                    Color[] statsColors = new Color[] { 
+                        Color.FromArgb(255, 255, 0, 0), 
+                        Color.DarkBlue, 
+                        Color.FromArgb(255, 255, 165, 0), 
+                        Color.Olive, 
+                        Color.FromArgb(255, 154, 205, 50), 
+                        Color.Aqua 
+                    };
+
+                    Base.Graph.RenderGraph(g, width, height, character, statsList, statsColors, 200, "", "Sustained DPS", Base.Graph.Style.Mage);
+                    break;
+            }
+        }
+#endif
+
 		public override ICalculationOptionBase DeserializeDataObject(string xml)
 		{
 			System.Xml.Serialization.XmlSerializer serializer =
