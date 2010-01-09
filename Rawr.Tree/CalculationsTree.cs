@@ -511,12 +511,12 @@ applied and result is scaled down by 100)",
             return settings;
         }
 
-        protected void CalculateTriggers(SustainedResult rot, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
+        protected void CalculateTriggers(CombatFactors cf, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
-            float CastInterval = 60f / rot.TotalCastsPerMinute;
-            float HealInterval = 60f / rot.TotalHealsPerMinute;
-            float CritsRatio = rot.TotalCritsPerMinute / rot.TotalCastsPerMinute;
-            float RejuvInterval = 60 / rot.spellMix.RejuvenationHealsPerMinute;
+            float CastInterval = 1f / cf.CastsPerSecond;
+            float HealInterval = 1f / cf.HealsPerSecond;
+            float CritsRatio = cf.CritsPerSecond / cf.CastsPerSecond;
+            float RejuvInterval = 1f / cf.RejuvTicksPerSecond;
             
             triggerIntervals[Trigger.Use] = 0f;
             triggerChances[Trigger.Use] = 1f;
@@ -540,12 +540,12 @@ applied and result is scaled down by 100)",
             triggerChances[Trigger.RejuvenationTick] = 1f;
         }
 
-        private void DoSpecialEffects(Character character, Stats stats, SustainedResult rot)
+        private void DoSpecialEffects(Character character, Stats stats, CombatFactors cf, float TotalTime, List<float> hasteRatings, List<float> hasteRatingUptimes)
         {
             #region Initialize Triggers
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>(); ;
             Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>(); ;
-            CalculateTriggers(rot, triggerIntervals, triggerChances);
+            CalculateTriggers(cf, triggerIntervals, triggerChances);
             #endregion
 
             #region Haste Lists (seperately handled)
@@ -594,34 +594,32 @@ applied and result is scaled down by 100)",
             }
 
             #region Calculate Haste Breakdown
-            List<float> tempHasteRatings = new List<float>();
-            List<float> tempHasteRatingUptimes = new List<float>();
-
             if (tempHasteEffects.Count == 0)
             {
-                tempHasteRatings.Add(0.0f);
-                tempHasteRatingUptimes.Add(1.0f);
+                hasteRatings.Add(0.0f);
+                hasteRatingUptimes.Add(1.0f);
             }
             else if (tempHasteEffects.Count == 1)
             {   //Only one, add it to
                 SpecialEffect effect = tempHasteEffects[0];
-                float uptime = effect.GetAverageStackSize(tempHasteEffectIntervals[0], tempHasteEffectChances[0], 0, rot.TotalTime);
-                tempHasteRatings.Add(effect.Stats.HasteRating);
-                tempHasteRatingUptimes.Add(uptime);
-                tempHasteRatings.Add(0.0f);
-                tempHasteRatingUptimes.Add(1.0f - uptime);
+                float uptime = effect.GetAverageStackSize(tempHasteEffectIntervals[0], tempHasteEffectChances[0], 0, TotalTime);
+                hasteRatings.Add(effect.Stats.HasteRating);
+                hasteRatingUptimes.Add(uptime);
+                hasteRatings.Add(0.0f);
+                hasteRatingUptimes.Add(1.0f - uptime);
             }
             else if (tempHasteEffects.Count > 1)
             {
-                WeightedStat[] HasteRatingWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempHasteEffects.ToArray(), tempHasteEffectIntervals.ToArray(), tempHasteEffectChances.ToArray(), tempHasteEffectOffsets.ToArray(), tempHasteEffectScales.ToArray(), 0, rot.TotalTime, AdditiveStat.HasteRating);
+                WeightedStat[] HasteRatingWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempHasteEffects.ToArray(), tempHasteEffectIntervals.ToArray(), tempHasteEffectChances.ToArray(), tempHasteEffectOffsets.ToArray(), tempHasteEffectScales.ToArray(), 0, TotalTime, AdditiveStat.HasteRating);
                 for (int i = 0; i < HasteRatingWeights.Length; i++)
                 {
-                    tempHasteRatings.Add(HasteRatingWeights[i].Value);
-                    tempHasteRatingUptimes.Add(HasteRatingWeights[i].Chance);
+                    hasteRatings.Add(HasteRatingWeights[i].Value);
+                    hasteRatingUptimes.Add(HasteRatingWeights[i].Chance);
                 }
             }
             #endregion
 
+            /*
             #region Calculate average Haste from effects (capped)
             if (tempHasteRatings.Count > 0f)
             {
@@ -637,8 +635,9 @@ applied and result is scaled down by 100)",
                 stats.HasteRating += HasteRatingFromProcs;                
             }
             #endregion
+            */
 
-            AccumulateSpecialEffects(character, ref stats, rot.TotalTime, triggerIntervals, triggerChances, effects, 1f);
+            AccumulateSpecialEffects(character, ref stats, TotalTime, triggerIntervals, triggerChances, effects, 1f);
 
             #region Clear special effects from Stats
             for (int i = 0; i < stats._rawSpecialEffectDataSize; i++) stats._rawSpecialEffectData[i] = null;
@@ -714,12 +713,22 @@ applied and result is scaled down by 100)",
             // Initial run
             SustainedResult rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
 
-            int nPasses = 2, k;
-            for (k = 0; k < nPasses; k++) {
+            List<float> hasteRatings = new List<float>();
+            List<float> hasteRatingUptimes = new List<float>();
+
+            CombatFactors cfs = rot.getCombatFactors();
+            cfs.Compute();
+
+            for (int k = 0; k < 2; k++) {
                 // Create new stats instance with procs
                 stats = GetCharacterStats(character, additionalItem);
                 stats.ManaRestore /= profile.FightDuration;
-                DoSpecialEffects(character, stats, rot);
+
+                hasteRatings.Clear();
+                hasteRatingUptimes.Clear();
+                DoSpecialEffects(character, stats, cfs, rot.TotalTime, hasteRatings, hasteRatingUptimes);
+
+                // Add replenish
                 replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
                 stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
                 stats.ManaRestoreFromMaxManaPerSecond = replenish;
@@ -730,19 +739,36 @@ applied and result is scaled down by 100)",
                 {
                     stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
                     stats.HasteRating = calculationResult.BasicStats.HasteRating;
-                }
 
-                // New run
-                rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);  
+                    rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
+                    cfs = rot.getCombatFactors();
+                    cfs.Compute();
+                }
+                else
+                {
+                    cfs = new CombatFactors();
+                    float AverageHasteRating = 0;
+                    for (int i = 0; i < hasteRatings.Count; i++)
+                    {
+                        stats.HasteRating += hasteRatings[i];
+                        SustainedResult r = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
+                        cfs.Accumulate(r.getCombatFactors(), hasteRatingUptimes[i]);
+                        stats.HasteRating -= hasteRatings[i];
+                        AverageHasteRating += hasteRatings[i] * hasteRatingUptimes[i];
+                        if (i == 0) rot = r;
+                    }
+                    cfs.Compute();
+                    stats.HasteRating += AverageHasteRating; // For Burst
+                }
             }
             calculationResult.Sustained = rot;
-            calculationResult.CombatStats = stats;     // Replace BasicStats to get Spirit while casting included
+            calculationResult.CombatStats = stats;
             #endregion
 
             calculationResult.SingleTarget = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
 
             calculationResult.SingleTargetHPS = calculationResult.SingleTarget[0].HPS;
-            calculationResult.SustainedHPS = rot.TotalHealing / rot.TotalTime + ExtraHealing;
+            calculationResult.SustainedHPS = cfs.TotalHealing / rot.TotalTime + ExtraHealing;
 
             #region Survival Points
             float DamageReduction = StatConversion.GetArmorDamageReduction(83, stats.Armor, 0, 0, 0);

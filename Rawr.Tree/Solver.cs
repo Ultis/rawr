@@ -171,6 +171,8 @@ namespace Rawr.Tree
         public float RejuvAvg { get { return RejuvCPS * rejuvenate.Duration; } }
         public float RejuvHPS { get { return RejuvCF * rejuvenate.HPCT; } }
         public float RejuvMPS { get { return RejuvCPS * rejuvenate.ManaCost; } }
+        public float RejuvHealsPerSecond { get { return RejuvCPS * rejuvenate.PeriodicTicks; } }
+        public float RejuvCritsPerSecond { get { return RejuvCPS * rejuvenate.PeriodicTicks * rejuvenate.CritHoTPercent / 100f; } }
 
         public float ManagedRejuvCF = 0f;
         public float ManagedRejuvCPS { get { return ManagedRejuvCF / rejuvenate.CastTime; } }
@@ -181,6 +183,8 @@ namespace Rawr.Tree
         }
         public float ManagedRejuvHPS { get { return ManagedRejuvCF * rejuvenate.HPCT; } }
         public float ManagedRejuvMPS { get { return ManagedRejuvCPS * rejuvenate.ManaCost; } }
+        public float ManagedRejuvHealsPerSecond { get { return ManagedRejuvCPS * rejuvenate.PeriodicTicks; } }
+        public float ManagedRejuvCritsPerSecond { get { return ManagedRejuvCPS * rejuvenate.PeriodicTicks * rejuvenate.CritHoTPercent / 100f; } }
 
         public float RejuvHealsPerMinute { get { return (ManagedRejuvCPM + RejuvCPM) * rejuvenate.PeriodicTicks; } }
         #endregion
@@ -196,7 +200,8 @@ namespace Rawr.Tree
         public float RegrowthAvg { get { return RegrowthCPS * regrowthSpell.Duration; } }
         public float RegrowthHPS { get { return RegrowthCF * (regrowthChainCast ? regrowthSpell.HPCT_DH : regrowthSpell.HPCT); } }
         public float RegrowthMPS { get { return RegrowthCPS * regrowthSpell.ManaCost; } }
-        public float RegrowthHealsPerMinute { get { return RegrowthCPM * (1f + (regrowthChainCast ? 0 : regrowthSpell.PeriodicTicks)); } }
+        public float RegrowthHotTicksPerMinute { get { return RegrowthCPM * (regrowthChainCast ? 0 : regrowthSpell.PeriodicTicks); } }
+        public float RegrowthHealsPerMinute { get { return RegrowthCPM + RegrowthHotTicksPerMinute; } }
         public float RegrowthCritsPerMinute { get { return RegrowthCPM * regrowthSpell.CritPercent / 100f; } }
 
         public float ManagedRegrowthCF = 0f;
@@ -212,7 +217,8 @@ namespace Rawr.Tree
         }
         public float ManagedRegrowthHPS { get { return ManagedRegrowthCF * (managedRegrowthChainCast ? managedRegrowthSpell.HPCT_DH : managedRegrowthSpell.HPCT); } }
         public float ManagedRegrowthMPS { get { return ManagedRegrowthCPS * managedRegrowthSpell.ManaCost; } }
-        public float ManagedRegrowthHealsPerMinute { get { return ManagedRegrowthCPM * (1f + (managedRegrowthChainCast ? 0 : managedRegrowthSpell.PeriodicTicks)); } }
+        public float ManagedRegrowthHotTicksPerMinute { get { return ManagedRegrowthCPM * (managedRegrowthChainCast ? 0 : managedRegrowthSpell.PeriodicTicks); } }
+        public float ManagedRegrowthHealsPerMinute { get { return ManagedRegrowthCPM + ManagedRegrowthHotTicksPerMinute; } }
         public float ManagedRegrowthCritsPerMinute { get { return ManagedRegrowthCPM * managedRegrowthSpell.CritPercent / 100f; } }
         #endregion
 
@@ -223,7 +229,8 @@ namespace Rawr.Tree
         public float LifebloomAvg { get { return LifebloomCPS * lifebloom.Duration; } }
         public float LifebloomHPS { get { return LifebloomCF * lifebloom.HPCT; } }
         public float LifebloomMPS { get { return LifebloomCPS * lifebloom.ManaCost; } }
-        public float LifebloomHealsPerMinute { get { return LifebloomCPM * (1f + lifebloom.PeriodicTicks); } }
+        public float LifebloomHotTicksPerMinute { get { return LifebloomCPM * lifebloom.PeriodicTicks; } }
+        public float LifebloomHealsPerMinute { get { return LifebloomCPM + LifebloomHotTicksPerMinute; } }
         public float LifebloomCritsPerMinute { get { return LifebloomCPM * lifebloom.CritPercent / 100f; } }
         #endregion
 
@@ -340,11 +347,18 @@ namespace Rawr.Tree
                 return LifebloomStackCPS * lifebloomStackSpell.ManaCost;
             }
         }
+        public float LifebloomStackHotTicksPerMinute
+        {
+            get
+            {
+                return LifebloomStackAvg * 60f / lifebloomStackSpell.PeriodicTickTime;
+            }
+        }
         public float LifebloomStackHealsPerMinute
         {
             get
             {
-                return 60f * LifebloomStackBPS * (1f + lifebloomStackSpell.PeriodicTicks);
+                return 60f * LifebloomStackBPS + LifebloomStackHotTicksPerMinute;
             }
         }
         public float LifebloomStackCritsPerMinute
@@ -438,6 +452,179 @@ namespace Rawr.Tree
         public float RevitalizeProcsPerMinute { get { return RevitalizeChance * (RejuvCPM * rejuvenate.PeriodicTicks + WildGrowthCPM * wildGrowth.PeriodicTicks * wildGrowth.maxTargets); } }
     }
 
+    public enum HealingSpell : int
+    {
+        Rejuv,
+        Regrowth,
+        Lifebloom,
+        ManagedRejuv,
+        ManagedRegrowth,
+        ManagedLifebloom,
+        WildGrowth,
+        Swiftmend,
+        Nourish,
+        HealingTouch,
+        NUM_HealingSpell // should always be last
+    };
+
+    public class CombatFactor
+    {
+        public float HealingPerSecond;
+        public float ManaPerSecond;
+        public float HotTicksPerSecond;
+        public float DirectHealsPerSecond;
+        public float HotCritsPerSecond;
+        public float DirectCritsPerSecond;
+        public float CritsPerSecond;
+        public float HealsPerSecond;
+        public float CastsPerSecond;
+        public float CastFraction;
+
+        public void Compute()
+        {
+            CritsPerSecond = DirectCritsPerSecond + HotCritsPerSecond;
+            HealsPerSecond = DirectHealsPerSecond + HotTicksPerSecond;
+        }
+
+        public CombatFactor()
+        {
+            HealingPerSecond = 0;
+            ManaPerSecond = 0;
+            HotTicksPerSecond = 0;
+            DirectHealsPerSecond = 0;
+            HotCritsPerSecond = 0;
+            DirectCritsPerSecond = 0;
+            CritsPerSecond = 0;
+            HealsPerSecond = 0;
+            CastsPerSecond = 0;
+            CastFraction = 0;
+        }
+
+        public CombatFactor Clone()
+        {
+            CombatFactor result = new CombatFactor();
+            result.HealingPerSecond = HealingPerSecond;
+            result.ManaPerSecond = ManaPerSecond;
+            result.HotTicksPerSecond = HotTicksPerSecond;
+            result.DirectHealsPerSecond = DirectHealsPerSecond;
+            result.HotCritsPerSecond = HotCritsPerSecond;
+            result.DirectCritsPerSecond = DirectCritsPerSecond;
+            result.HealsPerSecond = HealsPerSecond;
+            result.CritsPerSecond = CritsPerSecond;
+            result.CastsPerSecond = CastsPerSecond;
+            result.CastFraction = CastFraction;
+            return result;
+        }
+
+        public void Accumulate(CombatFactor cf, float weight)
+        {
+            HealingPerSecond += cf.HealingPerSecond * weight;
+            ManaPerSecond += cf.ManaPerSecond * weight;
+            HotTicksPerSecond += cf.HotTicksPerSecond * weight;
+            DirectHealsPerSecond += cf.DirectHealsPerSecond * weight;
+            HotCritsPerSecond += cf.HotCritsPerSecond * weight;
+            DirectCritsPerSecond += cf.DirectCritsPerSecond * weight;
+            HealsPerSecond += cf.HealsPerSecond * weight;
+            CritsPerSecond += cf.CritsPerSecond * weight;
+            CastsPerSecond += cf.CastsPerSecond * weight;
+            CastFraction += cf.CastFraction * weight;
+        }
+    }
+
+    public class CombatFactors
+    {
+        public CombatFactor[] factors;
+
+        public float HealingPerSecond;
+        public float ManaPerSecond;
+        public float HotTicksPerSecond;
+        public float DirectHealsPerSecond;
+        public float HotCritsPerSecond;
+        public float DirectCritsPerSecond;
+        public float CritsPerSecond;
+        public float HealsPerSecond;
+        public float CastsPerSecond;
+        public float CastFraction;
+
+        public float RejuvTicksPerSecond;
+        public float HealingPerMana;
+
+        public float TotalHealing;
+
+        public CombatFactors()
+        {
+            int Count = EnumHelper.GetValues(typeof(HealingSpell)).Length;
+            factors = new CombatFactor[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                factors[i] = new CombatFactor();
+            }
+            TotalHealing = 0;
+        }
+
+        public CombatFactors(CombatFactors copyOf)
+        {
+            int Count = EnumHelper.GetValues(typeof(HealingSpell)).Length;
+            factors = new CombatFactor[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                factors[i] = copyOf.factors[i].Clone();
+            }
+            TotalHealing = 0;
+        }
+
+        public CombatFactors Clone()
+        {
+            return new CombatFactors(this);
+        }
+
+        public void Accumulate(CombatFactors cfs, float weight)
+        {
+            int Count = EnumHelper.GetValues(typeof(HealingSpell)).Length;
+            for (int i = 0; i < Count; i++)
+            {
+                factors[i].Accumulate(cfs.factors[i], weight);
+            }
+            TotalHealing += cfs.TotalHealing * weight;
+        }
+
+        public void Compute()
+        {
+            HealingPerSecond = 0;
+            ManaPerSecond = 0;
+            HotTicksPerSecond = 0;
+            DirectHealsPerSecond = 0;
+            HotCritsPerSecond = 0;
+            DirectCritsPerSecond = 0;
+            CritsPerSecond = 0;
+            HealsPerSecond = 0;
+            CastsPerSecond = 0;
+            CastFraction = 0;
+            RejuvTicksPerSecond = 0;
+
+            int Count = EnumHelper.GetValues(typeof(HealingSpell)).Length;
+            for (int i = 0; i < Count; i++)
+            {
+                HealingPerSecond += factors[i].HealingPerSecond;
+                ManaPerSecond += factors[i].ManaPerSecond;
+                HotTicksPerSecond += factors[i].HotTicksPerSecond;
+                DirectHealsPerSecond += factors[i].DirectHealsPerSecond;
+                HotCritsPerSecond += factors[i].HotCritsPerSecond;
+                DirectCritsPerSecond += factors[i].DirectCritsPerSecond;
+                CritsPerSecond += factors[i].CritsPerSecond;
+                HealsPerSecond += factors[i].HealsPerSecond;
+                CastsPerSecond += factors[i].CastsPerSecond;
+                CastFraction += factors[i].CastFraction;
+                if (i == (int)HealingSpell.Rejuv || i == (int)HealingSpell.ManagedRejuv)
+                {
+                    RejuvTicksPerSecond += factors[i].HotTicksPerSecond;
+                }
+            }
+
+            HealingPerMana = ManaPerSecond > 0 ? HealingPerSecond / ManaPerSecond : 0;
+        }
+    }
+
     public class SustainedResult
     {
         public SustainedResult(CharacterCalculationsTree calculatedStats, Stats stats)
@@ -526,6 +713,114 @@ namespace Rawr.Tree
         public float TotalHealsPerMinute { get { return spellMix.HealsPerMinute * TotalModifier; } }
 
         public RotationSettings rotSettings;
+
+        public CombatFactors getCombatFactors()
+        {
+            CombatFactors result = new CombatFactors();
+            result.factors[(int)HealingSpell.Rejuv].HealingPerSecond = spellMix.RejuvHPS;
+            result.factors[(int)HealingSpell.Rejuv].ManaPerSecond = spellMix.RejuvMPS;
+            result.factors[(int)HealingSpell.Rejuv].HotTicksPerSecond = spellMix.RejuvHealsPerSecond;
+            result.factors[(int)HealingSpell.Rejuv].DirectHealsPerSecond = 0;
+            result.factors[(int)HealingSpell.Rejuv].HotCritsPerSecond = spellMix.RejuvCritsPerSecond;
+            result.factors[(int)HealingSpell.Rejuv].DirectCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.Rejuv].CastsPerSecond = spellMix.RejuvCPS;
+            result.factors[(int)HealingSpell.Rejuv].CastFraction = spellMix.RejuvCF;
+            result.factors[(int)HealingSpell.Rejuv].Compute();
+
+            result.factors[(int)HealingSpell.Regrowth].HealingPerSecond = spellMix.RegrowthHPS;
+            result.factors[(int)HealingSpell.Regrowth].ManaPerSecond = spellMix.RegrowthMPS;
+            result.factors[(int)HealingSpell.Regrowth].HotTicksPerSecond = spellMix.RegrowthHotTicksPerMinute / 60f;
+            result.factors[(int)HealingSpell.Regrowth].DirectHealsPerSecond = spellMix.RegrowthCPS;
+            result.factors[(int)HealingSpell.Regrowth].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.Regrowth].DirectCritsPerSecond = spellMix.RegrowthCritsPerMinute / 60f;
+            result.factors[(int)HealingSpell.Regrowth].CastsPerSecond = spellMix.RegrowthCPS;
+            result.factors[(int)HealingSpell.Regrowth].CastFraction = spellMix.RegrowthCF;
+            result.factors[(int)HealingSpell.Regrowth].Compute();
+
+            result.factors[(int)HealingSpell.Lifebloom].HealingPerSecond = spellMix.LifebloomHPS;
+            result.factors[(int)HealingSpell.Lifebloom].ManaPerSecond = spellMix.LifebloomMPS;
+            result.factors[(int)HealingSpell.Lifebloom].HotTicksPerSecond = spellMix.LifebloomHotTicksPerMinute / 60f;
+            result.factors[(int)HealingSpell.Lifebloom].DirectHealsPerSecond = spellMix.LifebloomCPS;
+            result.factors[(int)HealingSpell.Lifebloom].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.Lifebloom].DirectCritsPerSecond = spellMix.LifebloomCritsPerMinute / 60f;
+            result.factors[(int)HealingSpell.Lifebloom].CastsPerSecond = spellMix.LifebloomCPS;
+            result.factors[(int)HealingSpell.Lifebloom].CastFraction = spellMix.LifebloomCF;
+            result.factors[(int)HealingSpell.Lifebloom].Compute();
+
+            result.factors[(int)HealingSpell.ManagedRejuv].HealingPerSecond = spellMix.ManagedRejuvHPS;
+            result.factors[(int)HealingSpell.ManagedRejuv].ManaPerSecond = spellMix.ManagedRejuvMPS;
+            result.factors[(int)HealingSpell.ManagedRejuv].HotTicksPerSecond = spellMix.ManagedRejuvHealsPerSecond;
+            result.factors[(int)HealingSpell.ManagedRejuv].DirectHealsPerSecond = 0;
+            result.factors[(int)HealingSpell.ManagedRejuv].HotCritsPerSecond = spellMix.ManagedRejuvCritsPerSecond;
+            result.factors[(int)HealingSpell.ManagedRejuv].DirectCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.ManagedRejuv].CastsPerSecond = spellMix.ManagedRejuvCPS;
+            result.factors[(int)HealingSpell.ManagedRejuv].CastFraction = spellMix.ManagedRejuvCF;
+            result.factors[(int)HealingSpell.ManagedRejuv].Compute();
+
+            result.factors[(int)HealingSpell.ManagedRegrowth].HealingPerSecond = spellMix.ManagedRegrowthHPS;
+            result.factors[(int)HealingSpell.ManagedRegrowth].ManaPerSecond = spellMix.ManagedRegrowthMPS;
+            result.factors[(int)HealingSpell.ManagedRegrowth].HotTicksPerSecond = spellMix.ManagedRegrowthHotTicksPerMinute / 60f;
+            result.factors[(int)HealingSpell.ManagedRegrowth].DirectHealsPerSecond = spellMix.ManagedRegrowthCPS;
+            result.factors[(int)HealingSpell.ManagedRegrowth].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.ManagedRegrowth].DirectCritsPerSecond = spellMix.ManagedRegrowthCritsPerMinute / 60f;
+            result.factors[(int)HealingSpell.ManagedRegrowth].CastsPerSecond = spellMix.ManagedRegrowthCPS;
+            result.factors[(int)HealingSpell.ManagedRegrowth].CastFraction = spellMix.ManagedRegrowthCF;
+            result.factors[(int)HealingSpell.ManagedRegrowth].Compute();
+
+            result.factors[(int)HealingSpell.ManagedLifebloom].HealingPerSecond = spellMix.LifebloomStackHPS;
+            result.factors[(int)HealingSpell.ManagedLifebloom].ManaPerSecond = spellMix.LifebloomStackMPS;
+            result.factors[(int)HealingSpell.ManagedLifebloom].HotTicksPerSecond = spellMix.LifebloomStackHotTicksPerMinute / 60f;
+            result.factors[(int)HealingSpell.ManagedLifebloom].DirectHealsPerSecond = spellMix.LifebloomStackBPS;
+            result.factors[(int)HealingSpell.ManagedLifebloom].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.ManagedLifebloom].DirectCritsPerSecond = spellMix.LifebloomStackCritsPerMinute / 60f;
+            result.factors[(int)HealingSpell.ManagedLifebloom].CastsPerSecond = spellMix.LifebloomStackCPS;
+            result.factors[(int)HealingSpell.ManagedLifebloom].CastFraction = spellMix.LifebloomStackCF;
+            result.factors[(int)HealingSpell.ManagedLifebloom].Compute();
+
+            result.factors[(int)HealingSpell.WildGrowth].HealingPerSecond = spellMix.WildGrowthHPS;
+            result.factors[(int)HealingSpell.WildGrowth].ManaPerSecond = spellMix.WildGrowthMPS;
+            result.factors[(int)HealingSpell.WildGrowth].HotTicksPerSecond = spellMix.WildGrowthHealsPerMinute / 60f;
+            result.factors[(int)HealingSpell.WildGrowth].DirectHealsPerSecond = 0;
+            result.factors[(int)HealingSpell.WildGrowth].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.WildGrowth].DirectCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.WildGrowth].CastsPerSecond = spellMix.WildGrowthCPS;
+            result.factors[(int)HealingSpell.WildGrowth].CastFraction = spellMix.WildGrowthCF;
+            result.factors[(int)HealingSpell.WildGrowth].Compute();
+
+            result.factors[(int)HealingSpell.Swiftmend].HealingPerSecond = spellMix.SwiftmendHPS;
+            result.factors[(int)HealingSpell.Swiftmend].ManaPerSecond = spellMix.SwiftmendMPS;
+            result.factors[(int)HealingSpell.Swiftmend].HotTicksPerSecond = 0;
+            result.factors[(int)HealingSpell.Swiftmend].DirectHealsPerSecond = spellMix.SwiftmendHealsPerMinute / 60f;
+            result.factors[(int)HealingSpell.Swiftmend].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.Swiftmend].DirectCritsPerSecond = spellMix.SwiftmendCritsPerMinute / 60f;
+            result.factors[(int)HealingSpell.Swiftmend].CastsPerSecond = spellMix.SwiftmendCPS;
+            result.factors[(int)HealingSpell.Swiftmend].CastFraction = spellMix.SwiftmendCF;
+            result.factors[(int)HealingSpell.Swiftmend].Compute();
+
+            result.factors[(int)HealingSpell.Nourish].HealingPerSecond = spellMix.NourishHPS;
+            result.factors[(int)HealingSpell.Nourish].ManaPerSecond = spellMix.NourishMPS;
+            result.factors[(int)HealingSpell.Nourish].HotTicksPerSecond = 0;
+            result.factors[(int)HealingSpell.Nourish].DirectHealsPerSecond = spellMix.NourishHealsPerMinute / 60f;
+            result.factors[(int)HealingSpell.Nourish].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.Nourish].DirectCritsPerSecond = spellMix.NourishCritsPerMinute / 60f;
+            result.factors[(int)HealingSpell.Nourish].CastsPerSecond = spellMix.NourishCPS;
+            result.factors[(int)HealingSpell.Nourish].CastFraction = spellMix.NourishCF;
+            result.factors[(int)HealingSpell.Nourish].Compute();
+
+            result.factors[(int)HealingSpell.HealingTouch].HealingPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].ManaPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].HotTicksPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].DirectHealsPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].HotCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].DirectCritsPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].CastsPerSecond = 0;
+            result.factors[(int)HealingSpell.HealingTouch].CastFraction = 0;
+            result.factors[(int)HealingSpell.HealingTouch].Compute();
+
+            result.TotalHealing = TotalHealing;
+
+            return result;
+        }
     }
 
     public enum SingleTargetBurstRotations
