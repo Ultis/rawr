@@ -1341,7 +1341,7 @@ namespace Rawr {
                 // Ashen Band of Vengeance - seems to be 60 sec iCD (wowhead)
                 float power = (float)int.Parse(match.Groups["power"].Value);
                 float time = (float)int.Parse(match.Groups["time"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = power }, time, 60f, 0.1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = power }, time, 60f, 0.1f));
             }
             else if ((match = new Regex(@"When struck in combat has a chance of increasing your armor by (?<armor>\d+) for (?<time>\d+) sec").Match(line)).Success)
             { 
