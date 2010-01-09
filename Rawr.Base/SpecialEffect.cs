@@ -1151,6 +1151,79 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Computes chance that proc is up at specific time assuming uniform trigger grid.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between spell ticks and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="time">Time in seconds since fight start.</param>
+        /// <returns>Returns chance that proc is up at specific time.</returns>
+        public float GetUptimePlot(float triggerInterval, float triggerChance, float attackSpeed, float time)
+        {
+            if (triggerChance == 0f || float.IsPositiveInfinity(triggerInterval))
+            {
+                return 0f;
+            }
+
+            const bool discretizationCorrection = true;
+
+            if (Cooldown > Duration)
+            {
+                if (triggerInterval > 0)
+                {
+                    double d = Duration / triggerInterval;
+                    double n = time / triggerInterval;
+                    double p = triggerChance * GetChance(attackSpeed);
+
+                    double c = Cooldown / triggerInterval;
+                    if (discretizationCorrection)
+                    {
+                        c += 0.5;
+                    }
+                    if (c < 1.0) c = 1.0;
+                    double x = n;
+
+                    double uptime = 0.0;
+                    int r = 1;
+                    while (x > 0)
+                    {
+                        uptime += SpecialFunction.Ibeta(r, x, p);
+                        double xd = x - d;
+                        if (xd > 0)
+                        {
+                            uptime -= SpecialFunction.Ibeta(r, xd, p);
+                        }
+                        r++;
+                        x -= c;
+                    }
+
+                    return (float)uptime;
+                }
+                else
+                {
+                    // this is a special case, meaning that it basically auto triggers on cooldown
+                    float t = time;
+                    float cc = Cooldown;
+                    float uptime = (t % cc <= Duration) ? 1.0f : 0.0f;
+                    return uptime;
+                }
+            }
+            else if (Cooldown == 0.0f)
+            {
+                // only stationary model so far
+                if (triggerInterval >= Duration) return Duration / triggerInterval * GetChance(attackSpeed) * triggerChance;
+                else return 1.0f - (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), Duration / triggerInterval);
+            }
+            else
+            {
+                // only stationary model so far
+                return 1.0f - 1.0f / (1.0f + Cooldown / triggerInterval * triggerChance * GetChance(attackSpeed)) * (float)Math.Pow(1f - triggerChance * GetChance(attackSpeed), (Duration - Cooldown) / triggerInterval);
+            }
+        }
+
+        /// <summary>
         /// Computes average number of procs per second given the frequency of triggers.
         /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>

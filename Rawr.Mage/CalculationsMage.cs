@@ -197,7 +197,7 @@ namespace Rawr.Mage
             {
                 if (_customRenderedChartNames == null)
                 {
-					_customRenderedChartNames = new string[] { "Sequence Reconstruction", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
+					_customRenderedChartNames = new string[] { "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
 				}
                 return _customRenderedChartNames;
             }
@@ -1034,6 +1034,8 @@ namespace Rawr.Mage
             string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Hit Rating", "10 Intellect", "10 Spirit" };
             Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.DarkBlue, Color.FromArgb(255, 255, 165, 0), Color.Olive, Color.FromArgb(255, 154, 205, 50), Color.Aqua, Color.FromArgb(255, 0, 0, 255) };
 
+            CharacterCalculationsMage calculations = calculationOptions.Calculations;
+
             List<float> X = new List<float>();
             List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
             Stats baseStats;
@@ -1056,6 +1058,163 @@ namespace Rawr.Mage
                     };
 
                     Base.Graph.RenderGraph(g, width, height, character, statsList, statColors, 100, "", "Dps Rating", Base.Graph.Style.Mage);
+                    break;
+                case "Proc Uptime":
+                    List<SpecialEffect> effectList = new List<SpecialEffect>();
+                    effectList.AddRange(calculations.SpellPowerEffects);
+                    effectList.AddRange(calculations.HasteRatingEffects);
+
+                    #region Legend
+                    legendY = 2;
+
+                    Color[] colors = new Color[] {
+                        Color.FromArgb(255,202,180,96), 
+                        Color.FromArgb(255,101,225,240),
+                        Color.FromArgb(255,0,4,3), 
+                        Color.FromArgb(255,238,238,30),
+                        Color.FromArgb(255,45,112,63), 
+                        Color.FromArgb(255,121,72,210), 
+                        Color.FromArgb(255,217,100,54), 
+                        Color.FromArgb(255,210,72,195), 
+                        Color.FromArgb(255,206,189,191), 
+                        Color.FromArgb(255,255,0,0), 
+                        Color.FromArgb(255,0,255,0), 
+                        Color.FromArgb(255,0,0,255), 
+                    };
+
+                    brushSubPoints = new Brush[effectList.Count];
+                    colorSubPointsA = new Color[effectList.Count];
+                    colorSubPointsB = new Color[effectList.Count];
+                    for (int i = 0; i < effectList.Count; i++)
+                    {
+                        Color baseColor = colors[i];
+                        brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
+                        colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
+                        colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
+                    }
+
+                    for (int i = 0; i < effectList.Count; i++)
+                    {
+                        g.DrawLine(new Pen(colors[i]), new Point(20, legendY + 7), new Point(50, legendY + 7));
+                        g.DrawString(effectList[i].ToString(), fontLegend, Brushes.Black, new Point(60, legendY));
+
+                        legendY += 16;
+                    }
+
+                    #endregion
+
+                    #region Graph Ticks
+                    graphStart = 30f;
+                    graphWidth = width - 50f;
+                    graphTop = legendY;
+                    graphBottom = height - 4 - 4 * effectList.Count;
+                    graphHeight = graphBottom - graphTop - 40;
+                    maxScale = calculationOptions.FightDuration;
+                    graphEnd = graphStart + graphWidth;
+                    ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float h = (float)Math.Round(graphBottom - graphHeight * i / 10.0);
+                        g.DrawLine(black25, graphStart - 4, h, graphEnd, h);
+                        //g.DrawLine(black200, graphStart - 4, h, graphStart, h);
+
+                        g.DrawString((i / 10.0).ToString("F1"), fontLegend, black200brush, graphStart - 15, h + 6, formatTick);
+                    }
+
+                    g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
+                    g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
+                    g.DrawLine(black75, ticks[3], graphTop + 36, ticks[3], graphTop + 39);
+                    g.DrawLine(black75, ticks[4], graphTop + 36, ticks[4], graphTop + 39);
+                    g.DrawLine(black75, ticks[5], graphTop + 36, ticks[5], graphTop + 39);
+                    g.DrawLine(black75, ticks[6], graphTop + 36, ticks[6], graphTop + 39);
+                    g.DrawLine(black75, graphEnd, graphTop + 41, graphEnd, height - 4);
+                    g.DrawLine(black75, ticks[0], graphTop + 41, ticks[0], height - 4);
+                    g.DrawLine(black50, ticks[1], graphTop + 41, ticks[1], height - 4);
+                    g.DrawLine(black50, ticks[2], graphTop + 41, ticks[2], height - 4);
+                    g.DrawLine(black25, ticks[3], graphTop + 41, ticks[3], height - 4);
+                    g.DrawLine(black25, ticks[4], graphTop + 41, ticks[4], height - 4);
+                    g.DrawLine(black25, ticks[5], graphTop + 41, ticks[5], height - 4);
+                    g.DrawLine(black25, ticks[6], graphTop + 41, ticks[6], height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
+                    g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
+                    g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphBottom, graphEnd + 4, graphBottom);
+
+                    g.DrawString(TimeFormat(0f), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.5f), fontLegend, black200brush, ticks[0], graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.75f), fontLegend, black150brush, ticks[1], graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.25f), fontLegend, black150brush, ticks[2], graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.125f), fontLegend, black75brush, ticks[3], graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.375f), fontLegend, black75brush, ticks[4], graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.625f), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
+                    g.DrawString(TimeFormat(maxScale * 0.875f), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
+                    #endregion
+
+                    for (int i = 0; i < effectList.Count; i++)
+                    {
+                        float procs = 0.0f;
+                        float triggers = 0.0f;
+                        for (int j = 0; j < calculations.SolutionVariable.Count; j++)
+                        {
+                            if (calculations.Solution[j] > 0)
+                            {
+                                Cycle c = calculations.SolutionVariable[j].Cycle;
+                                if (c != null)
+                                {
+                                    switch (effectList[i].Trigger)
+                                    {
+                                        case Trigger.DamageSpellCrit:
+                                        case Trigger.SpellCrit:
+                                            triggers += (float)calculations.Solution[j] * c.Ticks / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * c.CritProcs / c.CastTime;
+                                            break;
+                                        case Trigger.DamageSpellHit:
+                                        case Trigger.SpellHit:
+                                            triggers += (float)calculations.Solution[j] * c.Ticks / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * c.HitProcs / c.CastTime;
+                                            break;
+                                        case Trigger.SpellMiss:
+                                            triggers += (float)calculations.Solution[j] * c.Ticks / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * (1 - c.HitProcs) / c.CastTime;
+                                            break;
+                                        case Trigger.DamageSpellCast:
+                                        case Trigger.SpellCast:
+                                            triggers += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
+                                            break;
+                                        case Trigger.MageNukeCast:
+                                            triggers += (float)calculations.Solution[j] * c.NukeProcs / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * c.NukeProcs / c.CastTime;
+                                            break;
+                                        case Trigger.DamageDone:
+                                            triggers += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        float triggerInterval = calculations.CalculationOptions.FightDuration / triggers;
+                        float triggerChance = Math.Min(1.0f, procs / triggers);
+
+                        int steps = 200;
+                        PointF[] plot = new PointF[steps + 1];
+                        for (int tick = 0; tick <= steps; tick++)
+                        {
+                            float time = tick / (float)steps * calculations.CalculationOptions.FightDuration;
+                            plot[tick] = new PointF(graphStart + time / maxScale * graphWidth, graphBottom - graphHeight * effectList[i].GetUptimePlot(triggerInterval, triggerChance, 3.0f, time));
+                        }
+
+                        g.DrawLines(new Pen(colors[i]), plot);
+                    }
                     break;
                 case "Sequence Reconstruction":
 
@@ -1168,7 +1327,6 @@ namespace Rawr.Mage
                         #endregion
 
                         List<SequenceReconstruction.SequenceItem> sequence = calculationOptions.SequenceReconstruction.sequence;
-                        CharacterCalculationsMage calculations = calculationOptions.Calculations;
 
                         float mana = calculations.StartingMana;
                         int gemCount = 0;
