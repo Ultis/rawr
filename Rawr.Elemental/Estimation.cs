@@ -49,8 +49,11 @@ namespace Rawr.Elemental
         private Rotation getPriorityRotation(int type)
         {
             #region Elemental Mastery
-            if (talents.ElementalMastery > 0)
+            // Temporary ignore Elemental Mastery
+            // The talent is obviously useful but on a 3 minute cooldown.... so it's not very important for gear evaluation...
+            /*if (talents.ElementalMastery > 0)
                 spellbox.ApplyEM(ElementalMastery.getAverageUptime(talents.GlyphofElementalMastery, calcOpts.FightDuration));
+             */
             #endregion
             
             return new Rotation(talents, spellbox);
@@ -90,7 +93,8 @@ namespace Rawr.Elemental
             int nPasses = 2, k;
             for (k = 0; k < nPasses; k++)
             {
-                procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
+                procStats = DoSpecialEffects(character, stats, rot, calcOpts.FightDuration);
+                //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
                 e.Update(stats, procStats, talents, calcOpts);
                 rot = e.getPriorityRotation(calcOpts.rotationType);
             }
@@ -127,11 +131,15 @@ namespace Rawr.Elemental
             if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
 
             #region SpecialEffects from procs etc.
-            procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
+            procStats = DoSpecialEffects(character, stats, rot, calcOpts.FightDuration);
+            //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
             //damage procs (Thunder Capacitor etc.) are effected by spellcrit and damage debuffs
             damage = procStats.ArcaneDamage * (1 + stats.BonusArcaneDamageMultiplier) + procStats.NatureDamage * (1 + stats.BonusNatureDamageMultiplier) + procStats.FireDamage * (1 + stats.BonusFireDamageMultiplier) + procStats.ShadowDamage * (1 + stats.BonusShadowDamageMultiplier);
-            damage *= (1 + stats.SpellCrit * .5f); // but only with the normal 50% dmg bonus
-            rot.DPS += damage;
+            if (damage > 0)
+            {
+                damage *= (1 + stats.SpellCrit * .5f); // but only with the normal 50% dmg bonus
+                rot.DPS += damage;
+            }
             #endregion
 
             float TotalDamage = TimeUntilOOM * rot.DPS;
@@ -153,6 +161,10 @@ namespace Rawr.Elemental
             calculatedStats.BurstPoints = (1f - bsRatio) * 2f * rot.DPS;
             calculatedStats.SustainedPoints = bsRatio * 2f * TotalDamage / FightDuration;
             calculatedStats.OverallPoints = calculatedStats.BurstPoints + calculatedStats.SustainedPoints;
+
+            calculatedStats.CombatStats = stats.Clone();
+            calculatedStats.CombatStats.Accumulate(procStats);
+
             calculatedStats.ManaRegenInFSR = ManaRegInFSR;
             calculatedStats.ManaRegenOutFSR = ManaRegOutFSR;
             calculatedStats.ReplenishMP5 = replenishRegen;
@@ -181,6 +193,120 @@ namespace Rawr.Elemental
             calculatedStats.RotationDetails = rot.ToDetailedString();
         }
 
+        protected static void CalculateTriggers(Rotation rot, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
+        {
+            float CastInterval = 1f / rot.getCastsPerSecond();
+            float WeightedCritChance = rot.getWeightedCritchance();
+            float WeightedHitChance = rot.getWeightedHitchance();
+
+            triggerIntervals[Trigger.Use] = 0f;
+            triggerChances[Trigger.Use] = 1f;
+
+            triggerIntervals[Trigger.DamageDone] = 1f / (rot.getCastsPerSecond() + 1f / rot.FS.PeriodicTickTime);
+            // flameshock ticks are not taken into account. the chance would be slightly higher.
+            triggerChances[Trigger.DamageDone] = WeightedHitChance;
+
+            triggerIntervals[Trigger.SpellMiss] = CastInterval;
+            triggerChances[Trigger.SpellMiss] = 1f - WeightedHitChance;
+
+            triggerIntervals[Trigger.SpellHit] = CastInterval;
+            triggerChances[Trigger.SpellHit] = WeightedHitChance;
+
+            triggerIntervals[Trigger.DamageSpellHit] = CastInterval;
+            triggerChances[Trigger.DamageSpellHit] = WeightedHitChance;
+
+            triggerIntervals[Trigger.DoTTick] = 1f / rot.FS.PeriodicTickTime;
+            triggerChances[Trigger.DoTTick] = 1f;
+
+            triggerIntervals[Trigger.SpellCast] = CastInterval;
+            triggerChances[Trigger.SpellCast] = 1f;
+
+            triggerIntervals[Trigger.DamageSpellCast] = CastInterval;
+            triggerChances[Trigger.DamageSpellCast] = 1f;
+
+            triggerIntervals[Trigger.SpellCrit] = CastInterval;
+            triggerChances[Trigger.SpellCrit] = WeightedCritChance;
+
+            triggerIntervals[Trigger.DamageSpellCrit] = CastInterval;
+            triggerChances[Trigger.DamageSpellCrit] = WeightedCritChance;
+
+            triggerIntervals[Trigger.ShamanLightningBolt] = 1f / rot.getCastsPerSecond(typeof(LightningBolt));
+            triggerChances[Trigger.ShamanLightningBolt] = 1f;
+
+            triggerIntervals[Trigger.ShamanShock] = 1f / rot.getCastsPerSecond(typeof(Shock));
+            triggerChances[Trigger.ShamanShock] = 1f;
+
+            triggerIntervals[Trigger.ShamanFlameShockDoTTick] = 1f / rot.getTicksPerSecond(typeof(FlameShock));
+            triggerChances[Trigger.ShamanFlameShockDoTTick] = 1f;
+        }
+
+        protected static Stats DoSpecialEffects(Character character, Stats stats, Rotation rot, float FightDuration)
+        {
+            #region Initialize Triggers
+            Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>(); ;
+            Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>(); ;
+            CalculateTriggers(rot, triggerIntervals, triggerChances);
+            #endregion
+
+            Stats procStats = new Stats();
+
+            List<SpecialEffect> effects = new List<SpecialEffect>();
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                effect.Stats.GenerateSparseData();
+
+                #region Filter out unhandled effects
+                if (!triggerIntervals.ContainsKey(effect.Trigger)) continue;
+                #endregion
+
+                effects.Add(effect);
+            }
+
+            AccumulateSpecialEffects(character, ref procStats, FightDuration, triggerIntervals, triggerChances, effects, 1f);
+            return procStats;
+        }
+
+        protected static void AccumulateSpecialEffects(Character character, ref Stats stats, float FightDuration, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, List<SpecialEffect> effects, float weight)
+        {
+            foreach (SpecialEffect effect in effects)
+            {
+                Stats effectStats = effect.Stats;
+
+                float upTime = 0f;
+
+                if (effect.Trigger == Trigger.Use)
+                {
+                    if (effect.Stats._rawSpecialEffectDataSize >= 1)
+                    {
+                        upTime = effect.GetAverageUptime(0f, 1f, 0, FightDuration);
+                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>(effect.Stats.SpecialEffects());
+                        Stats _stats2 = effectStats.Clone();
+                        AccumulateSpecialEffects(character, ref _stats2, effect.Duration, triggerIntervals, triggerChances, nestedEffect, upTime);
+                        effectStats = _stats2;
+                    }
+                    else
+                    {
+                        upTime = effect.GetAverageStackSize(0f, 1f, 0, FightDuration);
+                    }
+                }
+                else if (effect.Duration == 0f)
+                {
+                    upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger],
+                                                             0, FightDuration);
+                }
+                else if (triggerIntervals.ContainsKey(effect.Trigger))
+                {
+                    upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger],
+                                                             0, FightDuration);
+                }
+
+                if (upTime > 0f)
+                {
+                    stats.Accumulate(effectStats, upTime * weight);
+                }
+            }
+        }
+        
         private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, Rotation rot)
         {
             Stats statsAverage = new Stats();
