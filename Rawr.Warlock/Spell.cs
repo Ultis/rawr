@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 #if RAWR3
 using System.Windows.Media;
+using System.Diagnostics;
 #else
 using System.Diagnostics;
 using System.Drawing;
@@ -640,11 +641,11 @@ namespace Rawr.Warlock
             ShadowEmbrace shadowEmbrace = (ShadowEmbrace) sender;
             if (shadowEmbrace.Active)
             {
-                Trace.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura is active - {1} [shadow school] periodic damage increased by 5%", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
+				Debug.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura is active - {1} [shadow school] periodic damage increased by 5%", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
             }
             else
             {
-                Trace.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura has been removed - {1} periodic damage loses 5% damage bonus", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
+				Debug.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura has been removed - {1} periodic damage loses 5% damage bonus", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
             }
         }
         #endregion

@@ -50,7 +50,7 @@ namespace Rawr.Warlock
         /// <summary>
         /// The events that occurred during combat.
         /// </summary>
-        public ArrayList Events = new ArrayList();
+        public List<Spell> Events = new List<Spell>();
 
         public string Name { get; protected set; }
         public string Abilities { get; protected set; }
@@ -169,7 +169,7 @@ namespace Rawr.Warlock
                 OverallDamage += (float)spell.SpellStatistics.OverallDamage();
                 TotalManaCost += (float)spell.SpellStatistics.ManaUsed;
 
-                Trace.WriteLine(String.Format("thread:[{0}] | - {1}: #Hits={2} [Damage={3:0}, Average={4:0}], #Crits={5} [Damage={6:0}, Average={7:0}], #Misses={8}", 
+				Debug.WriteLine(String.Format("thread:[{0}] | - {1}: #Hits={2} [Damage={3:0}, Average={4:0}], #Crits={5} [Damage={6:0}, Average={7:0}], #Misses={8}", 
                                               threadid, spell.Name, 
                                               spell.SpellStatistics.HitCount, spell.SpellStatistics.HitDamage ,spell.SpellStatistics.HitAverage(),
                                               spell.SpellStatistics.CritCount, spell.SpellStatistics.CritDamage, spell.SpellStatistics.CritAverage(),
@@ -179,7 +179,7 @@ namespace Rawr.Warlock
             }
 
             DpsPoints = (OverallDamage / ActiveTime);
-            Trace.WriteLine(string.Format("thread:[{0}] | ActiveTime={1}", threadid, ActiveTime));
+			Debug.WriteLine(string.Format("thread:[{0}] | ActiveTime={1}", threadid, ActiveTime));
 
             //StringBuilder sb =  new StringBuilder();
             //foreach (Spell spell in Events)
@@ -205,8 +205,8 @@ namespace Rawr.Warlock
 
             List<string> scheduledTicks = new List<string>();
 
-            Trace.WriteLine("-------------------");
-            Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation starts [timelimit: {2:0.00}]", threadID, timer, timelimit));
+			Debug.WriteLine("-------------------");
+			Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation starts [timelimit: {2:0.00}]", threadID, timer, timelimit));
 
             while (queue.Count != 0)
             {
@@ -243,7 +243,7 @@ namespace Rawr.Warlock
                 //check if there is enough time left to cast this spell
                 if ((timer + casttime) < timelimit)
                 {
-                    Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - begins casting: {2} [{3:0.00}s cast, {4:0.00}s latency] - finish casting @ {5:0.00}s", threadID, timer, spell.Name, spell.CastTime(), latency, (timer + casttime)));
+					Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - begins casting: {2} [{3:0.00}s cast, {4:0.00}s latency] - finish casting @ {5:0.00}s", threadID, timer, spell.Name, spell.CastTime(), latency, (timer + casttime)));
 
                     //the casttime is the time spent waving your hands around in the air
                     timer += (casttime);
@@ -263,7 +263,7 @@ namespace Rawr.Warlock
                     //however, in cases where items have the same priority value, they are treated as FIFO.
                     spell.ScheduledTime = timer + delay;
 
-                    Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - finished casting: {2} - re-cast @ approximately {3:0.00}s", threadID, timer, spell.Name, spell.ScheduledTime));
+					Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - finished casting: {2} - re-cast @ approximately {3:0.00}s", threadID, timer, spell.Name, spell.ScheduledTime));
 
                     //the spell lands on the target, so calculate damage and trigger any related effects
                     spell.Execute();
@@ -280,7 +280,7 @@ namespace Rawr.Warlock
                     else
                     {
                         //the simulation will end before this spell can be re-cast, so we wont bother adding it to the queue
-                        Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - removing {2} spell - the simulation ends before it can be re-casted", threadID, timer, spell.Name));
+						Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - removing {2} spell - the simulation ends before it can be re-casted", threadID, timer, spell.Name));
                     }
                 }
                 else
@@ -291,19 +291,19 @@ namespace Rawr.Warlock
                     if (queue.Count > 0)
                     {
                         Spell next = queue.Peek();
-                        Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - not enough time to cast {2} [{3:0.00}s cast, {4:0.00}s lat] - trying next spell: {5}", threadID, timer, spell.Name, spell.CastTime(), latency, next.Name));
+						Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - not enough time to cast {2} [{3:0.00}s cast, {4:0.00}s lat] - trying next spell: {5}", threadID, timer, spell.Name, spell.CastTime(), latency, next.Name));
                     }
                     else
                     {
-                        Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - not enough time to cast {2} - [this was the last spell in the queue]", threadID, timer, spell.Name));
+						Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - not enough time to cast {2} - [this was the last spell in the queue]", threadID, timer, spell.Name));
                     }
                 }
             }
 
             ActiveTime = timer;
-            Trace.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation ends [no spells left in the queue]", threadID, timer));
+			Debug.WriteLine(String.Format("thread:[{0}] | time: {1:0.00} - simulation ends [no spells left in the queue]", threadID, timer));
             DateTime stop = DateTime.Now;
-            Trace.WriteLine(String.Format("thread:[{0}] | simulation time: {1} seconds", threadID, (stop - start).Seconds));
+			Debug.WriteLine(String.Format("thread:[{0}] | simulation time: {1} seconds", threadID, (stop - start).Seconds));
         }
 
         private double GetManaRegenFromSpiritAndIntellect()

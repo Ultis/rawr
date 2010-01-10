@@ -76,7 +76,7 @@ namespace Rawr.Warlock
         /// </summary>
         protected virtual void ApplyAura()
         {
-            Trace.WriteLine(String.Format("thread:[{0}] | {1} aura is active", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
+            Debug.WriteLine(String.Format("thread:[{0}] | {1} aura is active", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
             OnAuraUpdate();
         }
 
@@ -85,7 +85,7 @@ namespace Rawr.Warlock
         /// </summary>
         protected virtual void RemoveAura()
         {
-            Trace.WriteLine(String.Format("thread:[{0}] | {1} aura has ended", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
+			Debug.WriteLine(String.Format("thread:[{0}] | {1} aura has ended", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
             OnAuraUpdate();
         }
 
@@ -168,7 +168,7 @@ namespace Rawr.Warlock
                 StackSize += 1;
             }
 
-            Trace.WriteLine(String.Format("{0} aura updated - current stacksize = {1}", Name, StackSize));
+			Debug.WriteLine(String.Format("{0} aura updated - current stacksize = {1}", Name, StackSize));
         }
     }
 
