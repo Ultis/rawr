@@ -133,8 +133,8 @@ namespace Rawr.UI
         //#endregion
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
-        {
-            UpdateGraph();
+		{
+			UpdateGraph();
         }
 
         private bool _loading;
@@ -204,7 +204,7 @@ namespace Rawr.UI
 		private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
 
         private void UpdateGraphGear(string subgraph)
-        {
+		{
 			_characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
 			bool seenEquippedItem = (Character[_characterSlot] == null);
 
@@ -228,8 +228,9 @@ namespace Rawr.UI
 			if (!seenEquippedItem) listItemCalculations.Add(Calculations.GetItemCalculations(Character[_characterSlot], Character, _characterSlot));
 			_itemCalculations = FilterTopXGemmings(listItemCalculations);
 
-            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
-            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+
+			ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+			ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
 			ComparisonGraph.DisplayCalcs(_itemCalculations);
         }
 

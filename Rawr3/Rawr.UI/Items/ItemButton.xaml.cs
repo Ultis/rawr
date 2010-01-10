@@ -44,7 +44,7 @@ namespace Rawr.UI
         }
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
-        {
+		{
             if (character != null)
             {
                 item = character[Slot];

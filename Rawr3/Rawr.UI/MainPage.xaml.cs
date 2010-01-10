@@ -103,11 +103,17 @@ namespace Rawr.UI
         }
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
-        {
+		{
+#if DEBUG
+			DateTime start = DateTime.Now;
+#endif
             this.Cursor = Cursors.Wait;
             CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(character, null, true, true, true);
             CalculationDisplay.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
             this.Cursor = Cursors.Arrow;
+#if DEBUG
+			System.Diagnostics.Debug.WriteLine("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
+#endif
         }
 
         public MainPage()
@@ -196,9 +202,18 @@ namespace Rawr.UI
                 Application.Current.Install();
             }
 #endif
-        }
+		}
 
-        private void NewCharacter()
+		private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
+		{
+			DateTime start = DateTime.Now;
+			for (int i = 0; i < 20000; i++)
+				Calculations.GetCharacterCalculations(Character);
+			TimeSpan ts = DateTime.Now.Subtract(start);
+			MessageBox.Show(ts.ToString());
+		}
+
+		private void NewCharacter()
         {
             Character c = new Character();
             c.CurrentModel = Character.CurrentModel;

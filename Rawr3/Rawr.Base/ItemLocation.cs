@@ -888,7 +888,7 @@ namespace Rawr
             }
             ItemLocation[] prev = {null,null};
             _allLocations.TryGetValue(itemId, out prev);
-            if (prev[0] != null) item.Note = prev[0].Note;
+            if (prev != null && prev[0] != null) item.Note = prev[0].Note;
             _allLocations[itemId] = new ItemLocation[] { item, null };
 
             return item;

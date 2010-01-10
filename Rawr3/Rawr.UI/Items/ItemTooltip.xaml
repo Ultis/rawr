@@ -7,19 +7,19 @@
 	xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" 
 	x:Class="Rawr.UI.ItemTooltip"
     d:DesignWidth="300" d:DesignHeight="150">
-    <UserControl.Resources>
-        <Style x:Key="SmallIconStyle" TargetType="Image">
-            <Setter Property="Width" Value="16"/>
-            <Setter Property="Height" Value="16"/>
-            <Setter Property="Margin" Value="1,1,1,1"/>
-        </Style>
-    </UserControl.Resources>
-    <Popup x:Name="ItemPopup">
-		<Grid x:Name="ItemGrid" MaxWidth="350">
+  <UserControl.Resources>
+      <Style x:Key="SmallIconStyle" TargetType="Image">
+          <Setter Property="Width" Value="16"/>
+          <Setter Property="Height" Value="16"/>
+          <Setter Property="Margin" Value="1,1,1,1"/>
+      </Style>
+  </UserControl.Resources>
+  <Popup x:Name="ItemPopup">
+		<Grid CacheMode="BitmapCache" x:Name="ItemGrid" MaxWidth="350">
 			<Rectangle RadiusX="3" RadiusY="3">
-				<Rectangle.Effect>
+        <!--Rectangle.Effect> //Turning this effect off for performance reasons, may add it back in later
 					<DropShadowEffect ShadowDepth="4" Opacity="0.35" BlurRadius="10"/>
-				</Rectangle.Effect>
+				</Rectangle.Effect-->
 				<Rectangle.Stroke>
 					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 						<GradientStop Color="#FFA3AEB9"/>

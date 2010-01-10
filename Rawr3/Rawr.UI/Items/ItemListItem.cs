@@ -63,7 +63,7 @@ namespace Rawr.UI
 					ratings[i] = new ItemListItemRating()
 					{
 						Brush = new SolidColorBrush(colors[i]),
-						Width = _maxWidth * ((double)_calc.SubPoints[i] / _maxValue)
+						Width = Math.Max(0d, _maxWidth * ((double)_calc.SubPoints[i] / _maxValue))
 					};
 				return ratings;
 			}

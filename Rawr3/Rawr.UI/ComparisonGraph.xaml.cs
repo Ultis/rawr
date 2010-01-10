@@ -83,10 +83,11 @@ namespace Rawr.UI
                 legendItems = value;
                 if (legendItems != null)
                 {
-                    if (comparisonItems != null)
-                    {
-                        foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
-                    }
+					//Turning this off for performance reasons. You should re-call DisplayCalcs after setting LegendItems
+					//if (comparisonItems != null)
+					//{
+					//    foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
+					//}
                     LegendStack.Children.Clear();
                     foreach (KeyValuePair<string, Color> kvp in legendItems)
                     {
@@ -130,7 +131,10 @@ namespace Rawr.UI
             if (calcs == null) return;
             currentCalcs = calcs;
             if (comparisonItems == null) comparisonItems = new List<ComparisonGraphItem>();
-            int i = 0;
+			int i = 0;
+#if DEBUG
+			DateTime dtA = DateTime.Now;
+#endif
 
             minScale = 0; maxScale = 0;
             foreach (ComparisonCalculationBase c in calcs)
@@ -173,7 +177,11 @@ namespace Rawr.UI
 
                 minScale = -(float)Math.Ceiling(-minScale / totalScale * 8f) * (totalScale / 8f);
                 maxScale = (float)Math.Ceiling(maxScale / totalScale * 8f) * (totalScale / 8f);
-            }
+			}
+#if DEBUG
+			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase A: {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds);
+			DateTime dtB = DateTime.Now;
+#endif
 
             ChangedSize(this, null);
             IOrderedEnumerable<ComparisonCalculationBase> orderedCalcs;
@@ -182,9 +190,12 @@ namespace Rawr.UI
             else if (Sort == ComparisonSort.Overall)
                 orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.OverallPoints);
             else
-                orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)Sort]);
-
-            foreach (ComparisonCalculationBase c in orderedCalcs)
+				orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)Sort]);
+#if DEBUG
+			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase B: {0}ms", DateTime.Now.Subtract(dtB).TotalMilliseconds);
+			DateTime dtC = DateTime.Now;
+#endif
+			foreach (ComparisonCalculationBase c in orderedCalcs)
             {
                 if (c == null) continue;
                 ComparisonGraphItem item;
@@ -214,8 +225,16 @@ namespace Rawr.UI
                 
                 item.Visibility = Visibility.Visible;
                 i++;
-            }
-            for (; i < comparisonItems.Count; i++) comparisonItems[i].Visibility = Visibility.Collapsed;
+			}
+#if DEBUG
+			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase C: {0}ms", DateTime.Now.Subtract(dtC).TotalMilliseconds);
+			DateTime dtD = DateTime.Now;
+#endif
+			for (; i < comparisonItems.Count; i++) comparisonItems[i].Visibility = Visibility.Collapsed;
+#if DEBUG
+			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase D: {0}ms", DateTime.Now.Subtract(dtD).TotalMilliseconds);
+			System.Diagnostics.Debug.WriteLine("Finished DisplayCalcs: Total {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds);
+#endif
         }
 
         private void NameGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

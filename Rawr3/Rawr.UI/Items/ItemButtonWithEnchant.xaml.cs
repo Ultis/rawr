@@ -48,7 +48,7 @@ namespace Rawr.UI
         private ItemInstance gear;
         private Item enchant;
         public void character_CalculationsInvalidated(object sender, EventArgs e)
-        {
+		{
             if (character != null)
             {
                 item = character[Slot];

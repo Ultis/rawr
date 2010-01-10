@@ -106,6 +106,11 @@ namespace Rawr.UI
 			InitializeComponent();
 		}
 
+		void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+		{
+			//Handling this event makes it not throw the exception up to the user. This occurs when a talent image cannot be found, which is fine to ignore.
+		}
+
 		private void TalentClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0) Current--;

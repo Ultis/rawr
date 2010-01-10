@@ -1481,12 +1481,22 @@ namespace Rawr //O O . .
 		public event EventHandler CalculationsInvalidated;
 		public void OnCalculationsInvalidated()
 		{
+#if DEBUG
+			if (CalculationsInvalidated != null) System.Diagnostics.Debug.WriteLine("Starting CalculationsInvalidated");
+			DateTime start = DateTime.Now;
+#endif
             gemCountValid = false; // invalidate gem counts
             InvalidateItemInstances();
             if (IsLoading) return;
 			RecalculateSetBonuses();
 
-			if (CalculationsInvalidated != null) CalculationsInvalidated(this, EventArgs.Empty);
+			if (CalculationsInvalidated != null)
+			{
+				CalculationsInvalidated(this, EventArgs.Empty);
+#if DEBUG
+				System.Diagnostics.Debug.WriteLine("Finished CalculationsInvalidated: Total {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
+#endif
+			}
 		}
 
 		public event EventHandler ClassChanged;

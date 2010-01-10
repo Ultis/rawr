@@ -20,6 +20,13 @@ namespace Rawr.Silverlight
 
         public App()
         {
+#if DEBUG
+#if SILVERLIGHT
+			Application.Current.Host.Settings.EnableFrameRateCounter = true;
+			//Application.Current.Host.Settings.EnableRedrawRegions = true;
+			//Application.Current.Host.Settings.EnableCacheVisualization = true;
+#endif
+#endif
             this.Startup += this.Application_Startup;
             this.Exit += this.Application_Exit;
             this.UnhandledException += this.Application_UnhandledException;

@@ -14,7 +14,7 @@
 		 Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="EnchantButton_MouseLeave"/>
 		<Button x:Name="MainButton" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="70" Margin="0,0,0,15"
 			 Click="MainButton_Clicked" MouseEnter="MainButton_MouseEnter" MouseLeave="MainButton_MouseLeave">
-			<Image x:Name="IconImage" Height="Auto" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
+			<Image CacheMode="BitmapCache" x:Name="IconImage" Height="Auto" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
 		</Button>
 		<Popup x:Name="ListPopup" HorizontalOffset="72">
 			<local:ItemListControl x:Name="ComparisonItemList"/>

@@ -9,8 +9,8 @@
 	MouseLeftButtonUp="TalentClicked">
 
 	<Grid x:Name="LayoutRoot">
-		<Image x:Name="TalentImage" Width="43" Height="43" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="3,3,0,0"/>
-		<Image x:Name="OverlayImage" Margin="0,0,0,0" Width="56" Height="54" VerticalAlignment="Top" HorizontalAlignment="Left" Source="../Images/icon-over-grey.png" />
+		<Image x:Name="TalentImage" Width="43" Height="43" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="3,3,0,0" ImageFailed="Image_ImageFailed"/>
+		<Image x:Name="OverlayImage" Margin="0,0,0,0" Width="56" Height="54" VerticalAlignment="Top" HorizontalAlignment="Left" Source="../Images/icon-over-grey.png" ImageFailed="Image_ImageFailed" />
 		<TextBlock x:Name="RankLabel" Margin="0,38,-2,1" Width="34" Text="0/5" Foreground="#FFFFFFFF" d:LayoutOverrides="Width" HorizontalAlignment="Right"/>
 	</Grid>
 </UserControl>

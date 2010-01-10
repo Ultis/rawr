@@ -77,7 +77,7 @@ namespace Rawr.UI
         public event EventHandler SelectedItemChanged;
 
         private void character_CalculationsInvalidated(object sender, EventArgs e)
-        {
+		{
             IsPopulated = false;
         }
 
@@ -114,107 +114,116 @@ namespace Rawr.UI
 		}
         #endregion
 
+		private bool _buildingListItems = false;
         private void BuildListItems()
         {
-            if (Character == null) return;
-            bool seenEquippedItem = (Character[Slot] == null);
-
-            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-            if (IsEnchantList)
-            {
-                CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
-                if (Character != null && current != null)
-                {
-                    itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current, false);
-                }
-            }
-            else if (IsGemList)
-            {
-                Calculations.ClearCache();
-                List<Item> relevantItems = Character.GetRelevantItems(Slot);
-                foreach (Item item in relevantItems)
-                {
-                    ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
-                    if (SelectedItem != null && SelectedItem.Id == item.Id)
-                    {
-                        itemCalc.Equipped = true;
-                        seenEquippedItem = true;
-                    }
-                    itemCalculations.Add(itemCalc);
-                }
-                if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
-            }
-            else
-            {
-                Calculations.ClearCache();
-                List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
-                if (relevantItemInstances.Count > 0)
-                {
-                    foreach (ItemInstance item in relevantItemInstances)
-                    {
-                        if (!seenEquippedItem && Character[Slot].Equals(item)) seenEquippedItem = true;
-                        itemCalculations.Add(Calculations.GetItemCalculations((ItemInstance)item, Character, Slot));
-                    }
-                }
-                if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(Character[Slot], Character, Slot));
-            }
-
-            float maxValue = itemCalculations.Count == 0 ? 100f : itemCalculations.Max(c => c.OverallPoints);
-
-			Items.Clear();
-			List<ItemListItem> itemListItems = new List<ItemListItem>();
-			ItemListItem selectedListItem = null;
-			int selectedEnchantId = 0;
-			if (IsEnchantList)
+			try
 			{
-				Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
-				if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
-			}
-            else if (IsGemList)
-            {
-                ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
-                emptyCalcs.Name = "Empty";
-                emptyCalcs.Item = new Item();
-                emptyCalcs.Item.Name = "Empty";
-                emptyCalcs.Item.Id = -1;
-                emptyCalcs.Equipped = SelectedItem == null;
-                itemCalculations.Add(emptyCalcs);
-            }
-            else
-            {
-                ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
-                emptyCalcs.Name = "Empty";
-                emptyCalcs.Item = new Item();
-                emptyCalcs.Item.Name = "Empty";
-                emptyCalcs.ItemInstance = new ItemInstance();
-                emptyCalcs.ItemInstance.Id = -1;
-                emptyCalcs.Equipped = Character[Slot] == null;
-                itemCalculations.Add(emptyCalcs);
-            }
-			foreach (ComparisonCalculationBase calc in itemCalculations)
-			{
-				ItemListItem itemListItem = new ItemListItem(calc, maxValue, 344d);
-				itemListItems.Add(itemListItem);
+				_buildingListItems = true;
+				if (Character == null) return;
+				bool seenEquippedItem = (Character[Slot] == null);
+
+				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 				if (IsEnchantList)
 				{
-					if (itemListItem.EnchantId == selectedEnchantId)
-						selectedListItem = itemListItem;
+					CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
+					if (Character != null && current != null)
+					{
+						itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current, false);
+					}
 				}
-                else if (IsGemList)
-                {
-                    if ((SelectedItem != null && calc.Item.Id == SelectedItem.Id) || (calc.Item.Id == -1 && SelectedItem == null))
-                        selectedListItem = itemListItem;
-                }
-                else
-                {
-                    if (calc.ItemInstance == Character[Slot] || (calc.ItemInstance.Id == -1 && Character[Slot] == null))
-                        selectedListItem = itemListItem;
-                }
+				else if (IsGemList)
+				{
+					Calculations.ClearCache();
+					List<Item> relevantItems = Character.GetRelevantItems(Slot);
+					foreach (Item item in relevantItems)
+					{
+						ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+						if (SelectedItem != null && SelectedItem.Id == item.Id)
+						{
+							itemCalc.Equipped = true;
+							seenEquippedItem = true;
+						}
+						itemCalculations.Add(itemCalc);
+					}
+					if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+				}
+				else
+				{
+					Calculations.ClearCache();
+					List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(Slot);
+					if (relevantItemInstances.Count > 0)
+					{
+						foreach (ItemInstance item in relevantItemInstances)
+						{
+							if (!seenEquippedItem && Character[Slot].Equals(item)) seenEquippedItem = true;
+							itemCalculations.Add(Calculations.GetItemCalculations((ItemInstance)item, Character, Slot));
+						}
+					}
+					if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(Character[Slot], Character, Slot));
+				}
+
+				float maxValue = itemCalculations.Count == 0 ? 100f : itemCalculations.Max(c => c.OverallPoints);
+
+				Items.Clear();
+				List<ItemListItem> itemListItems = new List<ItemListItem>();
+				ItemListItem selectedListItem = null;
+				int selectedEnchantId = 0;
+				if (IsEnchantList)
+				{
+					Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
+					if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
+				}
+				else if (IsGemList)
+				{
+					ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+					emptyCalcs.Name = "Empty";
+					emptyCalcs.Item = new Item();
+					emptyCalcs.Item.Name = "Empty";
+					emptyCalcs.Item.Id = -1;
+					emptyCalcs.Equipped = SelectedItem == null;
+					itemCalculations.Add(emptyCalcs);
+				}
+				else
+				{
+					ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+					emptyCalcs.Name = "Empty";
+					emptyCalcs.Item = new Item();
+					emptyCalcs.Item.Name = "Empty";
+					emptyCalcs.ItemInstance = new ItemInstance();
+					emptyCalcs.ItemInstance.Id = -1;
+					emptyCalcs.Equipped = Character[Slot] == null;
+					itemCalculations.Add(emptyCalcs);
+				}
+				foreach (ComparisonCalculationBase calc in itemCalculations)
+				{
+					ItemListItem itemListItem = new ItemListItem(calc, maxValue, 344d);
+					itemListItems.Add(itemListItem);
+					if (IsEnchantList)
+					{
+						if (itemListItem.EnchantId == selectedEnchantId)
+							selectedListItem = itemListItem;
+					}
+					else if (IsGemList)
+					{
+						if ((SelectedItem != null && calc.Item.Id == SelectedItem.Id) || (calc.Item.Id == -1 && SelectedItem == null))
+							selectedListItem = itemListItem;
+					}
+					else
+					{
+						if (calc.ItemInstance == Character[Slot] || (calc.ItemInstance.Id == -1 && Character[Slot] == null))
+							selectedListItem = itemListItem;
+					}
+				}
+				Items.AddRange(itemListItems);
+				listBoxItems.SelectedItem = selectedListItem;
+				listBoxItems.Focus();
+				IsPopulated = true;
 			}
-			Items.AddRange(itemListItems);
-			listBoxItems.SelectedItem = selectedListItem;
-			listBoxItems.Focus();
-            IsPopulated = true;
+			finally
+			{
+				_buildingListItems = false;
+			}
         }
 
 		private void BuildSorts()
@@ -263,50 +272,59 @@ namespace Rawr.UI
 
         private void listBoxItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                if (IsEnchantList)
-                {
-                    ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
-                    ItemInstance copy = Character[Slot].Clone();
-                    copy.EnchantId = listItem.EnchantId;
-                    IsShown = false;
-                    IsPopulated = false;
-                    Character[Slot] = copy;
-                }
-                else if (IsGemList)
-                {
-                    ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
-                    IsShown = false;
-                    IsPopulated = false;
-                    SelectedItem = listItem.Item.Id == -1 ? null : listItem.Item;
-                }
-                else
-                {
-                    ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
-                    IsShown = false;
-                    IsPopulated = false;
-                    Character[Slot] = listItem.ItemInstance.Id == -1 ? null : listItem.ItemInstance;
-                }
-                this.Close();
-            }
-            catch { }
-            this.Close();
-        }
-
-		private void UserControl_LostFocus(object sender, RoutedEventArgs e)
-		{
-			FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
-			if (focus is ComboBoxItem && comboBoxSort.Items.Contains(focus.DataContext))
-				focus = comboBoxSort;
-			DependencyObject parent = VisualTreeHelper.GetParent(focus);
-			while (parent != null && parent != this)
-				parent = VisualTreeHelper.GetParent(parent);
-			if (parent == null)
+			if (!_buildingListItems)
 			{
-				//focus isn't within this control
+				try
+				{
+					if (IsEnchantList)
+					{
+						ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
+						ItemInstance copy = Character[Slot].Clone();
+						copy.EnchantId = listItem.EnchantId;
+						IsShown = false;
+						IsPopulated = false;
+						Character[Slot] = copy;
+					}
+					else if (IsGemList)
+					{
+						ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
+						IsShown = false;
+						IsPopulated = false;
+						SelectedItem = listItem.Item.Id == -1 ? null : listItem.Item;
+					}
+					else
+					{
+						ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
+						IsShown = false;
+						IsPopulated = false;
+						if (listItem != null)
+							Character[Slot] = listItem.ItemInstance.Id == -1 ? null : listItem.ItemInstance;
+					}
+				}
+				catch { }
 				this.Close();
 			}
+        }
+
+		//private void UserControl_LostFocus(object sender, RoutedEventArgs e)
+		//{
+		//    FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
+		//    if (focus is ComboBoxItem && comboBoxSort.Items.Contains(focus.DataContext))
+		//        focus = comboBoxSort;
+		//    DependencyObject parent = VisualTreeHelper.GetParent(focus);
+		//    while (parent != null && parent != this)
+		//        parent = VisualTreeHelper.GetParent(parent);
+		//    if (parent == null)
+		//    {
+		//        //focus isn't within this control
+		//        this.Close();
+		//    }
+		//}
+
+		private void Background_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.OriginalSource == sender)
+				Close();
 		}
 
 		private void Close()
