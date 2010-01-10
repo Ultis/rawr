@@ -401,29 +401,15 @@ namespace Rawr {
         CinderglacierProc,
         #endregion
         #region Damage Procs
-        ProcdPhysicalDamageMin,
-        ProcdPhysicalDamageMax,
-        ArcaneDamage, // This is Legacy
-        ProcdArcaneDamageMin,
-        ProcdArcaneDamageMax,
-        HolyDamage, // This is Legacy
-        ProcdHolyDamageMin,
-        ProcdHolyDamageMax,
-        NatureDamage, // This is Legacy
-        ProcdNatureDamageMin,
-        ProcdNatureDamageMax,
-        ShadowDamage, // This is Legacy
-        ProcdShadowDamageMin,
-        ProcdShadowDamageMax,
-        FireDamage, // This is Legacy
-        ProcdFireDamageMin,
-        ProcdFireDamageMax,
-        FrostDamage, // This is Legacy
-        ProcdFrostDamageMin,
-        ProcdFrostDamageMax,
+        PhysicalDamage,
+        ArcaneDamage,
+        HolyDamage,
+        NatureDamage,
+        ShadowDamage,
+        FireDamage,
+        FrostDamage,
+        ValkyrDamage,
         #endregion
-
-        NUM_AdditiveStat // This should always be the last entry.
     }
 
     public enum MultiplicativeStat : int {
@@ -522,15 +508,11 @@ namespace Rawr {
         #region Boss Stats
         BossAttackSpeedMultiplier,
         #endregion
-
-        NUM_MultiplicativeStat // This should always be the last entry.
     }
 
     public enum InverseMultiplicativeStat : int {
 		ArmorPenetration,
 		ThreatReductionMultiplier,
-
-        NUM_InverseMultiplicativeStat // This should always be the last entry.
     }
 
     public enum NonStackingStat : int {
@@ -549,7 +531,6 @@ namespace Rawr {
         FlameShockDoTCanCrit,
         DeathbringerProc,
         BattlemasterHealth,
-        NUM_NonStackingStat // This should always be the last entry.
     }
 
     // Pulling this from ProtWar/ProtPally so that it can be used in other common areas.
@@ -564,17 +545,14 @@ namespace Rawr {
         Resist,
         Crit,
         Hit,
-
-        NUM_HitResult, // Always the last entry in the enum.
     }
+
     public enum MagicSchool {
         Fire = 2,
         Nature,
         Frost,
         Shadow,
         Arcane,
-
-        NUM_MagicSchool, // Always the last entry in the enum.
     }
 
 #if SILVERLIGHT
@@ -2271,124 +2249,13 @@ namespace Rawr {
         #region Proc'd Damage Types
         // Physical
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Physical Damage (Min)")]
+        [DisplayName("Physical Damage")]
         [Category("Equipment Effects")]
-        public float ProcdPhysicalDamageMin
+        public float PhysicalDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdPhysicalDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdPhysicalDamageMin] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PhysicalDamage] = value; }
         }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Physical Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdPhysicalDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdPhysicalDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdPhysicalDamageMax] = value; }
-        }
-        // Arcane
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Arcane Damage (Min)")]
-        [Category("Equipment Effects")]
-        public float ProcdArcaneDamageMin
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdArcaneDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdArcaneDamageMin] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Arcane Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdArcaneDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdArcaneDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdArcaneDamageMax] = value; }
-        }
-        // Holy
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Holy Damage (Min)")]
-        [Category("Equipment Effects")]
-        public float ProcdHolyDamageMin
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdHolyDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdHolyDamageMin] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Holy Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdHolyDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdHolyDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdHolyDamageMax] = value; }
-        }
-        // Nature
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Nature Damage (Min)")]
-        [Category("Equipment Effects")]
-        public float ProcdNatureDamageMin
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdNatureDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdNatureDamageMin] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Nature Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdNatureDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdNatureDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdNatureDamageMax] = value; }
-        }
-        // Shadow
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Shadow Damage (Min)")]
-        [Category("Equipment Effects")]
-        public float ProcdShadowDamageMin
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdShadowDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdShadowDamageMin] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Shadow Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdShadowDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdShadowDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdShadowDamageMax] = value; }
-        }
-        // Fire
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Fire Damage (Min)")]
-        [Category("Equipment Effects")]
-        public float ProcdFireDamageMin
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdFireDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdFireDamageMin] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Fire Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdFireDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdFireDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdFireDamageMax] = value; }
-        }
-        // Frost
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Frost Damage (Min)")]
-        [Category("Equipment Effects")]
-        public float ProcdFrostDamageMin
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdFrostDamageMin]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdFrostDamageMin] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Proc'd Frost Damage (Max)")]
-        [Category("Equipment Effects")]
-        public float ProcdFrostDamageMax
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ProcdFrostDamageMax]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ProcdFrostDamageMax] = value; }
-        }
-        #endregion
 
         // Bandit's Insignia
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2447,6 +2314,16 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.NatureDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.NatureDamage] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Valkyr Damage")]
+        [Category("Equipment Effects")]
+        public float ValkyrDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ValkyrDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ValkyrDamage] = value; }
+        }
+        #endregion
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spells Mana Cost Reduction")]

@@ -515,8 +515,6 @@ namespace Rawr.Healadin
                 HolyShockHoTOnCrit = stats.HolyShockHoTOnCrit,
                 // Ony Shiny Shard of the Flame
                 FireDamage = stats.FireDamage,
-                ProcdFireDamageMin = stats.ProcdFireDamageMin,
-                ProcdFireDamageMax = stats.ProcdFireDamageMax,
                 Healed = stats.Healed,
                 Hp5 = stats.Hp5,
             };
@@ -565,7 +563,7 @@ namespace Rawr.Healadin
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction
                 + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit + stats.MovementSpeed +
-                stats.FireDamage + stats.ProcdFireDamageMin + stats.ProcdFireDamageMax + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
+                stats.FireDamage + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
                 ) > 0;
         }
 

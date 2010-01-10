@@ -764,7 +764,41 @@ namespace Rawr.Mage
                 return _HolyDamageTemplate;
             }
         }
+
+        private ValkyrDamageTemplate _ValkyrDamageTemplate;
+        public ValkyrDamageTemplate ValkyrDamageTemplate
+        {
+            get
+            {
+                if (_ValkyrDamageTemplate == null)
+                {
+                    _ValkyrDamageTemplate = new ValkyrDamageTemplate(this);
+                }
+                return _ValkyrDamageTemplate;
+            }
+        }
         #endregion
+
+        private Stats targetDebuffs;
+        public Stats TargetDebuffs
+        {
+            get
+            {
+                if (targetDebuffs == null)
+                {
+                    targetDebuffs = new Stats();
+                    foreach (Buff buff in ActiveBuffs)
+                    {
+                        if (buff.IsTargetDebuff)
+                        {
+                            targetDebuffs.Accumulate(buff.Stats);
+                        }
+                    }
+                }
+                return targetDebuffs;
+            }
+        }
+
 
         public string ReconstructSequence()
         {

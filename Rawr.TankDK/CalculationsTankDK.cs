@@ -23,6 +23,8 @@ namespace Rawr.TankDK {
 
         public bool m_bT9_4PC = false;
 
+        public static int HitResultCount = EnumHelper.GetCount(typeof(HitResult));
+
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				////Relevant Gem IDs for TankDKs
@@ -537,8 +539,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion // Special effects 
 
             // refresh avoidance w/ the new stats.
-            float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
-            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
+            float[] fAvoidance = new float[HitResultCount];
+            for (uint i = 0; i < HitResultCount; i++)
             {
                 // GetDRAvoidanceChance returns a dec. percentage.
                 // Since CurrentAvoidance is a percent, need to multiply by 100.
@@ -1298,10 +1300,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         {
             // Get all the character avoidance numbers including deminishing returns.
             // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
-            float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
+            float[] fAvoidance = new float[HitResultCount];
             Character c = new Character();
             c.Class = CharacterClass.DeathKnight;
-            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
+            for (uint i = 0; i < HitResultCount; i++)
             {
                 // GetDRAvoidanceChance returns a dec. percentage.
                 // Since CurrentAvoidance is a percent, need to multiply by 100.

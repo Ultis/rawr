@@ -607,18 +607,6 @@ These numbers to do not include racial bonuses.",
                 NatureDamage = stats.NatureDamage,
                 FrostDamage = stats.FrostDamage,
                 FireDamage = stats.FireDamage,
-                ProcdShadowDamageMin = stats.ProcdShadowDamageMin,
-                ProcdArcaneDamageMin = stats.ProcdArcaneDamageMin,
-                ProcdHolyDamageMin = stats.ProcdHolyDamageMin,
-                ProcdNatureDamageMin = stats.ProcdNatureDamageMin,
-                ProcdFrostDamageMin = stats.ProcdFrostDamageMin,
-                ProcdFireDamageMin = stats.ProcdFireDamageMin,
-                ProcdShadowDamageMax = stats.ProcdShadowDamageMax,
-                ProcdArcaneDamageMax = stats.ProcdArcaneDamageMax,
-                ProcdHolyDamageMax = stats.ProcdHolyDamageMax,
-                ProcdNatureDamageMax = stats.ProcdNatureDamageMax,
-                ProcdFrostDamageMax = stats.ProcdFrostDamageMax,
-                ProcdFireDamageMax = stats.ProcdFireDamageMax,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
@@ -710,18 +698,6 @@ These numbers to do not include racial bonuses.",
                 stats.NatureDamage +
                 stats.FrostDamage +
                 stats.FireDamage +
-                stats.ProcdShadowDamageMin +
-                stats.ProcdArcaneDamageMin +
-                stats.ProcdHolyDamageMin +
-                stats.ProcdNatureDamageMin +
-                stats.ProcdFrostDamageMin +
-                stats.ProcdFireDamageMin +
-                stats.ProcdShadowDamageMax +
-                stats.ProcdArcaneDamageMax +
-                stats.ProcdHolyDamageMax +
-                stats.ProcdNatureDamageMax +
-                stats.ProcdFrostDamageMax +
-                stats.ProcdFireDamageMax +
                 stats.BonusShadowDamageMultiplier +
                 stats.BonusArcaneDamageMultiplier +
                 stats.BonusHolyDamageMultiplier +

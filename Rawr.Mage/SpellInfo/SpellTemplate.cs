@@ -30,6 +30,7 @@ namespace Rawr.Mage
         public float DotDuration;
         public float DotTickInterval;
         public float CastProcs;
+        public float CastProcs2;
         public float NukeProcs;
         public float HitRate;
 
@@ -117,6 +118,7 @@ namespace Rawr.Mage
             SpellDamageCoefficient = spellDamageCoefficient;
             Ticks = hitProcs;
             CastProcs = castProcs;
+            CastProcs2 = castProcs;
             DotDamageCoefficient = dotDamageCoefficient;
             DotDuration = dotDuration;
         }

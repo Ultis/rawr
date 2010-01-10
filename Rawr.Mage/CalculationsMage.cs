@@ -1187,8 +1187,16 @@ namespace Rawr.Mage
                                             break;
                                         case Trigger.DamageSpellCast:
                                         case Trigger.SpellCast:
-                                            triggers += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
-                                            procs += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
+                                            if (effectList[i].Stats.ValkyrDamage > 0)
+                                            {
+                                                triggers += (float)calculations.Solution[j] * c.CastProcs2 / c.CastTime;
+                                                procs += (float)calculations.Solution[j] * c.CastProcs2 / c.CastTime;
+                                            }
+                                            else
+                                            {
+                                                triggers += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
+                                                procs += (float)calculations.Solution[j] * c.CastProcs / c.CastTime;
+                                            }
                                             break;
                                         case Trigger.MageNukeCast:
                                             triggers += (float)calculations.Solution[j] * c.NukeProcs / c.CastTime;
@@ -2207,7 +2215,7 @@ namespace Rawr.Mage
                             continue;
                         }
                     }
-                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage > 0)
+                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0)
                     {
                         if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                         {
@@ -2316,7 +2324,7 @@ namespace Rawr.Mage
                             return true;
                         }
                     }
-                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage > 0)
+                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0)
                     {
                         if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                         {

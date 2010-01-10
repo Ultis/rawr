@@ -257,6 +257,7 @@ namespace Rawr.Mage
         public bool Channeled { get { return template.Channeled; } }
         public float Ticks { get { return template.Ticks; } }
         public float CastProcs { get { return template.CastProcs; } }
+        public float CastProcs2 { get { return template.CastProcs2; } }
         public float NukeProcs { get { return template.NukeProcs; } }
         public bool Instant { get { return template.Instant; } }
         public int BaseCost { get { return template.BaseCost; } }
@@ -366,6 +367,7 @@ namespace Rawr.Mage
                 CastTime = spell.CastTime;
                 HitProcs = spell.HitProcs;
                 CastProcs = spell.CastProcs;
+                CastProcs2 = spell.CastProcs2;
                 NukeProcs = spell.NukeProcs;
                 CritProcs = spell.CritProcs;
                 IgniteProcs = spell.IgniteProcs;

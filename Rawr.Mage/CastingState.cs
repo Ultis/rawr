@@ -407,6 +407,7 @@ namespace Rawr.Mage
         public float ShadowAverageDamage { get { return Calculations.ShadowDamageTemplate.GetEffectAverageDamage(this); } }
         public float NatureAverageDamage { get { return Calculations.NatureDamageTemplate.GetEffectAverageDamage(this); } }
         public float HolyAverageDamage { get { return Calculations.HolyDamageTemplate.GetEffectAverageDamage(this); } }
+        public float ValkyrAverageDamage { get { return Calculations.ValkyrDamageTemplate.Multiplier; } }
 
         //private static int CycleIdCount;
         //private static int SpellIdCount;

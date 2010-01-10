@@ -137,7 +137,7 @@ namespace Rawr.Mage
             int playerLevel = calculationOptions.PlayerLevel;
             int targetLevel = calculationOptions.TargetLevel;
             // TODO recheck all buffs that apply
-            float spellCrit = 0.05f + waterElementalBuffs.SpellCrit;
+            float spellCrit = 0.05f + waterElementalBuffs.SpellCrit + waterElementalBuffs.SpellCritOnTarget;
             float hitRate = calculations.BaseState.FrostHitRate;
             multiplier = hitRate;
             baseHaste = (1f + waterElementalBuffs.SpellHaste);
@@ -166,22 +166,12 @@ namespace Rawr.Mage
 
     public class MirrorImageTemplate : SpellTemplate
     {
-        Stats mirrorImageBuffs;
-        private static readonly string[] validBuffs = new string[] { "Heart of the Crusader", "Master Poisoner", "Totem of Wrath", "Winter's Chill", "Improved Scorch", "Improved Shadow Bolt", "Curse of the Elements", "Earth and Moon", "Ebon Plaguebringer", "Improved Faerie Fire", "Misery" };
         float baseDamageBlast, baseDamageBolt, boltMultiplier, blastMultiplier, castTime, multiplier, dpsp;
 
         public MirrorImageTemplate(CharacterCalculationsMage calculations)
         {
             Name = "Mirror Image";
             // these buffs are independent of casting state, so things that depend on them can be calculated only once and then reused
-            mirrorImageBuffs = new Stats();
-            foreach (Buff buff in calculations.ActiveBuffs)
-            {
-                if (Array.IndexOf(validBuffs, buff.Name) >= 0)
-                {
-                    mirrorImageBuffs.Accumulate(buff.Stats);
-                }
-            }
             baseDamageBlast = 97.5f;
             baseDamageBolt = 166.0f;
             Character character = calculations.CalculationOptions.Character;
@@ -189,13 +179,13 @@ namespace Rawr.Mage
             int playerLevel = calculationOptions.PlayerLevel;
             int targetLevel = calculationOptions.TargetLevel;
             // TODO recheck all buffs that apply
-            float spellCrit = 0.05f + mirrorImageBuffs.SpellCrit;
+            float spellCrit = 0.05f + calculations.TargetDebuffs.SpellCritOnTarget;
             // hit rate could actually change between casting states theoretically, but it is negligible and would slow things down unnecessarily
             float blastHitRate = calculations.BaseState.FireHitRate;
             float boltHitRate = calculations.BaseState.FrostHitRate;
-            float haste = (1f + mirrorImageBuffs.SpellHaste);
-            boltMultiplier = boltHitRate * (1 + mirrorImageBuffs.BonusDamageMultiplier) * (1 + mirrorImageBuffs.BonusFrostDamageMultiplier) * ((calculationOptions.FrostResist == 1) ? 0 : (1 - calculationOptions.FrostResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
-            blastMultiplier = blastHitRate * (1 + mirrorImageBuffs.BonusDamageMultiplier) * (1 + mirrorImageBuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == 1) ? 0 : (1 - calculationOptions.FireResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
+            float haste = (1f + calculations.TargetDebuffs.SpellHaste);
+            boltMultiplier = boltHitRate * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusFrostDamageMultiplier) * ((calculationOptions.FrostResist == 1) ? 0 : (1 - calculationOptions.FrostResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
+            blastMultiplier = blastHitRate * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == 1) ? 0 : (1 - calculationOptions.FireResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
             castTime = (2 * 3.0f + 1.5f) / haste;
             multiplier = (calculations.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 0.5f * spellCrit);
             dpsp = multiplier * (2 * (1f / 3f * 0.3f) * boltMultiplier + (1f / 3f * 0.15f) * blastMultiplier);
@@ -1395,6 +1385,7 @@ namespace Rawr.Mage
         public ArcaneMissilesTemplate(CharacterCalculationsMage calculations)
             : base("Arcane Missiles", true, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 5, 6)
         {
+            CastProcs2 = 1;
             base.Calculate(calculations);
             if (calculations.MageTalents.GlyphOfArcaneMissiles)
             {
@@ -1667,6 +1658,20 @@ namespace Rawr.Mage
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusHolyDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
+        }
+    }
+
+    public class ValkyrDamageTemplate : SpellTemplate
+    {
+        public float Multiplier;
+
+        public ValkyrDamageTemplate(CharacterCalculationsMage calculations)
+        {
+            Name = "Valkyr Damage";
+            // TODO recheck all buffs that apply
+            float spellCrit = 0.05f + calculations.TargetDebuffs.SpellCritOnTarget;
+            // Valkyr always hit
+            Multiplier = (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + 0.5f * spellCrit);
         }
     }
 }

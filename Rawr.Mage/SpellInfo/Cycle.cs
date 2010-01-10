@@ -161,6 +161,7 @@ namespace Rawr.Mage
             HitProcs = 0;
             Ticks = 0;
             CastProcs = 0;
+            CastProcs2 = 0;
             NukeProcs = 0;
             CritProcs = 0;
             IgniteProcs = 0;
@@ -235,6 +236,7 @@ namespace Rawr.Mage
         public float HitProcs;
         public float Ticks;
         public float CastProcs;
+        public float CastProcs2; // variant with only one proc from AM
         public float NukeProcs;
         public float CritProcs;
         public float IgniteProcs;
@@ -366,7 +368,14 @@ namespace Rawr.Mage
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
                             chance = 1;
-                            interval = CastTime / CastProcs;
+                            if (effect.Stats.ValkyrDamage > 0)
+                            {
+                                interval = CastTime / CastProcs2;
+                            }
+                            else
+                            {
+                                interval = CastTime / CastProcs;
+                            }
                             break;
                     }
                     float effectsPerSecond = effect.GetAverageProcsPerSecond(interval, chance, 3f, CastingState.CalculationOptions.FightDuration);
@@ -403,6 +412,12 @@ namespace Rawr.Mage
                     if (effect.Stats.HolyDamage > 0)
                     {
                         float boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
+                    }
+                    if (effect.Stats.ValkyrDamage > 0)
+                    {
+                        float boltDps = CastingState.ValkyrAverageDamage * effect.Stats.ValkyrDamage * effectsPerSecond;
                         effectDamagePerSecond += boltDps;
                         effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
                     }
@@ -707,7 +722,14 @@ namespace Rawr.Mage
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
                             chance = 1;
-                            interval = CastTime / CastProcs;
+                            if (effect.Stats.ValkyrDamage > 0)
+                            {
+                                interval = CastTime / CastProcs2;
+                            }
+                            else
+                            {
+                                interval = CastTime / CastProcs;
+                            }
                             break;
                     }
                     float effectsPerSecond = effect.GetAverageProcsPerSecond(interval, chance, 3f, CastingState.CalculationOptions.FightDuration);
@@ -741,6 +763,11 @@ namespace Rawr.Mage
                     {
                         boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
                         name = "Holy Damage Proc";
+                    }
+                    if (effect.Stats.ValkyrDamage > 0)
+                    {
+                        boltDps = CastingState.ValkyrAverageDamage * effect.Stats.ValkyrDamage * effectsPerSecond;
+                        name = "Val'kyr Damage";
                     }
                     if (!dict.TryGetValue(name, out contrib))
                     {
@@ -873,6 +900,7 @@ namespace Rawr.Mage
             NukeProcs += spell.NukeProcs;
             HitProcs += spell.HitProcs;
             CastProcs += spell.CastProcs;
+            CastProcs2 += spell.CastProcs2;
             CritProcs += spell.CritProcs;
             IgniteProcs += spell.IgniteProcs;
             TargetProcs += spell.TargetProcs;
@@ -896,6 +924,7 @@ namespace Rawr.Mage
             NukeProcs += spell.NukeProcs;
             HitProcs += spell.HitProcs;
             CastProcs += spell.CastProcs;
+            CastProcs2 += spell.CastProcs2;
             CritProcs += spell.CritProcs;
             IgniteProcs += spell.IgniteProcs;
             TargetProcs += spell.TargetProcs;
@@ -994,6 +1023,7 @@ namespace Rawr.Mage
             }
             CastTime += weight * cycle.CastTime;
             CastProcs += weight * cycle.CastProcs;
+            CastProcs2 += weight * cycle.CastProcs2;
             NukeProcs += weight * cycle.NukeProcs;
             Ticks += weight * cycle.Ticks;
             HitProcs += weight * cycle.HitProcs;
@@ -1016,6 +1046,7 @@ namespace Rawr.Mage
             }
             CastTime += weight * spell.CastTime;
             CastProcs += weight * spell.CastProcs;
+            CastProcs2 += weight * spell.CastProcs2;
             NukeProcs += weight * spell.NukeProcs;
             Ticks += weight * spell.Ticks;
             HitProcs += weight * spell.HitProcs;
@@ -1038,6 +1069,7 @@ namespace Rawr.Mage
             }
             CastTime += weight * spell.CastTime;
             CastProcs += weight * spell.CastProcs;
+            CastProcs2 += weight * spell.CastProcs2;
             NukeProcs += weight * spell.NukeProcs;
             Ticks += weight * spell.Ticks;
             HitProcs += weight * spell.HitProcs;

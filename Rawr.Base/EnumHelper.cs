@@ -23,11 +23,7 @@ namespace Rawr
 
             List<T> values = new List<T>();
 
-            var fields = from field in enumType.GetFields()
-                         where field.IsLiteral
-                         select field;
-
-            foreach (FieldInfo field in fields)
+            foreach (FieldInfo field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
                 object value = field.GetValue(enumType);
                 values.Add((T)value);
@@ -45,11 +41,7 @@ namespace Rawr
 
             List<object> values = new List<object>();
 
-            var fields = from field in enumType.GetFields()
-                         where field.IsLiteral
-                         select field;
-
-            foreach (FieldInfo field in fields)
+            foreach (FieldInfo field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
             {
                 object value = field.GetValue(enumType);
                 values.Add(value);
@@ -57,6 +49,29 @@ namespace Rawr
 
             return values.ToArray();
         }
+
+        public static string[] GetNames(Type enumType)
+        {
+            if (!enumType.IsEnum)
+            {
+                throw new ArgumentException("Type '" + enumType.Name + "' is not an enum");
+            }
+
+            List<string> values = new List<string>();
+
+            foreach (FieldInfo field in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
+            {
+                values.Add(field.Name);
+            }
+
+            return values.ToArray();
+        }
+
+        public static int GetCount(Type enumType)
+        {
+            return enumType.GetFields(BindingFlags.Public | BindingFlags.Static).Length;
+        }
+
 #else
         public static T[] GetValues<T>()
         {
@@ -67,6 +82,17 @@ namespace Rawr
         {
             return Enum.GetValues(enumType);
         }
+
+        public static string[] GetNames(Type enumType)
+        {
+            return Enum.GetNames(enumType);
+        }
+
+        public static int GetCount(Type enumType)
+        {
+            return Enum.GetNames(enumType).Length;
+        }
+
 #endif
 
     }

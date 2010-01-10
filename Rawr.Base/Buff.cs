@@ -68,6 +68,7 @@ namespace Rawr
         public string Source;
         public int SetThreshold = 0;
         public List<Buff> Improvements = new List<Buff>();
+        public bool IsTargetDebuff = false;
         public bool IsCustom = false;
         private List<string> _conflictingBuffs = null;
         public List<string> ConflictingBuffs 
@@ -1103,21 +1104,24 @@ namespace Rawr
                 Name = "Acid Spit",
                 Source = "BM Hunter (Worm pet)",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 0.2f }
+                Stats = { ArmorPenetration = 0.2f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Expose Armor",
                 Source = "Rogue",
                 Group = "Armor (Major)",
-				Stats = { ArmorPenetration = 0.2f }
+				Stats = { ArmorPenetration = 0.2f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sunder Armor",
                 Source = "Warrior",
                 Group = "Armor (Major)",
-				Stats = { ArmorPenetration = 0.2f }
+				Stats = { ArmorPenetration = 0.2f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1127,21 +1131,24 @@ namespace Rawr
                 Name = "Curse of Weakness",
                 Source = "Warlock",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 0.05f }
+                Stats = { ArmorPenetration = 0.05f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Faerie Fire",
                 Source = "Druid",
                 Group = "Armor (Minor)",
-				Stats = { ArmorPenetration = 0.05f }
+				Stats = { ArmorPenetration = 0.05f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sting",
                 Source = "BM Hunter (Wasp pet)",
                 Group = "Armor (Minor)",
-				Stats = { ArmorPenetration = 0.05f }
+				Stats = { ArmorPenetration = 0.05f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1168,7 +1175,8 @@ namespace Rawr
                         Stats = { RangedAttackPower = 250f }, 
                         ConflictingBuffs = { "Hunter's Mark Improvements" } 
                     }
-                }
+                },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1178,7 +1186,8 @@ namespace Rawr
                 Group = "Boss Attack Power",
                 Source = "Warrior",
                 Stats = { BossAttackPower = -410f }, // Base Demo Shout
-                Improvements = { new Buff { Name = "Improved Demoralizing Shout", Source = "Warrior", Stats = new Stats() { BossAttackPower = -410f * 0.40f } } } // Fully Talented Demo Shout
+                Improvements = { new Buff { Name = "Improved Demoralizing Shout", Source = "Warrior", Stats = new Stats() { BossAttackPower = -410f * 0.40f } } }, // Fully Talented Demo Shout
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1197,14 +1206,16 @@ namespace Rawr
                 Name = "Mangle",
                 Source = "Feral Druid",
                 Group = "Bleed Damage",
-                Stats = { BonusBleedDamageMultiplier = 0.3f }
+                Stats = { BonusBleedDamageMultiplier = 0.3f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Trauma",
                 Source = "Arms Warrior",
                 Group = "Bleed Damage",
-                Stats = { BonusBleedDamageMultiplier = 0.3f }
+                Stats = { BonusBleedDamageMultiplier = 0.3f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1214,21 +1225,24 @@ namespace Rawr
                 Name = "Heart of the Crusader",
                 Source = "Ret Paladin",
                 Group = "Critical Strike Chance Taken",
-                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f }
+                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Master Poisoner",
                 Source = "Assasin Rogue",
                 Group = "Critical Strike Chance Taken",
-                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f }
+                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Totem of Wrath",
                 Source = "Elem Shaman",
                 Group = "Critical Strike Chance Taken",
-                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f }
+                Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1238,7 +1252,8 @@ namespace Rawr
                 Name = "Judgement of Wisdom",
                 Source = "Paladin",
                 Group = "Mana Restore",
-                Stats = { ManaRestoreFromBaseManaPPM = 0.24f }
+                Stats = { ManaRestoreFromBaseManaPPM = 0.24f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1248,14 +1263,16 @@ namespace Rawr
                 Name = "Insect Swarm",
                 Source = "Moonkin Druid",
                 Group = "Melee Hit Chance Reduction",
-                Stats = { Miss = 0.03f }
+                Stats = { Miss = 0.03f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Scorpid Sting",
                 Source = "Hunter",
                 Group = "Melee Hit Chance Reduction",
-                Stats = { Miss = 0.03f }
+                Stats = { Miss = 0.03f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1265,14 +1282,16 @@ namespace Rawr
                 Name = "Blood Frenzy",
                 Source = "Arms Warrior",
                 Group = "Physical Vulnerability",
-                Stats = { BonusPhysicalDamageMultiplier = 0.04f }
+                Stats = { BonusPhysicalDamageMultiplier = 0.04f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Savage Combat",
                 Source = "Combat Rogue",
                 Group = "Physical Vulnerability",
-                Stats = { BonusPhysicalDamageMultiplier = 0.04f }
+                Stats = { BonusPhysicalDamageMultiplier = 0.04f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1282,21 +1301,24 @@ namespace Rawr
                 Name = "Winter's Chill",
                 Source = "Frost Mage",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCritOnTarget = 0.05f }
+                Stats = { SpellCritOnTarget = 0.05f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Scorch",
                 Source = "Fire Mage",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCritOnTarget = 0.05f }
+                Stats = { SpellCritOnTarget = 0.05f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Shadow Bolt",
                 Source = "Warlock",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCritOnTarget = 0.05f }
+                Stats = { SpellCritOnTarget = 0.05f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1314,7 +1336,8 @@ namespace Rawr
                     BonusShadowDamageMultiplier = 0.13f,
                     BonusHolyDamageMultiplier = 0.13f,
                     BonusNatureDamageMultiplier = 0.13f
-                }
+                },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
@@ -1329,7 +1352,8 @@ namespace Rawr
                     BonusShadowDamageMultiplier = 0.13f,
                     BonusNatureDamageMultiplier = 0.13f,
                     BonusHolyDamageMultiplier = 0.13f
-                }
+                },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
@@ -1345,6 +1369,7 @@ namespace Rawr
                     BonusHolyDamageMultiplier = 0.13f,
                     BonusNatureDamageMultiplier = 0.13f
                 },
+                IsTargetDebuff = true,
             });
            /* defaultBuffs.Add(new Buff
             {
@@ -1366,7 +1391,8 @@ namespace Rawr
                 Name = "Crypt Fever",
                 Source = "Unholy Death Knight",
                 Group = "Disease Damage Taken",
-                Stats = { BonusDiseaseDamageMultiplier = 0.3f }
+                Stats = { BonusDiseaseDamageMultiplier = 0.3f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1376,14 +1402,16 @@ namespace Rawr
                 Name = "Improved Faerie Fire",
                 Source = "Moonkin Druid",
                 Group = "Spell Hit Chance Taken",
-                Stats = { SpellHit = 0.03f }
+                Stats = { SpellHit = 0.03f },
+                IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Misery",
                 Source = "Shadow Priest",
                 Group = "Spell Hit Chance Taken",
-                Stats = { SpellHit = 0.03f }
+                Stats = { SpellHit = 0.03f },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -1403,7 +1431,8 @@ namespace Rawr
                 Name = "Judgements of the Just",
                 Group = "Boss Attack Speed",
                 Source = "Prot Paladin",
-                Stats = { BossAttackSpeedMultiplier = -0.2f }
+                Stats = { BossAttackSpeedMultiplier = -0.2f },
+                IsTargetDebuff = true,
             });
 
             defaultBuffs.Add(new Buff()
@@ -1411,7 +1440,8 @@ namespace Rawr
                 Name = "Infected Wounds",
                 Group = "Boss Attack Speed",
                 Source = "Cat/Bear Druids",
-                Stats = { BossAttackSpeedMultiplier = -0.2f }
+                Stats = { BossAttackSpeedMultiplier = -0.2f },
+                IsTargetDebuff = true,
             });
 
             defaultBuffs.Add(new Buff()
@@ -1420,7 +1450,8 @@ namespace Rawr
                 Group = "Boss Attack Speed",
                 Source = "Frost DK",
                 Stats = { BossAttackSpeedMultiplier = -0.14f },
-                Improvements = { new Buff { Name = "Improved Icy Touch", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f / 0.86f)) } } }
+                Improvements = { new Buff { Name = "Improved Icy Touch", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f / 0.86f)) } } },
+                IsTargetDebuff = true,
             });
 
             defaultBuffs.Add(new Buff()
@@ -1429,7 +1460,8 @@ namespace Rawr
                 Group = "Boss Attack Speed",
                 Source = "Prot/Arms Warrior",
                 Stats = { BossAttackSpeedMultiplier = -0.10f },
-                Improvements = { new Buff { Name = "Improved Thunder Clap", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f/0.9f)) } } }
+                Improvements = { new Buff { Name = "Improved Thunder Clap", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f/0.9f)) } } },
+                IsTargetDebuff = true,
             });
             #endregion
 
@@ -4718,8 +4750,6 @@ namespace Rawr
 			    setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats()
                 { 
                     FireDamage = 2862,
-                    ProcdFireDamageMin = 2862f,
-                    ProcdFireDamageMax = 2862f,
                 }, 0, 45, 0.2f));
                 // Not sure what the stat for this DoT effect would be for damage classes
                 //setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
@@ -4740,8 +4770,6 @@ namespace Rawr
                 setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats()
                 {
                     FireDamage = 3192,
-                    ProcdFireDamageMin = 3192f,
-                    ProcdFireDamageMax = 3192f,
                 }, 0, 45, 0.2f));
                 // Not sure what the stat for this DoT effect would be for damage classes
                 //setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));

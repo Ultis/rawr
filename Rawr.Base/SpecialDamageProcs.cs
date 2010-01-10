@@ -221,13 +221,13 @@ namespace Rawr.DamageProcs
                         || !TriggerChances.ContainsKey(effect.Trigger)
                         || !TriggerIntervals.ContainsKey(effect.Trigger))
                     {
-                    }else if(effect.Stats.ProcdPhysicalDamageMin > 0 && type == ItemDamageType.Physical) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdPhysicalDamageMin, effect.Stats.ProcdPhysicalDamageMax, type);
-                    }else if(effect.Stats.ProcdArcaneDamageMin   > 0 && type == ItemDamageType.Arcane  ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdArcaneDamageMin,   effect.Stats.ProcdArcaneDamageMax,   type);
-                    }else if(effect.Stats.ProcdHolyDamageMin     > 0 && type == ItemDamageType.Holy    ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdHolyDamageMin,     effect.Stats.ProcdHolyDamageMax,     type);
-                    }else if(effect.Stats.ProcdNatureDamageMin   > 0 && type == ItemDamageType.Nature  ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdNatureDamageMin,   effect.Stats.ProcdNatureDamageMax,   type);
-                    }else if(effect.Stats.ProcdShadowDamageMin   > 0 && type == ItemDamageType.Shadow  ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdShadowDamageMin,   effect.Stats.ProcdShadowDamageMax,   type);
-                    }else if(effect.Stats.ProcdFireDamageMin     > 0 && type == ItemDamageType.Fire    ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdFireDamageMin,     effect.Stats.ProcdFireDamageMax,     type);
-                    }else if(effect.Stats.ProcdFrostDamageMin    > 0 && type == ItemDamageType.Frost   ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdFrostDamageMin,    effect.Stats.ProcdFrostDamageMax,    type);}
+                    }else if(effect.Stats.PhysicalDamage > 0 && type == ItemDamageType.Physical) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.PhysicalDamage, type);
+                    }else if(effect.Stats.ArcaneDamage   > 0 && type == ItemDamageType.Arcane  ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ArcaneDamage, type);
+                    }else if(effect.Stats.HolyDamage     > 0 && type == ItemDamageType.Holy    ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.HolyDamage, type);
+                    }else if(effect.Stats.NatureDamage   > 0 && type == ItemDamageType.Nature  ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.NatureDamage, type);
+                    }else if(effect.Stats.ShadowDamage   > 0 && type == ItemDamageType.Shadow  ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.ShadowDamage, type);
+                    }else if(effect.Stats.FireDamage     > 0 && type == ItemDamageType.Fire    ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.FireDamage, type);
+                    }else if(effect.Stats.FrostDamage    > 0 && type == ItemDamageType.Frost   ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.FrostDamage, type);}
                 }
             }catch(Exception ex){
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
@@ -247,19 +247,19 @@ namespace Rawr.DamageProcs
             foreach (SpecialEffect effect in EffectsList)
             {
                 if (!TriggerChances.ContainsKey(effect.Trigger) || effect.Stats == null) continue;
-                if (effect.Stats.ProcdPhysicalDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdPhysicalDamageMin, effect.Stats.ProcdPhysicalDamageMax, ItemDamageType.Physical);
-                if (effect.Stats.ProcdArcaneDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdArcaneDamageMin, effect.Stats.ProcdArcaneDamageMax, ItemDamageType.Arcane);
-                if (effect.Stats.ProcdHolyDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdHolyDamageMin, effect.Stats.ProcdHolyDamageMax, ItemDamageType.Holy);
-                if (effect.Stats.ProcdNatureDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdNatureDamageMin, effect.Stats.ProcdNatureDamageMax, ItemDamageType.Nature);
-                if (effect.Stats.ProcdShadowDamageMin> 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdShadowDamageMin, effect.Stats.ProcdShadowDamageMax, ItemDamageType.Shadow);
-                if (effect.Stats.ProcdFireDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdFireDamageMin, effect.Stats.ProcdFireDamageMax, ItemDamageType.Fire);
-                if (effect.Stats.ProcdFrostDamageMin > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ProcdFrostDamageMin, effect.Stats.ProcdFrostDamageMax, ItemDamageType.Frost);
+                if (effect.Stats.PhysicalDamage > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.PhysicalDamage, ItemDamageType.Physical);
+                if (effect.Stats.ArcaneDamage > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ArcaneDamage, ItemDamageType.Arcane);
+                if (effect.Stats.HolyDamage > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.HolyDamage, ItemDamageType.Holy);
+                if (effect.Stats.NatureDamage > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.NatureDamage, ItemDamageType.Nature);
+                if (effect.Stats.ShadowDamage> 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.ShadowDamage, ItemDamageType.Shadow);
+                if (effect.Stats.FireDamage > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.FireDamage, ItemDamageType.Fire);
+                if (effect.Stats.FrostDamage > 0) retVal += CalculateTotalDamagePerSecond(effect, effect.Stats.FrostDamage, ItemDamageType.Frost);
             }
 
             return retVal;
         }
 
-        private float CalculateTotalDamagePerSecond(SpecialEffect effect, float MinDmg, float MaxDmg, ItemDamageType type) {
+        private float CalculateTotalDamagePerSecond(SpecialEffect effect, float baseDamage, ItemDamageType type) {
             float totalDamage = 0f;
             float totalDamagePerSec = 0f;
             float totalNumProcs = 0f;
@@ -281,7 +281,7 @@ namespace Rawr.DamageProcs
                 // Process the Effects
                 totalNumProcsPerSec = effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, Char.MainHand.Speed, FightDuration);
                 totalNumProcs = totalNumProcsPerSec * FightDuration;
-                totalDamage = totalNumProcs * CalculateThisDamage(type, MinDmg, MaxDmg);
+                totalDamage = totalNumProcs * CalculateThisDamage(type, baseDamage);
                 totalDamagePerSec = totalDamage / FightDuration;
 
                 // Set our Results into the Dictionaries
@@ -296,11 +296,11 @@ namespace Rawr.DamageProcs
 
             return totalDamagePerSec;
         }
-        private float CalculateThisDamage(ItemDamageType type, float MinDmg, float MaxDmg) {
+        private float CalculateThisDamage(ItemDamageType type, float baseDamage) {
             float dmg = 0;
             try {
                 AttackTable MHAtkTable = AttackTables[type];
-                dmg  = (MinDmg + MaxDmg) / 2f; // Base Damage
+                dmg  = baseDamage; // Base Damage
                 dmg *= 1f + DamageMultipliers[type];     // Global Damage Bonuses
                 dmg *= 1f - DamageResistances[type];     // Global Damage Penalties
 

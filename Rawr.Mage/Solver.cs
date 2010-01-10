@@ -878,7 +878,7 @@ namespace Rawr.Mage
             list.Clear();
             foreach (SpecialEffect effect in baseStats.SpecialEffects())
             {
-                if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage > 0 && effect.MaxStack == 1)
+                if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                     {

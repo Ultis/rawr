@@ -11,7 +11,7 @@ namespace Rawr.UnitTests
     [TestClass()]
     public class StatConversionTest
     {
-
+        public static int HitResultCount = EnumHelper.GetCount(typeof(HitResult));
 
         private TestContext testContextInstance;
         /// <summary>
@@ -95,7 +95,7 @@ namespace Rawr.UnitTests
             stats.DefenseRating = 566f;
             uint TargetLevel = 83;
             //float levelDiff = 0.006f;
-            float[] expected = new float[(int)HitResult.NUM_HitResult];
+            float[] expected = new float[HitResultCount];
             expected[(int)HitResult.Miss] = 0.121f;
             expected[(int)HitResult.Dodge] = 0.134f;
             expected[(int)HitResult.Parry] = 0.098f;
@@ -108,7 +108,7 @@ namespace Rawr.UnitTests
             expected[(int)HitResult.Hit] = .05f;
 
             // Iterate through the hit result types.
-            for (HitResult i = 0; i < HitResult.NUM_HitResult; i++)
+            for (HitResult i = 0; i < (HitResult)HitResultCount; i++)
             {
                 float actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, i, TargetLevel), 3);
                 Assert.AreEqual(expected[(int)i], actual, i.ToString());
@@ -131,7 +131,7 @@ namespace Rawr.UnitTests
             stats.DefenseRating = testValue;
             uint TargetLevel = 80;
             //float levelDiff = 0.006f;
-            float[] expected = new float[(int)HitResult.NUM_HitResult];
+            float[] expected = new float[HitResultCount];
             expected[(int)HitResult.Miss] = 0.0929f;
             expected[(int)HitResult.Dodge] = 0.1516f;
             expected[(int)HitResult.Parry] = 0.1117f;
@@ -167,7 +167,7 @@ namespace Rawr.UnitTests
             stats.DefenseRating = testValue;
             uint TargetLevel = 80;
             //float levelDiff = 0.006f;
-            float[] expected = new float[(int)HitResult.NUM_HitResult];
+            float[] expected = new float[HitResultCount];
             expected[(int)HitResult.Miss] = 0.1847f;
             expected[(int)HitResult.Dodge] = 0.6619f;
             expected[(int)HitResult.Parry] = 0.3850f;

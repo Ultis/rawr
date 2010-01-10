@@ -214,7 +214,7 @@ namespace Rawr {
             }
         }
 
-		public static void ProcessEquipLine(string line, Stats stats, bool isArmory, int ilvl) {
+		public static void ProcessEquipLine(string line, Stats stats, bool isArmory, int ilvl, int id) {
             Match match;
             #region Prep the line, if it needs it
             while (line.Contains("secs")) { line = line.Replace("secs", "sec"); }
@@ -237,6 +237,18 @@ namespace Rawr {
             {
                 // Elemental Focus Stone
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { HasteRating = 522 }, 10f, 45f, 0.1f));
+            }
+            else if (line.StartsWith("Your harmful spells have a chance to cause you to summon a Val'kyr to fight by your side for 30 sec"))
+            {
+                // Nibelung
+                // source http://elitistjerks.com/f75/t37825-rawr_mage/p42/#post1517923
+                // 5% crit rate, 1.5 crit multiplier, not affected by talents, affected only by target debuffs
+                float damage = 27008;
+                if (id == 50648)
+                {
+                    damage = 27008; // enter value for heroic when it becomes known
+                }
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.01f));
             }
             else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140."))
 			{ // Essence of Gossamer - probably not quite right?!
@@ -295,8 +307,6 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
                 { 
                     ShadowDamage = (float)(min+max)/2f,
-                    ProcdShadowDamageMin = min,
-                    ProcdShadowDamageMax = max,
                 }, 1f, 0f, 0.09f));
             }
             else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 25 spell power for the next 10 sec, stacking up to 5 times."))
@@ -704,7 +714,7 @@ namespace Rawr {
             }
             else if (line == "Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.")
             {   //Bandit's Insignia
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880, ProcdArcaneDamageMin = 1504f, ProcdArcaneDamageMax = 2256f, }, 0f, 45f, 0.15f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880 }, 0f, 45f, 0.15f));
             }
             else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
             {
@@ -724,24 +734,18 @@ namespace Rawr {
                 //        break;
                 //}
             }
-            else if (line.StartsWith("Your offensive spells have a chance on hit to increase your spell power by "))
+            else if ((match = new Regex(@"Your offensive spells have a chance on hit to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
             {
-                // Your offensive spells have a chance on hit to increase your spell power by 95 for 10 secs.
-                line = line.Substring("Your offensive spells have a chance on hit to increase your spell power by ".Length);
-                float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
-                line = line.Substring(line.IndexOf(" for") + " for ".Length);
-                int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
-
-                //switch (duration)
-                //{
-                //    case 10:
-                //        if (name == "Band of the Eternal Sage")
-                //        {
-                // Fixed in 2.4 to be 10 sec instead of 15
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = value }, duration, 45, 0.1f));
-                //        }
-                //        break;
-                //}
+                float spellpower = (float)int.Parse(match.Groups["power"].Value);
+                float time = (float)int.Parse(match.Groups["time"].Value);
+                float procRate = 0.1f;
+                float internalCooldown = 45.0f;
+                if (id == 50397 || id == 50398)
+                {
+                    // Ashen Band of Destruction - seems to be 60 sec iCD (wowhead)
+                    internalCooldown = 60.0f;
+                }
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellpower }, time, internalCooldown, procRate));
             }
             else if (line.StartsWith("Increases the spell power of your Starfire spell by "))
             {
@@ -950,8 +954,6 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats()
                 {
                     ShadowDamage = 1460,
-                    ProcdShadowDamageMin = 1168,
-                    ProcdShadowDamageMax = 1752,
                 }, 0f, 45f, .1f));
             }
             else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
@@ -961,8 +963,6 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats()
                 { 
                     ShadowDamage = 1050f,
-                    ProcdShadowDamageMin = 788,
-                    ProcdShadowDamageMax = 1312,
                 }, 0f, 45f, .1f));
             }
             else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage."))
@@ -972,8 +972,6 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats()
                 {
                     ShadowDamage = 2000f,
-                    ProcdShadowDamageMin = 1750,
-                    ProcdShadowDamageMax = 2250,
                 }, 0f, 45f, .35f));
             }
             else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
@@ -1038,8 +1036,8 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
                 {
                     ShadowDamage = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f,
-                    ProcdShadowDamageMin = int.Parse(match.Groups["amount1"].Value),
-                    ProcdShadowDamageMax = int.Parse(match.Groups["amount2"].Value),
+                    //ProcdShadowDamageMin = int.Parse(match.Groups["amount1"].Value),
+                    //ProcdShadowDamageMax = int.Parse(match.Groups["amount2"].Value),
                     // Stealing health means that some is restored to the user.
                     HealthRestore = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f,
 
@@ -1328,13 +1326,6 @@ namespace Rawr {
                 float spellpower = (float)int.Parse(match.Groups["power"].Value);
                 float time = (float)int.Parse(match.Groups["time"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { SpellPower = spellpower }, time, 60f, 0.1f));
-            }
-            else if ((match = new Regex(@"Your offensive spells have a chance on hit to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
-            {
-                // Ashen Band of Destruction - seems to be 60 sec iCD (wowhead)
-                float spellpower = (float)int.Parse(match.Groups["power"].Value);
-                float time = (float)int.Parse(match.Groups["time"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellpower }, time, 60f, 0.1f));
             }
             else if ((match = new Regex(@"Chance on hit to increase your attack power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
             {

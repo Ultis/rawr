@@ -912,7 +912,7 @@ namespace Rawr
                 htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
             }
             foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
-            foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel);
+            foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel, item.Id);
             #endregion
 
             #region Armor vs Bonus Armor Fixes
