@@ -133,7 +133,7 @@ namespace Rawr.Enhance
             sb.AppendLine("glyph_minor3                    -");
             sb.AppendLine();
 
-            sb.AppendLine("necrotic_touch                  " + (character.MainHand.Id == 30035 ? "1" : "0"));
+            sb.AppendLine("necrotic_touch                  " + (character.MainHand.Id == 50035 ? "1" : "0"));
             sb.AppendLine("mixology                        " + 
                 (character.PrimaryProfession == Profession.Alchemy ||
                  character.SecondaryProfession == Profession.Alchemy ? "1" : "0"));
