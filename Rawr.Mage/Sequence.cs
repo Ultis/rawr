@@ -241,13 +241,14 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-                if (t < MinTime(j, j - 1) - eps || overflowBuffer > eps || threatBuffer > eps)
+                double minTimeJ = MinTime(j, j - 1);
+                if (t < minTimeJ - eps || overflowBuffer > eps || threatBuffer > eps)
                 {
                     // sequence positioned too early, we have to buffer up with something that can
                     // be positioned at t and is either small enough not to disrupt max time
                     // or is splittable
                     bool updated = false;
-                    double minbuffer = MinTime(j, j - 1) - t;
+                    double minbuffer = minTimeJ - t;
                     double buffer = sequence[j].MaxTime - t;
                     int k;
                     for (k = j + 1; k < sequence.Count && (minbuffer > eps || overflowBuffer > eps || threatBuffer > eps) && buffer > eps; k++)
@@ -1488,6 +1489,7 @@ namespace Rawr.Mage.SequenceReconstruction
         List<double> compactTime;
         double compactTotalTime;
         int compactGroupSplits;
+        int compactInversions;
         //double compactLastDestro;
 
         public bool SortGroups(Solver solver)
@@ -1503,6 +1505,7 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             compactTotalTime = double.PositiveInfinity;
             compactGroupSplits = int.MaxValue;
+            compactInversions = int.MaxValue;
             //compactLastDestro = double.NegativeInfinity;
             //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
             groupedItems.Sort((x, y) => x.Segment.CompareTo(y.Segment));
@@ -1563,15 +1566,14 @@ namespace Rawr.Mage.SequenceReconstruction
 
             sequence.Sort((x, y) =>
             {
-                /*int compare = x.Segment.CompareTo(y.Segment);
-                if (compare != 0) return compare;*/
                 bool xgrouped = x.Group.Count > 0;
                 bool ygrouped = y.Group.Count > 0;
                 int compare = xgrouped.CompareTo(ygrouped);
                 if (compare != 0) return compare;
                 compare = x.MinTime.CompareTo(y.MinTime);
                 if (compare != 0) return compare;
-                return x.MaxTime.CompareTo(y.MaxTime);
+                compare = x.Segment.CompareTo(y.Segment);
+                return compare;
             });
             return true;
         }
@@ -2082,6 +2084,7 @@ namespace Rawr.Mage.SequenceReconstruction
             List<double>[] constructionTimeHistory = new List<double>[N];
             bool[] used = new bool[N];
             int[] index = new int[N];
+            int[] inversions = new int[N];
             int[] coldsnap = new int[N];
             double[] coldsnapTime = new double[N];
             int[] maxIntersect = new int[N];
@@ -2192,8 +2195,9 @@ namespace Rawr.Mage.SequenceReconstruction
                         groupSplits += (maxIndex - minIndex + 1) - group.Item.Count;
                     }
                     //if (lastDestro < FightDuration - 120.0) lastDestro = double.NegativeInfinity;
-                    if (groupSplits < compactGroupSplits /*|| (groupSplits == compactGroupSplits && time < compactTotalTime) || (groupSplits == compactGroupSplits && time == compactTotalTime && lastDestro > compactLastDestro)*/)
+                    if (inversions[N - 1] < compactInversions || (inversions[N - 1] == compactInversions && groupSplits < compactGroupSplits))
                     {
+                        compactInversions = inversions[N - 1];
                         compactGroupSplits = groupSplits;
                         //compactTotalTime = time;
                         //compactLastDestro = lastDestro;
@@ -2249,11 +2253,26 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     else
                     {
+                        if (i == 0)
+                        {
+                            inversions[0] = 0;
+                        }
+                        else
+                        {
+                            inversions[i] = inversions[i - 1];
+                        }
                         // check if valid
                         SequenceItem item = itemList[index[i]];
                         // if we have segmentation data take a more directed search, respect segmentation ordering (jumps should be eliminated, but check back in case something looks strange)
-                        if (i == 0 || ((item.SuperIndex == itemList[index[i - 1]].SuperIndex || superLeft[itemList[index[i - 1]].SuperIndex] == 0) && item.Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[item.Segment]))
+                        if (i == 0 || (item.Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[item.Segment]))
                         {
+                            if (i > 0)
+                            {
+                                if (!(item.SuperIndex == itemList[index[i - 1]].SuperIndex || superLeft[itemList[index[i - 1]].SuperIndex] == 0))
+                                {
+                                    inversions[i]++; // this is actually just a group split, but should be fine i think
+                                }
+                            }
                             int tail = item.CooldownHex;
                             int activeTail = 0;
                             int intersectHex = 0;
@@ -2263,271 +2282,269 @@ namespace Rawr.Mage.SequenceReconstruction
                                 intersectHex = HexCount(tail & activeTail);
                                 if (intersectHex > maxIntersect[i]) maxIntersect[i] = intersectHex;
                             }
-                            if (intersectHex >= maxIntersect[i])
+                            if (intersectHex < maxIntersect[i])
                             {
-                                used[index[i]] = true;
-                                itemList[index[i]].OrderIndex = i;
-                                superLeft[itemList[index[i]].SuperIndex]--;
-                                foreach (SequenceGroup group in itemList[index[i]].Group)
+                                inversions[i]++;
+                            }
+                            used[index[i]] = true;
+                            itemList[index[i]].OrderIndex = i;
+                            superLeft[itemList[index[i]].SuperIndex]--;
+                            foreach (SequenceGroup group in itemList[index[i]].Group)
+                            {
+                                if (group.OrderIndex == -1)
                                 {
-                                    if (group.OrderIndex == -1)
+                                    // first item in this group
+                                    group.OrderIndex = i;
+                                }
+                            }
+                            // skip tests for coldsnap == 0
+                            //if (coldsnap[i] == 1) // just compute it, if you want to optimize take a bit more time to think about it
+                            if (superLeft[itemList[index[i]].SuperIndex] > 0) // if we don't have enough constraints not all of these might be enforced
+                            {
+                                for (int j = 0; j < used.Length; j++)
+                                {
+                                    if (!used[j])
                                     {
-                                        // first item in this group
-                                        group.OrderIndex = i;
+                                        if (itemList[j].SuperIndex == item.SuperIndex)
+                                        {
+                                            // make sure activations are placed before use
+                                            if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
+                                            {
+                                                inversions[i]++;
+                                                //tail = 0;
+                                                //break;
+                                            }
+                                            if (item.CastingState.MirrorImage && item.VariableType != VariableType.SummonMirrorImage && itemList[j].VariableType == VariableType.SummonMirrorImage)
+                                            {
+                                                inversions[i]++;
+                                                //tail = 0;
+                                                //break;
+                                            }
+                                            if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                                            {
+                                                int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
+                                                if (intersectHexJ > intersectHex)
+                                                {
+                                                    inversions[i]++;
+                                                    /*if (j > index[i] && (i == 0 || (itemList[j].Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[itemList[j].Segment])))
+                                                    {
+                                                        // anything up to j is not valid, so skip ahead
+                                                        used[index[i]] = false;
+                                                        foreach (SequenceGroup group in itemList[index[i]].Group)
+                                                        {
+                                                            if (group.OrderIndex == i)
+                                                            {
+                                                                group.OrderIndex = -1;
+                                                            }
+                                                        }
+                                                        superLeft[itemList[index[i]].SuperIndex]++;
+                                                        index[i] = j;
+                                                        used[j] = true;
+                                                        itemList[j].OrderIndex = i;
+                                                        superLeft[itemList[index[i]].SuperIndex]--;
+                                                        foreach (SequenceGroup group in itemList[j].Group)
+                                                        {
+                                                            if (group.OrderIndex == -1)
+                                                            {
+                                                                // first item in this group
+                                                                group.OrderIndex = i;
+                                                            }
+                                                        }
+                                                        intersectHex = intersectHexJ;
+                                                        maxIntersect[i] = intersectHex;
+                                                        item = itemList[j];
+                                                        tail = item.CooldownHex;
+                                                        j = -1;
+                                                        continue;
+                                                    }
+                                                    else
+                                                    {
+                                                        // invalidate
+                                                        tail = 0;
+                                                        break;
+                                                    }*/
+                                                }
+                                            }
+                                            if ((itemList[j].CooldownHex & activeTail & ~item.CooldownHex) != 0) // strong requirement, if converting for reconstruction on nonsegmented data might have to remove this
+                                            {
+                                                // we'll have to place something from active tail that is being removed
+                                                // from active tail
+                                                inversions[i]++;
+                                                //tail = 0;
+                                                //break;
+                                            }
+                                            int intersect = item.CooldownHex & itemList[j].CooldownHex;
+                                            if (intersect > 0)
+                                            {
+                                                tail = intersect & tail;
+                                                if (tail == 0)
+                                                {
+                                                    inversions[i]++;
+                                                    //break;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                // skip tests for coldsnap == 0
-                                //if (coldsnap[i] == 1) // just compute it, if you want to optimize take a bit more time to think about it
-                                if (superLeft[itemList[index[i]].SuperIndex] > 0)
+                            }
+                            double time = 0;
+                            if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
+                            time = Math.Max(time, item.MinTime);
+                            double minTotalTime = time + item.Duration;
+                            //for (int j = 0; j < N; j++) // too expensive
+                            //{
+                            //    if (!used[j]) minTotalTime += itemList[j].Duration;
+                            //}
+                            //if (tail > 0 && minTotalTime < compactTotalTime)
+                            if (inversions[i] < compactInversions)
+                            {
+                                // check constraints
+                                List<int> icyVeinsStarts = new List<int>();
+                                List<int> waterElementalStarts = new List<int>();
+                                SequenceGroup icyVeinsGroup = null;
+                                SequenceGroup waterElementalGroup = null;
+                                foreach (SequenceGroup group in item.Group)
                                 {
-                                    for (int j = 0; j < used.Length; j++)
+                                    foreach (CooldownConstraint constraint in group.Constraint)
                                     {
-                                        if (!used[j])
+                                        if (!constraint.ColdSnap)
                                         {
-                                            if (itemList[j].SuperIndex == item.SuperIndex)
+                                            //for (int j = 0; j < i; j++)
+                                            //{
+                                            //    if (itemList[index[j]].Group.Contains(constraint.Group))
+                                            //    {
+                                            //        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                            //        break;
+                                            //    }
+                                            //}
+                                            int j = constraint.Group.OrderIndex;
+                                            if (j >= 0)
                                             {
-                                                // make sure activations are placed before use
-                                                if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
+                                                time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // if we're in group with already placed item then no need to redo all this
+                                            if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
+                                            if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsGroup = group;
+                                            if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
+                                            int minIndex = i;
+                                            foreach (SequenceItem coldsnapItem in constraint.Group.Item)
+                                            {
+                                                if (coldsnapItem.OrderIndex >= 0 && coldsnapItem.OrderIndex < N && index[coldsnapItem.OrderIndex] < N && itemList[index[coldsnapItem.OrderIndex]] == coldsnapItem && used[index[coldsnapItem.OrderIndex]] && coldsnapItem.OrderIndex < minIndex)
                                                 {
-                                                    tail = 0;
-                                                    break;
+                                                    minIndex = coldsnapItem.OrderIndex;
                                                 }
-                                                if (item.CastingState.MirrorImage && item.VariableType != VariableType.SummonMirrorImage && itemList[j].VariableType == VariableType.SummonMirrorImage)
-                                                {
-                                                    tail = 0;
-                                                    break;
-                                                }
-                                                if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
-                                                {
-                                                    int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
-                                                    if (intersectHexJ > intersectHex)
-                                                    {
-                                                        if (j > index[i] && (i == 0 || (itemList[j].Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[itemList[j].Segment])))
-                                                        {
-                                                            // anything up to j is not valid, so skip ahead
-                                                            used[index[i]] = false;
-                                                            foreach (SequenceGroup group in itemList[index[i]].Group)
-                                                            {
-                                                                if (group.OrderIndex == i)
-                                                                {
-                                                                    group.OrderIndex = -1;
-                                                                }
-                                                            }
-                                                            superLeft[itemList[index[i]].SuperIndex]++;
-                                                            index[i] = j;
-                                                            used[j] = true;
-                                                            itemList[j].OrderIndex = i;
-                                                            superLeft[itemList[index[i]].SuperIndex]--;
-                                                            foreach (SequenceGroup group in itemList[j].Group)
-                                                            {
-                                                                if (group.OrderIndex == -1)
-                                                                {
-                                                                    // first item in this group
-                                                                    group.OrderIndex = i;
-                                                                }
-                                                            }
-                                                            intersectHex = intersectHexJ;
-                                                            maxIntersect[i] = intersectHex;
-                                                            item = itemList[j];
-                                                            tail = item.CooldownHex;
-                                                            j = -1;
-                                                            continue;
-                                                        }
-                                                        else
-                                                        {
-                                                            // invalidate
-                                                            tail = 0;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                                if ((itemList[j].CooldownHex & activeTail & ~item.CooldownHex) != 0) // strong requirement, if converting for reconstruction on nonsegmented data might have to remove this
-                                                {
-                                                    // we'll have to place something from active tail that is being removed
-                                                    // from active tail
-                                                    tail = 0;
-                                                    break;
-                                                }
-                                                int intersect = item.CooldownHex & itemList[j].CooldownHex;
-                                                if (intersect > 0)
-                                                {
-                                                    tail = intersect & tail;
-                                                    if (tail == 0) break;
-                                                }
+                                            }
+                                            if (minIndex < i)
+                                            {
+                                                if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsStarts.Add(minIndex);
+                                                if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
                                             }
                                         }
                                     }
                                 }
-                                double time = 0;
-                                if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
-                                time = Math.Max(time, item.MinTime);
-                                double minTotalTime = time + item.Duration;
-                                //for (int j = 0; j < N; j++) // too expensive
-                                //{
-                                //    if (!used[j]) minTotalTime += itemList[j].Duration;
-                                //}
-                                if (tail > 0 && minTotalTime < compactTotalTime)
+                                bool valid = true;
+                                // we absolutely can't come faster than time
+                                // now check coldsnap constraints
+                                // the constraints should link to all the other icy veins/water elemental groups
+                                // look at the ones that were placed already and sort them by order index
+                                // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
+                                // if we don't need to use coldsnap anyway then adjust coldsnap to 0
+                                if (icyVeinsGroup != null || waterElementalGroup != null)
                                 {
-                                    // check constraints
-                                    List<int> icyVeinsStarts = new List<int>();
-                                    List<int> waterElementalStarts = new List<int>();
-                                    SequenceGroup icyVeinsGroup = null;
-                                    SequenceGroup waterElementalGroup = null;
-                                    foreach (SequenceGroup group in item.Group)
+                                    // this is only called for first coldsnap item in group
+                                    icyVeinsStarts.Sort();
+                                    waterElementalStarts.Sort();
+                                    int lastColdsnap = -1;
+                                    for (int j = 0; j < i; j++)
                                     {
-                                        foreach (CooldownConstraint constraint in group.Constraint)
-                                        {
-                                            if (!constraint.ColdSnap)
-                                            {
-                                                //for (int j = 0; j < i; j++)
-                                                //{
-                                                //    if (itemList[index[j]].Group.Contains(constraint.Group))
-                                                //    {
-                                                //        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
-                                                //        break;
-                                                //    }
-                                                //}
-                                                int j = constraint.Group.OrderIndex;
-                                                if (j >= 0)
-                                                {
-                                                    time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // if we're in group with already placed item then no need to redo all this
-                                                if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
-                                                if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsGroup = group;
-                                                if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
-                                                int minIndex = i;
-                                                foreach (SequenceItem coldsnapItem in constraint.Group.Item)
-                                                {
-                                                    if (coldsnapItem.OrderIndex >= 0 && coldsnapItem.OrderIndex < N && index[coldsnapItem.OrderIndex] < N && itemList[index[coldsnapItem.OrderIndex]] == coldsnapItem && used[index[coldsnapItem.OrderIndex]] && coldsnapItem.OrderIndex < minIndex)
-                                                    {
-                                                        minIndex = coldsnapItem.OrderIndex;
-                                                    }
-                                                }
-                                                if (minIndex < i)
-                                                {
-                                                    if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsStarts.Add(minIndex);
-                                                    if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
-                                                }
-                                            }
-                                        }
+                                        if (coldsnap[j] == 1) lastColdsnap = j;
                                     }
-                                    bool valid = true;
-                                    // we absolutely can't come faster than time
-                                    // now check coldsnap constraints
-                                    // the constraints should link to all the other icy veins/water elemental groups
-                                    // look at the ones that were placed already and sort them by order index
-                                    // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
-                                    // if we don't need to use coldsnap anyway then adjust coldsnap to 0
-                                    if (icyVeinsGroup != null || waterElementalGroup != null)
+                                    if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > SequenceItem.Calculations.WaterElementalDuration + eps))
                                     {
-                                        // this is only called for first coldsnap item in group
-                                        icyVeinsStarts.Sort();
-                                        waterElementalStarts.Sort();
-                                        int lastColdsnap = -1;
-                                        for (int j = 0; j < i; j++)
+                                        // we need internal coldsnap
+                                        if (coldsnap[i] == 1)
                                         {
-                                            if (coldsnap[j] == 1) lastColdsnap = j;
-                                        }
-                                        if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > SequenceItem.Calculations.WaterElementalDuration + eps))
-                                        {
-                                            // we need internal coldsnap
-                                            if (coldsnap[i] == 1)
-                                            {
-                                                double normalTime = time;
-                                                if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                                if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
-                                                double coldsnapReady = 0;
-                                                if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
-                                                // we have to do first one on normal time and have coldsnap ready in the middle
-                                                time = normalTime;
-                                                if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
-                                                if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
-                                                coldsnapTime[i] = Math.Max(time, coldsnapReady);
-                                            }
-                                            else
-                                            {
-                                                // can't do without coldsnap
-                                                valid = false;
-                                            }
-                                        }
-                                        else if ((icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps) && (waterElementalGroup == null || waterElementalStarts.Count == 0 || time - constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] >= SequenceItem.Calculations.WaterElementalCooldown - eps))
-                                        {
-                                            // don't need coldsnap and can start right at time
-                                            coldsnap[i] = 0;
-                                        }
-                                        else if (coldsnap[i] == 1)
-                                        {
-                                            // use coldsnap
                                             double normalTime = time;
                                             if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
                                             if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                             double coldsnapReady = 0;
                                             if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
-                                            if (coldsnapReady >= normalTime)
-                                            {
-                                                // coldsnap won't be ready until IV/WE will be back anyway, so we don't actually need it
-                                                coldsnap[i] = 0;
-                                                time = normalTime;
-                                            }
-                                            else
-                                            {
-                                                // go now or when coldsnap is ready
-                                                time = Math.Max(coldsnapReady, time);
-                                                coldsnapTime[i] = coldsnapReady;
-                                                if (icyVeinsStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]]);
-                                                if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
-                                            }
+                                            // we have to do first one on normal time and have coldsnap ready in the middle
+                                            time = normalTime;
+                                            if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
+                                            if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
+                                            coldsnapTime[i] = Math.Max(time, coldsnapReady);
                                         }
                                         else
                                         {
-                                            // we are not allowed to use coldsnap even if we could
-                                            // make sure to adjust by coldsnap constraints
-                                            double normalTime = time;
-                                            if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
-                                            time = normalTime;
+                                            // can't do without coldsnap
+                                            valid = false;
                                         }
                                     }
-                                    else
+                                    else if ((icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps) && (waterElementalGroup == null || waterElementalStarts.Count == 0 || time - constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] >= SequenceItem.Calculations.WaterElementalCooldown - eps))
                                     {
-                                        // no coldsnap constraints active
+                                        // don't need coldsnap and can start right at time
                                         coldsnap[i] = 0;
                                     }
-                                    if (valid)
+                                    else if (coldsnap[i] == 1)
                                     {
-                                        List<double> adjustedConstructionTime = new List<double>(constructionTime);
-                                        adjustedConstructionTime.Add(time);
-                                        // adjust min time of items in same super group
-                                        for (int j = adjustedConstructionTime.Count - 2; j >= 0 && itemList[index[j]].SuperIndex == item.SuperIndex; j--)
+                                        // use coldsnap
+                                        double normalTime = time;
+                                        if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                        if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                        double coldsnapReady = 0;
+                                        if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
+                                        if (coldsnapReady >= normalTime)
                                         {
-                                            time -= itemList[index[j]].Duration;
-                                            adjustedConstructionTime[j] = time;
+                                            // coldsnap won't be ready until IV/WE will be back anyway, so we don't actually need it
+                                            coldsnap[i] = 0;
+                                            time = normalTime;
                                         }
-                                        constructionTimeHistory[i] = constructionTime;
-                                        constructionTime = adjustedConstructionTime;
-                                        i++;
-                                        if (i < N)
+                                        else
                                         {
-                                            index[i] = 0;
-                                            maxIntersect[i] = 0;
-                                            coldsnap[i] = maxColdsnap;
+                                            // go now or when coldsnap is ready
+                                            time = Math.Max(coldsnapReady, time);
+                                            coldsnapTime[i] = coldsnapReady;
+                                            if (icyVeinsStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]]);
+                                            if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
                                         }
                                     }
                                     else
                                     {
-                                        used[index[i]] = false;
-                                        superLeft[itemList[index[i]].SuperIndex]++;
-                                        foreach (SequenceGroup group in itemList[index[i]].Group)
-                                        {
-                                            if (group.OrderIndex == i)
-                                            {
-                                                group.OrderIndex = -1;
-                                            }
-                                        }
+                                        // we are not allowed to use coldsnap even if we could
+                                        // make sure to adjust by coldsnap constraints
+                                        double normalTime = time;
+                                        if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                        if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                        time = normalTime;
+                                    }
+                                }
+                                else
+                                {
+                                    // no coldsnap constraints active
+                                    coldsnap[i] = 0;
+                                }
+                                if (valid)
+                                {
+                                    List<double> adjustedConstructionTime = new List<double>(constructionTime);
+                                    adjustedConstructionTime.Add(time);
+                                    // adjust min time of items in same super group
+                                    for (int j = adjustedConstructionTime.Count - 2; j >= 0 && itemList[index[j]].SuperIndex == item.SuperIndex; j--)
+                                    {
+                                        time -= itemList[index[j]].Duration;
+                                        adjustedConstructionTime[j] = time;
+                                    }
+                                    constructionTimeHistory[i] = constructionTime;
+                                    constructionTime = adjustedConstructionTime;
+                                    i++;
+                                    if (i < N)
+                                    {
+                                        index[i] = 0;
+                                        maxIntersect[i] = 0;
+                                        coldsnap[i] = maxColdsnap;
                                     }
                                 }
                                 else
@@ -2540,6 +2557,18 @@ namespace Rawr.Mage.SequenceReconstruction
                                         {
                                             group.OrderIndex = -1;
                                         }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                used[index[i]] = false;
+                                superLeft[itemList[index[i]].SuperIndex]++;
+                                foreach (SequenceGroup group in itemList[index[i]].Group)
+                                {
+                                    if (group.OrderIndex == i)
+                                    {
+                                        group.OrderIndex = -1;
                                     }
                                 }
                             }

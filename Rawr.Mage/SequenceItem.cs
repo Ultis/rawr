@@ -223,8 +223,8 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public override string ToString()
         {
-            if (cycle == null) return index.ToString();
-            return castingState.BuffLabel + "+" + cycle.Name;
+            if (cycle == null) return string.Format("{0}: {1}", Segment, VariableType);
+            return string.Format("{0}: {1}", Segment, castingState.BuffLabel + "+" + cycle.Name);
         }
     }
 }
