@@ -80,20 +80,22 @@ namespace Rawr.UI
             get { return legendItems; }
             set
             {
-                legendItems = value;
-                if (legendItems != null)
-                {
-					//Turning this off for performance reasons. You should re-call DisplayCalcs after setting LegendItems
-					//if (comparisonItems != null)
-					//{
-					//    foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
-					//}
-                    LegendStack.Children.Clear();
-                    foreach (KeyValuePair<string, Color> kvp in legendItems)
-                    {
-                        LegendStack.Children.Add(new ComparisonGraphBar() { Color = kvp.Value, Title = kvp.Key });
-                    }
-                }
+				if (legendItems != value)
+				{
+					legendItems = value;
+					if (legendItems != null)
+					{
+						if (comparisonItems != null)
+						{
+							foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
+						}
+						LegendStack.Children.Clear();
+						foreach (KeyValuePair<string, Color> kvp in legendItems)
+						{
+							LegendStack.Children.Add(new ComparisonGraphBar() { Color = kvp.Value, Title = kvp.Key });
+						}
+					}
+				}
             }
         }
 
