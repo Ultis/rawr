@@ -1262,7 +1262,7 @@ namespace Rawr {
             else if (line == "Your weapon swings have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional 9% damage as shadow damage.")
             {
                 // Black Bruise
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = .09f }, 10f, 0f, 0.0275f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = .09f }, 10f, 0f, 0.033f));
             }
             #endregion
             #region 3.3 Trinkets

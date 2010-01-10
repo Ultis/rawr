@@ -1494,7 +1494,7 @@ namespace Rawr //O O . .
 			{
 				CalculationsInvalidated(this, EventArgs.Empty);
 #if DEBUG
-				System.Diagnostics.Debug.WriteLine("Finished CalculationsInvalidated: Total {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
+				System.Diagnostics.Debug.WriteLine("Finished CalculationsInvalidated: Total {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds.ToString());
 #endif
 			}
 		}
