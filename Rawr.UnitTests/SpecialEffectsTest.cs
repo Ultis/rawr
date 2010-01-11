@@ -209,7 +209,7 @@ namespace Rawr.UnitTests
                 string line = m_TestLineArray[m_i];
                 Stats stats = new Stats();
                 bool isArmory = false;
-                SpecialEffects.ProcessEquipLine(line, stats, isArmory, 0);
+                SpecialEffects.ProcessEquipLine(line, stats, isArmory, 0, 0);
                 string szExpected = m_ExpectedArray[m_i].ToString();
                 string szStats = stats.ToString();
                 Assert.AreEqual(szExpected, szStats, line);

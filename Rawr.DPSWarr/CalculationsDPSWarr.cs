@@ -60,7 +60,7 @@ namespace Rawr.DPSWarr {
 
                 #region Armor Pen
                 enabled = true;
-                group = "Armor Pen";
+                group = "ArPen";
                 // Straight
                 AddTemplates(templates, red_arp, red_arp, red_arp, red_arp, group, enabled);
                 // Socket Bonus
@@ -81,7 +81,7 @@ namespace Rawr.DPSWarr {
                     AddTemplates(templates, red_arp, blu_hit, ylw_hit[k], red_arp, group, enabled);
                 }
                 // Exp
-                group = "Exp";
+                group = "Expertise";
                 enabled = false;
                 // Straight
                 AddTemplates(templates, red_exp, red_exp, red_exp, red_exp, group, enabled);
@@ -94,6 +94,8 @@ namespace Rawr.DPSWarr {
                 enabled = false;                
                 // Strength
                 AddTemplates(templates, red_str, blu_str, ylw_has, red_str, group, enabled);
+                // ArP
+                AddTemplates(templates, red_arp, blu_arp, ylw_has, red_arp, group, enabled);
                 #endregion
 
                 /*foreach (GemmingTemplate gt in templates)
@@ -107,8 +109,9 @@ namespace Rawr.DPSWarr {
                 
                 templates.Sort(new Comparison<GemmingTemplate>(
                     delegate(GemmingTemplate first, GemmingTemplate second) {
-                        string[] group1 = first.Group.Split(new char[] {' '}, 2, System.StringSplitOptions.None);
-                        string[] group2 = second.Group.Split(new char[] { ' ' }, 2, System.StringSplitOptions.None);
+                        char[] splitters = {' '};
+                        string[] group1 = first.Group.Split(splitters, System.StringSplitOptions.RemoveEmptyEntries);
+                        string[] group2 = second.Group.Split(splitters, System.StringSplitOptions.RemoveEmptyEntries);
                         int temp = group1[0].CompareTo(group2[0]);
                         if (temp != 0) // they're not the same
                         {
@@ -124,13 +127,19 @@ namespace Rawr.DPSWarr {
                                 // str > arp > hit > exp > crit-capped
                                 switch (group1[1]) {
                                     case "Strength": return -1;
-                                    case "Armor Pen": return (group2[1] == "Strength" ? 1 : -1);
-                                    case "Hit": return (group2[1] == "Strength" || group2[1] == "Armor Pen" ? 1 : -1);
+                                    case "ArPen": return (group2[1] == "Strength" ? 1 : -1);
+                                    case "Hit": return (group2[1] == "Strength" || group2[1] == "ArPen" ? 1 : -1);
                                     case "Expertise": return (group2[1] != "Crit-capped" ? 1 : -1);
                                     default: return 1;
                                 }
                             } else {
-                                return 0; // Not exact, but i'll take it for now 
+                                int val = first.RedId.CompareTo(second.RedId);
+                                if (val != 0) return val;
+                                val = first.YellowId.CompareTo(second.YellowId);
+                                if (val != 0) return val;
+                                val = first.BlueId.CompareTo(second.BlueId);
+                                if (val != 0) return val;
+                                return first.MetaId.CompareTo(second.MetaId);
                             }
                         }
                         
