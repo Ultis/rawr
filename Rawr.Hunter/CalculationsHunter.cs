@@ -2758,6 +2758,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             HunterTalents talents = Char.HunterTalents;
             Stats statsProcs = new Stats();
             float fightDuration_M = calcOpts.Duration;
+            Stats _stats;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
@@ -2771,10 +2772,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         effect.Stats.ArmorPenetrationRating = arpToHardCap;
                     }
                 }
-                if (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use) {
+                if (triggerIntervals.ContainsKey(effect.Trigger) && (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use))
+                {
                     switch (effect.Trigger) {
                         case Trigger.Use:
-                            Stats _stats = new Stats();
+                            _stats = new Stats();
                             if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
                                 float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
                                 _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
@@ -2786,52 +2788,36 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                 _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
                             }
                             statsProcs.Accumulate(_stats);
-                            break;
-                        case Trigger.MeleeHit: // Pets Only
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            _stats = null;
                             break;
                         case Trigger.RangedHit:
                         case Trigger.PhysicalHit:
-                            Stats add = new Stats();
+                            _stats = new Stats();
                             float weight = 1.0f;
                             if (effect.Stats.DeathbringerProc > 0) {
-                                add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                                add.Agility = add.DeathbringerProc;
-                                add.CritRating = add.DeathbringerProc;
-                                add.AttackPower = add.DeathbringerProc * 2f;
-                                add.DeathbringerProc = 0f;
+                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                _stats.Agility = _stats.DeathbringerProc;
+                                _stats.CritRating = _stats.DeathbringerProc;
+                                _stats.AttackPower = _stats.DeathbringerProc * 2f;
+                                _stats.DeathbringerProc = 0f;
                                 weight = 1f / 3f;
                             } else {
-                                add = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             }
-                            statsProcs.Accumulate(add, weight);
+                            statsProcs.Accumulate(_stats, weight);
+                            _stats = null;
                             break;
+                        case Trigger.MeleeHit: // Pets Only
                         case Trigger.MeleeCrit: // Pets Only
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            break;
                         case Trigger.RangedCrit:
                         case Trigger.PhysicalCrit:
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            break;
                         case Trigger.DoTTick:
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            break;
                         case Trigger.DamageDone: // physical and dots
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            break;
                         case Trigger.HunterAutoShotHit:
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            break;
                         case Trigger.SteadyShotHit:
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            break;
                         case Trigger.PetClawBiteSmackCrit:
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            break;
                         case Trigger.SerpentWyvernStingsDoDamage:
-                            if (triggerIntervals[effect.Trigger] > 0f) {
-                                statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration); // this needs to be fixed to read steady shot frequencies
-                            }
+                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                             break;
                     }
                 }

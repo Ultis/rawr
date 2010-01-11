@@ -107,8 +107,8 @@ namespace Rawr.DPSWarr {
                 
                 templates.Sort(new Comparison<GemmingTemplate>(
                     delegate(GemmingTemplate first, GemmingTemplate second) {
-                        string[] group1 = first.Group.Split(new char[] {' '}, (System.StringSplitOptions)2);
-                        string[] group2 = second.Group.Split(new char[] { ' ' }, (System.StringSplitOptions)2);
+                        string[] group1 = first.Group.Split(new char[] {' '}, 2, System.StringSplitOptions.None);
+                        string[] group2 = second.Group.Split(new char[] { ' ' }, 2, System.StringSplitOptions.None);
                         int temp = group1[0].CompareTo(group2[0]);
                         if (temp != 0) // they're not the same
                         {
@@ -120,20 +120,16 @@ namespace Rawr.DPSWarr {
                         else // they're the same
                         {
                             temp = group1[1].CompareTo(group2[1]);
-                            if (temp != 0)
-                            {
+                            if (temp != 0) {
                                 // str > arp > hit > exp > crit-capped
-                                switch (group1[1])
-                                {
+                                switch (group1[1]) {
                                     case "Strength": return -1;
                                     case "Armor Pen": return (group2[1] == "Strength" ? 1 : -1);
                                     case "Hit": return (group2[1] == "Strength" || group2[1] == "Armor Pen" ? 1 : -1);
                                     case "Expertise": return (group2[1] != "Crit-capped" ? 1 : -1);
                                     default: return 1;
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 return 0; // Not exact, but i'll take it for now 
                             }
                         }
