@@ -134,6 +134,7 @@ namespace Rawr.Enhance
             sb.AppendLine();
 
             sb.AppendLine("necrotic_touch                  " + (character.MainHand.Id == 50035 ? "1" : "0"));
+            sb.AppendLine("necrotic_touch_heroic           " + (character.MainHand.Id == 50692 ? "1" : "0"));
             sb.AppendLine("mixology                        " + 
                 (character.PrimaryProfession == Profession.Alchemy ||
                  character.SecondaryProfession == Profession.Alchemy ? "1" : "0"));

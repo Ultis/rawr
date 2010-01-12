@@ -18,7 +18,6 @@ namespace Rawr.Enhance
         private float whiteCritDepression = 0.048f;
         private float yellowCritDepression = 0.018f;
         private float fightLength = 0f;
-        private float chanceCrit = 0f;
         private float chanceDodgeMH = 0f;
         private float chanceDodgeOH = 0f;
         private float chanceParryMH = 0f;
@@ -111,8 +110,6 @@ namespace Rawr.Enhance
         public float ChanceWhiteCritOH { get { return chanceWhiteCritOH; } }
         public float ChanceYellowCritMH { get { return chanceYellowCritMH; } }
         public float ChanceYellowCritOH { get { return chanceYellowCritOH; } }
-        public float ChanceMeleeHit { get { return chanceMeleeHit; } }
-        public float ChanceMeleeCrit { get { return chanceCrit; } }
         public float OverSpellHitCap { get { return overSpellHitCap; } }
 
         public float AverageDodge { get { return (ChanceDodgeMH + ChanceDodgeOH) / 2; } }
@@ -156,7 +153,7 @@ namespace Rawr.Enhance
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
-        public float DisplayMeleeCrit { get { return chanceCrit; } }
+        public float DisplayMeleeCrit { get { return AverageWhiteCrit; } }
         public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
 
@@ -234,8 +231,6 @@ namespace Rawr.Enhance
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
-            // max crit chance 95.2% (ie 100% - 4.8% crit reduction) see http://elitistjerks.com/f31/t76785-crit_depression_combat_table/
-            chanceCrit         = Math.Min(1f - whiteCritDepression - GlancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             chanceDodgeMH      = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
             chanceDodgeOH      = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);
             float ParryChance = ParryChanceCap - expertiseBonusMH;
@@ -246,8 +241,12 @@ namespace Rawr.Enhance
             chanceWhiteMissOH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeOH + chanceParryOH;
             chanceYellowMissMH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeMH + chanceParryMH; // base miss 8% now
             chanceYellowMissOH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeOH + chanceParryOH; // base miss 8% now
-            chanceWhiteCritMH  = Math.Min(chanceCrit - whiteCritDepression , 1f - GlancingRate - chanceWhiteMissMH);
-            chanceWhiteCritOH  = Math.Min(chanceCrit - whiteCritDepression , 1f - GlancingRate - chanceWhiteMissOH);
+            
+            // max crit chance 71.2% (ie 100% - 4.8% crit reduction - 24% glancing) 
+            // see http://elitistjerks.com/f31/t76785-crit_depression_combat_table/
+            float chanceCrit = Math.Min(1f - whiteCritDepression - GlancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            chanceWhiteCritMH = Math.Min(chanceCrit - whiteCritDepression, 1f - GlancingRate - chanceWhiteMissMH);
+            chanceWhiteCritOH  = Math.Min(chanceCrit - whiteCritDepression, 1f - GlancingRate - chanceWhiteMissOH);
             chanceYellowCritMH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissMH);
             chanceYellowCritOH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissOH);
 

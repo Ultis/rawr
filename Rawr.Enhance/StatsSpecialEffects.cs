@@ -107,19 +107,19 @@ namespace Rawr.Enhance
             {
                 case Trigger.DamageDone:
                     trigger = (_cs.HastedMHSpeed + 1f / _cs.GetSpellAttacksPerSec()) / 2f;
-                    chance = (float)Math.Min(1.0f, _cs.ChanceMeleeHit + _cs.ChanceSpellHit); // limit to 100% chance
+                    chance = (float)Math.Min(1.0f, _cs.AverageWhiteHit + _cs.ChanceSpellHit); // limit to 100% chance
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
                     trigger = _cs.HastedMHSpeed;
-                    chance = _cs.ChanceMeleeCrit;
+                    chance = _cs.AverageWhiteCrit;
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.MeleeHit:
                 case Trigger.PhysicalHit:
                     trigger = _cs.HastedMHSpeed;
-                    chance = _cs.ChanceMeleeHit;
+                    chance = _cs.AverageWhiteHit;
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.DamageSpellCast:
@@ -186,14 +186,14 @@ namespace Rawr.Enhance
         {
             if (mainHandEnchant != null && mainHandEnchant.Trigger == Trigger.SpellHit)
                 return mainHandEnchant.GetAverageUptime(1f / _cs.GetSpellAttacksPerSec(), _cs.ChanceSpellHit, _cs.UnhastedMHSpeed, _cs.FightLength);
-            return mainHandEnchant == null ? 0f : mainHandEnchant.GetAverageUptime(_cs.HastedMHSpeed, _cs.ChanceMeleeHit, _cs.UnhastedMHSpeed, _cs.FightLength);
+            return mainHandEnchant == null ? 0f : mainHandEnchant.GetAverageUptime(_cs.HastedMHSpeed, _cs.ChanceWhiteHitMH, _cs.UnhastedMHSpeed, _cs.FightLength);
         }
 
         public float GetOHUptime()
         {
             if (offHandEnchant != null && offHandEnchant.Trigger == Trigger.SpellHit)
                 return offHandEnchant.GetAverageUptime(1f / _cs.GetSpellAttacksPerSec(), _cs.ChanceSpellHit, _cs.UnhastedOHSpeed, _cs.FightLength);
-            return offHandEnchant == null ? 0f : offHandEnchant.GetAverageUptime(_cs.HastedOHSpeed, _cs.ChanceMeleeHit, _cs.UnhastedOHSpeed, _cs.FightLength);
+            return offHandEnchant == null ? 0f : offHandEnchant.GetAverageUptime(_cs.HastedOHSpeed, _cs.ChanceWhiteHitOH, _cs.UnhastedOHSpeed, _cs.FightLength);
         }
 
         // Handling for Paragon trinket procs
