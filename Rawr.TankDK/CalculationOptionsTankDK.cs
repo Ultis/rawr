@@ -184,7 +184,7 @@ namespace Rawr.TankDK
             {
                 if (null == _m_rotation)
                 {
-                    _m_rotation = new Rotation();
+                    _m_rotation = new Rotation(talents);
                 }
                 return _m_rotation;
             }

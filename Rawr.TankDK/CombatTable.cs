@@ -77,14 +77,10 @@ namespace Rawr.TankDK
                 // Crit: Base .65%
                 physCrits = .0065f;
                 physCrits += stats.PhysicalCrit;
-//                calcs.CritChance = physCrits;
 
                 chanceAvoided = 0.335f;
 
                 chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
-
-//                calcs.DodgedMHAttacks = MH.chanceDodged;
-//                calcs.DodgedOHAttacks = OH.chanceDodged;
 
                 if (character.MainHand != null)
                 {
@@ -116,16 +112,13 @@ namespace Rawr.TankDK
 //                calcs.TargetMiss = chanceMiss;
 
                 chanceAvoided = chanceDodged + chanceMiss;
-//                chanceAvoided = chanceDodged + chanceMiss;
 
                 chanceDodged = MH.chanceDodged;
                 missedSpecial = chanceMiss;
                 dodgedSpecial = chanceDodged;
-                // calcs.MissedAttacks = chanceMiss           
 
                 spellCrits = 0f;
                 spellCrits += stats.SpellCrit;
-//                calcs.SpellCritChance = spellCrits;
 
                 // Resists: Base 17%
                 spellResist = .17f;
@@ -603,13 +596,7 @@ namespace Rawr.TankDK
                 if (calcOpts.m_Rotation.Pestilence > 0f )
                 {
                     fDamBloodPlague *= calcOpts.uNumberTargets;
-                    if (talents.GlyphofHowlingBlast && calcOpts.m_Rotation.HowlingBlast > 0f)
-                    {
-                    }
-                    else
-                    {
-                        fDamFrostFever *= calcOpts.uNumberTargets;
-                    }
+                    fDamFrostFever *= calcOpts.uNumberTargets;
                 }
             }
             #endregion

@@ -13,7 +13,6 @@ namespace Rawr.TankDK {
         public float m_fPhysicalHaste = 0f;
 //        public Stats m_FullStats = new Stats();
         
-        // Initial Code taken from DPSDK
         public Type curRotationType = Type.Frost;
         
         public float curRotationDuration = 0f;  // rotation duration in seconds
@@ -22,7 +21,6 @@ namespace Rawr.TankDK {
         public float avgDiseaseMult = 0f;
         public float numDisease = 0f;
         public float diseaseUptime = 0f;
-//        public float GargoyleDuration = 0f;
         
         //ability number of times per rotation used 
         public float DeathCoil = 0f;
@@ -54,9 +52,17 @@ namespace Rawr.TankDK {
         public float GCDTime;
         public float RP;
 
-        public Rotation() 
+        public Rotation( ) 
         {
             this.setRotation(this.curRotationType); 
+        }
+
+        public Rotation(DeathKnightTalents t)
+        {
+            if (t != null)
+                this.GetRotationByTalents(t);
+            else
+                this.setRotation(this.curRotationType); 
         }
 
         public enum Type { Custom, Blood, Frost, Unholy }
@@ -254,5 +260,93 @@ namespace Rawr.TankDK {
                     break;
             }
         }
+
+        public void GetRotationByTalents(DeathKnightTalents t)
+        {
+            // Frost
+            if (t.HowlingBlast > 0)
+            {
+                curRotationType = Type.Frost;
+
+                // Default Frost Rotation.
+                numDisease = 2f;
+                diseaseUptime = 100f;
+                DeathCoil = 0f;
+                IcyTouch = 2f;
+                PlagueStrike = 2f;
+                ScourgeStrike = 0f;
+                FrostStrike = 1f;
+                HowlingBlast = 0f;
+                Obliterate = 3f;
+                BloodStrike = 2f;
+                HeartStrike = 0f;
+                DeathStrike = 0f;
+                RuneStrike = 3f;
+                Pestilence = 0f;
+                curRotationDuration = 20f;
+
+                if (t.GlyphofHowlingBlast)
+                {
+                    // Single Disease Glyphed HB rotation
+                    numDisease = 1f;
+                    IcyTouch = 1f;
+                    PlagueStrike = 1f;
+                    HowlingBlast = 1f;
+                }
+                if (t.Rime > 0)
+                {
+                    // Additional HB proc based on Rime.
+                    HowlingBlast += .5f;
+                }
+            }
+            else if (t.BloodGorged > 0)
+            // Blood
+            {
+                curRotationType = Type.Blood;
+
+                numDisease = 2f;
+                diseaseUptime = 100f;
+                DeathCoil = 2f;
+                IcyTouch = 1f;
+                PlagueStrike = 1f;
+                ScourgeStrike = 0f;
+                FrostStrike = 0f;
+                HowlingBlast = 0f;
+                Obliterate = 0f;
+                DeathStrike = 2f;
+                BloodStrike = 0f;
+                HeartStrike = 6f;
+                Pestilence = 0f;
+                RuneStrike = 2f;
+                curRotationDuration = 20f;
+            }
+            else if (t.EbonPlaguebringer > 0)
+            // UnHoly
+            {
+                curRotationType = Type.Unholy;
+
+                numDisease = 3f;
+                diseaseUptime = 100f;
+                DeathCoil = 0f;
+                IcyTouch = 1f;
+                PlagueStrike = 1f;
+                ScourgeStrike = 4f;
+                FrostStrike = 0f;
+                HowlingBlast = 0f;
+                Obliterate = 0f;
+                BloodStrike = 2f;
+                HeartStrike = 0f;
+                curRotationDuration = 20f;
+                DeathStrike = 0f;
+                RuneStrike = 2f;
+                Pestilence = 0f;
+            }
+            else
+            // Unknown/custom build.
+            {
+                curRotationType = Type.Custom;
+            }
+        }
+
     }
 }
