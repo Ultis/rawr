@@ -198,7 +198,7 @@
             this.txtLatency.Name = "txtLatency";
             this.txtLatency.Size = new System.Drawing.Size(83, 20);
             this.txtLatency.TabIndex = 49;
-            this.tipRestoSham.SetToolTip(this.txtLatency, "The number of times per fight you use Cleanse Spirit.");
+            this.tipRestoSham.SetToolTip(this.txtLatency, "Your normal latency.");
             this.txtLatency.Validated += new System.EventHandler(this.numericTextBox_Validated);
             this.txtLatency.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
             // 
