@@ -55,6 +55,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+  <Compile Include="..\..\Rawr.RestoSham\RelevantStats.cs">
+      <Link>RelevantStats.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.RestoSham\CalculationOptionsRestoSham.cs">
       <Link>CalculationOptionsRestoSham.cs</Link>
     </Compile>
