@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Drawing;
 #endif
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Rawr.RestoSham
 {
@@ -1007,9 +1008,6 @@ namespace Rawr.RestoSham
                     }
 
                     break;
-
-
-
             }
 
             ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
@@ -1022,7 +1020,19 @@ namespace Rawr.RestoSham
         #region Relevant Stats
         public override Stats GetRelevantStats(Stats stats)
         {
-            Stats s = new Stats()
+            Stats relevantStats = new Stats();
+            Type statsType = typeof(Stats);
+            
+            foreach (string relevantStat in RelevantStats.StatList)
+            {
+                float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
+                if (v > 0)
+                {
+                    statsType.GetProperty(relevantStat).SetValue(relevantStats, v, null);
+                }
+            }
+
+            /*Stats relevantStats = new Stats()
             {
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
@@ -1059,7 +1069,7 @@ namespace Rawr.RestoSham
                 FireDamage = stats.FireDamage,
                 Healed = stats.Healed,
                 Hp5 = stats.Hp5,
-            };
+            };*/
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1072,16 +1082,30 @@ namespace Rawr.RestoSham
                     effect.Trigger == Trigger.Use)
                 {
                     if (HasRelevantStats(effect.Stats))
-                        s.AddSpecialEffect(effect);
+                        relevantStats.AddSpecialEffect(effect);
                 }
             }
 
-            return s;
+            return relevantStats;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.SpellCrit +
+            float statTotal = 0f;
+
+            // Loop over each relevant stat and get its value
+            Type statsType = typeof(Stats);
+            foreach (string relevantStat in RelevantStats.StatList)
+            {
+                float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
+                if (v > 0)
+                    statTotal += v;
+            }
+
+            // if statTotal > 0 then we have relevant stats
+            return statTotal > 0;
+
+            /*return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.SpellCrit +
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestore + stats.HighestStat +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
@@ -1089,7 +1113,7 @@ namespace Rawr.RestoSham
                 stats.TotemHWSpellpower + stats.TotemLHWSpellpower + stats.TotemThunderhead + stats.RestoSham2T9 + stats.RestoSham4T9 +
                 stats.RestoSham2T10 + stats.RestoSham4T10 + stats.RestoShamRelicT9 + stats.RestoShamRelicT10 +
                 stats.FireDamage + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
-                ) > 0;
+                ) > 0;*/
         }
         public Stats GetBuffsStats(Character character, CalculationOptionsRestoSham calcOpts)
         {
