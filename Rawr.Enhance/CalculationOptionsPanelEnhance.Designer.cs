@@ -87,6 +87,7 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.chbShowExportMsgBox = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
@@ -118,6 +119,7 @@
             // 
             // tabPageBasics
             // 
+            this.tabPageBasics.Controls.Add(this.chbShowExportMsgBox);
             this.tabPageBasics.Controls.Add(this.labelReactionTime);
             this.tabPageBasics.Controls.Add(this.trackBarReactionTime);
             this.tabPageBasics.Controls.Add(this.label12);
@@ -181,7 +183,7 @@
             // 
             this.labelSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSRMana.Location = new System.Drawing.Point(123, 251);
+            this.labelSRMana.Location = new System.Drawing.Point(123, 274);
             this.labelSRMana.Name = "labelSRMana";
             this.labelSRMana.Size = new System.Drawing.Size(145, 12);
             this.labelSRMana.TabIndex = 56;
@@ -194,7 +196,7 @@
             this.trackbarSRMana.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackbarSRMana.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackbarSRMana.LargeChange = 250;
-            this.trackbarSRMana.Location = new System.Drawing.Point(123, 218);
+            this.trackbarSRMana.Location = new System.Drawing.Point(123, 241);
             this.trackbarSRMana.Maximum = 5000;
             this.trackbarSRMana.Name = "trackbarSRMana";
             this.trackbarSRMana.Size = new System.Drawing.Size(145, 45);
@@ -208,7 +210,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 227);
+            this.label9.Location = new System.Drawing.Point(8, 250);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 13);
             this.label9.TabIndex = 54;
@@ -219,7 +221,7 @@
             this.chbMana.AutoSize = true;
             this.chbMana.Checked = true;
             this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMana.Location = new System.Drawing.Point(10, 195);
+            this.chbMana.Location = new System.Drawing.Point(10, 218);
             this.chbMana.Name = "chbMana";
             this.chbMana.Size = new System.Drawing.Size(135, 17);
             this.chbMana.TabIndex = 53;
@@ -853,6 +855,19 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // chbShowExportMsgBox
+            // 
+            this.chbShowExportMsgBox.AutoSize = true;
+            this.chbShowExportMsgBox.Checked = true;
+            this.chbShowExportMsgBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbShowExportMsgBox.Location = new System.Drawing.Point(10, 195);
+            this.chbShowExportMsgBox.Name = "chbShowExportMsgBox";
+            this.chbShowExportMsgBox.Size = new System.Drawing.Size(213, 17);
+            this.chbShowExportMsgBox.TabIndex = 62;
+            this.chbShowExportMsgBox.Text = "Show Export Message Box confirmation";
+            this.chbShowExportMsgBox.UseVisualStyleBackColor = true;
+            this.chbShowExportMsgBox.CheckedChanged += new System.EventHandler(this.chbShowExportMsgBox_CheckedChanged);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -945,6 +960,7 @@
         private System.Windows.Forms.CheckBox chkStatsAP;
         private System.Windows.Forms.CheckBox chkStatsAgility;
         private System.Windows.Forms.CheckBox chkStatsStrength;
+        private System.Windows.Forms.CheckBox chbShowExportMsgBox;
 
     }
 }

@@ -35,6 +35,7 @@ namespace Rawr.Enhance
         private float _additionalTargetPercent = 0.25f;
         private bool _baseStatOption = true;
         private bool _useMana = true;
+        private bool _showExportMessageBox = true;
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList = SetPriorityDefaults();
         private List<KeyValuePair<EnhanceAbility, Priority>> _sortedList;
@@ -60,6 +61,7 @@ namespace Rawr.Enhance
         public bool FireElemental { get { return PriorityInUse(EnhanceAbility.FireElemental); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
         public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
+        public bool ShowExportMessageBox { get { return _showExportMessageBox; } set { _showExportMessageBox = value; OnPropertyChanged("ShowExportMessageBox"); } }
         public bool MultipleTargets { get { return _multipleTargets; } set { _multipleTargets = value; OnPropertyChanged("MultipleTargets"); } }
         public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }
         public float AdditionalTargetPercent { get { return _additionalTargetPercent; } set { _additionalTargetPercent = value; OnPropertyChanged("AdditionalTargetPercent"); } }

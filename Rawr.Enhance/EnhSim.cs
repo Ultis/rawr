@@ -17,16 +17,18 @@ namespace Rawr.Enhance
         private String _trinket2name = String.Empty;
         private String _totemname = String.Empty;
         private Character _character;
+        CalculationOptionsEnhance _calcOpts;
 
         public EnhSim(Character character, CalculationOptionsEnhance calcOpts)
         {
             _character = character;
+            _calcOpts = calcOpts;
             CalculationsEnhance ce = new CalculationsEnhance();
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.EnhSimStats;
             if(_character.ActiveBuffsContains("Master of Anatomy"))
                 stats.CritRating += 40;
-            CombatStats cs = new CombatStats(character, stats, calcOpts);
+            CombatStats cs = new CombatStats(character, stats, _calcOpts);
             
             getSpecialsNames(character, stats);
 
@@ -76,8 +78,8 @@ namespace Rawr.Enhance
             sb.AppendLine("max_mana                        " + stats.Mana.ToString());
             sb.AppendLine("mp5                             " + stats.Mp5.ToString());
             sb.AppendLine();
-            sb.AppendLine("mh_imbue                        " + calcOpts.MainhandImbue.ToString().ToLower());
-            sb.AppendLine("oh_imbue                        " + calcOpts.OffhandImbue.ToString().ToLower());
+            sb.AppendLine("mh_imbue                        " + _calcOpts.MainhandImbue.ToString().ToLower());
+            sb.AppendLine("oh_imbue                        " + _calcOpts.OffhandImbue.ToString().ToLower());
             sb.AppendLine();
             sb.AppendLine("mh_enchant                      " + _mhEnchant);
             String weaponType = "-";
@@ -138,8 +140,8 @@ namespace Rawr.Enhance
             sb.AppendLine("mixology                        " + 
                 (character.PrimaryProfession == Profession.Alchemy ||
                  character.SecondaryProfession == Profession.Alchemy ? "1" : "0"));
- //           addPriorities(calcOpts, sb);
-            addManaConfigs(character, calcOpts, sb);
+ //           addPriorities(_calcOpts, sb);
+            addManaConfigs(character, sb);
             sb.AppendLine();
             sb.AppendLine("#############");
             sb.AppendLine("## Talents ##");
@@ -180,7 +182,7 @@ namespace Rawr.Enhance
             addBuffs(character, sb);
             // add extras
             sb.AppendLine();
-            sb.AppendLine("combat_length                   " + calcOpts.FightLength.ToString("F2", CultureInfo.InvariantCulture));
+            sb.AppendLine("combat_length                   " + _calcOpts.FightLength.ToString("F2", CultureInfo.InvariantCulture));
             _configText = sb.ToString();
         }
 
@@ -192,9 +194,9 @@ namespace Rawr.Enhance
                 Clipboard.SetText(_configText);
 			}
 			catch { }
-            if(Clipboard.Success)
+            if(Clipboard.Success && _calcOpts.ShowExportMessageBox)
                 MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.5.0 or higher, to import it\n" +
+                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.5.8 or higher, to import it\n" +
                     "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                     "Enhance Module", MessageBoxButton.OK);
         }
@@ -206,10 +208,11 @@ namespace Rawr.Enhance
                 System.Windows.Forms.Clipboard.SetText(_configText);
 			}
 			catch { }
-            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.5.0 or higher, to import it\n" +
-                "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
-                "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
+            if(_calcOpts.ShowExportMessageBox) 
+                System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
+                    "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.5.8 or higher, to import it\n" +
+                    "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
+                    "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
 #endif
         private void addBuffs(Character character, StringBuilder sb)
@@ -483,12 +486,12 @@ namespace Rawr.Enhance
             }
         }
 
-        private void addPriorities(CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
+        private void addPriorities(System.Text.StringBuilder sb)
         {
             sb.AppendLine();
-            sb.AppendLine("rotation_priority_count         " + calcOpts.ActivePriorities());
+            sb.AppendLine("rotation_priority_count         " + _calcOpts.ActivePriorities());
             int priorityNumber = 0;
-            List<KeyValuePair<EnhanceAbility, Priority>> sortedPriorites = new List<KeyValuePair<EnhanceAbility, Priority>>(calcOpts.PriorityList);
+            List<KeyValuePair<EnhanceAbility, Priority>> sortedPriorites = new List<KeyValuePair<EnhanceAbility, Priority>>(_calcOpts.PriorityList);
             sortedPriorites.Sort(
                 delegate(KeyValuePair<EnhanceAbility, Priority> firstPair, KeyValuePair<EnhanceAbility, Priority> nextPair)
                 {
@@ -504,18 +507,18 @@ namespace Rawr.Enhance
             sb.AppendLine();
         }
 
-        private void addManaConfigs(Character character, CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
+        private void addManaConfigs(Character character, System.Text.StringBuilder sb)
         {
             List<Buff> buffs = character.ActiveBuffs;
             sb.AppendLine();
-            sb.AppendLine("cast_sr_only_if_mana_left " + calcOpts.MinManaSR);
-            sb.AppendLine("simulate_mana             " + (calcOpts.UseMana ? "1" : "0"));
+            sb.AppendLine("cast_sr_only_if_mana_left " + _calcOpts.MinManaSR);
+            sb.AppendLine("simulate_mana             " + (_calcOpts.UseMana ? "1" : "0"));
             if (_character.ActiveBuffsContains("Hunting Party") || _character.ActiveBuffsContains("Judgements of the Wise") || _character.ActiveBuffsContains("Vampiric Touch") || 
                     _character.ActiveBuffsContains("Improved Soul Leech") || _character.ActiveBuffsContains("Enduring Winter"))
                 sb.AppendLine("replenishment             1");
             else
                 sb.AppendLine("replenishment             0");
-            if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
+            if (_calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
                 sb.AppendLine("water_shield              0");
             else
                 sb.AppendLine("water_shield              1");

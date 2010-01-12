@@ -481,5 +481,10 @@ namespace Rawr.Enhance
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void chbShowExportMsgBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.ShowExportMessageBox = chbShowExportMsgBox.Checked;
+        }
     }
 }
