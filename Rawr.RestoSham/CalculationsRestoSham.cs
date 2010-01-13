@@ -969,6 +969,7 @@ namespace Rawr.RestoSham
         }
         #endregion
         #region Chart data area: Code Flag = Penguin (Model MAPS)
+        
         //
         // Class used by stat relative weights custom chart.
         //
@@ -978,16 +979,13 @@ namespace Rawr.RestoSham
             {
                 this.Stat = stat;
                 this.Name = name;
-                this.PercentChange = 0f;
-                this.RealChange = 0f;
+                this.Change = 0f;
             }
 
             public Stats Stat;
             public string Name;
-            public float PercentChange;
-            public float RealChange;
+            public float Change;
         }
-
 
         //
         // Data for custom charts:
@@ -1017,16 +1015,15 @@ namespace Rawr.RestoSham
                     foreach (StatRelativeWeight weight in stats)
                     {
                         CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character, null, weight.Stat);
-                        weight.PercentChange = ((statCalc.MAPS - calc.MAPS) / calc.MAPS) * 100;
-                        weight.RealChange = (statCalc.MAPS - calc.MAPS);
+                        weight.Change = (statCalc.MAPS - calc.MAPS);
                     }
 
                     // Create the chart data points:
                     foreach (StatRelativeWeight weight in stats)
                     {
                         ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(weight.Name);
-                        comp.OverallPoints = weight.RealChange;
-                        comp.SubPoints = new float[] { 0f, weight.RealChange, 0f };
+                        comp.OverallPoints = weight.Change;
+                        comp.SubPoints = new float[] { 0f, weight.Change, 0f };
                         comp.Description = string.Format("If you added 10 more {0}.", weight.Name);
                         list.Add(comp);
                     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rawr.RestoSham
 {
-    class CharacterCalculationsRestoSham : CharacterCalculationsBase
+    internal sealed class CharacterCalculationsRestoSham : CharacterCalculationsBase
     {
         private float _overallPoints = 0f;
         public override float OverallPoints
