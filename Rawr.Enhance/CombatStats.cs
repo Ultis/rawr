@@ -387,12 +387,12 @@ namespace Rawr.Enhance
         {
             // first set max crit chance 71.2% - miss chance (ie 100% - 4.8% crit reduction - 24% glancing - miss chance) 
             // see http://elitistjerks.com/f31/t76785-crit_depression_combat_table/
-            chanceWhiteCritMH = Math.Min(chanceCrit, 1f - GlancingRate  - whiteCritDepression - chanceWhiteMissMH);
-            chanceWhiteCritOH = Math.Min(chanceCrit, 1f - GlancingRate  - whiteCritDepression - chanceWhiteMissOH);
-            chanceYellowCritMH = Math.Min(chanceCrit, 1f - yellowCritDepression - chanceYellowMissMH);
-            chanceYellowCritOH = Math.Min(chanceCrit, 1f - yellowCritDepression - chanceYellowMissOH);
-            if (chanceCrit > 1f - GlancingRate - whiteCritDepression - chanceWhiteMissMH)
-                overMeleeCritCap = chanceCrit - (1f - GlancingRate - whiteCritDepression - chanceWhiteMissMH);
+            chanceWhiteCritMH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissMH);
+            chanceWhiteCritOH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissOH);
+            chanceYellowCritMH = Math.Min(chanceCrit, 1f - chanceYellowMissMH);
+            chanceYellowCritOH = Math.Min(chanceCrit, 1f - chanceYellowMissOH);
+            if (chanceCrit > 1f - GlancingRate - chanceWhiteMissMH)
+                overMeleeCritCap = chanceCrit - (1f - GlancingRate - chanceWhiteMissMH);
             else
                 overMeleeCritCap = 0f;
             // now apply crit depression
