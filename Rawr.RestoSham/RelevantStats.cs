@@ -15,7 +15,7 @@
             "Earthliving",
             "ManacostReduceWithin15OnHealingCast",
             "ManaRestoreFromMaxManaPerSecond",
-            "BonusManaPotion",
+            //"BonusManaPotion",                            Mana pots are not currently modeled by RestoSham
             "WaterShieldIncrease",
             "CHHWHealIncrease",
             "CHCTDecrease",
@@ -31,12 +31,11 @@
             "BonusManaMultiplier",
             "BonusIntellectMultiplier",
             "RestoSham2T9",
-            "RestoSham4T9",
+            //"RestoSham4T9",                               This set bonus is not currently modeled by RestoSham
             "RestoSham2T10",
             "RestoSham4T10",
             "RestoShamRelicT9",
             "RestoShamRelicT10",
-            "FireDamage",
             "Healed",
             "Hp5"
         };

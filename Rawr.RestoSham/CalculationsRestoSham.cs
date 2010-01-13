@@ -320,6 +320,9 @@ namespace Rawr.RestoSham
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
+            if (options == null)
+                return calcStats;
+
             FightSeconds = options.FightLength * 60f;
             #region Spell Power and Haste Based Calcs
             stats.SpellPower += stats.Earthliving * ((1 + character.ShamanTalents.ElementalWeapons * .1f) * 150f);

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rawr.RestoSham;
 
 namespace Rawr.UnitTests.RestoSham
 {
     /// <summary>
-    /// Summary description for RestoShamStatsTest
+    /// Tests to verify the operation of the RelevantStats methods for the RestoSham module
     /// </summary>
     [TestClass]
-    public class RestoShamStatsTest
+    public class RelevantStatsTests
     {
         [TestMethod]
         public void HasRelevantStatsTest()
