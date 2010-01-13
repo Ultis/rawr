@@ -305,9 +305,9 @@ namespace Rawr.Enhance
             float wfProcsPerSecond = 0f;
             float mwProcsPerSecond = 0f;
             secondsToFiveStack = 10f;
-            float averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f;
-            float averageMeleeHitChance = ((1f - chanceWhiteMissMH - chanceDodgeMH) + (1f - chanceWhiteMissOH - chanceDodgeOH)) / 2f;
-            float averageMeleeMissChance = (chanceWhiteMissMH + chanceDodgeMH + chanceWhiteMissOH + chanceDodgeOH) / 2f;
+            float averageMeleeCritChance = (chanceWhiteCritMH + chanceWhiteCritOH + chanceYellowCritMH + chanceYellowCritOH) / 4f;
+            float averageMeleeHitChance = ((1f - chanceWhiteMissMH - chanceDodgeMH - chanceParryMH) + (1f - chanceWhiteMissOH - chanceDodgeOH - chanceParryOH)) / 2f;
+            float averageMeleeMissChance = (chanceWhiteMissMH + chanceWhiteMissOH) / 2f;
             float couldCritSwingsPerSecond = 0f;
             float whiteHitsPerSMH = 0f;
             float whiteHitsPerSOH = 0f;
@@ -363,7 +363,7 @@ namespace Rawr.Enhance
                                    * (1f - chanceSpellMiss);
                 float couldCritSpellsPerS = spellAttacksPerSec - staticShocksPerSecond; // LS procs from Static Shock cannot crit
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
-                averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f + edUptime * edCritBonus;
+                averageMeleeCritChance = (chanceWhiteCritMH + chanceWhiteCritOH + chanceYellowCritMH + chanceYellowCritOH) / 4f + edUptime * edCritBonus;
             }
             couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH; 
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
@@ -385,7 +385,7 @@ namespace Rawr.Enhance
 
         private void SetCritValues(float chanceCrit)
         {
-            // first set max crit chance 71.2% - miss chance (ie 100% - 4.8% crit reduction - 24% glancing - miss chance) 
+            // first set max crit chance 76% - miss chance (ie 100% - 24% glancing - miss chance) 
             // see http://elitistjerks.com/f31/t76785-crit_depression_combat_table/
             chanceWhiteCritMH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissMH);
             chanceWhiteCritOH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissOH);
