@@ -90,7 +90,7 @@ namespace Rawr.RestoSham
 		public float BurstPercentage = 85f;
 
 		/// <summary>
-		/// The percentage of fight you are active.
+		/// The number of times you use Cleanse Spirit.
 		/// </summary>
 		public float Decurse = 0f;
 

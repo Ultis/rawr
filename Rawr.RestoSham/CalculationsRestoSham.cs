@@ -779,45 +779,62 @@ namespace Rawr.RestoSham
             #region Calculate Sequence HPS/MPS
             float HSTHPS = (25 + HSTBonusHealing) * HSTHealingScale / 2f * (1 - HSTOverheal);
             calcStats.HSTHeals = HSTHPS * HSTTargets;
+
+            // Burst
             calcStats.BurstSequence = options.BurstStyle;
-            if (options.BurstStyle.Equals("CH Spam"))
-                calcStats.BurstHPS = (calcStats.CHSpamHPS);
-            if (options.BurstStyle.Equals("HW Spam"))
-                calcStats.BurstHPS = (calcStats.HWSpamHPS);
-            if (options.BurstStyle.Equals("LHW Spam"))
-                calcStats.BurstHPS = (calcStats.LHWSpamHPS);
-            if (options.BurstStyle.Equals("RT+HW"))
-                calcStats.BurstHPS = (calcStats.RTHWHPS);
-            if (options.BurstStyle.Equals("RT+LHW"))
-                calcStats.BurstHPS = (calcStats.RTLHWHPS);
-            if (options.BurstStyle.Equals("RT+CH"))
-                calcStats.BurstHPS = (calcStats.RTCHHPS);
+            switch (options.BurstStyle)
+            {
+                case "CH Spam":
+                    calcStats.BurstHPS = calcStats.CHSpamHPS;
+                    break;
+                case "HW Spam":
+                    calcStats.BurstHPS = calcStats.HWSpamHPS;
+                    break;
+                case "LHW Spam":
+                    calcStats.BurstHPS = calcStats.LHWSpamHPS;
+                    break;
+                case "RT+HW":
+                    calcStats.BurstHPS = calcStats.RTHWHPS;
+                    break;
+                case "RT+LHW":
+                    calcStats.BurstHPS = calcStats.RTLHWHPS;
+                    break;
+                case "RT+CH":
+                    calcStats.BurstHPS = calcStats.RTCHHPS;
+                    break;
+            }
+            
+            // Sustained
             calcStats.SustainedSequence = options.SustStyle;
             float SustHPS = 0;
-            if (options.SustStyle.Equals("CH Spam"))
-                SustHPS = (calcStats.CHSpamHPS);
-            if (options.SustStyle.Equals("CH Spam"))
-                calcStats.MUPS = (calcStats.CHSpamMPS);
-            if (options.SustStyle.Equals("HW Spam"))
-                SustHPS = (calcStats.HWSpamHPS);
-            if (options.SustStyle.Equals("HW Spam"))
-                calcStats.MUPS = (calcStats.HWSpamMPS);
-            if (options.SustStyle.Equals("LHW Spam"))
-                SustHPS = (calcStats.LHWSpamHPS);
-            if (options.SustStyle.Equals("LHW Spam"))
-                calcStats.MUPS = (calcStats.LHWSpamMPS);
-            if (options.SustStyle.Equals("RT+HW"))
-                SustHPS = (calcStats.RTHWHPS);
-            if (options.SustStyle.Equals("RT+HW"))
-                calcStats.MUPS = (calcStats.RTHWMPS);
-            if (options.SustStyle.Equals("RT+LHW"))
-                SustHPS = (calcStats.RTLHWHPS);
-            if (options.SustStyle.Equals("RT+LHW"))
-                calcStats.MUPS = (calcStats.RTLHWMPS);
-            if (options.SustStyle.Equals("RT+CH"))
-                SustHPS = (calcStats.RTCHHPS);
-            if (options.SustStyle.Equals("RT+CH"))
-                calcStats.MUPS = (calcStats.RTCHMPS);
+            switch (options.SustStyle)
+            {
+                case "CH Spam":
+                    SustHPS = calcStats.CHSpamHPS;
+                    calcStats.MUPS = calcStats.CHSpamMPS;
+                    break;
+                case "HW Spam":
+                    SustHPS = calcStats.HWSpamHPS;
+                    calcStats.MUPS = calcStats.HWSpamMPS;
+                    break;
+                case "LHW Spam":
+                    SustHPS = calcStats.LHWSpamHPS;
+                    calcStats.MUPS = calcStats.LHWSpamMPS;
+                    break;
+                case "RT+HW":
+                    SustHPS = calcStats.RTHWHPS;
+                    calcStats.MUPS = calcStats.RTHWMPS;
+                    break;
+                case "RT+LHW":
+                    SustHPS = calcStats.RTLHWHPS;
+                    calcStats.MUPS = calcStats.RTLHWMPS;
+                    break;
+                case "RT+CH":
+                    SustHPS = calcStats.RTCHHPS;
+                    calcStats.MUPS = calcStats.RTCHMPS;
+                    break;
+            }
+            
             calcStats.BurstHPS += calcStats.HSTHeals;
             SustHPS += calcStats.HSTHeals;
             calcStats.MUPS += (DecurseCost * options.Decurse) / FightSeconds;
