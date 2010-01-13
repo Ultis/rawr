@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Rawr.RestoSham
+﻿namespace Rawr.RestoSham
 {
     public static class RelevantStats
     {
@@ -18,6 +14,7 @@ namespace Rawr.RestoSham
             "Mp5",
             "Earthliving",
             "ManacostReduceWithin15OnHealingCast",
+            "ManaRestoreFromMaxManaPerSecond",
             "BonusManaPotion",
             "WaterShieldIncrease",
             "CHHWHealIncrease",

@@ -224,7 +224,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-                return new string[]{"Mana Available per Second - NYI"};
+                return new string[]{"Mana Available per Second"};
             }
         }
 
@@ -314,8 +314,7 @@ namespace Rawr.RestoSham
         public float CritPerSec { get; set; }
         public float FightSeconds { get; set; }
         #endregion
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
-                                                                  Stats statModifier)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
         {
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
@@ -846,7 +845,7 @@ namespace Rawr.RestoSham
                 - ESMPS
                 + (stats.ManaRestore / FightSeconds)
                 + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) / FightSeconds)
-                + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * (options.BurstPercentage * .01f))
+                + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * (options.ReplenishmentPercentage * .01f))
                 + (stats.Mp5 / 5)
                 + (options.Innervates * 7866f / FightSeconds)
                 + statsProcs2.ManaRestore
@@ -950,9 +949,16 @@ namespace Rawr.RestoSham
             #endregion
             statsTotal += statsProcs;
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
-            statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) + 
-                (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect/* + statsEnchants.Intellect*/) * IntMultiplier);
+            if (IntMultiplier > 1)
+            {
+                statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) +
+                    (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect/* + statsEnchants.Intellect*/) * IntMultiplier);
+                if (statModifier != null && statModifier.Intellect > 0)
+                    statsTotal.Intellect += (float)Math.Floor((statModifier.Intellect) * IntMultiplier);
+            }
+            
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
@@ -972,11 +978,14 @@ namespace Rawr.RestoSham
             {
                 this.Stat = stat;
                 this.Name = name;
+                this.PercentChange = 0f;
+                this.RealChange = 0f;
             }
 
             public Stats Stat;
             public string Name;
-            public float PctChange;
+            public float PercentChange;
+            public float RealChange;
         }
 
 
@@ -996,31 +1005,29 @@ namespace Rawr.RestoSham
             List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
             switch (chartName)
             {
-                case "Mana Usable per Second - NYI":
+                case "Mana Available per Second":
                     StatRelativeWeight[] stats = new StatRelativeWeight[] {
-                      new StatRelativeWeight("10 Intellect", new Stats() { Intellect = 10f }),
-                      new StatRelativeWeight("10 Haste Rating", new Stats() { HasteRating = 10f }),
-                      new StatRelativeWeight("10 Spellpower", new Stats() { SpellPower = 10f}),
-                      new StatRelativeWeight("10 MP5", new Stats() { Mp5 = 10f }),
-                      new StatRelativeWeight("10 Crit Rating", new Stats() { CritRating = 10f })};
+                      new StatRelativeWeight("Intellect", new Stats() { Intellect = 10f }),
+                      new StatRelativeWeight("Haste Rating", new Stats() { HasteRating = 10f }),
+                      new StatRelativeWeight("Spellpower", new Stats() { SpellPower = 10f}),
+                      new StatRelativeWeight("MP5", new Stats() { Mp5 = 10f }),
+                      new StatRelativeWeight("Crit Rating", new Stats() { CritRating = 10f })};
 
                     // Get the percentage total healing is changed by a change in a single stat:
-
-                    float mpsPct = 0f;
                     foreach (StatRelativeWeight weight in stats)
                     {
                         CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character, null, weight.Stat);
-                        weight.PctChange = ((statCalc.MAPS - calc.MAPS) / calc.MAPS);
-                        if (weight.Name == "+MAPS")
-                            mpsPct = weight.PctChange;
+                        weight.PercentChange = ((statCalc.MAPS - calc.MAPS) / calc.MAPS) * 100;
+                        weight.RealChange = (statCalc.MAPS - calc.MAPS);
                     }
 
                     // Create the chart data points:
-
                     foreach (StatRelativeWeight weight in stats)
                     {
                         ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(weight.Name);
-                        comp.OverallPoints = weight.PctChange / mpsPct;
+                        comp.OverallPoints = weight.RealChange;
+                        comp.SubPoints = new float[] { 0f, weight.RealChange, 0f };
+                        comp.Description = string.Format("If you added 10 more {0}.", weight.Name);
                         list.Add(comp);
                     }
 
@@ -1048,45 +1055,6 @@ namespace Rawr.RestoSham
                     statsType.GetProperty(relevantStat).SetValue(relevantStats, v, null);
                 }
             }
-
-            /*Stats relevantStats = new Stats()
-            {
-                Stamina = stats.Stamina,
-                Intellect = stats.Intellect,
-                SpellPower = stats.SpellPower,
-                CritRating = stats.CritRating,
-                HasteRating = stats.HasteRating,
-                SpellCrit = stats.SpellCrit,
-                Mana = stats.Mana,
-                Mp5 = stats.Mp5,
-                Earthliving = stats.Earthliving,
-                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
-                BonusManaPotion = stats.BonusManaPotion,
-                WaterShieldIncrease = stats.WaterShieldIncrease,
-                CHHWHealIncrease = stats.CHHWHealIncrease,
-                CHCTDecrease = stats.CHCTDecrease,
-                RTCDDecrease = stats.RTCDDecrease,
-                TotemCHBaseHeal = stats.TotemCHBaseHeal,
-                TotemHWBaseCost = stats.TotemHWBaseCost,
-                TotemCHBaseCost = stats.TotemCHBaseCost,
-                TotemHWSpellpower = stats.TotemHWSpellpower,
-                TotemLHWSpellpower = stats.TotemLHWSpellpower,
-                TotemThunderhead = stats.TotemThunderhead,
-                ManaRestore = stats.ManaRestore,
-                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                BonusManaMultiplier = stats.BonusManaMultiplier,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                RestoSham2T9 = stats.RestoSham2T9,
-                RestoSham4T9 = stats.RestoSham4T9,
-                RestoSham2T10 = stats.RestoSham2T10,
-                RestoSham4T10 = stats.RestoSham4T10,
-                RestoShamRelicT9 = stats.RestoShamRelicT9,
-                RestoShamRelicT10 = stats.RestoShamRelicT10,
-                // Ony Shiny Shard of the Flame
-                FireDamage = stats.FireDamage,
-                Healed = stats.Healed,
-                Hp5 = stats.Hp5,
-            };*/
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1121,16 +1089,6 @@ namespace Rawr.RestoSham
 
             // if statTotal > 0 then we have relevant stats
             return statTotal > 0;
-
-            /*return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.SpellCrit +
-                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestore + stats.HighestStat +
-                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
-                stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
-                stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost +
-                stats.TotemHWSpellpower + stats.TotemLHWSpellpower + stats.TotemThunderhead + stats.RestoSham2T9 + stats.RestoSham4T9 +
-                stats.RestoSham2T10 + stats.RestoSham4T10 + stats.RestoShamRelicT9 + stats.RestoShamRelicT10 +
-                stats.FireDamage + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
-                ) > 0;*/
         }
         public Stats GetBuffsStats(Character character, CalculationOptionsRestoSham calcOpts)
         {

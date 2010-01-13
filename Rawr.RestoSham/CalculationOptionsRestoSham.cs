@@ -85,9 +85,9 @@ namespace Rawr.RestoSham
 		public string Heroism = "Me";
 
 		/// <summary>
-		/// The percentage of healing that is intended to be burst.
+		/// The percentage of time that Replenishment is "up".
 		/// </summary>
-		public float BurstPercentage = 85f;
+        public float ReplenishmentPercentage = 90f;
 
 		/// <summary>
 		/// The number of times you use Cleanse Spirit.

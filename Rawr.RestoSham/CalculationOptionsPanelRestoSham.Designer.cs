@@ -56,8 +56,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chkWaterShield = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.tbBurst = new System.Windows.Forms.TrackBar();
-            this.tbBurst_Label = new System.Windows.Forms.Label();
+            this.tbReplenishment = new System.Windows.Forms.TrackBar();
+            this.tbReplenishment_Label = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.chkEarthShield = new System.Windows.Forms.CheckBox();
@@ -71,7 +71,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbSurvival)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbReplenishment)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
@@ -339,8 +339,8 @@
             // 
             this.groupBox2.Controls.Add(this.chkWaterShield);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.tbBurst);
-            this.groupBox2.Controls.Add(this.tbBurst_Label);
+            this.groupBox2.Controls.Add(this.tbReplenishment);
+            this.groupBox2.Controls.Add(this.tbReplenishment_Label);
             this.groupBox2.Controls.Add(this.txtInnervates);
             this.groupBox2.Controls.Add(this.chkManaTide);
             this.groupBox2.Location = new System.Drawing.Point(3, 206);
@@ -370,23 +370,23 @@
             this.label5.TabIndex = 51;
             this.label5.Text = "Innervates:";
             // 
-            // tbBurst
+            // tbReplenishment
             // 
-            this.tbBurst.Location = new System.Drawing.Point(6, 104);
-            this.tbBurst.Maximum = 100;
-            this.tbBurst.Name = "tbBurst";
-            this.tbBurst.Size = new System.Drawing.Size(274, 45);
-            this.tbBurst.TabIndex = 0;
-            this.tbBurst.Scroll += new System.EventHandler(this.OnTrackBarScroll);
+            this.tbReplenishment.Location = new System.Drawing.Point(6, 104);
+            this.tbReplenishment.Maximum = 100;
+            this.tbReplenishment.Name = "tbReplenishment";
+            this.tbReplenishment.Size = new System.Drawing.Size(274, 45);
+            this.tbReplenishment.TabIndex = 0;
+            this.tbReplenishment.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
-            // tbBurst_Label
+            // tbReplenishment_Label
             // 
-            this.tbBurst_Label.AutoSize = true;
-            this.tbBurst_Label.Location = new System.Drawing.Point(6, 88);
-            this.tbBurst_Label.Name = "tbBurst_Label";
-            this.tbBurst_Label.Size = new System.Drawing.Size(133, 13);
-            this.tbBurst_Label.TabIndex = 1;
-            this.tbBurst_Label.Text = "Replenishment Uptime (%):";
+            this.tbReplenishment_Label.AutoSize = true;
+            this.tbReplenishment_Label.Location = new System.Drawing.Point(6, 88);
+            this.tbReplenishment_Label.Name = "tbReplenishment_Label";
+            this.tbReplenishment_Label.Size = new System.Drawing.Size(133, 13);
+            this.tbReplenishment_Label.TabIndex = 1;
+            this.tbReplenishment_Label.Text = "Replenishment Uptime (%):";
             // 
             // groupBox1
             // 
@@ -471,7 +471,7 @@
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbReplenishment)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -490,8 +490,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label tbOverhealing_Label;
         private System.Windows.Forms.TrackBar tbSurvival;
-        private System.Windows.Forms.Label tbBurst_Label;
-        private System.Windows.Forms.TrackBar tbBurst;
+        private System.Windows.Forms.Label tbReplenishment_Label;
+        private System.Windows.Forms.TrackBar tbReplenishment;
         private System.Windows.Forms.CheckBox chkWaterShield;
         private System.Windows.Forms.CheckBox chkManaTide;
         private System.Windows.Forms.TextBox txtFightLength;

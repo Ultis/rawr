@@ -22,7 +22,7 @@ namespace Rawr.RestoSham
             txtLatency.Tag = new NumericField("Latency", 0f, 500f, true);
             txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
             txtInnervates.Tag = new NumericField("Innervates", 0f, 100f, true);
-            tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
+            tbReplenishment.Tag = new NumericField("ReplenishmentPercentage", 0f, 100f, true);
 			tbSurvival.Tag = new NumericField("SurvivalPerc", 0f, 100f, true);
 		}
 
@@ -47,8 +47,8 @@ namespace Rawr.RestoSham
             cboTargets.Text = options.Targets.ToString();
             txtLatency.Text = options.Latency.ToString();
             #region The track bars
-			tbBurst.Value = (Int32)options.BurstPercentage;
-			UpdateTrackBarLabel(tbBurst);
+			tbReplenishment.Value = (Int32)options.ReplenishmentPercentage;
+			UpdateTrackBarLabel(tbReplenishment);
 			tbSurvival.Value = (Int32)options.SurvivalPerc;
 			UpdateTrackBarLabel(tbSurvival);
 			#endregion
