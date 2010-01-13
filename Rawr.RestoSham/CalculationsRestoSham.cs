@@ -224,7 +224,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-                return new string[]{"Mana Available per Second"};
+                return new string[] { "Mana Available per Second", "Healing Sequences" };
             }
         }
 
@@ -998,9 +998,9 @@ namespace Rawr.RestoSham
             if (calc == null)
                 calc = new CharacterCalculationsRestoSham();
 
-            CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
-            if (options == null)
-                options = new CalculationOptionsRestoSham();
+            CalculationOptionsRestoSham originalOptions = character.CalculationOptions as CalculationOptionsRestoSham;
+            if (originalOptions == null)
+                originalOptions = new CalculationOptionsRestoSham();
 
             List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
             switch (chartName)
@@ -1031,6 +1031,34 @@ namespace Rawr.RestoSham
                         list.Add(comp);
                     }
 
+                    break;
+                case "Healing Sequences":
+
+                    CalculationOptionsRestoSham opts = originalOptions;
+                    string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
+                    string[] descs = new string[] {
+                        "All chain heal, all the time",
+                        "All healing wave, all the time",
+                        "All lesser healing wave, all the time",
+                        "Riptide + Healing Wave", 
+                        "Riptide + Chain Heal", 
+                        "Riptide + Lesser Healing Wave" 
+                    };
+                    for (int i = 0; i < styles.Length; i++)
+                    {
+                        opts.SustStyle = styles[i];
+                        character.CalculationOptions = opts;
+                        CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character);
+
+                        // normalize the mana a bit to make a better chart
+                        float mana = statCalc.ManaUsed / (opts.FightLength);
+
+                        ComparisonCalculationRestoSham hsComp = new ComparisonCalculationRestoSham(styles[i]);
+                        hsComp.OverallPoints = statCalc.SustainedHPS + mana;
+                        hsComp.SubPoints = new float[] { statCalc.SustainedHPS, mana, 0f };
+                        hsComp.Description = descs[i];
+                        list.Add(hsComp);
+                    }
                     break;
             }
 
