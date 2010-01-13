@@ -142,9 +142,9 @@ namespace Rawr.Mage
             multiplier = hitRate;
             baseHaste = (1f + waterElementalBuffs.SpellHaste);
             multiplier *= (1 + waterElementalBuffs.BonusDamageMultiplier) * (1 + waterElementalBuffs.BonusFrostDamageMultiplier);
-            float realResistance = calculationOptions.FrostResist;
-            float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
-            multiplier *= partialResistFactor * (1 + 0.5f * spellCrit);
+            RealResistance = calculationOptions.FrostResist;
+            PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, RealResistance, 0));
+            multiplier *= PartialResistFactor * (1 + 0.5f * spellCrit);
             dpspBase = ((1f / 3f) * 5f / 6f) * multiplier;
         }
 
@@ -184,8 +184,8 @@ namespace Rawr.Mage
             float blastHitRate = calculations.BaseState.FireHitRate;
             float boltHitRate = calculations.BaseState.FrostHitRate;
             float haste = (1f + calculations.TargetDebuffs.SpellHaste);
-            boltMultiplier = boltHitRate * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusFrostDamageMultiplier) * ((calculationOptions.FrostResist == 1) ? 0 : (1 - calculationOptions.FrostResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
-            blastMultiplier = blastHitRate * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == 1) ? 0 : (1 - calculationOptions.FireResist - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f)));
+            boltMultiplier = boltHitRate * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusFrostDamageMultiplier) * ((calculationOptions.FrostResist == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, calculationOptions.FrostResist, 0)));
+            blastMultiplier = blastHitRate * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, calculationOptions.FireResist, 0)));
             castTime = (2 * 3.0f + 1.5f) / haste;
             multiplier = (calculations.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 0.5f * spellCrit);
             dpsp = multiplier * (2 * (1f / 3f * 0.3f) * boltMultiplier + (1f / 3f * 0.15f) * blastMultiplier);
@@ -1671,7 +1671,9 @@ namespace Rawr.Mage
             // TODO recheck all buffs that apply
             float spellCrit = 0.05f + calculations.TargetDebuffs.SpellCritOnTarget;
             // Valkyr always hit
-            Multiplier = (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + 0.5f * spellCrit);
+            RealResistance = calculations.CalculationOptions.HolyResist;
+            PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(calculations.CalculationOptions.PlayerLevel, calculations.CalculationOptions.TargetLevel, RealResistance, 0));
+            Multiplier = PartialResistFactor * (1 + calculations.TargetDebuffs.BonusDamageMultiplier) * (1 + calculations.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + 0.5f * spellCrit);
         }
     }
 }
