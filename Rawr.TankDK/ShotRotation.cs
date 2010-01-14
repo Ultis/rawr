@@ -299,7 +299,7 @@ namespace Rawr.TankDK {
                     HowlingBlast += .5f;
                 }
             }
-            else if (t.BloodGorged > 0)
+            else if (t.HeartStrike > 0)
             // Blood
             {
                 curRotationType = Type.Blood;
