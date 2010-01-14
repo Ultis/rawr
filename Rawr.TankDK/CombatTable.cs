@@ -807,32 +807,34 @@ namespace Rawr.TankDK
                 float RSDmg = (MHDam + (150 * stats.AttackPower * 10 / 10000));
                 // Threat of Thassarian
                 RSDmg += (OHDam +(150 * stats.AttackPower * 10 / 10000)) * (talents.ThreatOfThassarian / 3f) * 0.5f;
-                RSDmg *= (1.17f + stats.BonusRuneStrikeMultiplier); // Two T8. & 3.3 update to RS Threat.
+                RSDmg *= (1f + stats.BonusRuneStrikeMultiplier); // Two T8. 
                 // what's the threat modifier?
-                RSDmg *= 1.5f;
+                RSDmg *= (1.5f * 1.17f); // 3.3 update to RS Threat.
                 float RSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier + (talents.GlyphofRuneStrike ? .1f : 0f));
                 float RSCrit = 1f + ((this.physCrits) * RSCritDmgMult);
-                // How many RS do we get?
-                // First off, we'll go w/ triggers off of the number of Boss Attacks over the duration.
-                // How many can we Dodge or Parry?
-                m_fRSCount = (fDuration / calcOpts.BossAttackSpeed) * (stats.Dodge + stats.Parry);
-                // Then make sure that we don't trigger more often than the number of white swings
-                // No more than the number of white swings.
-                m_fRSCount = Math.Min(m_fRSCount, (fDuration / MH.hastedSpeed));
-                // Then no more than the amount of RP available.
-                m_fRSCount = Math.Min(m_fRSCount, (calcOpts.m_Rotation.RP / 20f));
-                // No fewer than 0;
-                m_fRSCount = Math.Max(m_fRSCount, 0);
-                if (m_fRSCount == 0)
+                /*
+                if (calcOpts.m_Rotation.RuneStrike == 0)
                 {
-                    m_fRSCount = calcOpts.m_Rotation.RuneStrike;
+                    // How many RS do we get?
+                    // First off, we'll go w/ triggers off of the number of Boss Attacks over the duration.
+                    // How many can we Dodge or Parry?
+                    m_fRSCount = (fDuration / calcOpts.BossAttackSpeed) * (stats.Dodge + stats.Parry);
+                    // Then make sure that we don't trigger more often than the number of white swings
+                    // No more than the number of white swings.
+                    m_fRSCount = Math.Min(m_fRSCount, (fDuration / MH.hastedSpeed));
+                    // Then no more than the amount of RP available.
+                    // However, RP may be 0 if Manage runic power is enabled, or if the user has their RP dumps tuned.
+                    // Well, at least in this case, Manage RP is not enabled.  5
+                    m_fRSCount = Math.Min(m_fRSCount, (calcOpts.m_Rotation.RP / 20f));
+                    // No fewer than 0;
+                    m_fRSCount = Math.Max(m_fRSCount, 0);
                 }
                 else
                 {
-                    // if the number entered into the UI was too high, let's bring it down.
-                    if (m_fRSCount < calcOpts.m_Rotation.RuneStrike)
-                        calcOpts.m_Rotation.RuneStrike = m_fRSCount;
-                }
+                 */ 
+                    m_fRSCount = calcOpts.m_Rotation.RuneStrike;
+                
+                //}
                 fDamRuneStrike = RSDmg * m_fRSCount;
                 fDamRuneStrike *= RSCrit;
             }
