@@ -155,7 +155,7 @@ namespace Rawr.Enhance
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
-        public float DisplayMeleeCrit { get { return AverageWhiteCrit; } }
+        public float DisplayMeleeCrit { get { return AverageWhiteCrit + whiteCritDepression; } }
         public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
 
