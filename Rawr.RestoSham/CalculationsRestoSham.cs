@@ -80,27 +80,43 @@ namespace Rawr.RestoSham
 					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Runed[1], YellowId = Potent[1], BlueId = Sundered[1], PrismaticId = Smooth[1], MetaId = Revitalizing },
 
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Max Spellpower
-						RedId = Runed[2], YellowId = Runed[2], BlueId = Runed[2], PrismaticId = Runed[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Int
-						RedId = Runed[2], YellowId = Luminous[2], BlueId = Glowing[2], PrismaticId = Runed[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Heavy MP5
-						RedId = Royal[2], YellowId = Dazzling[2], BlueId = Dazzling[2], PrismaticId = Lustrous[2], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP MP5
-						RedId = Runed[2], YellowId = Dazzling[2], BlueId = Royal[2], PrismaticId = Runed[2], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Haste
-						RedId = Runed[2], YellowId = Reckless[2], BlueId = Energized[2], PrismaticId = Quick[2], MetaId = Revitalizing },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Crit
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Max Haste + Insight
+						RedId = Quick[2], YellowId = Quick[2], BlueId = Quick[2], PrismaticId = Quick[2], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Int + Insight
+						RedId = Luminous[2], YellowId = Luminous[2], BlueId = Dazzling[2], PrismaticId = Luminous[2], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Heavy Haste + Insight
+						RedId = Reckless[2], YellowId = Quick[2], BlueId = Energized[2], PrismaticId = Quick[2], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Crit + Insight
+						RedId = Runed[2], YellowId = Potent[2], BlueId = Sundered[2], PrismaticId = Smooth[2], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Max Haste + Revitalizing
+						RedId = Quick[2], YellowId = Quick[2], BlueId = Quick[2], PrismaticId = Quick[2], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Int + Revitalizing
+						RedId = Luminous[2], YellowId = Luminous[2], BlueId = Dazzling[2], PrismaticId = Luminous[2], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Heavy Haste + Revitalizing
+						RedId = Reckless[2], YellowId = Quick[2], BlueId = Energized[2], PrismaticId = Quick[2], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Crit + Revitalizing
 						RedId = Runed[2], YellowId = Potent[2], BlueId = Sundered[2], PrismaticId = Smooth[2], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //SP MP5
+						RedId = Runed[2], YellowId = Dazzling[2], BlueId = Royal[2], PrismaticId = Runed[2], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Heavy MP5
+						RedId = Royal[2], YellowId = Dazzling[2], BlueId = Dazzling[2], PrismaticId = Lustrous[2], MetaId = Insightful },
 
-					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //JC - SP
-						RedId = Runed[3], YellowId = Smooth[3], BlueId = Lustrous[3], PrismaticId = Runed[3], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //JC - Haste
-						RedId = Runed[3], YellowId = Quick[3], BlueId = Lustrous[3], PrismaticId = Quick[3], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //JC - Crit
-						RedId = Runed[3], YellowId = Smooth[3], BlueId = Lustrous[3], PrismaticId = Smooth[3], MetaId = Revitalizing },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //JC - Int
-						RedId = Runed[3], YellowId = Brilliant[3], BlueId = Lustrous[3], PrismaticId = Brilliant[3], MetaId = Ember },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //Max Haste + Insight
+						RedId = Quick[3], YellowId = Quick[3], BlueId = Quick[3], PrismaticId = Quick[3], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //SP Int + Insight
+						RedId = Runed[3], YellowId = Brilliant[3], BlueId = Dazzling[2], PrismaticId = Luminous[2], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //Heavy Haste + Insight
+						RedId = Reckless[2], YellowId = Quick[3], BlueId = Energized[2], PrismaticId = Quick[3], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //SP Crit + Insight
+						RedId = Runed[3], YellowId = Smooth[3], BlueId = Sundered[2], PrismaticId = Smooth[3], MetaId = Insightful },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //Max Haste + Revitalizing
+						RedId = Quick[3], YellowId = Quick[3], BlueId = Quick[3], PrismaticId = Quick[3], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //SP Int + Revitalizing
+						RedId = Runed[3], YellowId = Brilliant[3], BlueId = Dazzling[2], PrismaticId = Luminous[2], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //Heavy Haste + Revitalizing
+						RedId = Reckless[2], YellowId = Quick[3], BlueId = Energized[2], PrismaticId = Quick[3], MetaId = Revitalizing },
+					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //SP Crit + Revitalizing
+						RedId = Runed[3], YellowId = Smooth[3], BlueId = Sundered[2], PrismaticId = Smooth[3], MetaId = Revitalizing },
 				};
             }
         }
@@ -313,6 +329,7 @@ namespace Rawr.RestoSham
         public float HealHitPerSec { get; set; }
         public float CritPerSec { get; set; }
         public float FightSeconds { get; set; }
+        public float castingActivity { get; set; }
         #endregion
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
         {
@@ -324,6 +341,7 @@ namespace Rawr.RestoSham
                 return calcStats;
 
             FightSeconds = options.FightLength * 60f;
+            castingActivity = options.ActivityPerc * .01f;
             #region Spell Power and Haste Based Calcs
             stats.SpellPower += stats.Earthliving * ((1 + character.ShamanTalents.ElementalWeapons * .1f) * 150f);
             if (options.SustStyle.Contains("CH"))
@@ -342,7 +360,8 @@ namespace Rawr.RestoSham
             float Healing = 1.88f * stats.SpellPower;
             #endregion
             #region Overhealing/Latency/Interval/CH jumps values
-            float Latency = options.Latency / 1000;
+            float GcdLatency = options.Latency / 1000;
+            float Latency = Math.Max(Math.Min(GcdLatency, 0.275f) - 0.14f, 0) + Math.Max(GcdLatency - 0.275f, 0);
 #if true
             float ESOverheal = 0;
             float ELWOverheal = 0;
@@ -377,6 +396,7 @@ namespace Rawr.RestoSham
             float HSTTargets = RaidHeal ? 5f : 1f;
             #endregion
             #region Intellect and MP5 Based Calcs
+            float CritPenalty = ((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + LHWOverheal + AAOverheal) / 6) / 2;
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             stats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
@@ -385,7 +405,8 @@ namespace Rawr.RestoSham
             calcStats.SpellCrit = stats.SpellCrit;
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
             float CriticalChance = calcStats.SpellCrit;
-            float Critical = 1f + CriticalChance * Math.Min(CriticalScale - 1, 1);
+            float Critical = 1f + ((CriticalChance * Math.Min(CriticalScale - 1, 1)) * (CritPenalty));  //  The penalty is set to ensure that while no crit will ever be valued less then a full heal, it will however be reduced more so due to overhealing.  The average currently works out close to current HEP reports and combat logs.
+
             #endregion
             #region Healing Bonuses and scales
             //  Cost scale
@@ -463,22 +484,23 @@ namespace Rawr.RestoSham
             #endregion
             #region Base Speeds ( Hasted / RTCast / LHWCast / HWCast / CHCast )
             float HasteScale = 1f / (1f + calcStats.SpellHaste);
-            float GcdLatency = Latency * 1.1f;
+            float RTHaste = stats.RestoSham2T10 * 0.2f;
             float RTCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
             float RTCD = 6 - stats.RTCDDecrease;
             float RTCDCast = RTCD + GcdLatency * 2;
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
             float ELWDuration = stats.Earthliving * 12;
             float HWCastBase = 3.0f - (character.ShamanTalents.ImprovedHealingWave * .1f);
-            float HWCast = (float)Math.Max(HWCastBase * HasteScale, 1f) + Latency;
-            float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f, 1f) + Latency;
-            float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + stats.RestoSham2T10), 1f) + Latency;
-            float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + stats.RestoSham2T10) * 0.7f, 1f) + Latency;
+            float HWCast = (float)Math.Max(HWCastBase * HasteScale + Latency, 1f + GcdLatency);
+            float HWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
+            float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f + HWCastTWLatency, 1f + GcdLatency);
+            float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
+            float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + RTHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
             float LHWCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
-            float LHWCast_RT = (float)Math.Max(1.5f / (1f + calcStats.SpellHaste + stats.RestoSham2T10), 1f) + GcdLatency;
+            float LHWCast_RT = (float)Math.Max(1.5f / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             float CHCastBase = 2.5f - stats.CHCTDecrease;
-            float CHCast = (float)Math.Max(CHCastBase * HasteScale, 1f) + Latency;
-            float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calcStats.SpellHaste + stats.RestoSham2T10), 1f) + Latency;
+            float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
+            float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             #endregion
             #region Base Spells ( TankCH / RTHeal / LHWHeal / HWHeal / CHHeal )
             //  RT bonus healing = spell power
@@ -576,7 +598,7 @@ namespace Rawr.RestoSham
                     ++RTLHWLHWCasts;
                     if (RTLHWRemainingTime > GcdLatency)
                     {
-                        int RTLHWLHWRemainingCasts = (int)Math.Ceiling(RTLHWRemainingTime / LHWCast);
+                        int RTLHWLHWRemainingCasts = (int)Math.Ceiling((RTLHWRemainingTime - GcdLatency) / LHWCast);
                         RTLHWTime += RTLHWLHWRemainingCasts * LHWCast;
                         RTLHWLHWCasts += RTLHWLHWRemainingCasts;
                     }
@@ -621,7 +643,7 @@ namespace Rawr.RestoSham
                         ++RTHWHWCasts;
                         if (RTHWRemainingTime > GcdLatency)
                         {
-                            int RTHWHWRemainingCasts = (int)Math.Ceiling(RTHWRemainingTime / HWCast);
+                            int RTHWHWRemainingCasts = (int)Math.Ceiling((RTHWRemainingTime - GcdLatency) / HWCast);
                             RTHWTime += RTHWHWRemainingCasts * HWCast;
                             RTHWHWCasts += RTHWHWRemainingCasts;
                         }
@@ -662,7 +684,7 @@ namespace Rawr.RestoSham
                     ++RTCHCHCasts;
                     if (RTCHRemainingTime > GcdLatency)
                     {
-                        int RTCHCHRemainingCasts = (int)Math.Ceiling(RTCHRemainingTime / CHCast);
+                        int RTCHCHRemainingCasts = (int)Math.Ceiling((RTCHRemainingTime - GcdLatency) / CHCast);
                         RTCHTime += RTCHCHRemainingCasts * CHCast;
                         RTCHCHCasts += RTCHCHRemainingCasts;
                     }
@@ -728,6 +750,7 @@ namespace Rawr.RestoSham
                 ELWTicksPerSec += HWELWTargets;
             }
             #endregion
+            #region Variables if Riptide not taken in talents
             if (character.ShamanTalents.Riptide == 0)
             {
                 calcStats.RTLHWHPS = calcStats.LHWSpamHPS;
@@ -737,10 +760,12 @@ namespace Rawr.RestoSham
                 calcStats.RTCHHPS = calcStats.CHSpamHPS;
                 calcStats.RTCHMPS = calcStats.CHSpamMPS;
             }
+            #endregion
             #region Create Final calcs via spell cast (Improve Water Shield Mana Return and proc handling)
-            HealPerSec = RTPerSec + LHWPerSec + HWPerSec + CHPerSec;
-            HealHitPerSec = RTPerSec + RTTicksPerSec + LHWPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec;
-            CritPerSec = RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec;
+            HealPerSec = (RTPerSec + LHWPerSec + HWPerSec + CHPerSec) * castingActivity;
+            HealHitPerSec = (RTPerSec + RTTicksPerSec + LHWPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec) * castingActivity;
+            CritPerSec = (RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec) * castingActivity;
+            #endregion
             #region Proc Handling for Mana Restore only
             Stats statsProcs2 = new Stats();
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -777,7 +802,6 @@ namespace Rawr.RestoSham
                 }
             }
             #endregion
-            #endregion
             #region Calculate Sequence HPS/MPS
             float HSTHPS = (25 + HSTBonusHealing) * HSTHealingScale / 2f * (1 - HSTOverheal);
             calcStats.HSTHeals = HSTHPS * HSTTargets;
@@ -812,28 +836,28 @@ namespace Rawr.RestoSham
             switch (options.SustStyle)
             {
                 case "CH Spam":
-                    SustHPS = calcStats.CHSpamHPS;
-                    calcStats.MUPS = calcStats.CHSpamMPS;
+                    SustHPS = calcStats.CHSpamHPS * castingActivity;
+                    calcStats.MUPS = calcStats.CHSpamMPS * castingActivity;
                     break;
                 case "HW Spam":
-                    SustHPS = calcStats.HWSpamHPS;
-                    calcStats.MUPS = calcStats.HWSpamMPS;
+                    SustHPS = calcStats.HWSpamHPS * castingActivity;
+                    calcStats.MUPS = calcStats.HWSpamMPS * castingActivity;
                     break;
                 case "LHW Spam":
-                    SustHPS = calcStats.LHWSpamHPS;
-                    calcStats.MUPS = calcStats.LHWSpamMPS;
+                    SustHPS = calcStats.LHWSpamHPS * castingActivity;
+                    calcStats.MUPS = calcStats.LHWSpamMPS * castingActivity;
                     break;
                 case "RT+HW":
-                    SustHPS = calcStats.RTHWHPS;
-                    calcStats.MUPS = calcStats.RTHWMPS;
+                    SustHPS = calcStats.RTHWHPS * castingActivity;
+                    calcStats.MUPS = calcStats.RTHWMPS * castingActivity;
                     break;
                 case "RT+LHW":
-                    SustHPS = calcStats.RTLHWHPS;
-                    calcStats.MUPS = calcStats.RTLHWMPS;
+                    SustHPS = calcStats.RTLHWHPS * castingActivity;
+                    calcStats.MUPS = calcStats.RTLHWMPS * castingActivity;
                     break;
                 case "RT+CH":
-                    SustHPS = calcStats.RTCHHPS;
-                    calcStats.MUPS = calcStats.RTCHMPS;
+                    SustHPS = calcStats.RTCHHPS * castingActivity;
+                    calcStats.MUPS = calcStats.RTCHMPS * castingActivity;
                     break;
             }
             
@@ -857,7 +881,7 @@ namespace Rawr.RestoSham
                 + (HWCPerSec * Orb)
                 + (CHCHitsPerSec * Orb * .3f);
             calcStats.ManaUsed = calcStats.MAPS * FightSeconds;
-            float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS)), 1);
+            float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS * castingActivity)), 1);
             //  FIXME: some Healed effects can crit and some are not affected by Purification, this should be taken into account
             float HealedHPS = stats.Healed * PurificationScale;
             calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + ESHPS * (1 - ESOverheal) + HealedHPS;
@@ -971,7 +995,7 @@ namespace Rawr.RestoSham
             return statsTotal;
         }
         #endregion
-        #region Chart data area: Code Flag = Penguin (Model MAPS)
+        #region Chart data area
         
         //
         // Class used by stat relative weights custom chart.
@@ -1037,12 +1061,12 @@ namespace Rawr.RestoSham
                     CalculationOptionsRestoSham opts = originalOptions;
                     string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
                     string[] descs = new string[] {
-                        "All chain heal, all the time",
-                        "All healing wave, all the time",
-                        "All lesser healing wave, all the time",
-                        "Riptide + Healing Wave", 
-                        "Riptide + Chain Heal", 
-                        "Riptide + Lesser Healing Wave" 
+                        "All chain heal, all the time.  \nPercentage of mana pool added to sustained rating.",
+                        "All healing wave, all the time  \nPercentage of mana pool added to sustained rating.",
+                        "All lesser healing wave, all the time  \nPercentage of mana pool added to sustained rating.",
+                        "Riptide + Healing Wave.  \nPercentage of mana pool added to sustained rating.", 
+                        "Riptide + Chain Heal.  \nPercentage of mana pool added to sustained rating.", 
+                        "Riptide + Lesser Healing Wave.\n  Percentage of mana pool added to sustained rating." 
                     };
                     for (int i = 0; i < styles.Length; i++)
                     {

@@ -64,6 +64,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tbActivity = new System.Windows.Forms.TrackBar();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.GeneralPage.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -74,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbReplenishment)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbActivity)).BeginInit();
             this.SuspendLayout();
             // 
             // chkManaTide
@@ -102,7 +105,7 @@
             this.cboBurstStyle.Name = "cboBurstStyle";
             this.cboBurstStyle.Size = new System.Drawing.Size(83, 21);
             this.cboBurstStyle.TabIndex = 28;
-            this.tipRestoSham.SetToolTip(this.cboBurstStyle, "Choose the style of burst healing you do, or leave on Auto.");
+            this.tipRestoSham.SetToolTip(this.cboBurstStyle, "Choose the style of burst healing you do.");
             this.cboBurstStyle.TextChanged += new System.EventHandler(this.cboBurstStyle_TextChanged);
             // 
             // txtFightLength
@@ -129,7 +132,7 @@
             this.cboSustStyle.Name = "cboSustStyle";
             this.cboSustStyle.Size = new System.Drawing.Size(83, 21);
             this.cboSustStyle.TabIndex = 31;
-            this.tipRestoSham.SetToolTip(this.cboSustStyle, "Choose the style of sustained healing you do, or leave on Auto.");
+            this.tipRestoSham.SetToolTip(this.cboSustStyle, "Choose the style of sustained healing you do.");
             this.cboSustStyle.TextChanged += new System.EventHandler(this.cboSustStyle_TextChanged);
             // 
             // cboHeroism
@@ -287,7 +290,7 @@
             // 
             this.groupBox4.Controls.Add(this.tbOverhealing_Label);
             this.groupBox4.Controls.Add(this.tbSurvival);
-            this.groupBox4.Location = new System.Drawing.Point(3, 450);
+            this.groupBox4.Location = new System.Drawing.Point(3, 491);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(286, 85);
             this.groupBox4.TabIndex = 55;
@@ -298,7 +301,7 @@
             // 
             this.tbOverhealing_Label.AutoSize = true;
             this.tbOverhealing_Label.Location = new System.Drawing.Point(6, 16);
-            this.tbOverhealing_Label.Name = "tbOverhealing_Label";
+            this.tbOverhealing_Label.Name = "tbSurvival_Label";
             this.tbOverhealing_Label.Size = new System.Drawing.Size(102, 13);
             this.tbOverhealing_Label.TabIndex = 5;
             this.tbOverhealing_Label.Text = "Survival Weight (%):";
@@ -319,7 +322,7 @@
             this.groupBox3.Controls.Add(this.label14);
             this.groupBox3.Controls.Add(this.txtCleanse);
             this.groupBox3.Controls.Add(this.label16);
-            this.groupBox3.Location = new System.Drawing.Point(3, 369);
+            this.groupBox3.Location = new System.Drawing.Point(3, 410);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(286, 75);
             this.groupBox3.TabIndex = 53;
@@ -343,7 +346,7 @@
             this.groupBox2.Controls.Add(this.tbReplenishment_Label);
             this.groupBox2.Controls.Add(this.txtInnervates);
             this.groupBox2.Controls.Add(this.chkManaTide);
-            this.groupBox2.Location = new System.Drawing.Point(3, 206);
+            this.groupBox2.Location = new System.Drawing.Point(3, 247);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(286, 157);
             this.groupBox2.TabIndex = 28;
@@ -390,6 +393,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.tbActivity);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.cboTargets);
             this.groupBox1.Controls.Add(this.chkEarthShield);
@@ -399,7 +404,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Location = new System.Drawing.Point(3, 78);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(286, 122);
+            this.groupBox1.Size = new System.Drawing.Size(286, 163);
             this.groupBox1.TabIndex = 27;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Healing";
@@ -416,7 +421,7 @@
             // chkEarthShield
             // 
             this.chkEarthShield.AutoSize = true;
-            this.chkEarthShield.Location = new System.Drawing.Point(81, 100);
+            this.chkEarthShield.Location = new System.Drawing.Point(173, 48);
             this.chkEarthShield.Name = "chkEarthShield";
             this.chkEarthShield.Size = new System.Drawing.Size(83, 17);
             this.chkEarthShield.TabIndex = 50;
@@ -453,6 +458,25 @@
             this.tabControl1.TabIndex = 14;
             this.tabControl1.Tag = "";
             // 
+            // tbActivity
+            // 
+            this.tbActivity.Location = new System.Drawing.Point(6, 112);
+            this.tbActivity.Maximum = 100;
+            this.tbActivity.Name = "tbActivity";
+            this.tbActivity.Size = new System.Drawing.Size(274, 45);
+            this.tbActivity.TabIndex = 53;
+            this.tbActivity.Scroll += new System.EventHandler(this.OnTrackBarScroll);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 96);
+            this.label9.Name = "tbActivity_Label";
+            this.label9.Size = new System.Drawing.Size(119, 13);
+            this.label9.TabIndex = 54;
+            this.label9.Text = "Time Spent Casting (%):";
+            this.tipRestoSham.SetToolTip(this.label9, "Do not include canceled spells, 85% default includes canceled spells.");
+            // 
             // CalculationOptionsPanelRestoSham
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -475,6 +499,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tbActivity)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -516,6 +541,8 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtLatency;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TrackBar tbActivity;
+        private System.Windows.Forms.Label label9;
 
     }
 }

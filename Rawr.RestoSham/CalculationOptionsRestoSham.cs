@@ -99,10 +99,15 @@ namespace Rawr.RestoSham
         /// </summary>
         public float Latency = 60f;
 
-		/// <summary>
-		/// The percentage of usefulness survival is to you.
-		/// </summary>
-		public float SurvivalPerc = 2f;
+        /// <summary>
+        /// The percentage of usefulness survival is to you.
+        /// </summary>
+        public float SurvivalPerc = 2f;
+
+        /// <summary>
+        /// The percentage of usefulness survival is to you.
+        /// </summary>
+        public float ActivityPerc = 85f;
 		#endregion
 
 	}

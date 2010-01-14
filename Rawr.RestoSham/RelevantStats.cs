@@ -21,6 +21,7 @@
             "CHCTDecrease",
             "RTCDDecrease",
             "TotemCHBaseHeal",
+            "ManaRestoreFromMaxManaPerSecond",
             "TotemHWBaseCost",
             "TotemCHBaseCost",
             "TotemHWSpellpower",
