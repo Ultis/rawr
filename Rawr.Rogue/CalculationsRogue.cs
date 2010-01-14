@@ -840,11 +840,11 @@ namespace Rawr.Rogue {
                 _relevantGlyphs.Add("Glyph of Rupture");
                 _relevantGlyphs.Add("Glyph of Blade Flurry");
                 _relevantGlyphs.Add("Glyph of Adrenaline Rush");
-                /*_relevantGlyphs.Add("Glyph of Killing Spree");
+                _relevantGlyphs.Add("Glyph of Killing Spree");
                 _relevantGlyphs.Add("Glyph of Vigor");
                 _relevantGlyphs.Add("Glyph of Fan of Knives");
                 _relevantGlyphs.Add("Glyph of Expose Armor");
-                _relevantGlyphs.Add("Glyph of Ghostly Strike");*/
+                _relevantGlyphs.Add("Glyph of Ghostly Strike");
             }
             return _relevantGlyphs;
         }
