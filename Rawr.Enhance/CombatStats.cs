@@ -129,7 +129,7 @@ namespace Rawr.Enhance
 
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
         public float BaseShockSpeed { get { return 6f - .2f * _talents.Reverberation; } }
-        public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova - (_talents.GlyphofFireNova ? 3f : 0f); } }
+        public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } } // -(_talents.GlyphofFireNova ? 3f : 0f); } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
         public float StaticShockAvDuration { get { return StaticShockProcsPerS == 0 ? 600f : ((3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS); } }
         public float MultiTargetMultiplier { get { return _calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f; } }
