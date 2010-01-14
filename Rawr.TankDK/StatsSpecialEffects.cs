@@ -95,14 +95,17 @@ namespace Rawr.TankDK
                             trigger += rRotation.curRotationDuration / rRotation.HowlingBlast;
                         break;
                 }
-                if (effect.MaxStack > 1)
+                if (!float.IsInfinity(trigger))
                 {
-                    float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                    statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
-                }
-                else
-                {
-                    effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
+                    if (effect.MaxStack > 1)
+                    {
+                            float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
+                            statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
+                    }
+                    else
+                    {
+                        effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
+                    }
                 }
             }
 
