@@ -1032,15 +1032,20 @@ namespace Rawr.Enhance
                     ComparisonCalculationEnhance calcHitWhite = new ComparisonCalculationEnhance() { Name = "Hit" };
                     if (currentCalculationsEnhanceWhite != null)
                     {
-                        calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = 100 - currentCalculationsEnhanceWhite.WhiteHit;
+                        calcMissWhite.SubPoints = new float[2];
+                        calcMissWhite.DPSPoints = 0;
+                        calcMissWhite.OverallPoints = calcMissWhite.SubPoints[1] = 100 - currentCalculationsEnhanceWhite.WhiteHit;
                         calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
                         calcCritWhite.SubPoints = new float[2];
                         calcCritWhite.SubPoints[1] = currentCalculationsEnhanceWhite.OverMeleeCritCap;
                         calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
                         calcCritWhite.OverallPoints = calcCritWhite.DPSPoints + calcCritWhite.SubPoints[1];
                         calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
+                        calcHitWhite.SubPoints = new float[2];
                         calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints -
                                                      calcDodgeWhite.OverallPoints - calcCritWhite.DPSPoints - calcGlanceWhite.OverallPoints);
+                        calcHitWhite.DPSPoints = 4.8f;
+                        calcHitWhite.SubPoints[1] = calcHitWhite.OverallPoints - calcHitWhite.DPSPoints;
                     }
                     return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
 
