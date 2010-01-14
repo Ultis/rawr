@@ -510,7 +510,7 @@ namespace Rawr
         public bool GlyphofRuneStrike { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
         [GlyphData(20, "Glyph of Rune Tap", true, @"Your Rune Tap heals yourself for an additional 10% of the effect, and also heals your party for 10% of their maximum health.")]
         public bool GlyphofRuneTap { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
-        [GlyphData(21, "Glyph of Scourge Strike", true, @"Your Scourge Strike has a 25% chance to cause Blood Plague and Frost Fever.")]
+        [GlyphData(21, "Glyph of Scourge Strike", true, @"Your Scourge Strike increases the duration of your diseases on the target by 3 sec, up to a maximum of 9 additional seconds.")]
         public bool GlyphofScourgeStrike { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
         [GlyphData(22, "Glyph of Strangulate", true, @"Reduces the cooldown of your Strangulate by 20 sec.")]
         public bool GlyphofStrangulate { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
