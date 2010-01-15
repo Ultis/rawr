@@ -27,7 +27,7 @@ namespace Rawr.DPSDK {
 
             #region Attack Speed
             {
-                hastedSpeed = baseSpeed / (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.PhysicalHaste);
+                hastedSpeed = baseSpeed / ((1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1 + stats.PhysicalHaste));
                 hastedSpeed /= 1f + 0.05f * (float)calcOpts.talents.ImprovedIcyTalons;
             }
             #endregion

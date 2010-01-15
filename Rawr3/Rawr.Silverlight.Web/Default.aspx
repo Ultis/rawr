@@ -48,7 +48,10 @@
                 errMsg += "MethodName: " + args.methodName + "     \n";
             }
 
-            throw new Error(errMsg);
+            if (errorType != "ImageError") {
+
+                throw new Error(errMsg);
+            }
         }
     </script>
 </head>

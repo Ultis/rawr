@@ -52,11 +52,11 @@ namespace Rawr.DPSDK
             }
 #endif*/
             float DWExtraHits = 1f;// +talents.ThreatOfThassarian / 3f;
-            totalMeleeAbilities = calcOpts.rotation.PlagueStrike * DWExtraHits + calcOpts.rotation.ScourgeStrike +
+            totalMeleeAbilities =(float)( calcOpts.rotation.PlagueStrike * DWExtraHits + calcOpts.rotation.ScourgeStrike +
                 calcOpts.rotation.Obliterate * DWExtraHits + calcOpts.rotation.BloodStrike * DWExtraHits + calcOpts.rotation.HeartStrike +
-                calcOpts.rotation.FrostStrike * DWExtraHits + calcOpts.rotation.DeathStrike * DWExtraHits;
+                calcOpts.rotation.FrostStrike * DWExtraHits + calcOpts.rotation.DeathStrike * DWExtraHits);
             
-            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast + calcOpts.rotation.Pestilence + calcOpts.rotation.Horn + calcOpts.rotation.GhoulFrenzy;
+            totalSpellAbilities = (float)(calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast + calcOpts.rotation.Pestilence + calcOpts.rotation.Horn + calcOpts.rotation.GhoulFrenzy);
 
             hitBonus = .01f * (float)talents.NervesOfColdSteel;
             Weapons();
@@ -157,10 +157,10 @@ namespace Rawr.DPSDK
                 }
                 else
                 {
-                    realDuration = calcOpts.rotation.CurRotationDuration;
+                    realDuration = (float)(calcOpts.rotation.CurRotationDuration);
                 }
 
-                float dodgeMissPerRotation = (totalMeleeAbilities - calcOpts.rotation.FrostStrike);
+                float dodgeMissPerRotation = (float)(totalMeleeAbilities - calcOpts.rotation.FrostStrike);
                 chanceAvoided = chanceDodged + chanceMiss;
                 double GChanceAvoided = (1 / (1 - chanceAvoided)) - 1;
                 double GSpellResist = (1 / (1 - spellResist)) - 1;

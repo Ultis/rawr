@@ -132,6 +132,13 @@ namespace Rawr.DPSDK
 			set { _TalentsSaved = value; OnPropertyChanged("TalentsSaved"); }
 		}
 
+        private double _weightScale = .01;
+        public double WeightScale
+        {
+            get { return _weightScale; }
+            set { _weightScale = value; }
+        }
+
 		
 		#region INotifyPropertyChanged Members
         private void OnPropertyChanged(string property)

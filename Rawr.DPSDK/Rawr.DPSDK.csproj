@@ -88,6 +88,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ability.cs" />
+    <Compile Include="AbilityHandler.cs" />
+    <Compile Include="BloodCycle.cs" />
     <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="CalculationOptionsPanelDPSDK.cs">
       <SubType>UserControl</SubType>
@@ -100,6 +102,7 @@
     <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationDPSDK.cs" />
     <Compile Include="DRW.cs" />
+    <Compile Include="FrostCycle.cs" />
     <Compile Include="Graph.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,7 +142,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Rotation.cs" />
-    <Compile Include="RotationGene.cs" />
     <Compile Include="RotationViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +149,7 @@
       <DependentUpon>RotationViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="StatsSpecialEffects.cs" />
+    <Compile Include="UnholyCycle.cs" />
     <Compile Include="Weapon.cs" />
   </ItemGroup>
   <ItemGroup>

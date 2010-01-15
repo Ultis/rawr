@@ -21,7 +21,7 @@ namespace Rawr.DPSDK
         None
     }
    
-    public class RuneAbility
+    public abstract class RuneAbility
     {
         private Character _character;
 
@@ -53,19 +53,10 @@ namespace Rawr.DPSDK
             get { return _secondaryDamageMod; }
             set { _secondaryDamageMod = value; }
         }
-        private double _damage = 0d;
-        public double Damage
-        {
-            get { return _damage; }
-            set { _damage = value; }
-        }
 
-        private double _secondaryDamage = 0d;
-        public double SecondaryDamage
-        {
-            get { return _secondaryDamage; }
-            set { _secondaryDamage = value; }
-        }
+        public abstract double Damage { get; }
+
+        public abstract double SecondaryDamage{get;}
 
         private double _staticThreat;
         public double StaticThreat
@@ -164,23 +155,23 @@ namespace Rawr.DPSDK
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; GcdType = GCDType.Melee; Runes = RunesUsed.Blood; talents = Talents; Name = "Blood Strike";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
-                double BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-                    0.4f) + 305.6f + stats.BonusBloodStrikeDamage;
+                double BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 764d) *
+                            0.4d) + stats.BonusBloodStrikeDamage;
                 if (combatTable.DW)
                 {
-                    double BSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-                    combatTable.normalizationFactor)) * 0.4d) + 305.6d;
+                    double BSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
+                            combatTable.normalizationFactor) + 764d) * 0.4d);
                     BSDmgOH *= 0.5d;
                     BSDmgOH += stats.BonusBloodStrikeDamage;
                     BSDmgOH *= 1d + 0.05d * (double)talents.NervesOfColdSteel;
-                    BSDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.3333333333333333f*/));
+                    BSDmgOH *= (talents.ThreatOfThassarian * (1d / 3d));
                     BSDmg += BSDmgOH;
                 }
-                BSDmg *= 1d + 0.12d * (double)calcOpts.rotation.AvgDiseaseMult * (1d + stats.BonusPerDiseaseBloodStrikeDamage);
+                BSDmg *= 1d + 0.125d * (double)calcOpts.rotation.AvgDiseaseMult * (1d + stats.BonusPerDiseaseBloodStrikeDamage);
                 _damage = BSDmg;
                 double BSCritDmgMult = 1d + (.15d * (double)talents.MightOfMograine);
                 BSCritDmgMult += (.15d * (double)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
@@ -189,16 +180,20 @@ namespace Rawr.DPSDK
                 return _damage * DamageMod;
             }
         }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
+        }
     }
   
-    public class DeathCoil : RuneAbility
+    public class  DeathCoil : RuneAbility
     {
         public DeathCoil(Character c, Stats s, CalculationOptionsDPSDK CalcOpts, CombatTable table, DeathKnightTalents Talents)
         {
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; GcdType = GCDType.Spell; Runes = RunesUsed.RunicPower; talents = Talents; Name = "Death Coil";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
@@ -209,6 +204,10 @@ namespace Rawr.DPSDK
                 return _damage * DamageMod;
             }
         }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
+        }
     }
 
     public class IcyTouch : RuneAbility
@@ -218,7 +217,7 @@ namespace Rawr.DPSDK
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; GcdType = GCDType.Spell; Runes = RunesUsed.Frost; talents = Talents; Name = "Icy Touch";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
@@ -229,6 +228,10 @@ namespace Rawr.DPSDK
                 return _damage * DamageMod;
             }
         }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
+        }
     }
 
     public class PlagueStrike : RuneAbility
@@ -238,20 +241,24 @@ namespace Rawr.DPSDK
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; talents = Talents; GcdType = GCDType.Melee; Runes = RunesUsed.Unholy; Name = "Plague Strike";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
-                _damage = (combatTable.MH.baseDamage + ((stats.AttackPower / 14d) *
-                                combatTable.normalizationFactor)) * 0.5d + 189d;
-                _damage += ((combatTable.DW ? ((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
-                    combatTable.normalizationFactor)) * 0.5d + 189d) : 0d) * talents.ThreatOfThassarian / 3d) *
+                _damage = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) *
+                                        combatTable.normalizationFactor) + 378f) * 0.5f;
+                _damage += ((combatTable.DW ? ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
+                                        combatTable.normalizationFactor) + 378f) * 0.5f) : 0d) * talents.ThreatOfThassarian / 3d) *
                     (0.5d * 1d + talents.NervesOfColdSteel * .05d);
                 double PSCritDmgMult = 1d + (.15d * talents.ViciousStrikes) + stats.BonusCritMultiplier;
                 PSCritDmgMult = 1d + ((combatTable.physCrits + (.03d * talents.ViciousStrikes) + stats.BonusPlagueStrikeCrit) * PSCritDmgMult);
                 _damage *= PSCritDmgMult;
                 return _damage * DamageMod;
             }
+        }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
         }
     }
 
@@ -263,7 +270,7 @@ namespace Rawr.DPSDK
         }
 
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
@@ -277,7 +284,7 @@ namespace Rawr.DPSDK
             }
         }
         private double _secondaryDamage;
-        public double SecondaryDamage
+        public override double SecondaryDamage
         {
             get
             {
@@ -299,16 +306,29 @@ namespace Rawr.DPSDK
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; talents = Talents; GcdType = GCDType.Spell; Runes = RunesUsed.UnholyFrost; Name = "Howling Blast";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
                 _damage = 540 + 0.2d * (1d + talents.Impurity * .04d) * stats.AttackPower;
-                double HBCritDmgMult = 1d + (0.5d * (2d + (.15d * talents.GuileOfGorefiend) + stats.BonusCritMultiplier));
+                double HBCritDmgMult = (0.5d * (2d + (.15d * talents.GuileOfGorefiend) + stats.BonusCritMultiplier));
                 HBCritDmgMult = 1d + (Math.Min((combatTable.spellCrits), 1d) * HBCritDmgMult);
                 _damage *= HBCritDmgMult;
                 _damage *= DamageMod;
                 return _damage;
+            }
+        }
+        private double _secondaryDamage;
+        public override double SecondaryDamage
+        {
+            get
+            {
+                _secondaryDamage = 540 + 0.2d * (1d + talents.Impurity * .04d) * stats.AttackPower;
+                double HBCritDmgMult = (0.5d * (2d + (.15d * talents.GuileOfGorefiend) + stats.BonusCritMultiplier));
+                HBCritDmgMult = 1d + HBCritDmgMult;
+                _secondaryDamage *= HBCritDmgMult;
+                _secondaryDamage *= DamageMod;
+                return _secondaryDamage;
             }
         }
     }
@@ -320,20 +340,42 @@ namespace Rawr.DPSDK
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; talents = Talents; GcdType = GCDType.Melee; Runes = RunesUsed.RunicPower; Name = "Frost Strike";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
-                _damage = (combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor)) 
-                                        * 0.55d + 110.55d + stats.BonusFrostStrikeDamage;
-                _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) * 
-                                        combatTable.normalizationFactor)) * 0.55d + 110.55d) * 0.5d) + stats.BonusFrostStrikeDamage) 
+                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) *
+                                combatTable.normalizationFactor)) +
+                                250d) * 0.55d + stats.BonusFrostStrikeDamage;
+                _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
+                                combatTable.normalizationFactor)) +
+                                250d) * 0.55d * 0.5d) + stats.BonusFrostStrikeDamage) 
                                         * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
                 double FSCritDmgMult = 1d + .15d * talents.GuileOfGorefiend + stats.BonusCritMultiplier;
                 FSCritDmgMult = 1d + (Math.Min((combatTable.physCrits + stats.BonusFrostStrikeCrit), 1d) * FSCritDmgMult);
                 _damage *= FSCritDmgMult;
                 _damage *= DamageMod;
                 return _damage;
+            }
+        }
+
+        private double _secondaryDamage;
+        public override double SecondaryDamage
+        {
+            get
+            {
+                _secondaryDamage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) *
+                                combatTable.normalizationFactor)) +
+                                250d) * 0.55f + stats.BonusFrostStrikeDamage;
+                _secondaryDamage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
+                                combatTable.normalizationFactor)) +
+                                250d) * 0.55d * 0.5d) + stats.BonusFrostStrikeDamage)
+                                        * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
+                double FSCritDmgMult = 1d + .15d * talents.GuileOfGorefiend + stats.BonusCritMultiplier;
+                FSCritDmgMult = 1d + FSCritDmgMult;
+                _secondaryDamage *= FSCritDmgMult;
+                _secondaryDamage *= DamageMod;
+                return _secondaryDamage;
             }
         }
     }
@@ -346,16 +388,16 @@ namespace Rawr.DPSDK
         }
 
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
-                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor)) *
-                    0.8d) + stats.BonusObliterateDamage + 467.2d;
-                _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
-                                        combatTable.normalizationFactor)) * 0.8d + 467.2d) * 0.5d) + stats.BonusObliterateDamage)
+                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 584d) *
+                    (talents.GlyphofObliterate ? 1 : 0.8d)) + stats.BonusObliterateDamage;
+                _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 584f) *
+                    (talents.GlyphofObliterate ? 1 : 0.8d)) * 0.5d) + stats.BonusObliterateDamage)
                                         * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
-                _damage *= 1d + .125d * calcOpts.rotation.AvgDiseaseMult * (1d + stats.BonusPerDiseaseObliterateDamage);
+                _damage *= 1f + (talents.GlyphofObliterate ? 0.1d : 0.125d) * calcOpts.rotation.AvgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                 double OblitCritDmgMult = 1d + (.15d * talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
                 OblitCritDmgMult = 1d + (combatTable.physCrits + 
                         .03d * talents.Subversion +
@@ -366,6 +408,10 @@ namespace Rawr.DPSDK
                 return _damage;
             }
         }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
+        }
     }
 
     public class DeathStrike : RuneAbility
@@ -375,13 +421,12 @@ namespace Rawr.DPSDK
             character = c; stats = s; calcOpts = CalcOpts; combatTable = table; talents = Talents; GcdType = GCDType.Melee; Runes = RunesUsed.UnholyFrost; Name = "Death Strike";
         }
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
-                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor)) * 0.75d) + 222.75d + stats.BonusDeathStrikeDamage;
-                _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
-                                        combatTable.normalizationFactor)) * 0.75d + 222.75d) * 0.5d) + stats.BonusDeathStrikeDamage)
+                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 297) * 0.75d) + stats.BonusDeathStrikeDamage;
+                _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 297) * 0.75d) * 0.5d) + stats.BonusDeathStrikeDamage)
                                         * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
                 double DSCritDmgMult = 1d + (.15d * talents.MightOfMograine) + stats.BonusCritMultiplier;
                 DSCritDmgMult = 1d + (combatTable.physCrits +
@@ -391,6 +436,10 @@ namespace Rawr.DPSDK
                 _damage *= DamageMod;
                 return _damage;
             }
+        }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
         }
     }
 
@@ -402,11 +451,12 @@ namespace Rawr.DPSDK
         }
 
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
-                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor)) * 0.5d) + 368d + stats.BonusHeartStrikeDamage;
+                _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor) + 736f) *
+                            0.5f) + stats.BonusHeartStrikeDamage;
                 _damage *= 1d + 0.1d * calcOpts.rotation.AvgDiseaseMult * (1d + stats.BonusPerDiseaseHeartStrikeDamage);
                 double HSCritDmgMult = 1d + (.15d * talents.MightOfMograine) + stats.BonusCritMultiplier;
                 HSCritDmgMult = 1d + ((combatTable.physCrits + (.03d * talents.Subversion)) * HSCritDmgMult);
@@ -414,6 +464,10 @@ namespace Rawr.DPSDK
                 _damage *= DamageMod;
                 return _damage;
             }
+        }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
         }
     }
 
@@ -425,7 +479,7 @@ namespace Rawr.DPSDK
         }
 
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
@@ -444,6 +498,10 @@ namespace Rawr.DPSDK
                 return _damage;
             }
         }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
+        }
     }
 
     public class Disease : RuneAbility
@@ -461,7 +519,7 @@ namespace Rawr.DPSDK
         }
 
         private double _damage;
-        public double Damage
+        public override double Damage
         {
             get
             {
@@ -469,6 +527,10 @@ namespace Rawr.DPSDK
                 _damage *= DamageMod;
                 return _damage;
             }
+        }
+        public override double SecondaryDamage
+        {
+            get { return 0; }
         }
     }
 }

@@ -83,7 +83,7 @@ namespace Rawr.DPSDK
                 float dpsMHBCB = 0f;
                 if (combatTable.MH.damage != 0)
                 {
-                    float MHBCBDmg = combatTable.MH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult);
+                    float MHBCBDmg = (float)(combatTable.MH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult));
                     dpsMHBCB = MHBCBDmg / combatTable.MH.hastedSpeed;
                 }
                 dpsBCB = dpsMHBCB;

@@ -28,158 +28,186 @@ namespace Rawr.DPSDK
                 if (_presenceByIndex == 2) presence = CalculationOptionsDPSDK.Presence.Frost;
             }
         }
-        private float _curRotationDuration = 0f;  // rotation duration in seconds
-        public float CurRotationDuration
+        private double _curRotationDuration = 0f;  // rotation duration in seconds
+        public double CurRotationDuration
         {
             get { return _curRotationDuration; }
             set { _curRotationDuration = value; }
         }
 
         //disease info
-        private float _avgDiseaseMult = 0f;
+        private double _avgDiseaseMult = 0f;
 
-        public float AvgDiseaseMult
+        public double AvgDiseaseMult
         {
             get { return _avgDiseaseMult; }
             set { _avgDiseaseMult = value; }
         }
-        private float _numDisease = 0f;
+        private double _numDisease = 0f;
 
-        public float NumDisease
+        public double NumDisease
         {
             get { return _numDisease; }
             set { _numDisease = value; }
         }
-        private float _diseaseUptime = 0f;
+        private double _diseaseUptime = 0f;
 
-        public float DiseaseUptime
+        public double DiseaseUptime
         {
             get { return _diseaseUptime; }
             set { _diseaseUptime = value; }
         }
-        private float _gargoyleDuration = 0f;
+        private double _gargoyleDuration = 0f;
 
-        public float GargoyleDuration
+        public double GargoyleDuration
         {
             get { return _gargoyleDuration; }
             set { _gargoyleDuration = value; }
         }
         
-        private float _deathCoil = 0f;
+        private double _deathCoil = 0f;
 
-        public float DeathCoil
+        public double DeathCoil
         {
             get { return _deathCoil; }
             set { _deathCoil = value; }
         }
-        private float _icyTouch = 0f;
+        private double _icyTouch = 0f;
 
-        public float IcyTouch
+        public double IcyTouch
         {
             get { return _icyTouch; }
             set { _icyTouch = value; }
         }
-        private float _plagueStrike = 0f;
+        private double _plagueStrike = 0f;
 
-        public float PlagueStrike
+        public double PlagueStrike
         {
             get { return _plagueStrike; }
             set { _plagueStrike = value; }
         }
-        private float _frostFever = 0f;
+        private double _frostFever = 0f;
 
-        public float FrostFever
+        public double FrostFever
         {
             get { return _frostFever; }
             set { _frostFever = value; }
         }
-        private float _bloodPlague = 0f;
+        private double _bloodPlague = 0f;
 
-        public float BloodPlague
+        public double BloodPlague
         {
             get { return _bloodPlague; }
             set { _bloodPlague = value; }
         }
-        private float _scourgeStrike = 0f;
+        private double _scourgeStrike = 0f;
 
-        public float ScourgeStrike
+        public double ScourgeStrike
         {
             get { return _scourgeStrike; }
             set { _scourgeStrike = value; }
         }
-        private float _frostStrike = 0f;
+        private double _frostStrike = 0f;
 
-        public float FrostStrike
+        public double FrostStrike
         {
             get { return _frostStrike; }
             set { _frostStrike = value; }
         }
-        private float _howlingBlast = 0f;
+        private double _howlingBlast = 0f;
 
-        public float HowlingBlast
+        public double HowlingBlast
         {
             get { return _howlingBlast; }
             set { _howlingBlast = value; }
         }
-        private float _obliterate = 0f;
+        private double _obliterate = 0f;
 
-        public float Obliterate
+        public double Obliterate
         {
             get { return _obliterate; }
             set { _obliterate = value; }
         }
-        private float _deathStrike = 0f;
+        private double _deathStrike = 0f;
 
-        public float DeathStrike
+        public double DeathStrike
         {
             get { return _deathStrike; }
             set { _deathStrike = value; }
         }
-        private float _bloodStrike = 0f;
+        private double _bloodStrike = 0f;
 
-        public float BloodStrike
+        public double BloodStrike
         {
             get { return _bloodStrike; }
             set { _bloodStrike = value; }
         }
-        private float _bloodBoil = 0f;
+        private double _bloodBoil = 0f;
 
-        public float BloodBoil
+        private double _KMFS;
+        public double KMFS
+        {
+            get { return _KMFS; }
+            set { _KMFS = value; }
+        }
+
+        private double _KMRime;
+        public double KMRime
+        {
+            get { return _KMRime; }
+            set { _KMRime = value; }
+        }
+
+        private double _FFTick;
+        public double FFTick
+        {
+            get { return _FFTick; }
+            set { _FFTick = value; }
+        }
+
+        private double _BPTick;
+        public double BPTick
+        {
+            get { return _BPTick; }
+            set { _BPTick = value; }
+        }
+
+        public double BloodBoil
         {
             get { return _bloodBoil; }
             set { _bloodBoil = value; }
         }
-        private float _heartStrike = 0f;
+        private double _heartStrike = 0f;
 
-        public float HeartStrike
+        public double HeartStrike
         {
             get { return _heartStrike; }
             set { _heartStrike = value; }
         }
-        private float _dancingRuneWeapon = 0f;
+        private double _dancingRuneWeapon = 0f;
 
-        public float DancingRuneWeapon
+        public double DancingRuneWeapon
         {
             get { return _dancingRuneWeapon; }
             set { _dancingRuneWeapon = value; }
         }
-        private float _horn = 0f;
+        private double _horn = 0f;
 
-        public float Horn
+        public double Horn
         {
             get { return _horn; }
             set { _horn = value; }
         }
-        private float _ghoulFrenzy = 0f;
+        private double _ghoulFrenzy = 0f;
 
-        public float GhoulFrenzy
+        public double GhoulFrenzy
         {
             get { return _ghoulFrenzy; }
             set { _ghoulFrenzy = value; }
         }
-        private float _pestilence = 0f;
+        private double _pestilence = 0f;
 
-        public float Pestilence
+        public double Pestilence
         {
             get { return _pestilence; }
             set { _pestilence = value; }
@@ -199,19 +227,112 @@ namespace Rawr.DPSDK
             get { return _pTRCalcs; }
             set { _pTRCalcs = value; }
         }
-        private float _gCDTime;
+        private double _gCDTime;
 
-        public float GCDTime
+        public double GCDTime
         {
             get { return _gCDTime; }
             set { _gCDTime = value; }
         }
-        private float _rP;
+        private double _rP;
 
-        public float RP
+        public double RP
         {
             get { return _rP; }
             set { _rP = value; }
+        }
+
+        private double _weight;
+        public double Weight
+        {
+            get { return _weight; }
+            set { _weight = value; }
+        }
+
+        public void applyWeight(double weight)
+        {
+            Weight = weight;
+            AvgDiseaseMult *= weight;
+            BloodBoil *= weight;
+            BloodPlague *= weight;
+            BloodStrike *= weight;
+            BPTick *= weight;
+            this.DeathCoil *= weight;
+            this.DeathStrike *= weight;
+            this.FFTick *= weight;
+            this.FrostFever *= weight;
+            this.FrostStrike *= weight;
+            this.GhoulFrenzy *= weight;
+            this.HeartStrike *= weight;
+            this.Horn *= weight;
+            this.HowlingBlast *= weight;
+            this.IcyTouch *= weight;
+            this.KMFS *= weight;
+            this.KMRime *= weight;
+            this.Obliterate *= weight;
+            this.Pestilence *= weight;
+            this.PlagueStrike *= weight;
+            this.ScourgeStrike *= weight;
+            this.NumDisease *= weight;
+        }
+
+        public void addRotation(Rotation other)
+        {
+            this.Weight += other.Weight;
+            this.AvgDiseaseMult += other.AvgDiseaseMult;
+            this.BloodBoil += other.BloodBoil;
+            this.BloodPlague += other.BloodPlague;
+            this.BloodStrike += other.BloodStrike;
+            this.BPTick += other.BPTick;
+            this.DancingRuneWeapon += other.DancingRuneWeapon;
+            this.DeathCoil += other.DeathCoil;
+            this.DeathStrike += other.DeathStrike;
+            this.FFTick += other.FFTick;
+            this.FrostFever += other.FrostFever;
+            this.FrostStrike += other.FrostStrike;
+            this.GhoulFrenzy += other.GhoulFrenzy;
+            this.HeartStrike += other.HeartStrike;
+            this.Horn += other.Horn;
+            this.HowlingBlast += other.HowlingBlast;
+            this.IcyTouch += other.IcyTouch;
+            this.KMFS += other.KMFS;
+            this.KMRime += other.KMRime;
+            this.NumDisease += other.NumDisease;
+            this.Obliterate += other.Obliterate;
+            this.Pestilence += other.Pestilence;
+            this.PlagueStrike += other.PlagueStrike;
+            this.ScourgeStrike += other.ScourgeStrike;
+        }
+
+        public void copyRotation(Rotation other)
+        {
+            this.Weight = other.Weight;
+            this.CurRotationDuration = other.CurRotationDuration;
+            this.AvgDiseaseMult = other.AvgDiseaseMult;
+            this.BloodBoil = other.BloodBoil;
+            this.BloodPlague = other.BloodPlague;
+            this.BloodStrike = other.BloodStrike;
+            this.BPTick = other.BPTick;
+            this.DancingRuneWeapon = other.DancingRuneWeapon;
+            this.DeathCoil = other.DeathCoil;
+            this.DeathStrike = other.DeathStrike;
+            this.FFTick = other.FFTick;
+            this.FrostFever = other.FrostFever;
+            this.FrostStrike = other.FrostStrike;
+            this.GhoulFrenzy = other.GhoulFrenzy;
+            this.HeartStrike = other.HeartStrike;
+            this.Horn = other.Horn;
+            this.HowlingBlast = other.HowlingBlast;
+            this.IcyTouch = other.IcyTouch;
+            this.KMFS = other.KMFS;
+            this.KMRime = other.KMRime;
+            this.NumDisease = other.NumDisease;
+            this.Obliterate = other.Obliterate;
+            this.Pestilence = other.Pestilence;
+            this.PlagueStrike = other.PlagueStrike;
+            this.ScourgeStrike = other.ScourgeStrike;
+            this.presence = other.presence;
+            this.NumDisease = other.NumDisease;
         }
 
         public enum Type
@@ -226,17 +347,17 @@ namespace Rawr.DPSDK
 
         public float getMeleeSpecialsPerSecond()
         {
-            float temp;
+            double temp;
             temp = PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike + BloodStrike + HeartStrike;
             temp = temp / CurRotationDuration;
-            return temp;
+            return (float)temp;
         }
 
         public float getSpellSpecialsPerSecond()
         {
             float temp;
-            temp = DeathCoil + IcyTouch + HowlingBlast;
-            temp = temp / CurRotationDuration;
+            temp = (float)(DeathCoil + IcyTouch + HowlingBlast);
+            temp = temp / (float)CurRotationDuration;
             return temp;
         }
 
@@ -259,25 +380,25 @@ namespace Rawr.DPSDK
 
             if (ManagedRP)
             {
-                RP = manageRPDumping(talents, RP);
+                RP = manageRPDumping(talents, (float)RP);
             }
             else
             {
                 RP -= ((40 * DeathCoil) +
                     ((GlyphofFS ? 32 : 40) * FrostStrike));
             }
-            return RP;
+            return (float)RP;
         }
 
         public float manageRPDumping(DeathKnightTalents talents, float RP)
         {
 			if (talents.DancingRuneWeapon > 0f)
 			{
-				RP -= CurRotationDuration * (60f / 90f);
+				RP -= (float)CurRotationDuration * (60f / 90f);
 			}
 			if (talents.SummonGargoyle > 0f)
 			{
-				RP -= CurRotationDuration * (60f / 180f);
+                RP -= (float)(CurRotationDuration * (60f / 180f));
 			}
 			if (talents.FrostStrike > 0f)
 			{
@@ -309,7 +430,7 @@ namespace Rawr.DPSDK
                 GCDTime += 1.5f * (DeathCoil + IcyTouch + HowlingBlast + Horn + Pestilence + GhoulFrenzy);
                 // this does not currently account for haste, and I don't think it is possible in the current design.
             }
-            return GCDTime;
+            return (float)GCDTime;
         }
 
         public void setRotation(Type t)
@@ -332,7 +453,7 @@ namespace Rawr.DPSDK
                     DeathStrike = 2f;
                     BloodStrike = 0f;
                     HeartStrike = 6f;
-                    CurRotationDuration = 20f;
+                    CurRotationDuration = 360f;
                     DancingRuneWeapon = 90f;
                     GargoyleDuration = 0f;
                     DeathStrike = 2f;
@@ -355,7 +476,7 @@ namespace Rawr.DPSDK
                     BloodStrike = 2f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
-                    CurRotationDuration = 20f;
+                    CurRotationDuration = 360f;
                     GargoyleDuration = 0f;
                     DeathStrike = 0f;
 					Pestilence = 0f;
@@ -376,7 +497,7 @@ namespace Rawr.DPSDK
                     BloodStrike = 2f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
-                    CurRotationDuration = 20f;
+                    CurRotationDuration = 360f;
                     Horn = 1f;
                     GargoyleDuration = 30f;
                     DeathStrike = 0f;

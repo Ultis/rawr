@@ -91,6 +91,7 @@ namespace Rawr.Silverlight
             LoadScreen.SaveFiles();
         }
 
+
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             // If the app is running outside of the debugger then report the exception using

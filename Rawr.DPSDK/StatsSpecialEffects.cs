@@ -32,7 +32,7 @@ namespace Rawr.DPSDK
             }
             else
             {
-                float trigger = 0f;
+                double trigger = 0f;
                 float chance = 0f;
                 float unhastedAttackSpeed = 2f;
                 switch (effect.Trigger)
@@ -45,7 +45,7 @@ namespace Rawr.DPSDK
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        trigger = (1f / ((rotation.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+                        trigger = (1f / ((rotation.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ?  1f / combatTable.combinedSwingTime : 0.5f)));
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
@@ -116,11 +116,11 @@ namespace Rawr.DPSDK
                     {
                         timeToMax = 2 * buffDuration;
                     }
-                    statsAverage.Accumulate(effect.Stats, effect.GetAverageStackSize(trigger, chance, unhastedAttackSpeed, buffDuration));
+                    statsAverage.Accumulate(effect.Stats, effect.GetAverageStackSize((float)trigger, chance, unhastedAttackSpeed, buffDuration));
                 }
                 else
                 {
-                    effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
+                    effect.AccumulateAverageStats(statsAverage, (float)trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
                 }
             }
         
