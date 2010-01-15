@@ -19,7 +19,7 @@ namespace Rawr.ProtWarr
         private void Calculate()
         {
             float globalCooldownSpeed   = Lookup.GlobalCooldownSpeed(Character, true);
-            float baseBossAttackSpeed   = Options.BossAttackSpeed / (1.0f + Stats.BossAttackSpeedMultiplier);
+            float baseBossAttackSpeed   = Options.BossAttackSpeed * (1.0f - Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
