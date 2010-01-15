@@ -48,7 +48,6 @@
             this.rbKr = new System.Windows.Forms.RadioButton();
             this.comboBoxEffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.CK_DisplayItemType = new System.Windows.Forms.CheckBox();
             this.CK_HideEnchantsBasedOnProfs = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
@@ -177,12 +176,6 @@
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
             // 
-            // CK_DisplayItemType
-            // 
-            resources.ApplyResources(this.CK_DisplayItemType, "CK_DisplayItemType");
-            this.CK_DisplayItemType.Name = "CK_DisplayItemType";
-            this.CK_DisplayItemType.UseVisualStyleBackColor = true;
-            // 
             // CK_HideEnchantsBasedOnProfs
             // 
             resources.ApplyResources(this.CK_HideEnchantsBasedOnProfs, "CK_HideEnchantsBasedOnProfs");
@@ -197,7 +190,6 @@
             this.Controls.Add(this.rbKr);
             this.Controls.Add(this.rbZhCn);
             this.Controls.Add(this.rbZhTW);
-            this.Controls.Add(this.CK_DisplayItemType);
             this.Controls.Add(this.comboBoxEffectCombinationsCalculationMode);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.CK_DisplayItemIds);
@@ -239,7 +231,6 @@
         private System.Windows.Forms.RadioButton rbKr;
         private System.Windows.Forms.ComboBox comboBoxEffectCombinationsCalculationMode;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox CK_DisplayItemType;
         private System.Windows.Forms.CheckBox CK_HideEnchantsBasedOnProfs;
 
 

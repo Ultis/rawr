@@ -22,8 +22,7 @@ namespace Rawr.UserControls.Options
             CK_GemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
             comboBoxProcEffectCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ProcEffectMode;
             comboBoxEffectCombinationsCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.CombinationEffectMode;
-            CK_DisplayItemIds.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemIds;
-            CK_DisplayItemType.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemType;
+            CK_DisplayItemIds.Checked = Rawr.Properties.GeneralSettings.Default.DisplayExtraItemInfo;
             CK_HideEnchantsBasedOnProfs.Checked = Rawr.Properties.GeneralSettings.Default.HideProfEnchants;
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
@@ -69,8 +68,7 @@ namespace Rawr.UserControls.Options
 			Rawr.Properties.GeneralSettings.Default.UseMultithreading = CK_UseMultithreading.Checked;
             Rawr.Properties.GeneralSettings.Default.DisplayBuffSource = CK_BuffSource.Checked;
             Rawr.Properties.GeneralSettings.Default.DisplayGemNames = CK_GemNames.Checked;
-            Rawr.Properties.GeneralSettings.Default.DisplayItemIds = CK_DisplayItemIds.Checked;
-            Rawr.Properties.GeneralSettings.Default.DisplayItemType = CK_DisplayItemType.Checked;
+            Rawr.Properties.GeneralSettings.Default.DisplayExtraItemInfo = CK_DisplayItemIds.Checked;
             Rawr.Properties.GeneralSettings.Default.HideProfEnchants = CK_HideEnchantsBasedOnProfs.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
             Rawr.Properties.GeneralSettings.Default.ProcEffectMode = comboBoxProcEffectCalculationMode.SelectedIndex;

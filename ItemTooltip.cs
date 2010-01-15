@@ -206,7 +206,6 @@ namespace Rawr
             return string.Empty;
         }
 
-
         protected Image CachedToolTipImage
         {
             get
@@ -222,7 +221,9 @@ namespace Rawr
                             bool hasSockets = _currentItem.SocketColor1 != ItemSlot.None ||
                                               _currentItem.SocketColor2 != ItemSlot.None ||
                                               _currentItem.SocketColor3 != ItemSlot.None;
-                            if (_currentItemInstance != null && (_currentItemInstance.Gem1 != null || _currentItemInstance.Gem2 != null || _currentItemInstance.Gem3 != null))
+                            if (_currentItemInstance != null && (_currentItemInstance.Gem1 != null ||
+                                                                 _currentItemInstance.Gem2 != null ||
+                                                                 _currentItemInstance.Gem3 != null))
                             {
                                 hasSockets = true;
                             }
@@ -253,34 +254,21 @@ namespace Rawr
                             // 8.jan.2010: all ID's (including binding info) goes separate line, as stats
                             var typesText = string.Empty;
 
-                            if (Properties.GeneralSettings.Default.DisplayItemIds)
-                            {
-                                if( CurrentItem.ItemLevel > 0 )
-                                    typesText += string.Format("[{0}] ", CurrentItem.ItemLevel);
-
-                                typesText += string.Format("[{0}] ", CurrentItem.Id);
-                            }
-
-                            if (Properties.GeneralSettings.Default.DisplayItemType)
-                            {
-                                if (CurrentItem.Bind != BindsOn.None)
-                                    typesText += string.Format("[{0}] ", CurrentItem.Bind);
-
-                                if (!string.IsNullOrEmpty(CurrentItem.SlotString))
-                                    typesText += string.Format("[{0}] ", CurrentItem.SlotString);
-
-                                if (CurrentItem.Type != ItemType.None)
-                                    typesText += string.Format("[{0}] ", CurrentItem.Type);
+                            if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
+                                                                                    typesText += string.Format("[{0}] ", CurrentItem.Id);
+                                if (CurrentItem.ItemLevel > 0) {                    typesText += string.Format("[{0}] ", CurrentItem.ItemLevel); }
+                                if (CurrentItem.Bind != BindsOn.None) {             typesText += string.Format("[{0}] ", CurrentItem.Bind); }
+                                if (!string.IsNullOrEmpty(CurrentItem.SlotString)) {typesText += string.Format("[{0}] ", CurrentItem.SlotString); }
+                                if (CurrentItem.Type != ItemType.None) {            typesText += string.Format("[{0}] ", CurrentItem.Type); }
+                            }else{
+                                // Just do the iLevel so we can differentiate the Heroic vs non-Heroic versions of items
+                                if (CurrentItem.ItemLevel > 0) { typesText += string.Format(" [{0}]", CurrentItem.ItemLevel); }
                             }
 
                             // check if we added some and join the text for drawing
-                            if (!string.IsNullOrEmpty(typesText))
-                            {
-                                yPos += yGrid.step;
-                            }
+                            if (Properties.GeneralSettings.Default.DisplayExtraItemInfo && !string.IsNullOrEmpty(typesText)) { yPos += yGrid.step; }
 
                             #endregion // Item ID's Section
-
 
                             List<string> statsList = new List<string>();
 
@@ -460,7 +448,7 @@ namespace Rawr
 
                             _cachedToolTipImage = new Bitmap(309,
                                 (hasSockets ? 78 : 20) + statHeight                                   // Stats
-                                + (!string.IsNullOrEmpty(typesText) ? 13 : 0)                         // ID's info
+                                //+ (!string.IsNullOrEmpty(typesText) ? 13 : 0)                         // ID's info
                                 + (_currentItem.Quality != ItemQuality.Temp ? 13 + extraLocation : 0) // Location
                                 + (_currentItem.Quality != ItemQuality.Temp && !CurrentItem.IsGem ? 13 + extraEnchant  : 0) // Enchant
                                 + gemInfoSize + gemNamesSize                                          // Gems
@@ -518,6 +506,10 @@ namespace Rawr
                                         break;
                                 }
                                 g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
+                                if (!Properties.GeneralSettings.Default.DisplayExtraItemInfo && !string.IsNullOrEmpty(typesText)) {
+                                    float nameWidth = _dummyBitmap.MeasureString(CurrentItem.Name, _fontStats).Width;
+                                    g.DrawString(typesText, _fontName, SystemBrushes.GrayText, 4 + nameWidth, 4);
+                                }
                             }
 
                             #endregion
@@ -525,9 +517,8 @@ namespace Rawr
                             xPos = xGrid.initial;
                             yPos = yGrid.initial;
 
-                            // draw item bind
-                            if (!string.IsNullOrEmpty(typesText))
-                            {
+                            // draw extra item info (if option is checked)
+                            if (Properties.GeneralSettings.Default.DisplayExtraItemInfo && !string.IsNullOrEmpty(typesText)) {
                                 g.DrawString(typesText, _fontName, SystemBrushes.GrayText, xPos, yPos);
                                 yPos += yGrid.step;
                             }
@@ -559,10 +550,7 @@ namespace Rawr
                             #endregion
 
                             // this is the next clean/empty line after we wrote the stats
-                            if (xPos > xGrid.initial)
-                            {
-                                yPos += yGrid.step;
-                            }
+                            if (xPos > xGrid.initial) { yPos += yGrid.step; }
 
                             #region Sockets Section
                             if (hasSockets)

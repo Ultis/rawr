@@ -1162,12 +1162,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             out RotationTest rotationTest)
         {
             #region Ranged Weapon Stats
-            //float
-                rangedWeaponDamage = 0;
-            //float
-                rangedWeaponSpeed = 0;
-            //float
-                rangedAmmoDPS = 0;
+            rangedWeaponDamage = 0;
+            rangedWeaponSpeed = 0;
+            rangedAmmoDPS = 0;
 
             if (character.Ranged != null) {
                 rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;

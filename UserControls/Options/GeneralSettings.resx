@@ -142,7 +142,7 @@
     <value>NoControl</value>
   </data>
   <data name="CK_HideEnchantsBasedOnProfs.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 118</value>
+    <value>3, 95</value>
   </data>
   <data name="CK_HideEnchantsBasedOnProfs.Size" type="System.Drawing.Size, System.Drawing">
     <value>183, 17</value>
@@ -172,7 +172,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbKr.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 220</value>
+    <value>87, 197</value>
   </data>
   <data name="rbKr.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 17</value>
@@ -202,7 +202,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbZhCn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 198</value>
+    <value>87, 175</value>
   </data>
   <data name="rbZhCn.Size" type="System.Drawing.Size, System.Drawing">
     <value>73, 17</value>
@@ -232,7 +232,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbZhTW.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 176</value>
+    <value>87, 153</value>
   </data>
   <data name="rbZhTW.Size" type="System.Drawing.Size, System.Drawing">
     <value>73, 17</value>
@@ -255,36 +255,6 @@
   <data name="&gt;&gt;rbZhTW.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="CK_DisplayItemType.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="CK_DisplayItemType.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="CK_DisplayItemType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 95</value>
-  </data>
-  <data name="CK_DisplayItemType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>166, 17</value>
-  </data>
-  <data name="CK_DisplayItemType.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="CK_DisplayItemType.Text" xml:space="preserve">
-    <value>Display Item Types in Tooltips</value>
-  </data>
-  <data name="&gt;&gt;CK_DisplayItemType.Name" xml:space="preserve">
-    <value>CK_DisplayItemType</value>
-  </data>
-  <data name="&gt;&gt;CK_DisplayItemType.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;CK_DisplayItemType.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;CK_DisplayItemType.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
   <data name="comboBoxEffectCombinationsCalculationMode.Items" xml:space="preserve">
     <value>Interpolation - Linear</value>
   </data>
@@ -295,7 +265,7 @@
     <value>High Precision</value>
   </data>
   <data name="comboBoxEffectCombinationsCalculationMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 300</value>
+    <value>6, 277</value>
   </data>
   <data name="comboBoxEffectCombinationsCalculationMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 21</value>
@@ -313,7 +283,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;comboBoxEffectCombinationsCalculationMode.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -322,7 +292,7 @@
     <value>NoControl</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 283</value>
+    <value>3, 260</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
     <value>189, 13</value>
@@ -343,7 +313,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="CK_DisplayItemIds.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -355,13 +325,13 @@
     <value>3, 72</value>
   </data>
   <data name="CK_DisplayItemIds.Size" type="System.Drawing.Size, System.Drawing">
-    <value>151, 17</value>
+    <value>182, 17</value>
   </data>
   <data name="CK_DisplayItemIds.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
   <data name="CK_DisplayItemIds.Text" xml:space="preserve">
-    <value>Display Item Ids in Tooltips</value>
+    <value>Display Extra Item Info in Tooltips</value>
   </data>
   <data name="&gt;&gt;CK_DisplayItemIds.Name" xml:space="preserve">
     <value>CK_DisplayItemIds</value>
@@ -373,7 +343,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CK_DisplayItemIds.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="comboBoxProcEffectCalculationMode.Items" xml:space="preserve">
     <value>Simple</value>
@@ -388,7 +358,7 @@
     <value>Advanced - Interpolation</value>
   </data>
   <data name="comboBoxProcEffectCalculationMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 259</value>
+    <value>6, 236</value>
   </data>
   <data name="comboBoxProcEffectCalculationMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 21</value>
@@ -406,7 +376,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;comboBoxProcEffectCalculationMode.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -415,7 +385,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 242</value>
+    <value>3, 219</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>148, 13</value>
@@ -436,7 +406,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>8</value>
   </data>
   <data name="CK_GemNames.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -466,7 +436,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CK_GemNames.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>9</value>
   </data>
   <data name="CK_BuffSource.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -496,7 +466,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CK_BuffSource.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>10</value>
   </data>
   <data name="rbEnglish.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -505,7 +475,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbEnglish.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 154</value>
+    <value>6, 131</value>
   </data>
   <data name="rbEnglish.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 17</value>
@@ -526,7 +496,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbEnglish.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
   </data>
   <data name="rbFrench.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -535,7 +505,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbFrench.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 198</value>
+    <value>6, 175</value>
   </data>
   <data name="rbFrench.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 17</value>
@@ -556,7 +526,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbFrench.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>12</value>
   </data>
   <data name="rbSpanish.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -565,7 +535,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbSpanish.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 220</value>
+    <value>6, 197</value>
   </data>
   <data name="rbSpanish.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 17</value>
@@ -586,7 +556,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbSpanish.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>13</value>
   </data>
   <data name="rbRussian.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -595,7 +565,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbRussian.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 154</value>
+    <value>87, 131</value>
   </data>
   <data name="rbRussian.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 17</value>
@@ -616,7 +586,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbRussian.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>14</value>
   </data>
   <data name="rbGerman.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -625,7 +595,7 @@
     <value>NoControl</value>
   </data>
   <data name="rbGerman.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 176</value>
+    <value>6, 153</value>
   </data>
   <data name="rbGerman.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 17</value>
@@ -646,7 +616,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rbGerman.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>15</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -655,7 +625,7 @@
     <value>NoControl</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 138</value>
+    <value>3, 115</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>42, 13</value>
@@ -676,7 +646,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>16</value>
   </data>
   <data name="CK_UseMultithreading.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -703,10 +673,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;CK_UseMultithreading.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>17</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 328</value>
+    <value>208, 305</value>
   </data>
   <data name="&gt;&gt;errorProvider1.Name" xml:space="preserve">
     <value>errorProvider1</value>
