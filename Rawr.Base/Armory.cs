@@ -329,12 +329,23 @@ namespace Rawr
                 ItemInstance item = currentChar[slot];
                 if ((object)item != null && item.Id != 0)
                 {
+                    // add item as available
                     if (!currentChar.AvailableItems.Contains(item.Id.ToString())) currentChar.AvailableItems.Add(item.Id.ToString());
+                    // add used enchant as available
                     Enchant enchant = item.Enchant;
                     if (enchant != null && enchant.Id != 0)
                     {
                         string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
                         if (!currentChar.AvailableItems.Contains(enchantString)) currentChar.AvailableItems.Add(enchantString);
+                    }
+                    // add used gems as available
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Item gem = item.GetGem(i);
+                        if ((object)gem != null)
+                        {
+                            if (!currentChar.AvailableItems.Contains(gem.Id.ToString())) currentChar.AvailableItems.Add(gem.Id.ToString());
+                        }
                     }
                 }
             }
