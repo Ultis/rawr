@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Rawr
 {
@@ -320,6 +321,12 @@ namespace Rawr
 
 		void setTalentsFromTree(SavedVariablesDictionary characterInfo)
 		{
+            if (!characterInfo.ContainsKey("Talents"))
+            {
+                MessageBox.Show("Talent data was not found, and must be manually added.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
 			SavedVariablesDictionary talent_tree = characterInfo["Talents"] as SavedVariablesDictionary;
 
 			TalentsBase Talents = m_character.CurrentTalents;
