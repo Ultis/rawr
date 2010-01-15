@@ -605,7 +605,8 @@ namespace Rawr.RestoSham
                 }
                 float RTLHWLHWCrits = Math.Min(2, RTLHWLHWCasts) * Math.Min(CriticalChance + TWChance * 0.25f, 1) + (RTLHWLHWCasts - 2) * CriticalChance;
                 float RTLHWRTHeal = RTHeal * Critical;
-                float RTLHWLHWHeal = LHWHeal * ((RTLHWLHWCasts - RTLHWLHWCrits) + CriticalScale * RTLHWLHWCrits);
+                float RTLHWLHWCritHeal = LHWHeal * Critical;
+                float RTLHWLHWHeal = (LHWHeal * (RTLHWLHWCasts - RTLHWLHWCrits)) + (RTLHWLHWCrits * RTLHWLHWCritHeal);
                 float RTLHWAA = (RTHeal * CriticalChance + LHWHeal * RTLHWLHWCrits) * AAScale;
                 float RTTargets = TankHeal ? 1 : RTDuration / RTLHWTime;
                 float RTLHWELWTargets = ELWChance * (TankHeal ? 1 : RTLHWLHWCasts * ELWDuration / RTLHWTime);
