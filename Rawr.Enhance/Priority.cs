@@ -127,12 +127,13 @@ namespace Rawr.Enhance
                 if (ability.AbilityType == EnhanceAbility.StormStrike)
                     totalManaUsed -= uses * _cs.ImpStormStrikeMana;
             }
+        // fight length & mana calcs causing huge issues - disabling for now
 //            if (totalTimeUsed > fightLength)
 //                foreach (Ability ability in _abilities)
 //                   ability.AverageUses(totalTimeUsed / fightLength); 
-            if (totalManaUsed > _cs.MaxMana && _calcOpts.UseMana)
-                foreach (Ability ability in _abilities)
-                    ability.AverageUses(totalManaUsed / _cs.MaxMana); 
+//            if (totalManaUsed > _cs.MaxMana && _calcOpts.UseMana)
+//                foreach (Ability ability in _abilities)
+//                    ability.AverageUses(totalManaUsed / _cs.MaxMana); 
             // at this stage have the upper bounds of number of uses - ie: no GCD interference
             foreach (Ability ability in _abilities)
             {

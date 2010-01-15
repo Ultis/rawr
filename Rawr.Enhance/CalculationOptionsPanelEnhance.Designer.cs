@@ -30,6 +30,7 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageBasics = new System.Windows.Forms.TabPage();
+            this.chbShowExportMsgBox = new System.Windows.Forms.CheckBox();
             this.labelReactionTime = new System.Windows.Forms.Label();
             this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
             this.label12 = new System.Windows.Forms.Label();
@@ -87,7 +88,6 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.chbShowExportMsgBox = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
@@ -142,6 +142,19 @@
             this.tabPageBasics.TabIndex = 0;
             this.tabPageBasics.Text = "Basics";
             this.tabPageBasics.UseVisualStyleBackColor = true;
+            // 
+            // chbShowExportMsgBox
+            // 
+            this.chbShowExportMsgBox.AutoSize = true;
+            this.chbShowExportMsgBox.Checked = true;
+            this.chbShowExportMsgBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbShowExportMsgBox.Location = new System.Drawing.Point(10, 195);
+            this.chbShowExportMsgBox.Name = "chbShowExportMsgBox";
+            this.chbShowExportMsgBox.Size = new System.Drawing.Size(213, 17);
+            this.chbShowExportMsgBox.TabIndex = 62;
+            this.chbShowExportMsgBox.Text = "Show Export Message Box confirmation";
+            this.chbShowExportMsgBox.UseVisualStyleBackColor = true;
+            this.chbShowExportMsgBox.CheckedChanged += new System.EventHandler(this.chbShowExportMsgBox_CheckedChanged);
             // 
             // labelReactionTime
             // 
@@ -219,8 +232,7 @@
             // chbMana
             // 
             this.chbMana.AutoSize = true;
-            this.chbMana.Checked = true;
-            this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbMana.Enabled = false;
             this.chbMana.Location = new System.Drawing.Point(10, 218);
             this.chbMana.Name = "chbMana";
             this.chbMana.Size = new System.Drawing.Size(135, 17);
@@ -854,19 +866,6 @@
             this.btnEnhSim.Text = "Export Stats to EnhSim config file";
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
-            // 
-            // chbShowExportMsgBox
-            // 
-            this.chbShowExportMsgBox.AutoSize = true;
-            this.chbShowExportMsgBox.Checked = true;
-            this.chbShowExportMsgBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbShowExportMsgBox.Location = new System.Drawing.Point(10, 195);
-            this.chbShowExportMsgBox.Name = "chbShowExportMsgBox";
-            this.chbShowExportMsgBox.Size = new System.Drawing.Size(213, 17);
-            this.chbShowExportMsgBox.TabIndex = 62;
-            this.chbShowExportMsgBox.Text = "Show Export Message Box confirmation";
-            this.chbShowExportMsgBox.UseVisualStyleBackColor = true;
-            this.chbShowExportMsgBox.CheckedChanged += new System.EventHandler(this.chbShowExportMsgBox_CheckedChanged);
             // 
             // CalculationOptionsPanelEnhance
             // 
