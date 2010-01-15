@@ -22,7 +22,7 @@ namespace Rawr.Properties
 			_default.Locale = "en";
 			_default.DisplayBuffSource = false;
 			_default.DisplayGemNames = false;
-			_default.DisplayItemIds = false;
+            //_default.DisplayExtraItemInfo = false;
 			_default.ProcEffectMode = 0;
 			_default.CombinationEffectMode = 0;
 
@@ -37,8 +37,7 @@ namespace Rawr.Properties
 		public bool DisplayBuffSource { get; set; }
 		public bool DisplayGemNames { get; set; }
 		public int ProcEffectMode { get; set; }
-		public bool DisplayItemIds { get; set; }
-        public bool DisplayItemType { get; set; }
+		//public bool DisplayExtraItemInfo { get; set; }
         public bool HideProfEnchants { get; set; }
 		public int CombinationEffectMode { get; set; }
 	}

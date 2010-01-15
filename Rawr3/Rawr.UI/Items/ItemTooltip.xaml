@@ -17,7 +17,7 @@
   <Popup x:Name="ItemPopup">
 		<Grid CacheMode="BitmapCache" x:Name="ItemGrid" MaxWidth="350">
 			<Rectangle RadiusX="3" RadiusY="3">
-        <!--Rectangle.Effect> //Turning this effect off for performance reasons, may add it back in later
+                <!--Rectangle.Effect> //Turning this effect off for performance reasons, may add it back in later
 					<DropShadowEffect ShadowDepth="4" Opacity="0.35" BlurRadius="10"/>
 				</Rectangle.Effect-->
 				<Rectangle.Stroke>
@@ -37,11 +37,9 @@
 			</Rectangle>
 
 			<StackPanel x:Name="RootLayout" Margin="4,4,4,4">
-				<StackPanel Orientation="Horizontal">
-					<TextBlock x:Name="ItemName" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF32004D" Text="Item Name" Margin="0,0,0,0"/>
-					<TextBlock x:Name="ItemLevel" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FF464646" Text="[239]" Margin="8,0,0,0"/>
-				</StackPanel>
-				<controls:WrapPanel x:Name="StatPanel" HorizontalAlignment="Stretch"/>
+                <TextBlock x:Name="ItemName" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF32004D" Text="Item Name" Margin="0,0,0,0"/>
+                <controls:WrapPanel x:Name="TypesPanel" HorizontalAlignment="Stretch"/>
+                <controls:WrapPanel x:Name="StatPanel" HorizontalAlignment="Stretch"/>
 				<StackPanel x:Name="GemStack" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,0,0,0">
 					<Border x:Name="GemColor1" Background="#FFFF0000" BorderBrush="#FF000000" BorderThickness="0,0,0,0" Padding="2,2,2,2" Margin="0,0,0,0" Width="36" Height="36">
 						<Image x:Name="GemImage1" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" d:LayoutOverrides="HorizontalAlignment"/>

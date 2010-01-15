@@ -20,8 +20,7 @@ namespace Rawr.UI
             CK_MultiThreading.IsChecked = GeneralSettings.Default.UseMultithreading;
             CK_BuffSource.IsChecked = GeneralSettings.Default.DisplayBuffSource;
             CK_GemNames.IsChecked = GeneralSettings.Default.DisplayGemNames;
-            CK_DisplayItemIds.IsChecked = GeneralSettings.Default.DisplayItemIds;
-            CK_DisplayItemType.IsChecked = GeneralSettings.Default.DisplayItemType;
+            //CK_DisplayExtraItemInfo.IsChecked = GeneralSettings.Default.DisplayExtraItemInfo;
             CK_HideEnchantsBasedOnProfs.IsChecked = GeneralSettings.Default.HideProfEnchants;
             WarningsCheck.IsChecked = OptimizerSettings.Default.WarningsEnabled;
             TemplateGemsCheck.IsChecked = OptimizerSettings.Default.TemplateGemsEnabled;
@@ -58,8 +57,7 @@ namespace Rawr.UI
             GeneralSettings.Default.UseMultithreading = CK_MultiThreading.IsChecked.GetValueOrDefault();
             GeneralSettings.Default.DisplayBuffSource = CK_BuffSource.IsChecked.GetValueOrDefault();
             GeneralSettings.Default.DisplayGemNames   = CK_GemNames.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.DisplayItemIds    = CK_DisplayItemIds.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.DisplayItemType   = CK_DisplayItemType.IsChecked.GetValueOrDefault();
+            //GeneralSettings.Default.DisplayExtraItemInfo = CK_DisplayExtraItemInfo.IsChecked.GetValueOrDefault();
             GeneralSettings.Default.HideProfEnchants  = CK_HideEnchantsBasedOnProfs.IsChecked.GetValueOrDefault();
             switch (OptimizationMethodCombo.SelectedIndex)
             {

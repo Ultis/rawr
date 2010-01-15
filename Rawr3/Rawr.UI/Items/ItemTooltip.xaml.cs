@@ -16,8 +16,8 @@ namespace Rawr.UI
 	{
         private string currentString;
         public string CurrentString
-       {
-           get { return currentString; }
+        {
+            get { return currentString; }
             set
             {
                 itemInstance = null;
@@ -150,7 +150,7 @@ namespace Rawr.UI
                 ItemName.Text = Title;
                 ItemName.Foreground = new SolidColorBrush(Colors.Purple);
                 //ItemName.FontSize = 10;
-                ItemLevel.Text = "";
+                //ItemLevel.Text = "";
 
                 StatPanel.Visibility = Visibility.Collapsed;
                 GemStack.Visibility = Visibility.Collapsed;
@@ -170,6 +170,31 @@ namespace Rawr.UI
             }
         }
 
+		public static void List2Panel( WrapPanel p, IList<string> li, Brush fore )
+		{
+			// reset
+			p.Children.Clear();
+
+			// show
+			p.Visibility = li.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+			// fill
+			foreach (var s in li)
+			{
+				var c = new TextBlock
+				        	{
+				        		Margin = new Thickness(0, 0, 8, 0),
+				        		HorizontalAlignment = HorizontalAlignment.Left,
+				        		VerticalAlignment = VerticalAlignment.Top,
+				        		Text = s
+				        	};
+
+				if (fore != null)
+					c.Foreground = fore;
+				p.Children.Add(c);
+			}
+		}
+
         public void UpdateTooltip()
         {
             Item actualItem = null;
@@ -188,7 +213,7 @@ namespace Rawr.UI
 
             ItemName.Text = actualItem.Name;
             ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem.Quality));
-            if (actualItem.ItemLevel > 0) {
+            /*if (actualItem.ItemLevel > 0) {
                 string s = "";
                 if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
                     s = string.Format("[{0}] ({1}) [{2}]", actualItem.ItemLevel, actualItem.Id, actualItem.SlotString);
@@ -200,10 +225,35 @@ namespace Rawr.UI
                     s = string.Format("[{0}]", actualItem.ItemLevel);
                 }
                 ItemLevel.Text = s;
-            } else { ItemLevel.Text = ""; }
+            } else { ItemLevel.Text = ""; }*/
 
-            #region Displaying Item Stats
-            List<string> statsList = new List<string>();
+			#region Displaying Item Types
+            //List<string> statsList = new List<string>();
+ 
+			var liTypes = new List<string>();
+
+            //if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
+				if (actualItem.ItemLevel > 0)
+					liTypes.Add( string.Format("[{0}]", actualItem.ItemLevel) );
+
+				liTypes.Add( string.Format("[{0}]", actualItem.Id) );
+
+			    if (actualItem.Bind != BindsOn.None)
+					liTypes.Add( string.Format("[{0}]", actualItem.Bind) );
+
+				if (!string.IsNullOrEmpty(actualItem.SlotString))
+					liTypes.Add( string.Format("[{0}]", actualItem.SlotString) );
+
+				if (actualItem.Type != ItemType.None)
+					liTypes.Add( string.Format("[{0}]", actualItem.Type) );
+			//}
+
+			List2Panel(TypesPanel, liTypes, new SolidColorBrush(Colors.Gray) );
+			
+			#endregion // Displaying Item Types
+
+			#region Displaying Item Stats
+			List<string> statsList = new List<string>();
 
             Stats relevantStats = Calculations.GetRelevantStats(actualItem.Stats);
             var positiveStats = relevantStats.Values(x => x != 0);
@@ -228,7 +278,7 @@ namespace Rawr.UI
                 string text = effect.ToString();
                 statsList.Add(text);
             }
-            StatPanel.Children.Clear();
+            /*StatPanel.Children.Clear();
             if (statsList.Count == 0) StatPanel.Visibility = Visibility.Collapsed;
             else
             {
@@ -242,7 +292,8 @@ namespace Rawr.UI
                     text.Text = s;
                     StatPanel.Children.Add(text);
                 }
-            }
+            }*/
+            List2Panel(StatPanel, statsList, null);
             #endregion
 
             #region Setting Up Gems
