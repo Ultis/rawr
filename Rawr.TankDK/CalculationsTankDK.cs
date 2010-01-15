@@ -639,6 +639,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fFightDuration = opts.FightLength;
             // Does the boss have parry haste?
             bool bParryHaste = true;
+            // Setup the base DPS
             float fIncDPS = opts.IncomingDamage / opts.BossAttackSpeed;
             float fTotalMitigation = 0f;
 
@@ -649,7 +650,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (opts.bExperimental)
             {
                 Rawr.BossList BL = new Rawr.BossList();
-                hCurrentBoss = BL.TheAvgBoss;
+                hCurrentBoss = BL.TheHardestBoss;
 
                 // How much of what kind of damage does this boss deal with?
                 #region ** Incoming Boss Damage **
@@ -731,75 +732,118 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #region ***** Experimental Mitigation Rating *****
             if (opts.bExperimental)
             {
+                float fSegmentMitigation = 0f;
+
                 #region ** Crit Mitigation **
                 // Crit mitigation:
                 // Crit mitigation works for Magical as well as Physical damage so take care of that first.
                 float fCritMultiplier = 1;
                 float fCritDPS = fIncDPS * fCritMultiplier;
-                float fCritMitigation = (fCritDPS * fPercentCritMitigation);
+                fSegmentMitigation = (fCritDPS * fPercentCritMitigation);
                 // Add in the value of crit mitigation.
-                fTotalMitigation += fCritMitigation;
+                fTotalMitigation += fSegmentMitigation;
                 // The max damage at this point needs to include crit.
-                float fMaxIncDPS = fIncDPS + fCritDPS - fCritMitigation;
+                float fMaxIncDPS = fIncDPS + fCritDPS - fSegmentMitigation;
                 #endregion
 
                 float fIncPhyDPS = fMaxIncDPS * (1 - opts.PercentIncomingFromMagic);
                 float fIncMagDPS = fMaxIncDPS * opts.PercentIncomingFromMagic;
 
-                #region ** Parry Haste **
-
-                if (fFightDuration == 0f)
-                {
-                    opts.FightLength = fFightDuration = 10f;
-                }
-                float fNumRotations = 0f;
-
                 // How much damage per shot normal shot?
                 float fPerShotPhysical = fIncPhyDPS * opts.BossAttackSpeed;
-                // How many shots over the length of the fight?
-                // Factor in attack speed negative haste caused by talents.
-                float fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + (.02f * character.DeathKnightTalents.ImprovedIcyTouch));
 
-                float fTotalBossAttacksPerFight = (fFightDuration * 60f) / fBossAverageAttackSpeed;
-                // Integrate Expertise values to prevent additional physical damage coming in:
-                // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
-                // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
-                // Figure out how many shots there are.  Right now, just calculating white damage.
-                // How fast is a hasted shot? up to 40% faster.
-                // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
-                float fBossParryHastedSpeed = fBossAverageAttackSpeed;
+                #region ** Haste Mitigation **
+                // Placeholder for comparing differing DPS values related to haste.
+                float fNewIncPhysDPS = 0;
+                float fBossAverageAttackSpeed = opts.BossAttackSpeed;
+                #region Improved Icy Touch
+                if (character.DeathKnightTalents.ImprovedIcyTouch > 0)
+                {
+                    // Get the new slowed AttackSpeed based on ImpIcyTouch
+                    fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + (.02f * character.DeathKnightTalents.ImprovedIcyTouch));
+                    // Figure out what the new Physical DPS should be based on that.
+                    fNewIncPhysDPS = (fPerShotPhysical / fBossAverageAttackSpeed);
+                    // Send the difference to the Mitigation value.
+                    fSegmentMitigation = fIncPhyDPS - fNewIncPhysDPS;
+                    fTotalMitigation += fSegmentMitigation;
+                    // Update the IncPhyDPS for moving forward.
+                    fIncPhyDPS = fNewIncPhysDPS;
+                }
+                #endregion
+
+                // we don't have to do this work unless we are working out parry haste since we already have the current DPS.
                 if (bParryHaste)
                 {
-                    fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
-                }
-                float fShotsParried = 0f;
-                float fBossShotCountPerRot = 0f;
-                if (fRotDuration > 0)
-                {
-                    fNumRotations = (fFightDuration * 60f) / fRotDuration;
-                    // How many shots does the boss take over a given rotation period.
-                    fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
-                    float fCharacterShotCount = 0f;
-                    if (character.MainHand != null && ct.MH.hastedSpeed > 0f)
+                    if (fFightDuration == 0f)
                     {
-                        fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
+                        opts.FightLength = fFightDuration = 10f;
                     }
-                    if (character.OffHand != null && ct.OH.hastedSpeed > 0f)
+                    float fNumRotations = 0f;
+
+                    // How many shots over the length of the fight?
+                    float fTotalBossAttacksPerFight = (fFightDuration * 60f) / fBossAverageAttackSpeed;
+                    // Integrate Expertise values to prevent additional physical damage coming in:
+                    // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
+                    // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
+                    // Figure out how many shots there are.  Right now, just calculating white damage.
+                    // How fast is a hasted shot? up to 40% faster.
+                    // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
+                    float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
+                    float fShotsParried = 0f;
+                    float fBossShotCountPerRot = 0f;
+                    if (fRotDuration > 0)
                     {
-                        fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
+                        fNumRotations = (fFightDuration * 60f) / fRotDuration;
+                        // How many shots does the boss take over a given rotation period.
+                        fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
+                        float fCharacterShotCount = 0f;
+                        if (character.MainHand != null && ct.MH.hastedSpeed > 0f)
+                        {
+                            fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
+                        }
+                        if (character.OffHand != null && ct.OH.hastedSpeed > 0f)
+                        {
+                            fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
+                        }
+                        fCharacterShotCount += ct.totalParryableAbilities;
+
+                        #region Max Parry-Hasted Damage
+                        // What was the max POTENTIAL hasted damage?
+                        // The number of shots taken * the chance to be parried.
+                        fShotsParried = StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff] * fCharacterShotCount;
+                        float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+                        float fTimeNormal = fRotDuration - fTimeHasted;
+                        // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+                        fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
+                        // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
+                        fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
+                        // How much DPS is the hasted amount?
+                        fIncPhyDPS = (float)Math.Floor((fBossShotCountPerRot * fPerShotPhysical) / fRotDuration);
+                        #endregion
+
+                        #region Actual Parry-haste for this character
+                        // Now, what's the actual expertise-based hasted damage?
+                        // The number of shots taken * the chance to be parried.
+                        // Ensure that this value doesn't go over 100%
+                        fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
+                        // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
+                        fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+                        fTimeNormal = fRotDuration - fTimeHasted;
+                        // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+                        fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
+                        // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
+                        fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
+                        // How much DPS is the hasted amount?
+                        fNewIncPhysDPS = (float)Math.Floor((fBossShotCountPerRot * fPerShotPhysical) / fRotDuration);
+                        #endregion
+
+                        fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
+                        // Still need to translate this to how much is mitigated by Expertise.
+                        fSegmentMitigation = fIncPhyDPS - fNewIncPhysDPS;
+                        fTotalMitigation += fSegmentMitigation;
+                        // Update the IncPhyDPS for moving forward.
+                        fIncPhyDPS = fNewIncPhysDPS;
                     }
-                    fCharacterShotCount += ct.totalParryableAbilities;
-                    // The number of shots taken * the chance to be parried.
-                    // Ensure that this value doesn't go over 100%
-                    fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
-                    // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
-                    float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
-                    float fTimeNormal = fRotDuration - fTimeHasted;
-                    // Update the shot count w/ the new # of normal shots + the number of hasted shots.
-                    fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
-                    // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
-                    fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
-                    fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
                 }
 
                 #endregion
@@ -1154,8 +1198,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            //float hasRelevantBuff;
-
             #region Racials to Force Enable
             // Draenei should always have this buff activated
             // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
@@ -1164,71 +1206,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 character.ActiveBuffsAdd(("Heroic Presence"));
             }
-            #endregion
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
-                }
-            }
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
-            #endregion
-
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }*/
             #endregion
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -1325,7 +1302,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             s.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
             // Patch 3.2: Replace 10% Health w/ 6% Stamina
             s.BonusStaminaMultiplier += .06f; // Bonus 6% Stamina
-            //            FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
             s.DamageTakenMultiplier -= .08f;// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
             s.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
         }
@@ -1335,10 +1311,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         {
             Stats newStats = new Stats();
             float fDamageDone = 0f;
-            // ok... I don't like that we have to do some evaluation at this point.
-            // However, this health value is not passed forward, just gives an initial pass 
-            // to evaluate the value of talents.
-            float fHealth = StatConversion.ApplyMultiplier((FullCharacterStats.Health + StatConversion.GetHealthFromStamina(FullCharacterStats.Stamina)), FullCharacterStats.BonusHealthMultiplier);
 
             #region Blood Talents
             // Butchery
@@ -1384,7 +1356,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 newStats = new Stats();
                 float fCD = 60f;
-                newStats.Healed = (fHealth * .1f);
+                newStats.Healed = (GetCurrentHealth(FullCharacterStats) * .1f);
                 // Improved Rune Tap.
                 // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
                 fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
@@ -1480,11 +1452,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // take damage 1% of max every sec.
             if (character.DeathKnightTalents.Hysteria > 0)
             {
+                /*
+                 * Pulling out the value of Hysteria since the target is rarely going to be the tank.
                 float fDur = 30f;
                 newStats = new Stats();
                 newStats.BonusPhysicalDamageMultiplier += 0.2f;
                 newStats.Healed -= (fHealth * 0.01f * fDur);
                 FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fDur, 3f * 60f));
+                 */
             }
 
             // Improved Blood Presence
@@ -1512,8 +1487,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 // Also copy above, but it's commented out.
                 newStats = new Stats();
-                // TODO: need to figure out how to factor this back in.
-                newStats.Health = (fHealth * 0.15f);
+                newStats.Health = (GetCurrentHealth(FullCharacterStats) * 0.15f);
                 newStats.HealingReceivedMultiplier += 0.35f;
 
                 float fVBCD = 60f;
@@ -1556,6 +1530,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Damage done increase has to be in shot rotation.
                 // Assuming a 50% up time 
                 FullCharacterStats.ArmorPenetration += (0.02f * character.DeathKnightTalents.BloodGorged * 0.5f);
+                FullCharacterStats.BonusDamageMultiplier += (0.02f * character.DeathKnightTalents.BloodGorged * 0.5f);
             }
 
             // Dancing Rune Weapon
@@ -1776,16 +1751,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + FullCharacterStats.BonusIceboundFortitudeDuration);
             // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
             float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
-            float ibfReduction = 0.2f + (ibfDefense * 0.03f / 28.0f);
+            float ibfReduction = 0.2f + (ibfDefense * 0.0015f);
             if (character.DeathKnightTalents.GlyphofIceboundFortitude)
             {
-                // Glyphed to 30% + def value.
-                ibfReduction += 0.1f;
-                // Since 3.1 the glyph is capped to 30%.
+                // The glyph provides a MIN of 30% damage reduction, but doesn't help if your def takes you over that.
+                ibfReduction = Math.Max(0.3f, ibfReduction);
             }
-            // There has always been a cap on the IBF to 30% the glyph was nerfed, not IBF.
-            // So it's not worth it for those who already have alot of DEF. (EG. most tanks)
-            ibfReduction = Math.Min(0.3f, ibfReduction);
             newStats = new Stats();
             newStats.DamageTakenMultiplier -= ibfReduction;
             FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 120)); // Patch 3.2
@@ -1979,6 +1950,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             //            return sReturn;
         }
 
+        private float GetCurrentHealth(Stats FullCharacterStats)
+        {
+            return StatConversion.ApplyMultiplier((FullCharacterStats.Health + StatConversion.GetHealthFromStamina(FullCharacterStats.Stamina)), FullCharacterStats.BonusHealthMultiplier);
+        }
 
         /// <summary>
         /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
