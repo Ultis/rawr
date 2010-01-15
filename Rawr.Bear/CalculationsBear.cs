@@ -400,6 +400,7 @@ the Threat Scale defined on the Options tab.",
 			int characterLevel = character.Level;
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - characterLevel) * 0.002f;
+            float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
 			
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
@@ -455,8 +456,8 @@ the Threat Scale defined on the Options tab.",
 			float totalAttacksPerSecond = autoSpecialAttacksPerSecond + lacerateTicksPerSecond;
 			float averageSDAttackCritChance = (chanceCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond) + chanceCritBleed * (lacerateTicksPerSecond / totalAttacksPerSecond));
 			float playerAttackSpeed = 1f / totalAttacksPerSecond;
-			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, calcOpts.TargetAttackSpeed / playerAttackSpeed)) *
-				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, calcOpts.TargetAttackSpeed / playerAttackSpeed));
+            float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, TargAttackSpeed / playerAttackSpeed)) *
+                1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, TargAttackSpeed / playerAttackSpeed));
 			float blockValue = stats.AttackPower * 0.25f;
 			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.ConstantDamageReduction) * calcOpts.TargetDamage));
 			calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
@@ -470,7 +471,7 @@ the Threat Scale defined on the Options tab.",
 				//Target parries within the first 40% of their swing timer advances their swing timer by 40%
 				//...Within the next 40%, it advances their swing timer to 20% remaining.
 				//So, we average that as a 60% window (since the last 40% only provides half as much haste on average), with a 40% swing advance
-				float parryWindow = calcOpts.TargetAttackSpeed * 0.6f; 
+                float parryWindow = TargAttackSpeed * 0.6f; 
 				float parryableAttacksPerParryWindow = parryableAttacksPerSecond * parryWindow;
 				float chanceParryPerWindow = 1f - (float)Math.Pow(1f - chanceParry, parryableAttacksPerParryWindow);
 				float parryBonusDPSMultiplier = 1f / 0.6f - 1f; //When a parry happens, boss DPS gets muliplied by 1/0.6 for that swing
@@ -895,6 +896,8 @@ the Threat Scale defined on the Options tab.",
 			float dodgeTotal = dodgeNonDR + dodgePostDR;
 			float missTotal = missNonDR + missPostDR;
 
+            float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - statsTotal.BossAttackSpeedMultiplier);
+
 			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
@@ -928,7 +931,7 @@ the Threat Scale defined on the Options tab.",
 						statsProcs += effect.GetAverageStats(3f, 1f, 2.5f);
 						break;
 					case Trigger.DamageTaken:
-						statsProcs += effect.GetAverageStats(calcOpts.TargetAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+                        statsProcs += effect.GetAverageStats(TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
 						break;
 				}
 			}
@@ -1363,6 +1366,7 @@ the Threat Scale defined on the Options tab.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
 			};
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
@@ -1395,7 +1399,7 @@ the Threat Scale defined on the Options tab.",
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
                  + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
-                 + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating) != 0;
+                 + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier) != 0;
 
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
