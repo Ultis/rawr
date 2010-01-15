@@ -391,8 +391,8 @@ namespace Rawr.Enhance
             chanceWhiteCritOH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissOH);
             chanceYellowCritMH = Math.Min(chanceCrit, 1f - chanceYellowMissMH);
             chanceYellowCritOH = Math.Min(chanceCrit, 1f - chanceYellowMissOH);
-            if (chanceCrit > 1f - GlancingRate - chanceWhiteMissMH - whiteCritDepression)
-                overMeleeCritCap = chanceCrit - (1f - GlancingRate - chanceWhiteMissMH - whiteCritDepression);
+            if (chanceCrit > 1f - GlancingRate - chanceWhiteMissMH)
+                overMeleeCritCap = chanceCrit - (1f - GlancingRate - chanceWhiteMissMH);
             else
                 overMeleeCritCap = 0f;
             // now apply crit depression

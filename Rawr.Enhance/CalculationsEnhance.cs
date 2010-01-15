@@ -1038,7 +1038,7 @@ namespace Rawr.Enhance
                         calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsEnhanceWhite.DodgedAttacks;
                         calcCritWhite.SubPoints = new float[2];
                         calcCritWhite.SubPoints[1] = currentCalculationsEnhanceWhite.OverMeleeCritCap;
-                        calcCritWhite.OverallPoints = currentCalculationsEnhanceWhite.MeleeCrit;
+                        calcCritWhite.OverallPoints = currentCalculationsEnhanceWhite.MeleeCrit - 4.8f;
                         calcCritWhite.DPSPoints = calcCritWhite.OverallPoints - calcCritWhite.SubPoints[1];
                         calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
                         calcHitWhite.SubPoints = new float[2];
