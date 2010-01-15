@@ -219,7 +219,7 @@ namespace Rawr.Mage
             Stats baseStats;
             CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
             calculationResult.NeedsDisplayCalculations = true;
-            CastingState baseState = new CastingState(calculationResult, 0, false);
+            CastingState baseState = new CastingState(calculationResult, 0, false, 0);
 
             FireCycleGenerator generator = new FireCycleGenerator(baseState);            
 

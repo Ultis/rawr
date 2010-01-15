@@ -127,59 +127,59 @@ namespace Rawr.Mage
             switch (comboBoxCycleGenerator.Text)
             {
                 case "Arcane (MB/2T10 duration collapsed)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true);
                     break;
                 case "Arcane (Arcane Power, MB/2T10 duration collapsed)":
-                    castingState = new CastingState(calculationResult, (int)StandardEffect.ArcanePower, false);
+                    castingState = new CastingState(calculationResult, (int)StandardEffect.ArcanePower, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true);
                     break;
                 case "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, true, true, true, true, true);
                     break;
                 case "Arcane (no ABar, MB duration collapsed)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, false, true, true, true, false);
                     break;
                 case "Frost":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator(castingState, true, false);
                     break;
                 case "Frost (no latency combos)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator(castingState, false, false);
                     break;
                 case "Frost+Deep Freeze":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, false, false);
                     break;
                 case "Frost+Deep Freeze (no latency combos)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, false, false);
                     break;
                 case "Frost+Deep Freeze (2T10 duration collapsed)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, true, false);
                     break;
                 case "Frost+Deep Freeze (2T10 duration collapsed, no latency combos)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, true, false);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, true, true);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, no latency combos)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, true, true);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 10.0f, true, true);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown, no latency combos)":
-                    castingState = new CastingState(calculationResult, 0, false);
+                    castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 10.0f, true, true);
                     break;
             }

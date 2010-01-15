@@ -505,6 +505,13 @@ namespace Rawr.Mage
             set { _EnableHastedEvocation = value; OnPropertyChanged("EnableHastedEvocation"); }
         }
 
+        private bool _AdvancedHasteProcs;
+        public bool AdvancedHasteProcs
+        {
+            get { return _AdvancedHasteProcs; }
+            set { _AdvancedHasteProcs = value; OnPropertyChanged("AdvancedHasteProcs"); }
+        }
+
         private bool _EncounterEnabled;
         public bool EncounterEnabled
         {

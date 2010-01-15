@@ -155,6 +155,7 @@ namespace Rawr.Mage
 
         public float CombustionDuration { get; set; }
         public float SpellHasteRating { get; set; }
+        public float ProcHasteRating { get; set; }
 
         private string buffLabel;
         public string BuffLabel
@@ -231,7 +232,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = CastingState.New(Calculations, Effects, true);
+                        frozenState = CastingState.New(Calculations, Effects, true, ProcHasteRating);
                     }
                 }
                 return frozenState;
@@ -245,7 +246,7 @@ namespace Rawr.Mage
             {
                 if (tier10TwoPieceState == null)
                 {
-                    tier10TwoPieceState = CastingState.New(Calculations, Effects, Frozen);
+                    tier10TwoPieceState = CastingState.New(Calculations, Effects, Frozen, ProcHasteRating);
                     tier10TwoPieceState.CastingSpeed *= 1.12f;
                     tier10TwoPieceState.ReferenceCastingState = this;
                 }
@@ -253,16 +254,18 @@ namespace Rawr.Mage
             }
         }
 
+        private CastingState[] HasteProcs { get; set; }
+
         public CastingState()
         {
         }
 
-        public CastingState(CharacterCalculationsMage calculations, int effects, bool frozen)
+        public CastingState(CharacterCalculationsMage calculations, int effects, bool frozen, float procHasteRating)
         {
-            Initialize(calculations, effects, frozen);
+            Initialize(calculations, effects, frozen, procHasteRating);
         }
 
-        public static CastingState New(CharacterCalculationsMage calculations, int effects, bool frozen)
+        public static CastingState New(CharacterCalculationsMage calculations, int effects, bool frozen, float procHasteRating)
         {
             CastingState state;
             if (calculations.NeedsDisplayCalculations || calculations.ArraySet == null)
@@ -273,7 +276,7 @@ namespace Rawr.Mage
             {
                 state = calculations.ArraySet.NewCastingState();
             }
-            state.Initialize(calculations, effects, frozen);
+            state.Initialize(calculations, effects, frozen, procHasteRating);
             return state;
         }
 
@@ -286,15 +289,16 @@ namespace Rawr.Mage
             state.buffLabel = null;
             state.SpellsCount = 0;
             state.CyclesCount = 0;
+            state.ProcHasteRating = 0;
             return state;
         }
 
-        public void Initialize(CharacterCalculationsMage calculations, int effects, bool frozen)
+        public void Initialize(CharacterCalculationsMage calculations, int effects, bool frozen, float procHasteRating)
         {
             frozenState = null;
             maintainSnareState = null;
             tier10TwoPieceState = null;
-            ReferenceCastingState = null;
+            ReferenceCastingState = null;            
 
             StateSpellPower = 0;
             StateAdditiveSpellModifier = 0;
@@ -309,13 +313,16 @@ namespace Rawr.Mage
             MageTalents = calculations.MageTalents;
             BaseStats = calculations.BaseStats;
 
+            HasteProcs = null;
+
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
 
             SnaredTime = CalculationOptions.SnaredTime;
             if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
 
             float stateCritRating = 0.0f;
-            SpellHasteRating = BaseStats.HasteRating;
+            ProcHasteRating = procHasteRating;
+            SpellHasteRating = BaseStats.HasteRating + procHasteRating;
 
             Effects = effects;
 
@@ -443,6 +450,143 @@ namespace Rawr.Mage
                 if (cycle.CycleId == cycleId) return cycle;
             }
 
+            if (CalculationOptions.AdvancedHasteProcs)
+            {
+                c = GetAveragedHasteCycle(cycleId);
+            }
+
+            if (c == null)
+            {
+                c = GetNewCycle(cycleId);
+            }
+            if (c != null)
+            {
+                c.CycleId = cycleId;
+                //Cycles[(int)cycleId] = c;
+                //Cycles.Add(c);
+                if (CyclesCount >= Cycles.Length)
+                {
+                    int length = 2 * Cycles.Length;
+                    Cycle[] destinationArray = new Cycle[length];
+                    Array.Copy(Cycles, 0, destinationArray, 0, CyclesCount);
+                    Cycles = destinationArray;
+                }
+                Cycles[CyclesCount++] = c;
+            }
+
+            return c;
+        }
+
+        private Cycle GetAveragedHasteCycle(CycleId cycleId)
+        {
+            float baseProcHaste = 0;
+            // construct possible proc combinations
+            Cycle baseCycle = GetNewCycle(cycleId);
+            // on use stacking items
+            foreach (EffectCooldown effectCooldown in Calculations.StackingHasteEffectCooldowns)
+            {
+                if (EffectsActive(effectCooldown.Mask))
+                {
+                    foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
+                    {
+                        if (effect.Stats.HasteRating > 0)
+                        {
+                            float procs = 0.0f;
+                            switch (effect.Trigger)
+                            {
+                                case Trigger.DamageSpellCast:
+                                case Trigger.SpellCast:
+                                    procs = baseCycle.CastProcs;
+                                    break;
+                                case Trigger.DamageSpellCrit:
+                                case Trigger.SpellCrit:
+                                    procs = baseCycle.CritProcs;
+                                    break;
+                                case Trigger.DamageSpellHit:
+                                case Trigger.SpellHit:
+                                    procs = baseCycle.HitProcs;
+                                    break;
+                            }
+                            if (procs == 0.0f) continue;
+                            // until they put in some good trinkets with such effects just do a quick dirty calculation
+                            float effectHasteRating;
+                            if (procs > baseCycle.Ticks)
+                            {
+                                // some 100% on cast procs, happens because AM has 6 cast procs and only 5 ticks
+                                baseProcHaste += effect.GetAverageStackSize(baseCycle.CastTime / procs, 1.0f, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                            }
+                            else
+                            {
+                                baseProcHaste += effect.GetAverageStackSize(baseCycle.CastTime / baseCycle.Ticks, procs / baseCycle.Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                            }
+                        }
+                    }
+                }
+            }
+            int N = Calculations.HasteRatingEffects.Length;
+            if (baseProcHaste == 0 && N == 0) return baseCycle;
+            float[] triggerInterval = new float[N];
+            float[] triggerChance = new float[N];
+            float[] offset = new float[N];
+            for (int i = 0; i < N; i++)
+            {
+                SpecialEffect effect = Calculations.HasteRatingEffects[i];
+                float procs = 0.0f;
+                switch (effect.Trigger)
+                {
+                    case Trigger.DamageSpellCast:
+                    case Trigger.SpellCast:
+                        procs = baseCycle.CastProcs;
+                        break;
+                    case Trigger.DamageSpellCrit:
+                    case Trigger.SpellCrit:
+                        procs = baseCycle.CritProcs;
+                        break;
+                    case Trigger.DamageSpellHit:
+                    case Trigger.SpellHit:
+                        procs = baseCycle.HitProcs;
+                        break;
+                }
+                triggerInterval[i] = baseCycle.CastTime / baseCycle.Ticks;
+                triggerChance[i] = procs / baseCycle.Ticks;
+            }
+            WeightedStat[] result = SpecialEffect.GetAverageCombinedUptimeCombinations(Calculations.HasteRatingEffects, triggerInterval, triggerChance, offset, 3.0f, CalculationOptions.FightDuration, AdditiveStat.HasteRating);
+            if (HasteProcs == null)
+            {
+                HasteProcs = new CastingState[result.Length];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    CastingState subState = CastingState.New(Calculations, Effects, Frozen, baseProcHaste + result[i].Value);
+                    subState.ReferenceCastingState = this;
+                    HasteProcs[i] = subState;
+                }
+            }
+            DynamicCycle c = DynamicCycle.New(Calculations.NeedsDisplayCalculations, this);
+            c.Name = baseCycle.Name;
+            for (int i = 0; i < result.Length; i++)
+            {
+                Cycle subCycle = null;
+                if (HasteProcs[i].ProcHasteRating == 0)
+                {
+                    subCycle = baseCycle;
+                }
+                else
+                {
+                    subCycle = HasteProcs[i].GetNewCycle(cycleId);
+                }
+                c.AddCycle(Calculations.NeedsDisplayCalculations, subCycle, result[i].Chance / subCycle.CastTime);
+            }
+            // if base proc is not zero then the substates are different for each cycle
+            if (baseProcHaste > 0)
+            {
+                HasteProcs = null;
+            }
+            return c;
+        }
+
+        private Cycle GetNewCycle(CycleId cycleId)
+        {
+            Cycle c = null;
             switch (cycleId)
             {
                 case CycleId.FrostboltFOF:
@@ -752,21 +896,6 @@ namespace Rawr.Mage
                     c = GetSpell(SpellId.ConeOfCold);
                     break;
             }
-            if (c != null)
-            {
-                c.CycleId = cycleId;
-                //Cycles[(int)cycleId] = c;
-                //Cycles.Add(c);
-                if (CyclesCount >= Cycles.Length)
-                {
-                    int length = 2 * Cycles.Length;
-                    Cycle[] destinationArray = new Cycle[length];
-                    Array.Copy(Cycles, 0, destinationArray, 0, CyclesCount);
-                    Cycles = destinationArray;
-                }
-                Cycles[CyclesCount++] = c;
-            }
-
             return c;
         }
 

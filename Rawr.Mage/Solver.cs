@@ -1591,7 +1591,7 @@ namespace Rawr.Mage
             //segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
             segmentColumn = new int[segmentList.Count + 1];
 
-            calculationResult.BaseState = CastingState.New(calculationResult, 0, false);
+            calculationResult.BaseState = CastingState.New(calculationResult, 0, false, 0);
 
             calculationResult.StartingMana = Math.Min(baseStats.Mana, calculationResult.BaseState.ManaRegenDrinking * calculationOptions.DrinkingTime);
             double maxDrinkingTime = Math.Min(30, (baseStats.Mana - calculationResult.StartingMana) / calculationResult.BaseState.ManaRegenDrinking);
@@ -1843,12 +1843,12 @@ namespace Rawr.Mage
                     CastingState evoStateIVHero = null;
                     if (waterElementalAvailable && talents.GlyphOfEternalWater)
                     {
-                        evoState = CastingState.New(calculationResult, (int)StandardEffect.Evocation | mask, false);
+                        evoState = CastingState.New(calculationResult, (int)StandardEffect.Evocation | mask, false, 0);
                         if (calculationOptions.EnableHastedEvocation)
                         {
-                            evoStateIV = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask, false);
-                            evoStateHero = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask, false);
-                            evoStateIVHero = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask, false);
+                            evoStateIV = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | mask, false, 0);
+                            evoStateHero = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism | mask, false, 0);
+                            evoStateIVHero = CastingState.New(calculationResult, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask, false, 0);
                         }
                     }
                     else
@@ -2328,7 +2328,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        states.Add(CastingState.New(calculationResult, (int)StandardEffect.WaterElemental, false));
+                        states.Add(CastingState.New(calculationResult, (int)StandardEffect.WaterElemental, false, 0));
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
@@ -2394,7 +2394,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        states.Add(CastingState.New(calculationResult, (int)StandardEffect.MirrorImage, false));
+                        states.Add(CastingState.New(calculationResult, (int)StandardEffect.MirrorImage, false, 0));
                     }
                     for (int segment = 0; segment < mirrorImageSegments; segment++)
                     {
@@ -4136,7 +4136,7 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    list[i] = CastingState.New(calculationResult, index, false);
+                    list[i] = CastingState.New(calculationResult, index, false, 0);
                 }
             }
             return list;
