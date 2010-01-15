@@ -406,6 +406,7 @@ namespace Rawr.RestoSham
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
             float CriticalChance = calcStats.SpellCrit;
             float Critical = 1f + ((CriticalChance * Math.Min(CriticalScale - 1, 1)) * (CritPenalty));  //  The penalty is set to ensure that while no crit will ever be valued less then a full heal, it will however be reduced more so due to overhealing.  The average currently works out close to current HEP reports and combat logs.
+            float ChCritical = 1f + (((CriticalChance + (stats.RestoSham4T9 * .05f)) * Math.Min(CriticalScale - 1, 1)) * (CritPenalty));
 
             #endregion
             #region Healing Bonuses and scales
@@ -691,7 +692,7 @@ namespace Rawr.RestoSham
                     }
                 }
                 float RTCHRTHeal = RTHeal * Critical;
-                float RTCHCHHeal = (CHJumpHeal + CHHeal * CHRTConsumption * .25f) * RTCHCHCasts * Critical;
+                float RTCHCHHeal = (CHJumpHeal + CHHeal * CHRTConsumption * .25f) * RTCHCHCasts * ChCritical;
                 float RTCHAA = RTHeal * CriticalChance * AAScale;
                 float RTTargets = TankHeal ? Math.Max(RTDuration / RTCHTime - CHRTConsumption, 0) : (RTCast + (RTDuration - RTCast) * (1 - CHRTConsumption)) / RTCHTime;
                 float RTCHELWTargets = ELWChance * (CHJumps * RTCHCHCasts + RTTargets) * ELWDuration / RTCHTime;
@@ -704,27 +705,27 @@ namespace Rawr.RestoSham
                     RTTicksPerSec = RTTargets / 3;
                     CHPerSec = RTCHCHCasts / RTCHTime;
                     CHHitsPerSec = CHPerSec * CHJumps;
-                    CHCPerSec = RTCHCHCasts * CriticalChance / RTCHTime;
+                    CHCPerSec = RTCHCHCasts * (CriticalChance + (stats.RestoSham4T9 * .05f)) / RTCHTime;
                     CHCHitsPerSec = CHCPerSec * CHJumps;
                     AAsPerSec += CriticalChance / RTCHTime;
                     ELWTicksPerSec += RTCHELWTargets;
                 }
             }
             #endregion
-            #region CH Spam (CHHPS / CHMPS) Needs Heals and Crits per Second
+            #region CH Spam (CHHPS / CHMPS)
             float CHELWTargets = ELWChance * CHJumps * ELWDuration / CHCast;
-            calcStats.CHSpamHPS = CHJumpHeal * Critical * (1 - CHOverheal) / CHCast + CHELWTargets * ELWHPS * (1 - ELWOverheal);
+            calcStats.CHSpamHPS = CHJumpHeal * ChCritical * (1 - CHOverheal) / CHCast + CHELWTargets * ELWHPS * (1 - ELWOverheal);
             calcStats.CHSpamMPS = CHCost / CHCast;
             if (options.SustStyle.Equals("CH Spam"))
             {
                 CHPerSec = 1f / CHCast;
                 CHHitsPerSec = CHPerSec * CHJumps;
-                CHCPerSec = CriticalChance / CHCast;
+                CHCPerSec = (CriticalChance + (stats.RestoSham4T9 * .05f)) / CHCast;
                 CHCHitsPerSec = CHCPerSec * CHJumps;
                 ELWTicksPerSec += CHELWTargets;
             }
             #endregion
-            #region LHW Spam (LHWHPS / LHWMPS) Needs Heals and Crits per Second
+            #region LHW Spam (LHWHPS / LHWMPS)
             float LHWLHWHeal = LHWHeal * Critical;
             float LHWAA = LHWHeal * CriticalChance * AAScale;
             float LHWELWTargets = ELWChance * ELWDuration / LHWCast;
@@ -737,7 +738,7 @@ namespace Rawr.RestoSham
                 ELWTicksPerSec += LHWELWTargets;
             }
             #endregion
-            #region HW Spam (HWHPS / HWMPS) Needs Heals and Crits per Second
+            #region HW Spam (HWHPS / HWMPS)
             float HWHWHeal = HWHeal * Critical;
             float HWHWSelfHeal = HWHWHeal * HWSelfHealingScale * Critical;
             float HWAA = HWHeal * CriticalChance * AAScale;
@@ -762,7 +763,7 @@ namespace Rawr.RestoSham
                 calcStats.RTCHMPS = calcStats.CHSpamMPS;
             }
             #endregion
-            #region Create Final calcs via spell cast (Improve Water Shield Mana Return and proc handling)
+            #region Create Final calcs via spell cast (HealPerSec/HealHitPerSec/CritPerSec)
             HealPerSec = (RTPerSec + LHWPerSec + HWPerSec + CHPerSec) * castingActivity;
             HealHitPerSec = (RTPerSec + RTTicksPerSec + LHWPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec) * castingActivity;
             CritPerSec = (RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec) * castingActivity;
