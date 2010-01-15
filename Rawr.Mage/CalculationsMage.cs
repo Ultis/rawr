@@ -2393,7 +2393,7 @@ namespace Rawr.Mage
                         return true;
                     }
                 }
-                ignoreStats += ignoreStats = effect.Stats.Agility + effect.Stats.Strength + effect.Stats.AttackPower + effect.Stats.DefenseRating + effect.Stats.Defense + effect.Stats.Dodge + effect.Stats.Parry + effect.Stats.DodgeRating + effect.Stats.ParryRating + effect.Stats.ExpertiseRating + effect.Stats.Expertise + effect.Stats.Block + effect.Stats.BlockRating + effect.Stats.BlockValue + effect.Stats.SpellShadowDamageRating + effect.Stats.SpellNatureDamageRating + effect.Stats.ArmorPenetration + effect.Stats.ArmorPenetrationRating;
+                ignoreStats += effect.Stats.Agility + effect.Stats.Strength + effect.Stats.AttackPower + effect.Stats.DefenseRating + effect.Stats.Defense + effect.Stats.Dodge + effect.Stats.Parry + effect.Stats.DodgeRating + effect.Stats.ParryRating + effect.Stats.ExpertiseRating + effect.Stats.Expertise + effect.Stats.Block + effect.Stats.BlockRating + effect.Stats.BlockValue + effect.Stats.SpellShadowDamageRating + effect.Stats.SpellNatureDamageRating + effect.Stats.ArmorPenetration + effect.Stats.ArmorPenetrationRating;
             }
             return (mageStats || (commonStats > 0 && ignoreStats == 0.0f));
         }

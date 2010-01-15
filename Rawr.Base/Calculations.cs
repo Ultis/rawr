@@ -1171,8 +1171,19 @@ namespace Rawr
 			{
                 bool b = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()));
 				b &= (RelevantItemTypes.Contains(item.Type));
-                b &= HasRelevantStats(item.Stats);
-                return b;
+                if (b)
+                {
+                    if (HasRelevantStats(item.Stats))
+                    {
+                        return true;
+                    }
+                    // check if maybe it is a part of set bonus that has relevant stats
+                    if (!string.IsNullOrEmpty(item.SetName))
+                    {
+                        return Buff.RelevantSetBonuses.Exists(buff => buff.SetName == item.SetName);
+                    }
+                }
+                return false;
             }
 			catch (Exception )
 			{
