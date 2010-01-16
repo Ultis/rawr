@@ -177,6 +177,7 @@ namespace Rawr.Warlock
 					case "Mana Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Sources ({0} Total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 0, 0, 255)); break;
 					case "Mana Usage": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Usage ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 0, 0, 255)); break;
 					case "Haste Rating Gain": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS"), Color.FromArgb(255, 255, 0, 0)); break;
+                    case "Crit Rating Gain": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS"), Color.FromArgb(255, 255, 0, 0)); break;
                     default:
                         _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
                         _subPointNameColors.Add("Pet DPS", Color.FromArgb(255, 0, 0, 255));
@@ -288,7 +289,8 @@ namespace Rawr.Warlock
                         "Mana Sources", 
                         "Mana Usage",
                         //*"Glyphs",
-                        "Haste Rating Gain" 
+                        "Haste Rating Gain",
+                        "Crit Rating Gain"
                     };
                 }
                 return _customChartNames;
@@ -398,22 +400,37 @@ namespace Rawr.Warlock
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
-
                     return comparisonList.ToArray();
 
                 case "Haste Rating Gain":
-                    CharacterCalculationsWarlock hrbase = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
-                    for (int x = 0; x <= 20; x++)
+                    CharacterCalculationsWarlock hasteBase = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
+                    //calculate the value of extra 0-200 haste rating (in increments of 10)
+                    for (int x = 0; x <= 200; x += 10)
                     {
-                        //calculate the value of extra 0-200 haste rating (in increments of 10)
-                        int y = (x*10);
-                        Item additionalItem = new Item {Stats = new Stats {HasteRating = y}};
-                        CharacterCalculationsWarlock hrnew = (CharacterCalculationsWarlock)GetCharacterCalculations(character, additionalItem);
+                        Item additionalItem = new Item {Stats = new Stats {HasteRating = x}};
+                        CharacterCalculationsWarlock hasteGain = (CharacterCalculationsWarlock)GetCharacterCalculations(character, additionalItem);
                         comparison = CreateNewComparisonCalculation();
-                        comparison.Name = String.Format(CultureInfo.InvariantCulture, "{0} Haste Rating", y);
-                        comparison.SubPoints[0] = hrnew.DpsPoints - hrbase.DpsPoints;
-                        comparison.SubPoints[1] = hrnew.PetDPSPoints - hrbase.PetDPSPoints;
+                        comparison.Name = String.Format(CultureInfo.InvariantCulture, "{0} Haste Rating", x);
+                        comparison.SubPoints[0] = hasteGain.DpsPoints - hasteBase.DpsPoints;
+                        comparison.SubPoints[1] = hasteGain.PetDPSPoints - hasteBase.PetDPSPoints;
 						comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+
+                case "Crit Rating Gain":
+                    CharacterCalculationsWarlock critBase = (CharacterCalculationsWarlock)GetCharacterCalculations(character);
+                    //calculate the value of extra 0-200 crit rating (in increments of 10)
+                    for (int x = 0; x <= 200; x += 10)
+                    {
+                        Item additionalItem = new Item { Stats = new Stats { CritRating = x } };
+                        CharacterCalculationsWarlock critGain = (CharacterCalculationsWarlock)GetCharacterCalculations(character, additionalItem);
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = String.Format(CultureInfo.InvariantCulture, "{0} Crit Rating", x);
+                        comparison.SubPoints[0] = critGain.DpsPoints - critBase.DpsPoints;
+                        comparison.SubPoints[1] = critGain.PetDPSPoints - critBase.PetDPSPoints;
+                        comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }

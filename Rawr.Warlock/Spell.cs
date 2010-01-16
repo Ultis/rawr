@@ -90,16 +90,29 @@ namespace Rawr.Warlock
             /// The percentage of base mana that it will cost to cast this spell.
             /// </summary>
             public float BaseCost { get; protected set; }
-            
-            public SpellRank(int rank, int level, float baseMinDamage, float baseMaxDamage, float baseTickDamage, float baseCost)
+
+            #region constructors
+            public SpellRank(int rank, int level, float baseMinDamage, float baseMaxDamage, float baseTickDamage, float baseCost) 
+                : this(rank, level, baseMinDamage, baseMaxDamage, baseTickDamage, baseCost, 0, 0, 0)
+            {
+            }
+
+            /// <remarks>
+            /// Some spells (Shadowbolt, Death Coil, Searing Pain, Hellfire, Rain of Fire) grant an additional bonus to the base min, max or tick values at level 80.
+            /// for example: 
+            /// - Shadowbolt (Rank 13) has base min/max values of 690/770 @ level 79 which becomes 694/775 @ level 80 - a bonus of 4/5
+            /// - Rain Of Fire (Rank 7) has a dot value of 2700 over 8 seconds @ level 79 which becomes 2708 - a bonus of 8 (or 2 per tick).
+            ///</remarks>
+            public SpellRank(int rank, int level, float baseMinDamage, float baseMaxDamage, float baseTickDamage, float baseCost, float baseBonusMinDamage, float baseBonusMaxDamage, float baseBonusTickDamage)
             {
                 Rank = rank;
                 Level = level;
-                BaseMinDamage = baseMinDamage;
-                BaseMaxDamage = baseMaxDamage;
-                BaseTickDamage = baseTickDamage;
+                BaseMinDamage = (baseMinDamage + baseBonusMinDamage);
+                BaseMaxDamage = (baseMaxDamage + baseBonusMaxDamage);
+                BaseTickDamage = (baseTickDamage + baseBonusTickDamage);
                 BaseCost = baseCost;
             }
+            #endregion
         }
         #endregion
 
@@ -175,19 +188,49 @@ namespace Rawr.Warlock
         /// </summary>
         public float BaseCost { get; protected set; }
         /// <summary>
-        /// The base cast time of the spell - can be 
+        /// The base time to cast the spell. 
         /// </summary>
         public float BaseCastTime { get; protected set; }
+        /// <summary>
+        /// The base global cooldown value.
+        /// </summary>
         public float BaseGlobalCooldown { get; protected set; }
+        /// <summary>
+        /// The base minimum direct damage inflicted when the spell hits the target.
+        /// </summary>
         public float BaseMinDamage { get; protected set; }
+        /// <summary>
+        /// The base maximum direct damage inflicted when the spell hits the target.
+        /// </summary>
         public float BaseMaxDamage { get; protected set; }
+        /// <summary>
+        /// The base periodic damage inflicted per tick.
+        /// </summary>
         public float BaseTickDamage { get; protected set; }
+        /// <summary>
+        /// The base interval of time between 2 consecutive spell ticks.
+        /// </summary>
         public float BaseTickTime { get; protected set; }
+        /// <summary>
+        /// The value that must be applied to spellpower when calculating the result for a direct damage spell.
+        /// </summary>
         public float BaseDirectDamageCoefficient { get; protected set; }
+        /// <summary>
+        /// The value that must be applied to spellpower when calculating the result for a dot damage spell.
+        /// </summary>
         public float BaseTickDamageCoefficient { get; protected set; }
-        public float BaseMultiplier { get; protected set; }
+        /// <summary>
+        /// The value (based on talent improvements) that must be applied when calculating the direct damage result.
+        /// </summary>
+        public float BaseDirectDamageMultiplier { get; protected set; }
+        /// <summary>
+        /// The value (based on talent improvements) that must be applied when calculating the periodic tick damage result.
+        /// </summary>
+        public float BaseTickDamageMultiplier { get; protected set; }
+        /// <summary>
+        /// The base critical strike chance (based on talent improvements) for the spell.
+        /// </summary>
         public float BaseCritChance { get; protected set; }
-
         /// <summary>
         /// Spell critical strikes deal 150% normal damage without talents. 
         /// This can be increased to 200% with the following talents:
@@ -197,10 +240,26 @@ namespace Rawr.Warlock
         /// and this in turn stacks with Ruin - for a total of 209%!
         /// </summary>
         public float BaseCritMultiplier { get; protected set; }
+        /// <summary>
+        /// The base range (including talent improvements) of the spell (in yards).
+        /// </summary>
         public int BaseRange { get; protected set; }
-        public float Duration { get; protected set; }
+        /// <summary>
+        /// The base duration of the spell.
+        /// </summary>
+        public float BaseDuration { get; protected set; }
+        /// <summary>
+        /// The cooldown time before this spell may be recast.
+        /// </summary>
         public float Cooldown { get; protected set; }
+        /// <summary>
+        /// The number of ticks over which the dot damage is spread.
+        /// </summary>
         public int NumberOfTicks { get; protected set; }
+        /// <summary>
+        /// True if the spell ticks are affected by haste; False if not.
+        /// </summary>
+        public bool HastedTicks { get; protected set; }
         #endregion
 
         #region aura flags
@@ -233,7 +292,8 @@ namespace Rawr.Warlock
             //all properties default to zero, except for the following:
             BaseCastTime = 3;
             BaseTickTime = 3;
-            BaseMultiplier = 1;
+            BaseDirectDamageMultiplier = 1;
+            BaseTickDamageMultiplier = 1;
             BaseCritMultiplier = 1.5f;
             BaseRange = 30;
             Harmful = true;
@@ -277,6 +337,35 @@ namespace Rawr.Warlock
         }
 
         /// <summary>
+        /// Returns the actual duration of the spell taking any haste & talent improvements (if applicable) into account.
+        /// </summary>
+        public virtual float Duration()
+        {
+            //first check if the spell has ticks
+            if (NumberOfTicks > 0)
+            {
+                //duration can be calculated as follows
+                return (TickTime() * NumberOfTicks);
+            }
+
+            //some spells (e.g. Haunt, Death Coil) have a duration but do not tick
+            return BaseDuration;
+        }
+
+        /// <summary>
+        /// Returns the actual time (i.e. including haste) for each spell tick.
+        /// </summary>
+        public virtual float TickTime()
+        {
+            if (HastedTicks)
+            {
+                return (BaseTickTime / (1 + Stats.SpellHaste));
+            }
+
+            return BaseTickTime;
+        }
+
+        /// <summary>
         /// Calculates the Range from BaseRange and any talent modifiers.
         /// </summary>
         public virtual int Range()
@@ -292,6 +381,7 @@ namespace Rawr.Warlock
             //demonology does not have any Range modifiers
             return BaseRange;
         }
+
         /// <summary>
         /// Calculates the Cost (percentage) from BaseCost (percentage) and any talent modifiers.
         /// </summary>
@@ -332,7 +422,7 @@ namespace Rawr.Warlock
         /// </summary>
         public virtual float MinHitDamage()
         {
-            float minDamage = CalculateDamage(BaseMinDamage, BaseDirectDamageCoefficient);
+            float minDamage = CalculateDamage(BaseMinDamage, BaseDirectDamageCoefficient, BaseDirectDamageMultiplier);
             //firestone increases direct damage by 1%
             return (minDamage * (1 + Stats.WarlockFirestoneDirectDamageMultiplier));
         }
@@ -341,7 +431,7 @@ namespace Rawr.Warlock
         /// </summary>
         public virtual float MaxHitDamage()
         {
-            float maxDamage = CalculateDamage(BaseMaxDamage, BaseDirectDamageCoefficient);
+            float maxDamage = CalculateDamage(BaseMaxDamage, BaseDirectDamageCoefficient, BaseDirectDamageMultiplier);
             //firestone increases direct damage by 1%
             return (maxDamage * (1 + Stats.WarlockFirestoneDirectDamageMultiplier));
         }
@@ -351,7 +441,7 @@ namespace Rawr.Warlock
         /// </summary>
         public virtual float TickHitDamage()
         {
-            float tickDamage = CalculateDamage(BaseTickDamage, BaseTickDamageCoefficient);
+            float tickDamage = CalculateDamage(BaseTickDamage, BaseTickDamageCoefficient, BaseTickDamageMultiplier);
             //spellstone increases periodic damage by 1%
             return (tickDamage * (1 + Stats.WarlockSpellstoneDotDamageMultiplier));
         }
@@ -369,12 +459,13 @@ namespace Rawr.Warlock
         }
 
         /// <summary>
-        /// Common function to calculate (minimum, maximum or tick) damage.
+        /// A common function to calculate minimum, maximum or tick damage.
         /// </summary>
-        /// <param name="baseValue"></param>
-        /// <param name="coefficient"></param>
+        /// <param name="baseValue">The base min, max or tick value.</param>
+        /// <param name="coefficient">The base directdamage or tickdamage coefficient.</param>
+        /// <param name="multiplier">A value based on talent improvements (or set bonuses).</param>
         /// <returns></returns>
-        protected float CalculateDamage(float baseValue, float coefficient)
+        protected float CalculateDamage(float baseValue, float coefficient, float multiplier)
         {
             float spellpower = Stats.SpellPower;
             float additional = (MagicSchool == MagicSchool.Shadow)
@@ -382,16 +473,20 @@ namespace Rawr.Warlock
                               : Stats.SpellFireDamageRating;
 
             spellpower += additional;
-
-            float damage = (baseValue + (spellpower * coefficient));
             
-            //malediction increases spell damage by 1/2/3%
-            damage *= (1 + (Character.WarlockTalents.Malediction * 0.01f));
+            //The basic spell damage formula is as follows: 
+            //  D = ((B + (Sp * C)) * M)
+            //where 
+            //  D = damage, B = basevalue, Sp = spellpower, C = coefficient & M = multiplier
+            float damage = ((baseValue + (spellpower * coefficient)) * multiplier);
 
-            //add buffs category: Damage(%) [sanctified ret / ferocious inspiration / arcane empowerment]
+            //apply any talents that increase spell damage
+            damage *= (1 + (Character.WarlockTalents.DemonicPact * 0.01f));   //increases spell damage by 1/2/3/4/5%
+
+            //apply buffs category: Damage(%) [sanctified ret / ferocious inspiration / arcane empowerment]
             damage *= (1 + Stats.BonusDamageMultiplier);
 
-            //add buffs category: Spell Damage Taken [curse of the elements / ebon plaguebringer / earth & moon]
+            //apply buffs category: Spell Damage Taken [curse of the elements / ebon plaguebringer / earth & moon]
             if (MagicSchool == MagicSchool.Shadow)
             {
                 damage *= (1 + Stats.BonusShadowDamageMultiplier);
@@ -405,12 +500,15 @@ namespace Rawr.Warlock
         }
 
         /// <summary>
-        /// Applies talents (and any other modifiers) to the BaseCritMultiplier to return
-        /// the actual value which must be used in spell critical strike damage calculations.
+        /// Returns the value to be used in spell critical strike damage calculations by taking the BaseCritMultiplier
+        /// and applying any talent (i.e. Ruin / Pandemic) modifiers plus any other bonuses (i.e. crit metagem - 3% increased damage, stacking multiplicatively).
         /// </summary>
         /// <remarks>
-        /// A spell crit with Ruin does (100% + 50% * 2) = 200% damage.
-        /// A spell crit with the crit meta gem and Ruin does (100% + 54.5% * 2) = 209% damage.
+        /// A normal spell hit does 100% of normal damage.
+        /// A spell crit with no talents or other bonuses does (by default) 150% of normal damage [i.e 50% increased damage], therefore the BaseCritMultiplier is 1.5
+        /// A spell crit with the crit metagem only (no Ruin / Pandemic talents) does 154.5% ((100% + 50%) x 1.03%) of normal damage.
+        /// A spell crit with Ruin (5/5) only (no crit metagem) does 200% [100% + (50% * 2)] of normal damage.
+        /// A spell crit with Ruin + metagem does 209% [(100% + (50% * 2)) * 1.03] of normal damage.
         /// </remarks>
         public float CritMultiplier()
         {
@@ -433,7 +531,34 @@ namespace Rawr.Warlock
                 damageBonus *= (1f + (Character.WarlockTalents.Ruin * 0.20f));
             }
 
+            // Talent: Pandemic - increases critical strike damage of the following spells
+            if ((Name == "Haunt") || (Name == "Corruption") || (Name == "Unstable Affliction"))
+            {
+                damageBonus *= (1f + (Character.WarlockTalents.Pandemic * 1f));
+            }
+
             return (1f + damageBonus);
+        }
+
+        /// <summary>
+        /// Returns the total crit chance from the BaseCritChance (talent improvements + any set bonuses) and current equipment.
+        /// </summary>
+        public float CritChance()
+        {
+            return (Stats.SpellCrit + BaseCritChance);
+        }
+
+        /// <summary>
+        /// Returns the total hit chance from current equipment, talents, plus the base chance to hit a target. Capped at 100%.
+        /// </summary>
+        /// <remarks>
+        /// 1) No need to account for the Suppression talent here because that would always be included in the Stats.SpellHit.
+        /// 2) A level 80 warlock has a base chance of 83% to hit a level 83 target.
+        /// todo: retrieve the correct value from CalculationOptionsWarlock.TargetHit
+        /// </remarks>
+        public float HitChance()
+        {
+            return Math.Min(Stats.SpellHit + 0.83f, 1.00f);
         }
 
         /// <summary>
@@ -455,11 +580,18 @@ namespace Rawr.Warlock
         /// <summary>
         /// Returns the average direct damage (including crits) per spell cast.
         /// </summary>
-        public float AvgDirectDamage() { return (AvgHitDamage() * (1 - BaseCritChance)) + (AvgCritDamage() * BaseCritChance); }
+        public float AvgDirectDamage() { return (AvgHitDamage() * (HitChance() - CritChance())) + (AvgCritDamage() * CritChance()); }
         /// <summary>
         /// Returns the average damage (including crits) per tick.
         /// </summary>
-        public float AvgTickDamage() { return (TickHitDamage() * (1 - BaseCritChance)) + (TickCritDamage() * BaseCritChance); }
+        public float AvgTickDamage()
+        {
+            if (TicksMayCrit)
+            {
+                return (TickHitDamage() * (HitChance() - CritChance())) + (TickCritDamage() * CritChance());
+            }
+            return TickHitDamage();
+        }
         /// <summary>
         /// Returns the average dot damage (including crits) per spell cast.
         /// </summary>
@@ -475,7 +607,7 @@ namespace Rawr.Warlock
         /// <summary>
         /// Returns the damage per second.
         /// </summary>
-        public float DpS() { return AvgTotalDamage() / ((Cooldown > 0) ? Cooldown : (Duration > 0) ? Duration : (CastTime() > 0) ? CastTime() : GlobalCooldown()); }
+        public float DpS() { return AvgTotalDamage() / ((Cooldown > 0) ? Cooldown : (Duration() > 0) ? Duration() : (CastTime() > 0) ? CastTime() : GlobalCooldown()); }
         /// <summary>
         /// Returns the damage per mana.
         /// </summary>
@@ -500,7 +632,7 @@ namespace Rawr.Warlock
             //if there is no cooldown, return its duration instead.
             //if there is no duration, or cooldown, then return its casttime.
             //if there is no casttime (i.e. instant cast spells), return the GCD.
-            return (Cooldown > 0) ? Cooldown : (Duration > 0) ? Duration : (CastTime() > 0) ? CastTime() : GlobalCooldown() ;
+            return (Cooldown > 0) ? Cooldown : (Duration() > 0) ? Duration() : (CastTime() > 0) ? CastTime() : GlobalCooldown() ;
         }
 
         /// <summary>
@@ -519,9 +651,7 @@ namespace Rawr.Warlock
             SpellStatistics.CastCount += 1;
 
             #region Hit or Miss? [or, the first roll ...]
-            //a level 80 warlock has an 83% base chance to hit a level 83 target
-            //todo: retrieve the correct value from CalculationOptionsWarlock.TargetHit
-            float totalHitChance = (Stats.SpellHit + 0.83f);
+            float totalHitChance = HitChance();
             float missChance = (totalHitChance >= 1) ? 0: (1 - totalHitChance);
             bool missed = false;
 
@@ -554,7 +684,7 @@ namespace Rawr.Warlock
                 //yay! its a hit :) 
                 #region now to see our directdamage spells should crit or not [a.k.a. the 2nd roll ...]
                 //The effect of Hit chance on Critical Hit chance -> http://www.wowwiki.com/Spell_hit
-                float expectedCritRate = (totalHitChance * Stats.SpellCrit);
+                float expectedCritRate = (totalHitChance * CritChance());
                 
                 float actualCritRate = 0f;
                 if (SpellStatistics.CritCount > 0)
@@ -641,17 +771,17 @@ namespace Rawr.Warlock
             ShadowEmbrace shadowEmbrace = (ShadowEmbrace) sender;
             if (shadowEmbrace.Active)
             {
-				Debug.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura is active - {1} [shadow school] periodic damage increased by 5%", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
+                Debug.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura is active - {1} [shadow school] periodic damage increased by 5%", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
             }
             else
             {
-				Debug.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura has been removed - {1} periodic damage loses 5% damage bonus", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
+                Debug.WriteLine(String.Format("thread:[{0}] | ShadowEmbrace aura has been removed - {1} periodic damage loses 5% damage bonus", System.Threading.Thread.CurrentThread.ManagedThreadId, Name));
             }
         }
         #endregion
 
         /// <summary>
-        /// The mother of all tooltips...
+        /// Returns the mother of all tooltips...
         /// </summary>
         public override string ToString() 
         {
@@ -664,17 +794,24 @@ namespace Rawr.Warlock
 
             if (Channeled)
             {
-                castInfo = String.Format("Channeled (Lasts {0:0.00} sec)", Duration);
+                castInfo = String.Format("Channeled (Lasts {0:0.00} sec)", Duration());
             }
 
-            string advancedInfo = String.Format("{0:0.00%}\tBase Multiplier\r\n"
-                                                + "{1:0.00%}\tCrit Multiplier\r\n"
-                                                + "{2:0.00%}\tCrit\r\n"
-                                                + "{3:0.00%}\tHit\r\n",
-                                                BaseMultiplier,
+            float effectiveSpellpower = (Stats.SpellPower * BaseDirectDamageCoefficient * BaseDirectDamageMultiplier)
+                                      + (Stats.SpellPower * (BaseTickDamageCoefficient * NumberOfTicks) * BaseTickDamageMultiplier);
+
+            string advancedInfo = String.Format("{0:0}\tEffective Spellpower\r\n"
+                                                + "{5:0.00%}\tTotal Coefficient (Direct + Dot)\r"
+                                                + "{1:0.00%}\tBase Multiplier\r\n"
+                                                + "{2:0.00%}\tCrit Multiplier\r\n"
+                                                + "{3:0.00%}\tCrit\r\n"
+                                                + "{4:0.00%}\tHit\r\n",
+                                                effectiveSpellpower,
+                                                (1 + (BaseDirectDamageMultiplier - 1) + (BaseTickDamageMultiplier - 1)),
                                                 CritMultiplier(),
-                                                BaseCritChance,
-                                                Stats.SpellHit
+                                                CritChance(),
+                                                HitChance(),
+                                                BaseDirectDamageCoefficient + (BaseTickDamageCoefficient * NumberOfTicks)
                                                 );
 
             string ddInfo = String.Format("Direct Damage breakdown:\r\n"
@@ -757,7 +894,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank> 
         { 
-            new SpellRank(13, 79, 690, 770, 0, 0.17f) 
+            new SpellRank(13, 79, 690, 770, 0, 0.17f, 4, 5, 0)
         };
 
         public ShadowBolt(Stats stats, Character character)
@@ -765,12 +902,15 @@ namespace Rawr.Warlock
         {
             MayCrit = true;
             BaseCastTime = 3;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
-                           * (1 + (character.WarlockTalents.ShadowMastery * 0.03f) 
-                                + (character.WarlockTalents.ImprovedShadowBolt * 0.01f));
-            BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Devastation * 0.05f) 
+
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f));
+
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f) 
+                                            + (character.WarlockTalents.ImprovedShadowBolt * 0.01f)
+                                          );
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
+
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f) 
                            + stats.Warlock4T8 
                            + stats.Warlock2T10;
         }
@@ -791,7 +931,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Sends a shadowy bolt at the enemy, causing {0:0} to {1:0} Shadow damage.", BaseMinDamage, BaseMaxDamage);
+                return String.Format("Sends a shadowy bolt at the enemy, causing {0:0} to {1:0} Shadow damage.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -812,14 +952,15 @@ namespace Rawr.Warlock
         {
             MayCrit = true;
             BaseCastTime = 2.5f;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
-                           * (1 + (character.WarlockTalents.Emberstorm * 0.03f)
-                                + (character.WarlockTalents.GlyphIncinerate ? 0.05f : 0f)
-                             );
 
-            BaseCritChance  = stats.SpellCrit 
-                            + (character.WarlockTalents.Devastation * 0.05f) 
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f));
+
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f)
+                                            + (character.WarlockTalents.GlyphIncinerate ? 0.05f : 0f)
+                                         );
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
+
+            BaseCritChance  = (character.WarlockTalents.Devastation * 0.05f) 
                             + stats.Warlock4T8
                             + stats.Warlock2T10;
         }
@@ -833,7 +974,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Deals {0:0} to {1:0} Fire damage to your target and an additional 145.5 to 169 Fire damage if the target is affected by an Immolate spell.", BaseMinDamage, BaseMaxDamage);
+                return String.Format("Deals {0:0} to {1:0} Fire damage to your target and an additional 145.5 to 169 Fire damage if the target is affected by an Immolate spell.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -857,11 +998,10 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 2;
             NumberOfTicks = 12;
-            Duration = 24;
+            BaseDuration = 24;
 
             if (character.WarlockTalents.GlyphCoA)
             {
-                Duration += 4;
                 NumberOfTicks += 2;
             }
 
@@ -869,17 +1009,18 @@ namespace Rawr.Warlock
             //http://www.wowwiki.com/Spell_damage_and_healing#Exceptions
             BaseTickDamageCoefficient = 0.10f;
 
-            BaseMultiplier = (1 + (character.WarlockTalents.ImprovedCurseOfAgony * 0.05f)
-                                + (character.WarlockTalents.ShadowMastery * 0.03f) 
-                                + (character.WarlockTalents.Contagion * 0.01f)
-                             );
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.ImprovedCurseOfAgony * 0.05f)
+                                          + (character.WarlockTalents.ShadowMastery * 0.03f) 
+                                          + (character.WarlockTalents.Contagion * 0.01f)
+                                       );
+            BaseTickDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Curses the target with agony, causing {0:0} Shadow damage over {1:0.00} sec.\r\nThis damage is dealt slowly at first, and builds up as the Curse reaches its full duration.\r\nOnly one Curse per Warlock can be active on any one target.", (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Curses the target with agony, causing {0:0} Shadow damage over {1:0.00} sec.\r\nThis damage is dealt slowly at first, and builds up as the Curse reaches its full duration.\r\nOnly one Curse per Warlock can be active on any one target.", (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
 
@@ -901,19 +1042,22 @@ namespace Rawr.Warlock
             : base("Curse of Doom", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
             BaseCastTime = 0;
-            BaseTickTime = Duration = 60;
+            BaseTickTime = 60;
             NumberOfTicks = 1;
 
             //The CoD spell coefficient has been capped at 200%, so its also an exception to the general spell coeff formula for DoT spells
             BaseTickDamageCoefficient = 2;
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+
+            //DrDamage addon does not take ShadowMastery or Malediction talents into account
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseTickDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Curses the target with impending doom, causing {0:0} Shadow damage after 1 min.\r\nIf the target yields experience or honor when it dies from this damage, a Doomguard will be summoned.\r\nCannot be cast on players.", (BaseTickDamage * NumberOfTicks));
+                return String.Format("Curses the target with impending doom, causing {0:0} Shadow damage after 1 min.\r\nIf the target yields experience or honor when it dies from this damage, a Doomguard will be summoned.\r\nCannot be cast on players.", (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier));
             }
         }
     }
@@ -934,32 +1078,30 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 3;
             NumberOfTicks = 6;
-            Duration = 18;
+            BaseDuration = 18;
 
-            BaseTickDamageCoefficient = (BaseTickTime / 15f);    //i.e. 20% per tick
-            BaseTickDamageCoefficient += (character.WarlockTalents.EmpoweredCorruption * 0.02f ); //each talent point increases damage by 12/24/36%, which must be divided by numberofticks
+            BaseTickDamageCoefficient = ((BaseDuration / 15f) / NumberOfTicks);    //i.e. 20% per tick
+            BaseTickDamageCoefficient += (character.WarlockTalents.EmpoweredCorruption * (0.12f / NumberOfTicks) ); //each talent point increases damage by 12/24/36%, which must be divided by numberofticks
             BaseTickDamageCoefficient += (character.WarlockTalents.EverlastingAffliction * 0.01f);
 
-            BaseMultiplier = (1 + (character.WarlockTalents.ImprovedCorruption * 0.02f)
-                                + (character.WarlockTalents.ShadowMastery * 0.03f)
-                                + (character.WarlockTalents.Contagion * 0.01f)
-                                + stats.Warlock4T9
-                              ) 
-                           * (1 + (character.WarlockTalents.SiphonLife * 0.05f));
-
-            BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Malediction * 0.03f)
-                           + stats.Warlock2T10;
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.ImprovedCorruption * 0.02f)
+                                        + (character.WarlockTalents.ShadowMastery * 0.03f)
+                                        + (character.WarlockTalents.Contagion * 0.01f)
+                                        + (character.WarlockTalents.SiphonLife * 0.05f)
+                                        + stats.Warlock4T9
+                                       );
+            BaseTickDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
 
             if (character.WarlockTalents.Pandemic > 0)
             {
                 TicksMayCrit = true;
-                BaseCritMultiplier = 2;
+                BaseCritChance = (character.WarlockTalents.Malediction * 0.03f)
+                               + stats.Warlock2T10;
             }
 
             if (character.WarlockTalents.GlyphQuickDecay)
             {
-                BaseTickTime *= (1 / (1 + stats.SpellHaste));
+                HastedTicks = true;
             }
         }
 
@@ -967,7 +1109,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Corrupts the target, causing {0:0} Shadow damage over {1:0.00} sec.", (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Corrupts the target, causing {0:0} Shadow damage over {1:0.00} sec.", (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
     }
@@ -989,23 +1131,22 @@ namespace Rawr.Warlock
             BaseCastTime = 1.5f;
             BaseTickTime = 3;
             NumberOfTicks = 5;
-            Duration = 15;
+            BaseDuration = 15;
 
             BaseTickDamageCoefficient = (BaseTickTime / 15);
             BaseTickDamageCoefficient += (character.WarlockTalents.EverlastingAffliction * 0.01f);
 
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f)
-                                + stats.Warlock2T8
-                                + stats.Warlock4T9
-                             )
-                           * (1 + (character.WarlockTalents.SiphonLife * 0.05f));
-
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Malediction * 0.03f);
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f)
+                                          + (character.WarlockTalents.SiphonLife * 0.05f)
+                                          + stats.Warlock2T8
+                                          + stats.Warlock4T9
+                                        );
+            BaseTickDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
 
             if (character.WarlockTalents.Pandemic > 0)
             {
-                BaseCritMultiplier = 2;
                 TicksMayCrit = true;
+                BaseCritChance = (character.WarlockTalents.Malediction * 0.03f);
             }
         }
 
@@ -1024,7 +1165,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Shadow energy slowly destroys the target, causing {0:0} damage over {1:0.00} sec.\r\nIn addition, if the Unstable Affliction is dispelled it will cause 2070 damage to the dispeller and silence them for 5 sec.", (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Shadow energy slowly destroys the target, causing {0:0} damage over {1:0.00} sec.\r\nIn addition, if the Unstable Affliction is dispelled it will cause 2070 damage to the dispeller and silence them for 5 sec.", (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
     }
@@ -1037,30 +1178,33 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(6, 78, 790, 790, 0, 0.23f)
+            new SpellRank(6, 78, 790, 790, 0, 0.23f, 10, 10, 0)
         };
 
         public DeathCoil(Stats stats, Character character)
             : base("Death Coil", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            MayCrit = true;
             Binary = true;
+            MayCrit = true;
             BaseCastTime = 0;
+            BaseDuration = 3;
             Cooldown = 120;
-            Duration = 3;
+
             if (character.WarlockTalents.GlyphDeathCoil )
             {
-                Duration += 0.5f;
+                BaseDuration += 0.5f;
             }
+
             BaseDirectDamageCoefficient = ((1.5f / 3.5f) / 2);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseDirectDamageMultiplier *= (1 + (Character.WarlockTalents.Malediction * 0.01f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Causes the enemy target to run in horror for {0:0.00} sec and causes {1:0} Shadow damage.\r\nThe caster gains 300% of the damage caused in health.", Duration, BaseMinDamage);
+                return String.Format("Causes the enemy target to run in horror for {0:0.00} sec and causes {1:0} Shadow damage.\r\nThe caster gains 300% of the damage caused in health.", Duration(), (BaseMinDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -1081,18 +1225,19 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 1;
             NumberOfTicks = 5;
-            Duration = 5;
-            Channeled = true;
+            BaseDuration = 5;
             Binary = true;
+            Channeled = true;
+            HastedTicks = true;
             BaseTickDamageCoefficient = ((BaseTickTime / 3.5f) / 2);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Transfers {0:0} health every {1:0.00} sec from the target to the caster. Lasts {2:0.00} sec.", BaseTickDamage, BaseTickTime, Duration);
+                return String.Format("Transfers {0:0} health every {1:0.00} sec from the target to the caster. Lasts {2:0.00} sec.", (BaseTickDamage * BaseTickDamageMultiplier), TickTime(), Duration());
             }
         }
     }
@@ -1112,21 +1257,22 @@ namespace Rawr.Warlock
         public DrainSoul(Stats stats, Character character)
             : base("Drain Soul", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Channeled = true;
-            Binary = true;
             BaseCastTime = 0;
             BaseTickTime = 3;
             NumberOfTicks = 5;
-            Duration = 15;
-            BaseDirectDamageCoefficient = ((BaseTickTime / 3.5f) / 2f);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseDuration = 15;
+            Binary = true;
+            Channeled = true;
+            HastedTicks = true;
+            BaseTickDamageCoefficient = ((BaseTickTime / 3.5f) / 2f);
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Drains the soul of the target, causing {0:0} Shadow damage over {1:0.00} sec.\r\nIf the target is at or below 25% health, Drain Soul causes four times the normal damage.", (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Drains the soul of the target, causing {0:0} Shadow damage over {1:0.00} sec.\r\nIf the target is at or below 25% health, Drain Soul causes four times the normal damage.", (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
     }
@@ -1137,7 +1283,6 @@ namespace Rawr.Warlock
     /// When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% 
     /// of the damage it did to the target.
     /// </summary>
-    /// todo: Glyph of Haunt to be implemented under the Haunted aura.
     public class Haunt : Spell
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
@@ -1149,23 +1294,21 @@ namespace Rawr.Warlock
             : base("Haunt", stats, character, SpellRankTable, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
             BaseCastTime = 1.5f;
-            Duration = 12;
+            BaseDuration = 12;
             Cooldown = 8;
             MayCrit = true;
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
 
-            if (character.WarlockTalents.Pandemic > 0)
-            {
-                BaseCritMultiplier = 2;
-            }
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
+
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.GlyphHaunt ? 0.03f : 0f));     //haunt glyph is multiplicative
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("You send a ghostly soul into the target, dealing {0:0} to {1:0} Shadow damage and increasing\r\nall damage done by your Shadow damage-over-time effects on the target by 20% for {2:0.00} sec.\r\nWhen the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100%\r\nof the damage it did to the target.", BaseMinDamage, BaseMaxDamage, Duration);
+                return String.Format("You send a ghostly soul into the target, dealing {0:0} to {1:0} Shadow damage and increasing\r\nall damage done by your Shadow damage-over-time effects on the target by 20% for {2:0.00} sec.\r\nWhen the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100%\r\nof the damage it did to the target.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier), Duration());
             }
         }
     }
@@ -1176,6 +1319,7 @@ namespace Rawr.Warlock
     /// Shadow damage to all enemies within 15 yards of the target. 
     /// Only one Corruption spell per Warlock can be active on any one target.
     /// </summary>
+    /// <remarks>Shadowflame is another hybrid spell - using the same formula for both.</remarks>
     // TODO: damage cap not implemented
     public class SeedOfCorruption : Spell
     {
@@ -1190,29 +1334,49 @@ namespace Rawr.Warlock
             BaseCastTime = 2;
             BaseTickTime = 3;
             NumberOfTicks = 6;
-            Duration = 18;
+            BaseDuration = 18;
+            MayCrit = true;
 
-            float avgBaseDirectDamage = ((BaseMinDamage + BaseMaxDamage) / 2);
+            // WoWWiki states that the spell coefficients for hybrid spells are calculated as follows:
+            //       x = Duration / 15      => (18 / 15) = 1.2
+            //       y = CastTime / 3.5     => (2 / 3.5) = 0.57142
+            //     CDD = y^2 / (x + y)      => (0.57142)^2 / (1.2 + 0.57142) => 0.184332 = 18.43%
+            //    CDoT = x^2 / (x + y)      => (1.2)^2 / (1.2 + 0.57142) => 0.812903  = 81.29% [or 13.55% per tick]
+            //  CTotal = CDD + CDot         => 99.72%
+            // [source: http://www.wowwiki.com/Spell_damage_and_healing#Hybrid_spells_.28Combined_standard_and_over-time_spells.29]
 
-            // coefficients derived as follows: 
-            //    dd portion = \frac{2}{3.5}*\frac{x}{x+y}
-            //   dot portion = \frac{15}{15}*\frac{y}{x+y}
+            // EJ states that the spell coefficients for hybrid spells are calculated as follows: 
+            //   (use http://www.forkosh.dreamhost.com/source_mathtex.html#preview to view the formulas)
+            //    DD portion = \frac{2}{3.5}*\frac{x}{x+y}  
+            //   Dot portion = \frac{18}{15}*\frac{y}{x+y}
+            // where 
+            //  - x is the avg base direct damage, in this case => ((1633 + 1897) / 2) = 1765
+            //  - y is the base dot damage (tickdamage * numberofticks), in this case => 1518 [or (253 * 6)]
+            //  - x+y = 1765 + 1518 => 3283
+            // This works out to:
+            //     CDD = (2 / 3.5) * (1765/3283)  => 0.571428 * 0.53761 => 0.30721 => 30.72%
+            //    CDoT = (18 / 15 ) * (1518/3283) => 1.2 * 0.46238      => 0.55485 => 55.49 % [or 9.247% per tick]
+            //  CTotal = CDD + CDot => 0.86206    => 86.21%
             // [source: http://elitistjerks.com/f47/t19038-spell_coefficients/#Warlock ]
-            // (use http://www.forkosh.dreamhost.com/source_mathtex.html#preview to view the formulas)
-            // According to wowhead, the dot portiion = 25% per tick, and the dd portion = 21.29% (but no math provided)
-            // TODO: verify the SoC coefficients 
-            // (using the EJ formulas for now)
 
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (avgBaseDirectDamage / (avgBaseDirectDamage + BaseTickDamage));
-            BaseTickDamageCoefficient = (Duration / 15f) * (BaseTickDamage / (avgBaseDirectDamage + BaseTickDamage));
+            // Using the EJ formula because their theorycrafting has always been pretty accurate.
 
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f)
-                                + (character.WarlockTalents.Contagion * 0.01f)
-                             )
-                           * (1 + (character.WarlockTalents.SiphonLife * 0.05f));
+            float x = ((BaseMinDamage + BaseMaxDamage) / 2);    //avg base damage
+            float y = (BaseTickDamage * NumberOfTicks);         //dot damage
+            float t = (x + y);
 
-            BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.ImprovedCorruption * 0.01f);
+            BaseDirectDamageCoefficient = ((BaseCastTime / 3.5f) * (x / t));
+            BaseTickDamageCoefficient = (((BaseDuration / 15f) * (y / t)) / NumberOfTicks); 
+
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f)
+                                            + (character.WarlockTalents.Contagion * 0.01f)
+                                            + (character.WarlockTalents.SiphonLife * 0.05f)
+                                          );
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
+
+            BaseTickDamageMultiplier = BaseDirectDamageMultiplier;
+
+            BaseCritChance = (character.WarlockTalents.ImprovedCorruption * 0.01f);
         }
 
         public override string Description
@@ -1223,8 +1387,10 @@ namespace Rawr.Warlock
                     + "When the target takes {0:0} total damage or dies, the seed will inflict {2:0} to {3:0}\r\n" 
                     + "Shadow damage to all enemies within 15 yards of the target.\r\n" 
                     + "Only one Corruption spell per Warlock can be active on any one target.", 
-                    (BaseTickDamage * NumberOfTicks), Duration,
-                    BaseMinDamage, BaseMaxDamage);
+                    (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), 
+                    Duration(),
+                    (BaseMinDamage * BaseDirectDamageMultiplier), 
+                    (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -1232,7 +1398,11 @@ namespace Rawr.Warlock
     /// <summary>
     /// Targets in a cone in front of the caster take 615 to 671 Shadow damage and an additional 644 Fire damage over 8 sec.
     /// </summary>
-    /// <remarks>The directdamage portion is shadow, while the dot portion is fire!</remarks>
+    /// <remarks>
+    /// 1) The directdamage portion is shadow, while the dot portion is fire!
+    /// 2) Seed of Corruption is another hybrid spell - using the same formula for both.
+    /// </remarks>
+    /// TODO: damage cap not implemented
     public class Shadowflame : Spell
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
@@ -1247,52 +1417,61 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 2;
             NumberOfTicks = 4;
-            Duration = 8;
+            BaseDuration = 8;
             Cooldown = 15;
             MayCrit = true;
 
-            // TODO: verify the Shadowflame coefficients 
             // The spell coefficients are hardcoded in SimCraft as:
             //      DD = 14.29f & DoT = 28%
+            // but there is no formula or explanation of how this was calculated
 
-            // WoWWiki states the spell coefficients formula as:
-            //      x = Duration / 15       => (8/15) = 0.53333
-            //      y = CastTime / 3.5      => (1.5/3.5) = 0.42857
-            //      CDD = y^2 / (x + y)     => (0.42857)^2 / (0.53333 + 0.42857) => 0.190948 = 19.095%
-            //      CDoT = x^2 / (x + y)    => (0.53333)^2 / (0.53333 + 0.42857) => 0.29571  = 29.571%
-            //      CTotal = CDD + CDot     => 48.67%
+            // WoWWiki states that the spell coefficients for hybrid spells are calculated as follows:
+            //       x = Duration / 15       => (8/15) = 0.53333
+            //       y = CastTime / 3.5      => (1.5/3.5) = 0.42857
+            //     CDD = y^2 / (x + y)     => (0.42857)^2 / (0.53333 + 0.42857) => 0.190948 = 19.095%
+            //    CDoT = x^2 / (x + y)    => (0.53333)^2 / (0.53333 + 0.42857) => 0.29571  = 29.571% [or 7.39% per tick]
+            //  CTotal = CDD + CDot     => 48.67%
             // [source: http://www.wowwiki.com/Spell_damage_and_healing#Hybrid_spells_.28Combined_standard_and_over-time_spells.29]
 
-            // EJ states the coefficients are derived as follows: 
+            // EJ states that the spell coefficients for hybrid spells are calculated as follows: 
             //   (use http://www.forkosh.dreamhost.com/source_mathtex.html#preview to view the formulas)
-            //    DD portion = \frac{2}{3.5}*\frac{x}{x+y}  
-            //   Dot portion = \frac{15}{15}*\frac{y}{x+y}
-            // where x is the avgDirectDamage ((615+671)/2 =643), and y (=644) is the basedotdamage
-            // so this works out to:
-            //     CDD = (2/3.5) * (643/(643 + 644)) => 0.5714 * 0.4996 => 0.28549 => 28.55%
+            //    DD portion = \frac{1.5}{3.5}*\frac{x}{x+y}  
+            //   Dot portion = \frac{8}{15}*\frac{y}{x+y}
+            // where 
+            //  - x is the avg base direct damage, in this case ((615+671)/2 =643), 
+            //  - y is the base dot damage (tickdamage * numberofticks), in this case (=644) or (161 * 4),
+            //  - x+y = 643+644 = 1287
+            // This works out to:
+            //     CDD = (1.5/3.5) * (643/(643 + 644)) => 0.42857 * 0.4996 => 0.214119 => 21.41%
             //    CDoT = (8/15 ) * (644/(643 + 644)) => 0.5333 * 0.5003 => 0.26687 => 26.69% [or 6.67% per tick]
-            //  CTotal = CDD + CDot => 55.25%
+            //  CTotal = CDD + CDot => 0.480993 => 48.10%
             // [source: http://elitistjerks.com/f47/t19038-spell_coefficients/#Warlock ]
-            // Anyhoo - using the EJ formulas (for now) because their theorycrafting has always been pretty accurate)
 
-            var avgBaseDirectDamage = ((BaseMinDamage + BaseMaxDamage) / 2);
+            // Two very different formulas, but similar results.
+            // Anyhoo, using the EJ formula because their theorycrafting has always been pretty accurate.
 
-            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (avgBaseDirectDamage / (avgBaseDirectDamage + BaseTickDamage));
+            float x = ((BaseMinDamage + BaseMaxDamage) / 2);
+            float y = (BaseTickDamage * NumberOfTicks);
+            float t = (x + y);
+
+            BaseDirectDamageCoefficient = ((1.5f / 3.5f) * (x / t));
             //shadowmastery applies to shadow spells, which is the directdamage portion of shadowflame
-            BaseDirectDamageCoefficient *= (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
 
-            BaseTickDamageCoefficient = (Duration / 15f) * (BaseTickDamage / (avgBaseDirectDamage + BaseTickDamage));
+            BaseTickDamageCoefficient = (((BaseDuration / 15f) * (y / t)) / NumberOfTicks); 
             //emberstorm applies to fire spells, which is the dot portion of shadowflame
-            BaseTickDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+            BaseTickDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
 
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f);
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Targets in a cone in front of the caster take {0:0} to {1:0} Shadow damage and an additional {2:0} Fire damage over {3:0.00} sec.", BaseMinDamage, BaseMaxDamage, (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Targets in a cone in front of the caster take {0:0} to {1:0} Shadow damage and an additional {2:0} Fire damage over {3:0.00} sec.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier), (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
     }
@@ -1315,17 +1494,16 @@ namespace Rawr.Warlock
             BaseRange = 20;
             Cooldown = 15;
             MayCrit = true;
-            BaseDirectDamageCoefficient = (1.5f / 3.5f);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
-                           * (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+            BaseDirectDamageCoefficient = (1.5f / 3.5f) * (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f));
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f);
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Instantly blasts the target for {0:0} to {1:0} Shadow damage.", BaseMinDamage, BaseMaxDamage);
+                return String.Format("Instantly blasts the target for {0:0} to {1:0} Shadow damage.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -1333,7 +1511,7 @@ namespace Rawr.Warlock
     /// <summary>
     /// Shadowfury is unleashed, causing 968 to 1152 Shadow damage and stunning all enemies within 8 yds for 3 sec.
     /// </summary>
-    /// todo: implement aoe effect
+    /// todo: implement shadowfury aoe effect
     public class Shadowfury : Spell
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
@@ -1346,18 +1524,19 @@ namespace Rawr.Warlock
         {
             BaseCastTime = 0;
             MayCrit = true;
-            Cooldown = Duration = 20;
+            Cooldown = 20;
+            BaseDuration = 3;
             BaseRange = 8;
             BaseDirectDamageCoefficient = (1.5f / 3.5f);
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.ShadowMastery * 0.03f));
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f);
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Shadowfury is unleashed, causing {0:0} to {1:0} Shadow damage and stunning all enemies within {2:0} yds for {3:0.00} sec.", BaseMinDamage, BaseMaxDamage, Range(), Duration);
+                return String.Format("Shadowfury is unleashed, causing {0:0} to {1:0} Shadow damage and stunning all enemies within {2:0} yds for {3:0.00} sec.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier), Range(), Duration());
             }
         }
     }
@@ -1377,29 +1556,27 @@ namespace Rawr.Warlock
         {
             BaseCastTime = 2;
             BaseTickTime = 3;
-            NumberOfTicks = 5;
-            Duration = 15;
+            NumberOfTicks = 5 + (character.WarlockTalents.MoltenCore * 1);
+            BaseDuration = 15 + (character.WarlockTalents.MoltenCore * 3);
             MayCrit = true;
 
-            //immolate coefficients were hotfixed to base 20% (before talents & other bonuses) in patch 3.0
-            //so this is another exception to the spell coeff formula for hybrid spells
+            //immolate coefficients were hotfixed to 120% in patch 3.0
+            //direct damage = 20%, and 100% for the dot (20% per tick) [before talents & other bonuses] 
+            //[this is another exception to the spell coeff formula for hybrid spells]
             BaseDirectDamageCoefficient = 0.20f;
-            BaseDirectDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03f)
-                                              + (character.WarlockTalents.ImprovedImmolate * 0.1f)
-                                              + (stats.Warlock2T8 / 2)
-                                              + stats.Warlock4T9
-                                           );
-
             BaseTickDamageCoefficient = 0.20f;
-            BaseTickDamageCoefficient *= (1 + (character.WarlockTalents.Emberstorm * 0.03f)
-                                            + (character.WarlockTalents.Aftermath * 0.03f)
-                                            + (character.WarlockTalents.ImprovedImmolate * 0.10f)
+
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f)
+                                            + (character.WarlockTalents.ImprovedImmolate * 0.1f)
                                             + (character.WarlockTalents.GlyphImmolate ? 0.10f : 0f)
                                             + (stats.Warlock2T8 / 2)
                                             + stats.Warlock4T9
                                          );
-            
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
+
+            BaseTickDamageMultiplier = (BaseDirectDamageMultiplier + (character.WarlockTalents.Aftermath * 0.03f));
+
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f);
         }
 
         public override float CastTime()
@@ -1411,7 +1588,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Burns the enemy for {0:0} Fire damage and then an additional {1:0} Fire damage over {2:0.00} sec.", BaseMinDamage, (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Burns the enemy for {0:0} Fire damage and then an additional {1:0} Fire damage over {2:0.00} sec.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
     }
@@ -1422,19 +1599,19 @@ namespace Rawr.Warlock
     /// <remarks>
     /// According to http://www.wowwiki.com/Spell_damage_and_healing#Area_of_effect_spells, the coefficient is calculated as follows:
     ///     (C) = (Duration / 7) => 8/7  => ~114% (or 28.57% per tick)
-    /// This is supported by theorycrafting on EJ -> http://elitistjerks.com/f47/t19038-spell_coefficients/#Warlock (note: the actual values are out of date on EJ, but its formula is still valid).
+    /// This is supported by theorycrafting on EJ -> http://elitistjerks.com/f47/t19038-spell_coefficients/#Warlock
     ///     (C) = (CastTime / 3.5), which is then divided by 2 (for AOE spells), which results in ~114% (28.57% per tick).
     ///         => ((2 / 3.5) / 2) => 28.57% per tick
     /// However, http://www.wowwiki.com/Rain_of_Fire states that RoF receives 33% of the bonus from +damage gear (which is then split over the 4 ticks),
     /// while http://www.wowwiki.com/Spell_power_coefficient has the RoF coefficient as 57.26% per tick ...
-    /// Anyhoo - going with 28.57% per tick for now :)
+    /// Anyhoo - going with 28.57% per tick because thats validated by the EJ theorycrafting. The RoF and Spellpower coefficient pages on wowwiki probably just need to be updated.
     /// TODO: the damage cap is currently not implemented
     /// </remarks>
     public class RainOfFire : Spell
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(7, 79, 0, 0, 675, 0.57f)
+            new SpellRank(7, 79, 0, 0, 675, 0.57f, 0, 0, 2)
         };
 
         public RainOfFire(Stats stats, Character character)
@@ -1443,20 +1620,21 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 2;
             NumberOfTicks = 4;
-            Duration = 8;
+            BaseDuration = 8;
             Channeled = true;
             AreaOfEffect = true;
-            MayCrit = true;
-            BaseTickDamageCoefficient = ((Duration / 7) / NumberOfTicks);
-            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+            TicksMayCrit = true;
+            HastedTicks = true;
+            BaseTickDamageCoefficient = ((BaseDuration / 7) / NumberOfTicks);
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f);
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Calls down a fiery rain to burn enemies in the area of effect for {0:0} Fire damage over {1:0.00} sec.", (BaseTickDamage * NumberOfTicks), Duration);
+                return String.Format("Calls down a fiery rain to burn enemies in the area of effect for {0:0} Fire damage over {1:0.00} sec.", (BaseTickDamage * NumberOfTicks * BaseTickDamageMultiplier), Duration());
             }
         }
     }
@@ -1473,7 +1651,7 @@ namespace Rawr.Warlock
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(5, 78, 0, 0, 451, 0.64f)
+            new SpellRank(5, 78, 0, 0, 451, 0.64f, 0, 0, 2)
         };
 
         public Hellfire(Stats stats, Character character)
@@ -1482,19 +1660,20 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 1;
             NumberOfTicks = 15;
-            Duration = 15;
+            BaseDuration = 15;
+            BaseRange = 10;
             Channeled = true;
             AreaOfEffect = true;
-            BaseRange = 10;
-            BaseTickDamageCoefficient = ((Duration / 7) / NumberOfTicks);
-            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+            HastedTicks = true;
+            BaseTickDamageCoefficient = ((BaseDuration / 7) / NumberOfTicks);
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Ignites the area surrounding the caster, causing {0:0} Fire self-damage and {0:0} Fire damage to all nearby enemies every {1:0.00} sec.  Lasts {2:0.00} sec.", BaseTickDamage, BaseTickTime, Duration);
+                return String.Format("Ignites the area surrounding the caster, causing {0:0} Fire self-damage and {0:0} Fire damage to all nearby enemies every {1:0.00} sec.  Lasts {2:0.00} sec.", (BaseTickDamage * BaseTickDamageMultiplier), TickTime(), Duration());
             }
         }
     }
@@ -1521,20 +1700,21 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 1;
             NumberOfTicks = 15;
-            Duration = 15;
+            BaseDuration = 15;
             Cooldown = 30;
+            BaseRange = 10;
             Channeled = true;
             AreaOfEffect = true;
-            BaseRange = 10;
-            BaseTickDamageCoefficient = ((Duration / 7) / NumberOfTicks);
-            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+            HastedTicks = true;
+            BaseTickDamageCoefficient = ((BaseDuration / 7) / NumberOfTicks);
+            BaseTickDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
         }
 
         public override string Description
         {
             get
             {
-                return String.Format("Ignites the area surrounds you, causing {0} Fire damage to all nearby enemies every {1:0.00} sec. Lasts {2:0.00} sec.", BaseTickDamage, BaseTickTime, Duration);
+                return String.Format("Ignites the area surrounds you, causing {0} Fire damage to all nearby enemies every {1:0.00} sec. Lasts {2:0.00} sec.", (BaseTickDamage * BaseTickDamageMultiplier), TickTime(), Duration());
             }
         }
     }
@@ -1543,13 +1723,13 @@ namespace Rawr.Warlock
     /// Inflict searing pain on the enemy target, causing 343 to 405 Fire damage. Causes a high amount of threat.
     /// </summary>
     /// <remarks>
-    /// TODO: Threatgain not implemented.
+    /// TODO: Threat gain not implemented.
     /// </remarks>
     public class SearingPain : Spell
     {
         static readonly List<SpellRank> SpellRankTable = new List<SpellRank>
         {
-            new SpellRank(10, 79, 343, 405, 0, 0.08f)
+            new SpellRank(10, 79, 343, 405, 0, 0.08f, 4, 5, 0)
         };
 
         public SearingPain(Stats stats, Character character)
@@ -1557,10 +1737,13 @@ namespace Rawr.Warlock
         {
             BaseCastTime = 1.5f;
             MayCrit = true;
+
             BaseDirectDamageCoefficient = (BaseCastTime / 3.5f);
-            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
-            BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Devastation * 0.05f)
+
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+            BaseDirectDamageMultiplier *= (1 + (character.WarlockTalents.Malediction * 0.01f));
+
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f)
                            + (character.WarlockTalents.ImprovedSearingPain > 0 ? 0.01f + 0.03f * character.WarlockTalents.ImprovedSearingPain: 0);
         }
 
@@ -1568,7 +1751,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Inflict searing pain on the enemy target, causing {0:0} to {1:0} Fire damage. Causes a high amount of threat.", BaseMinDamage, BaseMaxDamage);
+                return String.Format("Inflict searing pain on the enemy target, causing {0:0} to {1:0} Fire damage. Causes a high amount of threat.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -1596,9 +1779,9 @@ namespace Rawr.Warlock
             MayCrit = true;
             BaseCastTime = 6;
             BaseDirectDamageCoefficient = 1.15f;
-            BaseMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
-            BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Devastation * 0.05f)
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f)
                            + stats.Warlock2T10;
         }
 
@@ -1611,7 +1794,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Burn the enemy's soul, causing {0:0} to {1:0} Fire damage.", BaseMinDamage, BaseMaxDamage);
+                return String.Format("Burn the enemy's soul, causing {0:0} to {1:0} Fire damage.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -1633,13 +1816,12 @@ namespace Rawr.Warlock
             BaseCastTime = 0;
             BaseTickTime = 2;
             NumberOfTicks = 3;
-            Duration = 6;
+            BaseDuration = 6;
             Cooldown = 10;
-            MayCrit = true;
-            TicksMayCrit = true;    //TODO: need to re-check this - wowhead say no, simcraft say yes ..
+            MayCrit = true;         //the initial direct conflag hit can crit
+            TicksMayCrit = true;    //the conflag dot ticks can also crit
 
-            BaseCritChance = stats.SpellCrit 
-                           + (character.WarlockTalents.Devastation * 0.05f)
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f)
                            + (character.WarlockTalents.FireAndBrimstone * 0.05f);
         }
 
@@ -1647,40 +1829,40 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Causes (or consumes) an Immolate or Shadowflame effect on the enemy target to instantly deal\r\ndamage equal to 60% of your Immolate or Shadowflame, and causes an additional 20% damage over 6 sec.");
+                return String.Format("Causes (or consumes) an Immolate or Shadowflame effect on the enemy target to instantly deal\r\ndamage equal to 60% of your Immolate or Shadowflame, and causes an additional 20% damage over 6 sec.\r\n\r\nConflagrate is calculated from Immolate or Shadowflame dot damage, so you wont see effective sp or coefficients below.");
             }
         }
 
         /// <summary>
-        /// The direct damage portion of Conflag instantly hits for 60% of Immolate or Shadowflame damage.
+        /// The direct damage portion of Conflag instantly hits for 60% of the Immolate or Shadowflame DOT damage!
         /// </summary>
-        /// TODO: check for immolate or shadowflame buff
+        /// TODO: check for immolate or shadowflame on the target 
         public override float MinHitDamage()
         {
             Spell immolate = new Immolate(Stats, Character);
-            float damage = immolate.MinHitDamage() + (immolate.TickHitDamage() * immolate.NumberOfTicks);
+            float damage = (immolate.TickHitDamage() * immolate.NumberOfTicks);
             return (damage * 0.60f);
         }
 
         /// <summary>
-        /// The direct damage portion of Conflag instantly hits for 60% of Immolate or Shadowflame damage.
+        /// The direct damage portion of Conflag instantly hits for 60% of the Immolate or Shadowflame DOT damage!
         /// </summary>
         public override float MaxHitDamage()
         {
             Spell immolate = new Immolate(Stats, Character);
-            float damage = immolate.MaxHitDamage() + (immolate.TickHitDamage() * immolate.NumberOfTicks);
+            float damage = (immolate.TickHitDamage() * immolate.NumberOfTicks);
             return (damage * 0.60f);
         }
 
         /// <summary>
-        /// The dot portion of Conflag deals 20% of Immolate or Shadowflame damage over 6 seconds [3 ticks]...
+        /// The dot portion of Conflag deals 20% of the Immolate or Shadowflame DOT damage over 6 seconds [3 ticks]!
         /// </summary>
         public override float TickHitDamage()
         {
             Spell immolate = new Immolate(Stats, Character);
-            float damage = immolate.MaxHitDamage() + (immolate.TickHitDamage() * immolate.NumberOfTicks);
-            float tickDamage = ((damage * 0.20f) / NumberOfTicks);
-            return tickDamage; 
+            float dotdamage = ((immolate.TickHitDamage() * immolate.NumberOfTicks) * 0.20f);
+            float tickDamage = (dotdamage / NumberOfTicks);
+            return tickDamage;
         }
     }
 
@@ -1702,10 +1884,12 @@ namespace Rawr.Warlock
             MayCrit = true;
             Cooldown = 12;
             BaseCastTime = 2.5f;
-            BaseDirectDamageCoefficient = BaseCastTime / 3.5f;
-            BaseMultiplier = (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f))
-                           * (1 + (character.WarlockTalents.Emberstorm * 0.03f));
-            BaseCritChance = stats.SpellCrit + (character.WarlockTalents.Devastation * 0.05f);
+
+            BaseDirectDamageCoefficient = (BaseCastTime / 3.5f) * (1 + (character.WarlockTalents.ShadowAndFlame * 0.04f));
+            BaseDirectDamageMultiplier = (1 + (character.WarlockTalents.Emberstorm * 0.03f));
+
+            BaseCritChance = (character.WarlockTalents.Devastation * 0.05f);
+
             if (character.WarlockTalents.GlyphChaosBolt)
             {
                 Cooldown -= 2f;
@@ -1721,7 +1905,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Sends a bolt of chaotic fire at the enemy, dealing {0:0} to {1:0} Fire damage.\r\nChaos Bolt cannot be resisted, and pierces through all absorption effects.", BaseMinDamage, BaseMaxDamage);
+                return String.Format("Sends a bolt of chaotic fire at the enemy, dealing {0:0} to {1:0} Fire damage.\r\nChaos Bolt cannot be resisted, and pierces through all absorption effects.", (BaseMinDamage * BaseDirectDamageMultiplier), (BaseMaxDamage * BaseDirectDamageMultiplier));
             }
         }
     }
@@ -1742,7 +1926,10 @@ namespace Rawr.Warlock
             Harmful = false;
         }
 
-        public override float Mana()
+        /// <summary>
+        /// Calculates the amount of health that will be converted to mana when lifetap is cast.
+        /// </summary>
+        protected float HealthToMana()
         {
             return (float)Math.Floor((1490 + (Stats.Spirit * 3)) * (1 + (Character.WarlockTalents.ImprovedLifeTap * 0.10f)));
         }
@@ -1751,17 +1938,17 @@ namespace Rawr.Warlock
         {
             get
             {
-                return String.Format("Converts {0:0} health into {0:0} mana. Spirit increases quantity of health converted.", 1490);
+                return String.Format("Converts {0:0} health into {0:0} mana. Spirit increases quantity of health converted.", HealthToMana());
             }
         }
 
         public override string ToString()
         {
             float lifetapFromSpirit = (Stats.Spirit * 3);
-            float lifetapFromTalent = (Mana() - lifetapFromSpirit - 1490);
+            float lifetapFromTalent = (HealthToMana() - lifetapFromSpirit - 1490);
 
             return String.Format("{0}*{1} (Rank {2})\r\nInstant\r\n{3}\r\n\r\nBreakdown:\r\n{4}\tfrom base health\r\n{5}\tfrom Spirit (multiplied by 3)\r\n{6}\tfrom Talent: Improved Life Tap",
-                Mana(), 
+                HealthToMana(), 
                 Name, 
                 Rank,
                 Description,
