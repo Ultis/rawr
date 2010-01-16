@@ -2759,18 +2759,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
-                float oldArp = effect.Stats.ArmorPenetrationRating;
+                float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
+                float arpToHardCap = StatConversion.RATING_PER_ARMORPENETRATION;
                 if (effect.Stats.ArmorPenetrationRating > 0) {
                     float arpenBuffs = 0.0f;
                     float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating
                         + (statsToProcess != null ? statsToProcess.ArmorPenetrationRating : 0f));
-                    float arpToHardCap = (1f - currentArp) * StatConversion.RATING_PER_ARMORPENETRATION;
-                    if (arpToHardCap < effect.Stats.ArmorPenetrationRating) {
-                        effect.Stats.ArmorPenetrationRating = arpToHardCap;
-                    }
+                    arpToHardCap *= (1f - currentArp);
                 }
                 if (triggerIntervals.ContainsKey(effect.Trigger) && (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use))
                 {
+                    float weight = 1f;
                     switch (effect.Trigger) {
                         case Trigger.Use:
                             _stats = new Stats();
@@ -2782,15 +2781,21 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                     statsTotal, _stats);
                                 _stats = _stats2 * uptime;
                             } else {
-                                _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
+                                if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                    float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
+                                    weight = uptime;
+                                    _stats.ArmorPenetrationRating = arpToHardCap;
+                                } else {
+                                    _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
+                                }
                             }
-                            statsProcs.Accumulate(_stats);
+                            statsProcs.Accumulate(_stats, weight);
                             _stats = null;
                             break;
                         case Trigger.RangedHit:
                         case Trigger.PhysicalHit:
                             _stats = new Stats();
-                            float weight = 1.0f;
+                            weight = 1.0f;
                             if (effect.Stats.DeathbringerProc > 0) {
                                 _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                 _stats.Agility = _stats.DeathbringerProc;
@@ -2799,7 +2804,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                 _stats.DeathbringerProc = 0f;
                                 weight = 1f / 3f;
                             } else {
-                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                    float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                    weight = uptime;
+                                    _stats.ArmorPenetrationRating = arpToHardCap;
+                                } else {
+                                    _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                }
                             }
                             statsProcs.Accumulate(_stats, weight);
                             _stats = null;
@@ -2814,7 +2825,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         case Trigger.SteadyShotHit:
                         case Trigger.PetClawBiteSmackCrit:
                         case Trigger.SerpentWyvernStingsDoDamage:
-                            statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            _stats = new Stats();
+                            weight = 1.0f;
+                            if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                weight = uptime;
+                                _stats.ArmorPenetrationRating = arpToHardCap;
+                            } else {
+                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            }
+                            statsProcs.Accumulate(_stats, weight);
                             break;
                     }
                 }
