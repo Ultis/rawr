@@ -142,13 +142,10 @@ namespace Rawr.Optimizer
 
             optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeBatchProgressChanged);
             optimizeBatchCompletedDelegate = new SendOrPostCallback(PrivateOptimizeBatchCompleted);
-            optimizeCharacterThreadStartDelegate = new OptimizeBatchThreadStartDelegate(OptimizeBatchThreadStart);
             computeUpgradesProgressChangedDelegate = new SendOrPostCallback(PrivateComputeUpgradesProgressChanged);
             computeUpgradesCompletedDelegate = new SendOrPostCallback(PrivateComputeUpgradesCompleted);
-            computeUpgradesThreadStartDelegate = new ComputeUpgradesThreadStartDelegate(ComputeUpgradesThreadStart);
             evaluateUpgradeProgressChangedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeProgressChanged);
             evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
-            evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
 
             InitializeItemCache(batchList[0].Key.AvailableItems, overrideRegem, overrideReenchant, templateGemsEnabled);
 
@@ -276,9 +273,6 @@ namespace Rawr.Optimizer
         }
 
         private AsyncOperation asyncOperation;
-        private delegate void OptimizeBatchThreadStartDelegate(int thoroughness);
-        private delegate void ComputeUpgradesThreadStartDelegate(int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(int thoroughness, ItemInstance upgrade);
 
         public event OptimizeBatchCompletedEventHandler OptimizeBatchCompleted;
         public event OptimizeCharacterProgressChangedEventHandler OptimizeBatchProgressChanged;
@@ -289,13 +283,10 @@ namespace Rawr.Optimizer
 
         private SendOrPostCallback optimizeCharacterProgressChangedDelegate;
         private SendOrPostCallback optimizeBatchCompletedDelegate;
-        private OptimizeBatchThreadStartDelegate optimizeCharacterThreadStartDelegate;
         private SendOrPostCallback computeUpgradesProgressChangedDelegate;
         private SendOrPostCallback computeUpgradesCompletedDelegate;
-        private ComputeUpgradesThreadStartDelegate computeUpgradesThreadStartDelegate;
         private SendOrPostCallback evaluateUpgradeProgressChangedDelegate;
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
-        private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
 
         public void OptimizeCharacterAsync(int thoroughness)
         {
@@ -303,7 +294,10 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            optimizeCharacterThreadStartDelegate.BeginInvoke(thoroughness, null, null);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                OptimizeBatchThreadStart(thoroughness);
+            });
         }
 
         private void OptimizeBatchThreadStart(int thoroughness)
@@ -342,7 +336,10 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            computeUpgradesThreadStartDelegate.BeginInvoke(thoroughness, singleItemUpgrades, null, null);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                ComputeUpgradesThreadStart(thoroughness, singleItemUpgrades);
+            });
         }
 
         private void ComputeUpgradesThreadStart(int thoroughness, Item singleItemUpgrades)
@@ -366,7 +363,10 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            evaluateUpgradeThreadStartDelegate.BeginInvoke(thoroughness, upgrade, null, null);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                EvaluateUpgradeThreadStart(thoroughness, upgrade);
+            });
         }
 
         private void EvaluateUpgradeThreadStart(int thoroughness, ItemInstance upgrade)

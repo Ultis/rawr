@@ -322,13 +322,10 @@ namespace Rawr.Optimizer
             };
             optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterProgressChanged);
             optimizeCharacterCompletedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterCompleted);
-            optimizeCharacterThreadStartDelegate = new OptimizeCharacterThreadStartDelegate(OptimizeCharacterThreadStart);
             computeUpgradesProgressChangedDelegate = new SendOrPostCallback(PrivateComputeUpgradesProgressChanged);
             computeUpgradesCompletedDelegate = new SendOrPostCallback(PrivateComputeUpgradesCompleted);
-            computeUpgradesThreadStartDelegate = new ComputeUpgradesThreadStartDelegate(ComputeUpgradesThreadStart);
             evaluateUpgradeProgressChangedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeProgressChanged);
             evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
-            evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
 
             slotItemsRandom = new List<KeyedList<KeyedList<ItemInstance>>>[characterSlots];
             minJeweler = new int[characterSlots];
@@ -655,9 +652,6 @@ namespace Rawr.Optimizer
         }
 
         private AsyncOperation asyncOperation;
-        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter);
-        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade);
 
         public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
         public event OptimizeCharacterProgressChangedEventHandler OptimizeCharacterProgressChanged;
@@ -668,24 +662,10 @@ namespace Rawr.Optimizer
 
         private SendOrPostCallback optimizeCharacterProgressChangedDelegate;
         private SendOrPostCallback optimizeCharacterCompletedDelegate;
-        private OptimizeCharacterThreadStartDelegate optimizeCharacterThreadStartDelegate;
         private SendOrPostCallback computeUpgradesProgressChangedDelegate;
         private SendOrPostCallback computeUpgradesCompletedDelegate;
-        private ComputeUpgradesThreadStartDelegate computeUpgradesThreadStartDelegate;
         private SendOrPostCallback evaluateUpgradeProgressChangedDelegate;
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
-        private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
-
-#if SILVERLIGHT
-        private class OptimizeCharacterState
-        {
-            public Character Character { get; set; }
-            public string CalculationToOptimize { get; set; }
-            public List<OptimizationRequirement> Requirements { get; set; }
-            public int Thoroughness { get; set; }
-            public bool InjectCharacter { get; set; }
-        }
-#endif
 
         public void OptimizeCharacterAsync(Character character, int thoroughness, bool injectCharacter)
         {
@@ -698,54 +678,12 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-#if SILVERLIGHT
-            OptimizeCharacterState state = new OptimizeCharacterState()
+            ThreadPool.QueueUserWorkItem(delegate
             {
-                Character = character,
-                CalculationToOptimize = calculationToOptimize,
-                Requirements = requirements,
-                Thoroughness = thoroughness,
-                InjectCharacter = injectCharacter
-            };
-            ThreadPool.QueueUserWorkItem(new WaitCallback(OptimizeCharacterThreadStart), state);
-#else
-            optimizeCharacterThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, injectCharacter, null, null);
-#endif
+                OptimizeCharacterThreadStart(character, calculationToOptimize, requirements, thoroughness, injectCharacter);
+            });
         }
 
-#if SILVERLIGHT 
-        private void OptimizeCharacterThreadStart(object o)
-        {
-            OptimizeCharacterState state = o as OptimizeCharacterState;
-            Exception error = null;
-            Character optimizedCharacter = null;
-            float optimizedCharacterValue = 0.0f;
-            float currentCharacterValue = 0.0f;
-            bool injected = false;
-            try
-            {
-                optimizedCharacter = PrivateOptimizeCharacter(state.Character, state.CalculationToOptimize,
-                    state.Requirements, state.Thoroughness, state.InjectCharacter, out injected, out error);
-                if (optimizedCharacter != null)
-                {
-                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false), state.CalculationToOptimize, state.Requirements);
-                }
-                else
-                {
-                    if (error == null) error = new NullReferenceException();
-                }
-                currentCharacterValue = GetOptimizationValue(state.Character,
-                    model.GetCharacterCalculations(state.Character, null, false, optimizeTalents, false), state.CalculationToOptimize, state.Requirements);
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate,
-                new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue,
-                    state.Character, currentCharacterValue, injected, error, cancellationPending));
-        }
-#endif
         private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, bool injectCharacter)
         {
             Exception error = null;
@@ -779,17 +717,6 @@ namespace Rawr.Optimizer
             ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, null);
         }
 
-#if SILVERLIGHT
-        private class ComputeUpgradesState
-        {
-            public Character Character { get; set; }
-            public string CalculationToOptimize { get; set; }
-            public OptimizationRequirement[] Requirements { get; set; }
-            public int Thoroughness { get; set; }
-            public Item SingleItemUpgrades { get; set; }
-        }
-#endif
-
         public void ComputeUpgradesAsync(Character character, int thoroughness, Item singleItemUpgrades)
         {
             ComputeUpgradesAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, singleItemUpgrades);
@@ -801,39 +728,11 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-#if SILVERLIGHT
-            ComputeUpgradesState state = new ComputeUpgradesState()
+            ThreadPool.QueueUserWorkItem(delegate
             {
-                Character = character,
-                CalculationToOptimize = calculationToOptimize,
-                Requirements = requirements.ToArray(),
-                Thoroughness = thoroughness,
-                SingleItemUpgrades = singleItemUpgrades
-            };
-            ThreadPool.QueueUserWorkItem(new WaitCallback(ComputeUpgradesThreadStart), state);
-#else
-            computeUpgradesThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, null, null);
-#endif
+                ComputeUpgradesThreadStart(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades);
+            });
         }
-
-#if SILVERLIGHT
-        private void ComputeUpgradesThreadStart(object o)
-        {
-            ComputeUpgradesState state = o as ComputeUpgradesState;
-            Exception error = null;
-            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
-            try
-            {
-                upgrades = PrivateComputeUpgrades(state.Character, state.CalculationToOptimize,
-                    new List<OptimizationRequirement>(state.Requirements), state.Thoroughness, state.SingleItemUpgrades, out error);
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
-        }
-#endif
 
         private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades)
         {
@@ -850,17 +749,6 @@ namespace Rawr.Optimizer
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
 
-#if SILVERLIGHT
-        private class EvaluateUpgradesState
-        {
-            public Character Character { get; set; }
-            public string CalculationToOptimize { get; set; }
-            public OptimizationRequirement[] Requirements { get; set; }
-            public int Thoroughness { get; set; }
-            public ItemInstance Upgrade { get; set; }
-        }
-#endif
-
         public void EvaluateUpgradeAsync(Character character, int thoroughness, ItemInstance upgrade)
         {
             EvaluateUpgradeAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, upgrade);
@@ -872,40 +760,11 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-#if SILVERLIGHT
-            EvaluateUpgradesState state = new EvaluateUpgradesState()
+            ThreadPool.QueueUserWorkItem(delegate
             {
-                Character = character,
-                CalculationToOptimize = calculationToOptimize,
-                Requirements = requirements.ToArray(),
-                Thoroughness = thoroughness,
-                Upgrade = upgrade
-            };
-            ThreadPool.QueueUserWorkItem(new WaitCallback(EvaluateUpgradeThreadStart), state);
-#else
-            evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, null, null);
-#endif
+                EvaluateUpgradeThreadStart(character, calculationToOptimize, requirements, thoroughness, upgrade);
+            });
         }
-
-#if SILVERLIGHT
-        private void EvaluateUpgradeThreadStart(object o)
-        {
-            EvaluateUpgradesState state = o as EvaluateUpgradesState;
-            Exception error = null;
-            ComparisonCalculationUpgrades comparisonUpgrade = null;
-            float upgradeValue = 0f;
-            try
-            {
-                upgradeValue = PrivateEvaluateUpgrade(state.Character, state.CalculationToOptimize,
-                    new List<OptimizationRequirement>(state.Requirements), state.Thoroughness, state.Upgrade, out error, out comparisonUpgrade);
-            }
-            catch (Exception ex)
-            {
-                error = ex;
-            }
-            asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, comparisonUpgrade, error, cancellationPending));
-        }
-#endif
 
         private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, ItemInstance upgrade)
         {
