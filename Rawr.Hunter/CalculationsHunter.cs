@@ -2759,7 +2759,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
-                float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
+                //float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
                 float arpToHardCap = StatConversion.RATING_PER_ARMORPENETRATION;
                 if (effect.Stats.ArmorPenetrationRating > 0) {
                     float arpenBuffs = 0.0f;
@@ -2838,7 +2838,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                             break;
                     }
                 }
-                effect.Stats.ArmorPenetrationRating = oldArp;
+                //effect.Stats.ArmorPenetrationRating = oldArp;
             }
 
             return statsProcs;
