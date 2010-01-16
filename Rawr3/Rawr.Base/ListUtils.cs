@@ -49,6 +49,10 @@ namespace Rawr
             return new List<TOutput>((from item in source select converter(item)));
         }
 
+        public static bool Exists<T>(this IList<T> source, Predicate<T> match)
+        {
+            return FindIndex(source, match) != -1;
+        }
 
         public static int FindIndex<T>(this IList<T> source, Predicate<T> match)
         {

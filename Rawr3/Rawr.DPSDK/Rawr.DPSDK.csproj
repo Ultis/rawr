@@ -57,6 +57,12 @@
     <Compile Include="..\..\Rawr.DPSDK\Ability.cs">
       <Link>Ability.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\AbilityHandler.cs">
+      <Link>AbilityHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\BloodCycle.cs">
+      <Link>BloodCycle.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\CalculationOptionsDPSDK.cs">
       <Link>CalculationOptionsDPSDK.cs</Link>
     </Compile>
@@ -75,23 +81,25 @@
     <Compile Include="..\..\Rawr.DPSDK\DRW.cs">
       <Link>DRW.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\FrostCycle.cs">
+      <Link>FrostCycle.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.DPSDK\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\UnholyCycle.cs">
+      <Link>UnholyCycle.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\Weapon.cs">
       <Link>Weapon.cs</Link>
     </Compile>
-    <Compile Include="AbilityHandler.cs" />
-    <Compile Include="BloodCycle.cs" />
     <Compile Include="CalculationOptionsPanelDPSDK.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSDK.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FrostCycle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnholyCycle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
