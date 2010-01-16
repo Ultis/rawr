@@ -151,7 +151,7 @@ namespace Manas.Silverlight
         internal SuggestHandler SuggestHandler { get; set; }
 
         void textBox_LostFocus(object sender, RoutedEventArgs e) {
-            object elem = FocusManager.GetFocusedElement();
+            object elem = App.GetFocusedElement();
             if (elem == listBox) {
                 return;
             }
@@ -226,7 +226,7 @@ namespace Manas.Silverlight
                 listBox.Items.Add(suggestion);
             }
 
-            this.listBox.Dispatcher.BeginInvoke(() =>
+            this.listBox.Dispatcher.BeginInvoke((Action) delegate
             {
                 listBox.SelectedIndex = 0;
             });

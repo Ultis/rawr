@@ -90,8 +90,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="BuffsControl.xaml.cs">
+    <Compile Include="BossHandler\BossPicker.xaml.cs">
+      <DependentUpon>BossPicker.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buffs\BuffsControl.xaml.cs">
       <DependentUpon>BuffsControl.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buffs\SaveBuffSetDialog.xaml.cs">
+      <DependentUpon>SaveBuffSetDialog.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalculationDisplay.xaml.cs">
       <DependentUpon>CalculationDisplay.WPF.xaml</DependentUpon>
@@ -131,6 +137,7 @@
     <Compile Include="Dialogs\IncreaseQuota.xaml.cs">
       <DependentUpon>IncreaseQuota.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ManasAutoCompleting.cs" />
     <Compile Include="Dialogs\OptionsDialog.xaml.cs">
       <DependentUpon>OptionsDialog.WPF.xaml</DependentUpon>
     </Compile>
@@ -147,6 +154,9 @@
       <DependentUpon>Status.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileUtils.cs" />
+    <Compile Include="ChartPicker.xaml.cs">
+      <DependentUpon>ChartPicker.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GraphDisplay.xaml.cs">
       <DependentUpon>GraphDisplay.WPF.xaml</DependentUpon>
     </Compile>
@@ -243,6 +253,10 @@
       <Project>{5CB75C8B-6144-4B13-A2EA-00190C0A6D9D}</Project>
       <Name>Rawr.DPSWarr.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Elemental\Rawr.Elemental.WPF.csproj">
+      <Project>{48F82E5A-5B78-4D87-8AE2-1949BAF278EF}</Project>
+      <Name>Rawr.Elemental.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.WPF.csproj">
       <Project>{A4D7BC16-018B-4C0E-9C8B-6D766557D926}</Project>
       <Name>Rawr.Enhance.WPF</Name>
@@ -250,6 +264,14 @@
     <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.WPF.csproj">
       <Project>{E9AE8EB0-ABC4-41A4-AEDA-735A272887C1}</Project>
       <Name>Rawr.Healadin.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.HolyPriest\Rawr.HolyPriest.WPF.csproj">
+      <Project>{6B85524B-DB76-48EC-9999-A01A92E07CA4}</Project>
+      <Name>Rawr.HolyPriest.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Hunter\Rawr.Hunter.WPF.csproj">
+      <Project>{35B1AB81-6904-4959-90A8-BB9D89AA281D}</Project>
+      <Name>Rawr.Hunter.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.WPF.csproj">
       <Project>{C61A1D1A-21F8-4234-9085-5ECD33978DEF}</Project>
@@ -259,9 +281,17 @@
       <Project>{9334FFDE-D900-4164-BB15-FADB5A67E73F}</Project>
       <Name>Rawr.Moonkin.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.ProtPaladin\Rawr.ProtPaladin.WPF.csproj">
+      <Project>{C15F1991-6025-482E-81AF-17F310EE44D3}</Project>
+      <Name>Rawr.ProtPaladin.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.ProtWarr\Rawr.ProtWarr.WPF.csproj">
       <Project>{031BCFCE-8351-4187-8D7E-62999832AC22}</Project>
       <Name>Rawr.ProtWarr.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.RestoSham\Rawr.RestoSham.WPF.csproj">
+      <Project>{65A27658-C58D-42F0-A376-62824F5072DA}</Project>
+      <Name>Rawr.RestoSham.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.WPF.csproj">
       <Project>{C302699A-E850-44B2-BF09-5E696E106735}</Project>
@@ -271,17 +301,41 @@
       <Project>{542D6AC9-0436-4347-B737-714F20E73EB7}</Project>
       <Name>Rawr.Rogue.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj">
+      <Project>{0BC8C107-19BF-4103-B4DB-345F970C9C2F}</Project>
+      <Name>Rawr.ShadowPriest.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.WPF.csproj">
+      <Project>{6A791E89-09CA-4B38-8077-B06E82BF1F04}</Project>
+      <Name>Rawr.TankDK.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.WPF.csproj">
       <Project>{23BD5E7F-6195-4819-911B-B78578D71802}</Project>
       <Name>Rawr.Tree.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.Warlock\Rawr.Warlock.WPF.csproj">
+      <Project>{461E01F3-6B4B-4669-B728-B06D7C71CCE3}</Project>
+      <Name>Rawr.Warlock.WPF</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="BuffsControl.WPF.xaml">
+    <Page Include="BossHandler\BossPicker.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buffs\BuffsControl.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buffs\SaveBuffSetDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CalculationDisplay.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChartPicker.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

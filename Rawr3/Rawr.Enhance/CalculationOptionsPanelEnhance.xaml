@@ -9,7 +9,6 @@
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 	xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
 	xmlns:System="clr-namespace:System;assembly=mscorlib" 
     x:Class="Rawr.Enhance.CalculationOptionsPanelEnhance"
 	d:DesignWidth="297" d:DesignHeight="469" 

@@ -86,7 +86,7 @@ namespace XamlSync
                 // could do something more sophisticated here, for now ignore any lines with xmlns in them
                 if (slLine != null && !slLine.Contains("xmlns"))
                 {
-                    if (slLine != wpfLine)
+                    if (ConvertSL2WPF(slLine) != wpfLine)
                     {
                         needsSync = true;
                         break;
@@ -115,14 +115,28 @@ namespace XamlSync
             }
         }
 
+        private static string ConvertSL2WPF(string line)
+        {
+            //CacheMode="BitmapCache"
+            line = Regex.Replace(line, "CacheMode\\s*=\\s*\"BitmapCache\"", "d:CacheMode=\"BitmapCache\"");
+            return line;
+        }
+
+        private static string ConvertWPF2SL(string line)
+        {
+            //CacheMode="BitmapCache"
+            line = Regex.Replace(line, "d:CacheMode\\s*=\\s*\"BitmapCache\"", "CacheMode=\"BitmapCache\"");
+            return line;
+        }
+
         public static void GenerateSlXaml(string source, string target)
         {
-            GenerateXaml(source, target, slMap);
+            GenerateXaml(source, target, slMap, false);
         }
 
         public static void GenerateWpfXaml(string source, string target)
         {
-            GenerateXaml(source, target, wpfMap);
+            GenerateXaml(source, target, wpfMap, true);
         }
 
         public static string GetTempFileName(string extension) 
@@ -132,7 +146,7 @@ namespace XamlSync
             return Path.Combine(path, fileName);
         }
 
-        public static void GenerateXaml(string source, string target, Dictionary<string, string> xmlnsMap)
+        public static void GenerateXaml(string source, string target, Dictionary<string, string> xmlnsMap, bool targetWPF)
         {
             string sourceText = File.ReadAllText(source);
             string targetText = Regex.Replace(sourceText, "(xmlns:\\w+)\\s*=\\s*(\"[^\"]+\")", m =>
@@ -145,6 +159,14 @@ namespace XamlSync
                     }
                     return xmlns + "=" + name;
                 });
+            if (targetWPF)
+            {
+                targetText = ConvertSL2WPF(targetText);
+            }
+            else
+            {
+                targetText = ConvertWPF2SL(targetText);
+            }
             if (File.Exists(target))
             {
                 FileInfo info = new FileInfo(target);

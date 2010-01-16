@@ -56,23 +56,35 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Base\Algorithms\ArrayPool.cs">
+      <Link>Algorithms\ArrayPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Algorithms\LU.cs">
+      <Link>Algorithms\LU.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Algorithms\MarkovProcess.cs">
+      <Link>Algorithms\MarkovProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Algorithms\StateSpace.cs">
+      <Link>Algorithms\StateSpace.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\AvailableItemGenerator.cs">
       <Link>AvailableItemGenerator.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Bosses.cs">
-      <Link>Bosses.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\Bosses.cs">
+      <Link>Bosses\Bosses.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Bosses2.cs">
-      <Link>Bosses2.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\Bosses2.cs">
+      <Link>Bosses\Bosses2.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\BossHandler.cs">
-      <Link>BossHandler.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossHandler.cs">
+      <Link>Bosses\BossHandler.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\BossList.cs">
-      <Link>BossList.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossList.cs">
+      <Link>Bosses\BossList.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Buff.cs">
       <Link>Buff.cs</Link>
@@ -88,6 +100,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\ClassTalents.cs">
       <Link>ClassTalents.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\CustomControls\ErrorBox.cs">
+      <Link>CustomControls\ErrorBox.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Enchant.cs">
       <Link>Enchant.cs</Link>
@@ -113,6 +128,12 @@
     <Compile Include="..\..\Rawr.Base\OptimizerResults.cs">
       <Link>OptimizerResults.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\Profs.cs">
+      <Link>Profs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SavedBuffSet.cs">
+      <Link>SavedBuffSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs">
       <Link>SavedTalentSpec.cs</Link>
     </Compile>
@@ -121,6 +142,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\SerializableDictionary.cs">
       <Link>SerializableDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialDamageProcs.cs">
+      <Link>SpecialDamageProcs.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\SpecialEffect.cs">
       <Link>SpecialEffect.cs</Link>
@@ -160,6 +184,7 @@
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\NetworkSettings.cs" />
     <Compile Include="Settings\OptimizerSettings.cs" />
+    <Compile Include="Settings\RecentSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="XMLUtils.cs" />
     <None Include="app.config" />

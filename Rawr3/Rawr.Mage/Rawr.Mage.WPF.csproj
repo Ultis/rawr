@@ -83,6 +83,9 @@
     <Compile Include="..\..\Rawr.Mage\ComparisonCalculationMage.cs">
       <Link>ComparisonCalculationMage.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Mage\Encounter.cs">
+      <Link>Encounter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Mage\FSRCalc.cs">
       <Link>FSRCalc.cs</Link>
     </Compile>

@@ -112,7 +112,7 @@ namespace Rawr.UI
             CalculationDisplay.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
             this.Cursor = Cursors.Arrow;
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
+			System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
 #endif
         }
 

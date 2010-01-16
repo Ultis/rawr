@@ -8,7 +8,7 @@
     <ProjectGuid>{41D24B8B-EAD2-46BF-BBF2-79E814F51D69}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rawr.Bear.WPF</RootNamespace>
+    <RootNamespace>Rawr.Bear</RootNamespace>
     <AssemblyName>Rawr.Bear.WPF</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,6 +41,14 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WpfControls\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WpfControls\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -52,6 +60,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Rawr.Bear\BearRotationCalculator.cs">
@@ -63,6 +72,7 @@
     <Compile Include="..\..\Rawr.Bear\CalculationsBear.cs">
       <Link>CalculationsBear.cs</Link>
     </Compile>
+    <Compile Include="CalculationOptionsConverters.cs" />
     <Compile Include="CalculationOptionsPanelBear.xaml.cs">
       <DependentUpon>CalculationOptionsPanelBear.WPF.xaml</DependentUpon>
       <SubType>Code</SubType>

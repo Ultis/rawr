@@ -181,7 +181,7 @@ namespace Rawr.UI
                 maxScale = (float)Math.Ceiling(maxScale / totalScale * 8f) * (totalScale / 8f);
 			}
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase A: {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds);
+			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase A: {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
 			DateTime dtB = DateTime.Now;
 #endif
 
@@ -194,7 +194,7 @@ namespace Rawr.UI
             else
 				orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)Sort]);
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase B: {0}ms", DateTime.Now.Subtract(dtB).TotalMilliseconds);
+			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase B: {0}ms", DateTime.Now.Subtract(dtB).TotalMilliseconds));
 			DateTime dtC = DateTime.Now;
 #endif
 			foreach (ComparisonCalculationBase c in orderedCalcs)
@@ -229,13 +229,13 @@ namespace Rawr.UI
                 i++;
 			}
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase C: {0}ms", DateTime.Now.Subtract(dtC).TotalMilliseconds);
+			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase C: {0}ms", DateTime.Now.Subtract(dtC).TotalMilliseconds));
 			DateTime dtD = DateTime.Now;
 #endif
 			for (; i < comparisonItems.Count; i++) comparisonItems[i].Visibility = Visibility.Collapsed;
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine("DisplayCalcs Phase D: {0}ms", DateTime.Now.Subtract(dtD).TotalMilliseconds);
-			System.Diagnostics.Debug.WriteLine("Finished DisplayCalcs: Total {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds);
+			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase D: {0}ms", DateTime.Now.Subtract(dtD).TotalMilliseconds));
+			System.Diagnostics.Debug.WriteLine(string.Format("Finished DisplayCalcs: Total {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
 #endif
         }
 

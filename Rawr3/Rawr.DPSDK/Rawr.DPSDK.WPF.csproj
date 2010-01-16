@@ -54,6 +54,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.DPSDK\Ability.cs">
+      <Link>Ability.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\AbilityHandler.cs">
+      <Link>AbilityHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\BloodCycle.cs">
+      <Link>BloodCycle.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\CalculationOptionsDPSDK.cs">
       <Link>CalculationOptionsDPSDK.cs</Link>
     </Compile>
@@ -72,11 +81,17 @@
     <Compile Include="..\..\Rawr.DPSDK\DRW.cs">
       <Link>DRW.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\FrostCycle.cs">
+      <Link>FrostCycle.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.DPSDK\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\UnholyCycle.cs">
+      <Link>UnholyCycle.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.DPSDK\Weapon.cs">
       <Link>Weapon.cs</Link>
