@@ -191,7 +191,9 @@ namespace Rawr.Tree {
         private int sustainedTarget;
         private int survValuePer100; // 100 Survival Points = 1 HPS (Survival Points = Health / (1-ArmorDamage Reduction)
         private int singleTargetRotation;
-        private bool ignoreNaturesGrace, ignoreAllHasteEffects;
+        private bool ignoreNaturesGrace;
+        private int procType;
+
         private List<SpellProfile> profiles;
         private SpellProfile current;
 
@@ -207,7 +209,7 @@ namespace Rawr.Tree {
             current = new SpellProfile();
 
             IgnoreNaturesGrace = true;
-            IgnoreAllHasteEffects = true;
+            ProcType = 0;
 
         }
         public string GetXml() {
@@ -225,7 +227,7 @@ namespace Rawr.Tree {
 
         public int SingleTargetRotation { get { return singleTargetRotation; } set { singleTargetRotation = value; OnPropertyChanged("SingleTargetRotation"); } }
         public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
-        public bool IgnoreAllHasteEffects { get { return ignoreAllHasteEffects; } set { ignoreAllHasteEffects = value; OnPropertyChanged("IgnoreAllHasteEffects"); } }
+        public int ProcType { get { return procType; } set { procType = value; OnPropertyChanged("ProcType"); } }
 
 
         #region INotifyPropertyChanged Members

@@ -70,7 +70,25 @@ namespace Rawr.Tree {
             lblIdleFraction.Text = "Idle time: " + tbIdlePercentage.Value + "%.";
 
             cbIgnoreNaturesGrace.Checked = calcOpts.IgnoreNaturesGrace;
-            cbIgnoreAllHasteEffects.Checked = calcOpts.IgnoreAllHasteEffects;
+            switch (calcOpts.ProcType)
+            {
+                case 0:
+                default:
+                    rbProcsNone.Checked = true;
+                    rbProcsAverage.Checked = false;
+                    rbProcsMax.Checked = false;
+                    break;
+                case 1:
+                    rbProcsNone.Checked = false;
+                    rbProcsAverage.Checked = true;
+                    rbProcsMax.Checked = false;
+                    break;
+                case 2:
+                    rbProcsNone.Checked = false;
+                    rbProcsAverage.Checked = false;
+                    rbProcsMax.Checked = true;
+                    break;
+            }
 
             tbRevitalize.Value = calcOpts.Current.RevitalizePPM;
             lblRevitalize.Text = "Revitalize procs per minute: " + (float)calcOpts.Current.RevitalizePPM;
@@ -516,15 +534,6 @@ namespace Rawr.Tree {
             calcOpts.IgnoreNaturesGrace = cbIgnoreNaturesGrace.Checked;
             Character.OnCalculationsInvalidated();
         }
-
-        private void cbIgnoreAllHasteEffects_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.IgnoreAllHasteEffects = cbIgnoreAllHasteEffects.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
 
         private void tbRejuvRevitalize_Scroll(object sender, EventArgs e)
         {
@@ -1238,6 +1247,51 @@ namespace Rawr.Tree {
             {
                 lbTimeAdjust.SelectedIndex = index;
             }
+        }
+
+        private void rbProcsNone_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            if (rbProcsNone.Checked)
+            {
+                calcOpts.ProcType = 0;
+                rbProcsAverage.Checked = false;
+                rbProcsMax.Checked = false;
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void rbProcsAverage_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            if (rbProcsAverage.Checked)
+            {
+                calcOpts.ProcType = 1;
+                rbProcsNone.Checked = false;
+                rbProcsMax.Checked = false;
+            }
+
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void rbProcsMax_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+            if (rbProcsMax.Checked)
+            {
+                calcOpts.ProcType = 2;
+                rbProcsNone.Checked = false;
+                rbProcsAverage.Checked = false;
+            }
+
+            Character.OnCalculationsInvalidated();
         }
     }
 }

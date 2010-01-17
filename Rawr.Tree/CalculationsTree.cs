@@ -540,7 +540,14 @@ applied and result is scaled down by 100)",
             triggerChances[Trigger.RejuvenationTick] = 1f;
         }
 
-        private void DoSpecialEffects(Character character, Stats stats, CombatFactors cf, float TotalTime, List<float> hasteRatings, List<float> hasteRatingUptimes)
+        public enum ProcCalc
+        {
+            None,
+            Average,
+            Max
+        };
+
+        private void DoSpecialEffects(Character character, Stats stats, CombatFactors cf, float TotalTime, List<float> hasteRatings, List<float> hasteRatingUptimes, ProcCalc pc)
         {
             #region Initialize Triggers
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>(); ;
@@ -594,10 +601,17 @@ applied and result is scaled down by 100)",
             }
 
             #region Calculate Haste Breakdown
-            if (tempHasteEffects.Count == 0)
+            if (tempHasteEffects.Count == 0 || pc == ProcCalc.None)
             {
                 hasteRatings.Add(0.0f);
                 hasteRatingUptimes.Add(1.0f);
+            }
+            else if (pc == ProcCalc.Max)
+            {
+                float hasteRating = 0;
+                for (int i = 0; i < tempHasteEffects.Count; i++) hasteRating += tempHasteEffects[i].Stats.HasteRating;
+                hasteRatings.Add(hasteRating);
+                hasteRatingUptimes.Add(1f);
             }
             else if (tempHasteEffects.Count == 1)
             {   //Only one, add it to
@@ -637,7 +651,7 @@ applied and result is scaled down by 100)",
             #endregion
             */
 
-            AccumulateSpecialEffects(character, ref stats, TotalTime, triggerIntervals, triggerChances, effects, 1f);
+            AccumulateSpecialEffects(character, ref stats, TotalTime, triggerIntervals, triggerChances, effects, 1f, pc);
 
             #region Clear special effects from Stats
             for (int i = 0; i < stats._rawSpecialEffectDataSize; i++) stats._rawSpecialEffectData[i] = null;
@@ -645,7 +659,7 @@ applied and result is scaled down by 100)",
             #endregion
         }
 
-        protected void AccumulateSpecialEffects(Character character, ref Stats stats, float FightDuration, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, List<SpecialEffect> effects, float weight) 
+        protected void AccumulateSpecialEffects(Character character, ref Stats stats, float FightDuration, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, List<SpecialEffect> effects, float weight, ProcCalc pc) 
         {
             foreach (SpecialEffect effect in effects) 
             {
@@ -664,7 +678,7 @@ applied and result is scaled down by 100)",
                         upTime = effect.GetAverageUptime(0f, 1f, 0, FightDuration);
                         List<SpecialEffect> nestedEffect = new List<SpecialEffect>(effect.Stats.SpecialEffects());
                         Stats _stats2 = effectStats.Clone();
-                        AccumulateSpecialEffects(character, ref _stats2, effect.Duration, triggerIntervals, triggerChances, nestedEffect, upTime);
+                        AccumulateSpecialEffects(character, ref _stats2, effect.Duration, triggerIntervals, triggerChances, nestedEffect, upTime, pc);
                         effectStats = _stats2;
                     }
                     else
@@ -685,7 +699,49 @@ applied and result is scaled down by 100)",
 
                 if (upTime > 0f)
                 {
-                    stats.Accumulate(effectStats, upTime*weight);
+                    if (pc == ProcCalc.None && upTime < 0.5f)
+                    {
+                        Stats s = new Stats()
+                        {
+                            SpellPower = effectStats.SpellPower,
+                            CritRating = effectStats.CritRating,
+                            //HasteRating = effectStats.HasteRating,
+                            SpellHaste = effectStats.SpellHaste
+                        };
+                        effectStats.SpellPower = 0;
+                        effectStats.CritRating = 0;
+                        //effectStats.HasteRating = 0;
+                        effectStats.SpellHaste = 0;
+                        stats.Accumulate(effectStats, upTime * weight);
+                        effectStats.SpellPower = s.SpellPower;
+                        effectStats.CritRating = s.CritRating;
+                        //effectStats.HasteRating = s.HasteRating;
+                        effectStats.SpellHaste = s.SpellHaste;
+                    }
+                    else if (pc == ProcCalc.Max && upTime < 0.5f)
+                    {
+                        Stats s = new Stats()
+                        {
+                            SpellPower = effectStats.SpellPower,
+                            CritRating = effectStats.CritRating,
+                            //HasteRating = effectStats.HasteRating,
+                            SpellHaste = effectStats.SpellHaste
+                        };
+                        effectStats.SpellPower = 0;
+                        effectStats.CritRating = 0;
+                        //effectStats.HasteRating = 0;
+                        effectStats.SpellHaste = 0;
+                        stats.Accumulate(effectStats, upTime * weight);
+                        effectStats.SpellPower = s.SpellPower;
+                        effectStats.CritRating = s.CritRating;
+                        //effectStats.HasteRating = s.HasteRating;
+                        effectStats.SpellHaste = s.SpellHaste;
+                        stats.Accumulate(s, weight);
+                    }
+                    else
+                    {
+                        stats.Accumulate(effectStats, upTime * weight);
+                    }
                 }
             }
         }
@@ -716,6 +772,20 @@ applied and result is scaled down by 100)",
             List<float> hasteRatings = new List<float>();
             List<float> hasteRatingUptimes = new List<float>();
 
+            ProcCalc pc = ProcCalc.None;
+            switch (calcOpts.ProcType)
+            {
+                case 0:
+                    pc = ProcCalc.None;
+                    break;
+                case 1:
+                    pc = ProcCalc.Average;
+                    break;
+                case 2:
+                    pc = ProcCalc.Max;
+                    break;
+            }
+
             CombatFactors cfs = rot.getCombatFactors();
             cfs.Compute();
 
@@ -726,7 +796,7 @@ applied and result is scaled down by 100)",
 
                 hasteRatings.Clear();
                 hasteRatingUptimes.Clear();
-                DoSpecialEffects(character, stats, cfs, rot.TotalTime, hasteRatings, hasteRatingUptimes);
+                DoSpecialEffects(character, stats, cfs, rot.TotalTime, hasteRatings, hasteRatingUptimes, pc);
 
                 // Add replenish
                 replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
@@ -735,7 +805,7 @@ applied and result is scaled down by 100)",
 
                 ExtraHealing = stats.Healed;
 
-                if (calcOpts.IgnoreAllHasteEffects)
+                if (false)//calcOpts.IgnoreAllHasteEffects)
                 {
                     stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
                     stats.HasteRating = calculationResult.BasicStats.HasteRating;
