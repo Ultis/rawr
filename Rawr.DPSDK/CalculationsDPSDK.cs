@@ -152,7 +152,7 @@ namespace Rawr.DPSDK
         private string[] _customChartNames = null;
         public override string[] CustomChartNames {
             get {
-                if (_customChartNames == null) { _customChartNames = new string[] { "Item Budget"/*, "MH Weapon Speed", "OH Weapon Speed"*/ }; }
+                if (_customChartNames == null) { _customChartNames = new string[] { "Item Budget (10 point steps)", "Item Budget (25 point steps)", "Item Budget (50 point steps)", "Item Budget (100 point steps)"/*, "MH Weapon Speed", "OH Weapon Speed"*/ }; }
                 return _customChartNames;
             }
         }
@@ -260,13 +260,8 @@ namespace Rawr.DPSDK
             float dpsWhiteMinusGlancing = 0f;
             float fightDuration = calcOpts.FightLength * 60;
             float mitigation;
-            float KMProcsPerRotation = 0f;
+            //float KMProcsPerRotation = 0f;
             float CinderglacierMultiplier = 1f;
-
-    /*        if (additionalItem == null || additionalItem.Name != "bananas")
-            {
-                Rotation r = GenerateRotation(character, stats, talents, combatTable, calcOpts);
-            }*/
 
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
@@ -302,46 +297,8 @@ namespace Rawr.DPSDK
 
 
             {
-
                 float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.05f);	//an OH multiplier that is useful sometimes
-                Boolean PTR = false; // enable and disable PTR things here
-
-                
-                Rotation temp = new Rotation();
-                temp.ManagedRP = calcOpts.rotation.ManagedRP;
-                temp.AvgDiseaseMult = calcOpts.rotation.AvgDiseaseMult;
-                temp.BloodPlague = calcOpts.rotation.BloodPlague;
-                temp.BloodStrike = calcOpts.rotation.BloodStrike;
-                temp.CurRotationDuration = calcOpts.rotation.CurRotationDuration;
-                temp.curRotationType = calcOpts.rotation.curRotationType;
-                temp.DancingRuneWeapon = calcOpts.rotation.DancingRuneWeapon;
-                temp.DeathCoil = calcOpts.rotation.DeathCoil;
-                temp.DeathStrike = calcOpts.rotation.DeathStrike;
-                temp.DiseaseUptime = calcOpts.rotation.DiseaseUptime;
-                temp.FrostFever = calcOpts.rotation.FrostFever;
-                temp.FrostStrike = calcOpts.rotation.FrostStrike;
-                temp.GargoyleDuration = calcOpts.rotation.GargoyleDuration;
-                temp.GCDTime = calcOpts.rotation.GCDTime;
-                temp.GhoulFrenzy = calcOpts.rotation.GhoulFrenzy;
-                temp.HeartStrike = calcOpts.rotation.HeartStrike;
-                temp.Horn = calcOpts.rotation.Horn;
-                temp.HowlingBlast = calcOpts.rotation.HowlingBlast;
-                temp.IcyTouch = calcOpts.rotation.IcyTouch;
-                temp.NumDisease = calcOpts.rotation.NumDisease;
-                temp.Obliterate = calcOpts.rotation.Obliterate;
-                temp.Pestilence = calcOpts.rotation.Pestilence;
-                temp.PlagueStrike = calcOpts.rotation.PlagueStrike;
-                temp.presence = calcOpts.rotation.presence;
-                temp.PTRCalcs = calcOpts.rotation.PTRCalcs || PTR;
-                temp.RP = calcOpts.rotation.RP;
-                temp.ScourgeStrike = calcOpts.rotation.ScourgeStrike;
-                temp.HowlingBlast += talents.Rime * calcOpts.rotation.Obliterate * 0.05f + 
-                    (combatTable.DW ? (talents.ThreatOfThassarian / 3) * talents.Rime * calcOpts.rotation.Obliterate * .05f * (1 - talents.Rime * .05f) : 0);
-                    //OH Oblit hits can proc rime as well
-                if (temp.ManagedRP)
-                {
-                    temp.getRP(talents, character);
-                }
+                //Boolean PTR = false; // enable and disable PTR things here
 
                 #region Impurity Application
                 {
@@ -363,7 +320,7 @@ namespace Rawr.DPSDK
                 }
                 #endregion
 
-                #region Killing Machine
+               /* #region Killing Machine
                 {
                     float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                     KMPpM *= calcOpts.KMProcUsage;
@@ -374,7 +331,7 @@ namespace Rawr.DPSDK
                     float totalAbilities = (float)(temp.FrostStrike + temp.IcyTouch + temp.HowlingBlast);
                     KMProcsPerRotation = (float)KMPpR;
                 }
-                #endregion
+                #endregion*/
 
                 
 
@@ -422,65 +379,7 @@ namespace Rawr.DPSDK
 
                 AbilityHandler abilities = new AbilityHandler(stats, combatTable, character, calcOpts);
 
-                #region Blood Caked Blade
-                {
-                    float dpsMHBCB = 0f;
-                    float dpsOHBCB = 0f;
-                    if ((combatTable.OH.damage != 0) && (DW || combatTable.MH.damage == 0))
-                    {
-                        float OHBCBDmg = (float)(combatTable.OH.damage * (.25f + .125f * temp.AvgDiseaseMult));
-                        dpsOHBCB = OHBCBDmg / combatTable.OH.hastedSpeed;
-                        dpsOHBCB *= OHMult;
-                    }
-                    if (combatTable.MH.damage != 0)
-                    {
-                        float MHBCBDmg = (float)(combatTable.MH.damage * (.25f + .125f * temp.AvgDiseaseMult));
-                        dpsMHBCB = MHBCBDmg / combatTable.MH.hastedSpeed;
-                    }
-                    dpsBCB = dpsMHBCB + dpsOHBCB;
-                    dpsBCB *= .1f * (float)talents.BloodCakedBlade;
-                }
-                #endregion
-                #region Bloodworms
-                {
-                    if (talents.Bloodworms > 0)
-                    {
-                        float BloodwormSwing = 50f + BloodwormsAPMult * stats.AttackPower;
-                        float BloodwormSwingDPS = BloodwormSwing / 2.0f;    // any haste benefits?
-                        float TotalBloodworms = ((fightDuration / combatTable.MH.hastedSpeed) + temp.getMeleeSpecialsPerSecond() * fightDuration)
-                            * (0.03f * talents.Bloodworms)
-                            * 3f; // 3 bloodworms per proc
-                        dpsBloodworms = ((TotalBloodworms * BloodwormSwingDPS * 20f) / fightDuration);
-                    }
-                }
-                #endregion
-
-                #region Trinket direct-damage procs, razorice damage, etc
-                {
-                    dpsOtherArcane = stats.ArcaneDamage;
-                    dpsOtherShadow = stats.ShadowDamage;
-                    dpsOtherFire = stats.FireDamage;
-                    dpsOtherFrost = stats.FrostDamage;
-
-                    // TODO: Differentiate between MH razorice and OH razorice. Hardly matters though, since razorice hits only based off of base damage
-                    if (combatTable.MH.baseDamage != 0 && combatTable.MH.hastedSpeed != 0)
-                    {
-                        dpsOtherFrost += stats.BonusFrostWeaponDamage * combatTable.MH.baseDamage / combatTable.MH.hastedSpeed;
-                    }
-                    if (combatTable.OH.baseDamage != 0 && combatTable.OH.hastedSpeed != 0)
-                    {
-                        dpsOtherFrost += stats.BonusFrostWeaponDamage * combatTable.OH.baseDamage / combatTable.OH.hastedSpeed;
-                    }
-                    if (DW) dpsOtherFrost /= 2f; //razorice only actually effects the weapon its on, not both. this is closer than it would be otherwise.
-
-                    float OtherCritDmgMult = .5f * (1f + stats.BonusCritMultiplier);
-                    float OtherCrit = 1f + ((combatTable.spellCrits) * OtherCritDmgMult);
-                    dpsOtherArcane *= OtherCrit;
-                    //dpsOtherShadow *= OtherCrit;
-                    dpsOtherFire *= OtherCrit;
-                    //dpsOtherFrost *= OtherCrit;
-                }
-                #endregion
+                
                 if (talents.HeartStrike > 0)
                 {
                     BloodCycle cycle = new BloodCycle(character, combatTable, stats, calcOpts, abilities);
@@ -516,10 +415,69 @@ namespace Rawr.DPSDK
                     // add something to handle stupid rotations here, that or tell people to go fist themselves.
                     r.copyRotation(calcOpts.rotation);
                 }
+                #region Blood Caked Blade
+                {
+                    float dpsMHBCB = 0f;
+                    float dpsOHBCB = 0f;
+                    if ((combatTable.OH.damage != 0) && (DW || combatTable.MH.damage == 0))
+                    {
+                        float OHBCBDmg = (float)(combatTable.OH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult));
+                        dpsOHBCB = OHBCBDmg / combatTable.OH.hastedSpeed;
+                        dpsOHBCB *= OHMult;
+                    }
+                    if (combatTable.MH.damage != 0)
+                    {
+                        float MHBCBDmg = (float)(combatTable.MH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult));
+                        dpsMHBCB = MHBCBDmg / combatTable.MH.hastedSpeed;
+                    }
+                    dpsBCB = dpsMHBCB + dpsOHBCB;
+                    dpsBCB *= .1f * (float)talents.BloodCakedBlade;
+                }
+                #endregion
+                #region Bloodworms
+                {
+                    if (talents.Bloodworms > 0)
+                    {
+                        float BloodwormSwing = 50f + BloodwormsAPMult * stats.AttackPower;
+                        float BloodwormSwingDPS = BloodwormSwing / 2.0f;    // any haste benefits?
+                        float TotalBloodworms = ((fightDuration / combatTable.MH.hastedSpeed) + calcOpts.rotation.getMeleeSpecialsPerSecond() * fightDuration)
+                            * (0.03f * talents.Bloodworms)
+                            * 3f; // 3 bloodworms per proc
+                        dpsBloodworms = ((TotalBloodworms * BloodwormSwingDPS * 20f) / fightDuration);
+                    }
+                }
+                #endregion
+
+                #region Trinket direct-damage procs, razorice damage, etc
+                {
+                    dpsOtherArcane = stats.ArcaneDamage;
+                    dpsOtherShadow = stats.ShadowDamage;
+                    dpsOtherFire = stats.FireDamage;
+                    dpsOtherFrost = stats.FrostDamage;
+
+                    // TODO: Differentiate between MH razorice and OH razorice. Hardly matters though, since razorice hits only based off of base damage
+                    if (combatTable.MH.baseDamage != 0 && combatTable.MH.hastedSpeed != 0)
+                    {
+                        dpsOtherFrost += stats.BonusFrostWeaponDamage * combatTable.MH.baseDamage / combatTable.MH.hastedSpeed;
+                    }
+                    if (combatTable.OH.baseDamage != 0 && combatTable.OH.hastedSpeed != 0)
+                    {
+                        dpsOtherFrost += stats.BonusFrostWeaponDamage * combatTable.OH.baseDamage / combatTable.OH.hastedSpeed;
+                    }
+                    if (DW) dpsOtherFrost /= 2f; //razorice only actually effects the weapon its on, not both. this is closer than it would be otherwise.
+
+                    float OtherCritDmgMult = .5f * (1f + stats.BonusCritMultiplier);
+                    float OtherCrit = 1f + ((combatTable.spellCrits) * OtherCritDmgMult);
+                    dpsOtherArcane *= OtherCrit;
+                    //dpsOtherShadow *= OtherCrit;
+                    dpsOtherFire *= OtherCrit;
+                    //dpsOtherFrost *= OtherCrit;
+                }
+                #endregion
                     
                     #region Gargoyle
                     {
-                        if (temp.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
+                        if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
                         {
                             float GargoyleCastTime = 2.0f;  //2.0 second base cast time
                             GargoyleCastTime *= combatTable.MH.hastedSpeed / combatTable.MH.baseSpeed;
@@ -596,7 +554,7 @@ namespace Rawr.DPSDK
 
                             if (talents.GhoulFrenzy > 0f)
                             {
-                                float GhoulFrenzyHaste = (float)(0.25f * (temp.GhoulFrenzy / combatTable.realDuration) * 30f);
+                                float GhoulFrenzyHaste = (float)(0.25f * (calcOpts.rotation.GhoulFrenzy / combatTable.realDuration) * 30f);
                                 GhoulhastedSpeed /= 1f + GhoulFrenzyHaste;
                             }
                             GhoulhastedSpeed /= 1f + statsBuffs.PhysicalHaste;
@@ -1070,7 +1028,9 @@ namespace Rawr.DPSDK
 
             switch (chartName)
             {
-                case "Item Budget":
+
+                    //"Item Budget (10 point steps)","Item Budget (25 point steps)","Item Budget(50 point steps)","Item Budget (100 point steps)"
+                case "Item Budget (10 point steps)":
                     Item[] itemList = new Item[] {
                         new Item() { Stats = new Stats() { Strength = 10 } },
                         new Item() { Stats = new Stats() { Agility = 10 } },
@@ -1112,7 +1072,135 @@ namespace Rawr.DPSDK
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
+                    
+                case "Item Budget (25 point steps)":
+                    Item[] itemList25 = new Item[] {
+                        new Item() { Stats = new Stats() { Strength = 10 * 2.5f } },
+                        new Item() { Stats = new Stats() { Agility = 10 * 2.5f } },
+                        new Item() { Stats = new Stats() { AttackPower = 20 * 2.5f } },
+                        new Item() { Stats = new Stats() { CritRating = 10 * 2.5f } },
+                        new Item() { Stats = new Stats() { HitRating = 10 * 2.5f } },
+                        new Item() { Stats = new Stats() { ExpertiseRating = 10 * 2.5f } },
+                        new Item() { Stats = new Stats() { HasteRating = 10 * 2.5f } },
+                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * 2.5f} },
+                    };
+                    string[] statList25 = new string[] {
+                        "Strength",
+                        "Agility",
+                        "Attack Power",
+                        "Crit Rating",
+                        "Hit Rating",
+                        "Expertise Rating",
+                        "Haste Rating",
+                        "Armor Penetration Rating",
+                    };
 
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+                    for (int index = 0; index < itemList25.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList25[index]) as CharacterCalculationsDPSDK;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList25[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+
+                case "Item Budget (50 point steps)":
+                    Item[] itemList50 = new Item[] {
+                        new Item() { Stats = new Stats() { Strength = 10 * 5f } },
+                        new Item() { Stats = new Stats() { Agility = 10 * 5f } },
+                        new Item() { Stats = new Stats() { AttackPower = 20 * 5f } },
+                        new Item() { Stats = new Stats() { CritRating = 10 * 5f } },
+                        new Item() { Stats = new Stats() { HitRating = 10 * 5f } },
+                        new Item() { Stats = new Stats() { ExpertiseRating = 10 * 5f } },
+                        new Item() { Stats = new Stats() { HasteRating = 10 * 5f } },
+                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * 5f} },
+                    };
+                    string[] statList50 = new string[] {
+                        "Strength",
+                        "Agility",
+                        "Attack Power",
+                        "Crit Rating",
+                        "Hit Rating",
+                        "Expertise Rating",
+                        "Haste Rating",
+                        "Armor Penetration Rating",
+                    };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+                    for (int index = 0; index < itemList50.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList50[index]) as CharacterCalculationsDPSDK;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList50[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+
+                case "Item Budget (100 point steps)":
+                    Item[] itemList100 = new Item[] {
+                        new Item() { Stats = new Stats() { Strength = 10 * 10f } },
+                        new Item() { Stats = new Stats() { Agility = 10 * 10f } },
+                        new Item() { Stats = new Stats() { AttackPower = 20 * 10f } },
+                        new Item() { Stats = new Stats() { CritRating = 10 * 10f } },
+                        new Item() { Stats = new Stats() { HitRating = 10 * 10f } },
+                        new Item() { Stats = new Stats() { ExpertiseRating = 10 * 10f } },
+                        new Item() { Stats = new Stats() { HasteRating = 10 * 10f } },
+                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * 10f} },
+                    };
+                    string[] statList100 = new string[] {
+                        "Strength",
+                        "Agility",
+                        "Attack Power",
+                        "Crit Rating",
+                        "Hit Rating",
+                        "Expertise Rating",
+                        "Haste Rating",
+                        "Armor Penetration Rating",
+                    };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+                    for (int index = 0; index < itemList100.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList100[index]) as CharacterCalculationsDPSDK;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList100[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
                 #region weapon speed charts
                 /*               case "MH Weapon Speed":
                     string[] speedList = new String[] {"1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8"};
