@@ -700,7 +700,15 @@ namespace Rawr.UI
             Dictionary<int, int> countItem = new Dictionary<int, int>();
             foreach (ComparisonCalculationBase itemCalculation in listItemCalculations)
             {
-                int itemId = itemCalculation.ItemInstance.Id;
+                int itemId = 0;
+                if (itemCalculation.ItemInstance != null)
+                {
+                    itemId = itemCalculation.ItemInstance.Id;
+                }
+                else if (itemCalculation.Item != null)
+                {
+                    itemId = itemCalculation.Item.Id;
+                }
                 if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
                 if (countItem[itemId]++ < maxGemmings ||
                     itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
