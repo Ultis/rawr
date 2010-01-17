@@ -519,11 +519,12 @@ namespace Rawr.UI
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }
         public void Show(UIElement relativeTo, double offsetX, double offsetY)
         {
+#if SILVERLIGHT
             GeneralTransform gt = relativeTo.TransformToVisual((UIElement)this.Parent);
             Point offset = gt.Transform(new Point(offsetX, offsetY));
             ItemPopup.VerticalOffset = offset.Y;
             ItemPopup.HorizontalOffset = offset.X;
-            ItemPopup.IsOpen = true;
+            ItemPopup.IsOpen = true;            
 
             ItemGrid.Measure(App.Current.RootVisual.DesiredSize);
 
@@ -535,6 +536,12 @@ namespace Rawr.UI
             {
                 ItemPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
             }
+#else
+            ItemPopup.PlacementTarget = relativeTo;
+            ItemPopup.PlacementRectangle = new Rect(0, offsetY, offsetX, relativeTo.RenderSize.Height);
+            ItemPopup.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
+            ItemPopup.IsOpen = true;
+#endif
         }
 
         public void Hide()
