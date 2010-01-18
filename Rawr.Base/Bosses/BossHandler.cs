@@ -148,6 +148,9 @@ namespace Rawr {
             "Tier 8.5",
             "Tier 9",
             "Tier 9.5",
+            "Tier 10",
+            "Tier 10.5",
+            "Tier 10.9",
         };
         protected readonly static string[] BossVersionStrings = new string[] {
             "10 Man",
@@ -156,7 +159,7 @@ namespace Rawr {
             "25 Man (H)",
         };
         public enum Versions   : int { V_10 = 0, V_25, V_10H, V_25H, }
-        public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, }
+        public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9 }
         public readonly float[] StandardMeleePerHit = new float[] {
               5000f*2f, //T7_0,
              10000f*2f, //T7_5,
@@ -164,6 +167,9 @@ namespace Rawr {
              30000f*2f, //T8_5,
              40000f*2f, //T9_0,
              50000f*2f, //T9_5,
+             60000f*2f, //T10_0,
+             70000f*2f, //T10_5,
+             80000f*2f, //T10_9,
         };
         #endregion
         // Basics

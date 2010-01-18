@@ -100,6 +100,18 @@ namespace Rawr {
                 // Trial of the Grand Crusader
                 // ==== Tier 9 (25) H Content ====
                 // Trial of the Grand Crusader
+                // ==== Tier 10 (10) Content ====
+                // Icecrown Citadel
+                new LordMarrowgar_10(),
+                // ==== Tier 10 (25) Content ====
+                // Icecrown Citadel
+                new LordMarrowgar_25(),
+                // ==== Tier 10 (10) H Content ====
+                // Icecrown Citadel
+                new LordMarrowgar_10H(),
+                // ==== Tier 10 (25) H Content ====
+                // Icecrown Citadel
+                new LordMarrowgar_25H(),
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);
             TheAvgBoss     = GenTheAvgBoss(list);
@@ -557,50 +569,62 @@ namespace Rawr {
                     foreach (BossHandler boss in passedList) {
                         attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_MELEE));
                     }
-                    float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                    foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
-                            perhit += a.DamagePerHit;
-                            numtrg += a.MaxNumTargets;
-                            atkspd += a.AttackSpeed;
+                    if (attacks.Count > 0)
+                    {
+                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
+                        foreach (Attack a in attacks)
+                        {
+                            if (a.Name != "Invalid")
+                            {
+                                perhit += a.DamagePerHit;
+                                numtrg += a.MaxNumTargets;
+                                atkspd += a.AttackSpeed;
+                            }
                         }
+                        perhit /= (float)attacks.Count;
+                        numtrg /= (float)attacks.Count;
+                        atkspd /= (float)attacks.Count;
+                        retboss.Attacks.Add(new Attack
+                        {
+                            Name = "Avg Melee",
+                            AttackType = ATTACK_TYPES.AT_MELEE,
+                            DamageType = ItemDamageType.Physical,
+                            DamagePerHit = perhit,
+                            MaxNumTargets = numtrg,
+                            AttackSpeed = atkspd,
+                        });
                     }
-                    perhit /= (float)attacks.Count;
-                    numtrg /= (float)attacks.Count;
-                    atkspd /= (float)attacks.Count;
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg Melee",
-                        AttackType = ATTACK_TYPES.AT_MELEE,
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
                 }
                 {
                     List<Attack> attacks = new List<Attack>();
                     foreach (BossHandler boss in passedList) {
                         attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_RANGED));
                     }
-                    float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                    foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
-                            perhit += a.DamagePerHit;
-                            numtrg += a.MaxNumTargets;
-                            atkspd += a.AttackSpeed;
+                    if (attacks.Count > 0)
+                    {
+                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
+                        foreach (Attack a in attacks)
+                        {
+                            if (a.Name != "Invalid")
+                            {
+                                perhit += a.DamagePerHit;
+                                numtrg += a.MaxNumTargets;
+                                atkspd += a.AttackSpeed;
+                            }
                         }
+                        perhit /= (float)attacks.Count;
+                        numtrg /= (float)attacks.Count;
+                        atkspd /= (float)attacks.Count;
+                        retboss.Attacks.Add(new Attack
+                        {
+                            Name = "Avg Ranged",
+                            AttackType = ATTACK_TYPES.AT_RANGED,
+                            DamageType = ItemDamageType.Physical,
+                            DamagePerHit = perhit,
+                            MaxNumTargets = numtrg,
+                            AttackSpeed = atkspd,
+                        });
                     }
-                    perhit /= (float)attacks.Count;
-                    numtrg /= (float)attacks.Count;
-                    atkspd /= (float)attacks.Count;
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg Ranged",
-                        AttackType = ATTACK_TYPES.AT_RANGED,
-                        DamageType = ItemDamageType.Physical,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
                 }
                 {
                     List<Attack> attacks = new List<Attack>();
@@ -608,25 +632,31 @@ namespace Rawr {
                     {
                         attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_AOE));
                     }
-                    float perhit = 0f, numtrg = 0f, atkspd = 0f;
-                    foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
-                            perhit += a.DamagePerHit;
-                            numtrg += a.MaxNumTargets;
-                            atkspd += a.AttackSpeed;
+                    if (attacks.Count > 0)
+                    {
+                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
+                        foreach (Attack a in attacks)
+                        {
+                            if (a.Name != "Invalid")
+                            {
+                                perhit += a.DamagePerHit;
+                                numtrg += a.MaxNumTargets;
+                                atkspd += a.AttackSpeed;
+                            }
                         }
+                        perhit /= (float)attacks.Count;
+                        numtrg /= (float)attacks.Count;
+                        atkspd /= (float)attacks.Count;
+                        retboss.Attacks.Add(new Attack
+                        {
+                            Name = "Avg AoE",
+                            AttackType = ATTACK_TYPES.AT_AOE,
+                            DamageType = ItemDamageType.Arcane,
+                            DamagePerHit = perhit,
+                            MaxNumTargets = numtrg,
+                            AttackSpeed = atkspd,
+                        });
                     }
-                    perhit /= (float)attacks.Count;
-                    numtrg /= (float)attacks.Count;
-                    atkspd /= (float)attacks.Count;
-                    retboss.Attacks.Add(new Attack {
-                        Name = "Avg AoE",
-                        AttackType = ATTACK_TYPES.AT_AOE,
-                        DamageType = ItemDamageType.Arcane,
-                        DamagePerHit = perhit,
-                        MaxNumTargets = numtrg,
-                        AttackSpeed = atkspd,
-                    });
                 }
 
                 /*
