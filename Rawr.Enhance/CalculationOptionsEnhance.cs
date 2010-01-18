@@ -37,8 +37,17 @@ namespace Rawr.Enhance
         private bool _useMana = false;
         private bool _showExportMessageBox = true;
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
-        private SerializableDictionary<EnhanceAbility, Priority> _priorityList = SetPriorityDefaults();
+        private SerializableDictionary<EnhanceAbility, Priority> _priorityList;
+        // this can be read from multiple threads, make sure all modifications are only done from
+        // when no calculations are going on so we can avoid locking
+        // make sure it is updated whenever changes to _priorityList are made
         private List<KeyValuePair<EnhanceAbility, Priority>> _sortedList;
+
+        public CalculationOptionsEnhance()
+        {
+            _priorityList = SetPriorityDefaults();
+            SortPriorities();
+        }
 
         #region Getter/Setter
         public string BossName { get { return _bossName; } set { _bossName = value; OnPropertyChanged("BossName"); } }
@@ -66,8 +75,8 @@ namespace Rawr.Enhance
         public bool MultipleTargets { get { return _multipleTargets; } set { _multipleTargets = value; OnPropertyChanged("MultipleTargets"); } }
         public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }
         public float AdditionalTargetPercent { get { return _additionalTargetPercent; } set { _additionalTargetPercent = value; OnPropertyChanged("AdditionalTargetPercent"); } }
-        public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } } 
-        public SerializableDictionary<EnhanceAbility, Priority> PriorityList { get { return _priorityList; } set { _priorityList = value; OnPropertyChanged("PriorityList"); } }
+        public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
+        public SerializableDictionary<EnhanceAbility, Priority> PriorityList { get { return _priorityList; } set { _priorityList = value; SortPriorities(); OnPropertyChanged("PriorityList"); } }
         
         public string GetXml()
         {
@@ -97,16 +106,17 @@ namespace Rawr.Enhance
 
         public bool PriorityInUse(EnhanceAbility abilityType)
         {
-            Priority p = new Priority();
-            _priorityList.TryGetValue(abilityType, out p);
-            return p == null ? false : p.Checked;
+            Priority p;
+            if (_priorityList.TryGetValue(abilityType, out p))
+            {
+                return p.Checked;
+            }
+            return false;
         }
 
         public Priority GetAbilityPriority(EnhanceAbility abilityType)
         {
-            Priority p = new Priority();
-            _priorityList.TryGetValue(abilityType, out p);
-            return p;
+            return _priorityList[abilityType];
         }
 
         public int GetAbilityPriorityValue(EnhanceAbility abilityType)
@@ -130,6 +140,8 @@ namespace Rawr.Enhance
                 _priorityList.Remove(abilityType);
             if (priority.PriorityValue > 0)
                 _priorityList.Add(abilityType, priority);
+            // update the sorted list
+            SortPriorities();
         }
 
         public int ActivePriorities()
@@ -142,6 +154,7 @@ namespace Rawr.Enhance
             return activePriorities;
         }
 
+        // make sure not to call this from calculations, this should be setup before calculations start
         public void SortPriorities()
         {
             _sortedList = new List<KeyValuePair<EnhanceAbility, Priority>>(_priorityList);
