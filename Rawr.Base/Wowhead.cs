@@ -1618,7 +1618,8 @@ namespace Rawr
                         case "4722": return "Trial of the Crusader";
                         case "4812": return "Icecrown Citadel";
                         case "4813": return "Pit of Saron";
-                        case "4820": case "4809": return "Halls of Reflection";
+                        case "4809": return "Forge of Souls";
+                        case "4820": return "Halls of Reflection";
                         #endregion
                         default: return "Unknown - " + zoneId;
                     }
