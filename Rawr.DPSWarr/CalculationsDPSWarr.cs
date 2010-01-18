@@ -584,6 +584,7 @@ These numbers to do not include racial bonuses.",
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                Resilience = stats.Resilience,
                 // Bonuses
                 BonusArmor = stats.BonusArmor,
                 WeaponDamage = stats.WeaponDamage,
@@ -618,7 +619,7 @@ These numbers to do not include racial bonuses.",
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                    // Multipliers
+                // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -650,7 +651,7 @@ These numbers to do not include racial bonuses.",
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
+                if (RelevantTriggers.Contains(effect.Trigger) && (HasRelevantStats(effect.Stats) || HasSurvivabilityStats(effect.Stats)))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
@@ -675,6 +676,7 @@ These numbers to do not include racial bonuses.",
                 stats.HasteRating +
                 stats.ExpertiseRating +
                 stats.ArmorPenetrationRating +
+                stats.Resilience +
                 // Bonuses
                 stats.BonusArmor +
                 stats.WeaponDamage +
@@ -1329,7 +1331,8 @@ These numbers to do not include racial bonuses.",
                                                                       + Health2Surv
                                                                       + DmgTakenMods2Surv
                                                                       + BossAttackPower2Surv
-                                                                      + BossAttackSpeedMods2Surv);
+                                                                      + BossAttackSpeedMods2Surv
+                                                                      + stats.Resilience / 10);
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; 
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);

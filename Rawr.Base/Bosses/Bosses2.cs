@@ -135,7 +135,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 1.00f;
             // TODO:
              
-        }
+        /*}
     }*/
     // - Gunship Event
     // - Deathbringer Saurfang

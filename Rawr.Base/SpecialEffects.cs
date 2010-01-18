@@ -233,6 +233,10 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { ArmorPenetrationRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45, 0.15f));
             }
+            else if ((match = new Regex(@"Chance on hit to increase your critical strike rating by (?<amount>\d\d*) for 10 sec.*").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45, 0.10f));
+            }
             else if (line.StartsWith("Your harmful spells have a chance to increase your haste rating by 522 for 10 sec"))
             {
                 // Elemental Focus Stone
@@ -1623,6 +1627,13 @@ namespace Rawr {
                 // use it correctly, so we are going to give them the full power instead of half.
                 float spell_power = float.Parse(inputs[1]);
                 stats.SpellPower += spell_power;
+            }
+            // Medallion of Heroism
+            else if ((match = new Regex(@"Heal self for (?<amount1>\d\d\d*) to (?<amount2>\d\d\d*) damage.*").Match(line)).Success)
+            {
+                int val1 = int.Parse(match.Groups["amount1"].Value);
+                int val2 = int.Parse(match.Groups["amount2"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HealthRestore = (float)((val1 + val2) / 2f) }, 0f, 2 * 60));
             }
             // Increases spell power by 183 for 20 sec.
 			else if (Regex.IsMatch(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec"))
