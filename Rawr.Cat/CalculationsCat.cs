@@ -674,6 +674,7 @@ namespace Rawr.Cat
 			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility;
 			statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+			statsProcs.HasteRating += statsProcs.DeathbringerProc;
 			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
 			statsProcs.Armor += 2f * statsProcs.Agility;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
@@ -747,7 +748,7 @@ namespace Rawr.Cat
 			List<float> tempArPenEffectChances = new List<float>();
 			List<float> tempArPenEffectScales = new List<float>();
 
-			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating + se.Stats.DeathbringerProc > 0))
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating > 0))
 			{
 				tempArPenEffects.Add(effect);
 				tempArPenEffectIntervals.Add(triggerIntervals[effect.Trigger]);
@@ -771,8 +772,7 @@ namespace Rawr.Cat
 				List<float> tempArPenEffectValues = new List<float>();
 				foreach (SpecialEffect effect in tempArPenEffects)
 				{
-					tempArPenEffectValues.Add(effect.Stats.ArmorPenetrationRating +
-						effect.Stats.DeathbringerProc);
+					tempArPenEffectValues.Add(effect.Stats.ArmorPenetrationRating);
 				}
 
 				float[] intervals = new float[tempArPenEffects.Count];
