@@ -133,8 +133,8 @@ namespace Rawr.Bosses {
             MultiTargsPerc -= (1f - uptime) * 0.70f; // Phase 1 has adds, marking the downtime instead of uptime
             // Situational Changes
             InBackPerc_Melee = 1.00f;
-            /* TODO:
-             */
+            // TODO:
+             
         }
     }*/
     // - Gunship Event
