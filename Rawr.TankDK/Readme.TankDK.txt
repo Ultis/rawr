@@ -9,6 +9,15 @@ Currently targeting:
 * No Defect: I had the math all wrong for DW weapon speeds. It was increasing w/ 2 weapons rather than decreasing considering the white hits would occur more frequently rather than less in DW situations than 2H.
 * Defect 15212: Refactored ManageRP to just limit based on RP.  More work needs to be done to better reveal what kind of values we should be seeing when bringing in Avoidance #s and weapon speed. 
 * Defect 15671: I had Improved Icy Talons stacking with Normal IcyTalons for the tank's own haste.  It works out to only expand the effect from just the tank to the whole raid.  This suggests that we still need to find some way to include raid Utility into the value of effects/talents.
+* Defect 14553: Attempt to better provide rotations that match the active talents.  Only a partial change as I need to do more testing.
+* No Defect: Overvalue of things that had stacks & had an ability trigger.  The trigger would be infinity if it triggered off of things that were not in the rotation.  So now we just make sure to exclude infinite triggers.
+* Defect 14553: Change the talent based rotation determination to use HS rather than Bloodgorged to build a blood rotation.
+* Defect 15212: the code in the Combat table for RS was totally horked.  so I'm ripping it out since I didn't get any satisfactory results at this time.  I need to better segment any work that represents an attempt to do optimization for a given ability.  That's still a ways off.  So for now, RS is purely based on what's in the UI, even if the user enters in more RSs then they could possibly get given the combat situation available.
+* Defect 15272: Changed where I'm doing the health calc for the healing talents (Rune Tap & Vampiric Blood) This seems to have settled the RSVs somewhat, but not completely.
+* Defect 15732: Experimental mitigation now has expertise involved, but the results are totally weird.  I'm not done in there.
+* No Defect: Fixed a bug in the way I was handling IBF & the Glyph of IBF
+* No Defect: Fixed a bug in Blood Gorged that was not properly giving the bonusdamage part of it's effect.
+* No Defect: Pulling out the value of Hysteria.  I still want a way to provide value for the utility talents, but for now it will have to wait.
 
 2.3.5:
 * Exposed Experimental switch via options panel in Rawr2.
