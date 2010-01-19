@@ -75,6 +75,8 @@ namespace Rawr.Enhance
         private float baseMana = 0f;
         private float maxMana = 0f;
         private float manaRegen = 0f;
+        private float exportMeleeCritMH = 0f;
+        private float exportMeleeCritOH = 0f;
 
         public float FightLength { get { return fightLength; } }
         public float ChanceDodgeMH { get { return chanceDodgeMH; } }
@@ -155,6 +157,8 @@ namespace Rawr.Enhance
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
+        public float ExportMeleeCritMH { get { return exportMeleeCritMH; } } // doesn't include ED
+        public float ExportMeleeCritOH { get { return exportMeleeCritOH; } } // doesn't include ED
         public float DisplayMeleeCrit { get { return AverageWhiteCrit + whiteCritDepression; } }
         public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
@@ -245,6 +249,9 @@ namespace Rawr.Enhance
             chanceYellowMissOH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeOH + chanceParryOH; // base miss 8% now
             
             SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            // set two export values so that ED crit isn't included
+            exportMeleeCritMH = chanceWhiteCritMH;
+            exportMeleeCritOH = chanceWhiteCritOH;
 
             // Spells
             ftBonusCrit = 0f;
