@@ -586,7 +586,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec.",
             @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec." }, "ability_druid_berserk");
         /// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>
-        public readonly static PetTalentData RoarOfRecovery = new PetTalentData(27, "Roar Of Recovery", 2, new string[] {
+        public readonly static PetTalentData RoarOfRecovery = new PetTalentData(27, "Roar Of Recovery", 1, new string[] {
             @"Your pet's inspiring roar restores 30% of your total mana over 9 sec.",
             @"Your pet's inspiring roar restores 30% of your total mana over 9 sec." }, "ability_druid_mastershapeshifter");
         /// <summary>Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec.</summary>
