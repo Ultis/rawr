@@ -6,6 +6,7 @@
 	mc:Ignorable="d"
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
 	xmlns:local="clr-namespace:Rawr.UI"
+    MouseDown="UserControl_MouseDown" LostMouseCapture="UserControl_LostMouseCapture"
 	x:Class="Rawr.UI.ItemButtonWithEnchant"
 	Width="70" Height="85">
 
@@ -16,10 +17,10 @@
 			 Click="MainButton_Clicked" MouseEnter="MainButton_MouseEnter" MouseLeave="MainButton_MouseLeave">
 			<Image d:CacheMode="BitmapCache" x:Name="IconImage" Height="Auto" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
 		</Button>
-		<Popup x:Name="ListPopup" HorizontalOffset="72">
+		<Popup x:Name="ListPopup" HorizontalOffset="72" Opened="Popup_Opened" Closed="Popup_Closed">
 			<local:ItemListControl x:Name="ComparisonItemList"/>
 		</Popup>
-		<Popup x:Name="EnchantPopup" HorizontalOffset="72" VerticalOffset="66">
+		<Popup x:Name="EnchantPopup" HorizontalOffset="72" VerticalOffset="66" Opened="Popup_Opened" Closed="Popup_Closed">
 			<local:ItemListControl x:Name="ComparisonEnchantList"/>
 		</Popup>
 	</Grid>

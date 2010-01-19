@@ -7,12 +7,13 @@
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
 	xmlns:local="clr-namespace:Rawr.UI"
 	x:Class="Rawr.UI.ItemButton"
+    MouseDown="UserControl_MouseDown" LostMouseCapture="UserControl_LostMouseCapture"
 	Width="70" Height="70">
 	<Grid x:Name="LayoutRoot">
 				<Button x:Name="MainButton" Click="MainButton_Click" MouseEnter="MainButton_MouseEnter" MouseLeave="MainButton_MouseLeave">
           <Image d:CacheMode="BitmapCache" x:Name="IconImage" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				</Button>
-		<Popup x:Name="ListPopup" HorizontalOffset="72">
+		<Popup x:Name="ListPopup" HorizontalOffset="72" Opened="Popup_Opened" Closed="Popup_Closed">
 			<local:ItemListControl x:Name="ComparisonItemList"/>
 		</Popup>
 	</Grid>
