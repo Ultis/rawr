@@ -1274,7 +1274,10 @@ namespace Rawr
                         }
                     }
                     if (!CheckHasProf(Profession.Tailoring)) {
-                        if (name.Contains("Embroidery")) {
+                        if (name.Contains("Embroidery")
+                            || name.Contains("Sanctified Spellthread")
+                            || name.Contains("Master's Spellthread"))
+                        {
                             return false;
                         }
                     }
