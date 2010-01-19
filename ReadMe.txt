@@ -1,30 +1,29 @@
-Rawr v2.3.5.0
+Rawr v2.3.6.0
 ------------
-Welcome to Rawr v2.3.5.0.
+Welcome to Rawr v2.3.6.0.
    
 Recent Changes:
- - Fixed a significant performance issue that was introduced in v2.3.4, and affected most models, but especially Cat. Sorry about those multi-hour optimizations for a build there.
- - Improved and clarified the wording on a variety of error messages throughout Rawr to try to be more helpful.
- - Many models now have better support for proc'd direct damage special effects (ie, chance on hit to deal 5000 fire damage, etc).
- - Improved filters to include ICC bosses. Some bosses whose items come from chests are still problematic, but there's at least something there now.
- - Added support for Black Magic in several models. IMPORTANT! Please note however that for models which allow dual weilding, Black Magic does *not* stack, and Rawr doesn't know this yet. It may show dual-Black Magic as the optimal weapon enchants, but really you should only enchant one weapon with it in that case. We're working on a fix for this.
- - Improved handling of PvP gear filtering and source parsing.
- - Fix for downloading talent images from the Armory.
- - Adjusted the proc rate of Berserking and Executioner to match recent testing.
- - Rawr.Warlock: WARLOCKS! The big stream of updates has finally began! Rebuilt the combat priority queue. All spells, talents, and glyphs should have the correct damage, coefficients, multipliers, and effects, updated for 3.3. 2T10 implemented. Improved stat display. Added support for the missing spell crit debuff. Added several default talent specs. Cleaned up the options panel.
- - Rawr.Mage: Improved support for 2T10 to match the latest testing. Slight fix for haste calculations. Improved graph support.
- - Rawr.Tree: Fixes and improvements for mana restore effects. Slight fix for WG healing value.
- - Rawr.DPSDK: Remodelled Cinderglacier, improved handling of damage done-triggered special effects, and tweaked various ability calculations to match in-game testing. Improved valuing of hit and expertise based on their affect on your rotation. Fix for offhand OB hits not procing rime. Fix for parsing of Sigil of the Hanged Man.
- - Rawr.Cat: Added handling for Victor's Call, and similar recursive special effects.
- - Rawr.Hunter: Fix for a bug with changing pet options.
- - Rawr.RestoSham: Fix for Shard of the Flame.
- - Rawr.Healadin: Fix for Shard of the Flame.
- - Rawr.DPSWarr: Fix for a performance issue with the optimizer and multiple ArPen trinkets. Fixed an issue with sword spec not procing if you only have white attacks selected. Added rage and glancing from sword spec. Added several more default talent specs. Improved tooltips on several of the stats on the Stats tab.
- - Rawr.Rogue: Did a bit of cleanup to the options panel.
- - Rawr.Enhance: Fix for an export to EnhSim issue. Slight fix for ED and fire totem uptimes.
- - Rawr.TankDK: Fix for saving and loading of options tab data. Fix for parsing of Sigil of the Hanged Man. Fix for handling of recursive special effects.
- - Rawr.ProtPaladin: Fix for a rare chart crash.
- - Rawr.ProtWarr: Improvements to proc triggering chances. Several fixes for Deep Wounds calculations. Improved handling of partial talent specs, leading to better values on the talent point comparison chart.
+ - Chart Data should Export correctly now.
+ - Battlemaster trinkets on use are now modeled differently. 
+ - Regex fixes to parsing of several spell effects. 
+ - Wowhead's DB still has a bug with sockets being shown in spots 2&3 instead of 1&2 for some items, but we've compensated for this until they fix it. 
+ - Additional item information (BoP/BoE) attached to items now. 
+ - Updates to item filters; many new filter types added, check them out! 
+ - RPGO's Character Profiler should play nice with Rawr now. 
+ - Currently equiped gems (when loaded from Armory) are automatically marked as avaliable.
+ - Rawr.Tree: Improved handeling of procs from trinkets and spells. Haste (especially in trinket form) should be modeled better.
+ - Rawr.Warlock: Many spell coefficients and multipliers are now displayed in the mouseover tooltips. Damage from crits should also be calculated correctly now.
+ - Rawr.TankDK: Runic Power accumulation and usage should be more accurately modeled. Fixed a bug in which Improved Icy Talons was stacking with normal Ice Talons. Sigil of the Bone Gryphon should now properly stack its effect. Blood Gorged now properly increases your damage done. Hysteria no longer has a personal DPS value, to be added back in later.
+ - Rawr.DPSDK: Death Runes (from all trees) should now be more accurately modeled. Killing Machine and Rime should now interact properly with their affected abilities.
+ - Rawr.DPSWarr: Gem templates have been updated, though only ones which you're likely to use are active by default. Turning on more (or all of them) will slow down performance. Deathbringer's Will will now proc Haste instead of ArPen.
+ - Rawr.Enhance: Deathbringer's Will will now proc Haste instead of ArPen. The combat table should now play nice with the (white) crit cap.
+ - Rawr.ProtWarr: Crit depression is now properly modeled based on new research. Mocking blow threat (and mocking blow glyphs) are now properly modeled. Boss Attack speed calculations updated.
+ - Rawr.Hunter: Deathbringer's Will will now proc Haste instead of ArPen.
+ - Rawr.Mage: Nibelung's proc has been modeled and added. Improvements (both in accuracy and speed) to sequence reconstruction.
+ - Rawr.RestoSham: Gemming templates updated. Fight Activity slider added, and better overheal calculations.
+ - Rawr.Cat: Deathbringer's Will will now proc Haste instead of ArPen.
+
+
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -132,6 +131,30 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.5.0
+ - Fixed a significant performance issue that was introduced in v2.3.4, and affected most models, but especially Cat. Sorry about those multi-hour optimizations for a build there.
+ - Improved and clarified the wording on a variety of error messages throughout Rawr to try to be more helpful.
+ - Many models now have better support for proc'd direct damage special effects (ie, chance on hit to deal 5000 fire damage, etc).
+ - Improved filters to include ICC bosses. Some bosses whose items come from chests are still problematic, but there's at least something there now.
+ - Added support for Black Magic in several models. IMPORTANT! Please note however that for models which allow dual weilding, Black Magic does *not* stack, and Rawr doesn't know this yet. It may show dual-Black Magic as the optimal weapon enchants, but really you should only enchant one weapon with it in that case. We're working on a fix for this.
+ - Improved handling of PvP gear filtering and source parsing.
+ - Fix for downloading talent images from the Armory.
+ - Adjusted the proc rate of Berserking and Executioner to match recent testing.
+ - Rawr.Warlock: WARLOCKS! The big stream of updates has finally began! Rebuilt the combat priority queue. All spells, talents, and glyphs should have the correct damage, coefficients, multipliers, and effects, updated for 3.3. 2T10 implemented. Improved stat display. Added support for the missing spell crit debuff. Added several default talent specs. Cleaned up the options panel.
+ - Rawr.Mage: Improved support for 2T10 to match the latest testing. Slight fix for haste calculations. Improved graph support.
+ - Rawr.Tree: Fixes and improvements for mana restore effects. Slight fix for WG healing value.
+ - Rawr.DPSDK: Remodelled Cinderglacier, improved handling of damage done-triggered special effects, and tweaked various ability calculations to match in-game testing. Improved valuing of hit and expertise based on their affect on your rotation. Fix for offhand OB hits not procing rime. Fix for parsing of Sigil of the Hanged Man.
+ - Rawr.Cat: Added handling for Victor's Call, and similar recursive special effects.
+ - Rawr.Hunter: Fix for a bug with changing pet options.
+ - Rawr.RestoSham: Fix for Shard of the Flame.
+ - Rawr.Healadin: Fix for Shard of the Flame.
+ - Rawr.DPSWarr: Fix for a performance issue with the optimizer and multiple ArPen trinkets. Fixed an issue with sword spec not procing if you only have white attacks selected. Added rage and glancing from sword spec. Added several more default talent specs. Improved tooltips on several of the stats on the Stats tab.
+ - Rawr.Rogue: Did a bit of cleanup to the options panel.
+ - Rawr.Enhance: Fix for an export to EnhSim issue. Slight fix for ED and fire totem uptimes.
+ - Rawr.TankDK: Fix for saving and loading of options tab data. Fix for parsing of Sigil of the Hanged Man. Fix for handling of recursive special effects.
+ - Rawr.ProtPaladin: Fix for a rare chart crash.
+ - Rawr.ProtWarr: Improvements to proc triggering chances. Several fixes for Deep Wounds calculations. Improved handling of partial talent specs, leading to better values on the talent point comparison chart.
+
 v2.3.4.0
  - More improvements to Wowhead/Armory parsing.
  - More special effect handling improvements.
