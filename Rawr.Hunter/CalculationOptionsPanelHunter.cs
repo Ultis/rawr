@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
+using Rawr.Base;
 
 namespace Rawr.Hunter
 {
@@ -103,6 +104,8 @@ namespace Rawr.Hunter
             InitializeShotList(CB_ShotPriority_08);
             InitializeShotList(CB_ShotPriority_09);
             InitializeShotList(CB_ShotPriority_10);
+
+            CB_CalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
 
             //initTalentImages();
             isLoading = false;
@@ -204,7 +207,16 @@ namespace Rawr.Hunter
                 CB_ShotPriority_09.SelectedIndex = CalcOpts.PriorityIndex9;
                 CB_ShotPriority_10.SelectedIndex = CalcOpts.PriorityIndex10;
                 CB_PriorityDefaults.SelectedIndex = 0;
-
+                //
+                CK_StatsAgility.Checked = CalcOpts.StatsList[0];
+                CK_StatsAP.Checked = CalcOpts.StatsList[1];
+                CK_StatsCrit.Checked = CalcOpts.StatsList[2];
+                CK_StatsHit.Checked = CalcOpts.StatsList[3];
+                CK_StatsHaste.Checked = CalcOpts.StatsList[4];
+                CK_StatsArP.Checked = CalcOpts.StatsList[5];
+                NUD_StatsIncrement.Value = CalcOpts.StatsIncrement;
+                CB_CalculationToGraph.Text = CalcOpts.CalculationToGraph;
+                //
                 isLoading = false;
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
@@ -921,5 +933,43 @@ namespace Rawr.Hunter
         private void TB_Rotation_TextChanged(object sender, EventArgs e) { }
         private void TB_Shots_TextChanged(object sender, EventArgs e) { }
         #endregion
+
+        // Stat Graph
+        private Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            if (CK_StatsAgility.Checked) { statsList.Add(new Stats() { Agility = 1f }); }
+            if (CK_StatsAP.Checked) { statsList.Add(new Stats() { AttackPower = 1f }); }
+            if (CK_StatsCrit.Checked) { statsList.Add(new Stats() { CritRating = 1f }); }
+            if (CK_StatsHit.Checked) { statsList.Add(new Stats() { HitRating = 1f }); }
+            if (CK_StatsHaste.Checked) { statsList.Add(new Stats() { HasteRating = 1f }); }
+            if (CK_StatsArP.Checked) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
+            return statsList.ToArray();
+        }
+        private void btnStatsGraph_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            Stats[] statsList = BuildStatsList();
+            Graph graph = new Graph();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of dps added or lost";
+            graph.SetupGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            graph.Show();
+        }
+        private void chkStatsAgility_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[0] = CK_StatsAgility.Checked; }
+        private void chkStatsAP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[1] = CK_StatsAP.Checked; }
+        private void chkStatsCrit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[2] = CK_StatsCrit.Checked; }
+        private void chkStatsHit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[3] = CK_StatsHit.Checked; }
+        private void chkStatsHaste_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[4] = CK_StatsHaste.Checked; }
+        private void chkStatsArP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[5] = CK_StatsArP.Checked; }
+        private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+        }
+        private void NUD_StatsIncrement_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
+        }
     }
 }

@@ -1747,7 +1747,7 @@ CB_Version.Items.Add("All");
             }
         }
         // Survival
-private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
+        private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.SurvScale = (float)NUD_SurvScale.Value;

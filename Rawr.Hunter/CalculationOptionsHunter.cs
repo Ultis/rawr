@@ -303,6 +303,25 @@ namespace Rawr.Hunter
             set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
         }
 
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true };
+        public bool[] StatsList
+        {
+            get { return _statsList; }
+            set { _statsList = value; OnPropertyChanged("StatsList"); }
+        }
+        private int _StatsIncrement = 100;
+        public int StatsIncrement
+        {
+            get { return _StatsIncrement; }
+            set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
+        }
+        private string _calculationToGraph = "Overall Rating";
+        public string CalculationToGraph
+        {
+            get { return _calculationToGraph; }
+            set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
+        }
+
         #region ICalculationOptionBase Members
 		public string GetXml()
 		{

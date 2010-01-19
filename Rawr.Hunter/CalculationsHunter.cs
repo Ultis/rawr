@@ -2509,10 +2509,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #endregion
                 #region  Agility
                 float totalBAGIM = statsTotal.BonusAgilityMultiplier;
-                float agiBase    = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
-                float agiBonus   = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
-                float agiFromAvg = (float)Math.Floor((1f + totalBAGIM) * statsTotal.AverageAgility); // ??
-                statsTotal.Agility = agiBase + agiBonus + agiFromAvg;
+                float agiBase    = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsRace.Agility/*)*/;
+                float agiBonus   = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsGearEnchantsBuffs.Agility/*)*/;
+                float agiFromAvg = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsTotal.AverageAgility/*)*/;
+                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus + agiFromAvg);
 
                 if (talents.ExposeWeakness > 0) {
                     SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.RangedCrit,
@@ -2528,9 +2528,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 statsTotal.Intellect = intBase + intBonus;
                 #endregion
                 #region Armor
-                statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
+                statsTotal.Armor = /*(float)Math.Floor(*/statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier)/*)*/;
                 statsTotal.BonusArmor += statsTotal.Agility * 2f;
-                statsTotal.BonusArmor = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+                statsTotal.BonusArmor = /*(float)Math.Floor(*/statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier)/*)*/;
                 statsTotal.Armor += statsTotal.BonusArmor;
                 #endregion
                 #region Attack Power
@@ -2544,7 +2544,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
                 float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
                                                          + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
-                statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
+                statsTotal.AttackPower = Math.Max(0f, apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
                 statsTotal.RangedAttackPower = statsTotal.AttackPower;
                 #endregion
                 #region Spell Power
@@ -2557,11 +2557,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 statsTotal.CritRating += statsTotal.RangedCritRating;
                 statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
                                          + -0.0153f
-                                         + StatConversion.GetCritFromRating(statsTotal.CritRating, character.Class);
+                                         + StatConversion.GetCritFromRating(Math.Max(0f, statsTotal.CritRating), character.Class);
                 #endregion
                 #region Haste
                 statsTotal.HasteRating += statsTotal.RangedHasteRating;
-                float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, character.Class);
+                float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(Math.Max(0f, statsTotal.HasteRating), character.Class);
                 statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                            (1f + statsItems.PhysicalHaste) *
                                            (1f + statsBuffs.PhysicalHaste) *
@@ -2572,14 +2572,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                            - 1f;
                 #endregion
                 #region Hit
-                statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.RangedHitRating);
-                statsTotal.SpellHit    += StatConversion.GetHitFromRating(statsTotal.HitRating + statsTotal.SpellHitRating);
+                statsTotal.PhysicalHit += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating + statsTotal.RangedHitRating));
+                statsTotal.SpellHit    += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating + statsTotal.SpellHitRating));
                 #endregion
                 #region Mana
                 // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
                 // (20-(20/15)) = 18.66666
                 // spreadsheet uses 18.7, so we will too :)
                 statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
+                #endregion
+                #region ArP
+                if (statsTotal.ArmorPenetrationRating < 0) statsTotal.ArmorPenetrationRating = 0;
                 #endregion
 
                 #region Handle Special Effects
@@ -2649,16 +2652,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Base Stats
                 statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
                 statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
-                statsProcs.Agility  = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
-                statsProcs.Agility += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
-                statsProcs.Agility += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier));
+                statsProcs.Agility  = /*(float)Math.Floor(*/statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier)/*)*/;
+                statsProcs.Agility += /*(float)Math.Floor(*/statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier)/*)*/;
+                statsProcs.Agility += /*(float)Math.Floor(*/statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier)/*)*/;
                 statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
                 statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
 
                 // Armor
-                statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier));
+                statsProcs.Armor = /*(float)Math.Floor(*/statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier)/*)*/;
                 statsProcs.BonusArmor += statsProcs.Agility * 2f;
-                statsProcs.BonusArmor = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+                statsProcs.BonusArmor = /*(float)Math.Floor(*/statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier)/*)*/;
                 statsProcs.Armor += statsProcs.BonusArmor;
                 statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
 
@@ -2668,7 +2671,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility);
                 float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
                 float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
-                statsProcs.AttackPower = (float)Math.Floor(apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
+                statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
                 statsProcs.RangedAttackPower = statsProcs.AttackPower;
 
                 // Crit
