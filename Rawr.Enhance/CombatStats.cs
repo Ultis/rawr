@@ -250,8 +250,8 @@ namespace Rawr.Enhance
             
             SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             // set two export values so that ED crit isn't included
-            exportMeleeCritMH = chanceWhiteCritMH;
-            exportMeleeCritOH = chanceWhiteCritOH;
+            exportMeleeCritMH = chanceWhiteCritMH + whiteCritDepression;
+            exportMeleeCritOH = chanceWhiteCritOH + whiteCritDepression;
 
             // Spells
             ftBonusCrit = 0f;
