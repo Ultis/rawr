@@ -282,6 +282,7 @@ namespace Rawr.Mage
         public float PhysicalCritReduction { get; set; }
         public float SpellCritReduction { get; set; }
         public float CritDamageReduction { get; set; }
+        public float DamageTakenReduction { get; set; }
         public float Dodge { get; set; }
 
         public float BaseCastingSpeed { get; set; }
@@ -1118,7 +1119,7 @@ namespace Rawr.Mage
             dictValues.Add("Frost Resist", (BaseStats.FrostResistance).ToString());
             dictValues.Add("Shadow Resist", (BaseStats.ShadowResistance).ToString());
             dictValues.Add("Physical Mitigation", String.Format("{0:F}%", 100 * BaseState.MeleeMitigation));
-            dictValues.Add("Resilience", BaseStats.Resilience.ToString());
+            dictValues.Add("Resilience", string.Format("{0:F}*{1:F} Damage Taken Reduction", BaseStats.Resilience, DamageTakenReduction));
             dictValues.Add("Defense", BaseState.Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\r\nPhysical Crit Reduction: {1:F}%\r\nCrit Damage Reduction: {2:F}%", BaseState.SpellCritReduction * 100, BaseState.PhysicalCritReduction * 100, BaseState.CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));

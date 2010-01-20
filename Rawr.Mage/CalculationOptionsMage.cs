@@ -649,6 +649,13 @@ namespace Rawr.Mage
             set { _Aldor = value; OnPropertyChanged("Aldor"); }
         }
 
+        private bool _PVP;
+        public bool PVP
+        {
+            get { return _PVP; }
+            set { _PVP = value; OnPropertyChanged("PVP"); }
+        }
+
         private int _HeroismControl;
         // 0 = optimal, 1 = before 20%, 2 = no cooldowns, 3 = after 20%
         public int HeroismControl

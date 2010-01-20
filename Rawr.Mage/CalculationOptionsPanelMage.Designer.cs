@@ -355,6 +355,8 @@
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
             this.label127 = new System.Windows.Forms.Label();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.label128 = new System.Windows.Forms.Label();
+            this.checkBoxPVP = new System.Windows.Forms.CheckBox();
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -1106,6 +1108,8 @@
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.label128);
+            this.tabPage3.Controls.Add(this.checkBoxPVP);
             this.tabPage3.Controls.Add(this.textBoxMovementDuration);
             this.tabPage3.Controls.Add(this.label106);
             this.tabPage3.Controls.Add(this.textBoxMovementFrequency);
@@ -3803,6 +3807,26 @@
             this.checkBox5.TabIndex = 213;
             this.checkBox5.UseVisualStyleBackColor = true;
             // 
+            // label128
+            // 
+            this.label128.AutoSize = true;
+            this.label128.Location = new System.Drawing.Point(0, 565);
+            this.label128.Name = "label128";
+            this.label128.Size = new System.Drawing.Size(38, 13);
+            this.label128.TabIndex = 191;
+            this.label128.Text = "PVP: *";
+            this.toolTipMage.SetToolTip(this.label128, "When enabled follows PVP rules.");
+            // 
+            // checkBoxPVP
+            // 
+            this.checkBoxPVP.AutoSize = true;
+            this.checkBoxPVP.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "PVP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxPVP.Location = new System.Drawing.Point(128, 565);
+            this.checkBoxPVP.Name = "checkBoxPVP";
+            this.checkBoxPVP.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxPVP.TabIndex = 190;
+            this.checkBoxPVP.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4176,6 +4200,8 @@
         private System.Windows.Forms.CheckBox checkBoxMirrorImage;
         private System.Windows.Forms.Label label127;
         private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.Label label128;
+        private System.Windows.Forms.CheckBox checkBoxPVP;
 
     }
 }
