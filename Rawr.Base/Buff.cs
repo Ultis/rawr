@@ -4327,7 +4327,7 @@ namespace Rawr
                 Name = "Frost Witch's Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Frost Witch's",
+                SetName = "Frost Witch's Garb",
                 Stats = { RestoSham4T10 = 1f },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
