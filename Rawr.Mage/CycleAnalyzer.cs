@@ -182,6 +182,10 @@ namespace Rawr.Mage
                     castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 10.0f, true, true);
                     break;
+                case "Fire":
+                    castingState = new CastingState(calculationResult, 0, false, 0);
+                    generator = new FireCycleGenerator(castingState);
+                    break;
             }
 
             if (castingState == null || generator == null)
