@@ -152,6 +152,7 @@
             "Arcane (Arcane Power, MB/2T10 duration collapsed)",
             "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)",
             "Arcane (no ABar, MB duration collapsed)",
+            "Arcane Movement (average 1 per 10 sec for 1 sec)",
             "Frost",
             "Frost (no latency combos)",
             "Frost+Deep Freeze",

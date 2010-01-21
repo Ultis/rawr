@@ -142,6 +142,10 @@ namespace Rawr.Mage
                     castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, false, true, true, true, false);
                     break;
+                case "Arcane Movement (average 1 per 10 sec for 1 sec)":
+                    castingState = new CastingState(calculationResult, 0, false, 0);
+                    generator = new ArcaneMovementCycleGenerator(castingState, 0.1f, 1.0f, true, false, true, true, true, true);
+                    break;
                 case "Frost":
                     castingState = new CastingState(calculationResult, 0, false, 0);
                     generator = new FrostCycleGenerator(castingState, true, false);
