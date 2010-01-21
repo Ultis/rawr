@@ -66,7 +66,7 @@ namespace Rawr.ProtPaladin {
                         return;
                     }
 
-                    baseDamage        = Stats.WeaponDamage / Character.MainHand.Speed;
+                    baseDamage        = ((Stats.WeaponDamage / Character.MainHand.Speed) + (AP / 14.0f)) * 4.0f;
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
                                       * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
