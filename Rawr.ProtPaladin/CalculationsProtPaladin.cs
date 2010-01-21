@@ -660,6 +660,7 @@ focus on Survival Points.",
                         if (calcOpts.TrinketOnUseHandling == "Active") {
                             statsSpecialEffects.Accumulate(effect.Stats);
                         } else {
+                            effectsToAdd = new Stats();
                             effectsToAdd.Accumulate(effect.GetAverageStats());
                             // Health on Use Effects are never averaged.
                             effectsToAdd.BattlemasterHealth = 0.0f;
