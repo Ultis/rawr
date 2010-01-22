@@ -58,6 +58,7 @@ namespace Rawr.Rogue {
         public float SpecProcDPS { get; set; }
 
         public void AddRoundedDisplayValue(DisplayValue key, float value) { AddDisplayValue(key, Round(value)); }
+        public void AddRoundedDisplayValue(DisplayValue key, float value, string suffix) { AddDisplayValue(key, Round(value) + suffix); }
 
         public void AddPercentageToolTip(DisplayValue key, string prefix, float value) { AddToolTip(key, prefix + Round(value*100)); }
 

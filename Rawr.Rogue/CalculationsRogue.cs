@@ -232,11 +232,12 @@ namespace Rawr.Rogue {
             displayedValues.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
-            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("Total % Hit: {0:0.00%}", combatFactors.HitPercent));
-            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("Poison % Hit: {0:0.00%}", combatFactors.PoisonHitPercent));
-
+            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("Special Hit: {0:0.00%}, {1}", combatFactors.HitPercent, combatFactors.HitPercent>=0.08 ? (Math.Floor((combatFactors.HitPercent-0.08)*3279)+" rating over the cap"):Math.Ceiling((0.08-combatFactors.HitPercent)*3279)+" rating under the cap"));
+            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("Poison Hit: {0:0.00%}, {1}", combatFactors.PoisonHitPercent, combatFactors.PoisonHitPercent >= 0.17 ? (Math.Floor((combatFactors.PoisonHitPercent - 0.17) * 2623) + " rating over the cap") : Math.Ceiling((0.27 - combatFactors.PoisonHitPercent) * 2623) + " rating under the cap"));
+            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("White Hit: {0:0.00%}, {1}", combatFactors.HitPercent, combatFactors.HitPercent >= 0.27 ? (Math.Floor((combatFactors.HitPercent - 0.27) * 3279) + " rating over the cap") : Math.Ceiling((0.27 - combatFactors.HitPercent) * 3279) + " rating under the cap"));
+            
             displayedValues.AddRoundedDisplayValue(DisplayValue.CritRating, stats.CritRating);
-            displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("Crit % from Rating: {0:00.00%}",combatFactors.CritFromCritRating));
+            displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("{0:00.00%} Crit from {1} Crit Rating", combatFactors.CritFromCritRating, stats.CritRating));
             displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("MH Crit: {0:00.00%}", combatFactors.ProbMhCrit));
             displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("OH Crit: {0:00.00%}", combatFactors.ProbOhCrit));
             displayedValues.AddToolTip(DisplayValue.CritRating, "Crit Multiplier: " + combatFactors.BaseCritMultiplier);
@@ -245,10 +246,10 @@ namespace Rawr.Rogue {
             displayedValues.AddToolTip(DisplayValue.ArmorDamageReduction, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
-            displayedValues.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
-            displayedValues.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
+            displayedValues.AddToolTip(DisplayValue.BaseExpertise, string.Format("{0:00} MH Expertise, {1}, {2}", combatFactors.MhExpertise, combatFactors.MhExpertise >= 26 ? (Math.Floor((combatFactors.MhExpertise - 26) * 8.2) + " rating over the dodge cap") : Math.Ceiling((26 - combatFactors.MhExpertise) * 8.2) + " rating under the dodge cap", combatFactors.MhExpertise >= 56 ? (Math.Floor((combatFactors.MhExpertise - 56) * 8.2) + " rating over the parry cap") : Math.Ceiling((56 - combatFactors.MhExpertise) * 8.2) + " rating under the parry cap"));
+            displayedValues.AddToolTip(DisplayValue.BaseExpertise, string.Format("{0:00} OH Expertise, {1}, {2}", combatFactors.OhExpertise, combatFactors.OhExpertise >= 26 ? (Math.Floor((combatFactors.OhExpertise - 26) * 8.2) + " rating over the dodge cap") : Math.Ceiling((26 - combatFactors.OhExpertise) * 8.2) + " rating under the dodge cap", combatFactors.OhExpertise >= 56 ? (Math.Floor((combatFactors.OhExpertise - 56) * 8.2) + " rating over the parry cap") : Math.Ceiling((56 - combatFactors.OhExpertise) * 8.2) + " rating under the parry cap"));
 
-            displayedValues.AddRoundedDisplayValue(DisplayValue.Haste, (combatFactors.TotalHaste <= 0 ? 0 : combatFactors.TotalHaste - 1f) * 100);
+            displayedValues.AddRoundedDisplayValue(DisplayValue.Haste, StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue) * 100,"%");
             displayedValues.AddToolTip(DisplayValue.Haste, "Haste Rating: " + stats.HasteRating);
             
             displayedValues.AddRoundedDisplayValue(DisplayValue.SndUptime, sndUpTime*100f);
