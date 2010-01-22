@@ -11,6 +11,7 @@ namespace Rawr.DPSDK
         int spellGCD;
         int meleeGCD;
         int MHFrequency;
+        int RuneCD;
         Rotation occurence;
         Character character;
         CombatTable combatTable;
@@ -70,16 +71,18 @@ namespace Rawr.DPSDK
             stats = s;
             talents = c.DeathKnightTalents;
             calcOpts = opts;
-            if (opts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
+            if (opts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)
             {
                 meleeGCD = 1000;
                 spellGCD = 1000;
+                RuneCD = (int)(10000 * (1 - talents.ImprovedUnholyPresence * .05));
             }
             else
             {
                 meleeGCD = 1500;
                 spellGCD = (int)(1500 / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1d + stats.SpellHaste)));
                 if (spellGCD < 1000) spellGCD = 1000;
+                RuneCD = 10000;
             }
 
             PhysicalGCDMultiplier = (1 / (1 - (combatTable.dodgedSpecial + combatTable.missedSpecial)));
@@ -121,7 +124,7 @@ namespace Rawr.DPSDK
                         {
                             if (BloodRune1 < 0)
                             {
-                                    BloodRune1 = 10000 + BloodRune1;
+                                    BloodRune1 = RuneCD + BloodRune1;
                                     if (talents.Reaping == 3)
                                     {
                                         DeathRune1 = BloodRune1;
@@ -131,7 +134,7 @@ namespace Rawr.DPSDK
                             }
                             else if (BloodRune2 < 0)
                             {
-                                BloodRune2 += 10000;
+                                BloodRune2 += RuneCD;
                                 if (talents.Reaping == 3)
                                 {
                                     DeathRune2 = BloodRune2;
@@ -141,7 +144,7 @@ namespace Rawr.DPSDK
                             }
                             else if (DeathRune1 < 0)
                             {
-                                BloodRune1 = 10000 + DeathRune1;
+                                BloodRune1 = RuneCD + DeathRune1;
                                 DeathRune1 = fightDuration + 1;
                                 if (talents.Reaping == 3)
                                 {
@@ -153,7 +156,7 @@ namespace Rawr.DPSDK
                             }
                             else if (DeathRune2 < 0)
                             {
-                                BloodRune2 = DeathRune2 + 10000;
+                                BloodRune2 = DeathRune2 + RuneCD;
                                 DeathRune2 = fightDuration + 1;
                                 if (talents.Reaping == 3)
                                 {
@@ -173,19 +176,19 @@ namespace Rawr.DPSDK
                         {
                             // IT
                             IT = true;
-                            FrostRune1 += 10000;
+                            FrostRune1 += RuneCD;
                         }
                         else if (FrostRune2 < 0)
                         {
                             // IT
                             IT = true;
-                            FrostRune2 += 10000;
+                            FrostRune2 += RuneCD;
                         }
                         else if (DeathRune1 < 0)
                         {
                             // IT
                             IT = true;
-                            BloodRune1 = DeathRune1 + 10000;
+                            BloodRune1 = DeathRune1 + RuneCD;
                             DeathRune1 = fightDuration;
                             IT = true;
                         }
@@ -193,7 +196,7 @@ namespace Rawr.DPSDK
                         {
                             // IT
                             IT = true;
-                            BloodRune2 = DeathRune2 + 10000;
+                            BloodRune2 = DeathRune2 + RuneCD;
                             DeathRune2 = fightDuration;
                         }
                         #endregion
@@ -205,26 +208,26 @@ namespace Rawr.DPSDK
                         {
                             // PS
                             PS = true;
-                            UnholyRune1 += 10000;
+                            UnholyRune1 += RuneCD;
                         }
                         else if (UnholyRune2 < 0)
                         {
                             // PS
                             PS = true;
-                            UnholyRune2 += 10000;
+                            UnholyRune2 += RuneCD;
                         }
                         else if (DeathRune1 < 0)
                         {
                             // PS
                             PS = true;
-                            BloodRune1 = DeathRune1 + 10000;
+                            BloodRune1 = DeathRune1 + RuneCD;
                             DeathRune1 = fightDuration;
                         }
                         else if (DeathRune2 < 0)
                         {
                             // PS
                             PS = true;
-                            BloodRune2 = DeathRune2 + 10000;
+                            BloodRune2 = DeathRune2 + RuneCD;
                             DeathRune2 = fightDuration;
                         }
                         #endregion
@@ -232,76 +235,76 @@ namespace Rawr.DPSDK
                     #region Scourge Strike
                     else if (FrostRune1 < 0 && UnholyRune1 < 0)
                     {
-                        FrostRune1 += 10000;
-                        UnholyRune1 += 10000;
+                        FrostRune1 += RuneCD;
+                        UnholyRune1 += RuneCD;
                         SS = true;
                     }
                     else if (FrostRune2 < 0 && UnholyRune2 < 0)
                     {
-                        FrostRune2 += 10000;
-                        UnholyRune2 += 10000;
+                        FrostRune2 += RuneCD;
+                        UnholyRune2 += RuneCD;
                         SS = true;
                     }
                     else if (FrostRune1 < 0 && UnholyRune2 < 0)
                     {
-                        FrostRune1 += 10000;
-                        UnholyRune2 += 10000;
+                        FrostRune1 += RuneCD;
+                        UnholyRune2 += RuneCD;
                         SS = true;
                     }
                     else if (FrostRune1 < 0 && DeathRune1 < 0)
                     {
-                        FrostRune1 += 10000;
-                        BloodRune1 = DeathRune1 + 10000;
+                        FrostRune1 += RuneCD;
+                        BloodRune1 = DeathRune1 + RuneCD;
                         DeathRune1 = fightDuration + 1;
                         SS = true;
                     }
                     else if (FrostRune1 < 0 && DeathRune2 < 0)
                     {
-                        FrostRune1 += 10000;
-                        BloodRune2 = DeathRune2 + 10000;
+                        FrostRune1 += RuneCD;
+                        BloodRune2 = DeathRune2 + RuneCD;
                         DeathRune2 = fightDuration + 1;
                         SS = true;
                     }
                     else if (FrostRune2 < 0 && UnholyRune1 < 0)
                     {
-                        FrostRune2 += 10000;
-                        UnholyRune1 += 10000;
+                        FrostRune2 += RuneCD;
+                        UnholyRune1 += RuneCD;
                         SS = true;
                     }
                     else if (FrostRune2 < 0 && DeathRune1 < 0)
                     {
-                        FrostRune2 += 10000;
-                        BloodRune1 = DeathRune1 + 10000;
+                        FrostRune2 += RuneCD;
+                        BloodRune1 = DeathRune1 + RuneCD;
                         DeathRune1 = fightDuration + 1;
                         SS = true;
                     }
                     else if (FrostRune2 < 0 && DeathRune2 < 0)
                     {
-                        FrostRune2 = 10000;
-                        BloodRune2 = DeathRune2 + 10000;
+                        FrostRune2 = RuneCD;
+                        BloodRune2 = DeathRune2 + RuneCD;
                         DeathRune2 = fightDuration + 1;
                         SS = true;
                     }
 
                     else if (DeathRune1 < 0 && UnholyRune1 < 0)
                     {
-                        BloodRune1 = 10000 + DeathRune1;
+                        BloodRune1 = RuneCD + DeathRune1;
                         DeathRune1 = fightDuration + 1;
-                        UnholyRune1 += 10000;
+                        UnholyRune1 += RuneCD;
                         SS = true;
                     }
                     else if (DeathRune1 < 0 && UnholyRune2 < 0)
                     {
-                        BloodRune1 = DeathRune1 + 10000;
+                        BloodRune1 = DeathRune1 + RuneCD;
                         DeathRune1 = fightDuration + 1;
-                        UnholyRune2 += 10000;
+                        UnholyRune2 += RuneCD;
                         SS = true;
                     }
                     else if (DeathRune1 < 0 && DeathRune2 < 0)
                     {
-                        BloodRune1 = DeathRune1 + 10000;
+                        BloodRune1 = DeathRune1 + RuneCD;
                         DeathRune1 = fightDuration + 1;
-                        BloodRune2 = DeathRune2 + 10000;
+                        BloodRune2 = DeathRune2 + RuneCD;
                         DeathRune2 = fightDuration + 1;
                         SS = true;
                     }
@@ -313,12 +316,12 @@ namespace Rawr.DPSDK
                     {
                         if (talents.BloodOfTheNorth == 5 || talents.Reaping == 3)
                         {
-                            DeathRune1 = BloodRune1 + 10000;
+                            DeathRune1 = BloodRune1 + RuneCD;
                             BloodRune1 = fightDuration + 1;
                         }
                         else
                         {
-                            BloodRune1 += 10000;
+                            BloodRune1 += RuneCD;
                         }
                         BS = true;
                     }
@@ -326,12 +329,12 @@ namespace Rawr.DPSDK
                     {
                         if (talents.BloodOfTheNorth == 5 || talents.Reaping == 3)
                         {
-                            DeathRune2 = BloodRune2 + 10000;
+                            DeathRune2 = BloodRune2 + RuneCD;
                             BloodRune2 = fightDuration + 1;
                         }
                         else
                         {
-                            BloodRune2 += 10000;
+                            BloodRune2 += RuneCD;
                         }
                         BS = true;
                     }
@@ -341,7 +344,7 @@ namespace Rawr.DPSDK
                     {
                         #region DC
                         occurence.DeathCoil++;
-                        GCDTime = (int)(meleeGCD);
+                        GCDTime = (int)(spellGCD);
                         RP -= 40;
                         #endregion
                     }

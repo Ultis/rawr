@@ -48,6 +48,25 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
+        private void rbUnholyPresence_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbUnholyPresence.Checked)
+            {
+                CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+                calcOpts.CurrentPresence = CalculationOptionsDPSDK.Presence.Unholy;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void rbBloodPresence_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbBloodPresence.Checked)
+            {
+                CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+                calcOpts.CurrentPresence = CalculationOptionsDPSDK.Presence.Blood;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void btnGraph_Click(object sender, EventArgs e)
         {
             CalculationsDPSDK DKCalc = new CalculationsDPSDK();
@@ -78,28 +97,6 @@ namespace Rawr.DPSDK
                 new Stats() { HasteRating = 10 },
                 new Stats() { ArmorPenetrationRating = 10 }
             };
-
-            for (int index = 0; index < statsList.Length; index++)
-            {
-                Stats newStats = new Stats();
-                Point[] points = new Point[100];
-                for (int count = 0; count < 100; count++)
-                {
-                    newStats = newStats + statsList[index];
-
-                    CharacterCalculationsDPSDK currentCalc = DKCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsDPSDK;
-                    float overallPoints = currentCalc.DPSPoints - baseCalc.DPSPoints;
-
-                    if ((graphHeight - overallPoints) > 16)
-                        points[count] = new Point(Convert.ToInt32(graphStart + count * 5), (Convert.ToInt32(graphHeight - overallPoints)));
-                    else
-                        points[count] = points[count-1];
-
-                }
-                Brush statBrush = new SolidBrush(colors[index]);
-                g.DrawLines(new Pen(statBrush, 3), points);
-            }
-
             #region Graph Ticks
             float graphWidth = 500f;// this.Width - 150f;
             float graphEnd = graphStart + graphWidth;
@@ -157,19 +154,43 @@ namespace Rawr.DPSDK
             g.DrawString((maxScale * 0.625f).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
             g.DrawString((maxScale * 0.875f).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
 
-            g.DrawString((0f).ToString(), tickFont, black200brush, graphStart, _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale).ToString(), tickFont, black200brush, graphEnd, _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.5f).ToString(), tickFont, black200brush, ticks[0], _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.75f).ToString(), tickFont, black150brush, ticks[1], _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.25f).ToString(), tickFont, black150brush, ticks[2], _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.125f).ToString(), tickFont, black75brush, ticks[3], _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.375f).ToString(), tickFont, black75brush, ticks[4], _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.625f).ToString(), tickFont, black75brush, ticks[5], _prerenderedGraph.Height-16, formatTick);
-            g.DrawString((maxScale * 0.875f).ToString(), tickFont, black75brush, ticks[6], _prerenderedGraph.Height-16, formatTick);
+            g.DrawString((0f).ToString(), tickFont, black200brush, graphStart, _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale).ToString(), tickFont, black200brush, graphEnd, _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.5f).ToString(), tickFont, black200brush, ticks[0], _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.75f).ToString(), tickFont, black150brush, ticks[1], _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.25f).ToString(), tickFont, black150brush, ticks[2], _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.125f).ToString(), tickFont, black75brush, ticks[3], _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.375f).ToString(), tickFont, black75brush, ticks[4], _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.625f).ToString(), tickFont, black75brush, ticks[5], _prerenderedGraph.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.875f).ToString(), tickFont, black75brush, ticks[6], _prerenderedGraph.Height - 16, formatTick);
             #endregion
 
             Graph graph = new Graph(_prerenderedGraph);
             graph.Show();
+            for (int index = 0; index < statsList.Length; index++)
+            {
+                Stats newStats = new Stats();
+                Point[] points = new Point[100];
+                for (int count = 0; count < 100; count++)
+                {
+                    newStats = newStats + statsList[index];
+
+                    CharacterCalculationsDPSDK currentCalc = DKCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsDPSDK;
+                    float overallPoints = currentCalc.DPSPoints - baseCalc.DPSPoints;
+
+                    if ((graphHeight - overallPoints) > 16)
+                        points[count] = new Point(Convert.ToInt32(graphStart + count * 5), (Convert.ToInt32(graphHeight - overallPoints)));
+                    else
+                        points[count] = points[count-1];
+
+                }
+                Brush statBrush = new SolidBrush(colors[index]);
+                g.DrawLines(new Pen(statBrush, 3), points);
+                graph.Invalidate();
+                graph.Update();
+            }
+
+            
         }
 
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)

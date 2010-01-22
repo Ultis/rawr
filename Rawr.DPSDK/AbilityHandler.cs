@@ -196,6 +196,7 @@ namespace Rawr.DPSDK
                 (1d + talents.Hysteria * 0.2d / 180) *
                 (1d + talents.RageOfRivendare * .02d) *
                 (1d + talents.TundraStalker * .03d) *
+                (1d + talents.ImprovedDeathStrike * .15d) *
                 (1d + (!combatTable.DW ? talents.TwoHandedWeaponSpecialization * .02d : 0));
             BB.DamageMod *=
                 ShadowMod *

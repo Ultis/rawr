@@ -46,8 +46,10 @@
             this.lblTargetArmor = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.btnGraph = new System.Windows.Forms.Button();
-            this.btnRotation = new System.Windows.Forms.Button();
             this.cbGhoul = new System.Windows.Forms.CheckBox();
+            this.rbBloodPresence = new System.Windows.Forms.RadioButton();
+            this.rbUnholyPresence = new System.Windows.Forms.RadioButton();
+            this.label18 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
             this.gbFightInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).BeginInit();
@@ -110,6 +112,8 @@
             this.gbFightInfo.Controls.Add(this.lblTargetLevel);
             this.gbFightInfo.Controls.Add(this.cbTargetLevel);
             this.gbFightInfo.Controls.Add(this.lblFightLength);
+            this.gbFightInfo.Controls.Add(this.rbBloodPresence);
+            this.gbFightInfo.Controls.Add(this.rbUnholyPresence);
             this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbFightInfo.Location = new System.Drawing.Point(13, 3);
             this.gbFightInfo.Name = "gbFightInfo";
@@ -268,17 +272,6 @@
             this.btnGraph.UseVisualStyleBackColor = true;
             this.btnGraph.Click += new System.EventHandler(this.btnGraph_Click);
             // 
-            // btnRotation
-            // 
-            this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotation.Location = new System.Drawing.Point(39, 287);
-            this.btnRotation.Name = "btnRotation";
-            this.btnRotation.Size = new System.Drawing.Size(125, 23);
-            this.btnRotation.TabIndex = 36;
-            this.btnRotation.Text = "Rotation Details";
-            this.btnRotation.UseVisualStyleBackColor = true;
-            this.btnRotation.Click += new System.EventHandler(this.btnRotation_Click);
-            // 
             // cbGhoul
             // 
             this.cbGhoul.AutoSize = true;
@@ -291,17 +284,55 @@
             this.cbGhoul.UseVisualStyleBackColor = true;
             this.cbGhoul.CheckedChanged += new System.EventHandler(this.cbGhoul_CheckedChanged);
             // 
+            // rbBloodPresence
+            // 
+            this.rbBloodPresence.AutoSize = true;
+            this.rbBloodPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbBloodPresence.Location = new System.Drawing.Point(67, 392);
+            this.rbBloodPresence.Name = "rbBloodPresence";
+            this.rbBloodPresence.Size = new System.Drawing.Size(57, 19);
+            this.rbBloodPresence.TabIndex = 71;
+            this.rbBloodPresence.TabStop = true;
+            this.rbBloodPresence.Text = "Blood";
+            this.rbBloodPresence.UseVisualStyleBackColor = true;
+            this.rbBloodPresence.CheckedChanged += new System.EventHandler(rbBloodPresence_CheckedChanged);
+            // 
+            // rbUnholyPresence
+            // 
+            this.rbUnholyPresence.AutoSize = true;
+            this.rbUnholyPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbUnholyPresence.Location = new System.Drawing.Point(130, 392);
+            this.rbUnholyPresence.Name = "rbUnholyPresence";
+            this.rbUnholyPresence.Size = new System.Drawing.Size(63, 19);
+            this.rbUnholyPresence.TabIndex = 73;
+            this.rbUnholyPresence.TabStop = true;
+            this.rbUnholyPresence.Text = "Unholy";
+            this.rbUnholyPresence.UseVisualStyleBackColor = true;
+            this.rbUnholyPresence.CheckedChanged += new System.EventHandler(rbUnholyPresence_CheckedChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(10, 396);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(55, 13);
+            this.label18.TabIndex = 72;
+            this.label18.Text = "Presence:";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // CalculationOptionsPanelDPSDK
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.rbBloodPresence);
+            this.Controls.Add(this.rbUnholyPresence);
+            this.Controls.Add(this.label18);
             this.Controls.Add(this.cbGhoul);
-            this.Controls.Add(this.btnRotation);
             this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.gbFightInfo);
             this.Name = "CalculationOptionsPanelDPSDK";
-            this.Size = new System.Drawing.Size(243, 394);
+            this.Size = new System.Drawing.Size(243, 463);
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
@@ -325,7 +356,6 @@
 		private System.Windows.Forms.Label lblFightLengthNum;
         private System.Windows.Forms.Label lblTargetArmor;
         private System.Windows.Forms.NumericUpDown nudTargetArmor;
-        private System.Windows.Forms.Button btnRotation;
         private System.Windows.Forms.CheckBox cbGhoul;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar BloodwormUptime;
@@ -336,5 +366,8 @@
         private System.Windows.Forms.Label lbKMProcUsage;
         private System.Windows.Forms.TrackBar KMProcUsage;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton rbBloodPresence;
+        private System.Windows.Forms.RadioButton rbUnholyPresence;
+        private System.Windows.Forms.Label label18;
     }
 }

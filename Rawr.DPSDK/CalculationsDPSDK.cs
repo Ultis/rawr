@@ -791,14 +791,14 @@ namespace Rawr.DPSDK
 
                                 tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
 
-                                if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
                                 {
                                     tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
                                     tempStats.BonusSpellPowerMultiplier *= 1.15f;
                                     tempStats.BonusShadowDamageMultiplier *= 1.15f;
                                     tempStats.BonusFrostDamageMultiplier *= 1.15f;
                                 }
-                                else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                else if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
                                 {
                                     tempStats.PhysicalHaste += 0.15f;
                                     tempStats.SpellHaste += 0.15f;
@@ -926,14 +926,14 @@ namespace Rawr.DPSDK
 
             statsTotal.BonusPhysicalDamageMultiplier++;
 
-            if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+            if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
             {
                 statsTotal.BonusPhysicalDamageMultiplier *= 1.15f;
                 statsTotal.BonusSpellPowerMultiplier *= 1.15f;
                 statsTotal.BonusShadowDamageMultiplier *= 1.15f;
                 statsTotal.BonusFrostDamageMultiplier *= 1.15f;
             }
-            else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+            else if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
             {
                 statsTotal.PhysicalHaste += 0.15f;
                 statsTotal.SpellHaste += 0.15f;

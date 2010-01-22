@@ -31,6 +31,13 @@ namespace Rawr.DPSDK
 			get { return _GhoulUptime; }
 			set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
 		}
+
+        private Presence _Presence = Presence.Blood;
+        public Presence CurrentPresence
+        {
+            get { return _Presence; }
+            set { _Presence = value; }
+        }
 		
 		private float _KMProcUsage = 1f;
 		public float KMProcUsage

@@ -70,7 +70,7 @@ namespace Rawr.DPSDK
             stats = s;
             talents = c.DeathKnightTalents;
             calcOpts = opts;
-            if (opts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
+            if (opts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)
             {
                 meleeGCD = 1000;
                 spellGCD = 1000;
@@ -423,7 +423,7 @@ namespace Rawr.DPSDK
                     {
                         #region DC
                         occurence.DeathCoil++;
-                        GCDTime = (int)(spellGCD * SpellGCDMultiplier);
+                        GCDTime = (int)(spellGCD);
                         RP -= 40;
                         #endregion
                     }

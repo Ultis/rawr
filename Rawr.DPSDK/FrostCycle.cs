@@ -76,7 +76,7 @@ namespace Rawr.DPSDK
             talents = c.DeathKnightTalents;
             KMChance = (1 / (60 / t.MH.baseSpeed)) * talents.KillingMachine * (1 - combatTable.totalMHMiss);
             calcOpts = opts;
-            if (opts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
+            if (opts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)
             {
                 meleeGCD = 1000;
                 spellGCD = 1000;
