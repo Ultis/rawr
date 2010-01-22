@@ -19,8 +19,7 @@ namespace Rawr.Rogue.Poisons
         {
             float baseDamage = (296f + .12f * stats.AttackPower);
             baseDamage *= (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
-            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus);
-            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus) * (1f + Talents.Murder.Bonus);
             baseDamage *= (1f - combatFactors.PoisonDamageReduction);
 
             float countEnve = 0;// Number of Envenoms used

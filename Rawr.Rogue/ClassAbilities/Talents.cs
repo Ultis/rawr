@@ -174,15 +174,6 @@ namespace Rawr.Rogue.ClassAbilities
         {
             _talents = talents;
         }
-        /*
-        public static void InitializeMurder(CalculationOptionsRogue calcOpts)
-        {
-            if(!calcOpts.TargetIsValidForMurder)
-            {
-                ( (TalentBonusPulledFromList) Murder ).SetBonusValues(new [] {0f, 0f, 0f});
-            }            
-        }
-        */
         public abstract float Bonus { get; }
 
         public float Multiplier

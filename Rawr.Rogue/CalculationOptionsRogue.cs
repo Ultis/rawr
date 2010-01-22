@@ -29,7 +29,6 @@ namespace Rawr.Rogue
         public ComboPointGenerator CpGenerator = new SinisterStrike();
         public Feint Feint = new Feint();
         public float TurnTheTablesUptime;
-        public bool TargetIsValidForMurder;
         public float Duration;
 
         public float ComboPointsNeededForCycle()

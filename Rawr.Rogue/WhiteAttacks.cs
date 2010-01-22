@@ -44,8 +44,7 @@ namespace Rawr.Rogue {
         {
             float baseDamage = avgDamage;
             baseDamage *= (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
-            baseDamage *= (1f + Talents.HungerForBlood.Damage.Bonus);
-            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f + Talents.HungerForBlood.Damage.Bonus) * (1f + Talents.Murder.Bonus);
 
             return baseDamage;
         }

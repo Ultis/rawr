@@ -50,7 +50,6 @@
             this.LB_CPperSec = new System.Windows.Forms.Label();
             this.LB_CPG = new System.Windows.Forms.Label();
             this.GB_Abilities = new System.Windows.Forms.GroupBox();
-            this.CK_MurderValid = new System.Windows.Forms.CheckBox();
             this.CK_UseTurnTheTables = new System.Windows.Forms.CheckBox();
             this.LB_TurnTheTables = new System.Windows.Forms.Label();
             this.NUD_TurnTheTablesUptimePerc = new System.Windows.Forms.NumericUpDown();
@@ -420,7 +419,6 @@
             this.GB_Abilities.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_Abilities.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_Abilities.Controls.Add(this.CK_MurderValid);
             this.GB_Abilities.Controls.Add(this.CK_UseTurnTheTables);
             this.GB_Abilities.Controls.Add(this.LB_TurnTheTables);
             this.GB_Abilities.Controls.Add(this.NUD_TurnTheTablesUptimePerc);
@@ -429,21 +427,10 @@
             this.GB_Abilities.Controls.Add(this.CK_UseFeint);
             this.GB_Abilities.Location = new System.Drawing.Point(3, 348);
             this.GB_Abilities.Name = "GB_Abilities";
-            this.GB_Abilities.Size = new System.Drawing.Size(298, 93);
+            this.GB_Abilities.Size = new System.Drawing.Size(298, 70);
             this.GB_Abilities.TabIndex = 12;
             this.GB_Abilities.TabStop = false;
             this.GB_Abilities.Text = "Abilities";
-            // 
-            // CK_MurderValid
-            // 
-            this.CK_MurderValid.AutoSize = true;
-            this.CK_MurderValid.Location = new System.Drawing.Point(6, 72);
-            this.CK_MurderValid.Name = "CK_MurderValid";
-            this.CK_MurderValid.Size = new System.Drawing.Size(143, 17);
-            this.CK_MurderValid.TabIndex = 6;
-            this.CK_MurderValid.Text = "Target is valid for Murder";
-            this.CK_MurderValid.UseVisualStyleBackColor = true;
-            this.CK_MurderValid.CheckedChanged += new System.EventHandler(this.MurderTalentCheckBox_CheckedChanged);
             // 
             // CK_UseTurnTheTables
             // 
@@ -586,7 +573,6 @@
         private System.Windows.Forms.CheckBox CK_UseTurnTheTables;
         private System.Windows.Forms.Label LB_TurnTheTables;
         private System.Windows.Forms.NumericUpDown NUD_TurnTheTablesUptimePerc;
-        private System.Windows.Forms.CheckBox CK_MurderValid;
         private System.Windows.Forms.Label LB_Duration;
         private System.Windows.Forms.NumericUpDown NUD_Duration;
     }

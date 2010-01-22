@@ -80,7 +80,6 @@ namespace Rawr.Rogue
 
                 _calcOpts.Feint = loadOpts.Feint;
                 _calcOpts.TurnTheTablesUptime = loadOpts.TurnTheTablesUptime;
-                _calcOpts.TargetIsValidForMurder = loadOpts.TargetIsValidForMurder;
 
                 CB_TargLevel_SelectedIndexChanged(this, null);
                 CB_TargArmor_SelectedIndexChanged(this, null);
@@ -91,7 +90,6 @@ namespace Rawr.Rogue
                 OnOHPoisonChanged(this, null);
                 Feint_CheckedChanged(this, null);
                 UseTurnTheTables_CheckedChanged(this, null);
-                MurderTalentCheckBox_CheckedChanged(this, null);
 
                 UpdateCalculations();
             }
@@ -304,19 +302,6 @@ namespace Rawr.Rogue
                 int value = (int)(_calcOpts.TurnTheTablesUptime * 100.0f);
                 
                 NUD_TurnTheTablesUptimePerc.Text = value.ToString();
-            }
-        }
-
-        private void MurderTalentCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                _calcOpts.TargetIsValidForMurder = CK_MurderValid.Checked;
-                UpdateCalculations();
-            }
-            else
-            {
-                CK_MurderValid.Checked = _calcOpts.TargetIsValidForMurder;
             }
         }
 

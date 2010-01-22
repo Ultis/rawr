@@ -164,7 +164,6 @@ namespace Rawr.Rogue {
             cacheChar = character;
             TalentsAndGlyphs.Initialize(character.RogueTalents);
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            //  Talents.InitializeMurder(calcOpts);
             Stats stats = GetCharacterStats(character, additionalItem);
             CombatFactors combatFactors = new CombatFactors(character, stats);
 

@@ -27,8 +27,7 @@ namespace Rawr.Rogue.Poisons
         {
             float baseDamage = (231f + 0.04f * stats.AttackPower);
             baseDamage *= (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
-            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus);
-            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus) * (1f + Talents.Murder.Bonus);
             baseDamage *= (1f - combatFactors.PoisonDamageReduction);
 
             float critDamage = baseDamage * combatFactors.BaseSpellCritMultiplier;
@@ -43,8 +42,7 @@ namespace Rawr.Rogue.Poisons
         {
             float baseDamage = (231f + 0.04f * stats.AttackPower);
             baseDamage *= (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
-            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus);
-            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus) * (1f + Talents.Murder.Bonus);
             baseDamage *= (1f - combatFactors.PoisonDamageReduction);
 
             float critDamage = baseDamage * combatFactors.BaseSpellCritMultiplier;
