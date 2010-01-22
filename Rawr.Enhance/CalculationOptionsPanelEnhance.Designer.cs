@@ -72,6 +72,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tabPageGraph = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.udGraphRange = new System.Windows.Forms.NumericUpDown();
             this.chkStatsInt = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnStatsGraph = new System.Windows.Forms.Button();
@@ -88,6 +90,7 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
@@ -101,6 +104,7 @@
             this.tabPagePriorities.SuspendLayout();
             this.tabPageGraph.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udGraphRange)).BeginInit();
             this.tabPageEnhSim.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -676,6 +680,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.udGraphRange);
             this.groupBox1.Controls.Add(this.chkStatsInt);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.btnStatsGraph);
@@ -691,10 +698,41 @@
             this.groupBox1.Controls.Add(this.chkStatsStrength);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(248, 199);
+            this.groupBox1.Size = new System.Drawing.Size(248, 231);
             this.groupBox1.TabIndex = 59;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stats Graph Options";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(3, 167);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(71, 13);
+            this.label13.TabIndex = 65;
+            this.label13.Text = "Graph Range";
+            // 
+            // udGraphRange
+            // 
+            this.udGraphRange.Location = new System.Drawing.Point(89, 165);
+            this.udGraphRange.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.udGraphRange.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.udGraphRange.Name = "udGraphRange";
+            this.udGraphRange.Size = new System.Drawing.Size(53, 20);
+            this.udGraphRange.TabIndex = 64;
+            this.udGraphRange.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // chkStatsInt
             // 
@@ -718,7 +756,7 @@
             // 
             // btnStatsGraph
             // 
-            this.btnStatsGraph.Location = new System.Drawing.Point(62, 163);
+            this.btnStatsGraph.Location = new System.Drawing.Point(65, 191);
             this.btnStatsGraph.Name = "btnStatsGraph";
             this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
             this.btnStatsGraph.TabIndex = 61;
@@ -867,6 +905,15 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(148, 167);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(52, 13);
+            this.label14.TabIndex = 66;
+            this.label14.Text = "(10 - 200)";
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -892,6 +939,7 @@
             this.tabPageGraph.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udGraphRange)).EndInit();
             this.tabPageEnhSim.ResumeLayout(false);
             this.tabPageEnhSim.PerformLayout();
             this.ResumeLayout(false);
@@ -960,6 +1008,9 @@
         private System.Windows.Forms.CheckBox chkStatsAgility;
         private System.Windows.Forms.CheckBox chkStatsStrength;
         private System.Windows.Forms.CheckBox chbShowExportMsgBox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.NumericUpDown udGraphRange;
+        private System.Windows.Forms.Label label14;
 
     }
 }
