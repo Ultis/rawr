@@ -1742,7 +1742,27 @@ These numbers to do not include racial bonuses.",
             float avoidedAttacks = charStruct.combatFactors.StatS.Dodge + charStruct.combatFactors.StatS.Parry;
 
             float dwbleed = 0;
-            if (charStruct.Char.WarriorTalents.DeepWounds > 0 && crit != 0f) dwbleed = fightDuration * (float)Math.Floor(fightDuration / crit) / (fightDuration / crit);
+
+            if (charStruct.Char.WarriorTalents.DeepWounds > 0 && crit != 0f)
+            {
+                float dwTicks = 1f;
+                foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities())
+                {
+                    if (aw.numActivates > 0f && aw.ability.CanCrit)
+                    {
+                        if (aw.ability.SwingsOffHand)
+                        {
+                            dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit * (1f - aw.ability.OHAtkTable.Crit), aw.numActivates / fightDuration);
+                            dwTicks *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, aw.numActivates / fightDuration);
+                        }
+                        else
+                        {
+                            dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, aw.numActivates / fightDuration);
+                        }
+                    }
+                }
+                dwbleed = fightDuration * dwTicks;
+            }
 
             float bleed = dwbleed + fightDuration * (charStruct.calcOpts.FuryStance || !charStruct.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
 
