@@ -161,7 +161,7 @@ namespace Rawr.DPSWarr {
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok = CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
                      && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
-            availRage += WhiteAtks.whiteRageGenOverDur * (1f - totalPercTimeLost) * (1f - percTimeUnder20);
+            availRage += WhiteAtks.whiteRageGenOverDurNoHS * (1f - totalPercTimeLost) * (1f - percTimeUnder20);
             availRage -= SL.Rage;
             float repassAvailRage = 0f;
             float PercFailRage = 1f, PercFailRageUnder20 = 1f;

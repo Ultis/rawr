@@ -324,7 +324,8 @@ namespace Rawr.DPSWarr
             HPS_TTL += BS.HPS;
             rageadd = BS.Rage;
             availRage -= rageadd;
-            
+
+            InvalidateCache();
             //Sword Spec, Doesn't eat GCDs
             /*float SS_Acts = SS.GetActivates(GetLandedYellowsOverDur());
             _SS_Acts = SS_Acts;
