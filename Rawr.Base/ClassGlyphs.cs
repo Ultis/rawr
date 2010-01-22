@@ -593,7 +593,7 @@ namespace Rawr
         public bool GlyphOfEviscerate { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
         [GlyphData(2, "Glyph of Mutilate", true, @"Reduces the cost of Mutilate by 5 energy.")]
         public bool GlyphOfMutilate { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-        [GlyphData(3, "Glyph of Hunger for Blood", true, @"Increases the bonus damage from Hunger for Blood by 3%.")]
+        [GlyphData(3, "Glyph of Hunger For Blood", true, @"Increases the bonus damage from Hunger For Blood by 3%.")]
         public bool GlyphOfHungerforBlood { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
         [GlyphData(4, "Glyph of Killing Spree", true, @"Reduces the cooldown on Killing Spree by 45 seconds.")]
         public bool GlyphOfKillingSpree { get { return _glyphData[4]; } set { _glyphData[4] = value; } }

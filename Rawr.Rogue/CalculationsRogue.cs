@@ -832,7 +832,7 @@ namespace Rawr.Rogue {
                 _relevantGlyphs.Add("Glyph of Backstab");
                 _relevantGlyphs.Add("Glyph of Eviscerate");
                 _relevantGlyphs.Add("Glyph of Mutilate");
-                _relevantGlyphs.Add("Glyph of Hunger for Blood");
+                _relevantGlyphs.Add("Glyph of Hunger For Blood");
                 _relevantGlyphs.Add("Glyph of Sinister Strike");
                 _relevantGlyphs.Add("Glyph of Slice and Dice");
                 _relevantGlyphs.Add("Glyph of Feint");
