@@ -331,6 +331,26 @@
         </ArrayOfItemType>
       </value>
     </item>
+    <item>
+      <key>
+        <string>RestoSham</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>Leather</ItemType>
+          <ItemType>Mail</ItemType>
+          <ItemType>Totem</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>OneHandAxe</ItemType>
+          <ItemType>Shield</ItemType>
+          <ItemType>Staff</ItemType>
+          <ItemType>FistWeapon</ItemType>
+          <ItemType>Dagger</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
   </RelevantItemTypes>
   <RegexList>
     <ItemFilterRegex>
@@ -5814,8 +5834,8 @@
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Jewelcrafter BoP</Name>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable Jewelcrafter BoP</Name>
           <Pattern>BoP</Pattern>
           <BoA>false</BoA>
           <BoE>false</BoE>
@@ -5827,14 +5847,14 @@
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
+          <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Crafted (Non-BoP)</Name>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable Crafted (Non-BoP)</Name>
           <Pattern>(?&lt;!BoP.*)rafted|Created</Pattern>
           <BoA>false</BoA>
           <BoE>false</BoE>
@@ -5846,14 +5866,14 @@
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
+          <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>PvP</Name>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable PvP</Name>
           <Pattern>Points</Pattern>
           <BoA>false</BoA>
           <BoE>false</BoE>
@@ -5865,14 +5885,14 @@
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
+          <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>World Drop</Name>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable World Drop</Name>
           <Pattern>World Drop</Pattern>
           <BoA>false</BoA>
           <BoE>false</BoE>
@@ -5884,13 +5904,31 @@
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
+          <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable Green Level and 'Perfect' Gems</Name>
+          <BoA>false</BoA>
+          <BoE>false</BoE>
+          <BoP>false</BoP>
+          <BoU>false</BoU>
+          <BoN>false</BoN>
+          <MinItemLevel>70</MinItemLevel>
+          <MaxItemLevel>70</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>false</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Gems</Name>
+      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <Name>Disable Gems</Name>
       <Pattern />
       <BoA>false</BoA>
       <BoE>false</BoE>
@@ -5901,10 +5939,10 @@
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
       <MaxItemQuality>Heirloom</MaxItemQuality>
-      <AdditiveFilter>true</AdditiveFilter>
+      <AdditiveFilter>false</AdditiveFilter>
       <AppliesToItems>false</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -6173,13 +6211,31 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable 277+</Name>
+          <Name>Disable 277</Name>
           <BoA>false</BoA>
           <BoE>false</BoE>
           <BoP>false</BoP>
           <BoU>false</BoU>
           <BoN>false</BoN>
           <MinItemLevel>277</MinItemLevel>
+          <MaxItemLevel>277</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>false</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable 278+</Name>
+          <BoA>false</BoA>
+          <BoE>false</BoE>
+          <BoP>false</BoP>
+          <BoU>false</BoU>
+          <BoN>false</BoN>
+          <MinItemLevel>278</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
