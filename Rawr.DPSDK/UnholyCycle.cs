@@ -110,7 +110,7 @@ namespace Rawr.DPSDK
                     if (talents.GlyphofDisease)
                     {
                         #region GoD
-                        if (((FF < 1500 || BP < 1500) ||
+                        if (((FF < meleeGCD * PhysicalGCDMultiplier || BP < meleeGCD * PhysicalGCDMultiplier) ||
                             (FF < BloodRune1 && FF < BloodRune2 && FF < DeathRune1 && FF > DeathRune2) ||
                             (FF < BloodRune1 && FF < BloodRune2 && FF > DeathRune1 && FF < DeathRune2) ||
                             (FF < BloodRune1 && FF > BloodRune2 && FF < DeathRune1 && FF < DeathRune2) ||
@@ -169,7 +169,11 @@ namespace Rawr.DPSDK
                         #endregion
                     }
 
-                    if (FF < 1500 && (FrostRune1 < 0 || FrostRune2 < 0 || DeathRune1 < 0 || DeathRune2 < 0))
+                    if ((FF <= 0 && (FrostRune1 < 0 || FrostRune2 < 0 || DeathRune1 < 0 || DeathRune2 < 0)) ||
+                            (FF < FrostRune1 && FF < FrostRune2 && FF < DeathRune1 && FF > DeathRune2) ||
+                            (FF < FrostRune1 && FF < FrostRune2 && FF > DeathRune1 && FF < DeathRune2) ||
+                            (FF < FrostRune1 && FF > FrostRune2 && FF < DeathRune1 && FF < DeathRune2) ||
+                            (FF > FrostRune1 && FF < FrostRune2 && FF < DeathRune1 && FF < DeathRune2))
                     {
                         #region FF
                         if (FrostRune1 < 0)
@@ -201,7 +205,11 @@ namespace Rawr.DPSDK
                         }
                         #endregion
                     }
-                    else if (BP < 1500 && (UnholyRune1 < 0 || UnholyRune2 < 0 || DeathRune1 < 0 || DeathRune2 < 0))
+                    else if ((BP <= 0 && (UnholyRune1 < 0 || UnholyRune2 < 0 || DeathRune1 < 0 || DeathRune2 < 0)) ||
+                            (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathRune1 && BP > DeathRune2) ||
+                            (BP < UnholyRune1 && BP < UnholyRune2 && BP > DeathRune1 && BP < DeathRune2) ||
+                            (BP < UnholyRune1 && BP > UnholyRune2 && BP < DeathRune1 && BP < DeathRune2) ||
+                            (BP > UnholyRune1 && BP < UnholyRune2 && BP < DeathRune1 && BP < DeathRune2))
                     {
                         #region BP
                         if (UnholyRune1 < 0)

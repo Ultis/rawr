@@ -104,7 +104,7 @@ namespace Rawr.DPSDK
                     if (talents.GlyphofDisease)
                     {
                         #region GoD
-                        if (((FF < 1500 || BP < 1500) ||
+                        if (((FF < meleeGCD * PhysicalGCDMultiplier || BP < meleeGCD * PhysicalGCDMultiplier) ||
                             (FF < BloodRune1 && FF < BloodRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF < DeathUnholyRune1 && FF > DeathUnholyRune2) ||
                             (FF < BloodRune1 && FF < BloodRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF > DeathUnholyRune1 && FF < DeathUnholyRune2) ||
                             (FF < BloodRune1 && FF < BloodRune2 && FF < DeathFrostRune1 && FF > DeathFrostRune2 && FF < DeathUnholyRune1 && FF < DeathUnholyRune2) ||
@@ -156,7 +156,13 @@ namespace Rawr.DPSDK
                             }
                         }
                         #endregion
-                        else if (FF <= 0 && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
+                        else if ((FF <= 0 && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0)) ||
+                            (FF < FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF < DeathUnholyRune1 && FF > DeathUnholyRune2) ||
+                            (FF < FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF > DeathUnholyRune1 && FF < DeathUnholyRune2) ||
+                            (FF < FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF > DeathFrostRune2 && FF < DeathUnholyRune1 && FF < DeathUnholyRune2) ||
+                            (FF < FrostRune1 && FF < FrostRune2 && FF > DeathFrostRune1 && FF < DeathFrostRune2 && FF < DeathUnholyRune1 && FF < DeathUnholyRune2) ||
+                            (FF < FrostRune1 && FF > FrostRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF < DeathUnholyRune1 && FF < DeathUnholyRune2) ||
+                            (FF > FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF < DeathUnholyRune1 && FF < DeathUnholyRune2))
                         {
                             #region FF
                             if (FrostRune1 <= 0)
@@ -199,7 +205,13 @@ namespace Rawr.DPSDK
                             }
                             #endregion
                         }
-                        else if (BP <= 0 && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
+                        else if ((BP <= 0 && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0)) ||
+                            (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP > DeathUnholyRune2) ||
+                            (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP > DeathUnholyRune1 && BP < DeathUnholyRune2) ||
+                            (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP > DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2) ||
+                            (BP < UnholyRune1 && BP < UnholyRune2 && BP > DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2) ||
+                            (BP < UnholyRune1 && BP > UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2) ||
+                            (BP > UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2))
                         {
                             #region BP
                             if (UnholyRune1 <= 0)
@@ -243,7 +255,7 @@ namespace Rawr.DPSDK
                     }
                     else
                     {
-                        if (FF < 1500 && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
+                        if (FF < spellGCD * SpellGCDMultiplier && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
                         {
                             #region FF
                             if (FrostRune1 <= 0)
@@ -286,7 +298,7 @@ namespace Rawr.DPSDK
                             }
                             #endregion
                         }
-                        else if (BP < 1500 && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
+                        else if (BP < meleeGCD * PhysicalGCDMultiplier && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
                         {
                             #region BP
                             if (UnholyRune1 <= 0)
