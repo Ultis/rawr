@@ -1299,7 +1299,7 @@ These numbers to do not include racial bonuses.",
                 CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                 DamageProcs.SpecialDamageProcs SDP;
                 calculatedStats.SpecProcDPS = 0f;
-                if (stats._rawSpecialEffectData != null)
+                if (stats._rawSpecialEffectData != null && character.MainHand != null)
                 {
                     SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
                         calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats.SpecialEffects()),

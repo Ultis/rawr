@@ -122,8 +122,8 @@ namespace Rawr.DPSWarr
                     WhiteAtks.CLOverridesOverDur = CL.numActivates = Math.Min(clRageUsed / _CL.FullRageCost, WhiteAtks.MhActivatesNoHS - WhiteAtks.HSOverridesOverDur);
                     BS.hsActivates = HS.numActivates;
                 } while (Math.Abs(1f - (BS.Activates        != 0 ? oldBS / BS.Activates        : 1f)) > 0.05f ||
-                         Math.Abs(1f - (HS.numActivates != 0 ? oldHS / HS.numActivates : 1f)) > 0.05f ||
-                         Math.Abs(1f - (CL.numActivates != 0 ? oldCL / CL.numActivates : 1f)) > 0.05f);
+                         Math.Abs(1f - (HS.numActivates <= 0 ? oldHS / HS.numActivates : 1f)) > 0.05f ||
+                         Math.Abs(1f - (CL.numActivates <= 0 ? oldCL / CL.numActivates : 1f)) > 0.05f);
 
             }
             catch (Exception ex)
