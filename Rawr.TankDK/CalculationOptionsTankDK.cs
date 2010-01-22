@@ -53,6 +53,7 @@ namespace Rawr.TankDK
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
+        #region Physical Damage
         private uint _IncomingDamage = 10000u;
         public uint IncomingDamage
         {
@@ -66,32 +67,76 @@ namespace Rawr.TankDK
             }
             set { _IncomingDamage = value; OnPropertyChanged("IncomingDamage"); }
         }
-        private float _PercentIncomingFromMagic = 0;
-		public float PercentIncomingFromMagic
+        private float _BossAttackSpeed = 2.5f;
+        public float BossAttackSpeed
         {
-            get 
+            get
             {
-                if ( _PercentIncomingFromMagic < 0)
-                {
-                    _PercentIncomingFromMagic = .0f;
-                }
-                return _PercentIncomingFromMagic; 
-            }
-            set { _PercentIncomingFromMagic = value; OnPropertyChanged("PercentIncomingFromMagic"); }
-        }
-		private float _BossAttackSpeed = 2.5f;
-		public float BossAttackSpeed
-        {
-            get 
-            {
-                if ( _BossAttackSpeed < 1f)
+                if (_BossAttackSpeed < 1f)
                 {
                     _BossAttackSpeed = 2.5f;
                 }
-                return _BossAttackSpeed; 
+                return _BossAttackSpeed;
             }
             set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
         }
+        #endregion
+        #region Magic Damage
+        private uint _IncomingMagicDamage = 0;
+        public uint IncomingMagicDamage
+        {
+            get
+            {
+                if (_IncomingMagicDamage <= 0)
+                {
+                    _IncomingMagicDamage = 0;
+                }
+                return _IncomingMagicDamage;
+            }
+            set { _IncomingMagicDamage = value; OnPropertyChanged("IncomingMagicDamage"); }
+        }
+        private float _IncomingFromMagicFrequency = 0;
+        public float IncomingFromMagicFrequency
+        {
+            get 
+            {
+                if (_IncomingFromMagicFrequency < 0)
+                {
+                    _IncomingFromMagicFrequency = .0f;
+                }
+                return _IncomingFromMagicFrequency; 
+            }
+            set { _IncomingFromMagicFrequency = value; OnPropertyChanged("numIncFromMagicFrequency"); }
+        }
+        #endregion
+        #region Bleed Damage
+        private uint _IncomingBleedDamage = 0;
+        public uint IncomingBleedDamage
+        {
+            get
+            {
+                if (_IncomingBleedDamage <= 0)
+                {
+                    _IncomingBleedDamage = 0;
+                }
+                return _IncomingBleedDamage;
+            }
+            set { _IncomingBleedDamage = value; OnPropertyChanged("IncomingMagicDamage"); }
+        }
+        private float _IncomingBleedTickFrequency = 0;
+        public float BleedTickFrequency
+        {
+            get
+            {
+                if (_IncomingBleedTickFrequency < 0)
+                {
+                    _IncomingBleedTickFrequency = .0f;
+                }
+                return _IncomingBleedTickFrequency;
+            }
+            set { _IncomingBleedTickFrequency = value; OnPropertyChanged("BleedTickFrequency"); }
+        }
+        #endregion
 
         private float _BossArmor = StatConversion.NPC_ARMOR[83 - 80];
         public float BossArmor 
@@ -173,6 +218,17 @@ namespace Rawr.TankDK
             }
             set { _m_AdditiveMitigation = value; OnPropertyChanged("AdditiveMitigation"); }
         }
+
+        private bool _m_bEnableParryHaste = true;
+        public bool bParryHaste
+        {
+            get
+            {
+                return _m_bEnableParryHaste;
+            }
+            set { _m_bEnableParryHaste = value; OnPropertyChanged("EnableParryHaste"); }
+        }
+
         #endregion
 
         #region Rotation

@@ -29,6 +29,10 @@ namespace Rawr.TankDK {
             { }
         }
 
+        public float PhysicalSurvival { get; set; }
+        public float BleedSurvival { get; set; }
+        public float MagicSurvival { get; set; }
+
         public Stats BasicStats { get; set; }
         public int TargetLevel { get; set; }
 
@@ -43,6 +47,7 @@ namespace Rawr.TankDK {
         public float SurvivalWeight { get; set; }
         public float ThreatWeight { get; set; }
 
+        public float MagicDamageReduction { get; set; }
         public float ArmorDamageReduction { get; set; }
         public float Armor { get; set; }
 
@@ -105,6 +110,7 @@ namespace Rawr.TankDK {
             dict["Dodge"] = Dodge.ToString("F2") + "%";
             dict["Parry"] = Parry.ToString("F2") + "%";
             dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("F2") + "%";
+            dict["Magic Damage Reduction"] = (MagicDamageReduction * 100.0f).ToString("F2") + "%";
 
             dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2") + "%"; // Another duplicate math location.
             dict["Burst Time"] = String.Format("{0:0.0} sec", BurstTime);
@@ -126,7 +132,10 @@ namespace Rawr.TankDK {
 
             dict["Overall Points"] = OverallPoints.ToString("F1"); 
             dict["Mitigation Points"] = String.Format("{0:0.0}", Mitigation); // Unmodified Mitigation.
-            dict["Survival Points"] = String.Format("{0:0.0}", Survival); // Unmodified Survival
+            dict["Survival Points"] = String.Format("{0:0.0}", Survival) 
+                + string.Format("*Physical:{0:0.0}\n", PhysicalSurvival) 
+                + string.Format("Bleed:{0:0.0}\n", BleedSurvival) 
+                + string.Format("Magic:{0:0.0}", MagicSurvival); // Unmodified Survival
             dict["Threat Points"] = String.Format("{0:0.0}", Threat); // Unmodified Threat
 
             dict["Crit"] = Crit.ToString("F2");

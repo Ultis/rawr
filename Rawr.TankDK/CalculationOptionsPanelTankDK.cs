@@ -39,10 +39,15 @@ namespace Rawr.TankDK {
             cbExperimental.Checked = options.bExperimental;
             numBossAttackSpeed.Value = (decimal)options.BossAttackSpeed;
             numIncomingDamage.Value = options.IncomingDamage;
-            numPercIncFromMagic.Value = (decimal)options.PercentIncomingFromMagic;
+            numIncFromMagicFrequency.Value = (decimal)options.IncomingFromMagicFrequency;
             nudTargetArmor.Value = (decimal)options.BossArmor;
             tbFightLength.Value = (int)options.FightLength;
             numTargets.Value = (int)options.uNumberTargets;
+            cb_ParryHaste.Checked = options.bParryHaste;
+
+            numIncMagicDamage.Value = options.IncomingMagicDamage;
+            numBleedTickFreq.Value = (decimal)options.BleedTickFrequency;
+            numBleedPerTick.Value = options.IncomingBleedDamage;
 
             _loadingCalculationOptions = false;
         }
@@ -83,7 +88,7 @@ namespace Rawr.TankDK {
         }
         private void numPercIncFromMagic_ValueChanged(object sender, EventArgs e) {
             if (!_loadingCalculationOptions) {
-                options.PercentIncomingFromMagic = (float)(numPercIncFromMagic.Value);
+                options.IncomingFromMagicFrequency = (float)(numIncFromMagicFrequency.Value);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -165,6 +170,43 @@ namespace Rawr.TankDK {
                 options.bExperimental = cbExperimental.Checked;
                 Character.OnCalculationsInvalidated();
             }
+        }
+
+        private void cb_ParryHaste_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.bParryHaste = cb_ParryHaste.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numIncMagicDamage_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.IncomingMagicDamage = (uint)numIncMagicDamage.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numBleedTickFreq_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.BleedTickFrequency = (float)numBleedTickFreq.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numBleedPerTick_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.IncomingBleedDamage = (uint)numBleedPerTick.Value;
+                Character.OnCalculationsInvalidated();
+            }
+
         }
     }
 }

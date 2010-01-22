@@ -38,7 +38,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.numBossAttackSpeed = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.numPercIncFromMagic = new System.Windows.Forms.NumericUpDown();
+            this.numIncFromMagicFrequency = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.nudTargetArmor = new System.Windows.Forms.NumericUpDown();
             this.lblTargetArmor = new System.Windows.Forms.Label();
@@ -54,15 +54,25 @@
             this.btnStatsGraph = new System.Windows.Forms.Button();
             this.cb_AdditiveMitigation = new System.Windows.Forms.CheckBox();
             this.cbExperimental = new System.Windows.Forms.CheckBox();
+            this.cb_ParryHaste = new System.Windows.Forms.CheckBox();
+            this.numIncMagicDamage = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numBleedPerTick = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numBleedTickFreq = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBossAttackSpeed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIncFromMagicFrequency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
             this.gbFightInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTargets)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIncMagicDamage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBleedPerTick)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBleedTickFreq)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -157,7 +167,7 @@
             0,
             0,
             0});
-            this.numIncomingDamage.Location = new System.Drawing.Point(150, 122);
+            this.numIncomingDamage.Location = new System.Drawing.Point(150, 116);
             this.numIncomingDamage.Maximum = new decimal(new int[] {
             500000,
             0,
@@ -182,7 +192,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 122);
+            this.label4.Location = new System.Drawing.Point(3, 118);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(137, 13);
             this.label4.TabIndex = 6;
@@ -220,39 +230,39 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 97);
+            this.label5.Location = new System.Drawing.Point(3, 99);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 13);
+            this.label5.Size = new System.Drawing.Size(140, 13);
             this.label5.TabIndex = 8;
-            this.label5.Text = "Boss Attack Speed";
+            this.label5.Text = "Boss Physical Attack Speed";
             // 
-            // numPercIncFromMagic
+            // numIncFromMagicFrequency
             // 
-            this.numPercIncFromMagic.DecimalPlaces = 2;
-            this.numPercIncFromMagic.Increment = new decimal(new int[] {
+            this.numIncFromMagicFrequency.DecimalPlaces = 2;
+            this.numIncFromMagicFrequency.Increment = new decimal(new int[] {
             5,
             0,
             0,
-            131072});
-            this.numPercIncFromMagic.Location = new System.Drawing.Point(150, 148);
-            this.numPercIncFromMagic.Maximum = new decimal(new int[] {
-            1,
+            65536});
+            this.numIncFromMagicFrequency.Location = new System.Drawing.Point(150, 143);
+            this.numIncFromMagicFrequency.Maximum = new decimal(new int[] {
+            120,
             0,
             0,
             0});
-            this.numPercIncFromMagic.Name = "numPercIncFromMagic";
-            this.numPercIncFromMagic.Size = new System.Drawing.Size(105, 20);
-            this.numPercIncFromMagic.TabIndex = 11;
-            this.numPercIncFromMagic.ValueChanged += new System.EventHandler(this.numPercIncFromMagic_ValueChanged);
+            this.numIncFromMagicFrequency.Name = "numIncFromMagicFrequency";
+            this.numIncFromMagicFrequency.Size = new System.Drawing.Size(105, 20);
+            this.numIncFromMagicFrequency.TabIndex = 11;
+            this.numIncFromMagicFrequency.ValueChanged += new System.EventHandler(this.numPercIncFromMagic_ValueChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 148);
+            this.label6.Location = new System.Drawing.Point(3, 145);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(116, 13);
+            this.label6.Size = new System.Drawing.Size(123, 13);
             this.label6.TabIndex = 10;
-            this.label6.Text = "% Incoming from Magic";
+            this.label6.Text = "Magic Attack Frequency";
             // 
             // nudTargetArmor
             // 
@@ -288,7 +298,7 @@
             // tbFightLength
             // 
             this.tbFightLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbFightLength.Location = new System.Drawing.Point(153, 302);
+            this.tbFightLength.Location = new System.Drawing.Point(150, 510);
             this.tbFightLength.Name = "tbFightLength";
             this.tbFightLength.Size = new System.Drawing.Size(86, 45);
             this.tbFightLength.TabIndex = 15;
@@ -299,7 +309,7 @@
             // btnRotation
             // 
             this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotation.Location = new System.Drawing.Point(47, 75);
+            this.btnRotation.Location = new System.Drawing.Point(47, 73);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
             this.btnRotation.TabIndex = 17;
@@ -315,7 +325,7 @@
             this.gbFightInfo.Controls.Add(this.nudTargetArmor);
             this.gbFightInfo.Controls.Add(this.lblTargetArmor);
             this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbFightInfo.Location = new System.Drawing.Point(17, 176);
+            this.gbFightInfo.Location = new System.Drawing.Point(14, 241);
             this.gbFightInfo.Name = "gbFightInfo";
             this.gbFightInfo.Size = new System.Drawing.Size(227, 110);
             this.gbFightInfo.TabIndex = 37;
@@ -357,7 +367,7 @@
             // lblFightLengthNum
             // 
             this.lblFightLengthNum.AutoSize = true;
-            this.lblFightLengthNum.Location = new System.Drawing.Point(220, 334);
+            this.lblFightLengthNum.Location = new System.Drawing.Point(217, 542);
             this.lblFightLengthNum.Name = "lblFightLengthNum";
             this.lblFightLengthNum.Size = new System.Drawing.Size(19, 13);
             this.lblFightLengthNum.TabIndex = 2;
@@ -368,7 +378,7 @@
             // 
             this.lblFightLength.AutoSize = true;
             this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFightLength.Location = new System.Drawing.Point(24, 302);
+            this.lblFightLength.Location = new System.Drawing.Point(21, 510);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(114, 13);
             this.lblFightLength.TabIndex = 0;
@@ -382,7 +392,7 @@
             this.comboChartType.Items.AddRange(new object[] {
             "Default",
             "Burst/Reaction"});
-            this.comboChartType.Location = new System.Drawing.Point(150, 358);
+            this.comboChartType.Location = new System.Drawing.Point(147, 345);
             this.comboChartType.Name = "comboChartType";
             this.comboChartType.Size = new System.Drawing.Size(105, 21);
             this.comboChartType.TabIndex = 39;
@@ -391,7 +401,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 358);
+            this.label8.Location = new System.Drawing.Point(0, 345);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 13);
             this.label8.TabIndex = 38;
@@ -410,7 +420,7 @@
             // cb_AdditiveMitigation
             // 
             this.cb_AdditiveMitigation.AutoSize = true;
-            this.cb_AdditiveMitigation.Location = new System.Drawing.Point(6, 408);
+            this.cb_AdditiveMitigation.Location = new System.Drawing.Point(3, 397);
             this.cb_AdditiveMitigation.Name = "cb_AdditiveMitigation";
             this.cb_AdditiveMitigation.Size = new System.Drawing.Size(180, 17);
             this.cb_AdditiveMitigation.TabIndex = 63;
@@ -421,7 +431,7 @@
             // cbExperimental
             // 
             this.cbExperimental.AutoSize = true;
-            this.cbExperimental.Location = new System.Drawing.Point(6, 385);
+            this.cbExperimental.Location = new System.Drawing.Point(3, 374);
             this.cbExperimental.Name = "cbExperimental";
             this.cbExperimental.Size = new System.Drawing.Size(150, 17);
             this.cbExperimental.TabIndex = 64;
@@ -429,15 +439,119 @@
             this.cbExperimental.UseVisualStyleBackColor = true;
             this.cbExperimental.CheckedChanged += new System.EventHandler(this.cbExperimental_CheckedChanged);
             // 
+            // cb_ParryHaste
+            // 
+            this.cb_ParryHaste.AutoSize = true;
+            this.cb_ParryHaste.Checked = true;
+            this.cb_ParryHaste.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_ParryHaste.Location = new System.Drawing.Point(3, 420);
+            this.cb_ParryHaste.Name = "cb_ParryHaste";
+            this.cb_ParryHaste.Size = new System.Drawing.Size(117, 17);
+            this.cb_ParryHaste.TabIndex = 65;
+            this.cb_ParryHaste.Text = "Enable Parry Haste";
+            this.cb_ParryHaste.UseVisualStyleBackColor = true;
+            this.cb_ParryHaste.CheckedChanged += new System.EventHandler(this.cb_ParryHaste_CheckedChanged);
+            // 
+            // numIncMagicDamage
+            // 
+            this.numIncMagicDamage.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numIncMagicDamage.Location = new System.Drawing.Point(150, 162);
+            this.numIncMagicDamage.Maximum = new decimal(new int[] {
+            500000,
+            0,
+            0,
+            0});
+            this.numIncMagicDamage.Name = "numIncMagicDamage";
+            this.numIncMagicDamage.Size = new System.Drawing.Size(105, 20);
+            this.numIncMagicDamage.TabIndex = 67;
+            this.numIncMagicDamage.ThousandsSeparator = true;
+            this.numIncMagicDamage.ValueChanged += new System.EventHandler(this.numIncMagicDamage_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 164);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(123, 13);
+            this.label9.TabIndex = 66;
+            this.label9.Text = "Inc Magic Dmg Per Shot";
+            // 
+            // numBleedPerTick
+            // 
+            this.numBleedPerTick.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numBleedPerTick.Location = new System.Drawing.Point(150, 210);
+            this.numBleedPerTick.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numBleedPerTick.Name = "numBleedPerTick";
+            this.numBleedPerTick.Size = new System.Drawing.Size(105, 20);
+            this.numBleedPerTick.TabIndex = 71;
+            this.numBleedPerTick.ThousandsSeparator = true;
+            this.numBleedPerTick.ValueChanged += new System.EventHandler(this.numBleedPerTick_ValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 212);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(120, 13);
+            this.label10.TabIndex = 70;
+            this.label10.Text = "Inc Bleed Dmg Per Tick";
+            // 
+            // numBleedTickFreq
+            // 
+            this.numBleedTickFreq.DecimalPlaces = 2;
+            this.numBleedTickFreq.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numBleedTickFreq.Location = new System.Drawing.Point(150, 191);
+            this.numBleedTickFreq.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numBleedTickFreq.Name = "numBleedTickFreq";
+            this.numBleedTickFreq.Size = new System.Drawing.Size(105, 20);
+            this.numBleedTickFreq.TabIndex = 69;
+            this.numBleedTickFreq.ValueChanged += new System.EventHandler(this.numBleedTickFreq_ValueChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 193);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(111, 13);
+            this.label11.TabIndex = 68;
+            this.label11.Text = "Bleed Tick Frequency";
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.numBleedPerTick);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.numBleedTickFreq);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.numIncMagicDamage);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.cb_ParryHaste);
             this.Controls.Add(this.cbExperimental);
             this.Controls.Add(this.cb_AdditiveMitigation);
             this.Controls.Add(this.btnStatsGraph);
             this.Controls.Add(this.comboChartType);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.gbFightInfo);
-            this.Controls.Add(this.numPercIncFromMagic);
+            this.Controls.Add(this.numIncFromMagicFrequency);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.numBossAttackSpeed);
             this.Controls.Add(this.lblFightLengthNum);
@@ -453,17 +567,20 @@
             this.Controls.Add(this.cmbAttackerLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelTankDK";
-            this.Size = new System.Drawing.Size(258, 516);
+            this.Size = new System.Drawing.Size(258, 642);
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBossAttackSpeed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numPercIncFromMagic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIncFromMagicFrequency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTargets)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIncMagicDamage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBleedPerTick)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBleedTickFreq)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -481,7 +598,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numBossAttackSpeed;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numPercIncFromMagic;
+        private System.Windows.Forms.NumericUpDown numIncFromMagicFrequency;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown nudTargetArmor;
         private System.Windows.Forms.Label lblTargetArmor;
@@ -497,5 +614,12 @@
         private System.Windows.Forms.Button btnStatsGraph;
         private System.Windows.Forms.CheckBox cb_AdditiveMitigation;
         private System.Windows.Forms.CheckBox cbExperimental;
+        private System.Windows.Forms.CheckBox cb_ParryHaste;
+        private System.Windows.Forms.NumericUpDown numIncMagicDamage;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numBleedPerTick;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numBleedTickFreq;
+        private System.Windows.Forms.Label label11;
     }
 }

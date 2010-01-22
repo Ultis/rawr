@@ -3,6 +3,13 @@
 Currently targeting: 
 * Wow version 3.3.0
 
+2.3.7:
+* Defect 15829: Armor miscalculated - based on the comments, moving the frost presence application to the end of my accumulate work.
+* Defect 14569: Adjusting Survival by providing a more focused means of inputing the kinds of damage seen.  This is related to the BossHandler work.
+* Defect 15844: Provide a user-checkbox to enable/disable Parry Haste.
+* No Defect: Updating some of the tool tips to help with clarification.
+RSVs still go hay-wire when using certain blood talents.
+
 2.3.6:
 * No Defect: Factor in the DAMAGE procs, not just the healing procs of items.  This probably needs to be refactored.  Also the specials proc rate for OnMeleeHit was wrong.  
 * Defect 15682: Add in a Hit Rating option to the Optimizer list.
@@ -30,7 +37,6 @@ Currently targeting:
 * Adding in the experimental work in prep for Bosshandler.
 
 2.3.1:
-
 * No Defect: Actually remembered to check in the Rune of Nerubian Carapace change.
 
 2.3.0:

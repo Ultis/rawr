@@ -949,6 +949,7 @@ namespace Rawr.TankDK
                 PlagueStrikeMult *= 1 + BloodyVengeanceMult;
                 WhiteMult *= 1 + BloodyVengeanceMult;
 
+                /*
                 float HysteriaCoeff = .3f / 6f; // current uptime is 16.666...%
                 float HysteriaMult = HysteriaCoeff * (float)talents.Hysteria;
                 BCBMult *= 1f + HysteriaMult;
@@ -958,6 +959,7 @@ namespace Rawr.TankDK
                 DeathStrikeMult *= 1f + HysteriaMult;
                 PlagueStrikeMult *= 1f + HysteriaMult;
                 WhiteMult *= 1f + HysteriaMult;
+                */
 
                 float BlackIceMult = .02f * (float)talents.BlackIce;
                 FrostFeverMult *= 1 + BlackIceMult;
