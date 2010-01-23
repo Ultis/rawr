@@ -160,20 +160,29 @@ namespace Rawr.Rogue
             if (!m_bLoading)
             {
             var cycle = new Cycle();
-            cycle.Components.Add(GetCycleComponent(CB_ComboPoints1, CB_Finisher1));
-            cycle.Components.Add(GetCycleComponent(CB_ComboPoints2, CB_Finisher2));
-            cycle.Components.Add(GetCycleComponent(CB_ComboPoints3, CB_Finisher3));
+            if ((GetCycleComponent(CB_ComboPoints1, CB_Finisher1)).Rank > 0) cycle.Components.Add(GetCycleComponent(CB_ComboPoints1, CB_Finisher1));
+            if ((GetCycleComponent(CB_ComboPoints2, CB_Finisher2)).Rank > 0) cycle.Components.Add(GetCycleComponent(CB_ComboPoints2, CB_Finisher2));
+            if ((GetCycleComponent(CB_ComboPoints3, CB_Finisher3)).Rank > 0) cycle.Components.Add(GetCycleComponent(CB_ComboPoints3, CB_Finisher3));
             _calcOpts.DpsCycle = cycle;
             UpdateCalculations();
         }
             else
             {
-                CB_ComboPoints1.Text   = _calcOpts.DpsCycle.Components[0].Rank.ToString();
-                CB_Finisher1.Text      = _calcOpts.DpsCycle.Components[0].Finisher.Name;
-                CB_ComboPoints2.Text   = _calcOpts.DpsCycle.Components[1].Rank.ToString();
-                CB_Finisher2.Text      = _calcOpts.DpsCycle.Components[1].Finisher.Name;
-                CB_ComboPoints3.Text   = _calcOpts.DpsCycle.Components[2].Rank.ToString();
-                CB_Finisher3.Text      = _calcOpts.DpsCycle.Components[2].Finisher.Name;
+                if (_calcOpts.DpsCycle.Components.Count > 0)
+                {
+                    CB_ComboPoints1.Text = _calcOpts.DpsCycle.Components[0].Rank.ToString();
+                    CB_Finisher1.Text = _calcOpts.DpsCycle.Components[0].Finisher.Name;
+                }
+                if (_calcOpts.DpsCycle.Components.Count > 1)
+                {
+                    CB_ComboPoints2.Text = _calcOpts.DpsCycle.Components[1].Rank.ToString();
+                    CB_Finisher2.Text = _calcOpts.DpsCycle.Components[1].Finisher.Name;
+                }
+                if (_calcOpts.DpsCycle.Components.Count > 2)
+                {
+                    CB_ComboPoints3.Text = _calcOpts.DpsCycle.Components[2].Rank.ToString();
+                    CB_Finisher3.Text = _calcOpts.DpsCycle.Components[2].Finisher.Name;
+                }
             }
         }
 
