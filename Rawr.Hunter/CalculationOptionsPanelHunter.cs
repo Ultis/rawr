@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using System.Collections;
+using System.Xml.Serialization;
 using Rawr.Base;
 
 namespace Rawr.Hunter
@@ -22,6 +25,7 @@ namespace Rawr.Hunter
         public CalculationOptionsPanelHunter()
         {
             isLoading = true;
+            LoadPetTalentSpecs();
             InitializeComponent();
 
             CB_Duration.Minimum = 0;
@@ -106,6 +110,9 @@ namespace Rawr.Hunter
             InitializeShotList(CB_ShotPriority_10);
 
             CB_CalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
+
+            UpdateSavedTalents();
+            SavePetTalentSpecs();
 
             //initTalentImages();
             isLoading = false;
@@ -223,6 +230,125 @@ namespace Rawr.Hunter
                     "Error Loading Char File", ex.Message,
                     "LoadCalculationOptions", "No Additional Info", ex.StackTrace);
             }
+        }
+
+        private static readonly string _SavedFilePath;
+        static CalculationOptionsPanelHunter()
+        {
+			_SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
+                "Data" + Path.DirectorySeparatorChar + "PetTalents.xml");
+        }
+
+        private SavedPetTalentSpecList _savedPetTalents;
+        private void LoadPetTalentSpecs()
+        {
+            try
+            {
+                if (File.Exists(_SavedFilePath))
+                {
+                    using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
+                        _savedPetTalents = (SavedPetTalentSpecList)serializer.Deserialize(reader);
+                        reader.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                ;
+            }
+            if (_savedPetTalents == null)
+            {
+                _savedPetTalents = new SavedPetTalentSpecList(10);
+            }
+        }
+        private void SavePetTalentSpecs()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
+                    serializer.Serialize(writer, _savedPetTalents);
+                    writer.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex.Message);
+                Log.Write(ex.StackTrace);
+            }
+        }
+
+        private PetTalentTree _pettalents = null;
+        public PetTalentTree PetTalents
+        {
+            get { return _pettalents; }
+            set
+            {
+                _pettalents = value;
+                CalcOpts.PetTalents = _pettalents;
+                //if (_character != null) _character.CurrentTalents = value;
+                UpdatePetTrees();
+            }
+        }
+
+        public SavedPetTalentSpec CustomPetSpec { get; set; }
+        public List<SavedPetTalentSpec> SpecsFor(PetFamilyTree petClass)
+        {
+            List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
+            foreach (SavedPetTalentSpec spec in _savedPetTalents)
+            {
+                /*if (spec.Class == _character.Class)
+                {*/
+                    classTalents.Add(spec);
+                /*}*/
+            }
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null)
+            {
+                CustomPetSpec = new SavedPetTalentSpec("Custom", _pettalents, _treeCount);
+                classTalents.Add(CustomPetSpec);
+            }
+            return classTalents;
+        }
+
+        public SavedPetTalentSpec CurrentPetSpec()
+        {
+            if (CB_PetTalentsSpecSwitcher.SelectedItem == null) return CustomPetSpec;
+            else if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) return CustomPetSpec;
+            else return (SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem;
+        }
+
+        private int _treeCount;
+
+        private void UpdatePetTrees()
+        {
+            populatePetTalentCombos();
+        }
+
+        private bool _updateSaved = false;
+        private void UpdateSavedTalents()
+        {
+            //if (_character != null) {
+                List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
+                SavedPetTalentSpec current = null;
+                foreach (SavedPetTalentSpec spec in _savedPetTalents)
+                {
+                    //if (spec.Class == _character.Class) {
+                        classTalents.Add(spec);
+                        if (spec.Equals(_pettalents)) current = spec;
+                    //}
+                }
+                if (current == null) {
+                    current = new SavedPetTalentSpec("Custom", null, _treeCount);
+                    classTalents.Add(current);
+                }
+                _updateSaved = true;
+                CB_PetTalentsSpecSwitcher.DataSource = classTalents;
+                CB_PetTalentsSpecSwitcher.SelectedItem = current;
+                _updateSaved = false;
+            //}
         }
         #endregion
 
@@ -685,6 +811,7 @@ namespace Rawr.Hunter
         }
         private PetFamilyTree getPetFamilyTree()
         {
+            if (CB_PetFamily.SelectedItem == null) return PetFamilyTree.None;
             switch ((PetFamily)CB_PetFamily.SelectedItem)
             {
                 case PetFamily.Bat:
@@ -740,6 +867,52 @@ namespace Rawr.Hunter
             CalcOpts.PetTalents.Reset();
             populatePetTalentCombos();
         }
+        private void talentSpecButton_Click(object sender, EventArgs e)
+        {
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null)
+            {
+                List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
+                foreach (SavedPetTalentSpec spec in _savedPetTalents) {
+                    /*if (spec.Class == Character.Class)*/ classTalents.Add(spec);
+                }
+                FormSavePetTalentSpec form = new FormSavePetTalentSpec(classTalents);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    SavedPetTalentSpec spec = form.PetTalentSpec();
+                    String specName = form.PetTalentSpecName();
+                    if (spec == null)
+                    {
+                        spec = new SavedPetTalentSpec(specName, _pettalents, _treeCount);
+                        _savedPetTalents.Add(spec);
+                    }
+                    else spec.Spec = _pettalents.ToString();
+                    UpdateSavedTalents();
+                    SavePetTalentSpecs();
+                    Character.OnCalculationsInvalidated();
+                }
+                form.Dispose();
+            }
+            else
+            {
+                _savedPetTalents.Remove((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem);
+                UpdateSavedTalents();
+                SavePetTalentSpecs();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboBoxTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
+                BT_PetTalentsSaveDel.Text = "Save";
+            } else {
+                BT_PetTalentsSaveDel.Text = "Delete";
+                if (!_updateSaved) PetTalents = ((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).TalentSpec();
+            }
+            populatePetTalentCombos();
+            Character.OnCalculationsInvalidated();
+        }
+
         private void talentComboChanged(object sender, EventArgs e)
         {
             if (isLoading) { return; }
@@ -826,8 +999,18 @@ namespace Rawr.Hunter
                 //initTalentImages();
                 CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
 
+                {
+                    //ComboBox item = sender as ComboBox;
+                    _treeCount = pt.TotalPoints();
+                    //if (item != null) PetTalents.Data[item.Index] = item.CurrentRank;
+                    UpdateSavedTalents();
+                    SavePetTalentSpecs();
+                }
+
                 Character.OnCalculationsInvalidated();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
                     "Error Setting Pet Talents after a Change", ex.Message,
                     "talentComboChanged", "Current ID: " + currentId.ToString() + "\r\nCurrent Talent: " + pt.TalentTree[currentId].Name, ex.StackTrace);

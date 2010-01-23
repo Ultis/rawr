@@ -903,6 +903,21 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             Silverback.Value = 0;
         }
 
+        public int TotalPoints() {
+            int total = 0;
+            foreach (PetTalent pt in TalentTree) { total += pt.Value; }
+            return total;
+        }
+        public PetFamilyTree GetClass() {
+            if (RoarOfRecovery.Value + Cornered.Value + Bullheaded.Value + FeedingFrenzy.Value > 0)
+                return PetFamilyTree.Cunning;
+            else if (SharkAttack.Value + Rabid.Value + LickYourWounds.Value > 0)
+                return PetFamilyTree.Ferocity;
+            else if (Silverback.Value + LastStand.Value + Intervene.Value + Thunderstomp.Value + BloodOfTheRhino.Value > 0)
+                return PetFamilyTree.Tenacity;
+            else
+                return PetFamilyTree.None;
+        }
         public override string ToString()
         {
             string ret = "";
