@@ -910,7 +910,7 @@ namespace Rawr.Hunter
                 if (!_updateSaved) PetTalents = ((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).TalentSpec();
             }
             populatePetTalentCombos();
-            Character.OnCalculationsInvalidated();
+            if(Character != null) Character.OnCalculationsInvalidated();
         }
 
         private void talentComboChanged(object sender, EventArgs e)
