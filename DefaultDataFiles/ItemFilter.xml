@@ -5109,7 +5109,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Armor Tokens</Name>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph|Mark of Sanctification</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph|Mark of Sanctification|Sanctified</Pattern>
           <BoA>false</BoA>
           <BoE>false</BoE>
           <BoP>false</BoP>
