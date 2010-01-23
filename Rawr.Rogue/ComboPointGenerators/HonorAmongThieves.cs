@@ -39,7 +39,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public override float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
         {
-            return (calcOpts.ComboPointsNeededForCycle() - _hemosPerCycle) /_cpsPersecond;
+            return (calcOpts.ComboPointsNeededForCycle(combatFactors.T10x4ChanceOn3CPOnFinisher) - _hemosPerCycle) / _cpsPersecond;
         }
     }
 }

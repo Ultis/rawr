@@ -34,7 +34,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors, calcOpts);
             var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors, calcOpts), 0);
 
-            return (critDamage + nonCritDamage) * calcOpts.ComboPointsNeededForCycle() / cycleTime.Duration;
+            return (critDamage + nonCritDamage) * calcOpts.ComboPointsNeededForCycle(combatFactors.T10x4ChanceOn3CPOnFinisher) / cycleTime.Duration;
         }
 
         private static float BaseAttackDamage(CombatFactors combatFactors)

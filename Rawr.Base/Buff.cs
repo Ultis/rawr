@@ -4007,6 +4007,27 @@ namespace Rawr
             });
             #endregion
             #region Tier 10 | Shadowblade's
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Shadowblade's Battlegear (T10) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusToTTEnergy = 30 },
+                SetName = "Shadowblade's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Shadowblade's Battlegear (T10) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ChanceOn3CPOnFinisher = 0.13f },
+                SetName = "Shadowblade's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
             #endregion
             #region PvP
             #endregion
@@ -4783,8 +4804,6 @@ namespace Rawr
                     SetThreshold = 2
                 });
             }
-            #endregion
-
             #endregion
 
             #region Profession Buffs

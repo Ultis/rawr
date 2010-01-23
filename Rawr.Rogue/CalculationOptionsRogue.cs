@@ -30,10 +30,10 @@ namespace Rawr.Rogue
         public Feint Feint = new Feint();
         public float TurnTheTablesUptime;
         public float Duration;
-
-        public float ComboPointsNeededForCycle()
+        
+        public float ComboPointsNeededForCycle(float ChanceOn3CPOnFinisher)
         {
-            return DpsCycle.TotalComboPoints - (DpsCycle.Components.Count * Talents.Ruthlessness.Bonus);
+            return DpsCycle.TotalComboPoints - (DpsCycle.Components.Count * (Talents.Ruthlessness.Bonus + 3 * ChanceOn3CPOnFinisher));
         }
     }
 }

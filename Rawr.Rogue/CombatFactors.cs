@@ -140,7 +140,8 @@ namespace Rawr.Rogue {
                 float energyRegen = 10f;
                 energyRegen += Talents.Vitality.Bonus;
                 energyRegen += Talents.AdrenalineRush.Energy.Bonus;
-                energyRegen -= Talents.HungerForBlood.EnergyCost.Bonus / 55f;           //  Assum reactive HungerForBlood every 55 sec
+                energyRegen += _stats.BonusToTTEnergy / 30;                             // Assume ToTT every 30 sec
+                energyRegen -= Talents.HungerForBlood.EnergyCost.Bonus / 55f;           // Assume reactive HungerForBlood every 55 sec
                 energyRegen -= Talents.BladeFlurry.EnergyCost.Bonus;
                 energyRegen -= _calcOpts.Feint.EnergyCost();
                 return energyRegen;
@@ -155,6 +156,8 @@ namespace Rawr.Rogue {
         public float Tier8FourPieceRuptureCrit { get { return 1 + (_stats.RogueT8FourPieceBonus == 1 ? ProbMhCrit : 0f); } }
         public float T09x2ReduceEnergyCostFromRupture { get { return _stats.ReduceEnergyCostFromRupture; } }
         public float T09x4BonusCPGCritChance { get { return _stats.BonusCPGCritChance; } }
+        public float T10x2BonusToTTEnergy { get { return _stats.BonusToTTEnergy; } }
+        public float T10x4ChanceOn3CPOnFinisher { get { return _stats.ChanceOn3CPOnFinisher; } }
         private static float CalcAverageWeaponDamage(Item weapon, Stats stats) { return stats.WeaponDamage + (weapon.MinDamage + weapon.MaxDamage) / 2.0f; }
         public class Knuckles : Item { public Knuckles() { Speed = 2f; } }
     }

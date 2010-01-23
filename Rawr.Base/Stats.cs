@@ -367,6 +367,8 @@ namespace Rawr {
         RuptureCrit,
         ReduceEnergyCostFromRupture,
         BonusCPGCritChance,
+        BonusToTTEnergy,
+        ChanceOn3CPOnFinisher,
         #endregion
         #region DK Sigil Bonuses
         BonusBloodStrikeDamage,
@@ -1588,6 +1590,22 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusCPGCritChance]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusCPGCritChance] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float BonusToTTEnergy
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusToTTEnergy]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusToTTEnergy] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ChanceOn3CPOnFinisher
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOn3CPOnFinisher]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOn3CPOnFinisher] = value; }
         }
         #endregion
 

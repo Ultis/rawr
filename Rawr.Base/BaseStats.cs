@@ -501,7 +501,7 @@ namespace Rawr
                             case CharacterRace.Undead:
                                 S.Strength = 112;
                                 S.Agility = 187;
-                                S.Stamina = 106;
+                                S.Stamina = 105;
                                 S.Intellect = 41;
                                 S.Spirit = 72;
                                 break;

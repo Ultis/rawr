@@ -698,6 +698,8 @@ namespace Rawr.Rogue {
                RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus,
                ReduceEnergyCostFromRupture = stats.ReduceEnergyCostFromRupture,
                BonusCPGCritChance = stats.BonusCPGCritChance,
+               BonusToTTEnergy = stats.BonusToTTEnergy,
+               ChanceOn3CPOnFinisher = stats.ChanceOn3CPOnFinisher,
 
                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                SpellHit = stats.SpellHit,
@@ -788,6 +790,8 @@ namespace Rawr.Rogue {
                     stats.RogueT8FourPieceBonus +
                     stats.ReduceEnergyCostFromRupture +
                     stats.BonusCPGCritChance +
+                    stats.BonusToTTEnergy +
+                    stats.ChanceOn3CPOnFinisher +
 
                     stats.BonusPhysicalDamageMultiplier +
                     stats.SpellHit +

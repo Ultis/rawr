@@ -21,7 +21,7 @@ namespace Rawr.Rogue.ComboPointGenerators {
             return MhHitsNeeded(combatFactors, calcOpts) * EnergyCost(combatFactors, calcOpts) / regen;
         }
         public virtual float MhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts) {
-            return calcOpts.ComboPointsNeededForCycle() / ComboPointsGeneratedPerAttack(combatFactors, calcOpts);    
+            return calcOpts.ComboPointsNeededForCycle(combatFactors.T10x4ChanceOn3CPOnFinisher) / ComboPointsGeneratedPerAttack(combatFactors, calcOpts);    
         }
         public virtual float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts) {
             return 0f;
