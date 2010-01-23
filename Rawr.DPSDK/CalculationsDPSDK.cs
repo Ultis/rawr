@@ -861,6 +861,7 @@ namespace Rawr.DPSDK
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
+                ArmorPenetration = talents.BloodGorged * .02f
             };
             if (talents.UnbreakableArmor > 0)
             {
