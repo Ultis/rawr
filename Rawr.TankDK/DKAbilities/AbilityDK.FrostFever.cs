@@ -14,10 +14,33 @@ namespace Rawr.TankDK
         /// Base damage 0
         /// Bonus from attack power [AP * 0.055 * 1.15]
         /// </summary>
-        public AbilityDK_FrostFever()
+        public AbilityDK_FrostFever(Stats s)
         {
+            this.sStats = s;
             this.szName = "Frost Fever";
-            
+            this.tDamageType = ItemDamageType.Frost;
+            this.uDuration = 15000;
+            this.uTickRate = 3000;
+            this.uBaseDamage = 0;
+            this.bTriggersGCD = false;
+            this.Cooldown = 0;
+            this.CastTime = 0;
+        }
+        private int _DamageAdditiveModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public int DamageAdditiveModifer
+        {
+            get
+            {
+                //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
+                return (int)(this.sStats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer;
+            }
+            set
+            {
+                _DamageAdditiveModifer = value;
+            }
         }
     }
 }

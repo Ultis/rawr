@@ -26,14 +26,16 @@ namespace Rawr.TankDK
     /// going on when the abilities are used.
     /// EG. IT * 2 should give us the values of 2 ITs in cost, damage, time, etc.
     /// </summary>
-    class AbilityDK_Base
+    abstract class AbilityDK_Base
     {
         #region Constants
         public const uint MIN_GCD_MS = 1000;
         public const uint INSTANT = 1;
         public const uint MELEE_RANGE = 5;
+        public const float THREAT_FROST_PRESENCE = 2.0735f;
         #endregion
 
+        #region Constructors
         /// <summary>
         /// Default constructor for the DK's abilities.
         /// </summary>
@@ -67,6 +69,25 @@ namespace Rawr.TankDK
             this.uTickRate = INSTANT;
             this.uDuration = INSTANT;
         }
+        public AbilityDK_Base(Stats s)
+        {
+            this.sStats = s;
+            this.szName = "";
+            this.AbilityCost[(int)DKCostTypes.Blood] = 0;
+            this.AbilityCost[(int)DKCostTypes.Frost] = 0;
+            this.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = 0;
+            this.uBaseDamage = 0;
+            this.uRange = MELEE_RANGE;
+            this.tDamageType = ItemDamageType.Physical;
+            this.Cooldown = 1500; // GCD
+            this.CastTime = INSTANT;
+            this.uTickRate = INSTANT;
+            this.uDuration = INSTANT;
+        }
+        #endregion 
+
+        protected Stats sStats;
 
         /// <summary>
         ///  Name of the ability.
@@ -124,6 +145,7 @@ namespace Rawr.TankDK
         /// </summary>
         public ItemDamageType tDamageType  { get; set; }
 
+        #region Time Based Items
         ///////////////////////////////////////////////////////
         // Time based items.  
         // These will all be effected by haste.
@@ -152,11 +174,13 @@ namespace Rawr.TankDK
         { 
             get 
             {
-                return Math.Max(MIN_GCD_MS, (uint)AbilityCost[(int)DKCostTypes.CooldownTime]);
+                if (this.bTriggersGCD)
+                    return Math.Max(MIN_GCD_MS, (uint)AbilityCost[(int)DKCostTypes.CooldownTime]);
+                return (uint)AbilityCost[(int)DKCostTypes.CooldownTime];
             } 
             set
             { 
-                AbilityCost[(int)DKCostTypes.CooldownTime] = (int)Math.Max(value, MIN_GCD_MS); 
+                AbilityCost[(int)DKCostTypes.CooldownTime] = (int)value; 
             }
         }
 
@@ -179,13 +203,14 @@ namespace Rawr.TankDK
                 AbilityCost[(int)DKCostTypes.DurationTime] = (int)Math.Max(INSTANT, value);
             }
         }
+
+        private uint _uTickRate;
         /// <summary>
         /// How often does the effect proc for?
         /// Tick rate is millisecs.
         /// Ensure that we don't have a 0 value.  
         /// 1 ms == instant.
         /// </summary>
-        private uint _uTickRate;
         public uint uTickRate 
         {
             get
@@ -197,18 +222,21 @@ namespace Rawr.TankDK
                 _uTickRate = Math.Max(INSTANT, value);
             }
         }
+        #endregion 
 
+        #region Weapon related Items
         /////////////////////////////////////////////////
         // Weapon related items.
 
         public bool bWeaponRequired { get; set; }
         public Weapon wWeapon;
         public float fWeaponDamageModifier { get; set; }
+        #endregion 
 
         /// <summary>
         /// Get the single instance damage of this ability.
         /// </summary>
-        /// <returns>float that represents a fully buffed single instance of this ability.</returns>
+        /// <returns>Int that represents a fully buffed single instance of this ability.</returns>
         public int GetTickDamage()
         {
             // Start w/ getting the base damage values.
@@ -221,14 +249,14 @@ namespace Rawr.TankDK
         /// <summary>
         /// Get the full effect over the lifetime of the ability.
         /// </summary>
-        /// <returns>float that is TickDamage * duration</returns>
+        /// <returns>int that is TickDamage * duration</returns>
         public int GetTotalDamage()
         {
             // Start w/ getting the base damage values.
             int iDamage = this.GetTickDamage();
             // Assuming full duration, or standard impact.
             // But I want this in whole numbers.
-            
+            // Also need to decide if I want this to be whole ticks, or if partial ticks will be allowed.
             float fDamageCount = (float)(this.uDuration / this.uTickRate);
             // To prevent divide by 0 errors.
             if (float.IsNaN(fDamageCount))
@@ -243,11 +271,11 @@ namespace Rawr.TankDK
             return iDamage;
         }
 
+        private int _DamageAdditiveModifer;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>
-        private int _DamageAdditiveModifer;
-        public int DamageAdditiveModifer
+        virtual public int DamageAdditiveModifer
         {
             get 
             {
@@ -275,22 +303,23 @@ namespace Rawr.TankDK
             }
         }
 
+        private float _ThreatAdditiveModifier;
         /// <summary>
         /// Get the full effect of threat over the lifetime of the ability.
         /// </summary>
         /// <returns>float that is GetTotalDamage * ThreatModifiers</returns>
-        private float _ThreatAdditiveModifier;
         public float GetTotalThreat() { return TotalThreat; } 
         public float TotalThreat
         {
             get
             {
-                return StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier;
+                return (StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier) * THREAT_FROST_PRESENCE;
             }
             set
             {
                 _ThreatAdditiveModifier = value;
             }
         }
+
     }
 }

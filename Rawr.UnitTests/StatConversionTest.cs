@@ -99,10 +99,10 @@ namespace Rawr.UnitTests
             expected[(int)HitResult.Miss] = 0.121f;
             expected[(int)HitResult.Dodge] = 0.134f;
             expected[(int)HitResult.Parry] = 0.098f;
-            expected[(int)HitResult.Block] = 0.096f;
+            expected[(int)HitResult.Block] = .05f;
             expected[(int)HitResult.Crit] = .05f;
-            expected[(int)HitResult.AnyMiss] = .05f;
-            expected[(int)HitResult.AnyHit] = .05f;
+            expected[(int)HitResult.AnyMiss] = 0;
+            expected[(int)HitResult.AnyHit] = 0;
             expected[(int)HitResult.Glance] = .05f;
             expected[(int)HitResult.Resist] = .05f;
             expected[(int)HitResult.Hit] = .05f;
@@ -116,14 +116,14 @@ namespace Rawr.UnitTests
         }
 
         [TestMethod()]
-        public void GetDRAvoidanceChanceTest_Warr_TestTableRaw689()
+        public void GetDRAvoidanceChanceTest_Warr_TestTableDef689()
         {
             const float testValue = 689f;
             ItemInstance[] IIArray = new ItemInstance[1];
             Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, new BossHandler(), IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
-            toon.Class = CharacterClass.DeathKnight;
+            toon.Class = CharacterClass.Warrior;
 
             Stats stats = new Stats();
             stats += BaseStats.GetBaseStats(toon);
@@ -133,33 +133,28 @@ namespace Rawr.UnitTests
             //float levelDiff = 0.006f;
             float[] expected = new float[HitResultCount];
             expected[(int)HitResult.Miss] = 0.0929f;
-            expected[(int)HitResult.Dodge] = 0.1516f;
-            expected[(int)HitResult.Parry] = 0.1117f;
+            expected[(int)HitResult.Dodge] = 0.1037f;
+            expected[(int)HitResult.Parry] = 0.1021f;
             // Miss test
             float actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Miss, TargetLevel), 4);
             Assert.AreEqual(expected[(int)HitResult.Miss], actual, HitResult.Miss.ToString());
 
-            stats = new Stats(); // Don't want' defense messing w/ the numbers.
-            stats.Defense = 400;
-            // Dodge Test
-            stats.DodgeRating = testValue;
             actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Dodge, TargetLevel), 4);
             Assert.AreEqual(expected[(int)HitResult.Dodge], actual, HitResult.Dodge.ToString());
-            // Parry Test
-            stats.ParryRating = testValue;
+
             actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Parry, TargetLevel), 4);
             Assert.AreEqual(expected[(int)HitResult.Parry], actual, HitResult.Parry.ToString());
         }
 
         [TestMethod()]
-        public void GetDRAvoidanceChanceTest_Warr_TestTableRaw10000()
+        public void GetDRAvoidanceChanceTest_Warr_TestTableDef10000()
         {
             const float testValue = 10000f;
             ItemInstance[] IIArray = new ItemInstance[1];
             Character toon = new Character("TestWarrior", "Malygos", CharacterRegion.US, CharacterRace.Human, new BossHandler(), IIArray, new System.Collections.Generic.List<Buff>(), "ProtWar"); // TODO: Initialize to an appropriate value
             Assert.IsNotNull(toon);
             //toon.Level = 80;  //Asumption here.
-            toon.Class = CharacterClass.DeathKnight;
+            toon.Class = CharacterClass.Warrior;
 
             Stats stats = new Stats();
             stats += BaseStats.GetBaseStats(toon);
@@ -168,21 +163,16 @@ namespace Rawr.UnitTests
             uint TargetLevel = 80;
             //float levelDiff = 0.006f;
             float[] expected = new float[HitResultCount];
-            expected[(int)HitResult.Miss] = 0.1847f;
-            expected[(int)HitResult.Dodge] = 0.6619f;
-            expected[(int)HitResult.Parry] = 0.3850f;
+            expected[(int)HitResult.Miss]  = 0.16f;
+            expected[(int)HitResult.Dodge] = 0.7650f;
+            expected[(int)HitResult.Parry] = 0.4700f;
             // Miss test
             float actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Miss, TargetLevel), 4);
             Assert.AreEqual(expected[(int)HitResult.Miss], actual, HitResult.Miss.ToString());
-
-            stats = new Stats(); // Don't want' defense messing w/ the numbers.
-            stats.Defense = 400;
             // Dodge Test
-            stats.DodgeRating = testValue;
             actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Dodge, TargetLevel), 4);
             Assert.AreEqual(expected[(int)HitResult.Dodge], actual, HitResult.Dodge.ToString());
             // Parry Test
-            stats.ParryRating = testValue;
             actual = (float)System.Math.Round((double)StatConversion.GetDRAvoidanceChance(toon, stats, HitResult.Parry, TargetLevel), 4);
             Assert.AreEqual(expected[(int)HitResult.Parry], actual, HitResult.Parry.ToString());
         }

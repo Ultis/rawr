@@ -19,5 +19,29 @@ namespace Rawr.TankDK
             this.fWeaponDamageModifier = .5f;
             this.bTriggersGCD = true;
         }
+        public AbilityDK_PlagueStrike(Stats s)
+        {
+            this.sStats = s;
+            this.szName = "Plague Strike";
+            this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.uBaseDamage = 189;
+            this.bWeaponRequired = true;
+            this.fWeaponDamageModifier = .5f;
+            this.bTriggersGCD = true;
+        }
+        public AbilityDK_PlagueStrike(Stats s, Weapon w)
+        {
+            this.sStats = s;
+            this.wWeapon = w;
+            this.szName = "Plague Strike";
+            this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.uBaseDamage = 189;
+            this.bWeaponRequired = true;
+            this.fWeaponDamageModifier = .5f;
+            this.bTriggersGCD = true;
+        }
+
     }
 }

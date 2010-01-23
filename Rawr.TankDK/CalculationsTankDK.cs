@@ -2036,6 +2036,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                 Healed = stats.Healed,
                 HealthRestore = stats.HealthRestore,
+                HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
                 Hp5 = stats.Hp5,
 
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
@@ -2215,6 +2216,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             bResults |= (stats.Healed != 0);
             bResults |= (stats.HealthRestore != 0);
+            bResults |= (stats.HealthRestoreFromMaxHealth != 0);
             bResults |= (stats.Hp5 != 0);
 
             // Bonus to stats
