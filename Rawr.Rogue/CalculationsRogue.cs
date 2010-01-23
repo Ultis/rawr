@@ -845,6 +845,7 @@ namespace Rawr.Rogue {
                 _relevantGlyphs.Add("Glyph of Fan of Knives");
                 _relevantGlyphs.Add("Glyph of Expose Armor");
                 _relevantGlyphs.Add("Glyph of Ghostly Strike");
+                _relevantGlyphs.Add("Glyph of Tricks of the Trade");
             }
             return _relevantGlyphs;
         }
