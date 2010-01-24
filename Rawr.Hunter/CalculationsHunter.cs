@@ -400,6 +400,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+
+                ZodProc = stats.ZodProc,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -471,6 +473,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.BonusNatureDamageMultiplier +
                 stats.BonusFrostDamageMultiplier +
                 stats.BonusFireDamageMultiplier +
+                stats.ZodProc +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusAttackPowerMultiplier +
@@ -2306,8 +2309,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // iLevel 264 | x = 4
             // iLevel 277 | x = 5
             calculatedStats.BonusAttackProcsDPS = 0f;
-            if (character.Ranged != null && (character.Ranged.Item.Id == 50638 || character.Ranged.Item.Id == 50034)) {
-                float Chance = (character.Ranged.Item.Id == 50638 ? 0.05f : (character.Ranged.Item.Id == 50034 ? 0.04f : 0f));
+            if (stats.ZodProc > 0){//character.Ranged != null && (character.Ranged.Item.Id == 50638 || character.Ranged.Item.Id == 50034)) {
+                float Chance = stats.ZodProc;//(character.Ranged.Item.Id == 50638 ? 0.05f : (character.Ranged.Item.Id == 50034 ? 0.04f : 0f));
                 float ProcDamage = rangedWeaponDamage
                                  + rangedAmmoDamage
                                  + stats.WeaponDamage
@@ -2317,7 +2320,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                            0f,
                                                            1f,
                                                            autoShotDamageAdjust);
-                SpecialEffect zod = new SpecialEffect(Trigger.RangedHit,new Stats(),0f,0f,Chance);
+                SpecialEffect zod = new SpecialEffect(Trigger.RangedHit, new Stats(), 0f, 0f, Chance);
                 float numProcs = calcOpts.Duration * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, calcOpts.Duration);
                 float totalDamage = numProcs * ProcDamageReal;
                 calculatedStats.BonusAttackProcsDPS = totalDamage / calcOpts.Duration;

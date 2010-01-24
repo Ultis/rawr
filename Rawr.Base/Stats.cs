@@ -533,6 +533,7 @@ namespace Rawr {
         FlameShockDoTCanCrit,
         DeathbringerProc,
         BattlemasterHealth,
+        ZodProc,
     }
 
     // Pulling this from ProtWar/ProtPally so that it can be used in other common areas.
@@ -2215,6 +2216,16 @@ namespace Rawr {
         {
             get { return _rawNoStackData[(int)NonStackingStat.DeathbringerProc]; }
             set { _rawNoStackData[(int)NonStackingStat.DeathbringerProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        [DisplayName("% Chance to proc an extra half damage shot")]
+        [Percentage]
+        public float ZodProc
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.ZodProc]; }
+            set { _rawNoStackData[(int)NonStackingStat.ZodProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

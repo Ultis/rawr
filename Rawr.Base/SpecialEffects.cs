@@ -1271,6 +1271,11 @@ namespace Rawr {
                 // Black Bruise
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = .09f }, 10f, 0f, 0.033f));
             }
+            else if ((match = new Regex("Your ranged attacks have a (?<amount1>\\d\\d*)% chance to cause you to instantly attack with this weapon for 50% weapon damage.").Match(line)).Success)
+            {
+                // Zod, kneel before him
+                stats.ZodProc = (ilvl == 277 ? 0.05f : 0.04f);
+            }
             #endregion
             #region 3.3 Trinkets
             else if (line == "Each time you deal melee or ranged damage to an opponent, you gain 17 attack power for the next 10 sec, stacking up to 20 times.")
