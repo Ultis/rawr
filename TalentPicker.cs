@@ -13,18 +13,25 @@ namespace Rawr
 {
 	public partial class TalentPicker : UserControl
 	{
-
-        private static readonly string _SavedFilePath;
-        static TalentPicker()
-        {
-			_SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "Talents.xml");
-        }
+		public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "Talents.xml");
 
 		public TalentPicker()
 		{
-            LoadTalentSpecs();
-			InitializeComponent();
-			this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            try
+			{
+				LoadTalentSpecs();
+			}
+			catch { }
+		    try
+			{
+				InitializeComponent();
+			}
+			catch { }
+		    try
+			{
+				this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+			}
+			catch { }
 		}
 
         private SavedTalentSpecList _savedTalents;
@@ -32,9 +39,9 @@ namespace Rawr
         {
             try
             {
-                if (File.Exists(_SavedFilePath))
+                if (File.Exists(SavedFilePath))
                 {
-                    using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8))
+                    using (StreamReader reader = new StreamReader(SavedFilePath, Encoding.UTF8))
                     {
                         XmlSerializer serializer = new XmlSerializer(typeof(SavedTalentSpecList));
                         _savedTalents = (SavedTalentSpecList)serializer.Deserialize(reader);
@@ -55,7 +62,7 @@ namespace Rawr
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8))
+                using (StreamWriter writer = new StreamWriter(SavedFilePath, false, Encoding.UTF8))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(SavedTalentSpecList));
                     serializer.Serialize(writer, _savedTalents);

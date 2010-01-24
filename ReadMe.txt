@@ -1,19 +1,11 @@
-Rawr v2.3.6.0
+Rawr v2.3.8.0
 ------------
-Welcome to Rawr v2.3.6.0.
+Welcome to Rawr v2.3.8.0.
    
 Recent Changes:
- - Default Item Filters should now more accurately reflect what most raiders have available to them.  A filter was also added which enables the hide/show of green quality gems.  Token items which require the prior version (ie: T10 251 -->T10 264) are now correctly filtered.
- - Rawr.Enhance: Improvements to accuracy of EnhanceSim Export.
- - Rawr.Hunter: Fixed a crash with hunter pet talents.  
- - Rawr.Moonkin: Idol of Lunar Eclipse should now be properly modeled.
- - Rawr.Mage: Cycles with 2T10 should now be more accurate.
- - Rawr.ProtPaladin: HotR should do the correct threat/damage now.
- - Rawr.Rogue: Murder is now modeled correctly.  Glyph of Hunger for Blood is now properly modeled, display of stat values cleaned up.  Glyph of Tricks of the Trade is now listed.  Rogue T10 set bonuses are now properly modeled.
- - Rawr.DPSDK: Moved location of Rotation information to the options pane, rotation calculations smoothed out.  Tweeked priority system and disease uptime calculations.  Blood Gorged should now properly apply the armor penetration bonus of the talent. 
- - Rawr.TankDK: Armor in Frost Presence updated, checkbox added to enable/disable Parry Haste.
- - Rawr.DPSWarr: Cleaned up calculations for 2T10 this set bonus should properly show as an upgrade when it is one.  Fixed a crash with Fury when not equiping a mainhand weapon.
-
+ - Rawr.Hunter: Fixed a crashing bug.
+ - Rawr.Rogue: Fix for cycles that used less than 3 finishers.
+ - Rawr.DPSDK: Fix for Blood's Glyph of Disease priority.
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -120,6 +112,18 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.7.0
+ - Default Item Filters should now more accurately reflect what most raiders have available to them.  A filter was also added which enables the hide/show of green quality gems.  Token items which require the prior version (ie: T10 251 -->T10 264) are now correctly filtered.
+ - Rawr.Enhance: Improvements to accuracy of EnhanceSim Export.
+ - Rawr.Hunter: Fixed a crash with hunter pet talents.  
+ - Rawr.Moonkin: Idol of Lunar Eclipse should now be properly modeled.
+ - Rawr.Mage: Cycles with 2T10 should now be more accurate.
+ - Rawr.ProtPaladin: HotR should do the correct threat/damage now.
+ - Rawr.Rogue: Murder is now modeled correctly.  Glyph of Hunger for Blood is now properly modeled, display of stat values cleaned up.  Glyph of Tricks of the Trade is now listed.  Rogue T10 set bonuses are now properly modeled.
+ - Rawr.DPSDK: Moved location of Rotation information to the options pane, rotation calculations smoothed out.  Tweeked priority system and disease uptime calculations.  Blood Gorged should now properly apply the armor penetration bonus of the talent. 
+ - Rawr.TankDK: Armor in Frost Presence updated, checkbox added to enable/disable Parry Haste.
+ - Rawr.DPSWarr: Cleaned up calculations for 2T10 this set bonus should properly show as an upgrade when it is one.  Fixed a crash with Fury when not equiping a mainhand weapon.
+
 v2.3.6.0
  - Chart Data should Export correctly now.
  - Battlemaster trinkets on use are now modeled differently. 
