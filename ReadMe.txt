@@ -3,26 +3,16 @@ Rawr v2.3.6.0
 Welcome to Rawr v2.3.6.0.
    
 Recent Changes:
- - Chart Data should Export correctly now.
- - Battlemaster trinkets on use are now modeled differently. 
- - Regex fixes to parsing of several spell effects. 
- - Wowhead's DB still has a bug with sockets being shown in spots 2&3 instead of 1&2 for some items, but we've compensated for this until they fix it. 
- - Additional item information (BoP/BoE) attached to items now. 
- - Updates to item filters; many new filter types added, check them out! 
- - RPGO's Character Profiler should play nice with Rawr now. 
- - Currently equiped gems (when loaded from Armory) are automatically marked as avaliable.
- - Rawr.Tree: Improved handeling of procs from trinkets and spells. Haste (especially in trinket form) should be modeled better.
- - Rawr.Warlock: Many spell coefficients and multipliers are now displayed in the mouseover tooltips. Damage from crits should also be calculated correctly now.
- - Rawr.TankDK: Runic Power accumulation and usage should be more accurately modeled. Fixed a bug in which Improved Icy Talons was stacking with normal Ice Talons. Sigil of the Bone Gryphon should now properly stack its effect. Blood Gorged now properly increases your damage done. Hysteria no longer has a personal DPS value, to be added back in later.
- - Rawr.DPSDK: Death Runes (from all trees) should now be more accurately modeled. Killing Machine and Rime should now interact properly with their affected abilities.
- - Rawr.DPSWarr: Gem templates have been updated, though only ones which you're likely to use are active by default. Turning on more (or all of them) will slow down performance. Deathbringer's Will will now proc Haste instead of ArPen.
- - Rawr.Enhance: Deathbringer's Will will now proc Haste instead of ArPen. The combat table should now play nice with the (white) crit cap.
- - Rawr.ProtWarr: Crit depression is now properly modeled based on new research. Mocking blow threat (and mocking blow glyphs) are now properly modeled. Boss Attack speed calculations updated.
- - Rawr.Hunter: Deathbringer's Will will now proc Haste instead of ArPen.
- - Rawr.Mage: Nibelung's proc has been modeled and added. Improvements (both in accuracy and speed) to sequence reconstruction.
- - Rawr.RestoSham: Gemming templates updated. Fight Activity slider added, and better overheal calculations.
- - Rawr.Cat: Deathbringer's Will will now proc Haste instead of ArPen.
-
+ - Default Item Filters should now more accurately reflect what most raiders have available to them.  A filter was also added which enables the hide/show of green quality gems.  Token items which require the prior version (ie: T10 251 -->T10 264) are now correctly filtered.
+ - Rawr.Enhance: Improvements to accuracy of EnhanceSim Export.
+ - Rawr.Hunter: Fixed a crash with hunter pet talents.  
+ - Rawr.Moonkin: Idol of Lunar Eclipse should now be properly modeled.
+ - Rawr.Mage: Cycles with 2T10 should now be more accurate.
+ - Rawr.ProtPaladin: HotR should do the correct threat/damage now.
+ - Rawr.Rogue: Murder is now modeled correctly.  Glyph of Hunger for Blood is now properly modeled, display of stat values cleaned up.  Glyph of Tricks of the Trade is now listed.  Rogue T10 set bonuses are now properly modeled.
+ - Rawr.DPSDK: Moved location of Rotation information to the options pane, rotation calculations smoothed out.  Tweeked priority system and disease uptime calculations.  Blood Gorged should now properly apply the armor penetration bonus of the talent. 
+ - Rawr.TankDK: Armor in Frost Presence updated, checkbox added to enable/disable Parry Haste.
+ - Rawr.DPSWarr: Cleaned up calculations for 2T10 this set bonus should properly show as an upgrade when it is one.  Fixed a crash with Fury when not equiping a mainhand weapon.
 
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
@@ -36,7 +26,6 @@ Once you've got it running, you should see a basic character-screen-like layout 
 Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 
 ~Astrylian on US-Suramar, cnervig@hotmail.com
-
 
 FAQ
 ---
@@ -131,6 +120,27 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.6.0
+ - Chart Data should Export correctly now.
+ - Battlemaster trinkets on use are now modeled differently. 
+ - Regex fixes to parsing of several spell effects. 
+ - Wowhead's DB still has a bug with sockets being shown in spots 2&3 instead of 1&2 for some items, but we've compensated for this until they fix it. 
+ - Additional item information (BoP/BoE) attached to items now. 
+ - Updates to item filters; many new filter types added, check them out! 
+ - RPGO's Character Profiler should play nice with Rawr now. 
+ - Currently equiped gems (when loaded from Armory) are automatically marked as avaliable.
+ - Rawr.Tree: Improved handeling of procs from trinkets and spells. Haste (especially in trinket form) should be modeled better.
+ - Rawr.Warlock: Many spell coefficients and multipliers are now displayed in the mouseover tooltips. Damage from crits should also be calculated correctly now.
+ - Rawr.TankDK: Runic Power accumulation and usage should be more accurately modeled. Fixed a bug in which Improved Icy Talons was stacking with normal Ice Talons. Sigil of the Bone Gryphon should now properly stack its effect. Blood Gorged now properly increases your damage done. Hysteria no longer has a personal DPS value, to be added back in later.
+ - Rawr.DPSDK: Death Runes (from all trees) should now be more accurately modeled. Killing Machine and Rime should now interact properly with their affected abilities.
+ - Rawr.DPSWarr: Gem templates have been updated, though only ones which you're likely to use are active by default. Turning on more (or all of them) will slow down performance. Deathbringer's Will will now proc Haste instead of ArPen.
+ - Rawr.Enhance: Deathbringer's Will will now proc Haste instead of ArPen. The combat table should now play nice with the (white) crit cap.
+ - Rawr.ProtWarr: Crit depression is now properly modeled based on new research. Mocking blow threat (and mocking blow glyphs) are now properly modeled. Boss Attack speed calculations updated.
+ - Rawr.Hunter: Deathbringer's Will will now proc Haste instead of ArPen.
+ - Rawr.Mage: Nibelung's proc has been modeled and added. Improvements (both in accuracy and speed) to sequence reconstruction.
+ - Rawr.RestoSham: Gemming templates updated. Fight Activity slider added, and better overheal calculations.
+ - Rawr.Cat: Deathbringer's Will will now proc Haste instead of ArPen.
+
 v2.3.5.0
  - Fixed a significant performance issue that was introduced in v2.3.4, and affected most models, but especially Cat. Sorry about those multi-hour optimizations for a build there.
  - Improved and clarified the wording on a variety of error messages throughout Rawr to try to be more helpful.
