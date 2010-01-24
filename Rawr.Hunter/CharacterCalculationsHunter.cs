@@ -347,17 +347,18 @@ namespace Rawr.Hunter
                                 (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1)
                             ));
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*Includes:" +
-                                Environment.NewLine + "{2:00.00%} : Base Crit" +
-                                Environment.NewLine + "{3:00.00%} : Agility" +
-                                Environment.NewLine + "{4:00.00%} : Rating" +
-                                Environment.NewLine + "{5:00.00%} : Racial" +
-                                Environment.NewLine + "{6:00.00%} : Proc Effects" +
-                                Environment.NewLine + "{7:00.00%} : Lethal Shots" +
-                                Environment.NewLine + "{8:00.00%} : Killer Instincts" +
-                                Environment.NewLine + "{9:00.00%} : Master Marksman" +
-                                Environment.NewLine + "{10:00.00%} : Master Tactician" +
-                                Environment.NewLine + "{11:00.00%} : Buffs & Debuffs" +
-                                Environment.NewLine + "{12:00.00%} : Level Adjustment",
+                                "\r\n{2:00.00%} : Base Crit" +
+                                "\r\n{3:00.00%} : Agility" +
+                                "\r\n{4:00.00%} : Rating" +
+                                "\r\n{5:00.00%} : Racial" +
+                                "\r\n{6:00.00%} : Proc Effects" +
+                                "\r\n{7:00.00%} : Lethal Shots" +
+                                "\r\n{8:00.00%} : Killer Instincts" +
+                                "\r\n{9:00.00%} : Master Marksman" +
+                                "\r\n{10:00.00%} : Master Tactician" +
+                                "\r\n{11:00.00%} : Buffs & Debuffs" +
+                                "\r\n{12:00.00%} : Level Adjustment" +
+                                "\r\n\r\nNote that individual Shots will handle their own crit caps",
                                 critRateOverall, BasicStats.CritRating,
                                 critBase, critFromAgi, critFromRating, critFromRacial,
                                 critFromProcRating, critFromLethalShots, critFromKillerInstincts,

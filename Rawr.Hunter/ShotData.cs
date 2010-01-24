@@ -18,7 +18,11 @@ namespace Rawr.Hunter
         public float Duration = 0f;
         public bool  TriggersGCD = false;
         public bool  CanCrit = false;
-        public float CritChance = 0f;
+        private float _critChance = 0f;
+        public float CritChance {
+            get { return CanCrit ? Math.Min(1f, Math.Max(0f, _critChance)) : 0f; }
+            set { _critChance = value; }
+        }
 
         public CombatTable AttackTable;
 

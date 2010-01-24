@@ -1243,6 +1243,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
         }
 
+        public float ConstrainCrit(float lvlDifMOD, float chance) { return Math.Min(1f + lvlDifMOD, Math.Max(0f, chance)); }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
             bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             cacheChar = character;
@@ -1279,6 +1281,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             int   levelDifI = calcOpts.TargetLevel - character.Level;
             float levelDifF = (float)levelDifI;
 
+            float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifI];
+
             GenPrioRotation(calculatedStats, calcOpts, talents);
             GenAbilityCds(character, calculatedStats, calcOpts, talents);
 
@@ -1298,8 +1302,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Crits
             #region Crit Chance
-            calculatedStats.critFromAgi = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
-            calculatedStats.critFromRating = StatConversion.GetCritFromRating(stats.CritRating, character.Class);
+            calculatedStats.critFromAgi = ConstrainCrit(critMOD, StatConversion.GetCritFromAgility(stats.Agility, character.Class));
+            calculatedStats.critFromRating = ConstrainCrit(critMOD, StatConversion.GetCritFromRating(stats.CritRating, character.Class));
 
             calculatedStats.critRateOverall = stats.PhysicalCrit;
             #endregion
@@ -1314,23 +1318,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float sniperTrainingCritModifier = 0.05f * talents.SniperTraining;
             #endregion
             #region Shot Crit Chances
-            float steadyShotCritChance = stats.PhysicalCrit + survivalInstinctsCritModifier;
-            calculatedStats.steadyShot.CritChance = steadyShotCritChance;
-            float aimedShotCrit = stats.PhysicalCrit
+            calculatedStats.steadyShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + survivalInstinctsCritModifier);
+            calculatedStats.aimedShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit
                                 + (talents.GlyphOfTrueshotAura && talents.TrueshotAura > 0 ? 0.10f : 0f)
-                                + improvedBarrageCritModifier;
-            calculatedStats.aimedShot.CritChance = aimedShotCrit;
-            float explosiveShotCrit = stats.PhysicalCrit + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier;
-            calculatedStats.explosiveShot.CritChance = explosiveShotCrit;
-            calculatedStats.serpentSting.CritChance = stats.PhysicalCrit;
-            calculatedStats.chimeraShot.CritChance = stats.PhysicalCrit;
-            float arcaneShotCrit = stats.PhysicalCrit + survivalInstinctsCritModifier;
-            calculatedStats.arcaneShot.CritChance = arcaneShotCrit;
-            float multiShotCrit = stats.PhysicalCrit + improvedBarrageCritModifier;
-            calculatedStats.multiShot.CritChance = multiShotCrit;
-            float killShotCrit = stats.PhysicalCrit + sniperTrainingCritModifier;
-            calculatedStats.killShot.CritChance = killShotCrit;
-            calculatedStats.silencingShot.CritChance = stats.PhysicalCrit;
+                                + improvedBarrageCritModifier);
+            calculatedStats.explosiveShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier);
+            calculatedStats.serpentSting.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
+            calculatedStats.chimeraShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
+            calculatedStats.arcaneShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + survivalInstinctsCritModifier);
+            calculatedStats.multiShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + improvedBarrageCritModifier);
+            calculatedStats.killShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + sniperTrainingCritModifier);
+            calculatedStats.silencingShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
             calculatedStats.priorityRotation.calculateCrits();
             #endregion
 
@@ -1512,7 +1510,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float huntingPartyArcaneFreq = calculatedStats.arcaneShot.Freq;
             float huntingPartyArcaneCrit = calculatedStats.arcaneShot.CritChance;
-            float huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1f - (float)Math.Pow(1 - huntingPartyArcaneCrit * huntingPartyProc, 15f / huntingPartyArcaneFreq) : 0;
+            float huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1f - (float)Math.Pow(1f - huntingPartyArcaneCrit * huntingPartyProc, 15f / huntingPartyArcaneFreq) : 0;
 
             float huntingPartyExplosiveFreq = calculatedStats.explosiveShot.Freq; // spreadsheet divides by 3, but doesn't use that value?
             float huntingPartyExplosiveCrit = calculatedStats.explosiveShot.CritChance;
@@ -1773,7 +1771,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float autoShotDamageReal = CalcEffectiveDamage(autoShotDamage,
                                                            ChanceToMiss,
-                                                           stats.PhysicalCrit,
+                                                           ConstrainCrit(critMOD, stats.PhysicalCrit),
                                                            autoShotCritAdjust,
                                                            autoShotDamageAdjust);
 
@@ -1811,7 +1809,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float wildQuiverDamageReal = CalcEffectiveDamage(
                                                 wildQuiverDamageNormal,
                                                 ChanceToMiss,
-                                                stats.PhysicalCrit,
+                                                ConstrainCrit(critMOD, stats.PhysicalCrit),
                                                 1f,
                                                 wildQuiverDamageAdjust
                                               );
@@ -1849,7 +1847,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float steadyShotDamageReal = CalcEffectiveDamage(
                                             steadyShotDamageNormal,
                                             ChanceToMiss,
-                                            steadyShotCritChance,
+                                            calculatedStats.steadyShot.CritChance,
                                             steadyShotCritAdjust,
                                             steadyShotDamageAdjust
                                           );
@@ -1863,7 +1861,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //021109 Drizz: Have to add the Mangle/Trauma buff effect.
             float steadyShotPiercingShots = (1f + targetDebuffBleed)
                                           * (talents.PiercingShots * 0.1f)
-                                          * steadyShotCritChance * steadyShotAvgCritDamage;
+                                          * calculatedStats.steadyShot.CritChance * steadyShotAvgCritDamage;
 
             //Drizz: Add the piercingShots effect
             calculatedStats.steadyShot.Damage = steadyShotDamageReal + steadyShotPiercingShots;
@@ -1884,7 +1882,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Drizz : aligned with v92b
                 serpentStingInterimBonus = 0.5f + 0.5f * mortalShotsCritDamage + 0.5f;
                 serpentStingCriticalHitDamage = serpentStingInterimBonus * (1f + (1f + 0.5f) * (metaGemCritDamage - 1f) / 2f + (1f + 0.5f) * (metaGemCritDamage - 1) / 2);
-                serpentStingT9CritAdjust = 1f + stats.PhysicalCrit * serpentStingCriticalHitDamage;
+                serpentStingT9CritAdjust = 1f + ConstrainCrit(critMOD, stats.PhysicalCrit) * serpentStingCriticalHitDamage;
             }
 
             double serpentStingCritAdjustment = serpentStingT9CritAdjust;
@@ -1934,7 +1932,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float aimedShotDamageReal = CalcEffectiveDamage(
                                             aimedShotDamageNormal,
                                             ChanceToMiss,
-                                            aimedShotCrit,
+                                            calculatedStats.aimedShot.CritChance,
                                             aimedShotCritAdjust,
                                             aimedShotDamageAdjust
                                           );
@@ -1949,7 +1947,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
             float aimedShotPiercingShots = (1f + targetDebuffBleed)
                                          * (character.HunterTalents.PiercingShots * 0.1f)
-                                         * aimedShotCrit * aimedShotAvgCritDamage;
+                                         * calculatedStats.aimedShot.CritChance * aimedShotAvgCritDamage;
 
             //Drizz: Trying out...
             calculatedStats.aimedShot.Damage = aimedShotDamageReal + aimedShotPiercingShots;
@@ -1970,7 +1968,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float explosiveShotDamageReal = CalcEffectiveDamage(
                                                 explosiveShotDamageNormal,
                                                 ChanceToMiss,
-                                                explosiveShotCrit,
+                                                calculatedStats.explosiveShot.CritChance,
                                                 explosiveShotCritAdjust,
                                                 explosiveShotDamageAdjust
                                               );
@@ -2001,7 +1999,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float chimeraShotDamageReal = CalcEffectiveDamage(
                                                 chimeraShotDamageNormal,
                                                 ChanceToMiss,
-                                                stats.PhysicalCrit,
+                                                ConstrainCrit(critMOD, stats.PhysicalCrit),
                                                 chimeraShotCritAdjust,
                                                 chimeraShotDamageAdjust
                                            );
@@ -2012,7 +2010,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // 021109 - Drizz: Had to add the Bleed Damage Multiplier
             float chimeraShotPiercingShots = (1f + targetDebuffBleed)
                                            * (character.HunterTalents.PiercingShots * 0.1f)
-                                           * stats.PhysicalCrit
+                                           * ConstrainCrit(critMOD, stats.PhysicalCrit)
                                            * chimeraShotAvgCritDamage;
 
             calculatedStats.chimeraShot.Damage = chimeraShotDamageReal + chimeraShotPiercingShots;
@@ -2041,7 +2039,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Drizz: Updates
             float chimeraShotSerpentCritAdjust = metaGemCritDamage + (0.5f * metaGemCritDamage + 0.5f) * mortalShotsCritDamage;
-            float chimeraShotSerpentDamageAdjust = (1f - ChanceToMiss) * (1f + stats.PhysicalCrit * chimeraShotSerpentCritAdjust);
+            float chimeraShotSerpentDamageAdjust = (1f - ChanceToMiss) * (1f + ConstrainCrit(critMOD, stats.PhysicalCrit) * chimeraShotSerpentCritAdjust);
 
             float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1f + targetDebuffsNature);
 
@@ -2064,7 +2062,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float arcaneShotDamageReal = CalcEffectiveDamage(
                                             arcaneShotDamageNormal,
                                             ChanceToMiss,
-                                            arcaneShotCrit,
+                                            calculatedStats.arcaneShot.CritChance,
                                             arcaneShotCritAdjust,
                                             arcaneShotDamageAdjust
                                           );
@@ -2082,7 +2080,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float multiShotDamageReal = CalcEffectiveDamage(
                                             multiShotDamageNormal,
                                             ChanceToMiss,
-                                            multiShotCrit,
+                                            calculatedStats.multiShot.CritChance,
                                             1f,
                                             multiShotDamageAdjust
                                          );
@@ -2138,7 +2136,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float killShotDamageReal = CalcEffectiveDamage(
                                             killShotDamageNormal,
                                             ChanceToMiss,
-                                            killShotCrit,
+                                            calculatedStats.killShot.CritChance,
                                             killShotCritAdjust,
                                             killShotDamageAdjust
                                         );
@@ -2155,7 +2153,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float silencingShotDamageReal = CalcEffectiveDamage(
                                                 silencingShotDamageNormal,
                                                 ChanceToMiss,
-                                                stats.PhysicalCrit,
+                                                ConstrainCrit(critMOD, stats.PhysicalCrit),
                                                 silencingShotCritAdjust,
                                                 silencingShotDamageAdjust
                                              );
@@ -2190,7 +2188,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.explosiveTrap.Damage = CalcEffectiveDamage(
                                                             explosiveTrapDamagePerTick,
                                                             0f,
-                                                            stats.PhysicalCrit,
+                                                            ConstrainCrit(critMOD, stats.PhysicalCrit),
                                                             explosiveShotCritAdjust,
                                                             explosiveShotDamageAdjust
                                                         )
@@ -2598,8 +2596,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                 CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, triggerIntervals, triggerChances);
 
-
-
                 if (calcOpts.PetFamily == PetFamily.Wolf
                     && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
                 {
@@ -2609,46 +2605,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     statsTotal.AddSpecialEffect(FuriousHowl);
                 }
                 
-                /*float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
-                float autoShotSpeed = 0;
-                float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
-                RotationTest rotationTest;
-                GenRotation(character, statsTotal, calculatedStats, calcOpts, talents,
-                    out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
-                    out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
-                    out rotationTest);
-
-                triggerIntervals.Add(Trigger.Use, 0f);
-                triggerIntervals.Add(Trigger.MeleeHit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
-                triggerIntervals.Add(Trigger.RangedHit, 1f / totalShotsPerSecond);
-                triggerIntervals.Add(Trigger.PhysicalHit, 1f / totalShotsPerSecond);
-                triggerIntervals.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.PetCompInterval));
-                triggerIntervals.Add(Trigger.RangedCrit, 1f / totalShotsPerSecond);
-                triggerIntervals.Add(Trigger.PhysicalCrit, 1f / totalShotsPerSecond);
-                triggerIntervals.Add(Trigger.DoTTick, talents.PiercingShots > 0 ? 1f : 0f);
-                triggerIntervals.Add(Trigger.DamageDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))));
-                triggerIntervals.Add(Trigger.HunterAutoShotHit, 1f / autoShotsPerSecond);
-                triggerIntervals.Add(Trigger.SteadyShotHit, calculatedStats.steadyShot.Cd);
-                triggerIntervals.Add(Trigger.PetClawBiteSmackCrit, Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
-                triggerIntervals.Add(Trigger.SerpentWyvernStingsDoDamage, (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f));
-
-                float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
-                float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
-
-                triggerChances.Add(Trigger.Use, 0f);
-                triggerChances.Add(Trigger.MeleeHit, calculatedStats.pet.WhAtkTable.AnyLand);
-                triggerChances.Add(Trigger.RangedHit, (1f - ChanceToMiss));
-                triggerChances.Add(Trigger.PhysicalHit, (1f - ChanceToMiss));
-                triggerChances.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
-                triggerChances.Add(Trigger.RangedCrit, Math.Max(0f, statsTotal.PhysicalCrit));
-                triggerChances.Add(Trigger.PhysicalCrit, Math.Max(0f, statsTotal.PhysicalCrit));
-                triggerChances.Add(Trigger.DoTTick, 1f);
-                triggerChances.Add(Trigger.DamageDone, 1f);
-                triggerChances.Add(Trigger.HunterAutoShotHit, (1f - ChanceToMiss));
-                triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
-                triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
-                triggerChances.Add(Trigger.SerpentWyvernStingsDoDamage, 1f);*/
-
                 statsProcs += GetSpecialEffectsStats(character, triggerIntervals, triggerChances, statsTotal, null);
 
                 #region Handle Results of Special Effects
@@ -2706,6 +2662,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
             int levelDif = calcOpts.TargetLevel - character.Level;
+            float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif];
             HunterTalents talents = character.HunterTalents;
             float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
             float autoShotSpeed = 0;
@@ -2737,21 +2694,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             triggerChances.Add(Trigger.MeleeHit, calculatedStats.pet.WhAtkTable.AnyLand);
             triggerChances.Add(Trigger.RangedHit, (1f - ChanceToMiss));
             triggerChances.Add(Trigger.PhysicalHit, (1f - ChanceToMiss));
-            triggerChances.Add(Trigger.MeleeCrit, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit));
-            triggerChances.Add(Trigger.RangedCrit, Math.Max(0f, statsTotal.PhysicalCrit));
-            triggerChances.Add(Trigger.PhysicalCrit, Math.Max(0f, statsTotal.PhysicalCrit));
+            triggerChances.Add(Trigger.MeleeCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
+            triggerChances.Add(Trigger.RangedCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
+            triggerChances.Add(Trigger.PhysicalCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
             triggerChances.Add(Trigger.DoTTick, 1f);
             triggerChances.Add(Trigger.DamageDone, 1f);
             triggerChances.Add(Trigger.HunterAutoShotHit, (1f - ChanceToMiss));
             triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
-            triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
+            triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
             triggerChances.Add(Trigger.SerpentWyvernStingsDoDamage, 1f);
         }
 
         private Stats GetSpecialEffectsStats(Character Char,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
-            //float[] attemptedAtkInterval, float[] petattemptedAtksInterval,
-            //float[] hitRates, float[] critRates, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             cacheChar = Char;
