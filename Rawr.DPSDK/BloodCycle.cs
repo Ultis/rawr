@@ -156,7 +156,95 @@ namespace Rawr.DPSDK
                             }
                         }
                         #endregion
-                        else if ((FF <= 0 && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0)) ||
+
+                        else if (FF < spellGCD * SpellGCDMultiplier && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
+                        {
+                            #region FF
+                            if (FrostRune1 <= 0)
+                            {
+                                IT = true;
+                                FrostRune1 += 10000;
+                            }
+                            else if (FrostRune2 <= 0)
+                            {
+                                IT = true;
+                                FrostRune2 += 10000;
+                            }
+                            else if (DeathFrostRune1 <= 0)
+                            {
+                                IT = true;
+                                FrostRune1 = DeathFrostRune1 + 10000;
+                                DeathFrostRune1 = fightDuration + 1;
+
+                            }
+                            else if (DeathFrostRune2 <= 0)
+                            {
+                                IT = true;
+                                FrostRune2 = DeathFrostRune2 + 10000;
+                                DeathFrostRune2 = fightDuration + 1;
+
+                            }
+                            else if (DeathUnholyRune1 <= 0)
+                            {
+                                IT = true;
+                                UnholyRune1 = DeathUnholyRune2 + 10000;
+                                DeathUnholyRune1 = fightDuration + 1;
+
+                            }
+                            else if (DeathUnholyRune2 <= 0)
+                            {
+                                IT = true;
+                                UnholyRune2 = DeathUnholyRune2 + 10000;
+                                DeathUnholyRune2 = fightDuration + 1;
+
+                            }
+                            #endregion
+                        }
+                        else if (BP < meleeGCD * PhysicalGCDMultiplier && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
+                        {
+                            #region BP
+                            if (UnholyRune1 <= 0)
+                            {
+                                PS = true;
+                                UnholyRune1 += 10000;
+                            }
+                            else if (UnholyRune2 <= 0)
+                            {
+                                PS = true;
+                                UnholyRune2 += 10000;
+                            }
+                            else if (DeathUnholyRune1 <= 0)
+                            {
+                                PS = true;
+                                UnholyRune1 = DeathUnholyRune1 + 10000;
+                                DeathUnholyRune1 = fightDuration + 1;
+                            }
+                            else if (DeathUnholyRune2 <= 0)
+                            {
+                                PS = true;
+                                UnholyRune2 = DeathUnholyRune2 + 10000;
+                                DeathUnholyRune2 = fightDuration + 1;
+                            }
+                            else if (DeathFrostRune1 <= 0)
+                            {
+                                PS = true;
+                                FrostRune1 = DeathFrostRune1 + 10000;
+                                DeathFrostRune1 = fightDuration + 1;
+                            }
+                            else if (DeathFrostRune2 <= 0)
+                            {
+                                PS = true;
+                                FrostRune2 = DeathFrostRune2 + 10000;
+                                DeathFrostRune2 = fightDuration + 1;
+                            }
+
+                            #endregion
+                        }
+
+                    }
+                    else
+                    {
+                        if ((FF <= spellGCD * SpellGCDMultiplier && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0)) ||
                             (FF < FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF < DeathUnholyRune1 && FF > DeathUnholyRune2) ||
                             (FF < FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF < DeathFrostRune2 && FF > DeathUnholyRune1 && FF < DeathUnholyRune2) ||
                             (FF < FrostRune1 && FF < FrostRune2 && FF < DeathFrostRune1 && FF > DeathFrostRune2 && FF < DeathUnholyRune1 && FF < DeathUnholyRune2) ||
@@ -205,100 +293,13 @@ namespace Rawr.DPSDK
                             }
                             #endregion
                         }
-                        else if ((BP <= 0 && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0)) ||
+                        else if ((BP <= meleeGCD * PhysicalGCDMultiplier && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0)) ||
                             (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP > DeathUnholyRune2) ||
                             (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP > DeathUnholyRune1 && BP < DeathUnholyRune2) ||
                             (BP < UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP > DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2) ||
                             (BP < UnholyRune1 && BP < UnholyRune2 && BP > DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2) ||
                             (BP < UnholyRune1 && BP > UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2) ||
                             (BP > UnholyRune1 && BP < UnholyRune2 && BP < DeathFrostRune1 && BP < DeathFrostRune2 && BP < DeathUnholyRune1 && BP < DeathUnholyRune2))
-                        {
-                            #region BP
-                            if (UnholyRune1 <= 0)
-                            {
-                                PS = true;
-                                UnholyRune1 += 10000;
-                            }
-                            else if (UnholyRune2 <= 0)
-                            {
-                                PS = true;
-                                UnholyRune2 += 10000;
-                            }
-                            else if (DeathUnholyRune1 <= 0)
-                            {
-                                PS = true;
-                                UnholyRune1 = DeathUnholyRune1 + 10000;
-                                DeathUnholyRune1 = fightDuration + 1;
-                            }
-                            else if (DeathUnholyRune2 <= 0)
-                            {
-                                PS = true;
-                                UnholyRune2 = DeathUnholyRune2 + 10000;
-                                DeathUnholyRune2 = fightDuration + 1;
-                            }
-                            else if (DeathFrostRune1 <= 0)
-                            {
-                                PS = true;
-                                FrostRune1 = DeathFrostRune1 + 10000;
-                                DeathFrostRune1 = fightDuration + 1;
-                            }
-                            else if (DeathFrostRune2 <= 0)
-                            {
-                                PS = true;
-                                FrostRune2 = DeathFrostRune2 + 10000;
-                                DeathFrostRune2 = fightDuration + 1;
-                            }
-
-                            #endregion
-                        }
-
-                    }
-                    else
-                    {
-                        if (FF < spellGCD * SpellGCDMultiplier && (FrostRune1 <= 0 || FrostRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
-                        {
-                            #region FF
-                            if (FrostRune1 <= 0)
-                            {
-                                IT = true;
-                                FrostRune1 += 10000;
-                            }
-                            else if (FrostRune2 <= 0)
-                            {
-                                IT = true;
-                                FrostRune2 += 10000;
-                            }
-                            else if (DeathFrostRune1 <= 0)
-                            {
-                                IT = true;
-                                FrostRune1 = DeathFrostRune1 + 10000;
-                                DeathFrostRune1 = fightDuration + 1;
-
-                            }
-                            else if (DeathFrostRune2 <= 0)
-                            {
-                                IT = true;
-                                FrostRune2 = DeathFrostRune2 + 10000;
-                                DeathFrostRune2 = fightDuration + 1;
-
-                            }
-                            else if (DeathUnholyRune1 <= 0)
-                            {
-                                IT = true;
-                                UnholyRune1 = DeathUnholyRune2 + 10000;
-                                DeathUnholyRune1 = fightDuration + 1;
-
-                            }
-                            else if (DeathUnholyRune2 <= 0)
-                            {
-                                IT = true;
-                                UnholyRune2 = DeathUnholyRune2 + 10000;
-                                DeathUnholyRune2 = fightDuration + 1;
-
-                            }
-                            #endregion
-                        }
-                        else if (BP < meleeGCD * PhysicalGCDMultiplier && (UnholyRune1 <= 0 || UnholyRune2 <= 0 || DeathFrostRune1 <= 0 || DeathFrostRune2 <= 0 || DeathUnholyRune1 <= 0 || DeathUnholyRune2 <= 0))
                         {
                             #region BP
                             if (UnholyRune1 <= 0)
