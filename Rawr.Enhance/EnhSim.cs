@@ -527,7 +527,7 @@ namespace Rawr.Enhance
             List<Buff> buffs = character.ActiveBuffs;
             sb.AppendLine();
             sb.AppendLine("cast_sr_only_if_mana_left " + _calcOpts.MinManaSR);
-            sb.AppendLine("simulate_mana             " + (_calcOpts.UseMana ? "1" : "0"));
+            sb.AppendLine("simulate_mana             1"); // + (_calcOpts.UseMana ? "1" : "0"));
             if (_character.ActiveBuffsContains("Hunting Party") || _character.ActiveBuffsContains("Judgements of the Wise") || _character.ActiveBuffsContains("Vampiric Touch") || 
                     _character.ActiveBuffsContains("Improved Soul Leech") || _character.ActiveBuffsContains("Enduring Winter"))
                 sb.AppendLine("replenishment             1");
