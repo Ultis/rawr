@@ -513,6 +513,25 @@ namespace Rawr.Hunter
                 CB_ShotPriority_10.SelectedIndex = 0;
             }
 
+
+            /* I want to do a conglomerate one:
+                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex = 20; // Bestial Wrath
+                CB_ShotPriority_03.SelectedIndex = 19; // Readiness
+                CB_ShotPriority_04.SelectedIndex = 4; // Serpent Sting
+                CB_ShotPriority_05.SelectedIndex = 17; // Chimera Shot
+                CB_ShotPriority_06.SelectedIndex = 9; // Kill Shot
+                CB_ShotPriority_07.SelectedIndex = 10; // Explosive Shot
+                CB_ShotPriority_08.SelectedIndex = 11; // Black Arrow
+                CB_ShotPriority_09.SelectedIndex = 1; // Aimed Shot
+                CB_ShotPriority_10.SelectedIndex = 7; // Silencing Shot
+                CB_ShotPriority_11.SelectedIndex = 2; // Arcane Shot
+                CB_ShotPriority_12.SelectedIndex = 8; // Steady Shot
+             * But this requires 2 extra slots minimum
+             * Gotta add even more for volley and traps, etc.
+             * So frack it, I'll just forget it until we have the
+             * new rotation setup where this stuff doesn't matter
+             */
             isLoading = false;
 
             CalcOpts.PriorityIndex1 = CB_ShotPriority_01.SelectedIndex;
@@ -1117,7 +1136,7 @@ namespace Rawr.Hunter
         private void TB_Shots_TextChanged(object sender, EventArgs e) { }
         #endregion
 
-        // Stat Graph
+        #region Stat Graph
         private Stats[] BuildStatsList()
         {
             List<Stats> statsList = new List<Stats>();
@@ -1154,5 +1173,6 @@ namespace Rawr.Hunter
             CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
             calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
         }
+        #endregion
     }
 }

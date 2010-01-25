@@ -20,26 +20,34 @@ namespace Rawr.Cat
 				//Red
 				int[] bold = { 39900, 39996, 40111, 42142 };
 				int[] delicate = { 39905, 39997, 40112, 42143 };
+                int[] fractured = { 39909, 40002, 40117, 42153 };
 
 				//Purple
-				int[] shifting = { 39935, 40023, 40130 };
-				int[] sovereign = { 39934, 40022, 40129 };
+				int[] shifting = { 39935, 40023, 40130, 40130 };
+				int[] sovereign = { 39934, 40022, 40129, 40129 };
+                int[] puissant = { 39933, 40033, 40140, 40140 };
+                int[] forceful = { 39978, 40091, 40169, 40169 };
 
 				//Blue
 				int[] solid = { 39919, 40008, 40119, 36767 };
 
 				//Green
-				int[] enduring = { 39976, 40089, 40167 };
+				int[] enduring = { 39976, 40089, 40167, 40167 };
 
 				//Yellow
 				int[] thick = { 39916, 40015, 40126, 42157 };
+                int[] quick = { 39918, 40017, 40128, 42150 };
 
 				//Orange
-				int[] etched = { 39948, 40038, 40143 };
-				int[] fierce = { 39951, 40041, 40146 };
-				int[] glinting = { 39953, 40044, 40148 };
-				int[] stalwart = { 39964, 40056, 40160 };
-				int[] deadly = { 39952, 40043, 40147 };
+				int[] etched = { 39948, 40038, 40143, 40143 };
+				int[] fierce = { 39951, 40041, 40146, 40146 };
+				int[] glinting = { 39953, 40044, 40148, 40148 };
+				int[] stalwart = { 39964, 40056, 40160, 40160 };
+				int[] deadly = { 39952, 40043, 40147, 40147 };
+                int[] deft = { 39955, 40046, 40150, 40150 };
+
+                // Prismatic
+                int[] nightmare = { 49110, 49110, 49110, 49110 };
 
 				//Meta
 				// int austere = 41380;
@@ -47,29 +55,106 @@ namespace Rawr.Cat
 
 				return new List<GemmingTemplate>()
 				{
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max ArP
+						RedId = fractured[0], YellowId = fractured[0], BlueId = fractured[0], PrismaticId = fractured[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //ArP/Crit
+						RedId = fractured[0], YellowId = thick[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //ArP/Haste
+						RedId = fractured[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = fractured[0], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max Agility
 						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Crit
 						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Haste
+						RedId = delicate[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = delicate[0], MetaId = relentless },
+
 					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Hit
 					    RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
 
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max ArP
+						RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Crit
+						RedId = fractured[1], YellowId = thick[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Haste
+						RedId = fractured[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = fractured[1], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max Agility
 						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Crit 
 						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Haste 
+						RedId = delicate[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = delicate[1], MetaId = relentless },
+
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max ArP
+						RedId = fractured[1], YellowId = fractured[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Crit
+						RedId = fractured[1], YellowId = thick[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Haste
+						RedId = fractured[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max Agility
+						RedId = delicate[1], YellowId = delicate[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Crit 
+						RedId = delicate[1], YellowId = deadly[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Haste 
+						RedId = delicate[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
+
 					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Hit
 					    RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
 						
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max ArP
+						RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Crit
+						RedId = fractured[2], YellowId = thick[2], BlueId = puissant[2], PrismaticId = fractured[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Haste
+						RedId = fractured[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = fractured[2], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max Agility
 						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Crit 
 						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Haste 
+						RedId = delicate[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = delicate[2], MetaId = relentless },
+
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max ArP
+						RedId = fractured[2], YellowId = fractured[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Crit
+						RedId = fractured[2], YellowId = thick[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Haste
+						RedId = fractured[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max Agility
+						RedId = delicate[2], YellowId = delicate[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Crit 
+						RedId = delicate[2], YellowId = deadly[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Haste 
+						RedId = delicate[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
+
 					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Hit
 					    RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
 						
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max ArP
+						RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Crit
+						RedId = fractured[3], YellowId = thick[3], BlueId = puissant[2], PrismaticId = fractured[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Haste
+						RedId = fractured[3], YellowId = quick[3], BlueId = forceful[2], PrismaticId = fractured[3], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Agility
 						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Crit
+						RedId = delicate[3], YellowId = thick[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Haste
+						RedId = delicate[3], YellowId = quick[3], BlueId = forceful[3], PrismaticId = delicate[3], MetaId = relentless },
+
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max ArP
+						RedId = fractured[3], YellowId = fractured[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Crit
+						RedId = fractured[3], YellowId = thick[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Haste
+						RedId = fractured[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Agility
+						RedId = delicate[3], YellowId = delicate[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Crit
+						RedId = delicate[3], YellowId = thick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Haste
+						RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
+
 					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agility Heavy
 						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
 				};
