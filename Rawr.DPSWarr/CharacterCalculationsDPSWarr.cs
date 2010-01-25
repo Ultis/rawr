@@ -241,7 +241,12 @@ namespace Rawr.DPSWarr {
                     ));
             }
             #endregion
-            dictValues.Add("Attack Power", string.Format("{0}*Increases White DPS by {1:0.0}", (int)AverageStats.AttackPower, AverageStats.AttackPower / 14f));
+            dictValues.Add("Attack Power", string.Format("{0}*"+
+                                "Increases White DPS by {1:0.0}\r\n"+
+                                "\r\n"+
+                                "Buffed: {2:0}\r\n"+
+                                "Proc'd: {3:0}\r\n", (int)AverageStats.AttackPower, AverageStats.AttackPower / 14f,
+                                BuffedStats.AttackPower, MaximumStats.AttackPower));
             #region Agility
             {
                 int formIter = 1;
@@ -288,45 +293,56 @@ namespace Rawr.DPSWarr {
                 // sub to add neg number as pos, for overcapping to compensate
                 // for boss level on yellows (or whites, I dont remember which)
                 // Whites clip crit cap with glances, dodges, parries, misses
-                float WhCritCap = 1f - StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
-                WhCritCap -= (Whites.MHAtkTable.Glance + Whites.MHAtkTable.AnyNotLand);
-                // Yellows clip crit cap with dodges, parries, misses
-                float YwCritCap = 1f;// -StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
-                YwCritCap -= (new AttackTable(combatFactors.Char, BuffedStats, combatFactors, combatFactors.CalcOpts, FW, true, false, false)).AnyNotLand;
-
+                float WhCritCap = 1f;// +StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
+                //float YwCritCap = 1f + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
+                if (combatFactors.useOH)
+                {
+                    WhCritCap -= (Whites.OHAtkTable.Glance + Whites.OHAtkTable.AnyNotLand);
+                //    YwCritCap -= (new AttackTable(combatFactors.Char, BuffedStats, combatFactors, combatFactors.CalcOpts, FW, false, false, false)).AnyNotLand;
+                }
+                else
+                {
+                    WhCritCap -= (Whites.MHAtkTable.Glance + Whites.MHAtkTable.AnyNotLand);
+                    // Yellows clip crit cap with dodges, parries, misses
+                //    YwCritCap -= (new AttackTable(combatFactors.Char, BuffedStats, combatFactors, combatFactors.CalcOpts, FW, true, false, false)).AnyNotLand;
+                }
+                float useRamp = 0f;
+                if (combatFactors.Char.WarriorTalents.Rampage > 0f) useRamp = 0.05f;
                 float[] passiveContrsVals = new float[] {
                     0.03192f,
                     AgilityCritBonus,
+                    StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc),
                     combatFactors.Char.WarriorTalents.Cruelty * 0.01f,
                     (combatFactors.CalcOpts.FuryStance ? 0.03f : 0f),
                     (combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_Crit : 0f),
                     BonusCritPercPoleAxeSpec,
-                    BuffsStats.PhysicalCrit,
+                    BuffsStats.PhysicalCrit + useRamp,
                 };
                 float passiveContrsTtlVal = passiveContrsVals[0] + passiveContrsVals[1] + passiveContrsVals[2]
                                           + passiveContrsVals[3] + passiveContrsVals[4] + passiveContrsVals[5]
-                                          + passiveContrsVals[6];
-                string[] passiveContrs = new string[] { "Base Crit", "From Agility", "Cruelty",
+                                          + passiveContrsVals[6] + passiveContrsVals[7];
+                string[] passiveContrs = new string[] { "Base Crit", "From Agility", "From Crit Rating", "Cruelty",
                                                         "Berserker Stance", "T9 2P Set Bonus", "Poleaxe Specialization",
                                                         "Buffs" };
 
-                float WhUnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
-                float WhProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc);
-                bool isWhUnProcdOverCap = passiveContrsTtlVal + WhUnProcdCrit > WhCritCap;
+                //float WhUnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
+                float WhProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc - BuffedStats.CritRating - BuffedStats.DeathbringerProc);
+                bool isWhUnProcdOverCap = passiveContrsTtlVal > WhCritCap;
                 bool isWhProcdOverCap = passiveContrsTtlVal + WhProcdCrit > WhCritCap;
-                float amountWhUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(WhCritCap - (passiveContrsTtlVal + WhUnProcdCrit)));
+                float amountWhUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(WhCritCap - passiveContrsTtlVal));
                 float amountWhProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(WhCritCap - (passiveContrsTtlVal + WhProcdCrit)));
 
                 float YwUnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
                 float YwProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc);
-                bool isYwUnProcdOverCap = passiveContrsTtlVal + YwUnProcdCrit > YwCritCap;
-                bool isYwProcdOverCap = passiveContrsTtlVal + YwProcdCrit > YwCritCap;
-                float amountYwUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(YwCritCap - (passiveContrsTtlVal + YwUnProcdCrit)));
-                float amountYwProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(YwCritCap - (passiveContrsTtlVal + YwProcdCrit)));
+                //bool isYwUnProcdOverCap = passiveContrsTtlVal + YwUnProcdCrit > YwCritCap;
+                //bool isYwProcdOverCap = passiveContrsTtlVal + YwProcdCrit > YwCritCap;
+                //float amountYwUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(YwCritCap - (passiveContrsTtlVal + YwUnProcdCrit)));
+                //float amountYwProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(YwCritCap - (passiveContrsTtlVal + YwProcdCrit)));
 
                 string theFormat = GenFormattedString(passiveContrs, true,
-                    isWhUnProcdOverCap, isWhProcdOverCap,
-                    isYwUnProcdOverCap, isYwProcdOverCap);
+                    isWhUnProcdOverCap, isWhProcdOverCap
+                    //isYwUnProcdOverCap, isYwProcdOverCap
+                    );
 
                 dictValues.Add("Crit", string.Format(theFormat,
                     // Averaged Stats
@@ -334,15 +350,15 @@ namespace Rawr.DPSWarr {
                     // Passive Contributions
                     passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
                     passiveContrsVals[3], passiveContrsVals[4], passiveContrsVals[5],
-                    passiveContrsVals[6],
+                    passiveContrsVals[6], passiveContrsVals[7],
                     // UnProc'd Stats
                     BuffedStats.CritRating + BuffedStats.DeathbringerProc,
-                    Math.Min(WhCritCap, passiveContrsTtlVal + WhUnProcdCrit), amountWhUnProcdOverCap,
-                    Math.Min(YwCritCap, passiveContrsTtlVal + YwUnProcdCrit), amountYwUnProcdOverCap,
+                    Math.Min(WhCritCap, passiveContrsTtlVal), amountWhUnProcdOverCap,
+                    //Math.Min(YwCritCap, passiveContrsTtlVal + YwUnProcdCrit), amountYwUnProcdOverCap,
                     // Proc'd Stats
                     MaximumStats.CritRating + MaximumStats.DeathbringerProc,
-                    Math.Min(WhCritCap, passiveContrsTtlVal + WhProcdCrit), amountWhProcdOverCap,
-                    Math.Min(YwCritCap, passiveContrsTtlVal + YwProcdCrit), amountYwProcdOverCap
+                    Math.Min(WhCritCap, passiveContrsTtlVal + WhProcdCrit), amountWhProcdOverCap
+                    //Math.Min(YwCritCap, passiveContrsTtlVal + YwProcdCrit), amountYwProcdOverCap
                     ));
             }
             #endregion
