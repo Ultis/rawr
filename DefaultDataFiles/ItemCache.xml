@@ -113288,7 +113288,7 @@
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>0.15</Chance>
+          <Chance>-2</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -114887,7 +114887,7 @@
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>0.15</Chance>
+          <Chance>-2</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -123526,7 +123526,7 @@
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>0.15</Chance>
+          <Chance>-2</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -126612,7 +126612,7 @@
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>0.15</Chance>
+          <Chance>-2</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>

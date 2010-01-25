@@ -1050,7 +1050,7 @@ namespace Rawr {
                     // Stealing health means that some is restored to the user.
                     HealthRestore = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f,
 
-                }, 0f, 0f, 0.15f));
+                }, 0f, 0f, -2f));
             }
             else if (line == "Increases the spell power of your Consecration spell by 141.")
             {
