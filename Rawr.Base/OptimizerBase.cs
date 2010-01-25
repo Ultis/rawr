@@ -368,10 +368,32 @@ namespace Rawr.Optimizer
                     for (int island = 0; island < islandCount; island++)
                     {
                         sum = 0;
-                        for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
+                        /*for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
                             sum += values[i] - minIsland[island] + (maxIsland[island] - minIsland[island]) / 2;
                         for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
-                            share[i] = sum == 0 ? 1f / (Math.Min(popSize, (island + 1) * islandSize) - island * islandSize) : (values[i] - minIsland[island] + (maxIsland[island] - minIsland[island]) / 2) / sum;
+                            share[i] = sum == 0 ? 1f / (Math.Min(popSize, (island + 1) * islandSize) - island * islandSize) : (values[i] - minIsland[island] + (maxIsland[island] - minIsland[island]) / 2) / sum;*/
+                        // it seems a lot of values are huge negative due to missing constraints which can distort the values and make everything look the same
+                        float delta = maxIsland[island] - minIsland[island];
+                        for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
+                        {
+                            float value = (float)(Math.Pow((values[i] - minIsland[island]) / delta, 10.0) + 0.1);
+                            sum += value;
+                            share[i] = value;
+                        }
+                        if (sum == 0)
+                        {
+                            for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
+                            {
+                                share[i] = 1f / (Math.Min(popSize, (island + 1) * islandSize) - island * islandSize);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
+                            {
+                                share[i] /= sum;
+                            }
+                        }
                     }
 				}
 
