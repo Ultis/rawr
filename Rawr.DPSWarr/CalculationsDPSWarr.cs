@@ -1720,8 +1720,8 @@ These numbers to do not include racial bonuses.",
                 originalStats.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);                
             }
 
-            IterativeSpecialEffectsStats(charStruct, firstPass, critEffects, triggerIntervals, triggerChances, true, new Stats(), charStruct.combatFactors.StatS);
-            IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, false, null, charStruct.combatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, firstPass, critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.combatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.combatFactors.StatS);
         }
 
         private static void CalculateTriggers(DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
@@ -1820,7 +1820,7 @@ These numbers to do not include racial bonuses.",
         }
 
         private Stats IterativeSpecialEffectsStats(DPSWarrCharacter charStruct, List<SpecialEffect> specialEffects, List<SpecialEffect> critEffects,
-            Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
+            Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float oldFlurryUptime,
             bool iterate, Stats iterateOld, Stats originalStats) {
 
                 WarriorTalents talents = charStruct.Char.WarriorTalents;
@@ -1913,10 +1913,55 @@ These numbers to do not include racial bonuses.",
                     }
                 }
                 charStruct.combatFactors.critProcs = critProcs;
+                float flurryUptime = 0f;
+                if (iterate && talents.Flurry > 0f && charStruct.Char.MainHand != null && charStruct.Char.MainHand.Item != null)
+                {
+                    float numFlurryHits = 3f; // default
+                    float mhPerc = 1f; // 100% by default
+                    float flurryHaste = 0.05f * talents.Flurry;
+                    bool useOffHand = false;
+                    
+                    float flurryHitsPerSec = charStruct.combatFactors.TotalHaste * (1f + flurryHaste) / (1f + flurryHaste * oldFlurryUptime);
+                    float temp = 1f / charStruct.Char.MainHand.Item.Speed;
+                    if (charStruct.Char.OffHand != null && charStruct.Char.OffHand.Item != null)
+                    {
+                        useOffHand = true;
+                        temp += 1f / charStruct.Char.OffHand.Item.Speed;
+                        mhPerc = (charStruct.Char.MainHand.Speed / charStruct.Char.OffHand.Speed) / (1f + charStruct.Char.MainHand.Speed / charStruct.Char.OffHand.Speed);
+                        if (charStruct.Char.OffHand.Speed == charStruct.Char.MainHand.Speed) numFlurryHits = 4f;
+                    }
+                    
+                    flurryHitsPerSec *= temp;
+                    float flurryDuration = numFlurryHits / flurryHitsPerSec;
+                    flurryUptime = 1f;
+                    foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities())
+                    {
+                        if (aw.ability.CanCrit && aw.numActivates > 0f)
+                        {
+                            if (aw.ability is Skills.OnAttack)
+                            {
+                                float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, numFlurryHits * mhPerc * aw.numActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
+                                flurryUptime *= tempFactor;
+                            }
+                            else
+                            {
+                                float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, flurryDuration * (aw.numActivates / fightDuration));
+                                flurryUptime *= tempFactor;
+                                if (aw.ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, flurryDuration * (aw.numActivates / fightDuration));
+                            }
+                        }
+                    }
+                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.MHAtkTable.Crit, numFlurryHits * mhPerc * charStruct.Rot.WhiteAtks.MhActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
+                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));
+                    flurryUptime = 1 - flurryUptime;
+                    statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste) * (1f + flurryHaste * flurryUptime) - 1f;
+                }
+
                 charStruct.combatFactors.StatS = UpdateStatsAndAdd(statsProcs, originalStats, charStruct.Char);
                 charStruct.combatFactors.InvalidateCache();
                 //Rot.InvalidateCache();
                 if (iterate) {
+
                     const float precisionWhole = 0.01f;
                     const float precisionDec = 0.0001f;
                     if (statsProcs.Agility - iterateOld.Agility > precisionWhole ||
@@ -1931,7 +1976,7 @@ These numbers to do not include racial bonuses.",
                         charStruct.Rot.doIterations();
                         CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                         return IterativeSpecialEffectsStats(charStruct,
-                            specialEffects, critEffects, triggerIntervals, triggerChances, true, statsProcs, originalStats);
+                            specialEffects, critEffects, triggerIntervals, triggerChances, flurryUptime, true, statsProcs, originalStats);
                     }
                     else
                     {

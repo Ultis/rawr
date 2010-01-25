@@ -923,13 +923,13 @@ namespace Rawr.DPSWarr {
                     landedAtksInterval * 3f, RK.Cd);
                 statsTotal.AddSpecialEffect(reck);
             }
-            if (talents.Flurry > 0 && CalcOpts.FuryStance)
+            /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
             {
                 //float value = talents.Flurry * 0.05f;
                 SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
                     new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
                 statsTotal.AddSpecialEffect(flurry);
-            }
+            }*/
         }
 
         internal void ResetHitTables()
