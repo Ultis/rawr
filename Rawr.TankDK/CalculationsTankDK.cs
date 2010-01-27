@@ -175,7 +175,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					    @"Summary:Mitigation Points*Mitigation Points represent the amount of damage you avoid, 
 on average, through avoidance stats (Miss, Dodge, Parry) along 
 with ways to improve survivablity, +heal or self healing, ability 
-cooldowns.  It is directly relational to your Damage Taken. 
+cooldowns.  It is directly relative to your Damage Taken. 
 Ideally, you want to maximize Mitigation Points, while maintaining 
 'enough' Survival Points (see Survival Points). If you find 
 yourself dying due to healers running OOM, or being too busy 
@@ -214,8 +214,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         "Advanced Stats:Total Avoidance*Miss + Dodge + Parry",
                         "Advanced Stats:Armor Damage Reduction",
                         "Advanced Stats:Magic Damage Reduction*Currently Magic Resistance Only.",
-                        "Advanced Stats:Reaction Time",
-                        "Advanced Stats:Burst Time",
+                        "Advanced Stats:Reaction Time*The time healers have to react to a particularly high damage burst before the next potential burst.",
+                        "Advanced Stats:Burst Time*Enhanced time-to-live calculation that factors avoidance and survival.",
 
                         "Threat Stats:Target Miss*Chance to miss the target",
                         "Threat Stats:Target Dodge*Chance the target dodges",
@@ -224,8 +224,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                         "Overall Stats:Overall",
                         "Overall Stats:Modified Survival*Value of Survival modified by the multiplier provided on the options pane.",
-                        "Overall Stats:Modified Mitigation*Value of Survival modified by the multiplier provided on the options pane.",
-                        "Overall Stats:Modified Threat*Value of Survival modified by the multiplier provided on the options pane.",
+                        "Overall Stats:Modified Mitigation",
+                        "Overall Stats:Modified Threat*Value of Threat modified by the multiplier provided on the options pane.",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -640,6 +640,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #region Setup Fight parameters
 
             float fFightDuration = opts.FightLength;
+            if (fFightDuration == 0f)
+            {
+                opts.FightLength = fFightDuration = 10f;
+            }
             // Does the boss have parry haste?
             bool bParryHaste = opts.bParryHaste;
 
@@ -789,8 +793,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     // Send the difference to the Mitigation value.
                     fSegmentMitigation = fPhyDamageDPS - fNewIncPhysDPS;
                     fTotalMitigation += fSegmentMitigation;
-                    // Update the IncPhyDPS for moving forward.
-                    fPhyDamageDPS = fNewIncPhysDPS;
+                    if (opts.AdditiveMitigation)
+                    {
+                        // Lets' remove the Damage that was avoided.
+                        fPhyDamageDPS -= fSegmentMitigation;
+                    }
                 }
                 #endregion
 
@@ -812,7 +819,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     // Figure out how many shots there are.  Right now, just calculating white damage.
                     // How fast is a hasted shot? up to 40% faster.
                     // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
-                    float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
                     float fShotsParried = 0f;
                     float fBossShotCountPerRot = 0f;
                     if (fRotDuration > 0)
@@ -832,41 +838,24 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         fCharacterShotCount += ct.totalParryableAbilities;
 
                         #region Max Parry-Hasted Damage
-                        // What was the max POTENTIAL hasted damage?
-                        // The number of shots taken * the chance to be parried.
-                        fShotsParried = StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff] * fCharacterShotCount;
-                        float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
-                        float fTimeNormal = fRotDuration - fTimeHasted;
-                        // Update the shot count w/ the new # of normal shots + the number of hasted shots.
-                        fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
-                        // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
-                        fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
-                        // How much DPS is the hasted amount?
-                        fPhyDamageDPS = (float)Math.Floor((fBossShotCountPerRot * fPerShotPhysical) / fRotDuration);
+                        fPhyDamageDPS = GetParryHastedDPS(StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff], fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
                         #endregion
 
                         #region Actual Parry-haste for this character
                         // Now, what's the actual expertise-based hasted damage?
-                        // The number of shots taken * the chance to be parried.
-                        // Ensure that this value doesn't go over 100%
-                        fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
-                        // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
-                        fTimeHasted = fShotsParried * fBossParryHastedSpeed;
-                        fTimeNormal = fRotDuration - fTimeHasted;
-                        // Update the shot count w/ the new # of normal shots + the number of hasted shots.
-                        fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
-                        // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
-                        fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
-                        // How much DPS is the hasted amount?
-                        fNewIncPhysDPS = (float)Math.Floor((fBossShotCountPerRot * fPerShotPhysical) / fRotDuration);
+                        fNewIncPhysDPS = GetParryHastedDPS(chanceTargetParry, fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
                         #endregion
 
-                        fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
                         // Still need to translate this to how much is mitigated by Expertise.
                         fSegmentMitigation = fPhyDamageDPS - fNewIncPhysDPS;
+
+                        fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
                         fTotalMitigation += fSegmentMitigation;
-                        // Update the IncPhyDPS for moving forward.
-                        fPhyDamageDPS = fNewIncPhysDPS;
+                        if (opts.AdditiveMitigation)
+                        {
+                            // Lets' remove the Damage that was avoided.
+                            fPhyDamageDPS -= fSegmentMitigation;
+                        }
                     }
                 }
                 #endregion
@@ -892,12 +881,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Let's see how much damage was avoided.
                 float fAvoidanceTotal = 1 - fChanceToGetHit;
                 // Raise the total mitgation by that amount.
-                fTotalMitigation += fPhyDamageDPS * Math.Min(1f, fAvoidanceTotal);
-
+                fSegmentMitigation = fPhyDamageDPS * Math.Min(1f, fAvoidanceTotal);
+                fTotalMitigation += fSegmentMitigation;
                 if (opts.AdditiveMitigation)
                 {
                     // Lets' remove the Damage that was avoided.
-                    fPhyDamageDPS -= fPhyDamageDPS * Math.Min(1f, fAvoidanceTotal);
+                    fPhyDamageDPS -= fSegmentMitigation;
                 }
                 #endregion
 
@@ -974,10 +963,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             else
             #region ***** Legacy Mitigation Rating *****
             {
-                if (fFightDuration == 0f)
-                {
-                    opts.FightLength = fFightDuration = 10f;
-                }
+
                 float fNumRotations = 0f;
                 float fIncMagicalDamage = opts.IncomingMagicDamage;
                 float fIncPhysicalDamage = opts.IncomingDamage;
@@ -2371,6 +2357,27 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (fDamFrequency > 0)
                 return fPerUnitDamage / fDamFrequency;
             return 0f;
+        }
+
+        private float GetParryHastedDPS(float fParryChance, float fCharacterShotCount, float fBossAverageAttackSpeed, float fRotDuration, float fPerShotPhysical)
+        {
+            float fPhyDamageDPS = 0f;
+            // What was the max POTENTIAL hasted damage?
+            // The number of shots taken * the chance to be parried.
+            // can't be higher than cap.
+            float localParryChance = Math.Min(fParryChance, StatConversion.WHITE_PARRY_CHANCE_CAP[83-80]);
+            // can't be lower than 0
+            localParryChance = Math.Max(localParryChance, 0);
+            float fShotsParried = fParryChance * fCharacterShotCount;
+            float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
+
+            float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+            float fTimeNormal = fRotDuration - fTimeHasted;
+            // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+            float fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
+            // How much DPS is the hasted amount?
+            fPhyDamageDPS = (float)Math.Floor((fBossShotCountPerRot * fPerShotPhysical) / fRotDuration);
+            return fPhyDamageDPS;
         }
 
         /// <summary>Deserializes the model's CalculationOptions data object from xml</summary>
