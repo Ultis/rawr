@@ -1579,7 +1579,6 @@ namespace Rawr
                         case "2057": return "Scholomance";
                         case "2100": return "Maraudon";
                         case "2159": return "Onyxia's Lair";
-                        case "2367": return "Old Hillsbrad Foothills";
                         case "2437": return "Ragefire Chasm";
                         case "2557": return "Dire Maul";
                         case "2597": return "Alterac Valley";
@@ -1626,7 +1625,6 @@ namespace Rawr
                         case "394": return "Grizzly Hills";
                         case "495": return "Howling Fjord";
                         case "1196": return "Utgarde Pinnacle";
-                        case "1584": return "Blackrock Depths";
                         case "2817": return "Crystalsong Forest";
                         case "2917": return "Hall of Legends";
                         case "3456": return "Naxxramas";

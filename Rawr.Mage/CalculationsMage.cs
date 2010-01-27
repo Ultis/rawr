@@ -148,6 +148,7 @@ namespace Rawr.Mage
                     "Spell Info:AB4AM0234MBAM*AB-AB-AB-AB-AM, MBAM on 0, 2, 3 or 4 stack",
                     "Spell Info:ABSpam0234MBAM*Spam AB, MBAM on 0, 2, 3 or 4 stack",
                     "Spell Info:ABSpam024MBAM*Spam AB, MBAM on 0, 2 or 4 stack",
+                    "Spell Info:ABSpam034MBAM*Spam AB, MBAM on 0, 3 or 4 stack",
                     "Spell Info:ABSpam04MBAM*Spam AB, MBAM on 0 or 4 stack",
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",

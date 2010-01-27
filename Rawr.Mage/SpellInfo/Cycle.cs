@@ -48,6 +48,7 @@ namespace Rawr.Mage
         AB4AM0234MBAM,
         ABSpam04MBAM,
         ABSpam024MBAM,
+        ABSpam034MBAM,
         ABSpam0234MBAM,
         ABSpam4MBAM,
         ABSpam24MBAM,
