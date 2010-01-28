@@ -1063,16 +1063,17 @@ namespace Rawr.RestoSham
                     CalculationOptionsRestoSham opts = originalOptions;
                     string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
                     string[] descs = new string[] {
-                        "All chain heal, all the time.  \nPercentage of mana pool added to sustained rating.",
-                        "All healing wave, all the time  \nPercentage of mana pool added to sustained rating.",
-                        "All lesser healing wave, all the time  \nPercentage of mana pool added to sustained rating.",
-                        "Riptide + Healing Wave.  \nPercentage of mana pool added to sustained rating.", 
-                        "Riptide + Chain Heal.  \nPercentage of mana pool added to sustained rating.", 
-                        "Riptide + Lesser Healing Wave.\n  Percentage of mana pool added to sustained rating." 
+                        "All chain heal, all the time.  \nMana available for use per minute added to sustained.",
+                        "All healing wave, all the time  \nMana available for use per minute added to sustained.",
+                        "All lesser healing wave, all the time  \nMana available for use per minute added to sustained.",
+                        "Riptide + Healing Wave.  \nMana available for use per minute added to sustained.", 
+                        "Riptide + Chain Heal.  \nMana available for use per minute added to sustained.", 
+                        "Riptide + Lesser Healing Wave.\nMana available for use per minute added to sustained." 
                     };
                     for (int i = 0; i < styles.Length; i++)
                     {
                         opts.SustStyle = styles[i];
+                        opts.BurstStyle = styles[i];
                         character.CalculationOptions = opts;
                         CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character);
 
@@ -1080,8 +1081,8 @@ namespace Rawr.RestoSham
                         float mana = statCalc.ManaUsed / (opts.FightLength);
 
                         ComparisonCalculationRestoSham hsComp = new ComparisonCalculationRestoSham(styles[i]);
-                        hsComp.OverallPoints = statCalc.SustainedHPS + mana;
-                        hsComp.SubPoints = new float[] { statCalc.SustainedHPS, mana, 0f };
+                        hsComp.OverallPoints = statCalc.BurstHPS + statCalc.SustainedHPS + mana;
+                        hsComp.SubPoints = new float[] { statCalc.BurstHPS, statCalc.SustainedHPS + mana, 0f };
                         hsComp.Description = descs[i];
                         list.Add(hsComp);
                     }
