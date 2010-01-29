@@ -5127,7 +5127,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Special Currency (Badges, Rings, etc.)</Name>
-      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink</Pattern>
+      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot</Pattern>
       <BoA>false</BoA>
       <BoE>false</BoE>
       <BoP>false</BoP>
@@ -5528,7 +5528,7 @@
       <RegexList />
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Rare Elite</Name>
-      <Pattern>Aotona|Dirkee|Griegen|High Thane Jorfus|Icehorn|King Ping|Old Crystalbark|Putridus the Ancient|Seething Hate|Terror Spinner|Vigdis the War Maiden|Vyragosa|Zul'drak Sentinel|Tukemuth|Syreian the Bonecarver|Scarlet Highlord Daion|Perobas the Bloodthirster|Loque'nahak|King Krush|Hildana Deathstealer|Grocklar|Fumblub Gearwind|Crazed Indu'le Survivor</Pattern>
+      <Pattern>Aotona|Dirkee|Griegen|High Thane Jorfus|Icehorn|King Ping|Old Crystalbark|Putridus the Ancient|Seething Hate|Terror Spinner|Vigdis the War Maiden|Vyragosa|Zul'drak Sentinel|Tukemuth|Syreian the Bonecarver|Scarlet Highlord Daion|Perobas the Bloodthirster|Loque'nahak|King Krush|Hildana Deathstealer|Grocklar|Fumblub Gearwind|Crazed Indu'le Survivor|Skoll</Pattern>
       <BoA>false</BoA>
       <BoE>false</BoE>
       <BoP>false</BoP>
@@ -5643,7 +5643,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>PVP</Name>
-      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP</Pattern>
+      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP|Grex Brainboiler|Kezzik the Striker</Pattern>
       <BoA>false</BoA>
       <BoE>false</BoE>
       <BoP>false</BoP>
@@ -5720,6 +5720,25 @@
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Classic</Name>
       <Pattern>Zul'Gurub|Ahn'Qiraj</Pattern>
+      <BoA>false</BoA>
+      <BoE>false</BoE>
+      <BoP>false</BoP>
+      <BoU>false</BoU>
+      <BoN>false</BoN>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Mob Drops</Name>
+      <Pattern>Nascent Val'kyr</Pattern>
       <BoA>false</BoA>
       <BoE>false</BoE>
       <BoP>false</BoP>
