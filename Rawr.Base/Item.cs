@@ -1152,11 +1152,11 @@ namespace Rawr
             }
             set
             {
+                _itemCached = value;
                 if (value == null)
                     Id = 0;
                 else
                     Id = value.Id;
-                _itemCached = value;
             }
         }
 
@@ -1176,11 +1176,11 @@ namespace Rawr
 			}
 			set
 			{
-				if (value == null)
+                _gem1Cached = value;
+                if (value == null)
 					Gem1Id = 0;
 				else
 					Gem1Id = value.Id;
-				_gem1Cached = value;
             }
 		}
 
@@ -1200,11 +1200,11 @@ namespace Rawr
 			}
 			set
 			{
-				if (value == null)
+                _gem2Cached = value;
+                if (value == null)
 					Gem2Id = 0;
 				else
 					Gem2Id = value.Id;
-				_gem2Cached = value;
             }
 		}
 
@@ -1224,11 +1224,11 @@ namespace Rawr
 			}
 			set
 			{
-				if (value == null)
+                _gem3Cached = value;
+                if (value == null)
 					Gem3Id = 0;
 				else
 					Gem3Id = value.Id;
-				_gem3Cached = value;
             }
 		}
 
@@ -1247,11 +1247,11 @@ namespace Rawr
 		    }
 		    set
 		    {
-		        if (value == null)
+                _enchantCached = value;
+                if (value == null)
 		            EnchantId = 0;
 		        else
                     EnchantId = value.Id;
-		        _enchantCached = value;
             }
 		}
 
@@ -1336,11 +1336,18 @@ namespace Rawr
         }
         public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant)
         {
-            Item = item;
-            Gem1 = gem1;
-            Gem2 = gem2;
-            Gem3 = gem3;
-            Enchant = enchant;
+            // this code path is used a lot, optimize for performance
+            _itemCached = item;
+            _gem1Cached = gem1;
+            _gem2Cached = gem2;
+            _gem3Cached = gem3;
+            _enchantCached = enchant;
+            _id = item != null ? item.Id : 0;
+            _gem1Id = gem1 != null ? gem1.Id : 0;
+            _gem2Id = gem2 != null ? gem2.Id : 0;
+            _gem3Id = gem3 != null ? gem3.Id : 0;
+            _enchantId = enchant != null ? enchant.Id : 0;
+            OnIdsChanged();
         }
 
 		public ItemInstance Clone()

@@ -965,7 +965,6 @@ namespace Rawr.Mage
         private void InitializeEffectCooldowns()
         {
             cooldownList = new List<EffectCooldown>();
-            effectCooldown = new Dictionary<int, EffectCooldown>();
 
             calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
             calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
@@ -1315,6 +1314,7 @@ namespace Rawr.Mage
                 }
             }
 
+            effectCooldown = new Dictionary<int, EffectCooldown>(cooldownList.Count);
             foreach (EffectCooldown cooldown in cooldownList)
             {
                 effectCooldown[cooldown.Mask] = cooldown;

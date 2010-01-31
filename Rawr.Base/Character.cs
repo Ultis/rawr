@@ -23,7 +23,7 @@ namespace Rawr //O O . .
         [XmlElement("Class")]
         public CharacterClass _class = CharacterClass.Druid;
         [XmlIgnore]
-        public List<Buff> _activeBuffs = new List<Buff>();
+        public List<Buff> _activeBuffs;
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
         public const int SlotCount = 21;
@@ -824,16 +824,16 @@ namespace Rawr //O O . .
             }
             else
             {
-                WarriorTalents = character.WarriorTalents;
-                PaladinTalents = character.PaladinTalents;
-                HunterTalents = character.HunterTalents;
-                RogueTalents = character.RogueTalents;
-                PriestTalents = character.PriestTalents;
-                ShamanTalents = character.ShamanTalents;
-                MageTalents = character.MageTalents;
-                WarlockTalents = character.WarlockTalents;
-                DruidTalents = character.DruidTalents;
-                DeathKnightTalents = character.DeathKnightTalents;
+                _warriorTalents = character._warriorTalents;
+                _paladinTalents = character._paladinTalents;
+                _hunterTalents = character._hunterTalents;
+                _rogueTalents = character._rogueTalents;
+                _priestTalents = character._priestTalents;
+                _shamanTalents = character._shamanTalents;
+                _mageTalents = character._mageTalents;
+                _warlockTalents = character._warlockTalents;
+                _druidTalents = character._druidTalents;
+                _deathKnightTalents = character._deathKnightTalents;
             }
         }
 
@@ -1710,7 +1710,10 @@ namespace Rawr //O O . .
             return cslot;
         }
 
-        public Character() { }
+        public Character() 
+        {
+            _activeBuffs = new List<Buff>();
+        }
 
 		public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
 			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
@@ -1750,6 +1753,7 @@ namespace Rawr //O O . .
 
             WaistBlacksmithingSocketEnabled = true;
             SetFaction();
+            _activeBuffs = new List<Buff>(); 
             IsLoading = false;
             RecalculateSetBonuses();
 
@@ -1795,6 +1799,7 @@ namespace Rawr //O O . .
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
             SetFaction();
+            _activeBuffs = new List<Buff>();
             IsLoading = false;
             RecalculateSetBonuses();
             BossOptions = boss.Clone();
@@ -1835,7 +1840,7 @@ namespace Rawr //O O . .
             _item[(int)CharacterSlot.ProjectileBag] = projectileBag;
             SetFaction();
             IsLoading = false;
-            ActiveBuffs.AddRange(activeBuffs);
+            ActiveBuffs = new List<Buff>(activeBuffs);
             CurrentModel = model;
             RecalculateSetBonuses();
 
@@ -1854,11 +1859,11 @@ namespace Rawr //O O . .
             SetFaction();
 
             IsLoading = false;
-            ActiveBuffs.AddRange(activeBuffs);
+            ActiveBuffs = new List<Buff>(activeBuffs);
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            BossOptions = boss.Clone();
+            BossOptions = boss; // don't clone, this is used from optimizer
         }
 
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
@@ -1873,7 +1878,7 @@ namespace Rawr //O O . .
             SetFaction();
 
             IsLoading = false;
-            ActiveBuffs.AddRange(activeBuffs);
+            ActiveBuffs = new List<Buff>(activeBuffs);
             CurrentModel = model;
             RecalculateSetBonuses();
 
