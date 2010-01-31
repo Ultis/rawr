@@ -876,7 +876,7 @@ namespace Rawr.RestoSham
             #endregion
             #region Final Stats
             float ESUsage = UseES ? (float)Math.Round((FightSeconds / ESTimer), 0) : 0;
-            float Converter = (FightSeconds - (RTCast * ESUsage) - 4) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same
+            float ESDowntime = (FightSeconds - (RTCast * ESUsage) - 4) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same
             calcStats.MAPS = ((stats.Mana) / (FightSeconds))
                 + (stats.ManaRestore / FightSeconds)
                 + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD && character.ShamanTalents.ManaTideTotem > 0 ? 1 : 0)) / FightSeconds)
@@ -892,10 +892,10 @@ namespace Rawr.RestoSham
             if (options.WSPops > 0)
                 calcStats.MAPS += ((options.WSPops * Orb) / 60);
             calcStats.ManaUsed = calcStats.MAPS * FightSeconds;
-            float MAPSConvert = (float)Math.Min((calcStats.MAPS / ((calcStats.MUPS * castingActivity) * Converter)), 1);
+            float MAPSConvert = (float)Math.Min((calcStats.MAPS / ((calcStats.MUPS * castingActivity) * ESDowntime)), 1);
             //  FIXME: some Healed effects can crit and some are not affected by Purification, this should be taken into account
             float HealedHPS = stats.Healed * PurificationScale;
-            calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
+            calcStats.BurstHPS = (calcStats.BurstHPS * ESDowntime) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
             calcStats.SustainedHPS = (SustHPS * MAPSConvert) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
             calcStats.Survival = (calcStats.BasicStats.Health + calcStats.BasicStats.Hp5) * (options.SurvivalPerc * .01f);
             calcStats.OverallPoints = calcStats.BurstHPS + calcStats.SustainedHPS + calcStats.Survival;
