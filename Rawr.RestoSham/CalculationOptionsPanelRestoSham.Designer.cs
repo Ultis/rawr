@@ -41,6 +41,7 @@
             this.cboTargets = new System.Windows.Forms.ComboBox();
             this.txtLatency = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
@@ -59,13 +60,14 @@
             this.tbReplenishment = new System.Windows.Forms.TrackBar();
             this.tbReplenishment_Label = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbActivity = new System.Windows.Forms.TrackBar();
             this.label7 = new System.Windows.Forms.Label();
             this.chkEarthShield = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tbActivity = new System.Windows.Forms.TrackBar();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtWSPops = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.GeneralPage.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -75,14 +77,14 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbReplenishment)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbActivity)).BeginInit();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(81, 68);
+            this.chkManaTide.Location = new System.Drawing.Point(99, 68);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(155, 17);
             this.chkManaTide.TabIndex = 14;
@@ -172,7 +174,7 @@
             // 
             // txtInnervates
             // 
-            this.txtInnervates.Location = new System.Drawing.Point(81, 19);
+            this.txtInnervates.Location = new System.Drawing.Point(75, 16);
             this.txtInnervates.Name = "txtInnervates";
             this.txtInnervates.Size = new System.Drawing.Size(83, 20);
             this.txtInnervates.TabIndex = 52;
@@ -214,6 +216,16 @@
             this.label10.TabIndex = 48;
             this.label10.Text = "Ping:";
             this.tipRestoSham.SetToolTip(this.label10, "Ping in milliseconds.");
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 96);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(119, 13);
+            this.label9.TabIndex = 54;
+            this.label9.Text = "Time Spent Casting (%):";
+            this.tipRestoSham.SetToolTip(this.label9, "Do not include canceled spells, 85% default includes canceled spells.");
             // 
             // label2
             // 
@@ -301,7 +313,7 @@
             // 
             this.tbOverhealing_Label.AutoSize = true;
             this.tbOverhealing_Label.Location = new System.Drawing.Point(6, 16);
-            this.tbOverhealing_Label.Name = "tbSurvival_Label";
+            this.tbOverhealing_Label.Name = "tbOverhealing_Label";
             this.tbOverhealing_Label.Size = new System.Drawing.Size(102, 13);
             this.tbOverhealing_Label.TabIndex = 5;
             this.tbOverhealing_Label.Text = "Survival Weight (%):";
@@ -340,6 +352,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.txtWSPops);
+            this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.chkWaterShield);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.tbReplenishment);
@@ -356,7 +370,7 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(81, 45);
+            this.chkWaterShield.Location = new System.Drawing.Point(6, 68);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
@@ -367,7 +381,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 22);
+            this.label5.Location = new System.Drawing.Point(9, 19);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(60, 13);
             this.label5.TabIndex = 51;
@@ -408,6 +422,15 @@
             this.groupBox1.TabIndex = 27;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Healing";
+            // 
+            // tbActivity
+            // 
+            this.tbActivity.Location = new System.Drawing.Point(6, 112);
+            this.tbActivity.Maximum = 100;
+            this.tbActivity.Name = "tbActivity";
+            this.tbActivity.Size = new System.Drawing.Size(274, 45);
+            this.tbActivity.TabIndex = 53;
+            this.tbActivity.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
             // label7
             // 
@@ -458,24 +481,24 @@
             this.tabControl1.TabIndex = 14;
             this.tabControl1.Tag = "";
             // 
-            // tbActivity
+            // label11
             // 
-            this.tbActivity.Location = new System.Drawing.Point(6, 112);
-            this.tbActivity.Maximum = 100;
-            this.tbActivity.Name = "tbActivity";
-            this.tbActivity.Size = new System.Drawing.Size(274, 45);
-            this.tbActivity.TabIndex = 53;
-            this.tbActivity.Scroll += new System.EventHandler(this.OnTrackBarScroll);
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 45);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(55, 13);
+            this.label11.TabIndex = 53;
+            this.label11.Text = "WS Pops:";
             // 
-            // label9
+            // txtWSPops
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 96);
-            this.label9.Name = "tbActivity_Label";
-            this.label9.Size = new System.Drawing.Size(119, 13);
-            this.label9.TabIndex = 54;
-            this.label9.Text = "Time Spent Casting (%):";
-            this.tipRestoSham.SetToolTip(this.label9, "Do not include canceled spells, 85% default includes canceled spells.");
+            this.txtWSPops.Location = new System.Drawing.Point(75, 42);
+            this.txtWSPops.Name = "txtWSPops";
+            this.txtWSPops.Size = new System.Drawing.Size(83, 20);
+            this.txtWSPops.TabIndex = 54;
+            this.tipRestoSham.SetToolTip(this.txtWSPops, "Number of times per minute Water Shield is popped");
+            this.txtWSPops.Validated += new System.EventHandler(this.numericTextBox_Validated);
+            this.txtWSPops.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
             // 
             // CalculationOptionsPanelRestoSham
             // 
@@ -498,8 +521,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbReplenishment)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tbActivity)).EndInit();
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -543,6 +566,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TrackBar tbActivity;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox txtWSPops;
 
     }
 }

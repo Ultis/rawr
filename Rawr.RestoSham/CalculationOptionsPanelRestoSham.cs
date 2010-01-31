@@ -22,6 +22,7 @@ namespace Rawr.RestoSham
             txtLatency.Tag = new NumericField("Latency", 0f, 500f, true);
             txtCleanse.Tag = new NumericField("Decurse", 1f, 300f, true);
             txtInnervates.Tag = new NumericField("Innervates", 0f, 100f, true);
+            txtWSPops.Tag = new NumericField("WSPops", 0f, 20f, true);
             tbReplenishment.Tag = new NumericField("ReplenishmentPercentage", 0f, 100f, true);
             tbSurvival.Tag = new NumericField("SurvivalPerc", 0f, 100f, true);
             tbActivity.Tag = new NumericField("ActivityPerc", 1f, 100f, false);
@@ -47,6 +48,7 @@ namespace Rawr.RestoSham
             txtInnervates.Text = options.Innervates.ToString();
             cboTargets.Text = options.Targets.ToString();
             txtLatency.Text = options.Latency.ToString();
+            txtWSPops.Text = options.WSPops.ToString();
             #region The track bars
 			tbReplenishment.Value = (Int32)options.ReplenishmentPercentage;
             UpdateTrackBarLabel(tbReplenishment);

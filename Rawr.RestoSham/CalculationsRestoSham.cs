@@ -188,12 +188,19 @@ namespace Rawr.RestoSham
                           "Healing Style Breakdowns:Mana Available per Second",
                           "Healing Style Breakdowns:Mana Used per Second*This is the mana used per second by your chosen sustained sequence",
                           "Healing Style Breakdowns:Healing Stream HPS",
+                          "Healing Style Breakdowns:Earth Shield HPS",
                           "Healing Style Breakdowns:RT+HW HPS",
                           "Healing Style Breakdowns:RT+LHW HPS",
                           "Healing Style Breakdowns:RT+CH HPS",
                           "Healing Style Breakdowns:HW Spam HPS",
                           "Healing Style Breakdowns:LHW Spam HPS",
-                          "Healing Style Breakdowns:CH Spam HPS"};
+                          "Healing Style Breakdowns:CH Spam HPS",
+						  "Average Cast Times:Global Cooldown",
+						  "Average Cast Times:Healing Wave*Normal / Tidal Waves",
+						  "Average Cast Times:Lesser Healing Wave",
+						  "Average Cast Times:Chain Heal",
+						  "Average Cast Times:Lightning Bolt*Aren't you busy healing people? ;)",
+					};
                 }
                 return _characterDisplayCalcLabels;
             }
@@ -445,26 +452,21 @@ namespace Rawr.RestoSham
             float ELWChance = stats.Earthliving * (0.2f + (character.ShamanTalents.GlyphofEarthlivingWeapon ? .01f : 0)) * ELWOverwriteScale;
             #endregion
             #region Earth Shield Calculations
-            //  ES bonus healing = spell power
-            float ESBonusHealing = stats.SpellPower;
-            //  ... * generic healing scale * HoT scale
-            ESBonusHealing *= 1.88f * (1f / 3.5f);
-            //  ES healing scale = purification scale
-            float ESHealingScale = PurificationScale;
+            bool UseES = (options.EarthShield && character.ShamanTalents.EarthShield > 0); // Wether or not to use ES at all - Make sure the option and the talent are on.
+            float ESBonusHealing = stats.SpellPower;  //  ES bonus healing = spell power
+            ESBonusHealing *= 1.88f * (1f / 3.5f);  //  ... * generic healing scale * HoT scale
+            float ESHealingScale = PurificationScale;  //  ES healing scale = purification scale
             //  ... + 5%/10% Improved Earth Shield + 5%/10%/15% Improved Shields
             ESHealingScale *= 1 + character.ShamanTalents.ImprovedEarthShield * 0.05f + character.ShamanTalents.ImprovedShields * 0.05f;
             //  ... + 20% if Glyphed
             if (character.ShamanTalents.GlyphofEarthShield)
                 ESHealingScale *= 1.2f;
-            //  ... * ES flag
-            ESHealingScale *= options.EarthShield ? 1 : 0;
-            //  ES charge heal
-            float ESChargeHeal = (337 + ESBonusHealing) * ESHealingScale;
-            //  ES all charges heal
-            float ESHeal = ESChargeHeal * (6 + character.ShamanTalents.ImprovedEarthShield);
-            float ESCost = (float)Math.Round(.15 * BaseMana) * CostScale * (options.EarthShield ? 1 : 0);
+            ESHealingScale *= UseES ? 1 : 0;  // If ES is disabled or talent not taken, this will apply a 0 rating to ES
+            float ESChargeHeal = (337 + ESBonusHealing) * ESHealingScale; //  Heal per ES Charge
+            float ESHeal = ESChargeHeal * (6 + character.ShamanTalents.ImprovedEarthShield);  //  ES if all charges heal
+            float ESCost = (float)Math.Round(.15 * BaseMana) * CostScale * (UseES ? 1 : 0);
             float ESTimer = (6 + character.ShamanTalents.ImprovedEarthShield) * Math.Max(ESInterval, 4);
-            float ESHPS = (ESHeal * Critical) / ESTimer;
+            calcStats.ESHPS = (ESHeal * Critical) / ESTimer;
             float ESMPS = ESCost / ESTimer;
             #endregion
             #region Base Variables ( Heals per sec and Crits per sec )
@@ -491,16 +493,22 @@ namespace Rawr.RestoSham
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
             float ELWDuration = stats.Earthliving * 12;
             float HWCastBase = 3.0f - (character.ShamanTalents.ImprovedHealingWave * .1f);
+            calcStats.RealHWCast = HWCastBase * HasteScale;
             float HWCast = (float)Math.Max(HWCastBase * HasteScale + Latency, 1f + GcdLatency);
             float HWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
             float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f + HWCastTWLatency, 1f + GcdLatency);
             float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + RTHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
+            calcStats.RealLHWCast = 1.5f * HasteScale;
             float LHWCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
             float LHWCast_RT = (float)Math.Max(1.5f / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             float CHCastBase = 2.5f - stats.CHCTDecrease;
+            calcStats.RealCHCast = CHCastBase * HasteScale;
             float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
             float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
+            // This totally heals the boss backwards! Yeah! :D
+            // Don't worry about this messing with procs or anything, it's just to show on the stats page. :)
+            calcStats.LBCast = (float)Math.Max((2.5f - 0.1 * character.ShamanTalents.LightningMastery) * HasteScale, 1f);
             #endregion
             #region Base Spells ( TankCH / RTHeal / LHWHeal / HWHeal / CHHeal )
             //  RT bonus healing = spell power
@@ -525,7 +533,7 @@ namespace Rawr.RestoSham
             //  ... * generic healing scale + bonus from TW
             LHWBonusHealing *= 1.88f * (1.5f / 3.5f) + character.ShamanTalents.TidalWaves * .02f;
             //  ... + 20% if w/Glyph and tank healing + ES is enabled
-            if (TankHeal && options.EarthShield && character.ShamanTalents.GlyphofLesserHealingWave)
+            if (TankHeal && UseES && character.ShamanTalents.GlyphofLesserHealingWave)
                 LHWBonusHealing *= 1.2f;
             //  LHW healing scale = purification scale
             float LHWHealingScale = PurificationScale;
@@ -585,7 +593,7 @@ namespace Rawr.RestoSham
             //  NOTE: stats.CHManaReduction isn't handled since WotLK items don't have it
             float CHCost = ((float)Math.Round(BaseMana * .19f) - Preserve - stats.TotemCHBaseCost) * CostScale;
             #endregion
-            #region RT + LHW Rotation (RTLHWMPS / RTLHWHPS / RTLHWTime)
+            #region RT + LHW Rotation (RTLHWMPS / RTLHWHPS / RTLHWTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
                 float RTLHWTime = RTCast;
@@ -610,8 +618,8 @@ namespace Rawr.RestoSham
                 float RTLHWAA = (RTHeal * CriticalChance + LHWHeal * RTLHWLHWCrits) * AAScale;
                 float RTTargets = TankHeal ? 1 : RTDuration / RTLHWTime;
                 float RTLHWELWTargets = ELWChance * (TankHeal ? 1 : RTLHWLHWCasts * ELWDuration / RTLHWTime);
-                calcStats.RTLHWHPS = (RTLHWRTHeal * (1 - RTOverheal) + RTLHWLHWHeal * (1 - LHWOverheal) + RTLHWAA * (1 - AAOverheal)) / RTLHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTLHWELWTargets * ELWHPS * (1 - ELWOverheal);
-                calcStats.RTLHWMPS = (RTCost + (LHWCost * RTLHWLHWCasts)) / RTLHWTime;
+                calcStats.RTLHWHPS = ((RTLHWRTHeal * (1 - RTOverheal) + RTLHWLHWHeal * (1 - LHWOverheal) + RTLHWAA * (1 - AAOverheal)) / RTLHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTLHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity;
+                calcStats.RTLHWMPS = ((RTCost + (LHWCost * RTLHWLHWCasts)) / RTLHWTime) * castingActivity;
                 if (options.SustStyle.Equals("RT+LHW"))
                 {
                     RTPerSec = 1f / RTLHWTime;
@@ -624,7 +632,7 @@ namespace Rawr.RestoSham
                 }
             }
             #endregion
-            #region RT + HW Rotation (RTHWMPS / RTHWHPS / RTHWTime)
+            #region RT + HW Rotation (RTHWMPS / RTHWHPS / RTHWTime) (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
                 float RTHWTime = RTCast;
@@ -655,11 +663,11 @@ namespace Rawr.RestoSham
                 float RTHWHWHeal = HWHeal * RTHWHWCasts * Critical;
                 float RTHWHWSelfHeal = RTHWHWHeal * HWSelfHealingScale * Critical;
                 float RTHWAA = (RTHeal * CriticalChance + HWHeal * RTHWHWHCrits) * AAScale;
-                //  FIXME: needs multitarget ELW handling
+                //  Multi-target ELW handling not in yet due to low priority
                 float RTTargets = TankHeal ? 1 : RTDuration / RTHWTime;
                 float RTHWELWTargets = ELWChance * (TankHeal ? 1 : RTHWHWCasts * ELWDuration / RTHWTime);
-                calcStats.RTHWHPS = (RTHWRTHeal * (1 - RTOverheal) + RTHWHWHeal * (1 - HWOverheal) + RTHWHWSelfHeal * (1 - HWSelfOverheal) + RTHWAA * (1 - AAOverheal)) / RTHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHWELWTargets * ELWHPS * (1 - ELWOverheal);
-                calcStats.RTHWMPS = (RTCost + (HWCost * RTHWHWCasts)) / RTHWTime;
+                calcStats.RTHWHPS = ((RTHWRTHeal * (1 - RTOverheal) + RTHWHWHeal * (1 - HWOverheal) + RTHWHWSelfHeal * (1 - HWSelfOverheal) + RTHWAA * (1 - AAOverheal)) / RTHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity;
+                calcStats.RTHWMPS = ((RTCost + (HWCost * RTHWHWCasts)) / RTHWTime) * castingActivity;
                 if (options.SustStyle.Equals("RT+HW"))
                 {
                     RTPerSec = 1f / RTHWTime;
@@ -672,7 +680,7 @@ namespace Rawr.RestoSham
                 }
             }
             #endregion
-            #region RT + CH Rotation (RTCHMPS / RTCHHPS / RTCHTime / TankCH)
+            #region RT + CH Rotation (RTCHMPS / RTCHHPS / RTCHTime / TankCH) (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
                 float RTCHTime = RTCast;
@@ -695,8 +703,8 @@ namespace Rawr.RestoSham
                 float RTCHAA = RTHeal * CriticalChance * AAScale;
                 float RTTargets = TankHeal ? Math.Max(RTDuration / RTCHTime - CHRTConsumption, 0) : (RTCast + (RTDuration - RTCast) * (1 - CHRTConsumption)) / RTCHTime;
                 float RTCHELWTargets = ELWChance * (CHJumps * RTCHCHCasts + RTTargets) * ELWDuration / RTCHTime;
-                calcStats.RTCHHPS = (RTCHRTHeal * (1 - RTOverheal) + RTCHCHHeal * (1 - CHOverheal) + RTCHAA * (1 - AAOverheal)) / RTCHTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTCHELWTargets * ELWHPS * (1 - ELWOverheal);
-                calcStats.RTCHMPS = (RTCost + (CHCost * RTCHCHCasts)) / RTCHTime;
+                calcStats.RTCHHPS = ((RTCHRTHeal * (1 - RTOverheal) + RTCHCHHeal * (1 - CHOverheal) + RTCHAA * (1 - AAOverheal)) / RTCHTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTCHELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity;
+                calcStats.RTCHMPS = ((RTCost + (CHCost * RTCHCHCasts)) / RTCHTime) * castingActivity;
                 if (options.SustStyle.Equals("RT+CH"))
                 {
                     RTPerSec = 1f / RTCHTime;
@@ -713,8 +721,8 @@ namespace Rawr.RestoSham
             #endregion
             #region CH Spam (CHHPS / CHMPS)
             float CHELWTargets = ELWChance * CHJumps * ELWDuration / CHCast;
-            calcStats.CHSpamHPS = CHJumpHeal * ChCritical * (1 - CHOverheal) / CHCast + CHELWTargets * ELWHPS * (1 - ELWOverheal);
-            calcStats.CHSpamMPS = CHCost / CHCast;
+            calcStats.CHSpamHPS = (CHJumpHeal * ChCritical * (1 - CHOverheal) / CHCast + CHELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity;
+            calcStats.CHSpamMPS = (CHCost / CHCast) * castingActivity;
             if (options.SustStyle.Equals("CH Spam"))
             {
                 CHPerSec = 1f / CHCast;
@@ -728,8 +736,8 @@ namespace Rawr.RestoSham
             float LHWLHWHeal = LHWHeal * Critical;
             float LHWAA = LHWHeal * CriticalChance * AAScale;
             float LHWELWTargets = ELWChance * ELWDuration / LHWCast;
-            calcStats.LHWSpamHPS = (LHWLHWHeal * (1 - LHWOverheal) + LHWAA * (1 - AAOverheal)) / LHWCast + LHWELWTargets * ELWHPS * (1 - ELWOverheal);
-            calcStats.LHWSpamMPS = LHWCost / LHWCast;
+            calcStats.LHWSpamHPS = ((LHWLHWHeal * (1 - LHWOverheal) + LHWAA * (1 - AAOverheal)) / LHWCast + LHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity;
+            calcStats.LHWSpamMPS = (LHWCost / LHWCast) * castingActivity;
             if (options.SustStyle.Equals("LHW Spam"))
             {
                 LHWPerSec = 1f / LHWCast;
@@ -742,8 +750,8 @@ namespace Rawr.RestoSham
             float HWHWSelfHeal = HWHWHeal * HWSelfHealingScale * Critical;
             float HWAA = HWHeal * CriticalChance * AAScale;
             float HWELWTargets = ELWChance * ELWDuration / HWCast;
-            calcStats.HWSpamHPS = (HWHWHeal * (1 - HWOverheal) + HWHWSelfHeal * (1 - HWSelfOverheal) + HWAA * (1 - AAOverheal)) / HWCast + HWELWTargets * ELWHPS * (1 - ELWOverheal);
-            calcStats.HWSpamMPS = HWCost / HWCast;
+            calcStats.HWSpamHPS = ((HWHWHeal * (1 - HWOverheal) + HWHWSelfHeal * (1 - HWSelfOverheal) + HWAA * (1 - AAOverheal)) / HWCast + HWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity;
+            calcStats.HWSpamMPS = (HWCost / HWCast) * castingActivity;
             if (options.SustStyle.Equals("HW Spam"))
             {
                 HWPerSec = 1f / HWCast;
@@ -837,28 +845,28 @@ namespace Rawr.RestoSham
             switch (options.SustStyle)
             {
                 case "CH Spam":
-                    SustHPS = calcStats.CHSpamHPS * castingActivity;
-                    calcStats.MUPS = calcStats.CHSpamMPS * castingActivity;
+                    SustHPS = calcStats.CHSpamHPS;
+                    calcStats.MUPS = calcStats.CHSpamMPS;
                     break;
                 case "HW Spam":
-                    SustHPS = calcStats.HWSpamHPS * castingActivity;
-                    calcStats.MUPS = calcStats.HWSpamMPS * castingActivity;
+                    SustHPS = calcStats.HWSpamHPS;
+                    calcStats.MUPS = calcStats.HWSpamMPS;
                     break;
                 case "LHW Spam":
-                    SustHPS = calcStats.LHWSpamHPS * castingActivity;
-                    calcStats.MUPS = calcStats.LHWSpamMPS * castingActivity;
+                    SustHPS = calcStats.LHWSpamHPS;
+                    calcStats.MUPS = calcStats.LHWSpamMPS;
                     break;
                 case "RT+HW":
-                    SustHPS = calcStats.RTHWHPS * castingActivity;
-                    calcStats.MUPS = calcStats.RTHWMPS * castingActivity;
+                    SustHPS = calcStats.RTHWHPS;
+                    calcStats.MUPS = calcStats.RTHWMPS;
                     break;
                 case "RT+LHW":
-                    SustHPS = calcStats.RTLHWHPS * castingActivity;
-                    calcStats.MUPS = calcStats.RTLHWMPS * castingActivity;
+                    SustHPS = calcStats.RTLHWHPS;
+                    calcStats.MUPS = calcStats.RTLHWMPS;
                     break;
                 case "RT+CH":
-                    SustHPS = calcStats.RTCHHPS * castingActivity;
-                    calcStats.MUPS = calcStats.RTCHMPS * castingActivity;
+                    SustHPS = calcStats.RTCHHPS;
+                    calcStats.MUPS = calcStats.RTCHMPS;
                     break;
             }
             
@@ -867,12 +875,11 @@ namespace Rawr.RestoSham
             calcStats.MUPS += (DecurseCost * options.Decurse) / FightSeconds;
             #endregion
             #region Final Stats
-            float ESUsage = options.EarthShield ? (float)Math.Round((FightSeconds / ESTimer), 0) : 0;
-            float Converter = (FightSeconds - (1.5f * ESUsage) - 4) / FightSeconds;
+            float ESUsage = UseES ? (float)Math.Round((FightSeconds / ESTimer), 0) : 0;
+            float Converter = (FightSeconds - (RTCast * ESUsage) - 4) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same
             calcStats.MAPS = ((stats.Mana) / (FightSeconds))
-                - ESMPS
                 + (stats.ManaRestore / FightSeconds)
-                + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) / FightSeconds)
+                + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD && character.ShamanTalents.ManaTideTotem > 0 ? 1 : 0)) / FightSeconds)
                 + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * (options.ReplenishmentPercentage * .01f))
                 + (stats.Mp5 / 5)
                 + (options.Innervates * 7866f / FightSeconds)
@@ -880,13 +887,16 @@ namespace Rawr.RestoSham
                 + (RTCPerSec * Orb)
                 + (LHWCPerSec * Orb * .6f)
                 + (HWCPerSec * Orb)
-                + (CHCHitsPerSec * Orb * .3f);
+                + (CHCHitsPerSec * Orb * .3f)
+                - ESMPS;
+            if (options.WSPops > 0)
+                calcStats.MAPS += ((options.WSPops * Orb) / 60);
             calcStats.ManaUsed = calcStats.MAPS * FightSeconds;
-            float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS * castingActivity)), 1);
+            float MAPSConvert = (float)Math.Min((calcStats.MAPS / ((calcStats.MUPS * castingActivity) * Converter)), 1);
             //  FIXME: some Healed effects can crit and some are not affected by Purification, this should be taken into account
             float HealedHPS = stats.Healed * PurificationScale;
-            calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + ESHPS * (1 - ESOverheal) + HealedHPS;
-            calcStats.SustainedHPS = ((SustHPS * Converter) * MAPSConvert) + ESHPS * (1 - ESOverheal) + HealedHPS;
+            calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
+            calcStats.SustainedHPS = (SustHPS * MAPSConvert) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
             calcStats.Survival = (calcStats.BasicStats.Health + calcStats.BasicStats.Hp5) * (options.SurvivalPerc * .01f);
             calcStats.OverallPoints = calcStats.BurstHPS + calcStats.SustainedHPS + calcStats.Survival;
             calcStats.SubPoints[0] = calcStats.BurstHPS;

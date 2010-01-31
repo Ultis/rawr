@@ -38,6 +38,7 @@ namespace Rawr.RestoSham
         public float MAPS { get; set; }
         public float ManaUsed { get; set; }
         public float HSTHeals { get; set; }
+        public float ESHPS { get; set; }
         public float HWSpamHPS { get; set; }
         public float HWSpamMPS { get; set; }
         public float LHWSpamHPS { get; set; }
@@ -50,6 +51,10 @@ namespace Rawr.RestoSham
         public float RTLHWMPS { get; set; }
         public float RTCHHPS { get; set; }
         public float RTCHMPS { get; set; }
+        public float RealHWCast { get; set; }
+        public float RealLHWCast { get; set; }
+        public float RealCHCast { get; set; }
+        public float LBCast { get; set; }
         public float BurstHPS { get; set; }
         public float SustainedHPS { get; set; }
         public float MUPS { get; set; }
@@ -78,12 +83,23 @@ namespace Rawr.RestoSham
             values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
             values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
+            values.Add("Earth Shield HPS", Math.Round(ESHPS, 0).ToString());
             values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
             values.Add("RT+LHW HPS", Math.Round(RTLHWHPS, 0).ToString());
             values.Add("RT+CH HPS", Math.Round(RTCHHPS, 0).ToString());
             values.Add("HW Spam HPS", Math.Round(HWSpamHPS, 0).ToString());
             values.Add("LHW Spam HPS", Math.Round(LHWSpamHPS, 0).ToString());
             values.Add("CH Spam HPS", Math.Round(CHSpamHPS, 0).ToString());
+			values.Add("Global Cooldown", string.Format("{0:0.00}s*{1} haste rating to cap",
+                       Math.Max(1.5f / (1f + SpellHaste), 1f),
+			           // FIXME: I'm not entirely certain if this is accurate. Please double-check.
+			           Math.Ceiling(((1.5f / (1f + SpellHaste)) - 1f) * StatConversion.RATING_PER_SPELLHASTE).ToString()
+			));
+			// These all use string.Format() so they always have 2 digits after the decimal
+            values.Add("Healing Wave", string.Format("{0:0.00}s / {1:0.00}s",RealHWCast,RealHWCast*0.7));
+            values.Add("Lesser Healing Wave", string.Format("{0:0.00}s",RealLHWCast));
+            values.Add("Chain Heal", string.Format("{0:0.00}s",RealCHCast));
+            values.Add("Lightning Bolt", string.Format("{0:0.00}s",LBCast));
 
             return values;
         }

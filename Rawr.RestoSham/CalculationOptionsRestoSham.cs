@@ -105,9 +105,14 @@ namespace Rawr.RestoSham
         public float SurvivalPerc = 2f;
 
         /// <summary>
-        /// The percentage of usefulness survival is to you.
+        /// The percentage of time you are active.
         /// </summary>
         public float ActivityPerc = 85f;
+
+        /// <summary>
+        /// The number of times water shield pops per minute.
+        /// </summary>
+        public float WSPops = 0f;
 		#endregion
 
 	}
