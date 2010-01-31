@@ -41,7 +41,8 @@
             this.cboTargets = new System.Windows.Forms.ComboBox();
             this.txtLatency = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.tbActivity_Label = new System.Windows.Forms.Label();
+            this.txtWSPops = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
@@ -55,6 +56,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.chkWaterShield = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tbReplenishment = new System.Windows.Forms.TrackBar();
@@ -66,8 +68,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.label11 = new System.Windows.Forms.Label();
-            this.txtWSPops = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.GeneralPage.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -217,15 +217,25 @@
             this.label10.Text = "Ping:";
             this.tipRestoSham.SetToolTip(this.label10, "Ping in milliseconds.");
             // 
-            // label9
+            // tbActivity_Label
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 96);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(119, 13);
-            this.label9.TabIndex = 54;
-            this.label9.Text = "Time Spent Casting (%):";
-            this.tipRestoSham.SetToolTip(this.label9, "Do not include canceled spells, 85% default includes canceled spells.");
+            this.tbActivity_Label.AutoSize = true;
+            this.tbActivity_Label.Location = new System.Drawing.Point(6, 96);
+            this.tbActivity_Label.Name = "tbActivity_Label";
+            this.tbActivity_Label.Size = new System.Drawing.Size(119, 13);
+            this.tbActivity_Label.TabIndex = 54;
+            this.tbActivity_Label.Text = "Time Spent Casting (%):";
+            this.tipRestoSham.SetToolTip(this.tbActivity_Label, "Do not include canceled spells, 85% default includes canceled spells.");
+            // 
+            // txtWSPops
+            // 
+            this.txtWSPops.Location = new System.Drawing.Point(75, 42);
+            this.txtWSPops.Name = "txtWSPops";
+            this.txtWSPops.Size = new System.Drawing.Size(83, 20);
+            this.txtWSPops.TabIndex = 54;
+            this.tipRestoSham.SetToolTip(this.txtWSPops, "Number of times per minute Water Shield is popped");
+            this.txtWSPops.Validated += new System.EventHandler(this.numericTextBox_Validated);
+            this.txtWSPops.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
             // 
             // label2
             // 
@@ -367,6 +377,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 45);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(55, 13);
+            this.label11.TabIndex = 53;
+            this.label11.Text = "WS Pops:";
+            // 
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
@@ -408,7 +427,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tbActivity);
-            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.tbActivity_Label);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.cboTargets);
             this.groupBox1.Controls.Add(this.chkEarthShield);
@@ -481,25 +500,6 @@
             this.tabControl1.TabIndex = 14;
             this.tabControl1.Tag = "";
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 45);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(55, 13);
-            this.label11.TabIndex = 53;
-            this.label11.Text = "WS Pops:";
-            // 
-            // txtWSPops
-            // 
-            this.txtWSPops.Location = new System.Drawing.Point(75, 42);
-            this.txtWSPops.Name = "txtWSPops";
-            this.txtWSPops.Size = new System.Drawing.Size(83, 20);
-            this.txtWSPops.TabIndex = 54;
-            this.tipRestoSham.SetToolTip(this.txtWSPops, "Number of times per minute Water Shield is popped");
-            this.txtWSPops.Validated += new System.EventHandler(this.numericTextBox_Validated);
-            this.txtWSPops.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
-            // 
             // CalculationOptionsPanelRestoSham
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -565,7 +565,7 @@
         private System.Windows.Forms.TextBox txtLatency;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TrackBar tbActivity;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label tbActivity_Label;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtWSPops;
 

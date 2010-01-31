@@ -532,12 +532,12 @@ namespace Rawr.RestoSham
             float LHWBonusHealing = stats.SpellPower + stats.TotemLHWSpellpower;
             //  ... * generic healing scale + bonus from TW
             LHWBonusHealing *= 1.88f * (1.5f / 3.5f) + character.ShamanTalents.TidalWaves * .02f;
-            //  ... + 20% if w/Glyph and tank healing + ES is enabled
-            if (TankHeal && UseES && character.ShamanTalents.GlyphofLesserHealingWave)
-                LHWBonusHealing *= 1.2f;
             //  LHW healing scale = purification scale
             float LHWHealingScale = PurificationScale;
             float LHWHeal = (1720 + LHWBonusHealing) * LHWHealingScale;
+            //  ... + 20% if w/Glyph and tank healing + ES is enabled, effects entire heal.
+            if (TankHeal && UseES && character.ShamanTalents.GlyphofLesserHealingWave)
+                LHWHeal *= 1.2f;
             //  HW bonus healing = spell power + totem spell power bonus
             float HWBonusHealing = stats.SpellPower + stats.TotemHWSpellpower;
             //  ... * generic healing scale + bonus from TW
@@ -876,7 +876,7 @@ namespace Rawr.RestoSham
             #endregion
             #region Final Stats
             float ESUsage = UseES ? (float)Math.Round((FightSeconds / ESTimer), 0) : 0;
-            float ESDowntime = (FightSeconds - (RTCast * ESUsage) - 4) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same
+            float ESDowntime = (FightSeconds - (RTCast * ESUsage) - 3) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
             calcStats.MAPS = ((stats.Mana) / (FightSeconds))
                 + (stats.ManaRestore / FightSeconds)
                 + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD && character.ShamanTalents.ManaTideTotem > 0 ? 1 : 0)) / FightSeconds)
@@ -884,10 +884,10 @@ namespace Rawr.RestoSham
                 + (stats.Mp5 / 5)
                 + (options.Innervates * 7866f / FightSeconds)
                 + statsProcs2.ManaRestore
-                + (RTCPerSec * Orb)
-                + (LHWCPerSec * Orb * .6f)
-                + (HWCPerSec * Orb)
-                + (CHCHitsPerSec * Orb * .3f)
+                + ((RTCPerSec * Orb) * castingActivity * ESDowntime)
+                + ((LHWCPerSec * Orb * .6f) * castingActivity * ESDowntime)
+                + ((HWCPerSec * Orb) * castingActivity * ESDowntime)
+                + ((CHCHitsPerSec * Orb * .3f) * castingActivity * ESDowntime)
                 - ESMPS;
             if (options.WSPops > 0)
                 calcStats.MAPS += ((options.WSPops * Orb) / 60);
