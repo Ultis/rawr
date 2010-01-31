@@ -150,7 +150,7 @@ namespace Rawr.TankDK {
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your Overall Score.\n\nAt the Zero position is your current Overall.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of Overall points added or lost";
-            graph.SetupGraph(Character, statsList, 1000, explanatoryText, null);
+            graph.SetupStatsGraph(Character, statsList, 1000, explanatoryText, null);
             graph.Show();
         }
 

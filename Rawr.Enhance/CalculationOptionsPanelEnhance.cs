@@ -392,7 +392,7 @@ namespace Rawr.Enhance
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
             int scale = (int)udGraphRange.Value;
-            graph.SetupGraph(Character, statsList, scale, explanatoryText, _calcOpts.CalculationToGraph);
+            graph.SetupStatsGraph(Character, statsList, scale, explanatoryText, _calcOpts.CalculationToGraph);
             graph.Show();
         }
 

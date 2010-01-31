@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
+using System.Reflection;
 
 namespace Rawr.Base
 {
@@ -40,7 +41,7 @@ namespace Rawr.Base
             pictureBoxGraph.Width = graphWidth;
         }
 
-        public void SetupGraph(Character character, Stats[] statsList, int scale, string explanatoryText, string calculation)
+        public void SetupStatsGraph(Character character, Stats[] statsList, int scale, string explanatoryText, string calculation)
         {
             Cursor.Current = Cursors.WaitCursor;
             this.Text = "Graph of " + calculation;
@@ -58,11 +59,11 @@ namespace Rawr.Base
                 Color.FromArgb(255,0,255,0), 
                 Color.FromArgb(255,0,0,255), 
             };
-            RenderGraph(g, graphWidth, graphHeight, character, statsList, colors, scale, explanatoryText, calculation, Style.DpsWarr);
+            RenderStatsGraph(g, graphWidth, graphHeight, character, statsList, colors, scale, explanatoryText, calculation, Style.DpsWarr);
             Cursor.Current = Cursors.Default;
         }
 
-        public static void RenderGraph(Graphics g, int graphWidth, int graphHeight, Character character, Stats[] statsList, Color[] colors, int scale, string explanatoryText, string calculation, Style style)
+        public static void RenderStatsGraph(Graphics g, int graphWidth, int graphHeight, Character character, Stats[] statsList, Color[] colors, int scale, string explanatoryText, string calculation, Style style)
         {
             CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
             float baseFigure = GetCalculationValue(baseCalc, calculation);            
@@ -71,11 +72,11 @@ namespace Rawr.Base
             float graphOffset = graphWidth / 2.0f, graphStep = (graphWidth - 100) / 2.0f / scale;
             if (statsList.Length == 0 || statsList.Length > colors.Length) return; // more than 12 elements for the array would run out of colours
             float minDpsChange = 0f, maxDpsChange = 0f;
-            Point[][] points = new Point[statsList.Length][];
+            PointF[][] points = new PointF[statsList.Length][];
             for (int index = 0; index < statsList.Length; index++)
             {
                 Stats newStats = new Stats();
-                points[index] = new Point[2 * scale + 1];
+                points[index] = new PointF[2 * scale + 1];
                 newStats.Accumulate(statsList[index], -scale - 1);
                 for (int count = -scale; count <= scale; count++)
                 {
@@ -84,7 +85,7 @@ namespace Rawr.Base
                     CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(character, new Item() { Stats = newStats }, false, false, false);
                     float currentFigure = GetCalculationValue(currentCalc, calculation);
                     float dpsChange = currentFigure - baseFigure;
-                    points[index][count + scale] = new Point(Convert.ToInt32(graphOffset + count * graphStep), Convert.ToInt32(dpsChange));
+                    points[index][count + scale] = new PointF(graphOffset + count * graphStep, dpsChange);
                     if (dpsChange < minDpsChange)
                         minDpsChange = dpsChange;
                     if (dpsChange > maxDpsChange)
@@ -111,6 +112,93 @@ namespace Rawr.Base
                         break;
                 }
             }
+
+            RenderGrid(g, graphWidth, graphHeight, character, statsList, colors, scale, 1f, "F1", explanatoryText, calculation, style, minDpsChange, maxDpsChange, DpsVariance, true);
+        }
+
+        public static void RenderScalingGraph(Graphics g, int graphWidth, int graphHeight, Character character, Stats[] statsList, Stats baseStat, bool requiresReferenceCalculations, Color[] colors, int scale, string explanatoryText, string calculation, Style style)
+        {
+            CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            float graphOffset = graphWidth / 2.0f, graphStep = (graphWidth - 100) / 2.0f / scale;
+            if (statsList.Length == 0 || statsList.Length > colors.Length) return; // more than 12 elements for the array would run out of colours
+            float minDpsChange = 0f, maxDpsChange = 0f;
+            PointF[][] points = new PointF[statsList.Length][];
+            // extract property data for relative stats calculations
+            KeyValuePair<PropertyInfo, float>[] properties = new KeyValuePair<PropertyInfo,float>[statsList.Length];
+            for (int index = 0; index < statsList.Length; index++)
+            {
+                var p = statsList[index].Values(x => x > 0);
+                foreach (var kvp in p)
+                {
+                    properties[index] = kvp;
+                }
+                points[index] = new PointF[2 * scale + 1];
+            }
+            for (int count = -scale; count <= scale; count++)
+            {
+                Stats newStats = new Stats();
+                newStats.Accumulate(baseStat, count);
+                Item item = new Item() { Stats = newStats };
+                if (requiresReferenceCalculations)
+                {
+                    Calculations.GetCharacterCalculations(character, item, true, false, false);
+                }
+                for (int index = 0; index < statsList.Length; index++)
+                {
+                    ComparisonCalculationBase currentCalc = CalculationsBase.GetRelativeStatValue(character, properties[index].Key, item, properties[index].Value);
+                    float dpsChange = GetCalculationValue(currentCalc, calculation);
+                    points[index][count + scale] = new PointF(graphOffset + count * graphStep, dpsChange);
+                    if (dpsChange < minDpsChange)
+                        minDpsChange = dpsChange;
+                    if (dpsChange > maxDpsChange)
+                        maxDpsChange = dpsChange;
+                }
+            }
+            // restore reference calculation
+            if (requiresReferenceCalculations)
+            {
+                Stats newStats = new Stats();
+                Item item = new Item() { Stats = newStats };
+                Calculations.GetCharacterCalculations(character, item, true, false, false);
+            }
+            // increase the spread a bit to so that you can see if something is at the edges and straight
+            float DpsVariance = maxDpsChange - minDpsChange;
+            minDpsChange -= DpsVariance * 0.05f;
+            maxDpsChange += DpsVariance * 0.05f;
+            DpsVariance = maxDpsChange - minDpsChange;
+            if (DpsVariance == 0)
+                DpsVariance = 1;
+            for (int index = 0; index < statsList.Length; index++)
+            {
+                for (int count = -scale; count <= scale; count++)
+                {
+                    points[index][count + scale].Y = (int)((maxDpsChange - points[index][count + scale].Y) * (graphHeight - 48) / DpsVariance) + 20;
+                }
+                Brush statBrush = new SolidBrush(colors[index]);
+                switch (style)
+                {
+                    case Style.DpsWarr:
+                        g.DrawLines(new Pen(statBrush, 3), points[index]);
+                        break;
+                    case Style.Mage:
+                        g.DrawLines(new Pen(statBrush, 1), points[index]);
+                        break;
+                }
+            }
+            float unit = 1f;
+            var bp = baseStat.Values(x => x > 0);
+            foreach (var kvp in bp)
+            {
+                unit = kvp.Value;
+            }
+            RenderGrid(g, graphWidth, graphHeight, character, statsList, colors, scale, unit, "F", explanatoryText, calculation, style, minDpsChange, maxDpsChange, DpsVariance, false);
+        }
+
+        private static void RenderGrid(Graphics g, int graphWidth, int graphHeight, Character character, Stats[] statsList, Color[] colors, int scale, float unit, string yFormat, string explanatoryText, string calculation, Style style, float minDpsChange, float maxDpsChange, float DpsVariance, bool zeroCentered)
+        {
+            float graphOffset = graphWidth / 2.0f, graphStep = (graphWidth - 100) / 2.0f / scale;
 
             #region Graph X Ticks
             float graphStart = graphOffset - scale * graphStep;
@@ -175,58 +263,71 @@ namespace Rawr.Base
                     tickFont = new Font("Calibri", 11);
                     break;
             }
-            g.DrawString((-scale).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
-            g.DrawString((maxScale - scale).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
-            g.DrawString((maxScale * 0.5f - scale).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
-            g.DrawString((maxScale * 0.75f - scale).ToString(), tickFont, black150brush, ticks[1], 16, formatTick);
-            g.DrawString((maxScale * 0.25f - scale).ToString(), tickFont, black150brush, ticks[2], 16, formatTick);
-            g.DrawString((maxScale * 0.125f - scale).ToString(), tickFont, black75brush, ticks[3], 16, formatTick);
-            g.DrawString((maxScale * 0.375f - scale).ToString(), tickFont, black75brush, ticks[4], 16, formatTick);
-            g.DrawString((maxScale * 0.625f - scale).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
-            g.DrawString((maxScale * 0.875f - scale).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
+            g.DrawString((unit * (-scale)).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
+            g.DrawString((unit * (maxScale - scale)).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.5f - scale)).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.75f - scale)).ToString(), tickFont, black150brush, ticks[1], 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.25f - scale)).ToString(), tickFont, black150brush, ticks[2], 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.125f - scale)).ToString(), tickFont, black75brush, ticks[3], 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.375f - scale)).ToString(), tickFont, black75brush, ticks[4], 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.625f - scale)).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.875f - scale)).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
 
-            g.DrawString((-scale).ToString(), tickFont, black200brush, graphStart, graphHeight - 16, formatTick);
-            g.DrawString((maxScale - scale).ToString(), tickFont, black200brush, graphEnd, graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.5f - scale).ToString(), tickFont, black200brush, ticks[0], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.75f - scale).ToString(), tickFont, black150brush, ticks[1], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.25f - scale).ToString(), tickFont, black150brush, ticks[2], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.125f - scale).ToString(), tickFont, black75brush, ticks[3], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.375f - scale).ToString(), tickFont, black75brush, ticks[4], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.625f - scale).ToString(), tickFont, black75brush, ticks[5], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.875f - scale).ToString(), tickFont, black75brush, ticks[6], graphHeight - 16, formatTick);
+            g.DrawString((unit * (-scale)).ToString(), tickFont, black200brush, graphStart, graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale - scale)).ToString(), tickFont, black200brush, graphEnd, graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.5f - scale)).ToString(), tickFont, black200brush, ticks[0], graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.75f - scale)).ToString(), tickFont, black150brush, ticks[1], graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.25f - scale)).ToString(), tickFont, black150brush, ticks[2], graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.125f - scale)).ToString(), tickFont, black75brush, ticks[3], graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.375f - scale)).ToString(), tickFont, black75brush, ticks[4], graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.625f - scale)).ToString(), tickFont, black75brush, ticks[5], graphHeight - 16, formatTick);
+            g.DrawString((unit * (maxScale * 0.875f - scale)).ToString(), tickFont, black75brush, ticks[6], graphHeight - 16, formatTick);
             g.DrawString("Stat Change", tickFont, black200brush, activeWidth / 2 + 50, graphHeight, formatTick);
             #endregion
 
             #region Graph Y ticks
             Int32 zeroPoint = (int)(maxDpsChange * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(ZeroLine, graphStart, zeroPoint, graphEnd, zeroPoint);
             formatTick.Alignment = StringAlignment.Near;
             StringFormat formatName = new StringFormat(StringFormatFlags.DirectionVertical);
             g.DrawString(calculation, tickFont, black200brush, graphStart - 50, graphHeight / 2, formatName);
-            g.DrawString("0", tickFont, black200brush, graphStart - 20, zeroPoint + 10, formatTick);
-            g.DrawString(maxDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, 30, formatTick);
-            g.DrawString(minDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, graphHeight - 12, formatTick);
-            float pointY = (int)(maxDpsChange * .75f * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((maxDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 10, formatTick);
-            pointY = (int)(maxDpsChange * .5f * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black150, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((maxDpsChange * .5f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black150brush, graphStart - 50, pointY + 10, formatTick);
-            pointY = (int)(maxDpsChange * .25f * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((maxDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 10, formatTick);
-            pointY = (int)((maxDpsChange - minDpsChange * .75f) * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((minDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
-            pointY = (int)((maxDpsChange - minDpsChange * .5f) * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black150, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((minDpsChange * .5f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black150brush, graphStart - 50, pointY + 12, formatTick);
-            pointY = (int)((maxDpsChange - minDpsChange * .25f) * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((minDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
+            g.DrawString(maxDpsChange.ToString(yFormat, CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, 30, formatTick);
+            g.DrawString(minDpsChange.ToString(yFormat, CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, graphHeight - 12, formatTick);
+            float[] dpsChange;
+            if (maxDpsChange > 0 && minDpsChange < 0 && zeroCentered)
+            {
+                dpsChange = new float[] { maxDpsChange * .75f, maxDpsChange * .5f, maxDpsChange * .25f, 0f, minDpsChange * .25f, minDpsChange * .5f, minDpsChange * .75f };
+            }
+            else
+            {
+                dpsChange = new float[] { minDpsChange + DpsVariance * .125f, minDpsChange + DpsVariance * .25f, minDpsChange + DpsVariance * .375f, minDpsChange + DpsVariance * .5f, minDpsChange + DpsVariance * .625f, minDpsChange + DpsVariance * .75f, minDpsChange + DpsVariance * .875f };
+            }
+            for (int index = 0; index < 7; index++)
+            {
+                float dps = dpsChange[index];
+                Pen pen;
+                Brush brush;
+                if (index == 3)
+                {
+                    pen = ZeroLine;
+                    brush = black200brush;
+                }
+                else if (index % 2 == 1)
+                {
+                    pen = black150;
+                    brush = black150brush;
+                }
+                else
+                {
+                    pen = black75;
+                    brush = black75brush;
+                }
+                float pointY = (int)((maxDpsChange - dps) * (graphHeight - 48) / DpsVariance) + 20;
+                g.DrawLine(pen, graphStart, pointY, graphEnd, pointY);
+                g.DrawString(dps.ToString(yFormat, CultureInfo.InvariantCulture), tickFont, brush, graphStart - 50, pointY + 10, formatTick);
+            }
             #endregion
 
-            #region Key Legend 
+            #region Key Legend
             switch (style)
             {
                 case Style.Mage:
@@ -259,6 +360,23 @@ namespace Rawr.Base
         }
 
         private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
+        {
+            if (calculation == null || calculation == "Overall Rating")
+                return calcs.OverallPoints;
+            else
+            {
+                int index = 0;
+                foreach (string subPoint in Calculations.SubPointNameColors.Keys)
+                {
+                    if (calculation.StartsWith(subPoint))
+                        return calcs.SubPoints[index];
+                    index++;
+                }
+                return 0f;
+            }
+        }
+
+        private static float GetCalculationValue(ComparisonCalculationBase calcs, string calculation)
         {
             if (calculation == null || calculation == "Overall Rating")
                 return calcs.OverallPoints;

@@ -1893,7 +1893,7 @@ applied and result is scaled down by 100)",
                         new Stats() { Spirit = 1 },
                     };
 
-                    Base.Graph.RenderGraph(g, width, height, character, statsList, statColors, 200, "", "Sustained Rating", Base.Graph.Style.Mage);
+                    Base.Graph.RenderStatsGraph(g, width, height, character, statsList, statColors, 200, "", "Sustained Rating", Base.Graph.Style.Mage);
                     break;
             }
         }

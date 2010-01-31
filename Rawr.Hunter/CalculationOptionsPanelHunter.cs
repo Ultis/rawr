@@ -1156,7 +1156,7 @@ namespace Rawr.Hunter
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
-            graph.SetupGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
             graph.Show();
         }
         private void chkStatsAgility_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[0] = CK_StatsAgility.Checked; }

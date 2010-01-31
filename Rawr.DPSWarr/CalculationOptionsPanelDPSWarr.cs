@@ -1847,7 +1847,7 @@ CB_Version.Items.Add("All");
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
-            graph.SetupGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
             graph.Show();
         }
         private void chkStatsStrength_CheckedChanged(object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[0] = CK_StatsStrength.Checked; }

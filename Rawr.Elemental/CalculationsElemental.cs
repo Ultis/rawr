@@ -304,7 +304,7 @@ namespace Rawr.Elemental
                         Color.Aqua 
                     };
 
-                    Base.Graph.RenderGraph(g, width, height, character, statsList, statsColors, 200, "", "Sustained DPS", Base.Graph.Style.Mage);
+                    Base.Graph.RenderStatsGraph(g, width, height, character, statsList, statsColors, 200, "", "Sustained DPS", Base.Graph.Style.Mage);
                     break;
             }
         }
