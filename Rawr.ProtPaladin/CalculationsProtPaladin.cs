@@ -305,7 +305,6 @@ focus on Survival Points.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts);
@@ -493,7 +492,6 @@ focus on Survival Points.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             return GetCharacterStats(character, additionalItem, calcOpts);            
         }
@@ -1359,7 +1357,8 @@ focus on Survival Points.",
             return relevant;
         }
 
-        public override bool IsBuffRelevant(Buff buff) {
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
             Stats stats = buff.Stats;
             bool hasRelevantBuffStats = HasRelevantStats(stats);
             
@@ -1369,13 +1368,13 @@ focus on Survival Points.",
             return relevant;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant) {
+        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
             // Remove Death Knight runes
             if (enchant.Name.StartsWith("Rune of")) { return false; }
 
             Stats stats = enchant.Stats;
 
-            bool relevant = IsProfEnchantRelevant(enchant) && (HasRelevantStats(stats));
+            bool relevant = IsProfEnchantRelevant(enchant, character) && (HasRelevantStats(stats));
 
             return relevant;
         }

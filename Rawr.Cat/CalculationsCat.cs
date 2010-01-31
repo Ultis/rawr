@@ -333,7 +333,6 @@ namespace Rawr.Cat
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
-			cacheChar = character;
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
 			int targetLevel = calcOpts.TargetLevel;
@@ -603,7 +602,6 @@ namespace Rawr.Cat
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            cacheChar = character;
 			WeightedStat[] armorPenetrationUptimes, critRatingUptimes;
 			return GetCharacterStatsWithTemporaryEffects(character, additionalItem, out armorPenetrationUptimes, out critRatingUptimes);
 		}
@@ -901,14 +899,14 @@ namespace Rawr.Cat
 			}
 		}
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             string name = enchant.Name;
             if (name.Contains("Rune of"))
             {
                 return false; // Bad DK Enchant, Bad!
             }
-            return base.IsEnchantRelevant(enchant);
+            return base.IsEnchantRelevant(enchant, character);
         }
 
         public override bool IsItemRelevant(Item item)

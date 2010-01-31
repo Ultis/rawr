@@ -353,7 +353,7 @@ namespace Rawr.Optimizer
             List<Buff> battle = new List<Buff>();
             List<Buff> guardian = new List<Buff>();
             List<Buff> flask = new List<Buff>();
-            foreach (Buff buff in Buff.AllBuffs.FindAll(buff => model.IsBuffRelevant(buff)))
+            foreach (Buff buff in Buff.AllBuffs.FindAll(buff => model.IsBuffRelevant(buff, character)))
             {
                 if (buff.Group == "Elixirs and Flasks")
                 {
@@ -1432,7 +1432,8 @@ namespace Rawr.Optimizer
                 items, characterSlots,
                 _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
-            character.BossOptions = _character.BossOptions;
+            character.PrimaryProfession = _character.PrimaryProfession;
+            character.SecondaryProfession = _character.SecondaryProfession;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character, false);
             character.CalculationToOptimize = _character.CalculationToOptimize;
@@ -2500,17 +2501,7 @@ namespace Rawr.Optimizer
             }
 
             // create character
-
-            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, parent.Character.BossOptions,
-                items, characterSlots,
-                parent.Character.ActiveBuffs, parent.Character.CurrentModel);
-            character.CalculationOptions = parent.Character.CalculationOptions;
-            character.BossOptions = parent.Character.BossOptions;
-            character.Class = parent.Character.Class;
-            character.AssignAllTalentsFromCharacter(parent.Character, false);
-            character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
-
-            return new OptimizerCharacter() { Character = character, Items = items };
+            return GenerateIndividual(items);
         }
 
         private OptimizerCharacter BuildSwapGemMutantCharacter(OptimizerCharacter parent, out bool successful)
@@ -2591,14 +2582,7 @@ namespace Rawr.Optimizer
 
             if (successful)
             {
-                Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, parent.Character.BossOptions,
-                    items, characterSlots, parent.Character.ActiveBuffs, parent.Character.CurrentModel);
-                character.CalculationOptions = parent.Character.CalculationOptions;
-                character.BossOptions = parent.Character.BossOptions;
-                character.Class = parent.Character.Class;
-                character.AssignAllTalentsFromCharacter(parent.Character, false);
-                character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
-                return new OptimizerCharacter() { Character = character, Items = items };
+                return GenerateIndividual(items);
             }
             return null;
         }
@@ -2646,15 +2630,9 @@ namespace Rawr.Optimizer
 
         private OptimizerCharacter BuildMutateTalentsCharacter(OptimizerCharacter parent)
         {
-            object[] items = new object[slotCount];
-            Array.Copy(parent.Items, items, slotCount);
-            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, parent.Character.BossOptions,
-                items, characterSlots, parent.Character.ActiveBuffs, parent.Character.CurrentModel);
-            character.CalculationOptions = parent.Character.CalculationOptions;
-            character.BossOptions = parent.Character.BossOptions;
-            character.Class = parent.Character.Class;
-            character.AssignAllTalentsFromCharacter(parent.Character, false);
-            character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
+            OptimizerCharacter optCharacter = GenerateIndividual(parent.Items);
+            object[] items = optCharacter.Items;
+            Character character = optCharacter.Character;
 #if SILVERLIGHT
             TalentsBase talents = ((TalentsBase)items[characterSlots + 3]).Clone();
 #else
@@ -2733,7 +2711,7 @@ namespace Rawr.Optimizer
                 }
             } while (!talentRemoved);
             character.CurrentTalents = talents;
-            return new OptimizerCharacter() { Character = character, Items = items };
+            return optCharacter;
         }
     }
 

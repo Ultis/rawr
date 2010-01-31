@@ -1825,7 +1825,7 @@ namespace Rawr.Mage
         public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
-            float K1, K2, K3, K4, K5, K6, K7, S0, S1;
+            float K1, K2, K3, K4, K5, K7, S0, S1;
             cycle.Name = "ABSpam034MBAM";
 
             if (castingState.BaseStats.Mage2T10 > 0)

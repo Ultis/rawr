@@ -161,7 +161,6 @@ namespace Rawr.Rogue {
         #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-            cacheChar = character;
             TalentsAndGlyphs.Initialize(character.RogueTalents);
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -278,7 +277,6 @@ namespace Rawr.Rogue {
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            cacheChar = character;
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             RogueTalents talents = character.RogueTalents;
 
@@ -531,7 +529,7 @@ namespace Rawr.Rogue {
             }
         }
 
-        public override bool IsBuffRelevant(Buff buff)
+        public override bool IsBuffRelevant(Buff buff, Character character)
         {
             if (!buff.AllowedClasses.Contains(CharacterClass.Rogue)) { return false; }
             if (buff.Name == "Focus Magic") { return false; }
@@ -539,17 +537,17 @@ namespace Rawr.Rogue {
             if (buff.SetName == "Strength of the Clefthoof") { return false; }
             if (buff.SetName == "Skyshatter Regalia") { return false; }
 
-            return base.IsBuffRelevant(buff);
+            return base.IsBuffRelevant(buff, character);
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             string name = enchant.Name;
             if (name.Contains("Rune of"))
             {
                 return false; // Bad DK Enchant, Bad!
             }
-            return base.IsEnchantRelevant(enchant);
+            return base.IsEnchantRelevant(enchant, character);
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRogue calcOpts) {

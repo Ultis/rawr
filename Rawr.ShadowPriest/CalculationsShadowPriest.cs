@@ -465,7 +465,6 @@ namespace Rawr.ShadowPriest
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
@@ -487,7 +486,6 @@ namespace Rawr.ShadowPriest
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
             Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);

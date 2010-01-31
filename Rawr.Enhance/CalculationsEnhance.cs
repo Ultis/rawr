@@ -211,7 +211,6 @@ namespace Rawr.Enhance
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             #region Applied Stats
-            cacheChar = character;
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -762,8 +761,10 @@ namespace Rawr.Enhance
             character.ActiveBuffsAdd("Potion of Speed");
             character.ActiveBuffsAdd("Fish Feast");
 
-            if (CheckHasProf(Profession.Alchemy))
+            if (character.HasProfession(Profession.Alchemy))
+            {
                 character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
+            }
 
             character.EnforceGemRequirements = true; // set default to be true for Enhancement Shaman
         }
@@ -853,12 +854,12 @@ namespace Rawr.Enhance
 			return base.IsItemRelevant(item);
 		}
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             string name = enchant.Name;
             if (name.Contains("Rune of the Fallen Crusader"))
                 return false; // Bad DK Enchant, Bad!
-            return IsProfEnchantRelevant(enchant) && HasRelevantStats(enchant.Stats);
+            return IsProfEnchantRelevant(enchant, character) && HasRelevantStats(enchant.Stats);
         }
 
 		public override Stats GetRelevantStats(Stats stats)
@@ -963,12 +964,12 @@ namespace Rawr.Enhance
                     trigger == Trigger.DoTTick);
         }
 
-        public override bool IsBuffRelevant(Buff buff)
+        public override bool IsBuffRelevant(Buff buff, Character character)
         {
             if (buff.Name.StartsWith("Amplify Magic"))
                 return false;
             if (buff.AllowedClasses.Contains(CharacterClass.Shaman))
-                return base.IsBuffRelevant(buff);
+                return base.IsBuffRelevant(buff, character);
             else
                 return false;
         }

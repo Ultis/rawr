@@ -554,16 +554,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 ) > 0;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant) {
+        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
             string name = enchant.Name;
             if (name.Contains("Rune")) {
                 return false; // Bad DK Enchant, Bad!
             }
-            return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
+            return IsProfEnchantRelevant(enchant, character) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
             //return base.IsEnchantRelevant(enchant);
         }
 
-        public override bool IsBuffRelevant(Buff buff) {
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
             string name = buff.Name;
             // Force some buffs to active
             if (name.Contains("Potion of Wild Magic")
@@ -1247,7 +1248,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
             bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-            cacheChar = character;
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
@@ -2381,7 +2381,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             try {
-                cacheChar = character;
                 CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
                 if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
                 HunterTalents talents = character.HunterTalents;
@@ -2709,7 +2708,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
             Stats statsTotal, Stats statsToProcess)
         {
-            cacheChar = Char;
             CalculationOptionsHunter calcOpts = Char.CalculationOptions as CalculationOptionsHunter;
             ItemInstance RangeWeap = Char.MainHand;
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);

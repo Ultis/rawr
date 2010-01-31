@@ -216,7 +216,6 @@ namespace Rawr.DPSDK
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-            cacheChar = character;
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             int targetLevel = calcOpts.TargetLevel;
             GetTalents(character);
@@ -847,7 +846,6 @@ namespace Rawr.DPSDK
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            cacheChar = character;
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             DeathKnightTalents talents = calcOpts.talents;
 

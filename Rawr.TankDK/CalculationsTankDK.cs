@@ -347,7 +347,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
         {
-            cacheChar = character;
             #region Setup what we need and validate.
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
             // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
@@ -1164,7 +1163,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            cacheChar = character;
             Stats statsTotal = new Stats();
 
             // Validate that character.CalculationOptions != NULL

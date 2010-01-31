@@ -445,8 +445,6 @@ namespace Rawr.Warlock
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
         {
-            cacheChar = character;
-
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsWarlock results = new CharacterCalculationsWarlock(character, stats);
             
@@ -586,7 +584,6 @@ namespace Rawr.Warlock
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) 
         {
-        	cacheChar = character;
             WarlockTalents talents = character.WarlockTalents;
 
             Stats statsBase = BaseStats.GetBaseStats(character);

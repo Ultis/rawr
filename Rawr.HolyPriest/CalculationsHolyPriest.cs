@@ -452,7 +452,6 @@ namespace Rawr.HolyPriest
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
             CharacterCalculationsHolyPriest calculatedStats = new CharacterCalculationsHolyPriest();
@@ -497,7 +496,6 @@ namespace Rawr.HolyPriest
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             CalculationOptionsHolyPriest calcOpts = character.CalculationOptions as CalculationOptionsHolyPriest;
             Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);

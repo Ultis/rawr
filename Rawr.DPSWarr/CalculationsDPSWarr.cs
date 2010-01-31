@@ -816,7 +816,7 @@ These numbers to do not include racial bonuses.",
             }
         }
 
-        public override bool IsBuffRelevant(Buff buff) {
+        public override bool IsBuffRelevant(Buff buff, Character character) {
             string name = buff.Name;
             // Force some buffs to active
             if (name.Contains("Potion of Wild Magic")
@@ -835,12 +835,12 @@ These numbers to do not include racial bonuses.",
             return retVal;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant) {
+        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
             string name = enchant.Name;
             if (name.Contains("Rune of")) {
                 return false; // Bad DK Enchant, Bad!
             }
-            return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
+            return IsProfEnchantRelevant(enchant, character) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {
@@ -1207,7 +1207,6 @@ These numbers to do not include racial bonuses.",
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
-            cacheChar = character;
             try {
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
                 if (calcOpts == null) calcOpts = new CalculationOptionsDPSWarr();
@@ -1381,7 +1380,6 @@ These numbers to do not include racial bonuses.",
         }
 
         private Stats GetCharacterStats_Buffed(Character character, Item additionalItem, CalculationOptionsDPSWarr calcOpts, bool isBuffed) {
-            cacheChar = character;
             if (calcOpts == null) { calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; }
             WarriorTalents talents = character.WarriorTalents;
 
@@ -1500,7 +1498,6 @@ These numbers to do not include racial bonuses.",
         }
         private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
         {
-            cacheChar = character;
             Stats statsTotal = GetCharacterStats_Buffed(character, additionalItem, calcOpts, statType != StatType.Unbuffed);
             combatFactors = new CombatFactors(character, statsTotal, calcOpts);
             whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts);

@@ -244,14 +244,14 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             string name = enchant.Name;
             if (name.Contains("Rune of"))
             {
                 return false; // Bad DK Enchant, Bad!
             }
-            return base.IsEnchantRelevant(enchant);
+            return base.IsEnchantRelevant(enchant, character);
         }
 
         private static List<string> _relevantGlyphs;
@@ -454,7 +454,6 @@ namespace Rawr.Moonkin
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsMoonkin calcs = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             // Run the solver to do final calculations
@@ -465,7 +464,6 @@ namespace Rawr.Moonkin
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Start off with a slightly modified form of druid base character stats calculations
             Stats statsRace = character.Race == CharacterRace.NightElf ?

@@ -378,7 +378,6 @@ threat and limited threat scaled by the threat scale.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
             Stats stats = GetCharacterStats(character, additionalItem, options);
@@ -489,7 +488,6 @@ threat and limited threat scaled by the threat scale.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
             return GetCharacterStats(character, additionalItem, options);
         }
@@ -969,7 +967,7 @@ threat and limited threat scaled by the threat scale.",
             return base.IsItemRelevant(item);
         }
 
-        public override bool IsBuffRelevant(Buff buff)
+        public override bool IsBuffRelevant(Buff buff, Character character)
         {
             bool NotClassSetBonus = 
                 ((buff.Group == "Set Bonuses") && !(
@@ -980,7 +978,7 @@ threat and limited threat scaled by the threat scale.",
                     buff.Name.Contains("Gladiator")
                 ));
 
-            return base.IsBuffRelevant(buff) && !NotClassSetBonus;
+            return base.IsBuffRelevant(buff, character) && !NotClassSetBonus;
         }
 
         public override Stats GetRelevantStats(Stats stats)

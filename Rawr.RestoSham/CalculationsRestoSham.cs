@@ -321,7 +321,6 @@ namespace Rawr.RestoSham
         #region Calculations Begin
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             return GetCharacterCalculations(character, additionalItem, null);
         }
         #region Calculations Variables to be Carried Over
@@ -901,7 +900,6 @@ namespace Rawr.RestoSham
         #region Character Stats and other Final Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             return GetCharacterStats(character, additionalItem, null);
         }
 

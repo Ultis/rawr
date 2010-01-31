@@ -393,7 +393,6 @@ the Threat Scale defined on the Options tab.",
 		/// <returns>The CharacterCalculationsBear containing the results of the calculations</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
-            cacheChar = character;
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
             if (calcOpts == null) calcOpts = new CalculationOptionsBear();
 			int targetLevel = calcOpts.TargetLevel;
@@ -761,7 +760,6 @@ the Threat Scale defined on the Options tab.",
 		/// <returns>The total stats for the Character</returns>
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            cacheChar = character;
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
             if (calcOpts == null) calcOpts = new CalculationOptionsBear();
             Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Bear);
@@ -1415,14 +1413,14 @@ the Threat Scale defined on the Options tab.",
 			return relevant;
 		}
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             // Bad DK Enchants! Bad!
             if (enchant.Name.Contains("Rune")) {
                 return false;
             }
             // else do normal IsEnchantRelevent
-            return base.IsEnchantRelevant(enchant);
+            return base.IsEnchantRelevant(enchant, character);
         }
 		#endregion
 

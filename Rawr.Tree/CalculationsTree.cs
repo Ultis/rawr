@@ -748,7 +748,6 @@ applied and result is scaled down by 100)",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)character.CalculationOptions;
             SpellProfile profile = calcOpts.Current;
 
@@ -856,7 +855,6 @@ applied and result is scaled down by 100)",
         }
         public override Stats GetCharacterStats(Character character, Item additionalItem) { return GetCharacterStats(character, additionalItem, new Stats()); }
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statsProcs) {
-            cacheChar = character;
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
             DruidTalents talents = character.DruidTalents;
             SpellProfile profile = calcOpts.Current;
@@ -2105,14 +2103,14 @@ applied and result is scaled down by 100)",
             if (slot == ItemSlot.OffHand) { return false; }
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             string name = enchant.Name;
             if (name.Contains("Rune of"))
             {
                 return false; // Bad DK Enchant, Bad!
             }
-            return base.IsEnchantRelevant(enchant);
+            return base.IsEnchantRelevant(enchant, character);
         }
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {

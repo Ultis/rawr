@@ -322,22 +322,22 @@ namespace Rawr
 				return Instance.IsItemRelevant(item);
 			return false;
 		}
-		public static bool IsBuffRelevant(Buff buff)
+		public static bool IsBuffRelevant(Buff buff, Character character)
 		{
 			if (Instance != null)
-				return Instance.IsBuffRelevant(buff);
+				return Instance.IsBuffRelevant(buff, character);
 			return false;
 		}
-        public static bool IsProfEnchantRelevant(Enchant enchant)
+        public static bool IsProfEnchantRelevant(Enchant enchant, Character character)
         {
             if (Instance != null)
-                return Instance.IsProfEnchantRelevant(enchant);
+                return Instance.IsProfEnchantRelevant(enchant, character);
             return false;
         }
-        public static bool IsEnchantRelevant(Enchant enchant)
+        public static bool IsEnchantRelevant(Enchant enchant, Character character)
 		{
 			if (Instance != null)
-				return Instance.IsEnchantRelevant(enchant);
+				return Instance.IsEnchantRelevant(enchant, character);
 			return false;
 		}
 		public static bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
@@ -610,15 +610,6 @@ namespace Rawr
             ;
         }
 
-        public bool CheckHasProf(Character cacheChar, Profession p)
-        {
-            if (cacheChar == null) { return false; }
-            if (cacheChar.PrimaryProfession == p) { return true; }
-            if (cacheChar.SecondaryProfession == p) { return true; }
-
-            return false;
-        }
-
         /// <summary>
         /// Allow the model to update any model specific things about changing professions
         /// <param name="character">The character who the defaults are for.</param>
@@ -627,19 +618,19 @@ namespace Rawr
         {
             #region Buffs related to Professions to Force Enable
             // Miners should always have this buff activated
-            if (CheckHasProf(character, Profession.Mining)
+            if (character.HasProfession(Profession.Mining)
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
             {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
             }
             // Skinners should always have this buff activated
-            if (CheckHasProf(character, Profession.Skinning)
+            if (character.HasProfession(Profession.Skinning)
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
             {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
             }
             // Engineers should always have this buff activated IF the Primary is
-            if (CheckHasProf(character, Profession.Engineering))
+            if (character.HasProfession(Profession.Engineering))
             {
                 List<String> list = new List<string>() {
                     "Runic Mana Injector",
@@ -1191,11 +1182,11 @@ namespace Rawr
 			}
 		}
 
-		public virtual bool IsBuffRelevant(Buff buff)
+		public virtual bool IsBuffRelevant(Buff buff, Character character)
 		{
 			try
 			{
-                if (cacheChar != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !CheckHasProf(buff.Professions))
+                if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
                     return false;
 				return HasRelevantStats(buff.GetTotalStats());
 			}
@@ -1204,28 +1195,6 @@ namespace Rawr
 				return false;
 			}
 		}
-
-        /// <summary>This character variable is for Profession checks</summary>
-        protected static Character cacheChar = null;
-
-        public bool CheckHasProf(Profession p)
-        {
-            if (cacheChar                  == null) { return false; }
-            if (cacheChar.PrimaryProfession   == p) { return true;  }
-            if (cacheChar.SecondaryProfession == p) { return true;  }
-
-            return false;
-        }
-
-        private bool CheckHasProf(List<Profession> list)
-        {
-            foreach (Profession p in list)
-            {
-                if (CheckHasProf(p))
-                    return true;
-            }
-            return false;
-        }
 
         /// <summary>
         /// Hide an enchant that is tie to a profession when:
@@ -1236,18 +1205,20 @@ namespace Rawr
         /// </summary>
         /// <param name="enchant">The Enchant to check</param>
         /// <returns>Whether the Enchant should be hidden, defaults to true unless specific conditions are met.</returns>
-        public virtual bool IsProfEnchantRelevant(Enchant enchant) {
+        public virtual bool IsProfEnchantRelevant(Enchant enchant, Character character) {
             try {
                 #region Enchants related to Professions to Hide/Show
                 string name = enchant.Name;
                 if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants) {
-                    if (!CheckHasProf(Profession.Enchanting)) {
+                    if (!character.HasProfession(Profession.Enchanting)) 
+                    {
                         if (enchant.Slot == ItemSlot.Finger)
                         {
                             return false;
                         }
                     }
-                    if (!CheckHasProf(Profession.Engineering)) {
+                    if (!character.HasProfession(Profession.Engineering))
+                    {
                         if (name.Contains("Mind Amplification Dish")   ||
                             name.Contains("Flexweave Underlay")        ||
                             name.Contains("Hyperspeed Accelerators")   ||
@@ -1259,21 +1230,24 @@ namespace Rawr
                             return false;
                         }
                     }
-                    if (!CheckHasProf(Profession.Inscription)) {
+                    if (!character.HasProfession(Profession.Inscription))
+                    {
                         if (name.Contains("Master's")
                             && !name.Contains("Spellthread"))
                         {
                             return false;
                         }
                     }
-                    if (!CheckHasProf(Profession.Leatherworking)) {
+                    if (!character.HasProfession(Profession.Leatherworking))
+                    {
                         if (name.Contains("Fur Lining") ||
                             name.Contains("Nerubian Leg Reinforcements"))
                         {
                             return false;
                         }
                     }
-                    if (!CheckHasProf(Profession.Tailoring)) {
+                    if (!character.HasProfession(Profession.Tailoring))
+                    {
                         if (name.Contains("Embroidery")
                             || name.Contains("Sanctified Spellthread")
                             || name.Contains("Master's Spellthread"))
@@ -1293,10 +1267,10 @@ namespace Rawr
         /// </summary>
         /// <param name="enchant">The Enchant to check</param>
         /// <returns>Whether the Enchant should be hidden, based on Stats. If the option is set, also Professions.</returns>
-        public virtual bool IsEnchantRelevant(Enchant enchant)
+        public virtual bool IsEnchantRelevant(Enchant enchant, Character character)
 		{
 			try {
-                return IsProfEnchantRelevant(enchant) && HasRelevantStats(enchant.Stats);
+                return IsProfEnchantRelevant(enchant, character) && HasRelevantStats(enchant.Stats);
 			} catch (Exception) {
 				return false;
 			}

@@ -198,7 +198,7 @@ namespace Rawr
                 delegate(Enchant enchant)
                 {
                     return enchant.Slot == ItemSlot.None ||
-                        model.IsEnchantRelevant(enchant) &&
+                        model.IsEnchantRelevant(enchant, character) &&
                         (slot == ItemSlot.None || enchant.FitsInSlot(slot, character));
                 }
             ));
@@ -234,7 +234,7 @@ namespace Rawr
                 {
                     return enchant.Id == 0 || 
                         ((enchant.Slot == ItemSlot.None || 
-                        model.IsEnchantRelevant(enchant) && (slot == ItemSlot.None || enchant.FitsInSlot(slot, character)))
+                        model.IsEnchantRelevant(enchant, character) && (slot == ItemSlot.None || enchant.FitsInSlot(slot, character)))
                         && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()));
                 }
             ));
@@ -248,7 +248,7 @@ namespace Rawr
                     bool isRelevant = false;
                     for (int i = 0; i < models.Length; i++)
                     {
-                        if (models[i].IsEnchantRelevant(enchant) && (enchant.FitsInSlot(slot, characters[i]) || slot == ItemSlot.None))
+                        if (models[i].IsEnchantRelevant(enchant, characters[i]) && (enchant.FitsInSlot(slot, characters[i]) || slot == ItemSlot.None))
                         {
                             isRelevant = true;
                             break;

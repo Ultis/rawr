@@ -365,7 +365,6 @@ namespace Rawr.Retribution
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            cacheChar = character;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
             PaladinTalents talents = character.PaladinTalents;
@@ -413,7 +412,6 @@ namespace Rawr.Retribution
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             return GetCharacterStats(character, additionalItem, true);
         }
 
@@ -695,7 +693,7 @@ namespace Rawr.Retribution
             return base.IsItemRelevant(item);
         }
 
-        public override bool IsBuffRelevant(Buff buff)
+        public override bool IsBuffRelevant(Buff buff, Character character)
         {
             Stats stats = buff.Stats;
             bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
@@ -714,14 +712,14 @@ namespace Rawr.Retribution
             return wantedStats;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             string name = enchant.Name;
             if (name.Contains("Rune of"))
             {
                 return false; // Bad DK Enchant, Bad!
             }
-            return base.IsEnchantRelevant(enchant);
+            return base.IsEnchantRelevant(enchant, character);
         }
 
         public override Stats GetRelevantStats(Stats stats)

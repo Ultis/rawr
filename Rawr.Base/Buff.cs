@@ -204,12 +204,13 @@ namespace Rawr
         //enter static
         private static string _cachedModel = "";
         private static List<Buff> _relevantBuffs = new List<Buff>();
+        // returns relevant buffs, but not filtered for professions
         public static List<Buff> RelevantBuffs {
             get {
                 if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantBuffs == null) {
                     if (Calculations.Instance != null) {
                         _cachedModel = Calculations.Instance.ToString();
-                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff));
+                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff, null));
                     } else { _relevantBuffs = new List<Buff>(); }
                 }
                 return _relevantBuffs;

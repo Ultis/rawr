@@ -279,7 +279,6 @@ namespace Rawr.Healadin
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             if (character == null) return new CharacterCalculationsHealadin();
-            cacheChar = character;
 
             Stats stats;
             CharacterCalculationsHealadin calc = null;
@@ -308,7 +307,6 @@ namespace Rawr.Healadin
         #region Stat Calculation
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            cacheChar = character;
             return GetCharacterStats(character, additionalItem, true, null);
         }
 
@@ -609,7 +607,7 @@ namespace Rawr.Healadin
             else return base.IsItemRelevant(item);
         }
 
-        public override bool IsBuffRelevant(Buff buff)
+        public override bool IsBuffRelevant(Buff buff, Character character)
         {
             foreach (SpecialEffect effect in buff.Stats.SpecialEffects())
             {
@@ -618,13 +616,13 @@ namespace Rawr.Healadin
             return HasWantedStats(buff.Stats) || HasMaybeStats(buff.Stats) || HasSurvivalStats(buff.Stats);
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
             {
-                if (IsProfEnchantRelevant(enchant) && HasRelevantSpecialEffect(effect)) { return true; }
+                if (IsProfEnchantRelevant(enchant, character) && HasRelevantSpecialEffect(effect)) { return true; }
             }
-            return IsProfEnchantRelevant(enchant) && (HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats));
+            return IsProfEnchantRelevant(enchant, character) && (HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats));
         }
 
         public override bool HasRelevantStats(Stats stats)

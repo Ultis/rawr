@@ -321,7 +321,6 @@ namespace Rawr.Elemental
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
-			cacheChar = character;
 			CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 			if (calcOpts == null) calcOpts = new CalculationOptionsElemental();
 			Stats stats = GetCharacterStats(character, additionalItem);
@@ -362,7 +361,6 @@ namespace Rawr.Elemental
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            cacheChar = character;
             CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 
             Stats statsRace = BaseStats.GetBaseStats(character);
@@ -430,12 +428,12 @@ namespace Rawr.Elemental
             return base.IsItemRelevant(item);
 		}
 
-        public override bool IsBuffRelevant(Buff buff) {
+        public override bool IsBuffRelevant(Buff buff, Character character) {
             string name = buff.Name;
             if (!buff.AllowedClasses.Contains(CharacterClass.Shaman)) {
                 return false;
             }
-            return base.IsBuffRelevant(buff);
+            return base.IsBuffRelevant(buff, character);
         }
 
         public override Stats GetRelevantStats(Stats stats)
