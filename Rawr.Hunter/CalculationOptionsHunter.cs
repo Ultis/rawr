@@ -23,6 +23,12 @@ namespace Rawr.Hunter
         public PetAttacks PetPriority6 = PetAttacks.None;
         public PetAttacks PetPriority7 = PetAttacks.None;
         [XmlIgnore]
+        public int _SelectedArmoryPet = 0;
+        public int SelectedArmoryPet {
+            get { return _SelectedArmoryPet; }
+            set { _SelectedArmoryPet = value; OnPropertyChanged("SelectedArmoryPet"); }
+        }
+        [XmlIgnore]
         private List<Buff> _petActiveBuffs;
         [XmlElement("petActiveBuffs")]
         public List<string> _petActiveBuffsXml = new List<string>();

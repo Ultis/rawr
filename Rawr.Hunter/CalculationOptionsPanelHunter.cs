@@ -142,6 +142,14 @@ namespace Rawr.Hunter
                 }
                 isLoading = true;
 
+                CB_ArmoryPets.Items.Clear();
+                if (Character.ArmoryPets != null && Character.ArmoryPets.Count > 0) {
+                    CB_ArmoryPets.Items.AddRange(Character.ArmoryPets.ToArray());
+                    isLoading = false;
+                    CB_ArmoryPets.SelectedIndex = CalcOpts.SelectedArmoryPet;
+                    isLoading = true;
+                }
+
                 // Hiding Gear based on Bad Stats
                 CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
                 CK_HidePvPGear.Checked = CalcOpts.HideBadItems_PvP; CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
@@ -214,6 +222,27 @@ namespace Rawr.Hunter
                 CB_ShotPriority_09.SelectedIndex = CalcOpts.PriorityIndex9;
                 CB_ShotPriority_10.SelectedIndex = CalcOpts.PriorityIndex10;
                 CB_PriorityDefaults.SelectedIndex = 0;
+                if (CalcOpts.PriorityIndex1
+                    + CalcOpts.PriorityIndex2
+                    + CalcOpts.PriorityIndex3
+                    + CalcOpts.PriorityIndex4
+                    + CalcOpts.PriorityIndex5
+                    + CalcOpts.PriorityIndex6
+                    + CalcOpts.PriorityIndex7
+                    + CalcOpts.PriorityIndex8
+                    + CalcOpts.PriorityIndex9
+                    + CalcOpts.PriorityIndex10
+                    == 0)
+                {
+                    // No Shot Priority set up, use a default based on talent spec
+                    isLoading = false;
+                    int specIndex = 0;
+                    if (Character.HunterTalents.BestialWrath > 0) { specIndex = 1; }
+                    if (Character.HunterTalents.MasterMarksman > 0) { specIndex = 2; }
+                    if (Character.HunterTalents.LightningReflexes > 0) { specIndex = 3; }
+                    CB_PriorityDefaults.SelectedIndex = specIndex;
+                    isLoading = true;
+                }
                 //
                 CK_StatsAgility.Checked = CalcOpts.StatsList[0];
                 CK_StatsAP.Checked = CalcOpts.StatsList[1];
@@ -1174,5 +1203,31 @@ namespace Rawr.Hunter
             calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
         }
         #endregion
+
+        private void CB_ArmoryPets_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            // Save the Index
+            calcOpts.SelectedArmoryPet = CB_ArmoryPets.SelectedIndex;
+            ArmoryPet CurrentPet = (ArmoryPet)CB_ArmoryPets.SelectedItem;
+            // Convert the ArmoryPet spec to our spec
+            PetTalentTree pt = PetTalentTree.FromArmoryPet(CurrentPet);
+            // Populate the Pet Family
+            isLoading = true;
+            CB_PetFamily.Text = CurrentPet.Family;
+            isLoading = false;
+            // Populate the Pet Specs box
+            {
+                CalcOpts.PetTalents = pt;
+                CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
+                //ComboBox item = sender as ComboBox;
+                _treeCount = pt.TotalPoints();
+                //if (item != null) PetTalents.Data[item.Index] = item.CurrentRank;
+                UpdateSavedTalents();
+                SavePetTalentSpecs();
+            }
+            comboBoxTalentSpec_SelectedIndexChanged(null, null);
+        }
     }
 }

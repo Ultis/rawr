@@ -31,11 +31,136 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelHunter));
             this.Page_03_PetTalents = new System.Windows.Forms.TabPage();
+            this.LB_ArmoryPets = new System.Windows.Forms.Label();
+            this.CB_ArmoryPets = new System.Windows.Forms.ComboBox();
+            this.BT_PetTalentsSaveDel = new System.Windows.Forms.Button();
+            this.CB_PetTalentsSpecSwitcher = new System.Windows.Forms.ComboBox();
             this.FLP_PetFamilies = new System.Windows.Forms.FlowLayoutPanel();
             this.GB_PetTalents_Tenacity = new System.Windows.Forms.GroupBox();
+            this.TLP_Tenacity = new System.Windows.Forms.TableLayoutPanel();
+            this.LB_TenacityCobraReflexes = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_TenacityWildHunt = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.TalentImageList = new System.Windows.Forms.ImageList(this.components);
+            this.LB_TenacityGreatStamina = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityThunderstomp = new System.Windows.Forms.ComboBox();
+            this.CB_TenacityNaturalArmor = new System.Windows.Forms.ComboBox();
+            this.LB_TenacitySpikedCollar = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_TenacityBloodOfTheRhino = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityBoarsSpeed = new System.Windows.Forms.ComboBox();
+            this.CB_TenacityPetBarding = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityGuardDog = new System.Windows.Forms.ComboBox();
+            this.CB_TenacityTaunt = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityLastStand = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityIntervene = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityRoarOfSacrifice = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_TenacityCharge = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityCobraReflexes = new System.Windows.Forms.ComboBox();
+            this.CB_TenacityCharge = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityNaturalArmor = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityGreatStamina = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityPetBarding = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityBloodOfTheRhino = new System.Windows.Forms.ComboBox();
+            this.CB_TenacitySpikedCollar = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityLionhearted = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityThunderstomp = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_TenacityGuardDog = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityRoarOfSacrifice = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityIntervene = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityLastStand = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityTaunt = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacitySilverback = new System.Windows.Forms.ComboBox();
+            this.LB_TenacitySilverback = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityWildHunt = new System.Windows.Forms.ComboBox();
+            this.CB_TenacityGreatResistance = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityGraceOfTheMantis = new System.Windows.Forms.ComboBox();
+            this.LB_TenacityGraceOfTheMantis = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_TenacityCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_TenacityCullingTheHerd = new System.Windows.Forms.ComboBox();
             this.GB_PetTalents_Cunning = new System.Windows.Forms.GroupBox();
+            this.TLP_Cunning = new System.Windows.Forms.TableLayoutPanel();
+            this.LB_CunningCobraReflexes = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_CunningBullheaded = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_CunningBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_CunningWolverineBite = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningRoarOfRecovery = new System.Windows.Forms.ComboBox();
+            this.LB_CunningRoarOfRecovery = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningWolverineBite = new System.Windows.Forms.ComboBox();
+            this.LB_CunningGraceOfTheMantis = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningGraceOfTheMantis = new System.Windows.Forms.ComboBox();
+            this.CB_CunningBullheaded = new System.Windows.Forms.ComboBox();
+            this.CB_CunningDiveDash = new System.Windows.Forms.ComboBox();
+            this.LB_CunningDiveDash = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningCobraReflexes = new System.Windows.Forms.ComboBox();
+            this.CB_CunningBoarsSpeed = new System.Windows.Forms.ComboBox();
+            this.CB_CunningGreatStamina = new System.Windows.Forms.ComboBox();
+            this.LB_CunningNaturalArmor = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_CunningGreatStamina = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningNaturalArmor = new System.Windows.Forms.ComboBox();
+            this.LB_CunningMobility = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningMobility = new System.Windows.Forms.ComboBox();
+            this.LB_CunningSpikedCollar = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningSpikedCollar = new System.Windows.Forms.ComboBox();
+            this.LB_CunningOwlsFocus = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningOwlsFocus = new System.Windows.Forms.ComboBox();
+            this.LB_CunningCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningCullingTheHerd = new System.Windows.Forms.ComboBox();
+            this.LB_CunningLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningLionhearted = new System.Windows.Forms.ComboBox();
+            this.LB_CunningCarrionFeeder = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningCarrionFeeder = new System.Windows.Forms.ComboBox();
+            this.LB_CunningGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningGreatResistance = new System.Windows.Forms.ComboBox();
+            this.LB_CunningCornered = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningCornered = new System.Windows.Forms.ComboBox();
+            this.LB_CunningFeedingFrenzy = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningFeedingFrenzy = new System.Windows.Forms.ComboBox();
+            this.LB_CunningWildHunt = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningWildHunt = new System.Windows.Forms.ComboBox();
+            this.LB_CunningRoarofSacrifice = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_CunningRoarOfSacrifice = new System.Windows.Forms.ComboBox();
             this.GB_PetTalents_Ferocity = new System.Windows.Forms.GroupBox();
+            this.TLP_Ferocity = new System.Windows.Forms.TableLayoutPanel();
+            this.LB_FerocityCobraReflexes = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocityWildHunt = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocityGreatStamina = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityDiveDash = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityNaturalArmor = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityImprovedCower = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocitySpikedCollar = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityBloodthirsty = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityBoarsSpeed = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityCobraReflexes = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityDiveDash = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityGreatStamina = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityNaturalArmor = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocityBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocitySpikedCollar = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityBloodthirsty = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityImprovedCower = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityGreatResistance = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityChargeSwoop = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityChargeSwoop = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityCullingTheHerd = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocitySharkAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityRabid = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityRabid = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityCallOfTheWild = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityCalloftheWild = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocityLickYourWounds = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocityLickYourWounds = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityHeartOfThePhoenix = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityHeartOfThePheonix = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_FerocitySpidersBite = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocitySpidersBite = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityLionhearted = new System.Windows.Forms.ComboBox();
+            this.LB_FerocityLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_FerocitySharkAttack = new System.Windows.Forms.ComboBox();
+            this.CB_FerocityWildHunt = new System.Windows.Forms.ComboBox();
             this.LB_PetFamilies = new System.Windows.Forms.Label();
             this.CB_PetFamily = new System.Windows.Forms.ComboBox();
             this.Page_01_Options = new System.Windows.Forms.TabPage();
@@ -126,140 +251,20 @@
             this.CB_PetPrio_02 = new System.Windows.Forms.ComboBox();
             this.CB_PetPrio_01 = new System.Windows.Forms.ComboBox();
             this.Page_04_PetBuffs = new System.Windows.Forms.TabPage();
+            this.PetBuffs = new Rawr.Hunter.PetBuffSelector();
             this.Page_05_Details = new System.Windows.Forms.TabPage();
             this.TB_Rotation = new System.Windows.Forms.TextBox();
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
             this.BT_Calculate = new System.Windows.Forms.Button();
-            this.CB_PetTalentsSpecSwitcher = new System.Windows.Forms.ComboBox();
-            this.BT_PetTalentsSaveDel = new System.Windows.Forms.Button();
-            this.TLP_Tenacity = new System.Windows.Forms.TableLayoutPanel();
-            this.LB_TenacityCobraReflexes = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_TenacityWildHunt = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_TenacityGreatStamina = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityThunderstomp = new System.Windows.Forms.ComboBox();
-            this.CB_TenacityNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.LB_TenacitySpikedCollar = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_TenacityBloodOfTheRhino = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.CB_TenacityPetBarding = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityGuardDog = new System.Windows.Forms.ComboBox();
-            this.CB_TenacityTaunt = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityLastStand = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityIntervene = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityRoarOfSacrifice = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_TenacityCharge = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityCobraReflexes = new System.Windows.Forms.ComboBox();
-            this.CB_TenacityCharge = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityNaturalArmor = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityGreatStamina = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityPetBarding = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityBloodOfTheRhino = new System.Windows.Forms.ComboBox();
-            this.CB_TenacitySpikedCollar = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityLionhearted = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityThunderstomp = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_TenacityGuardDog = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityRoarOfSacrifice = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityIntervene = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityLastStand = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityTaunt = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacitySilverback = new System.Windows.Forms.ComboBox();
-            this.LB_TenacitySilverback = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityWildHunt = new System.Windows.Forms.ComboBox();
-            this.CB_TenacityGreatResistance = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityGraceOfTheMantis = new System.Windows.Forms.ComboBox();
-            this.LB_TenacityGraceOfTheMantis = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_TenacityCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_TenacityCullingTheHerd = new System.Windows.Forms.ComboBox();
-            this.TLP_Cunning = new System.Windows.Forms.TableLayoutPanel();
-            this.LB_CunningCobraReflexes = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_CunningBullheaded = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_CunningBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_CunningWolverineBite = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningRoarOfRecovery = new System.Windows.Forms.ComboBox();
-            this.LB_CunningRoarOfRecovery = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningWolverineBite = new System.Windows.Forms.ComboBox();
-            this.LB_CunningGraceOfTheMantis = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningGraceOfTheMantis = new System.Windows.Forms.ComboBox();
-            this.CB_CunningBullheaded = new System.Windows.Forms.ComboBox();
-            this.CB_CunningDiveDash = new System.Windows.Forms.ComboBox();
-            this.LB_CunningDiveDash = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningCobraReflexes = new System.Windows.Forms.ComboBox();
-            this.CB_CunningBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.CB_CunningGreatStamina = new System.Windows.Forms.ComboBox();
-            this.LB_CunningNaturalArmor = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_CunningGreatStamina = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.LB_CunningMobility = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningMobility = new System.Windows.Forms.ComboBox();
-            this.LB_CunningSpikedCollar = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningSpikedCollar = new System.Windows.Forms.ComboBox();
-            this.LB_CunningOwlsFocus = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningOwlsFocus = new System.Windows.Forms.ComboBox();
-            this.LB_CunningCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningCullingTheHerd = new System.Windows.Forms.ComboBox();
-            this.LB_CunningLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningLionhearted = new System.Windows.Forms.ComboBox();
-            this.LB_CunningCarrionFeeder = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningCarrionFeeder = new System.Windows.Forms.ComboBox();
-            this.LB_CunningGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningGreatResistance = new System.Windows.Forms.ComboBox();
-            this.LB_CunningCornered = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningCornered = new System.Windows.Forms.ComboBox();
-            this.LB_CunningFeedingFrenzy = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningFeedingFrenzy = new System.Windows.Forms.ComboBox();
-            this.LB_CunningWildHunt = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningWildHunt = new System.Windows.Forms.ComboBox();
-            this.LB_CunningRoarofSacrifice = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_CunningRoarOfSacrifice = new System.Windows.Forms.ComboBox();
-            this.TLP_Ferocity = new System.Windows.Forms.TableLayoutPanel();
-            this.LB_FerocityCobraReflexes = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocityWildHunt = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocityGreatStamina = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityDiveDash = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityImprovedCower = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocitySpikedCollar = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityBloodthirsty = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityCobraReflexes = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityDiveDash = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityGreatStamina = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityNaturalArmor = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocityBoarsSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocitySpikedCollar = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityBloodthirsty = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityImprovedCower = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityGreatResistance = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityGreatResistance = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityChargeSwoop = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityChargeSwoop = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityCullingTheHerd = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityCullingTheHerd = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocitySharkAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityRabid = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityRabid = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityCallOfTheWild = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityCalloftheWild = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocityLickYourWounds = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocityLickYourWounds = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityHeartOfThePhoenix = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityHeartOfThePheonix = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.LB_FerocitySpidersBite = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocitySpidersBite = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityLionhearted = new System.Windows.Forms.ComboBox();
-            this.LB_FerocityLionHearted = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.CB_FerocitySharkAttack = new System.Windows.Forms.ComboBox();
-            this.CB_FerocityWildHunt = new System.Windows.Forms.ComboBox();
-            this.PetBuffs = new Rawr.Hunter.PetBuffSelector();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
+            this.TLP_Tenacity.SuspendLayout();
             this.GB_PetTalents_Cunning.SuspendLayout();
+            this.TLP_Cunning.SuspendLayout();
             this.GB_PetTalents_Ferocity.SuspendLayout();
+            this.TLP_Ferocity.SuspendLayout();
             this.Page_01_Options.SuspendLayout();
             this.FLP_01_Options.SuspendLayout();
             this.GB_FightSettings.SuspendLayout();
@@ -283,15 +288,14 @@
             this.Page_04_PetBuffs.SuspendLayout();
             this.Page_05_Details.SuspendLayout();
             this.GB_Rotation_Shots.SuspendLayout();
-            this.TLP_Tenacity.SuspendLayout();
-            this.TLP_Cunning.SuspendLayout();
-            this.TLP_Ferocity.SuspendLayout();
             this.SuspendLayout();
             // 
             // Page_03_PetTalents
             // 
             this.Page_03_PetTalents.AutoScroll = true;
             this.Page_03_PetTalents.AutoScrollMinSize = new System.Drawing.Size(0, 400);
+            this.Page_03_PetTalents.Controls.Add(this.LB_ArmoryPets);
+            this.Page_03_PetTalents.Controls.Add(this.CB_ArmoryPets);
             this.Page_03_PetTalents.Controls.Add(this.BT_PetTalentsSaveDel);
             this.Page_03_PetTalents.Controls.Add(this.CB_PetTalentsSpecSwitcher);
             this.Page_03_PetTalents.Controls.Add(this.FLP_PetFamilies);
@@ -305,6 +309,54 @@
             this.Page_03_PetTalents.Text = "Pet Talents";
             this.Page_03_PetTalents.UseVisualStyleBackColor = true;
             // 
+            // LB_ArmoryPets
+            // 
+            this.LB_ArmoryPets.AutoSize = true;
+            this.LB_ArmoryPets.Location = new System.Drawing.Point(6, 9);
+            this.LB_ArmoryPets.Name = "LB_ArmoryPets";
+            this.LB_ArmoryPets.Size = new System.Drawing.Size(66, 13);
+            this.LB_ArmoryPets.TabIndex = 0;
+            this.LB_ArmoryPets.Text = "Armory Pets:";
+            // 
+            // CB_ArmoryPets
+            // 
+            this.CB_ArmoryPets.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_ArmoryPets.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_ArmoryPets.DropDownWidth = 400;
+            this.CB_ArmoryPets.FormattingEnabled = true;
+            this.CB_ArmoryPets.Location = new System.Drawing.Point(78, 6);
+            this.CB_ArmoryPets.Name = "CB_ArmoryPets";
+            this.CB_ArmoryPets.Size = new System.Drawing.Size(208, 21);
+            this.CB_ArmoryPets.TabIndex = 1;
+            this.CB_ArmoryPets.SelectedIndexChanged += new System.EventHandler(this.CB_ArmoryPets_SelectedIndexChanged);
+            // 
+            // BT_PetTalentsSaveDel
+            // 
+            this.BT_PetTalentsSaveDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BT_PetTalentsSaveDel.Location = new System.Drawing.Point(226, 59);
+            this.BT_PetTalentsSaveDel.Name = "BT_PetTalentsSaveDel";
+            this.BT_PetTalentsSaveDel.Size = new System.Drawing.Size(60, 23);
+            this.BT_PetTalentsSaveDel.TabIndex = 5;
+            this.BT_PetTalentsSaveDel.Text = "Save";
+            this.BT_PetTalentsSaveDel.UseVisualStyleBackColor = true;
+            this.BT_PetTalentsSaveDel.Click += new System.EventHandler(this.talentSpecButton_Click);
+            // 
+            // CB_PetTalentsSpecSwitcher
+            // 
+            this.CB_PetTalentsSpecSwitcher.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_PetTalentsSpecSwitcher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_PetTalentsSpecSwitcher.DropDownWidth = 400;
+            this.CB_PetTalentsSpecSwitcher.FormattingEnabled = true;
+            this.CB_PetTalentsSpecSwitcher.Items.AddRange(new object[] {
+            "Custom"});
+            this.CB_PetTalentsSpecSwitcher.Location = new System.Drawing.Point(6, 60);
+            this.CB_PetTalentsSpecSwitcher.Name = "CB_PetTalentsSpecSwitcher";
+            this.CB_PetTalentsSpecSwitcher.Size = new System.Drawing.Size(214, 21);
+            this.CB_PetTalentsSpecSwitcher.TabIndex = 4;
+            this.CB_PetTalentsSpecSwitcher.SelectedIndexChanged += new System.EventHandler(this.comboBoxTalentSpec_SelectedIndexChanged);
+            // 
             // FLP_PetFamilies
             // 
             this.FLP_PetFamilies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -314,10 +366,10 @@
             this.FLP_PetFamilies.Controls.Add(this.GB_PetTalents_Tenacity);
             this.FLP_PetFamilies.Controls.Add(this.GB_PetTalents_Cunning);
             this.FLP_PetFamilies.Controls.Add(this.GB_PetTalents_Ferocity);
-            this.FLP_PetFamilies.Location = new System.Drawing.Point(0, 60);
+            this.FLP_PetFamilies.Location = new System.Drawing.Point(0, 87);
             this.FLP_PetFamilies.Name = "FLP_PetFamilies";
-            this.FLP_PetFamilies.Size = new System.Drawing.Size(292, 614);
-            this.FLP_PetFamilies.TabIndex = 0;
+            this.FLP_PetFamilies.Size = new System.Drawing.Size(292, 587);
+            this.FLP_PetFamilies.TabIndex = 6;
             // 
             // GB_PetTalents_Tenacity
             // 
@@ -326,10 +378,113 @@
             this.GB_PetTalents_Tenacity.Controls.Add(this.TLP_Tenacity);
             this.GB_PetTalents_Tenacity.Location = new System.Drawing.Point(3, 3);
             this.GB_PetTalents_Tenacity.Name = "GB_PetTalents_Tenacity";
-            this.GB_PetTalents_Tenacity.Size = new System.Drawing.Size(268, 399);
+            this.GB_PetTalents_Tenacity.Size = new System.Drawing.Size(268, 447);
             this.GB_PetTalents_Tenacity.TabIndex = 0;
             this.GB_PetTalents_Tenacity.TabStop = false;
             this.GB_PetTalents_Tenacity.Text = "Tenacity Talents";
+            // 
+            // TLP_Tenacity
+            // 
+            this.TLP_Tenacity.BackgroundImage = global::Rawr.Hunter.Properties.Resources.bgTenacity;
+            this.TLP_Tenacity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.TLP_Tenacity.ColumnCount = 4;
+            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCobraReflexes, 0, 0);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityWildHunt, 2, 15);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatStamina, 2, 0);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityThunderstomp, 3, 7);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityNaturalArmor, 3, 1);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacitySpikedCollar, 0, 3);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityBloodOfTheRhino, 2, 3);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityBoarsSpeed, 1, 4);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityPetBarding, 3, 4);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityLionHearted, 2, 6);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGuardDog, 1, 7);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityTaunt, 1, 13);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityLastStand, 0, 12);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityIntervene, 3, 13);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityRoarOfSacrifice, 2, 12);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCharge, 1, 0);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCobraReflexes, 0, 1);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCharge, 1, 1);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityNaturalArmor, 3, 0);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGreatStamina, 2, 1);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityPetBarding, 3, 3);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityBloodOfTheRhino, 2, 4);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacitySpikedCollar, 0, 4);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityBoarsSpeed, 1, 3);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityLionhearted, 2, 7);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityThunderstomp, 3, 6);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGuardDog, 1, 6);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityRoarOfSacrifice, 2, 13);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityIntervene, 3, 12);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityLastStand, 0, 13);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityTaunt, 1, 12);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacitySilverback, 1, 16);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacitySilverback, 1, 15);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityWildHunt, 2, 16);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGreatResistance, 3, 10);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatResistance, 3, 9);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGraceOfTheMantis, 2, 10);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGraceOfTheMantis, 2, 9);
+            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCullingTheHerd, 0, 6);
+            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCullingTheHerd, 0, 7);
+            this.TLP_Tenacity.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TLP_Tenacity.Location = new System.Drawing.Point(3, 16);
+            this.TLP_Tenacity.Name = "TLP_Tenacity";
+            this.TLP_Tenacity.RowCount = 18;
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TLP_Tenacity.Size = new System.Drawing.Size(262, 428);
+            this.TLP_Tenacity.TabIndex = 0;
+            // 
+            // LB_TenacityCobraReflexes
+            // 
+            this.LB_TenacityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityCobraReflexes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityCobraReflexes.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityCobraReflexes.Location = new System.Drawing.Point(3, 3);
+            this.LB_TenacityCobraReflexes.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityCobraReflexes.Name = "LB_TenacityCobraReflexes";
+            this.LB_TenacityCobraReflexes.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityCobraReflexes.TabIndex = 0;
+            this.LB_TenacityCobraReflexes.Text = "Cobra Reflexes";
+            this.LB_TenacityCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityCobraReflexes.ToolTipText = null;
+            // 
+            // LB_TenacityWildHunt
+            // 
+            this.LB_TenacityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityWildHunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityWildHunt.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityWildHunt.ImageList = this.TalentImageList;
+            this.LB_TenacityWildHunt.Location = new System.Drawing.Point(133, 363);
+            this.LB_TenacityWildHunt.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityWildHunt.Name = "LB_TenacityWildHunt";
+            this.LB_TenacityWildHunt.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityWildHunt.TabIndex = 40;
+            this.LB_TenacityWildHunt.Text = "Wild Hunt";
+            this.LB_TenacityWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityWildHunt.ToolTipText = null;
             // 
             // TalentImageList
             // 
@@ -337,18 +492,1172 @@
             this.TalentImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.TalentImageList.Images.SetKeyName(0, "Taunt.gif");
             // 
+            // LB_TenacityGreatStamina
+            // 
+            this.LB_TenacityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGreatStamina.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityGreatStamina.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityGreatStamina.ImageList = this.TalentImageList;
+            this.LB_TenacityGreatStamina.Location = new System.Drawing.Point(133, 3);
+            this.LB_TenacityGreatStamina.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityGreatStamina.Name = "LB_TenacityGreatStamina";
+            this.LB_TenacityGreatStamina.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityGreatStamina.TabIndex = 4;
+            this.LB_TenacityGreatStamina.Text = "Great Stamina";
+            this.LB_TenacityGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityGreatStamina.ToolTipText = null;
+            // 
+            // CB_TenacityThunderstomp
+            // 
+            this.CB_TenacityThunderstomp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityThunderstomp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityThunderstomp.FormattingEnabled = true;
+            this.CB_TenacityThunderstomp.Location = new System.Drawing.Point(195, 190);
+            this.CB_TenacityThunderstomp.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityThunderstomp.Name = "CB_TenacityThunderstomp";
+            this.CB_TenacityThunderstomp.Size = new System.Drawing.Size(67, 21);
+            this.CB_TenacityThunderstomp.TabIndex = 23;
+            this.CB_TenacityThunderstomp.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_TenacityNaturalArmor
+            // 
+            this.CB_TenacityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityNaturalArmor.FormattingEnabled = true;
+            this.CB_TenacityNaturalArmor.Location = new System.Drawing.Point(195, 46);
+            this.CB_TenacityNaturalArmor.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityNaturalArmor.Name = "CB_TenacityNaturalArmor";
+            this.CB_TenacityNaturalArmor.Size = new System.Drawing.Size(67, 21);
+            this.CB_TenacityNaturalArmor.TabIndex = 7;
+            this.CB_TenacityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacitySpikedCollar
+            // 
+            this.LB_TenacitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacitySpikedCollar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacitySpikedCollar.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacitySpikedCollar.ImageList = this.TalentImageList;
+            this.LB_TenacitySpikedCollar.Location = new System.Drawing.Point(3, 75);
+            this.LB_TenacitySpikedCollar.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacitySpikedCollar.Name = "LB_TenacitySpikedCollar";
+            this.LB_TenacitySpikedCollar.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacitySpikedCollar.TabIndex = 8;
+            this.LB_TenacitySpikedCollar.Text = "Spiked Collar";
+            this.LB_TenacitySpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacitySpikedCollar.ToolTipText = null;
+            // 
+            // LB_TenacityBloodOfTheRhino
+            // 
+            this.LB_TenacityBloodOfTheRhino.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityBloodOfTheRhino.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityBloodOfTheRhino.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityBloodOfTheRhino.ImageList = this.TalentImageList;
+            this.LB_TenacityBloodOfTheRhino.Location = new System.Drawing.Point(133, 75);
+            this.LB_TenacityBloodOfTheRhino.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityBloodOfTheRhino.Name = "LB_TenacityBloodOfTheRhino";
+            this.LB_TenacityBloodOfTheRhino.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityBloodOfTheRhino.TabIndex = 12;
+            this.LB_TenacityBloodOfTheRhino.Text = "Blood of the Rhino";
+            this.LB_TenacityBloodOfTheRhino.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityBloodOfTheRhino.ToolTipText = null;
+            // 
+            // CB_TenacityBoarsSpeed
+            // 
+            this.CB_TenacityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityBoarsSpeed.FormattingEnabled = true;
+            this.CB_TenacityBoarsSpeed.Location = new System.Drawing.Point(65, 118);
+            this.CB_TenacityBoarsSpeed.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityBoarsSpeed.Name = "CB_TenacityBoarsSpeed";
+            this.CB_TenacityBoarsSpeed.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityBoarsSpeed.TabIndex = 11;
+            this.CB_TenacityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_TenacityPetBarding
+            // 
+            this.CB_TenacityPetBarding.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityPetBarding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityPetBarding.FormattingEnabled = true;
+            this.CB_TenacityPetBarding.Location = new System.Drawing.Point(195, 118);
+            this.CB_TenacityPetBarding.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityPetBarding.Name = "CB_TenacityPetBarding";
+            this.CB_TenacityPetBarding.Size = new System.Drawing.Size(67, 21);
+            this.CB_TenacityPetBarding.TabIndex = 15;
+            this.CB_TenacityPetBarding.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityLionHearted
+            // 
+            this.LB_TenacityLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityLionHearted.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityLionHearted.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityLionHearted.ImageList = this.TalentImageList;
+            this.LB_TenacityLionHearted.Location = new System.Drawing.Point(133, 147);
+            this.LB_TenacityLionHearted.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityLionHearted.Name = "LB_TenacityLionHearted";
+            this.LB_TenacityLionHearted.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityLionHearted.TabIndex = 20;
+            this.LB_TenacityLionHearted.Text = "Lionhearted";
+            this.LB_TenacityLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityLionHearted.ToolTipText = null;
+            // 
+            // CB_TenacityGuardDog
+            // 
+            this.CB_TenacityGuardDog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityGuardDog.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityGuardDog.FormattingEnabled = true;
+            this.CB_TenacityGuardDog.Location = new System.Drawing.Point(65, 190);
+            this.CB_TenacityGuardDog.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityGuardDog.Name = "CB_TenacityGuardDog";
+            this.CB_TenacityGuardDog.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityGuardDog.TabIndex = 19;
+            this.CB_TenacityGuardDog.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_TenacityTaunt
+            // 
+            this.CB_TenacityTaunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityTaunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityTaunt.FormattingEnabled = true;
+            this.CB_TenacityTaunt.Location = new System.Drawing.Point(65, 334);
+            this.CB_TenacityTaunt.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityTaunt.Name = "CB_TenacityTaunt";
+            this.CB_TenacityTaunt.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityTaunt.TabIndex = 33;
+            this.CB_TenacityTaunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityLastStand
+            // 
+            this.LB_TenacityLastStand.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityLastStand.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityLastStand.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityLastStand.ImageList = this.TalentImageList;
+            this.LB_TenacityLastStand.Location = new System.Drawing.Point(3, 291);
+            this.LB_TenacityLastStand.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityLastStand.Name = "LB_TenacityLastStand";
+            this.LB_TenacityLastStand.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityLastStand.TabIndex = 30;
+            this.LB_TenacityLastStand.Text = "Last Stand";
+            this.LB_TenacityLastStand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityLastStand.ToolTipText = null;
+            // 
+            // CB_TenacityIntervene
+            // 
+            this.CB_TenacityIntervene.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityIntervene.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityIntervene.FormattingEnabled = true;
+            this.CB_TenacityIntervene.Location = new System.Drawing.Point(195, 334);
+            this.CB_TenacityIntervene.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityIntervene.Name = "CB_TenacityIntervene";
+            this.CB_TenacityIntervene.Size = new System.Drawing.Size(67, 21);
+            this.CB_TenacityIntervene.TabIndex = 37;
+            this.CB_TenacityIntervene.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityRoarOfSacrifice
+            // 
+            this.LB_TenacityRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityRoarOfSacrifice.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityRoarOfSacrifice.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityRoarOfSacrifice.ImageList = this.TalentImageList;
+            this.LB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(133, 291);
+            this.LB_TenacityRoarOfSacrifice.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityRoarOfSacrifice.Name = "LB_TenacityRoarOfSacrifice";
+            this.LB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityRoarOfSacrifice.TabIndex = 34;
+            this.LB_TenacityRoarOfSacrifice.Text = "Roar of Sacrifice";
+            this.LB_TenacityRoarOfSacrifice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityRoarOfSacrifice.ToolTipText = null;
+            // 
+            // LB_TenacityCharge
+            // 
+            this.LB_TenacityCharge.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityCharge.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityCharge.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityCharge.ImageList = this.TalentImageList;
+            this.LB_TenacityCharge.Location = new System.Drawing.Point(68, 3);
+            this.LB_TenacityCharge.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityCharge.Name = "LB_TenacityCharge";
+            this.LB_TenacityCharge.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityCharge.TabIndex = 2;
+            this.LB_TenacityCharge.Text = "Charge/Swoop";
+            this.LB_TenacityCharge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityCharge.ToolTipText = null;
+            // 
+            // CB_TenacityCobraReflexes
+            // 
+            this.CB_TenacityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityCobraReflexes.FormattingEnabled = true;
+            this.CB_TenacityCobraReflexes.Location = new System.Drawing.Point(0, 46);
+            this.CB_TenacityCobraReflexes.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityCobraReflexes.Name = "CB_TenacityCobraReflexes";
+            this.CB_TenacityCobraReflexes.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityCobraReflexes.TabIndex = 1;
+            this.CB_TenacityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_TenacityCharge
+            // 
+            this.CB_TenacityCharge.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityCharge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityCharge.FormattingEnabled = true;
+            this.CB_TenacityCharge.Location = new System.Drawing.Point(65, 46);
+            this.CB_TenacityCharge.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityCharge.Name = "CB_TenacityCharge";
+            this.CB_TenacityCharge.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityCharge.TabIndex = 3;
+            this.CB_TenacityCharge.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityNaturalArmor
+            // 
+            this.LB_TenacityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityNaturalArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityNaturalArmor.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityNaturalArmor.ImageList = this.TalentImageList;
+            this.LB_TenacityNaturalArmor.Location = new System.Drawing.Point(198, 3);
+            this.LB_TenacityNaturalArmor.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityNaturalArmor.Name = "LB_TenacityNaturalArmor";
+            this.LB_TenacityNaturalArmor.Size = new System.Drawing.Size(61, 40);
+            this.LB_TenacityNaturalArmor.TabIndex = 6;
+            this.LB_TenacityNaturalArmor.Text = "Natural Armor";
+            this.LB_TenacityNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityNaturalArmor.ToolTipText = null;
+            // 
+            // CB_TenacityGreatStamina
+            // 
+            this.CB_TenacityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityGreatStamina.FormattingEnabled = true;
+            this.CB_TenacityGreatStamina.Location = new System.Drawing.Point(130, 46);
+            this.CB_TenacityGreatStamina.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityGreatStamina.Name = "CB_TenacityGreatStamina";
+            this.CB_TenacityGreatStamina.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityGreatStamina.TabIndex = 5;
+            this.CB_TenacityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityPetBarding
+            // 
+            this.LB_TenacityPetBarding.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityPetBarding.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityPetBarding.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityPetBarding.ImageList = this.TalentImageList;
+            this.LB_TenacityPetBarding.Location = new System.Drawing.Point(198, 75);
+            this.LB_TenacityPetBarding.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityPetBarding.Name = "LB_TenacityPetBarding";
+            this.LB_TenacityPetBarding.Size = new System.Drawing.Size(61, 40);
+            this.LB_TenacityPetBarding.TabIndex = 14;
+            this.LB_TenacityPetBarding.Text = "Pet Barding";
+            this.LB_TenacityPetBarding.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityPetBarding.ToolTipText = null;
+            // 
+            // CB_TenacityBloodOfTheRhino
+            // 
+            this.CB_TenacityBloodOfTheRhino.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityBloodOfTheRhino.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityBloodOfTheRhino.FormattingEnabled = true;
+            this.CB_TenacityBloodOfTheRhino.Location = new System.Drawing.Point(130, 118);
+            this.CB_TenacityBloodOfTheRhino.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityBloodOfTheRhino.Name = "CB_TenacityBloodOfTheRhino";
+            this.CB_TenacityBloodOfTheRhino.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityBloodOfTheRhino.TabIndex = 13;
+            this.CB_TenacityBloodOfTheRhino.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_TenacitySpikedCollar
+            // 
+            this.CB_TenacitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacitySpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacitySpikedCollar.FormattingEnabled = true;
+            this.CB_TenacitySpikedCollar.Location = new System.Drawing.Point(0, 118);
+            this.CB_TenacitySpikedCollar.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacitySpikedCollar.Name = "CB_TenacitySpikedCollar";
+            this.CB_TenacitySpikedCollar.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacitySpikedCollar.TabIndex = 9;
+            this.CB_TenacitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityBoarsSpeed
+            // 
+            this.LB_TenacityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityBoarsSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityBoarsSpeed.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityBoarsSpeed.ImageList = this.TalentImageList;
+            this.LB_TenacityBoarsSpeed.Location = new System.Drawing.Point(68, 75);
+            this.LB_TenacityBoarsSpeed.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityBoarsSpeed.Name = "LB_TenacityBoarsSpeed";
+            this.LB_TenacityBoarsSpeed.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityBoarsSpeed.TabIndex = 10;
+            this.LB_TenacityBoarsSpeed.Text = "Boar\'s Speed";
+            this.LB_TenacityBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityBoarsSpeed.ToolTipText = null;
+            // 
+            // CB_TenacityLionhearted
+            // 
+            this.CB_TenacityLionhearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityLionhearted.FormattingEnabled = true;
+            this.CB_TenacityLionhearted.Location = new System.Drawing.Point(130, 190);
+            this.CB_TenacityLionhearted.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityLionhearted.Name = "CB_TenacityLionhearted";
+            this.CB_TenacityLionhearted.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityLionhearted.TabIndex = 21;
+            this.CB_TenacityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityThunderstomp
+            // 
+            this.LB_TenacityThunderstomp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityThunderstomp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityThunderstomp.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityThunderstomp.ImageList = this.TalentImageList;
+            this.LB_TenacityThunderstomp.Location = new System.Drawing.Point(198, 147);
+            this.LB_TenacityThunderstomp.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityThunderstomp.Name = "LB_TenacityThunderstomp";
+            this.LB_TenacityThunderstomp.Size = new System.Drawing.Size(61, 40);
+            this.LB_TenacityThunderstomp.TabIndex = 22;
+            this.LB_TenacityThunderstomp.Text = "Thunderstomp";
+            this.LB_TenacityThunderstomp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityThunderstomp.ToolTipText = null;
+            // 
+            // LB_TenacityGuardDog
+            // 
+            this.LB_TenacityGuardDog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGuardDog.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityGuardDog.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityGuardDog.ImageList = this.TalentImageList;
+            this.LB_TenacityGuardDog.Location = new System.Drawing.Point(68, 147);
+            this.LB_TenacityGuardDog.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityGuardDog.Name = "LB_TenacityGuardDog";
+            this.LB_TenacityGuardDog.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityGuardDog.TabIndex = 18;
+            this.LB_TenacityGuardDog.Text = "Guard Dog";
+            this.LB_TenacityGuardDog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityGuardDog.ToolTipText = null;
+            // 
+            // CB_TenacityRoarOfSacrifice
+            // 
+            this.CB_TenacityRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityRoarOfSacrifice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityRoarOfSacrifice.FormattingEnabled = true;
+            this.CB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(130, 334);
+            this.CB_TenacityRoarOfSacrifice.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityRoarOfSacrifice.Name = "CB_TenacityRoarOfSacrifice";
+            this.CB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityRoarOfSacrifice.TabIndex = 35;
+            this.CB_TenacityRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityIntervene
+            // 
+            this.LB_TenacityIntervene.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityIntervene.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityIntervene.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityIntervene.ImageList = this.TalentImageList;
+            this.LB_TenacityIntervene.Location = new System.Drawing.Point(198, 291);
+            this.LB_TenacityIntervene.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityIntervene.Name = "LB_TenacityIntervene";
+            this.LB_TenacityIntervene.Size = new System.Drawing.Size(61, 40);
+            this.LB_TenacityIntervene.TabIndex = 36;
+            this.LB_TenacityIntervene.Text = "Intervene";
+            this.LB_TenacityIntervene.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityIntervene.ToolTipText = null;
+            // 
+            // CB_TenacityLastStand
+            // 
+            this.CB_TenacityLastStand.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityLastStand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityLastStand.FormattingEnabled = true;
+            this.CB_TenacityLastStand.Location = new System.Drawing.Point(0, 334);
+            this.CB_TenacityLastStand.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityLastStand.Name = "CB_TenacityLastStand";
+            this.CB_TenacityLastStand.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityLastStand.TabIndex = 31;
+            this.CB_TenacityLastStand.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityTaunt
+            // 
+            this.LB_TenacityTaunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityTaunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityTaunt.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityTaunt.ImageList = this.TalentImageList;
+            this.LB_TenacityTaunt.Location = new System.Drawing.Point(68, 291);
+            this.LB_TenacityTaunt.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityTaunt.Name = "LB_TenacityTaunt";
+            this.LB_TenacityTaunt.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityTaunt.TabIndex = 32;
+            this.LB_TenacityTaunt.Text = "Taunt";
+            this.LB_TenacityTaunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityTaunt.ToolTipText = null;
+            // 
+            // CB_TenacitySilverback
+            // 
+            this.CB_TenacitySilverback.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacitySilverback.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacitySilverback.FormattingEnabled = true;
+            this.CB_TenacitySilverback.Location = new System.Drawing.Point(65, 406);
+            this.CB_TenacitySilverback.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacitySilverback.Name = "CB_TenacitySilverback";
+            this.CB_TenacitySilverback.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacitySilverback.TabIndex = 39;
+            this.CB_TenacitySilverback.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacitySilverback
+            // 
+            this.LB_TenacitySilverback.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacitySilverback.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacitySilverback.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacitySilverback.ImageList = this.TalentImageList;
+            this.LB_TenacitySilverback.Location = new System.Drawing.Point(68, 363);
+            this.LB_TenacitySilverback.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacitySilverback.Name = "LB_TenacitySilverback";
+            this.LB_TenacitySilverback.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacitySilverback.TabIndex = 38;
+            this.LB_TenacitySilverback.Text = "Silverback";
+            this.LB_TenacitySilverback.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacitySilverback.ToolTipText = null;
+            // 
+            // CB_TenacityWildHunt
+            // 
+            this.CB_TenacityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityWildHunt.FormattingEnabled = true;
+            this.CB_TenacityWildHunt.Location = new System.Drawing.Point(130, 406);
+            this.CB_TenacityWildHunt.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityWildHunt.Name = "CB_TenacityWildHunt";
+            this.CB_TenacityWildHunt.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityWildHunt.TabIndex = 41;
+            this.CB_TenacityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_TenacityGreatResistance
+            // 
+            this.CB_TenacityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityGreatResistance.FormattingEnabled = true;
+            this.CB_TenacityGreatResistance.Location = new System.Drawing.Point(195, 262);
+            this.CB_TenacityGreatResistance.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityGreatResistance.Name = "CB_TenacityGreatResistance";
+            this.CB_TenacityGreatResistance.Size = new System.Drawing.Size(67, 21);
+            this.CB_TenacityGreatResistance.TabIndex = 29;
+            this.CB_TenacityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityGreatResistance
+            // 
+            this.LB_TenacityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGreatResistance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityGreatResistance.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityGreatResistance.ImageList = this.TalentImageList;
+            this.LB_TenacityGreatResistance.Location = new System.Drawing.Point(198, 219);
+            this.LB_TenacityGreatResistance.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityGreatResistance.Name = "LB_TenacityGreatResistance";
+            this.LB_TenacityGreatResistance.Size = new System.Drawing.Size(61, 40);
+            this.LB_TenacityGreatResistance.TabIndex = 28;
+            this.LB_TenacityGreatResistance.Text = "Great Resistance";
+            this.LB_TenacityGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityGreatResistance.ToolTipText = null;
+            // 
+            // CB_TenacityGraceOfTheMantis
+            // 
+            this.CB_TenacityGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityGraceOfTheMantis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityGraceOfTheMantis.FormattingEnabled = true;
+            this.CB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(130, 262);
+            this.CB_TenacityGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityGraceOfTheMantis.Name = "CB_TenacityGraceOfTheMantis";
+            this.CB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityGraceOfTheMantis.TabIndex = 27;
+            this.CB_TenacityGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_TenacityGraceOfTheMantis
+            // 
+            this.LB_TenacityGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityGraceOfTheMantis.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityGraceOfTheMantis.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityGraceOfTheMantis.ImageList = this.TalentImageList;
+            this.LB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(133, 219);
+            this.LB_TenacityGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityGraceOfTheMantis.Name = "LB_TenacityGraceOfTheMantis";
+            this.LB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityGraceOfTheMantis.TabIndex = 26;
+            this.LB_TenacityGraceOfTheMantis.Text = "Grace of the Mantis";
+            this.LB_TenacityGraceOfTheMantis.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityGraceOfTheMantis.ToolTipText = null;
+            // 
+            // LB_TenacityCullingTheHerd
+            // 
+            this.LB_TenacityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_TenacityCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LB_TenacityCullingTheHerd.ForeColor = System.Drawing.Color.White;
+            this.LB_TenacityCullingTheHerd.ImageList = this.TalentImageList;
+            this.LB_TenacityCullingTheHerd.Location = new System.Drawing.Point(3, 147);
+            this.LB_TenacityCullingTheHerd.Margin = new System.Windows.Forms.Padding(3);
+            this.LB_TenacityCullingTheHerd.Name = "LB_TenacityCullingTheHerd";
+            this.LB_TenacityCullingTheHerd.Size = new System.Drawing.Size(59, 40);
+            this.LB_TenacityCullingTheHerd.TabIndex = 24;
+            this.LB_TenacityCullingTheHerd.Text = "Culling The Herd (3.3)";
+            this.LB_TenacityCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_TenacityCullingTheHerd.ToolTipText = null;
+            // 
+            // CB_TenacityCullingTheHerd
+            // 
+            this.CB_TenacityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_TenacityCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TenacityCullingTheHerd.FormattingEnabled = true;
+            this.CB_TenacityCullingTheHerd.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.CB_TenacityCullingTheHerd.Location = new System.Drawing.Point(0, 190);
+            this.CB_TenacityCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_TenacityCullingTheHerd.Name = "CB_TenacityCullingTheHerd";
+            this.CB_TenacityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
+            this.CB_TenacityCullingTheHerd.TabIndex = 25;
+            this.CB_TenacityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
             // GB_PetTalents_Cunning
             // 
             this.GB_PetTalents_Cunning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_PetTalents_Cunning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.GB_PetTalents_Cunning.Controls.Add(this.TLP_Cunning);
-            this.GB_PetTalents_Cunning.Location = new System.Drawing.Point(3, 408);
+            this.GB_PetTalents_Cunning.Location = new System.Drawing.Point(3, 456);
             this.GB_PetTalents_Cunning.Name = "GB_PetTalents_Cunning";
             this.GB_PetTalents_Cunning.Size = new System.Drawing.Size(268, 447);
             this.GB_PetTalents_Cunning.TabIndex = 1;
             this.GB_PetTalents_Cunning.TabStop = false;
             this.GB_PetTalents_Cunning.Text = "Cunning Talents";
+            // 
+            // TLP_Cunning
+            // 
+            this.TLP_Cunning.BackgroundImage = global::Rawr.Hunter.Properties.Resources.bgCunning;
+            this.TLP_Cunning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.TLP_Cunning.ColumnCount = 4;
+            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCobraReflexes, 0, 0);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningBullheaded, 2, 12);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningBoarsSpeed, 0, 3);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningWolverineBite, 0, 12);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningRoarOfRecovery, 1, 13);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningRoarOfRecovery, 1, 12);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningWolverineBite, 0, 13);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningGraceOfTheMantis, 3, 12);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningGraceOfTheMantis, 3, 13);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningBullheaded, 2, 13);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningDiveDash, 1, 1);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningDiveDash, 1, 0);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningCobraReflexes, 0, 1);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningBoarsSpeed, 0, 4);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningGreatStamina, 2, 1);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningNaturalArmor, 3, 0);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningGreatStamina, 2, 0);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningNaturalArmor, 3, 1);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningMobility, 1, 3);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningMobility, 1, 4);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningSpikedCollar, 3, 3);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningSpikedCollar, 3, 4);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningOwlsFocus, 2, 3);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningOwlsFocus, 2, 4);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCullingTheHerd, 0, 6);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningCullingTheHerd, 0, 7);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningLionHearted, 1, 6);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningLionhearted, 1, 7);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCarrionFeeder, 2, 6);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningCarrionFeeder, 2, 7);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningGreatResistance, 1, 9);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningGreatResistance, 1, 10);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningCornered, 2, 9);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningCornered, 2, 10);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningFeedingFrenzy, 3, 9);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningFeedingFrenzy, 3, 10);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningWildHunt, 0, 15);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningWildHunt, 0, 16);
+            this.TLP_Cunning.Controls.Add(this.LB_CunningRoarofSacrifice, 3, 15);
+            this.TLP_Cunning.Controls.Add(this.CB_CunningRoarOfSacrifice, 3, 16);
+            this.TLP_Cunning.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TLP_Cunning.Location = new System.Drawing.Point(3, 16);
+            this.TLP_Cunning.Name = "TLP_Cunning";
+            this.TLP_Cunning.RowCount = 18;
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TLP_Cunning.Size = new System.Drawing.Size(262, 428);
+            this.TLP_Cunning.TabIndex = 0;
+            // 
+            // LB_CunningCobraReflexes
+            // 
+            this.LB_CunningCobraReflexes.AutoSize = true;
+            this.LB_CunningCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCobraReflexes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningCobraReflexes.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningCobraReflexes.ImageList = this.TalentImageList;
+            this.LB_CunningCobraReflexes.Location = new System.Drawing.Point(3, 2);
+            this.LB_CunningCobraReflexes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningCobraReflexes.Name = "LB_CunningCobraReflexes";
+            this.LB_CunningCobraReflexes.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningCobraReflexes.TabIndex = 0;
+            this.LB_CunningCobraReflexes.Text = "Cobra Reflexes";
+            this.LB_CunningCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningCobraReflexes.ToolTipText = null;
+            // 
+            // LB_CunningBullheaded
+            // 
+            this.LB_CunningBullheaded.AutoSize = true;
+            this.LB_CunningBullheaded.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningBullheaded.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningBullheaded.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningBullheaded.ImageList = this.TalentImageList;
+            this.LB_CunningBullheaded.Location = new System.Drawing.Point(133, 290);
+            this.LB_CunningBullheaded.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningBullheaded.Name = "LB_CunningBullheaded";
+            this.LB_CunningBullheaded.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningBullheaded.TabIndex = 34;
+            this.LB_CunningBullheaded.Text = "Bullheaded:";
+            this.LB_CunningBullheaded.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningBullheaded.ToolTipText = null;
+            // 
+            // LB_CunningBoarsSpeed
+            // 
+            this.LB_CunningBoarsSpeed.AutoSize = true;
+            this.LB_CunningBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningBoarsSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningBoarsSpeed.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningBoarsSpeed.ImageList = this.TalentImageList;
+            this.LB_CunningBoarsSpeed.Location = new System.Drawing.Point(3, 74);
+            this.LB_CunningBoarsSpeed.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningBoarsSpeed.Name = "LB_CunningBoarsSpeed";
+            this.LB_CunningBoarsSpeed.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningBoarsSpeed.TabIndex = 8;
+            this.LB_CunningBoarsSpeed.Text = "Boar\'s Speed";
+            this.LB_CunningBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningBoarsSpeed.ToolTipText = null;
+            // 
+            // LB_CunningWolverineBite
+            // 
+            this.LB_CunningWolverineBite.AutoSize = true;
+            this.LB_CunningWolverineBite.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningWolverineBite.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningWolverineBite.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningWolverineBite.ImageList = this.TalentImageList;
+            this.LB_CunningWolverineBite.Location = new System.Drawing.Point(3, 290);
+            this.LB_CunningWolverineBite.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningWolverineBite.Name = "LB_CunningWolverineBite";
+            this.LB_CunningWolverineBite.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningWolverineBite.TabIndex = 30;
+            this.LB_CunningWolverineBite.Text = "Wolverine Bite:";
+            this.LB_CunningWolverineBite.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningWolverineBite.ToolTipText = null;
+            // 
+            // CB_CunningRoarOfRecovery
+            // 
+            this.CB_CunningRoarOfRecovery.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningRoarOfRecovery.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningRoarOfRecovery.FormattingEnabled = true;
+            this.CB_CunningRoarOfRecovery.Location = new System.Drawing.Point(65, 334);
+            this.CB_CunningRoarOfRecovery.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningRoarOfRecovery.Name = "CB_CunningRoarOfRecovery";
+            this.CB_CunningRoarOfRecovery.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningRoarOfRecovery.TabIndex = 33;
+            this.CB_CunningRoarOfRecovery.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningRoarOfRecovery
+            // 
+            this.LB_CunningRoarOfRecovery.AutoSize = true;
+            this.LB_CunningRoarOfRecovery.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningRoarOfRecovery.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningRoarOfRecovery.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningRoarOfRecovery.ImageList = this.TalentImageList;
+            this.LB_CunningRoarOfRecovery.Location = new System.Drawing.Point(68, 290);
+            this.LB_CunningRoarOfRecovery.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningRoarOfRecovery.Name = "LB_CunningRoarOfRecovery";
+            this.LB_CunningRoarOfRecovery.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningRoarOfRecovery.TabIndex = 32;
+            this.LB_CunningRoarOfRecovery.Text = "Roar of Recovery:";
+            this.LB_CunningRoarOfRecovery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningRoarOfRecovery.ToolTipText = null;
+            // 
+            // CB_CunningWolverineBite
+            // 
+            this.CB_CunningWolverineBite.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningWolverineBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningWolverineBite.FormattingEnabled = true;
+            this.CB_CunningWolverineBite.Location = new System.Drawing.Point(0, 334);
+            this.CB_CunningWolverineBite.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningWolverineBite.Name = "CB_CunningWolverineBite";
+            this.CB_CunningWolverineBite.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningWolverineBite.TabIndex = 31;
+            this.CB_CunningWolverineBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningGraceOfTheMantis
+            // 
+            this.LB_CunningGraceOfTheMantis.AutoSize = true;
+            this.LB_CunningGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningGraceOfTheMantis.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningGraceOfTheMantis.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningGraceOfTheMantis.ImageList = this.TalentImageList;
+            this.LB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(198, 290);
+            this.LB_CunningGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningGraceOfTheMantis.Name = "LB_CunningGraceOfTheMantis";
+            this.LB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(61, 42);
+            this.LB_CunningGraceOfTheMantis.TabIndex = 36;
+            this.LB_CunningGraceOfTheMantis.Text = "Grace of the Mantis:";
+            this.LB_CunningGraceOfTheMantis.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningGraceOfTheMantis.ToolTipText = null;
+            // 
+            // CB_CunningGraceOfTheMantis
+            // 
+            this.CB_CunningGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningGraceOfTheMantis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningGraceOfTheMantis.FormattingEnabled = true;
+            this.CB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(195, 334);
+            this.CB_CunningGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningGraceOfTheMantis.Name = "CB_CunningGraceOfTheMantis";
+            this.CB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(67, 21);
+            this.CB_CunningGraceOfTheMantis.TabIndex = 35;
+            this.CB_CunningGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_CunningBullheaded
+            // 
+            this.CB_CunningBullheaded.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningBullheaded.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningBullheaded.FormattingEnabled = true;
+            this.CB_CunningBullheaded.Location = new System.Drawing.Point(130, 334);
+            this.CB_CunningBullheaded.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningBullheaded.Name = "CB_CunningBullheaded";
+            this.CB_CunningBullheaded.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningBullheaded.TabIndex = 37;
+            this.CB_CunningBullheaded.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_CunningDiveDash
+            // 
+            this.CB_CunningDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningDiveDash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningDiveDash.FormattingEnabled = true;
+            this.CB_CunningDiveDash.Location = new System.Drawing.Point(65, 46);
+            this.CB_CunningDiveDash.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningDiveDash.Name = "CB_CunningDiveDash";
+            this.CB_CunningDiveDash.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningDiveDash.TabIndex = 3;
+            this.CB_CunningDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningDiveDash
+            // 
+            this.LB_CunningDiveDash.AutoSize = true;
+            this.LB_CunningDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningDiveDash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningDiveDash.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningDiveDash.ImageList = this.TalentImageList;
+            this.LB_CunningDiveDash.Location = new System.Drawing.Point(68, 2);
+            this.LB_CunningDiveDash.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningDiveDash.Name = "LB_CunningDiveDash";
+            this.LB_CunningDiveDash.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningDiveDash.TabIndex = 2;
+            this.LB_CunningDiveDash.Text = "Dive/Dash";
+            this.LB_CunningDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningDiveDash.ToolTipText = null;
+            // 
+            // CB_CunningCobraReflexes
+            // 
+            this.CB_CunningCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningCobraReflexes.FormattingEnabled = true;
+            this.CB_CunningCobraReflexes.Location = new System.Drawing.Point(0, 46);
+            this.CB_CunningCobraReflexes.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningCobraReflexes.Name = "CB_CunningCobraReflexes";
+            this.CB_CunningCobraReflexes.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningCobraReflexes.TabIndex = 1;
+            this.CB_CunningCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_CunningBoarsSpeed
+            // 
+            this.CB_CunningBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningBoarsSpeed.FormattingEnabled = true;
+            this.CB_CunningBoarsSpeed.Location = new System.Drawing.Point(0, 118);
+            this.CB_CunningBoarsSpeed.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningBoarsSpeed.Name = "CB_CunningBoarsSpeed";
+            this.CB_CunningBoarsSpeed.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningBoarsSpeed.TabIndex = 9;
+            this.CB_CunningBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_CunningGreatStamina
+            // 
+            this.CB_CunningGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningGreatStamina.FormattingEnabled = true;
+            this.CB_CunningGreatStamina.Location = new System.Drawing.Point(130, 46);
+            this.CB_CunningGreatStamina.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningGreatStamina.Name = "CB_CunningGreatStamina";
+            this.CB_CunningGreatStamina.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningGreatStamina.TabIndex = 5;
+            this.CB_CunningGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningNaturalArmor
+            // 
+            this.LB_CunningNaturalArmor.AutoSize = true;
+            this.LB_CunningNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningNaturalArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningNaturalArmor.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningNaturalArmor.ImageList = this.TalentImageList;
+            this.LB_CunningNaturalArmor.Location = new System.Drawing.Point(198, 2);
+            this.LB_CunningNaturalArmor.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningNaturalArmor.Name = "LB_CunningNaturalArmor";
+            this.LB_CunningNaturalArmor.Size = new System.Drawing.Size(61, 42);
+            this.LB_CunningNaturalArmor.TabIndex = 6;
+            this.LB_CunningNaturalArmor.Text = "Natural Armor";
+            this.LB_CunningNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningNaturalArmor.ToolTipText = null;
+            // 
+            // LB_CunningGreatStamina
+            // 
+            this.LB_CunningGreatStamina.AutoSize = true;
+            this.LB_CunningGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningGreatStamina.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningGreatStamina.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningGreatStamina.ImageList = this.TalentImageList;
+            this.LB_CunningGreatStamina.Location = new System.Drawing.Point(133, 2);
+            this.LB_CunningGreatStamina.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningGreatStamina.Name = "LB_CunningGreatStamina";
+            this.LB_CunningGreatStamina.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningGreatStamina.TabIndex = 4;
+            this.LB_CunningGreatStamina.Text = "Great Stamina";
+            this.LB_CunningGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningGreatStamina.ToolTipText = null;
+            // 
+            // CB_CunningNaturalArmor
+            // 
+            this.CB_CunningNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningNaturalArmor.FormattingEnabled = true;
+            this.CB_CunningNaturalArmor.Location = new System.Drawing.Point(195, 46);
+            this.CB_CunningNaturalArmor.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningNaturalArmor.Name = "CB_CunningNaturalArmor";
+            this.CB_CunningNaturalArmor.Size = new System.Drawing.Size(67, 21);
+            this.CB_CunningNaturalArmor.TabIndex = 7;
+            this.CB_CunningNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningMobility
+            // 
+            this.LB_CunningMobility.AutoSize = true;
+            this.LB_CunningMobility.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningMobility.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningMobility.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningMobility.ImageList = this.TalentImageList;
+            this.LB_CunningMobility.Location = new System.Drawing.Point(68, 74);
+            this.LB_CunningMobility.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningMobility.Name = "LB_CunningMobility";
+            this.LB_CunningMobility.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningMobility.TabIndex = 10;
+            this.LB_CunningMobility.Text = "Mobility";
+            this.LB_CunningMobility.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningMobility.ToolTipText = null;
+            // 
+            // CB_CunningMobility
+            // 
+            this.CB_CunningMobility.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningMobility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningMobility.FormattingEnabled = true;
+            this.CB_CunningMobility.Location = new System.Drawing.Point(65, 118);
+            this.CB_CunningMobility.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningMobility.Name = "CB_CunningMobility";
+            this.CB_CunningMobility.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningMobility.TabIndex = 11;
+            this.CB_CunningMobility.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningSpikedCollar
+            // 
+            this.LB_CunningSpikedCollar.AutoSize = true;
+            this.LB_CunningSpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningSpikedCollar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningSpikedCollar.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningSpikedCollar.ImageList = this.TalentImageList;
+            this.LB_CunningSpikedCollar.Location = new System.Drawing.Point(198, 74);
+            this.LB_CunningSpikedCollar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningSpikedCollar.Name = "LB_CunningSpikedCollar";
+            this.LB_CunningSpikedCollar.Size = new System.Drawing.Size(61, 42);
+            this.LB_CunningSpikedCollar.TabIndex = 14;
+            this.LB_CunningSpikedCollar.Text = "Spiked Collar";
+            this.LB_CunningSpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningSpikedCollar.ToolTipText = null;
+            // 
+            // CB_CunningSpikedCollar
+            // 
+            this.CB_CunningSpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningSpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningSpikedCollar.FormattingEnabled = true;
+            this.CB_CunningSpikedCollar.Location = new System.Drawing.Point(195, 118);
+            this.CB_CunningSpikedCollar.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningSpikedCollar.Name = "CB_CunningSpikedCollar";
+            this.CB_CunningSpikedCollar.Size = new System.Drawing.Size(67, 21);
+            this.CB_CunningSpikedCollar.TabIndex = 15;
+            this.CB_CunningSpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningOwlsFocus
+            // 
+            this.LB_CunningOwlsFocus.AutoSize = true;
+            this.LB_CunningOwlsFocus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningOwlsFocus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningOwlsFocus.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningOwlsFocus.ImageList = this.TalentImageList;
+            this.LB_CunningOwlsFocus.Location = new System.Drawing.Point(133, 74);
+            this.LB_CunningOwlsFocus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningOwlsFocus.Name = "LB_CunningOwlsFocus";
+            this.LB_CunningOwlsFocus.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningOwlsFocus.TabIndex = 12;
+            this.LB_CunningOwlsFocus.Text = "Owl\'s Focus";
+            this.LB_CunningOwlsFocus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningOwlsFocus.ToolTipText = null;
+            // 
+            // CB_CunningOwlsFocus
+            // 
+            this.CB_CunningOwlsFocus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningOwlsFocus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningOwlsFocus.FormattingEnabled = true;
+            this.CB_CunningOwlsFocus.Location = new System.Drawing.Point(130, 118);
+            this.CB_CunningOwlsFocus.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningOwlsFocus.Name = "CB_CunningOwlsFocus";
+            this.CB_CunningOwlsFocus.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningOwlsFocus.TabIndex = 13;
+            this.CB_CunningOwlsFocus.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningCullingTheHerd
+            // 
+            this.LB_CunningCullingTheHerd.AutoSize = true;
+            this.LB_CunningCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningCullingTheHerd.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningCullingTheHerd.ImageList = this.TalentImageList;
+            this.LB_CunningCullingTheHerd.Location = new System.Drawing.Point(3, 146);
+            this.LB_CunningCullingTheHerd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningCullingTheHerd.Name = "LB_CunningCullingTheHerd";
+            this.LB_CunningCullingTheHerd.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningCullingTheHerd.TabIndex = 22;
+            this.LB_CunningCullingTheHerd.Text = "Culling The Herd (3.3)";
+            this.LB_CunningCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningCullingTheHerd.ToolTipText = null;
+            // 
+            // CB_CunningCullingTheHerd
+            // 
+            this.CB_CunningCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningCullingTheHerd.FormattingEnabled = true;
+            this.CB_CunningCullingTheHerd.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.CB_CunningCullingTheHerd.Location = new System.Drawing.Point(0, 190);
+            this.CB_CunningCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningCullingTheHerd.Name = "CB_CunningCullingTheHerd";
+            this.CB_CunningCullingTheHerd.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningCullingTheHerd.TabIndex = 23;
+            this.CB_CunningCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningLionHearted
+            // 
+            this.LB_CunningLionHearted.AutoSize = true;
+            this.LB_CunningLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningLionHearted.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningLionHearted.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningLionHearted.ImageList = this.TalentImageList;
+            this.LB_CunningLionHearted.Location = new System.Drawing.Point(68, 146);
+            this.LB_CunningLionHearted.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningLionHearted.Name = "LB_CunningLionHearted";
+            this.LB_CunningLionHearted.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningLionHearted.TabIndex = 18;
+            this.LB_CunningLionHearted.Text = "Lionhearted:";
+            this.LB_CunningLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningLionHearted.ToolTipText = null;
+            // 
+            // CB_CunningLionhearted
+            // 
+            this.CB_CunningLionhearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningLionhearted.FormattingEnabled = true;
+            this.CB_CunningLionhearted.Location = new System.Drawing.Point(65, 190);
+            this.CB_CunningLionhearted.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningLionhearted.Name = "CB_CunningLionhearted";
+            this.CB_CunningLionhearted.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningLionhearted.TabIndex = 19;
+            this.CB_CunningLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningCarrionFeeder
+            // 
+            this.LB_CunningCarrionFeeder.AutoSize = true;
+            this.LB_CunningCarrionFeeder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCarrionFeeder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningCarrionFeeder.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningCarrionFeeder.ImageList = this.TalentImageList;
+            this.LB_CunningCarrionFeeder.Location = new System.Drawing.Point(133, 146);
+            this.LB_CunningCarrionFeeder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningCarrionFeeder.Name = "LB_CunningCarrionFeeder";
+            this.LB_CunningCarrionFeeder.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningCarrionFeeder.TabIndex = 20;
+            this.LB_CunningCarrionFeeder.Text = "Carrion Feeder:";
+            this.LB_CunningCarrionFeeder.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningCarrionFeeder.ToolTipText = null;
+            // 
+            // CB_CunningCarrionFeeder
+            // 
+            this.CB_CunningCarrionFeeder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningCarrionFeeder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningCarrionFeeder.FormattingEnabled = true;
+            this.CB_CunningCarrionFeeder.Location = new System.Drawing.Point(130, 190);
+            this.CB_CunningCarrionFeeder.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningCarrionFeeder.Name = "CB_CunningCarrionFeeder";
+            this.CB_CunningCarrionFeeder.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningCarrionFeeder.TabIndex = 21;
+            this.CB_CunningCarrionFeeder.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningGreatResistance
+            // 
+            this.LB_CunningGreatResistance.AutoSize = true;
+            this.LB_CunningGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningGreatResistance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningGreatResistance.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningGreatResistance.ImageList = this.TalentImageList;
+            this.LB_CunningGreatResistance.Location = new System.Drawing.Point(68, 218);
+            this.LB_CunningGreatResistance.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningGreatResistance.Name = "LB_CunningGreatResistance";
+            this.LB_CunningGreatResistance.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningGreatResistance.TabIndex = 24;
+            this.LB_CunningGreatResistance.Text = "Great Resistance";
+            this.LB_CunningGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningGreatResistance.ToolTipText = null;
+            // 
+            // CB_CunningGreatResistance
+            // 
+            this.CB_CunningGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningGreatResistance.FormattingEnabled = true;
+            this.CB_CunningGreatResistance.Location = new System.Drawing.Point(65, 262);
+            this.CB_CunningGreatResistance.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningGreatResistance.Name = "CB_CunningGreatResistance";
+            this.CB_CunningGreatResistance.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningGreatResistance.TabIndex = 25;
+            this.CB_CunningGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningCornered
+            // 
+            this.LB_CunningCornered.AutoSize = true;
+            this.LB_CunningCornered.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningCornered.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningCornered.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningCornered.ImageList = this.TalentImageList;
+            this.LB_CunningCornered.Location = new System.Drawing.Point(133, 218);
+            this.LB_CunningCornered.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningCornered.Name = "LB_CunningCornered";
+            this.LB_CunningCornered.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningCornered.TabIndex = 26;
+            this.LB_CunningCornered.Text = "Cornered";
+            this.LB_CunningCornered.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningCornered.ToolTipText = null;
+            // 
+            // CB_CunningCornered
+            // 
+            this.CB_CunningCornered.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningCornered.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningCornered.FormattingEnabled = true;
+            this.CB_CunningCornered.Location = new System.Drawing.Point(130, 262);
+            this.CB_CunningCornered.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningCornered.Name = "CB_CunningCornered";
+            this.CB_CunningCornered.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningCornered.TabIndex = 27;
+            this.CB_CunningCornered.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningFeedingFrenzy
+            // 
+            this.LB_CunningFeedingFrenzy.AutoSize = true;
+            this.LB_CunningFeedingFrenzy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningFeedingFrenzy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningFeedingFrenzy.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningFeedingFrenzy.ImageList = this.TalentImageList;
+            this.LB_CunningFeedingFrenzy.Location = new System.Drawing.Point(198, 218);
+            this.LB_CunningFeedingFrenzy.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningFeedingFrenzy.Name = "LB_CunningFeedingFrenzy";
+            this.LB_CunningFeedingFrenzy.Size = new System.Drawing.Size(61, 42);
+            this.LB_CunningFeedingFrenzy.TabIndex = 28;
+            this.LB_CunningFeedingFrenzy.Text = "Feeding Frenzy";
+            this.LB_CunningFeedingFrenzy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningFeedingFrenzy.ToolTipText = null;
+            // 
+            // CB_CunningFeedingFrenzy
+            // 
+            this.CB_CunningFeedingFrenzy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningFeedingFrenzy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningFeedingFrenzy.FormattingEnabled = true;
+            this.CB_CunningFeedingFrenzy.Location = new System.Drawing.Point(195, 262);
+            this.CB_CunningFeedingFrenzy.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningFeedingFrenzy.Name = "CB_CunningFeedingFrenzy";
+            this.CB_CunningFeedingFrenzy.Size = new System.Drawing.Size(67, 21);
+            this.CB_CunningFeedingFrenzy.TabIndex = 29;
+            this.CB_CunningFeedingFrenzy.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningWildHunt
+            // 
+            this.LB_CunningWildHunt.AutoSize = true;
+            this.LB_CunningWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningWildHunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningWildHunt.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningWildHunt.ImageList = this.TalentImageList;
+            this.LB_CunningWildHunt.Location = new System.Drawing.Point(3, 362);
+            this.LB_CunningWildHunt.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningWildHunt.Name = "LB_CunningWildHunt";
+            this.LB_CunningWildHunt.Size = new System.Drawing.Size(59, 42);
+            this.LB_CunningWildHunt.TabIndex = 38;
+            this.LB_CunningWildHunt.Text = "Wild Hunt:";
+            this.LB_CunningWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningWildHunt.ToolTipText = null;
+            // 
+            // CB_CunningWildHunt
+            // 
+            this.CB_CunningWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningWildHunt.FormattingEnabled = true;
+            this.CB_CunningWildHunt.Location = new System.Drawing.Point(0, 406);
+            this.CB_CunningWildHunt.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningWildHunt.Name = "CB_CunningWildHunt";
+            this.CB_CunningWildHunt.Size = new System.Drawing.Size(65, 21);
+            this.CB_CunningWildHunt.TabIndex = 39;
+            this.CB_CunningWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_CunningRoarofSacrifice
+            // 
+            this.LB_CunningRoarofSacrifice.AutoSize = true;
+            this.LB_CunningRoarofSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CunningRoarofSacrifice.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_CunningRoarofSacrifice.ForeColor = System.Drawing.Color.White;
+            this.LB_CunningRoarofSacrifice.ImageList = this.TalentImageList;
+            this.LB_CunningRoarofSacrifice.Location = new System.Drawing.Point(198, 362);
+            this.LB_CunningRoarofSacrifice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_CunningRoarofSacrifice.Name = "LB_CunningRoarofSacrifice";
+            this.LB_CunningRoarofSacrifice.Size = new System.Drawing.Size(61, 42);
+            this.LB_CunningRoarofSacrifice.TabIndex = 40;
+            this.LB_CunningRoarofSacrifice.Text = "Roar of Sacrifice:";
+            this.LB_CunningRoarofSacrifice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_CunningRoarofSacrifice.ToolTipText = null;
+            // 
+            // CB_CunningRoarOfSacrifice
+            // 
+            this.CB_CunningRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_CunningRoarOfSacrifice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_CunningRoarOfSacrifice.FormattingEnabled = true;
+            this.CB_CunningRoarOfSacrifice.Location = new System.Drawing.Point(195, 406);
+            this.CB_CunningRoarOfSacrifice.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_CunningRoarOfSacrifice.Name = "CB_CunningRoarOfSacrifice";
+            this.CB_CunningRoarOfSacrifice.Size = new System.Drawing.Size(67, 21);
+            this.CB_CunningRoarOfSacrifice.TabIndex = 41;
+            this.CB_CunningRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // GB_PetTalents_Ferocity
             // 
@@ -356,20 +1665,629 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_PetTalents_Ferocity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.GB_PetTalents_Ferocity.Controls.Add(this.TLP_Ferocity);
-            this.GB_PetTalents_Ferocity.Location = new System.Drawing.Point(3, 861);
+            this.GB_PetTalents_Ferocity.Location = new System.Drawing.Point(3, 909);
             this.GB_PetTalents_Ferocity.Name = "GB_PetTalents_Ferocity";
             this.GB_PetTalents_Ferocity.Size = new System.Drawing.Size(268, 447);
             this.GB_PetTalents_Ferocity.TabIndex = 2;
             this.GB_PetTalents_Ferocity.TabStop = false;
             this.GB_PetTalents_Ferocity.Text = "Ferocity Talents";
             // 
+            // TLP_Ferocity
+            // 
+            this.TLP_Ferocity.BackgroundImage = global::Rawr.Hunter.Properties.Resources.bgFerocity;
+            this.TLP_Ferocity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.TLP_Ferocity.ColumnCount = 4;
+            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCobraReflexes, 0, 0);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityWildHunt, 2, 15);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatStamina, 2, 0);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityDiveDash, 1, 1);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityNaturalArmor, 3, 1);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityImprovedCower, 0, 3);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySpikedCollar, 2, 3);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityBloodthirsty, 1, 4);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityBoarsSpeed, 3, 4);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCobraReflexes, 0, 1);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityDiveDash, 1, 0);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityGreatStamina, 2, 1);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityNaturalArmor, 3, 0);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityBoarsSpeed, 3, 3);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocitySpikedCollar, 2, 4);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityBloodthirsty, 1, 3);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityImprovedCower, 0, 4);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityGreatResistance, 3, 10);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatResistance, 3, 9);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityChargeSwoop, 3, 7);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityChargeSwoop, 3, 6);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCullingTheHerd, 0, 7);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCullingTheHerd, 0, 6);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySharkAttack, 0, 15);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityRabid, 0, 13);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityRabid, 0, 12);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCallOfTheWild, 2, 13);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCalloftheWild, 2, 12);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityLickYourWounds, 1, 12);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityLickYourWounds, 1, 13);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityHeartOfThePhoenix, 1, 10);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityHeartOfThePheonix, 1, 9);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySpidersBite, 2, 9);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocitySpidersBite, 2, 10);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityLionhearted, 2, 7);
+            this.TLP_Ferocity.Controls.Add(this.LB_FerocityLionHearted, 2, 6);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocitySharkAttack, 0, 16);
+            this.TLP_Ferocity.Controls.Add(this.CB_FerocityWildHunt, 2, 16);
+            this.TLP_Ferocity.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TLP_Ferocity.Location = new System.Drawing.Point(3, 16);
+            this.TLP_Ferocity.Name = "TLP_Ferocity";
+            this.TLP_Ferocity.RowCount = 18;
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TLP_Ferocity.Size = new System.Drawing.Size(262, 428);
+            this.TLP_Ferocity.TabIndex = 0;
+            // 
+            // LB_FerocityCobraReflexes
+            // 
+            this.LB_FerocityCobraReflexes.AutoSize = true;
+            this.LB_FerocityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityCobraReflexes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityCobraReflexes.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityCobraReflexes.ImageList = this.TalentImageList;
+            this.LB_FerocityCobraReflexes.Location = new System.Drawing.Point(3, 2);
+            this.LB_FerocityCobraReflexes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityCobraReflexes.Name = "LB_FerocityCobraReflexes";
+            this.LB_FerocityCobraReflexes.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityCobraReflexes.TabIndex = 0;
+            this.LB_FerocityCobraReflexes.Text = "Cobra Reflexes";
+            this.LB_FerocityCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityCobraReflexes.ToolTipText = null;
+            // 
+            // LB_FerocityWildHunt
+            // 
+            this.LB_FerocityWildHunt.AutoSize = true;
+            this.LB_FerocityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityWildHunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityWildHunt.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityWildHunt.ImageList = this.TalentImageList;
+            this.LB_FerocityWildHunt.Location = new System.Drawing.Point(133, 362);
+            this.LB_FerocityWildHunt.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityWildHunt.Name = "LB_FerocityWildHunt";
+            this.LB_FerocityWildHunt.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityWildHunt.TabIndex = 38;
+            this.LB_FerocityWildHunt.Text = "Wild Hunt";
+            this.LB_FerocityWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityWildHunt.ToolTipText = null;
+            // 
+            // LB_FerocityGreatStamina
+            // 
+            this.LB_FerocityGreatStamina.AutoSize = true;
+            this.LB_FerocityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityGreatStamina.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityGreatStamina.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityGreatStamina.ImageList = this.TalentImageList;
+            this.LB_FerocityGreatStamina.Location = new System.Drawing.Point(133, 2);
+            this.LB_FerocityGreatStamina.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityGreatStamina.Name = "LB_FerocityGreatStamina";
+            this.LB_FerocityGreatStamina.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityGreatStamina.TabIndex = 4;
+            this.LB_FerocityGreatStamina.Text = "Great Stamina";
+            this.LB_FerocityGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityGreatStamina.ToolTipText = null;
+            // 
+            // CB_FerocityDiveDash
+            // 
+            this.CB_FerocityDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityDiveDash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityDiveDash.FormattingEnabled = true;
+            this.CB_FerocityDiveDash.Location = new System.Drawing.Point(65, 46);
+            this.CB_FerocityDiveDash.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityDiveDash.Name = "CB_FerocityDiveDash";
+            this.CB_FerocityDiveDash.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityDiveDash.TabIndex = 3;
+            this.CB_FerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityNaturalArmor
+            // 
+            this.CB_FerocityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityNaturalArmor.FormattingEnabled = true;
+            this.CB_FerocityNaturalArmor.Location = new System.Drawing.Point(195, 46);
+            this.CB_FerocityNaturalArmor.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityNaturalArmor.Name = "CB_FerocityNaturalArmor";
+            this.CB_FerocityNaturalArmor.Size = new System.Drawing.Size(67, 21);
+            this.CB_FerocityNaturalArmor.TabIndex = 7;
+            this.CB_FerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityImprovedCower
+            // 
+            this.LB_FerocityImprovedCower.AutoSize = true;
+            this.LB_FerocityImprovedCower.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityImprovedCower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityImprovedCower.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityImprovedCower.ImageList = this.TalentImageList;
+            this.LB_FerocityImprovedCower.Location = new System.Drawing.Point(3, 74);
+            this.LB_FerocityImprovedCower.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityImprovedCower.Name = "LB_FerocityImprovedCower";
+            this.LB_FerocityImprovedCower.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityImprovedCower.TabIndex = 8;
+            this.LB_FerocityImprovedCower.Text = "Improved Cower";
+            this.LB_FerocityImprovedCower.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityImprovedCower.ToolTipText = null;
+            // 
+            // LB_FerocitySpikedCollar
+            // 
+            this.LB_FerocitySpikedCollar.AutoSize = true;
+            this.LB_FerocitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocitySpikedCollar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocitySpikedCollar.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocitySpikedCollar.ImageList = this.TalentImageList;
+            this.LB_FerocitySpikedCollar.Location = new System.Drawing.Point(133, 74);
+            this.LB_FerocitySpikedCollar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocitySpikedCollar.Name = "LB_FerocitySpikedCollar";
+            this.LB_FerocitySpikedCollar.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocitySpikedCollar.TabIndex = 12;
+            this.LB_FerocitySpikedCollar.Text = "Spiked Collar";
+            this.LB_FerocitySpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocitySpikedCollar.ToolTipText = null;
+            // 
+            // CB_FerocityBloodthirsty
+            // 
+            this.CB_FerocityBloodthirsty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityBloodthirsty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityBloodthirsty.FormattingEnabled = true;
+            this.CB_FerocityBloodthirsty.Location = new System.Drawing.Point(65, 118);
+            this.CB_FerocityBloodthirsty.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityBloodthirsty.Name = "CB_FerocityBloodthirsty";
+            this.CB_FerocityBloodthirsty.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityBloodthirsty.TabIndex = 11;
+            this.CB_FerocityBloodthirsty.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityBoarsSpeed
+            // 
+            this.CB_FerocityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityBoarsSpeed.FormattingEnabled = true;
+            this.CB_FerocityBoarsSpeed.Location = new System.Drawing.Point(195, 118);
+            this.CB_FerocityBoarsSpeed.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityBoarsSpeed.Name = "CB_FerocityBoarsSpeed";
+            this.CB_FerocityBoarsSpeed.Size = new System.Drawing.Size(67, 21);
+            this.CB_FerocityBoarsSpeed.TabIndex = 15;
+            this.CB_FerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityCobraReflexes
+            // 
+            this.CB_FerocityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityCobraReflexes.FormattingEnabled = true;
+            this.CB_FerocityCobraReflexes.Location = new System.Drawing.Point(0, 46);
+            this.CB_FerocityCobraReflexes.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityCobraReflexes.Name = "CB_FerocityCobraReflexes";
+            this.CB_FerocityCobraReflexes.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityCobraReflexes.TabIndex = 1;
+            this.CB_FerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityDiveDash
+            // 
+            this.LB_FerocityDiveDash.AutoSize = true;
+            this.LB_FerocityDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityDiveDash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityDiveDash.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityDiveDash.ImageList = this.TalentImageList;
+            this.LB_FerocityDiveDash.Location = new System.Drawing.Point(68, 2);
+            this.LB_FerocityDiveDash.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityDiveDash.Name = "LB_FerocityDiveDash";
+            this.LB_FerocityDiveDash.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityDiveDash.TabIndex = 2;
+            this.LB_FerocityDiveDash.Text = "Dive/Dash";
+            this.LB_FerocityDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityDiveDash.ToolTipText = null;
+            // 
+            // CB_FerocityGreatStamina
+            // 
+            this.CB_FerocityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityGreatStamina.FormattingEnabled = true;
+            this.CB_FerocityGreatStamina.Location = new System.Drawing.Point(130, 46);
+            this.CB_FerocityGreatStamina.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityGreatStamina.Name = "CB_FerocityGreatStamina";
+            this.CB_FerocityGreatStamina.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityGreatStamina.TabIndex = 5;
+            this.CB_FerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityNaturalArmor
+            // 
+            this.LB_FerocityNaturalArmor.AutoSize = true;
+            this.LB_FerocityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityNaturalArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityNaturalArmor.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityNaturalArmor.ImageList = this.TalentImageList;
+            this.LB_FerocityNaturalArmor.Location = new System.Drawing.Point(198, 2);
+            this.LB_FerocityNaturalArmor.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityNaturalArmor.Name = "LB_FerocityNaturalArmor";
+            this.LB_FerocityNaturalArmor.Size = new System.Drawing.Size(61, 42);
+            this.LB_FerocityNaturalArmor.TabIndex = 6;
+            this.LB_FerocityNaturalArmor.Text = "Natural Armor";
+            this.LB_FerocityNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityNaturalArmor.ToolTipText = null;
+            // 
+            // LB_FerocityBoarsSpeed
+            // 
+            this.LB_FerocityBoarsSpeed.AutoSize = true;
+            this.LB_FerocityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityBoarsSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityBoarsSpeed.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityBoarsSpeed.ImageList = this.TalentImageList;
+            this.LB_FerocityBoarsSpeed.Location = new System.Drawing.Point(198, 74);
+            this.LB_FerocityBoarsSpeed.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityBoarsSpeed.Name = "LB_FerocityBoarsSpeed";
+            this.LB_FerocityBoarsSpeed.Size = new System.Drawing.Size(61, 42);
+            this.LB_FerocityBoarsSpeed.TabIndex = 14;
+            this.LB_FerocityBoarsSpeed.Text = "Boar\'s Speed";
+            this.LB_FerocityBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityBoarsSpeed.ToolTipText = null;
+            // 
+            // CB_FerocitySpikedCollar
+            // 
+            this.CB_FerocitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocitySpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocitySpikedCollar.FormattingEnabled = true;
+            this.CB_FerocitySpikedCollar.Location = new System.Drawing.Point(130, 118);
+            this.CB_FerocitySpikedCollar.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocitySpikedCollar.Name = "CB_FerocitySpikedCollar";
+            this.CB_FerocitySpikedCollar.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocitySpikedCollar.TabIndex = 13;
+            this.CB_FerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityBloodthirsty
+            // 
+            this.LB_FerocityBloodthirsty.AutoSize = true;
+            this.LB_FerocityBloodthirsty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityBloodthirsty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityBloodthirsty.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityBloodthirsty.ImageList = this.TalentImageList;
+            this.LB_FerocityBloodthirsty.Location = new System.Drawing.Point(68, 74);
+            this.LB_FerocityBloodthirsty.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityBloodthirsty.Name = "LB_FerocityBloodthirsty";
+            this.LB_FerocityBloodthirsty.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityBloodthirsty.TabIndex = 10;
+            this.LB_FerocityBloodthirsty.Text = "Bloodthirsty";
+            this.LB_FerocityBloodthirsty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityBloodthirsty.ToolTipText = null;
+            // 
+            // CB_FerocityImprovedCower
+            // 
+            this.CB_FerocityImprovedCower.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityImprovedCower.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityImprovedCower.FormattingEnabled = true;
+            this.CB_FerocityImprovedCower.Location = new System.Drawing.Point(0, 118);
+            this.CB_FerocityImprovedCower.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityImprovedCower.Name = "CB_FerocityImprovedCower";
+            this.CB_FerocityImprovedCower.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityImprovedCower.TabIndex = 9;
+            this.CB_FerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityGreatResistance
+            // 
+            this.CB_FerocityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityGreatResistance.FormattingEnabled = true;
+            this.CB_FerocityGreatResistance.Location = new System.Drawing.Point(195, 262);
+            this.CB_FerocityGreatResistance.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityGreatResistance.Name = "CB_FerocityGreatResistance";
+            this.CB_FerocityGreatResistance.Size = new System.Drawing.Size(67, 21);
+            this.CB_FerocityGreatResistance.TabIndex = 29;
+            this.CB_FerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityGreatResistance
+            // 
+            this.LB_FerocityGreatResistance.AutoSize = true;
+            this.LB_FerocityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityGreatResistance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityGreatResistance.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityGreatResistance.ImageList = this.TalentImageList;
+            this.LB_FerocityGreatResistance.Location = new System.Drawing.Point(198, 218);
+            this.LB_FerocityGreatResistance.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityGreatResistance.Name = "LB_FerocityGreatResistance";
+            this.LB_FerocityGreatResistance.Size = new System.Drawing.Size(61, 42);
+            this.LB_FerocityGreatResistance.TabIndex = 28;
+            this.LB_FerocityGreatResistance.Text = "Great Resistance";
+            this.LB_FerocityGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityGreatResistance.ToolTipText = null;
+            // 
+            // CB_FerocityChargeSwoop
+            // 
+            this.CB_FerocityChargeSwoop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityChargeSwoop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityChargeSwoop.FormattingEnabled = true;
+            this.CB_FerocityChargeSwoop.Location = new System.Drawing.Point(195, 190);
+            this.CB_FerocityChargeSwoop.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityChargeSwoop.Name = "CB_FerocityChargeSwoop";
+            this.CB_FerocityChargeSwoop.Size = new System.Drawing.Size(67, 21);
+            this.CB_FerocityChargeSwoop.TabIndex = 21;
+            this.CB_FerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityChargeSwoop
+            // 
+            this.LB_FerocityChargeSwoop.AutoSize = true;
+            this.LB_FerocityChargeSwoop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityChargeSwoop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityChargeSwoop.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityChargeSwoop.ImageList = this.TalentImageList;
+            this.LB_FerocityChargeSwoop.Location = new System.Drawing.Point(198, 146);
+            this.LB_FerocityChargeSwoop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityChargeSwoop.Name = "LB_FerocityChargeSwoop";
+            this.LB_FerocityChargeSwoop.Size = new System.Drawing.Size(61, 42);
+            this.LB_FerocityChargeSwoop.TabIndex = 20;
+            this.LB_FerocityChargeSwoop.Text = "Charge/Swoop";
+            this.LB_FerocityChargeSwoop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityChargeSwoop.ToolTipText = null;
+            // 
+            // CB_FerocityCullingTheHerd
+            // 
+            this.CB_FerocityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityCullingTheHerd.FormattingEnabled = true;
+            this.CB_FerocityCullingTheHerd.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.CB_FerocityCullingTheHerd.Location = new System.Drawing.Point(0, 190);
+            this.CB_FerocityCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityCullingTheHerd.Name = "CB_FerocityCullingTheHerd";
+            this.CB_FerocityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityCullingTheHerd.TabIndex = 23;
+            this.CB_FerocityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityCullingTheHerd
+            // 
+            this.LB_FerocityCullingTheHerd.AutoSize = true;
+            this.LB_FerocityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityCullingTheHerd.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityCullingTheHerd.ImageList = this.TalentImageList;
+            this.LB_FerocityCullingTheHerd.Location = new System.Drawing.Point(3, 146);
+            this.LB_FerocityCullingTheHerd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityCullingTheHerd.Name = "LB_FerocityCullingTheHerd";
+            this.LB_FerocityCullingTheHerd.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityCullingTheHerd.TabIndex = 22;
+            this.LB_FerocityCullingTheHerd.Text = "Culling The Herd (3.3)";
+            this.LB_FerocityCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityCullingTheHerd.ToolTipText = null;
+            // 
+            // LB_FerocitySharkAttack
+            // 
+            this.LB_FerocitySharkAttack.AutoSize = true;
+            this.LB_FerocitySharkAttack.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocitySharkAttack.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocitySharkAttack.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocitySharkAttack.ImageList = this.TalentImageList;
+            this.LB_FerocitySharkAttack.Location = new System.Drawing.Point(3, 362);
+            this.LB_FerocitySharkAttack.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocitySharkAttack.Name = "LB_FerocitySharkAttack";
+            this.LB_FerocitySharkAttack.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocitySharkAttack.TabIndex = 36;
+            this.LB_FerocitySharkAttack.Text = "Shark Attack";
+            this.LB_FerocitySharkAttack.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocitySharkAttack.ToolTipText = null;
+            // 
+            // CB_FerocityRabid
+            // 
+            this.CB_FerocityRabid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityRabid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityRabid.FormattingEnabled = true;
+            this.CB_FerocityRabid.Location = new System.Drawing.Point(0, 334);
+            this.CB_FerocityRabid.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityRabid.Name = "CB_FerocityRabid";
+            this.CB_FerocityRabid.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityRabid.TabIndex = 31;
+            this.CB_FerocityRabid.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityRabid
+            // 
+            this.LB_FerocityRabid.AutoSize = true;
+            this.LB_FerocityRabid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityRabid.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityRabid.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityRabid.ImageList = this.TalentImageList;
+            this.LB_FerocityRabid.Location = new System.Drawing.Point(3, 290);
+            this.LB_FerocityRabid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityRabid.Name = "LB_FerocityRabid";
+            this.LB_FerocityRabid.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityRabid.TabIndex = 30;
+            this.LB_FerocityRabid.Text = "Rabid";
+            this.LB_FerocityRabid.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityRabid.ToolTipText = null;
+            // 
+            // CB_FerocityCallOfTheWild
+            // 
+            this.CB_FerocityCallOfTheWild.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityCallOfTheWild.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityCallOfTheWild.FormattingEnabled = true;
+            this.CB_FerocityCallOfTheWild.Location = new System.Drawing.Point(130, 334);
+            this.CB_FerocityCallOfTheWild.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityCallOfTheWild.Name = "CB_FerocityCallOfTheWild";
+            this.CB_FerocityCallOfTheWild.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityCallOfTheWild.TabIndex = 35;
+            this.CB_FerocityCallOfTheWild.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityCalloftheWild
+            // 
+            this.LB_FerocityCalloftheWild.AutoSize = true;
+            this.LB_FerocityCalloftheWild.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityCalloftheWild.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityCalloftheWild.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityCalloftheWild.ImageList = this.TalentImageList;
+            this.LB_FerocityCalloftheWild.Location = new System.Drawing.Point(133, 290);
+            this.LB_FerocityCalloftheWild.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityCalloftheWild.Name = "LB_FerocityCalloftheWild";
+            this.LB_FerocityCalloftheWild.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityCalloftheWild.TabIndex = 34;
+            this.LB_FerocityCalloftheWild.Text = "Call of the Wild";
+            this.LB_FerocityCalloftheWild.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityCalloftheWild.ToolTipText = null;
+            // 
+            // LB_FerocityLickYourWounds
+            // 
+            this.LB_FerocityLickYourWounds.AutoSize = true;
+            this.LB_FerocityLickYourWounds.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityLickYourWounds.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityLickYourWounds.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityLickYourWounds.ImageList = this.TalentImageList;
+            this.LB_FerocityLickYourWounds.Location = new System.Drawing.Point(68, 290);
+            this.LB_FerocityLickYourWounds.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityLickYourWounds.Name = "LB_FerocityLickYourWounds";
+            this.LB_FerocityLickYourWounds.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityLickYourWounds.TabIndex = 32;
+            this.LB_FerocityLickYourWounds.Text = "Lick Your Wounds";
+            this.LB_FerocityLickYourWounds.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityLickYourWounds.ToolTipText = null;
+            // 
+            // CB_FerocityLickYourWounds
+            // 
+            this.CB_FerocityLickYourWounds.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityLickYourWounds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityLickYourWounds.FormattingEnabled = true;
+            this.CB_FerocityLickYourWounds.Location = new System.Drawing.Point(65, 334);
+            this.CB_FerocityLickYourWounds.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityLickYourWounds.Name = "CB_FerocityLickYourWounds";
+            this.CB_FerocityLickYourWounds.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityLickYourWounds.TabIndex = 33;
+            this.CB_FerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityHeartOfThePhoenix
+            // 
+            this.CB_FerocityHeartOfThePhoenix.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityHeartOfThePhoenix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityHeartOfThePhoenix.FormattingEnabled = true;
+            this.CB_FerocityHeartOfThePhoenix.Location = new System.Drawing.Point(65, 262);
+            this.CB_FerocityHeartOfThePhoenix.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityHeartOfThePhoenix.Name = "CB_FerocityHeartOfThePhoenix";
+            this.CB_FerocityHeartOfThePhoenix.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityHeartOfThePhoenix.TabIndex = 25;
+            this.CB_FerocityHeartOfThePhoenix.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityHeartOfThePheonix
+            // 
+            this.LB_FerocityHeartOfThePheonix.AutoSize = true;
+            this.LB_FerocityHeartOfThePheonix.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityHeartOfThePheonix.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityHeartOfThePheonix.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityHeartOfThePheonix.ImageList = this.TalentImageList;
+            this.LB_FerocityHeartOfThePheonix.Location = new System.Drawing.Point(68, 218);
+            this.LB_FerocityHeartOfThePheonix.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityHeartOfThePheonix.Name = "LB_FerocityHeartOfThePheonix";
+            this.LB_FerocityHeartOfThePheonix.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityHeartOfThePheonix.TabIndex = 24;
+            this.LB_FerocityHeartOfThePheonix.Text = "Heart of the Phoenix";
+            this.LB_FerocityHeartOfThePheonix.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityHeartOfThePheonix.ToolTipText = null;
+            // 
+            // LB_FerocitySpidersBite
+            // 
+            this.LB_FerocitySpidersBite.AutoSize = true;
+            this.LB_FerocitySpidersBite.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocitySpidersBite.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocitySpidersBite.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocitySpidersBite.ImageList = this.TalentImageList;
+            this.LB_FerocitySpidersBite.Location = new System.Drawing.Point(133, 218);
+            this.LB_FerocitySpidersBite.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocitySpidersBite.Name = "LB_FerocitySpidersBite";
+            this.LB_FerocitySpidersBite.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocitySpidersBite.TabIndex = 26;
+            this.LB_FerocitySpidersBite.Text = "Spider\'s Bite";
+            this.LB_FerocitySpidersBite.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocitySpidersBite.ToolTipText = null;
+            // 
+            // CB_FerocitySpidersBite
+            // 
+            this.CB_FerocitySpidersBite.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocitySpidersBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocitySpidersBite.FormattingEnabled = true;
+            this.CB_FerocitySpidersBite.Location = new System.Drawing.Point(130, 262);
+            this.CB_FerocitySpidersBite.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocitySpidersBite.Name = "CB_FerocitySpidersBite";
+            this.CB_FerocitySpidersBite.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocitySpidersBite.TabIndex = 27;
+            this.CB_FerocitySpidersBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityLionhearted
+            // 
+            this.CB_FerocityLionhearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityLionhearted.FormattingEnabled = true;
+            this.CB_FerocityLionhearted.Location = new System.Drawing.Point(130, 190);
+            this.CB_FerocityLionhearted.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityLionhearted.Name = "CB_FerocityLionhearted";
+            this.CB_FerocityLionhearted.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityLionhearted.TabIndex = 19;
+            this.CB_FerocityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // LB_FerocityLionHearted
+            // 
+            this.LB_FerocityLionHearted.AutoSize = true;
+            this.LB_FerocityLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_FerocityLionHearted.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.LB_FerocityLionHearted.ForeColor = System.Drawing.Color.White;
+            this.LB_FerocityLionHearted.ImageList = this.TalentImageList;
+            this.LB_FerocityLionHearted.Location = new System.Drawing.Point(133, 146);
+            this.LB_FerocityLionHearted.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LB_FerocityLionHearted.Name = "LB_FerocityLionHearted";
+            this.LB_FerocityLionHearted.Size = new System.Drawing.Size(59, 42);
+            this.LB_FerocityLionHearted.TabIndex = 18;
+            this.LB_FerocityLionHearted.Text = "Lionhearted";
+            this.LB_FerocityLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_FerocityLionHearted.ToolTipText = null;
+            // 
+            // CB_FerocitySharkAttack
+            // 
+            this.CB_FerocitySharkAttack.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocitySharkAttack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocitySharkAttack.FormattingEnabled = true;
+            this.CB_FerocitySharkAttack.Location = new System.Drawing.Point(0, 406);
+            this.CB_FerocitySharkAttack.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocitySharkAttack.Name = "CB_FerocitySharkAttack";
+            this.CB_FerocitySharkAttack.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocitySharkAttack.TabIndex = 37;
+            this.CB_FerocitySharkAttack.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // CB_FerocityWildHunt
+            // 
+            this.CB_FerocityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CB_FerocityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FerocityWildHunt.FormattingEnabled = true;
+            this.CB_FerocityWildHunt.Location = new System.Drawing.Point(130, 406);
+            this.CB_FerocityWildHunt.Margin = new System.Windows.Forms.Padding(0);
+            this.CB_FerocityWildHunt.Name = "CB_FerocityWildHunt";
+            this.CB_FerocityWildHunt.Size = new System.Drawing.Size(65, 21);
+            this.CB_FerocityWildHunt.TabIndex = 39;
+            this.CB_FerocityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
             // LB_PetFamilies
             // 
             this.LB_PetFamilies.AutoSize = true;
-            this.LB_PetFamilies.Location = new System.Drawing.Point(8, 9);
+            this.LB_PetFamilies.Location = new System.Drawing.Point(6, 36);
             this.LB_PetFamilies.Name = "LB_PetFamilies";
             this.LB_PetFamilies.Size = new System.Drawing.Size(58, 13);
-            this.LB_PetFamilies.TabIndex = 0;
+            this.LB_PetFamilies.TabIndex = 2;
             this.LB_PetFamilies.Text = "Pet Family:";
             // 
             // CB_PetFamily
@@ -378,10 +2296,10 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.CB_PetFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_PetFamily.FormattingEnabled = true;
-            this.CB_PetFamily.Location = new System.Drawing.Point(72, 6);
+            this.CB_PetFamily.Location = new System.Drawing.Point(78, 33);
             this.CB_PetFamily.Name = "CB_PetFamily";
-            this.CB_PetFamily.Size = new System.Drawing.Size(214, 21);
-            this.CB_PetFamily.TabIndex = 1;
+            this.CB_PetFamily.Size = new System.Drawing.Size(208, 21);
+            this.CB_PetFamily.TabIndex = 3;
             this.CB_PetFamily.SelectedIndexChanged += new System.EventHandler(this.comboPetFamily_SelectedIndexChanged);
             // 
             // Page_01_Options
@@ -1505,6 +3423,17 @@
             this.Page_04_PetBuffs.Text = "Pet Buffs";
             this.Page_04_PetBuffs.UseVisualStyleBackColor = true;
             // 
+            // PetBuffs
+            // 
+            this.PetBuffs.AutoScroll = true;
+            this.PetBuffs.character = null;
+            this.PetBuffs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PetBuffs.Location = new System.Drawing.Point(3, 3);
+            this.PetBuffs.Name = "PetBuffs";
+            this.PetBuffs.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.PetBuffs.Size = new System.Drawing.Size(286, 668);
+            this.PetBuffs.TabIndex = 0;
+            // 
             // Page_05_Details
             // 
             this.Page_05_Details.Controls.Add(this.TB_Rotation);
@@ -1570,1909 +3499,6 @@
             this.BT_Calculate.UseVisualStyleBackColor = true;
             this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
             // 
-            // CB_PetTalentsSpecSwitcher
-            // 
-            this.CB_PetTalentsSpecSwitcher.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_PetTalentsSpecSwitcher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_PetTalentsSpecSwitcher.DropDownWidth = 400;
-            this.CB_PetTalentsSpecSwitcher.FormattingEnabled = true;
-            this.CB_PetTalentsSpecSwitcher.Items.AddRange(new object[] {
-            "Custom"});
-            this.CB_PetTalentsSpecSwitcher.Location = new System.Drawing.Point(6, 33);
-            this.CB_PetTalentsSpecSwitcher.Name = "CB_PetTalentsSpecSwitcher";
-            this.CB_PetTalentsSpecSwitcher.Size = new System.Drawing.Size(214, 21);
-            this.CB_PetTalentsSpecSwitcher.TabIndex = 2;
-            this.CB_PetTalentsSpecSwitcher.SelectedIndexChanged += new System.EventHandler(this.comboBoxTalentSpec_SelectedIndexChanged);
-            // 
-            // BT_PetTalentsSaveDel
-            // 
-            this.BT_PetTalentsSaveDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BT_PetTalentsSaveDel.Location = new System.Drawing.Point(226, 32);
-            this.BT_PetTalentsSaveDel.Name = "BT_PetTalentsSaveDel";
-            this.BT_PetTalentsSaveDel.Size = new System.Drawing.Size(60, 23);
-            this.BT_PetTalentsSaveDel.TabIndex = 3;
-            this.BT_PetTalentsSaveDel.Text = "Save";
-            this.BT_PetTalentsSaveDel.UseVisualStyleBackColor = true;
-            this.BT_PetTalentsSaveDel.Click += new System.EventHandler(this.talentSpecButton_Click);
-            // 
-            // TLP_Tenacity
-            // 
-            this.TLP_Tenacity.BackgroundImage = global::Rawr.Hunter.Properties.Resources.bgTenacity;
-            this.TLP_Tenacity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.TLP_Tenacity.ColumnCount = 4;
-            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Tenacity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCobraReflexes, 0, 0);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityWildHunt, 2, 15);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatStamina, 2, 0);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityThunderstomp, 3, 7);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityNaturalArmor, 3, 1);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacitySpikedCollar, 0, 3);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityBloodOfTheRhino, 2, 3);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityBoarsSpeed, 1, 4);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityPetBarding, 3, 4);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityLionHearted, 2, 6);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGuardDog, 1, 7);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityTaunt, 1, 13);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityLastStand, 0, 12);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityIntervene, 3, 13);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityRoarOfSacrifice, 2, 12);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCharge, 1, 0);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCobraReflexes, 0, 1);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCharge, 1, 1);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityNaturalArmor, 3, 0);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGreatStamina, 2, 1);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityPetBarding, 3, 3);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityBloodOfTheRhino, 2, 4);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacitySpikedCollar, 0, 4);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityBoarsSpeed, 1, 3);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityLionhearted, 2, 7);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityThunderstomp, 3, 6);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGuardDog, 1, 6);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityRoarOfSacrifice, 2, 13);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityIntervene, 3, 12);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityLastStand, 0, 13);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityTaunt, 1, 12);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacitySilverback, 1, 16);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacitySilverback, 1, 15);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityWildHunt, 2, 16);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGreatResistance, 3, 10);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGreatResistance, 3, 9);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityGraceOfTheMantis, 2, 10);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityGraceOfTheMantis, 2, 9);
-            this.TLP_Tenacity.Controls.Add(this.LB_TenacityCullingTheHerd, 0, 6);
-            this.TLP_Tenacity.Controls.Add(this.CB_TenacityCullingTheHerd, 0, 7);
-            this.TLP_Tenacity.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TLP_Tenacity.Location = new System.Drawing.Point(3, 16);
-            this.TLP_Tenacity.Name = "TLP_Tenacity";
-            this.TLP_Tenacity.RowCount = 18;
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Tenacity.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TLP_Tenacity.Size = new System.Drawing.Size(262, 380);
-            this.TLP_Tenacity.TabIndex = 0;
-            // 
-            // LB_TenacityCobraReflexes
-            // 
-            this.LB_TenacityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityCobraReflexes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityCobraReflexes.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityCobraReflexes.Location = new System.Drawing.Point(3, 3);
-            this.LB_TenacityCobraReflexes.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityCobraReflexes.Name = "LB_TenacityCobraReflexes";
-            this.LB_TenacityCobraReflexes.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityCobraReflexes.TabIndex = 0;
-            this.LB_TenacityCobraReflexes.Text = "Cobra Reflexes";
-            this.LB_TenacityCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityCobraReflexes.ToolTipText = null;
-            // 
-            // LB_TenacityWildHunt
-            // 
-            this.LB_TenacityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityWildHunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityWildHunt.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityWildHunt.ImageList = this.TalentImageList;
-            this.LB_TenacityWildHunt.Location = new System.Drawing.Point(133, 363);
-            this.LB_TenacityWildHunt.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityWildHunt.Name = "LB_TenacityWildHunt";
-            this.LB_TenacityWildHunt.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityWildHunt.TabIndex = 40;
-            this.LB_TenacityWildHunt.Text = "Wild Hunt";
-            this.LB_TenacityWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityWildHunt.ToolTipText = null;
-            // 
-            // LB_TenacityGreatStamina
-            // 
-            this.LB_TenacityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityGreatStamina.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityGreatStamina.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityGreatStamina.ImageList = this.TalentImageList;
-            this.LB_TenacityGreatStamina.Location = new System.Drawing.Point(133, 3);
-            this.LB_TenacityGreatStamina.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityGreatStamina.Name = "LB_TenacityGreatStamina";
-            this.LB_TenacityGreatStamina.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityGreatStamina.TabIndex = 4;
-            this.LB_TenacityGreatStamina.Text = "Great Stamina";
-            this.LB_TenacityGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityGreatStamina.ToolTipText = null;
-            // 
-            // CB_TenacityThunderstomp
-            // 
-            this.CB_TenacityThunderstomp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityThunderstomp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityThunderstomp.FormattingEnabled = true;
-            this.CB_TenacityThunderstomp.Location = new System.Drawing.Point(195, 190);
-            this.CB_TenacityThunderstomp.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityThunderstomp.Name = "CB_TenacityThunderstomp";
-            this.CB_TenacityThunderstomp.Size = new System.Drawing.Size(67, 21);
-            this.CB_TenacityThunderstomp.TabIndex = 23;
-            this.CB_TenacityThunderstomp.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_TenacityNaturalArmor
-            // 
-            this.CB_TenacityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityNaturalArmor.FormattingEnabled = true;
-            this.CB_TenacityNaturalArmor.Location = new System.Drawing.Point(195, 46);
-            this.CB_TenacityNaturalArmor.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityNaturalArmor.Name = "CB_TenacityNaturalArmor";
-            this.CB_TenacityNaturalArmor.Size = new System.Drawing.Size(67, 21);
-            this.CB_TenacityNaturalArmor.TabIndex = 7;
-            this.CB_TenacityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacitySpikedCollar
-            // 
-            this.LB_TenacitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacitySpikedCollar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacitySpikedCollar.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacitySpikedCollar.ImageList = this.TalentImageList;
-            this.LB_TenacitySpikedCollar.Location = new System.Drawing.Point(3, 75);
-            this.LB_TenacitySpikedCollar.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacitySpikedCollar.Name = "LB_TenacitySpikedCollar";
-            this.LB_TenacitySpikedCollar.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacitySpikedCollar.TabIndex = 8;
-            this.LB_TenacitySpikedCollar.Text = "Spiked Collar";
-            this.LB_TenacitySpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacitySpikedCollar.ToolTipText = null;
-            // 
-            // LB_TenacityBloodOfTheRhino
-            // 
-            this.LB_TenacityBloodOfTheRhino.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityBloodOfTheRhino.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityBloodOfTheRhino.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityBloodOfTheRhino.ImageList = this.TalentImageList;
-            this.LB_TenacityBloodOfTheRhino.Location = new System.Drawing.Point(133, 75);
-            this.LB_TenacityBloodOfTheRhino.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityBloodOfTheRhino.Name = "LB_TenacityBloodOfTheRhino";
-            this.LB_TenacityBloodOfTheRhino.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityBloodOfTheRhino.TabIndex = 12;
-            this.LB_TenacityBloodOfTheRhino.Text = "Blood of the Rhino";
-            this.LB_TenacityBloodOfTheRhino.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityBloodOfTheRhino.ToolTipText = null;
-            // 
-            // CB_TenacityBoarsSpeed
-            // 
-            this.CB_TenacityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityBoarsSpeed.FormattingEnabled = true;
-            this.CB_TenacityBoarsSpeed.Location = new System.Drawing.Point(65, 118);
-            this.CB_TenacityBoarsSpeed.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityBoarsSpeed.Name = "CB_TenacityBoarsSpeed";
-            this.CB_TenacityBoarsSpeed.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityBoarsSpeed.TabIndex = 11;
-            this.CB_TenacityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_TenacityPetBarding
-            // 
-            this.CB_TenacityPetBarding.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityPetBarding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityPetBarding.FormattingEnabled = true;
-            this.CB_TenacityPetBarding.Location = new System.Drawing.Point(195, 118);
-            this.CB_TenacityPetBarding.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityPetBarding.Name = "CB_TenacityPetBarding";
-            this.CB_TenacityPetBarding.Size = new System.Drawing.Size(67, 21);
-            this.CB_TenacityPetBarding.TabIndex = 15;
-            this.CB_TenacityPetBarding.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityLionHearted
-            // 
-            this.LB_TenacityLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityLionHearted.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityLionHearted.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityLionHearted.ImageList = this.TalentImageList;
-            this.LB_TenacityLionHearted.Location = new System.Drawing.Point(133, 147);
-            this.LB_TenacityLionHearted.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityLionHearted.Name = "LB_TenacityLionHearted";
-            this.LB_TenacityLionHearted.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityLionHearted.TabIndex = 20;
-            this.LB_TenacityLionHearted.Text = "Lionhearted";
-            this.LB_TenacityLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityLionHearted.ToolTipText = null;
-            // 
-            // CB_TenacityGuardDog
-            // 
-            this.CB_TenacityGuardDog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityGuardDog.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityGuardDog.FormattingEnabled = true;
-            this.CB_TenacityGuardDog.Location = new System.Drawing.Point(65, 190);
-            this.CB_TenacityGuardDog.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityGuardDog.Name = "CB_TenacityGuardDog";
-            this.CB_TenacityGuardDog.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityGuardDog.TabIndex = 19;
-            this.CB_TenacityGuardDog.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_TenacityTaunt
-            // 
-            this.CB_TenacityTaunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityTaunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityTaunt.FormattingEnabled = true;
-            this.CB_TenacityTaunt.Location = new System.Drawing.Point(65, 334);
-            this.CB_TenacityTaunt.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityTaunt.Name = "CB_TenacityTaunt";
-            this.CB_TenacityTaunt.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityTaunt.TabIndex = 33;
-            this.CB_TenacityTaunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityLastStand
-            // 
-            this.LB_TenacityLastStand.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityLastStand.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityLastStand.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityLastStand.ImageList = this.TalentImageList;
-            this.LB_TenacityLastStand.Location = new System.Drawing.Point(3, 291);
-            this.LB_TenacityLastStand.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityLastStand.Name = "LB_TenacityLastStand";
-            this.LB_TenacityLastStand.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityLastStand.TabIndex = 30;
-            this.LB_TenacityLastStand.Text = "Last Stand";
-            this.LB_TenacityLastStand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityLastStand.ToolTipText = null;
-            // 
-            // CB_TenacityIntervene
-            // 
-            this.CB_TenacityIntervene.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityIntervene.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityIntervene.FormattingEnabled = true;
-            this.CB_TenacityIntervene.Location = new System.Drawing.Point(195, 334);
-            this.CB_TenacityIntervene.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityIntervene.Name = "CB_TenacityIntervene";
-            this.CB_TenacityIntervene.Size = new System.Drawing.Size(67, 21);
-            this.CB_TenacityIntervene.TabIndex = 37;
-            this.CB_TenacityIntervene.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityRoarOfSacrifice
-            // 
-            this.LB_TenacityRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityRoarOfSacrifice.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityRoarOfSacrifice.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityRoarOfSacrifice.ImageList = this.TalentImageList;
-            this.LB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(133, 291);
-            this.LB_TenacityRoarOfSacrifice.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityRoarOfSacrifice.Name = "LB_TenacityRoarOfSacrifice";
-            this.LB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityRoarOfSacrifice.TabIndex = 34;
-            this.LB_TenacityRoarOfSacrifice.Text = "Roar of Sacrifice";
-            this.LB_TenacityRoarOfSacrifice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityRoarOfSacrifice.ToolTipText = null;
-            // 
-            // LB_TenacityCharge
-            // 
-            this.LB_TenacityCharge.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityCharge.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityCharge.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityCharge.ImageList = this.TalentImageList;
-            this.LB_TenacityCharge.Location = new System.Drawing.Point(68, 3);
-            this.LB_TenacityCharge.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityCharge.Name = "LB_TenacityCharge";
-            this.LB_TenacityCharge.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityCharge.TabIndex = 2;
-            this.LB_TenacityCharge.Text = "Charge/Swoop";
-            this.LB_TenacityCharge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityCharge.ToolTipText = null;
-            // 
-            // CB_TenacityCobraReflexes
-            // 
-            this.CB_TenacityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityCobraReflexes.FormattingEnabled = true;
-            this.CB_TenacityCobraReflexes.Location = new System.Drawing.Point(0, 46);
-            this.CB_TenacityCobraReflexes.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityCobraReflexes.Name = "CB_TenacityCobraReflexes";
-            this.CB_TenacityCobraReflexes.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityCobraReflexes.TabIndex = 1;
-            this.CB_TenacityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_TenacityCharge
-            // 
-            this.CB_TenacityCharge.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityCharge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityCharge.FormattingEnabled = true;
-            this.CB_TenacityCharge.Location = new System.Drawing.Point(65, 46);
-            this.CB_TenacityCharge.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityCharge.Name = "CB_TenacityCharge";
-            this.CB_TenacityCharge.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityCharge.TabIndex = 3;
-            this.CB_TenacityCharge.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityNaturalArmor
-            // 
-            this.LB_TenacityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityNaturalArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityNaturalArmor.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityNaturalArmor.ImageList = this.TalentImageList;
-            this.LB_TenacityNaturalArmor.Location = new System.Drawing.Point(198, 3);
-            this.LB_TenacityNaturalArmor.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityNaturalArmor.Name = "LB_TenacityNaturalArmor";
-            this.LB_TenacityNaturalArmor.Size = new System.Drawing.Size(61, 40);
-            this.LB_TenacityNaturalArmor.TabIndex = 6;
-            this.LB_TenacityNaturalArmor.Text = "Natural Armor";
-            this.LB_TenacityNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityNaturalArmor.ToolTipText = null;
-            // 
-            // CB_TenacityGreatStamina
-            // 
-            this.CB_TenacityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityGreatStamina.FormattingEnabled = true;
-            this.CB_TenacityGreatStamina.Location = new System.Drawing.Point(130, 46);
-            this.CB_TenacityGreatStamina.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityGreatStamina.Name = "CB_TenacityGreatStamina";
-            this.CB_TenacityGreatStamina.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityGreatStamina.TabIndex = 5;
-            this.CB_TenacityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityPetBarding
-            // 
-            this.LB_TenacityPetBarding.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityPetBarding.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityPetBarding.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityPetBarding.ImageList = this.TalentImageList;
-            this.LB_TenacityPetBarding.Location = new System.Drawing.Point(198, 75);
-            this.LB_TenacityPetBarding.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityPetBarding.Name = "LB_TenacityPetBarding";
-            this.LB_TenacityPetBarding.Size = new System.Drawing.Size(61, 40);
-            this.LB_TenacityPetBarding.TabIndex = 14;
-            this.LB_TenacityPetBarding.Text = "Pet Barding";
-            this.LB_TenacityPetBarding.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityPetBarding.ToolTipText = null;
-            // 
-            // CB_TenacityBloodOfTheRhino
-            // 
-            this.CB_TenacityBloodOfTheRhino.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityBloodOfTheRhino.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityBloodOfTheRhino.FormattingEnabled = true;
-            this.CB_TenacityBloodOfTheRhino.Location = new System.Drawing.Point(130, 118);
-            this.CB_TenacityBloodOfTheRhino.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityBloodOfTheRhino.Name = "CB_TenacityBloodOfTheRhino";
-            this.CB_TenacityBloodOfTheRhino.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityBloodOfTheRhino.TabIndex = 13;
-            this.CB_TenacityBloodOfTheRhino.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_TenacitySpikedCollar
-            // 
-            this.CB_TenacitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacitySpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacitySpikedCollar.FormattingEnabled = true;
-            this.CB_TenacitySpikedCollar.Location = new System.Drawing.Point(0, 118);
-            this.CB_TenacitySpikedCollar.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacitySpikedCollar.Name = "CB_TenacitySpikedCollar";
-            this.CB_TenacitySpikedCollar.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacitySpikedCollar.TabIndex = 9;
-            this.CB_TenacitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityBoarsSpeed
-            // 
-            this.LB_TenacityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityBoarsSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityBoarsSpeed.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityBoarsSpeed.ImageList = this.TalentImageList;
-            this.LB_TenacityBoarsSpeed.Location = new System.Drawing.Point(68, 75);
-            this.LB_TenacityBoarsSpeed.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityBoarsSpeed.Name = "LB_TenacityBoarsSpeed";
-            this.LB_TenacityBoarsSpeed.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityBoarsSpeed.TabIndex = 10;
-            this.LB_TenacityBoarsSpeed.Text = "Boar\'s Speed";
-            this.LB_TenacityBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityBoarsSpeed.ToolTipText = null;
-            // 
-            // CB_TenacityLionhearted
-            // 
-            this.CB_TenacityLionhearted.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityLionhearted.FormattingEnabled = true;
-            this.CB_TenacityLionhearted.Location = new System.Drawing.Point(130, 190);
-            this.CB_TenacityLionhearted.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityLionhearted.Name = "CB_TenacityLionhearted";
-            this.CB_TenacityLionhearted.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityLionhearted.TabIndex = 21;
-            this.CB_TenacityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityThunderstomp
-            // 
-            this.LB_TenacityThunderstomp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityThunderstomp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityThunderstomp.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityThunderstomp.ImageList = this.TalentImageList;
-            this.LB_TenacityThunderstomp.Location = new System.Drawing.Point(198, 147);
-            this.LB_TenacityThunderstomp.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityThunderstomp.Name = "LB_TenacityThunderstomp";
-            this.LB_TenacityThunderstomp.Size = new System.Drawing.Size(61, 40);
-            this.LB_TenacityThunderstomp.TabIndex = 22;
-            this.LB_TenacityThunderstomp.Text = "Thunderstomp";
-            this.LB_TenacityThunderstomp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityThunderstomp.ToolTipText = null;
-            // 
-            // LB_TenacityGuardDog
-            // 
-            this.LB_TenacityGuardDog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityGuardDog.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityGuardDog.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityGuardDog.ImageList = this.TalentImageList;
-            this.LB_TenacityGuardDog.Location = new System.Drawing.Point(68, 147);
-            this.LB_TenacityGuardDog.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityGuardDog.Name = "LB_TenacityGuardDog";
-            this.LB_TenacityGuardDog.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityGuardDog.TabIndex = 18;
-            this.LB_TenacityGuardDog.Text = "Guard Dog";
-            this.LB_TenacityGuardDog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityGuardDog.ToolTipText = null;
-            // 
-            // CB_TenacityRoarOfSacrifice
-            // 
-            this.CB_TenacityRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityRoarOfSacrifice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityRoarOfSacrifice.FormattingEnabled = true;
-            this.CB_TenacityRoarOfSacrifice.Location = new System.Drawing.Point(130, 334);
-            this.CB_TenacityRoarOfSacrifice.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityRoarOfSacrifice.Name = "CB_TenacityRoarOfSacrifice";
-            this.CB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityRoarOfSacrifice.TabIndex = 35;
-            this.CB_TenacityRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityIntervene
-            // 
-            this.LB_TenacityIntervene.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityIntervene.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityIntervene.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityIntervene.ImageList = this.TalentImageList;
-            this.LB_TenacityIntervene.Location = new System.Drawing.Point(198, 291);
-            this.LB_TenacityIntervene.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityIntervene.Name = "LB_TenacityIntervene";
-            this.LB_TenacityIntervene.Size = new System.Drawing.Size(61, 40);
-            this.LB_TenacityIntervene.TabIndex = 36;
-            this.LB_TenacityIntervene.Text = "Intervene";
-            this.LB_TenacityIntervene.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityIntervene.ToolTipText = null;
-            // 
-            // CB_TenacityLastStand
-            // 
-            this.CB_TenacityLastStand.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityLastStand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityLastStand.FormattingEnabled = true;
-            this.CB_TenacityLastStand.Location = new System.Drawing.Point(0, 334);
-            this.CB_TenacityLastStand.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityLastStand.Name = "CB_TenacityLastStand";
-            this.CB_TenacityLastStand.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityLastStand.TabIndex = 31;
-            this.CB_TenacityLastStand.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityTaunt
-            // 
-            this.LB_TenacityTaunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityTaunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityTaunt.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityTaunt.ImageList = this.TalentImageList;
-            this.LB_TenacityTaunt.Location = new System.Drawing.Point(68, 291);
-            this.LB_TenacityTaunt.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityTaunt.Name = "LB_TenacityTaunt";
-            this.LB_TenacityTaunt.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityTaunt.TabIndex = 32;
-            this.LB_TenacityTaunt.Text = "Taunt";
-            this.LB_TenacityTaunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityTaunt.ToolTipText = null;
-            // 
-            // CB_TenacitySilverback
-            // 
-            this.CB_TenacitySilverback.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacitySilverback.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacitySilverback.FormattingEnabled = true;
-            this.CB_TenacitySilverback.Location = new System.Drawing.Point(65, 406);
-            this.CB_TenacitySilverback.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacitySilverback.Name = "CB_TenacitySilverback";
-            this.CB_TenacitySilverback.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacitySilverback.TabIndex = 39;
-            this.CB_TenacitySilverback.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacitySilverback
-            // 
-            this.LB_TenacitySilverback.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacitySilverback.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacitySilverback.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacitySilverback.ImageList = this.TalentImageList;
-            this.LB_TenacitySilverback.Location = new System.Drawing.Point(68, 363);
-            this.LB_TenacitySilverback.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacitySilverback.Name = "LB_TenacitySilverback";
-            this.LB_TenacitySilverback.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacitySilverback.TabIndex = 38;
-            this.LB_TenacitySilverback.Text = "Silverback";
-            this.LB_TenacitySilverback.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacitySilverback.ToolTipText = null;
-            // 
-            // CB_TenacityWildHunt
-            // 
-            this.CB_TenacityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityWildHunt.FormattingEnabled = true;
-            this.CB_TenacityWildHunt.Location = new System.Drawing.Point(130, 406);
-            this.CB_TenacityWildHunt.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityWildHunt.Name = "CB_TenacityWildHunt";
-            this.CB_TenacityWildHunt.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityWildHunt.TabIndex = 41;
-            this.CB_TenacityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_TenacityGreatResistance
-            // 
-            this.CB_TenacityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityGreatResistance.FormattingEnabled = true;
-            this.CB_TenacityGreatResistance.Location = new System.Drawing.Point(195, 262);
-            this.CB_TenacityGreatResistance.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityGreatResistance.Name = "CB_TenacityGreatResistance";
-            this.CB_TenacityGreatResistance.Size = new System.Drawing.Size(67, 21);
-            this.CB_TenacityGreatResistance.TabIndex = 29;
-            this.CB_TenacityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityGreatResistance
-            // 
-            this.LB_TenacityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityGreatResistance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityGreatResistance.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityGreatResistance.ImageList = this.TalentImageList;
-            this.LB_TenacityGreatResistance.Location = new System.Drawing.Point(198, 219);
-            this.LB_TenacityGreatResistance.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityGreatResistance.Name = "LB_TenacityGreatResistance";
-            this.LB_TenacityGreatResistance.Size = new System.Drawing.Size(61, 40);
-            this.LB_TenacityGreatResistance.TabIndex = 28;
-            this.LB_TenacityGreatResistance.Text = "Great Resistance";
-            this.LB_TenacityGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityGreatResistance.ToolTipText = null;
-            // 
-            // CB_TenacityGraceOfTheMantis
-            // 
-            this.CB_TenacityGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityGraceOfTheMantis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityGraceOfTheMantis.FormattingEnabled = true;
-            this.CB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(130, 262);
-            this.CB_TenacityGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityGraceOfTheMantis.Name = "CB_TenacityGraceOfTheMantis";
-            this.CB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityGraceOfTheMantis.TabIndex = 27;
-            this.CB_TenacityGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_TenacityGraceOfTheMantis
-            // 
-            this.LB_TenacityGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityGraceOfTheMantis.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityGraceOfTheMantis.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityGraceOfTheMantis.ImageList = this.TalentImageList;
-            this.LB_TenacityGraceOfTheMantis.Location = new System.Drawing.Point(133, 219);
-            this.LB_TenacityGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityGraceOfTheMantis.Name = "LB_TenacityGraceOfTheMantis";
-            this.LB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityGraceOfTheMantis.TabIndex = 26;
-            this.LB_TenacityGraceOfTheMantis.Text = "Grace of the Mantis";
-            this.LB_TenacityGraceOfTheMantis.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityGraceOfTheMantis.ToolTipText = null;
-            // 
-            // LB_TenacityCullingTheHerd
-            // 
-            this.LB_TenacityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_TenacityCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LB_TenacityCullingTheHerd.ForeColor = System.Drawing.Color.White;
-            this.LB_TenacityCullingTheHerd.ImageList = this.TalentImageList;
-            this.LB_TenacityCullingTheHerd.Location = new System.Drawing.Point(3, 147);
-            this.LB_TenacityCullingTheHerd.Margin = new System.Windows.Forms.Padding(3);
-            this.LB_TenacityCullingTheHerd.Name = "LB_TenacityCullingTheHerd";
-            this.LB_TenacityCullingTheHerd.Size = new System.Drawing.Size(59, 40);
-            this.LB_TenacityCullingTheHerd.TabIndex = 24;
-            this.LB_TenacityCullingTheHerd.Text = "Culling The Herd (3.3)";
-            this.LB_TenacityCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_TenacityCullingTheHerd.ToolTipText = null;
-            // 
-            // CB_TenacityCullingTheHerd
-            // 
-            this.CB_TenacityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_TenacityCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TenacityCullingTheHerd.FormattingEnabled = true;
-            this.CB_TenacityCullingTheHerd.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3"});
-            this.CB_TenacityCullingTheHerd.Location = new System.Drawing.Point(0, 190);
-            this.CB_TenacityCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_TenacityCullingTheHerd.Name = "CB_TenacityCullingTheHerd";
-            this.CB_TenacityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
-            this.CB_TenacityCullingTheHerd.TabIndex = 25;
-            this.CB_TenacityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // TLP_Cunning
-            // 
-            this.TLP_Cunning.BackgroundImage = global::Rawr.Hunter.Properties.Resources.bgCunning;
-            this.TLP_Cunning.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.TLP_Cunning.ColumnCount = 4;
-            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Cunning.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Cunning.Controls.Add(this.LB_CunningCobraReflexes, 0, 0);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningBullheaded, 2, 12);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningBoarsSpeed, 0, 3);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningWolverineBite, 0, 12);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningRoarOfRecovery, 1, 13);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningRoarOfRecovery, 1, 12);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningWolverineBite, 0, 13);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningGraceOfTheMantis, 3, 12);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningGraceOfTheMantis, 2, 13);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningBullheaded, 3, 13);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningDiveDash, 1, 1);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningDiveDash, 1, 0);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningCobraReflexes, 0, 1);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningBoarsSpeed, 0, 4);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningGreatStamina, 2, 1);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningNaturalArmor, 3, 0);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningGreatStamina, 2, 0);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningNaturalArmor, 3, 1);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningMobility, 1, 3);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningMobility, 1, 4);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningSpikedCollar, 3, 3);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningSpikedCollar, 3, 4);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningOwlsFocus, 2, 3);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningOwlsFocus, 2, 4);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningCullingTheHerd, 0, 6);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningCullingTheHerd, 0, 7);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningLionHearted, 1, 6);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningLionhearted, 1, 7);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningCarrionFeeder, 2, 6);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningCarrionFeeder, 2, 7);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningGreatResistance, 1, 9);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningGreatResistance, 1, 10);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningCornered, 2, 9);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningCornered, 2, 10);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningFeedingFrenzy, 3, 9);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningFeedingFrenzy, 3, 10);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningWildHunt, 0, 15);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningWildHunt, 0, 16);
-            this.TLP_Cunning.Controls.Add(this.LB_CunningRoarofSacrifice, 3, 15);
-            this.TLP_Cunning.Controls.Add(this.CB_CunningRoarOfSacrifice, 3, 16);
-            this.TLP_Cunning.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TLP_Cunning.Location = new System.Drawing.Point(3, 16);
-            this.TLP_Cunning.Name = "TLP_Cunning";
-            this.TLP_Cunning.RowCount = 18;
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Cunning.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TLP_Cunning.Size = new System.Drawing.Size(262, 428);
-            this.TLP_Cunning.TabIndex = 0;
-            // 
-            // LB_CunningCobraReflexes
-            // 
-            this.LB_CunningCobraReflexes.AutoSize = true;
-            this.LB_CunningCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningCobraReflexes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningCobraReflexes.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningCobraReflexes.ImageList = this.TalentImageList;
-            this.LB_CunningCobraReflexes.Location = new System.Drawing.Point(3, 2);
-            this.LB_CunningCobraReflexes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningCobraReflexes.Name = "LB_CunningCobraReflexes";
-            this.LB_CunningCobraReflexes.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningCobraReflexes.TabIndex = 0;
-            this.LB_CunningCobraReflexes.Text = "Cobra Reflexes";
-            this.LB_CunningCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningCobraReflexes.ToolTipText = null;
-            // 
-            // LB_CunningBullheaded
-            // 
-            this.LB_CunningBullheaded.AutoSize = true;
-            this.LB_CunningBullheaded.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningBullheaded.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningBullheaded.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningBullheaded.ImageList = this.TalentImageList;
-            this.LB_CunningBullheaded.Location = new System.Drawing.Point(133, 290);
-            this.LB_CunningBullheaded.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningBullheaded.Name = "LB_CunningBullheaded";
-            this.LB_CunningBullheaded.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningBullheaded.TabIndex = 34;
-            this.LB_CunningBullheaded.Text = "Bullheaded:";
-            this.LB_CunningBullheaded.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningBullheaded.ToolTipText = null;
-            // 
-            // LB_CunningBoarsSpeed
-            // 
-            this.LB_CunningBoarsSpeed.AutoSize = true;
-            this.LB_CunningBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningBoarsSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningBoarsSpeed.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningBoarsSpeed.ImageList = this.TalentImageList;
-            this.LB_CunningBoarsSpeed.Location = new System.Drawing.Point(3, 74);
-            this.LB_CunningBoarsSpeed.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningBoarsSpeed.Name = "LB_CunningBoarsSpeed";
-            this.LB_CunningBoarsSpeed.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningBoarsSpeed.TabIndex = 8;
-            this.LB_CunningBoarsSpeed.Text = "Boar\'s Speed";
-            this.LB_CunningBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningBoarsSpeed.ToolTipText = null;
-            // 
-            // LB_CunningWolverineBite
-            // 
-            this.LB_CunningWolverineBite.AutoSize = true;
-            this.LB_CunningWolverineBite.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningWolverineBite.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningWolverineBite.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningWolverineBite.ImageList = this.TalentImageList;
-            this.LB_CunningWolverineBite.Location = new System.Drawing.Point(3, 290);
-            this.LB_CunningWolverineBite.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningWolverineBite.Name = "LB_CunningWolverineBite";
-            this.LB_CunningWolverineBite.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningWolverineBite.TabIndex = 30;
-            this.LB_CunningWolverineBite.Text = "Wolverine Bite:";
-            this.LB_CunningWolverineBite.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningWolverineBite.ToolTipText = null;
-            // 
-            // CB_CunningRoarOfRecovery
-            // 
-            this.CB_CunningRoarOfRecovery.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningRoarOfRecovery.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningRoarOfRecovery.FormattingEnabled = true;
-            this.CB_CunningRoarOfRecovery.Location = new System.Drawing.Point(65, 334);
-            this.CB_CunningRoarOfRecovery.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningRoarOfRecovery.Name = "CB_CunningRoarOfRecovery";
-            this.CB_CunningRoarOfRecovery.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningRoarOfRecovery.TabIndex = 33;
-            this.CB_CunningRoarOfRecovery.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningRoarOfRecovery
-            // 
-            this.LB_CunningRoarOfRecovery.AutoSize = true;
-            this.LB_CunningRoarOfRecovery.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningRoarOfRecovery.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningRoarOfRecovery.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningRoarOfRecovery.ImageList = this.TalentImageList;
-            this.LB_CunningRoarOfRecovery.Location = new System.Drawing.Point(68, 290);
-            this.LB_CunningRoarOfRecovery.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningRoarOfRecovery.Name = "LB_CunningRoarOfRecovery";
-            this.LB_CunningRoarOfRecovery.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningRoarOfRecovery.TabIndex = 32;
-            this.LB_CunningRoarOfRecovery.Text = "Roar of Recovery:";
-            this.LB_CunningRoarOfRecovery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningRoarOfRecovery.ToolTipText = null;
-            // 
-            // CB_CunningWolverineBite
-            // 
-            this.CB_CunningWolverineBite.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningWolverineBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningWolverineBite.FormattingEnabled = true;
-            this.CB_CunningWolverineBite.Location = new System.Drawing.Point(0, 334);
-            this.CB_CunningWolverineBite.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningWolverineBite.Name = "CB_CunningWolverineBite";
-            this.CB_CunningWolverineBite.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningWolverineBite.TabIndex = 31;
-            this.CB_CunningWolverineBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningGraceOfTheMantis
-            // 
-            this.LB_CunningGraceOfTheMantis.AutoSize = true;
-            this.LB_CunningGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningGraceOfTheMantis.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningGraceOfTheMantis.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningGraceOfTheMantis.ImageList = this.TalentImageList;
-            this.LB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(198, 290);
-            this.LB_CunningGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningGraceOfTheMantis.Name = "LB_CunningGraceOfTheMantis";
-            this.LB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(61, 42);
-            this.LB_CunningGraceOfTheMantis.TabIndex = 36;
-            this.LB_CunningGraceOfTheMantis.Text = "Grace of the Mantis:";
-            this.LB_CunningGraceOfTheMantis.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningGraceOfTheMantis.ToolTipText = null;
-            // 
-            // CB_CunningGraceOfTheMantis
-            // 
-            this.CB_CunningGraceOfTheMantis.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningGraceOfTheMantis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningGraceOfTheMantis.FormattingEnabled = true;
-            this.CB_CunningGraceOfTheMantis.Location = new System.Drawing.Point(130, 334);
-            this.CB_CunningGraceOfTheMantis.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningGraceOfTheMantis.Name = "CB_CunningGraceOfTheMantis";
-            this.CB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningGraceOfTheMantis.TabIndex = 35;
-            this.CB_CunningGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_CunningBullheaded
-            // 
-            this.CB_CunningBullheaded.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningBullheaded.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningBullheaded.FormattingEnabled = true;
-            this.CB_CunningBullheaded.Location = new System.Drawing.Point(195, 334);
-            this.CB_CunningBullheaded.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningBullheaded.Name = "CB_CunningBullheaded";
-            this.CB_CunningBullheaded.Size = new System.Drawing.Size(67, 21);
-            this.CB_CunningBullheaded.TabIndex = 37;
-            this.CB_CunningBullheaded.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_CunningDiveDash
-            // 
-            this.CB_CunningDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningDiveDash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningDiveDash.FormattingEnabled = true;
-            this.CB_CunningDiveDash.Location = new System.Drawing.Point(65, 46);
-            this.CB_CunningDiveDash.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningDiveDash.Name = "CB_CunningDiveDash";
-            this.CB_CunningDiveDash.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningDiveDash.TabIndex = 3;
-            this.CB_CunningDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningDiveDash
-            // 
-            this.LB_CunningDiveDash.AutoSize = true;
-            this.LB_CunningDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningDiveDash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningDiveDash.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningDiveDash.ImageList = this.TalentImageList;
-            this.LB_CunningDiveDash.Location = new System.Drawing.Point(68, 2);
-            this.LB_CunningDiveDash.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningDiveDash.Name = "LB_CunningDiveDash";
-            this.LB_CunningDiveDash.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningDiveDash.TabIndex = 2;
-            this.LB_CunningDiveDash.Text = "Dive/Dash";
-            this.LB_CunningDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningDiveDash.ToolTipText = null;
-            // 
-            // CB_CunningCobraReflexes
-            // 
-            this.CB_CunningCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningCobraReflexes.FormattingEnabled = true;
-            this.CB_CunningCobraReflexes.Location = new System.Drawing.Point(0, 46);
-            this.CB_CunningCobraReflexes.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningCobraReflexes.Name = "CB_CunningCobraReflexes";
-            this.CB_CunningCobraReflexes.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningCobraReflexes.TabIndex = 1;
-            this.CB_CunningCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_CunningBoarsSpeed
-            // 
-            this.CB_CunningBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningBoarsSpeed.FormattingEnabled = true;
-            this.CB_CunningBoarsSpeed.Location = new System.Drawing.Point(0, 118);
-            this.CB_CunningBoarsSpeed.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningBoarsSpeed.Name = "CB_CunningBoarsSpeed";
-            this.CB_CunningBoarsSpeed.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningBoarsSpeed.TabIndex = 9;
-            this.CB_CunningBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_CunningGreatStamina
-            // 
-            this.CB_CunningGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningGreatStamina.FormattingEnabled = true;
-            this.CB_CunningGreatStamina.Location = new System.Drawing.Point(130, 46);
-            this.CB_CunningGreatStamina.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningGreatStamina.Name = "CB_CunningGreatStamina";
-            this.CB_CunningGreatStamina.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningGreatStamina.TabIndex = 5;
-            this.CB_CunningGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningNaturalArmor
-            // 
-            this.LB_CunningNaturalArmor.AutoSize = true;
-            this.LB_CunningNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningNaturalArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningNaturalArmor.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningNaturalArmor.ImageList = this.TalentImageList;
-            this.LB_CunningNaturalArmor.Location = new System.Drawing.Point(198, 2);
-            this.LB_CunningNaturalArmor.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningNaturalArmor.Name = "LB_CunningNaturalArmor";
-            this.LB_CunningNaturalArmor.Size = new System.Drawing.Size(61, 42);
-            this.LB_CunningNaturalArmor.TabIndex = 6;
-            this.LB_CunningNaturalArmor.Text = "Natural Armor";
-            this.LB_CunningNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningNaturalArmor.ToolTipText = null;
-            // 
-            // LB_CunningGreatStamina
-            // 
-            this.LB_CunningGreatStamina.AutoSize = true;
-            this.LB_CunningGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningGreatStamina.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningGreatStamina.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningGreatStamina.ImageList = this.TalentImageList;
-            this.LB_CunningGreatStamina.Location = new System.Drawing.Point(133, 2);
-            this.LB_CunningGreatStamina.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningGreatStamina.Name = "LB_CunningGreatStamina";
-            this.LB_CunningGreatStamina.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningGreatStamina.TabIndex = 4;
-            this.LB_CunningGreatStamina.Text = "Great Stamina";
-            this.LB_CunningGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningGreatStamina.ToolTipText = null;
-            // 
-            // CB_CunningNaturalArmor
-            // 
-            this.CB_CunningNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningNaturalArmor.FormattingEnabled = true;
-            this.CB_CunningNaturalArmor.Location = new System.Drawing.Point(195, 46);
-            this.CB_CunningNaturalArmor.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningNaturalArmor.Name = "CB_CunningNaturalArmor";
-            this.CB_CunningNaturalArmor.Size = new System.Drawing.Size(67, 21);
-            this.CB_CunningNaturalArmor.TabIndex = 7;
-            this.CB_CunningNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningMobility
-            // 
-            this.LB_CunningMobility.AutoSize = true;
-            this.LB_CunningMobility.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningMobility.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningMobility.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningMobility.ImageList = this.TalentImageList;
-            this.LB_CunningMobility.Location = new System.Drawing.Point(68, 74);
-            this.LB_CunningMobility.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningMobility.Name = "LB_CunningMobility";
-            this.LB_CunningMobility.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningMobility.TabIndex = 10;
-            this.LB_CunningMobility.Text = "Mobility";
-            this.LB_CunningMobility.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningMobility.ToolTipText = null;
-            // 
-            // CB_CunningMobility
-            // 
-            this.CB_CunningMobility.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningMobility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningMobility.FormattingEnabled = true;
-            this.CB_CunningMobility.Location = new System.Drawing.Point(65, 118);
-            this.CB_CunningMobility.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningMobility.Name = "CB_CunningMobility";
-            this.CB_CunningMobility.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningMobility.TabIndex = 11;
-            this.CB_CunningMobility.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningSpikedCollar
-            // 
-            this.LB_CunningSpikedCollar.AutoSize = true;
-            this.LB_CunningSpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningSpikedCollar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningSpikedCollar.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningSpikedCollar.ImageList = this.TalentImageList;
-            this.LB_CunningSpikedCollar.Location = new System.Drawing.Point(198, 74);
-            this.LB_CunningSpikedCollar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningSpikedCollar.Name = "LB_CunningSpikedCollar";
-            this.LB_CunningSpikedCollar.Size = new System.Drawing.Size(61, 42);
-            this.LB_CunningSpikedCollar.TabIndex = 14;
-            this.LB_CunningSpikedCollar.Text = "Spiked Collar";
-            this.LB_CunningSpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningSpikedCollar.ToolTipText = null;
-            // 
-            // CB_CunningSpikedCollar
-            // 
-            this.CB_CunningSpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningSpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningSpikedCollar.FormattingEnabled = true;
-            this.CB_CunningSpikedCollar.Location = new System.Drawing.Point(195, 118);
-            this.CB_CunningSpikedCollar.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningSpikedCollar.Name = "CB_CunningSpikedCollar";
-            this.CB_CunningSpikedCollar.Size = new System.Drawing.Size(67, 21);
-            this.CB_CunningSpikedCollar.TabIndex = 15;
-            this.CB_CunningSpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningOwlsFocus
-            // 
-            this.LB_CunningOwlsFocus.AutoSize = true;
-            this.LB_CunningOwlsFocus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningOwlsFocus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningOwlsFocus.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningOwlsFocus.ImageList = this.TalentImageList;
-            this.LB_CunningOwlsFocus.Location = new System.Drawing.Point(133, 74);
-            this.LB_CunningOwlsFocus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningOwlsFocus.Name = "LB_CunningOwlsFocus";
-            this.LB_CunningOwlsFocus.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningOwlsFocus.TabIndex = 12;
-            this.LB_CunningOwlsFocus.Text = "Owl\'s Focus";
-            this.LB_CunningOwlsFocus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningOwlsFocus.ToolTipText = null;
-            // 
-            // CB_CunningOwlsFocus
-            // 
-            this.CB_CunningOwlsFocus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningOwlsFocus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningOwlsFocus.FormattingEnabled = true;
-            this.CB_CunningOwlsFocus.Location = new System.Drawing.Point(130, 118);
-            this.CB_CunningOwlsFocus.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningOwlsFocus.Name = "CB_CunningOwlsFocus";
-            this.CB_CunningOwlsFocus.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningOwlsFocus.TabIndex = 13;
-            this.CB_CunningOwlsFocus.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningCullingTheHerd
-            // 
-            this.LB_CunningCullingTheHerd.AutoSize = true;
-            this.LB_CunningCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningCullingTheHerd.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningCullingTheHerd.ImageList = this.TalentImageList;
-            this.LB_CunningCullingTheHerd.Location = new System.Drawing.Point(3, 146);
-            this.LB_CunningCullingTheHerd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningCullingTheHerd.Name = "LB_CunningCullingTheHerd";
-            this.LB_CunningCullingTheHerd.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningCullingTheHerd.TabIndex = 22;
-            this.LB_CunningCullingTheHerd.Text = "Culling The Herd (3.3)";
-            this.LB_CunningCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningCullingTheHerd.ToolTipText = null;
-            // 
-            // CB_CunningCullingTheHerd
-            // 
-            this.CB_CunningCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningCullingTheHerd.FormattingEnabled = true;
-            this.CB_CunningCullingTheHerd.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3"});
-            this.CB_CunningCullingTheHerd.Location = new System.Drawing.Point(0, 190);
-            this.CB_CunningCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningCullingTheHerd.Name = "CB_CunningCullingTheHerd";
-            this.CB_CunningCullingTheHerd.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningCullingTheHerd.TabIndex = 23;
-            this.CB_CunningCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningLionHearted
-            // 
-            this.LB_CunningLionHearted.AutoSize = true;
-            this.LB_CunningLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningLionHearted.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningLionHearted.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningLionHearted.ImageList = this.TalentImageList;
-            this.LB_CunningLionHearted.Location = new System.Drawing.Point(68, 146);
-            this.LB_CunningLionHearted.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningLionHearted.Name = "LB_CunningLionHearted";
-            this.LB_CunningLionHearted.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningLionHearted.TabIndex = 18;
-            this.LB_CunningLionHearted.Text = "Lionhearted:";
-            this.LB_CunningLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningLionHearted.ToolTipText = null;
-            // 
-            // CB_CunningLionhearted
-            // 
-            this.CB_CunningLionhearted.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningLionhearted.FormattingEnabled = true;
-            this.CB_CunningLionhearted.Location = new System.Drawing.Point(65, 190);
-            this.CB_CunningLionhearted.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningLionhearted.Name = "CB_CunningLionhearted";
-            this.CB_CunningLionhearted.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningLionhearted.TabIndex = 19;
-            this.CB_CunningLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningCarrionFeeder
-            // 
-            this.LB_CunningCarrionFeeder.AutoSize = true;
-            this.LB_CunningCarrionFeeder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningCarrionFeeder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningCarrionFeeder.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningCarrionFeeder.ImageList = this.TalentImageList;
-            this.LB_CunningCarrionFeeder.Location = new System.Drawing.Point(133, 146);
-            this.LB_CunningCarrionFeeder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningCarrionFeeder.Name = "LB_CunningCarrionFeeder";
-            this.LB_CunningCarrionFeeder.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningCarrionFeeder.TabIndex = 20;
-            this.LB_CunningCarrionFeeder.Text = "Carrion Feeder:";
-            this.LB_CunningCarrionFeeder.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningCarrionFeeder.ToolTipText = null;
-            // 
-            // CB_CunningCarrionFeeder
-            // 
-            this.CB_CunningCarrionFeeder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningCarrionFeeder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningCarrionFeeder.FormattingEnabled = true;
-            this.CB_CunningCarrionFeeder.Location = new System.Drawing.Point(130, 190);
-            this.CB_CunningCarrionFeeder.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningCarrionFeeder.Name = "CB_CunningCarrionFeeder";
-            this.CB_CunningCarrionFeeder.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningCarrionFeeder.TabIndex = 21;
-            this.CB_CunningCarrionFeeder.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningGreatResistance
-            // 
-            this.LB_CunningGreatResistance.AutoSize = true;
-            this.LB_CunningGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningGreatResistance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningGreatResistance.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningGreatResistance.ImageList = this.TalentImageList;
-            this.LB_CunningGreatResistance.Location = new System.Drawing.Point(68, 218);
-            this.LB_CunningGreatResistance.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningGreatResistance.Name = "LB_CunningGreatResistance";
-            this.LB_CunningGreatResistance.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningGreatResistance.TabIndex = 24;
-            this.LB_CunningGreatResistance.Text = "Great Resistance";
-            this.LB_CunningGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningGreatResistance.ToolTipText = null;
-            // 
-            // CB_CunningGreatResistance
-            // 
-            this.CB_CunningGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningGreatResistance.FormattingEnabled = true;
-            this.CB_CunningGreatResistance.Location = new System.Drawing.Point(65, 262);
-            this.CB_CunningGreatResistance.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningGreatResistance.Name = "CB_CunningGreatResistance";
-            this.CB_CunningGreatResistance.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningGreatResistance.TabIndex = 25;
-            this.CB_CunningGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningCornered
-            // 
-            this.LB_CunningCornered.AutoSize = true;
-            this.LB_CunningCornered.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningCornered.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningCornered.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningCornered.ImageList = this.TalentImageList;
-            this.LB_CunningCornered.Location = new System.Drawing.Point(133, 218);
-            this.LB_CunningCornered.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningCornered.Name = "LB_CunningCornered";
-            this.LB_CunningCornered.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningCornered.TabIndex = 26;
-            this.LB_CunningCornered.Text = "Cornered";
-            this.LB_CunningCornered.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningCornered.ToolTipText = null;
-            // 
-            // CB_CunningCornered
-            // 
-            this.CB_CunningCornered.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningCornered.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningCornered.FormattingEnabled = true;
-            this.CB_CunningCornered.Location = new System.Drawing.Point(130, 262);
-            this.CB_CunningCornered.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningCornered.Name = "CB_CunningCornered";
-            this.CB_CunningCornered.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningCornered.TabIndex = 27;
-            this.CB_CunningCornered.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningFeedingFrenzy
-            // 
-            this.LB_CunningFeedingFrenzy.AutoSize = true;
-            this.LB_CunningFeedingFrenzy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningFeedingFrenzy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningFeedingFrenzy.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningFeedingFrenzy.ImageList = this.TalentImageList;
-            this.LB_CunningFeedingFrenzy.Location = new System.Drawing.Point(198, 218);
-            this.LB_CunningFeedingFrenzy.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningFeedingFrenzy.Name = "LB_CunningFeedingFrenzy";
-            this.LB_CunningFeedingFrenzy.Size = new System.Drawing.Size(61, 42);
-            this.LB_CunningFeedingFrenzy.TabIndex = 28;
-            this.LB_CunningFeedingFrenzy.Text = "Feeding Frenzy";
-            this.LB_CunningFeedingFrenzy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningFeedingFrenzy.ToolTipText = null;
-            // 
-            // CB_CunningFeedingFrenzy
-            // 
-            this.CB_CunningFeedingFrenzy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningFeedingFrenzy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningFeedingFrenzy.FormattingEnabled = true;
-            this.CB_CunningFeedingFrenzy.Location = new System.Drawing.Point(195, 262);
-            this.CB_CunningFeedingFrenzy.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningFeedingFrenzy.Name = "CB_CunningFeedingFrenzy";
-            this.CB_CunningFeedingFrenzy.Size = new System.Drawing.Size(67, 21);
-            this.CB_CunningFeedingFrenzy.TabIndex = 29;
-            this.CB_CunningFeedingFrenzy.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningWildHunt
-            // 
-            this.LB_CunningWildHunt.AutoSize = true;
-            this.LB_CunningWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningWildHunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningWildHunt.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningWildHunt.ImageList = this.TalentImageList;
-            this.LB_CunningWildHunt.Location = new System.Drawing.Point(3, 362);
-            this.LB_CunningWildHunt.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningWildHunt.Name = "LB_CunningWildHunt";
-            this.LB_CunningWildHunt.Size = new System.Drawing.Size(59, 42);
-            this.LB_CunningWildHunt.TabIndex = 38;
-            this.LB_CunningWildHunt.Text = "Wild Hunt:";
-            this.LB_CunningWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningWildHunt.ToolTipText = null;
-            // 
-            // CB_CunningWildHunt
-            // 
-            this.CB_CunningWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningWildHunt.FormattingEnabled = true;
-            this.CB_CunningWildHunt.Location = new System.Drawing.Point(0, 406);
-            this.CB_CunningWildHunt.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningWildHunt.Name = "CB_CunningWildHunt";
-            this.CB_CunningWildHunt.Size = new System.Drawing.Size(65, 21);
-            this.CB_CunningWildHunt.TabIndex = 39;
-            this.CB_CunningWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_CunningRoarofSacrifice
-            // 
-            this.LB_CunningRoarofSacrifice.AutoSize = true;
-            this.LB_CunningRoarofSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_CunningRoarofSacrifice.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_CunningRoarofSacrifice.ForeColor = System.Drawing.Color.White;
-            this.LB_CunningRoarofSacrifice.ImageList = this.TalentImageList;
-            this.LB_CunningRoarofSacrifice.Location = new System.Drawing.Point(198, 362);
-            this.LB_CunningRoarofSacrifice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_CunningRoarofSacrifice.Name = "LB_CunningRoarofSacrifice";
-            this.LB_CunningRoarofSacrifice.Size = new System.Drawing.Size(61, 42);
-            this.LB_CunningRoarofSacrifice.TabIndex = 40;
-            this.LB_CunningRoarofSacrifice.Text = "Roar of Sacrifice:";
-            this.LB_CunningRoarofSacrifice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_CunningRoarofSacrifice.ToolTipText = null;
-            // 
-            // CB_CunningRoarOfSacrifice
-            // 
-            this.CB_CunningRoarOfSacrifice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_CunningRoarOfSacrifice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CunningRoarOfSacrifice.FormattingEnabled = true;
-            this.CB_CunningRoarOfSacrifice.Location = new System.Drawing.Point(195, 406);
-            this.CB_CunningRoarOfSacrifice.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_CunningRoarOfSacrifice.Name = "CB_CunningRoarOfSacrifice";
-            this.CB_CunningRoarOfSacrifice.Size = new System.Drawing.Size(67, 21);
-            this.CB_CunningRoarOfSacrifice.TabIndex = 41;
-            this.CB_CunningRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // TLP_Ferocity
-            // 
-            this.TLP_Ferocity.BackgroundImage = global::Rawr.Hunter.Properties.Resources.bgFerocity;
-            this.TLP_Ferocity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.TLP_Ferocity.ColumnCount = 4;
-            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Ferocity.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCobraReflexes, 0, 0);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityWildHunt, 2, 15);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatStamina, 2, 0);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityDiveDash, 1, 1);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityNaturalArmor, 3, 1);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityImprovedCower, 0, 3);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySpikedCollar, 2, 3);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityBloodthirsty, 1, 4);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityBoarsSpeed, 3, 4);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCobraReflexes, 0, 1);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityDiveDash, 1, 0);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityGreatStamina, 2, 1);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityNaturalArmor, 3, 0);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityBoarsSpeed, 3, 3);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocitySpikedCollar, 2, 4);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityBloodthirsty, 1, 3);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityImprovedCower, 0, 4);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityGreatResistance, 3, 10);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityGreatResistance, 3, 9);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityChargeSwoop, 3, 7);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityChargeSwoop, 3, 6);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCullingTheHerd, 0, 7);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCullingTheHerd, 0, 6);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySharkAttack, 0, 15);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityRabid, 0, 13);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityRabid, 0, 12);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityCallOfTheWild, 2, 13);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityCalloftheWild, 2, 12);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityLickYourWounds, 1, 12);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityLickYourWounds, 1, 13);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityHeartOfThePhoenix, 1, 10);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityHeartOfThePheonix, 1, 9);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocitySpidersBite, 2, 9);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocitySpidersBite, 2, 10);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityLionhearted, 2, 7);
-            this.TLP_Ferocity.Controls.Add(this.LB_FerocityLionHearted, 2, 6);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocitySharkAttack, 0, 16);
-            this.TLP_Ferocity.Controls.Add(this.CB_FerocityWildHunt, 2, 16);
-            this.TLP_Ferocity.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TLP_Ferocity.Location = new System.Drawing.Point(3, 16);
-            this.TLP_Ferocity.Name = "TLP_Ferocity";
-            this.TLP_Ferocity.RowCount = 18;
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.TLP_Ferocity.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TLP_Ferocity.Size = new System.Drawing.Size(262, 428);
-            this.TLP_Ferocity.TabIndex = 0;
-            // 
-            // LB_FerocityCobraReflexes
-            // 
-            this.LB_FerocityCobraReflexes.AutoSize = true;
-            this.LB_FerocityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityCobraReflexes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityCobraReflexes.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityCobraReflexes.ImageList = this.TalentImageList;
-            this.LB_FerocityCobraReflexes.Location = new System.Drawing.Point(3, 2);
-            this.LB_FerocityCobraReflexes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityCobraReflexes.Name = "LB_FerocityCobraReflexes";
-            this.LB_FerocityCobraReflexes.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityCobraReflexes.TabIndex = 0;
-            this.LB_FerocityCobraReflexes.Text = "Cobra Reflexes";
-            this.LB_FerocityCobraReflexes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityCobraReflexes.ToolTipText = null;
-            // 
-            // LB_FerocityWildHunt
-            // 
-            this.LB_FerocityWildHunt.AutoSize = true;
-            this.LB_FerocityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityWildHunt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityWildHunt.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityWildHunt.ImageList = this.TalentImageList;
-            this.LB_FerocityWildHunt.Location = new System.Drawing.Point(133, 362);
-            this.LB_FerocityWildHunt.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityWildHunt.Name = "LB_FerocityWildHunt";
-            this.LB_FerocityWildHunt.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityWildHunt.TabIndex = 38;
-            this.LB_FerocityWildHunt.Text = "Wild Hunt";
-            this.LB_FerocityWildHunt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityWildHunt.ToolTipText = null;
-            // 
-            // LB_FerocityGreatStamina
-            // 
-            this.LB_FerocityGreatStamina.AutoSize = true;
-            this.LB_FerocityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityGreatStamina.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityGreatStamina.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityGreatStamina.ImageList = this.TalentImageList;
-            this.LB_FerocityGreatStamina.Location = new System.Drawing.Point(133, 2);
-            this.LB_FerocityGreatStamina.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityGreatStamina.Name = "LB_FerocityGreatStamina";
-            this.LB_FerocityGreatStamina.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityGreatStamina.TabIndex = 4;
-            this.LB_FerocityGreatStamina.Text = "Great Stamina";
-            this.LB_FerocityGreatStamina.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityGreatStamina.ToolTipText = null;
-            // 
-            // CB_FerocityDiveDash
-            // 
-            this.CB_FerocityDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityDiveDash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityDiveDash.FormattingEnabled = true;
-            this.CB_FerocityDiveDash.Location = new System.Drawing.Point(65, 46);
-            this.CB_FerocityDiveDash.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityDiveDash.Name = "CB_FerocityDiveDash";
-            this.CB_FerocityDiveDash.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityDiveDash.TabIndex = 3;
-            this.CB_FerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityNaturalArmor
-            // 
-            this.CB_FerocityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityNaturalArmor.FormattingEnabled = true;
-            this.CB_FerocityNaturalArmor.Location = new System.Drawing.Point(195, 46);
-            this.CB_FerocityNaturalArmor.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityNaturalArmor.Name = "CB_FerocityNaturalArmor";
-            this.CB_FerocityNaturalArmor.Size = new System.Drawing.Size(67, 21);
-            this.CB_FerocityNaturalArmor.TabIndex = 7;
-            this.CB_FerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityImprovedCower
-            // 
-            this.LB_FerocityImprovedCower.AutoSize = true;
-            this.LB_FerocityImprovedCower.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityImprovedCower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityImprovedCower.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityImprovedCower.ImageList = this.TalentImageList;
-            this.LB_FerocityImprovedCower.Location = new System.Drawing.Point(3, 74);
-            this.LB_FerocityImprovedCower.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityImprovedCower.Name = "LB_FerocityImprovedCower";
-            this.LB_FerocityImprovedCower.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityImprovedCower.TabIndex = 8;
-            this.LB_FerocityImprovedCower.Text = "Improved Cower";
-            this.LB_FerocityImprovedCower.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityImprovedCower.ToolTipText = null;
-            // 
-            // LB_FerocitySpikedCollar
-            // 
-            this.LB_FerocitySpikedCollar.AutoSize = true;
-            this.LB_FerocitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocitySpikedCollar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocitySpikedCollar.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocitySpikedCollar.ImageList = this.TalentImageList;
-            this.LB_FerocitySpikedCollar.Location = new System.Drawing.Point(133, 74);
-            this.LB_FerocitySpikedCollar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocitySpikedCollar.Name = "LB_FerocitySpikedCollar";
-            this.LB_FerocitySpikedCollar.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocitySpikedCollar.TabIndex = 12;
-            this.LB_FerocitySpikedCollar.Text = "Spiked Collar";
-            this.LB_FerocitySpikedCollar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocitySpikedCollar.ToolTipText = null;
-            // 
-            // CB_FerocityBloodthirsty
-            // 
-            this.CB_FerocityBloodthirsty.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityBloodthirsty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityBloodthirsty.FormattingEnabled = true;
-            this.CB_FerocityBloodthirsty.Location = new System.Drawing.Point(65, 118);
-            this.CB_FerocityBloodthirsty.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityBloodthirsty.Name = "CB_FerocityBloodthirsty";
-            this.CB_FerocityBloodthirsty.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityBloodthirsty.TabIndex = 11;
-            this.CB_FerocityBloodthirsty.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityBoarsSpeed
-            // 
-            this.CB_FerocityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityBoarsSpeed.FormattingEnabled = true;
-            this.CB_FerocityBoarsSpeed.Location = new System.Drawing.Point(195, 118);
-            this.CB_FerocityBoarsSpeed.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityBoarsSpeed.Name = "CB_FerocityBoarsSpeed";
-            this.CB_FerocityBoarsSpeed.Size = new System.Drawing.Size(67, 21);
-            this.CB_FerocityBoarsSpeed.TabIndex = 15;
-            this.CB_FerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityCobraReflexes
-            // 
-            this.CB_FerocityCobraReflexes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityCobraReflexes.FormattingEnabled = true;
-            this.CB_FerocityCobraReflexes.Location = new System.Drawing.Point(0, 46);
-            this.CB_FerocityCobraReflexes.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityCobraReflexes.Name = "CB_FerocityCobraReflexes";
-            this.CB_FerocityCobraReflexes.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityCobraReflexes.TabIndex = 1;
-            this.CB_FerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityDiveDash
-            // 
-            this.LB_FerocityDiveDash.AutoSize = true;
-            this.LB_FerocityDiveDash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityDiveDash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityDiveDash.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityDiveDash.ImageList = this.TalentImageList;
-            this.LB_FerocityDiveDash.Location = new System.Drawing.Point(68, 2);
-            this.LB_FerocityDiveDash.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityDiveDash.Name = "LB_FerocityDiveDash";
-            this.LB_FerocityDiveDash.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityDiveDash.TabIndex = 2;
-            this.LB_FerocityDiveDash.Text = "Dive/Dash";
-            this.LB_FerocityDiveDash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityDiveDash.ToolTipText = null;
-            // 
-            // CB_FerocityGreatStamina
-            // 
-            this.CB_FerocityGreatStamina.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityGreatStamina.FormattingEnabled = true;
-            this.CB_FerocityGreatStamina.Location = new System.Drawing.Point(130, 46);
-            this.CB_FerocityGreatStamina.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityGreatStamina.Name = "CB_FerocityGreatStamina";
-            this.CB_FerocityGreatStamina.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityGreatStamina.TabIndex = 5;
-            this.CB_FerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityNaturalArmor
-            // 
-            this.LB_FerocityNaturalArmor.AutoSize = true;
-            this.LB_FerocityNaturalArmor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityNaturalArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityNaturalArmor.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityNaturalArmor.ImageList = this.TalentImageList;
-            this.LB_FerocityNaturalArmor.Location = new System.Drawing.Point(198, 2);
-            this.LB_FerocityNaturalArmor.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityNaturalArmor.Name = "LB_FerocityNaturalArmor";
-            this.LB_FerocityNaturalArmor.Size = new System.Drawing.Size(61, 42);
-            this.LB_FerocityNaturalArmor.TabIndex = 6;
-            this.LB_FerocityNaturalArmor.Text = "Natural Armor";
-            this.LB_FerocityNaturalArmor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityNaturalArmor.ToolTipText = null;
-            // 
-            // LB_FerocityBoarsSpeed
-            // 
-            this.LB_FerocityBoarsSpeed.AutoSize = true;
-            this.LB_FerocityBoarsSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityBoarsSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityBoarsSpeed.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityBoarsSpeed.ImageList = this.TalentImageList;
-            this.LB_FerocityBoarsSpeed.Location = new System.Drawing.Point(198, 74);
-            this.LB_FerocityBoarsSpeed.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityBoarsSpeed.Name = "LB_FerocityBoarsSpeed";
-            this.LB_FerocityBoarsSpeed.Size = new System.Drawing.Size(61, 42);
-            this.LB_FerocityBoarsSpeed.TabIndex = 14;
-            this.LB_FerocityBoarsSpeed.Text = "Boar\'s Speed";
-            this.LB_FerocityBoarsSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityBoarsSpeed.ToolTipText = null;
-            // 
-            // CB_FerocitySpikedCollar
-            // 
-            this.CB_FerocitySpikedCollar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocitySpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocitySpikedCollar.FormattingEnabled = true;
-            this.CB_FerocitySpikedCollar.Location = new System.Drawing.Point(130, 118);
-            this.CB_FerocitySpikedCollar.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocitySpikedCollar.Name = "CB_FerocitySpikedCollar";
-            this.CB_FerocitySpikedCollar.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocitySpikedCollar.TabIndex = 13;
-            this.CB_FerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityBloodthirsty
-            // 
-            this.LB_FerocityBloodthirsty.AutoSize = true;
-            this.LB_FerocityBloodthirsty.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityBloodthirsty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityBloodthirsty.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityBloodthirsty.ImageList = this.TalentImageList;
-            this.LB_FerocityBloodthirsty.Location = new System.Drawing.Point(68, 74);
-            this.LB_FerocityBloodthirsty.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityBloodthirsty.Name = "LB_FerocityBloodthirsty";
-            this.LB_FerocityBloodthirsty.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityBloodthirsty.TabIndex = 10;
-            this.LB_FerocityBloodthirsty.Text = "Bloodthirsty";
-            this.LB_FerocityBloodthirsty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityBloodthirsty.ToolTipText = null;
-            // 
-            // CB_FerocityImprovedCower
-            // 
-            this.CB_FerocityImprovedCower.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityImprovedCower.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityImprovedCower.FormattingEnabled = true;
-            this.CB_FerocityImprovedCower.Location = new System.Drawing.Point(0, 118);
-            this.CB_FerocityImprovedCower.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityImprovedCower.Name = "CB_FerocityImprovedCower";
-            this.CB_FerocityImprovedCower.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityImprovedCower.TabIndex = 9;
-            this.CB_FerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityGreatResistance
-            // 
-            this.CB_FerocityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityGreatResistance.FormattingEnabled = true;
-            this.CB_FerocityGreatResistance.Location = new System.Drawing.Point(195, 262);
-            this.CB_FerocityGreatResistance.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityGreatResistance.Name = "CB_FerocityGreatResistance";
-            this.CB_FerocityGreatResistance.Size = new System.Drawing.Size(67, 21);
-            this.CB_FerocityGreatResistance.TabIndex = 29;
-            this.CB_FerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityGreatResistance
-            // 
-            this.LB_FerocityGreatResistance.AutoSize = true;
-            this.LB_FerocityGreatResistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityGreatResistance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityGreatResistance.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityGreatResistance.ImageList = this.TalentImageList;
-            this.LB_FerocityGreatResistance.Location = new System.Drawing.Point(198, 218);
-            this.LB_FerocityGreatResistance.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityGreatResistance.Name = "LB_FerocityGreatResistance";
-            this.LB_FerocityGreatResistance.Size = new System.Drawing.Size(61, 42);
-            this.LB_FerocityGreatResistance.TabIndex = 28;
-            this.LB_FerocityGreatResistance.Text = "Great Resistance";
-            this.LB_FerocityGreatResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityGreatResistance.ToolTipText = null;
-            // 
-            // CB_FerocityChargeSwoop
-            // 
-            this.CB_FerocityChargeSwoop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityChargeSwoop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityChargeSwoop.FormattingEnabled = true;
-            this.CB_FerocityChargeSwoop.Location = new System.Drawing.Point(195, 190);
-            this.CB_FerocityChargeSwoop.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityChargeSwoop.Name = "CB_FerocityChargeSwoop";
-            this.CB_FerocityChargeSwoop.Size = new System.Drawing.Size(67, 21);
-            this.CB_FerocityChargeSwoop.TabIndex = 21;
-            this.CB_FerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityChargeSwoop
-            // 
-            this.LB_FerocityChargeSwoop.AutoSize = true;
-            this.LB_FerocityChargeSwoop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityChargeSwoop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityChargeSwoop.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityChargeSwoop.ImageList = this.TalentImageList;
-            this.LB_FerocityChargeSwoop.Location = new System.Drawing.Point(198, 146);
-            this.LB_FerocityChargeSwoop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityChargeSwoop.Name = "LB_FerocityChargeSwoop";
-            this.LB_FerocityChargeSwoop.Size = new System.Drawing.Size(61, 42);
-            this.LB_FerocityChargeSwoop.TabIndex = 20;
-            this.LB_FerocityChargeSwoop.Text = "Charge/Swoop";
-            this.LB_FerocityChargeSwoop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityChargeSwoop.ToolTipText = null;
-            // 
-            // CB_FerocityCullingTheHerd
-            // 
-            this.CB_FerocityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityCullingTheHerd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityCullingTheHerd.FormattingEnabled = true;
-            this.CB_FerocityCullingTheHerd.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3"});
-            this.CB_FerocityCullingTheHerd.Location = new System.Drawing.Point(0, 190);
-            this.CB_FerocityCullingTheHerd.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityCullingTheHerd.Name = "CB_FerocityCullingTheHerd";
-            this.CB_FerocityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityCullingTheHerd.TabIndex = 23;
-            this.CB_FerocityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityCullingTheHerd
-            // 
-            this.LB_FerocityCullingTheHerd.AutoSize = true;
-            this.LB_FerocityCullingTheHerd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityCullingTheHerd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityCullingTheHerd.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityCullingTheHerd.ImageList = this.TalentImageList;
-            this.LB_FerocityCullingTheHerd.Location = new System.Drawing.Point(3, 146);
-            this.LB_FerocityCullingTheHerd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityCullingTheHerd.Name = "LB_FerocityCullingTheHerd";
-            this.LB_FerocityCullingTheHerd.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityCullingTheHerd.TabIndex = 22;
-            this.LB_FerocityCullingTheHerd.Text = "Culling The Herd (3.3)";
-            this.LB_FerocityCullingTheHerd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityCullingTheHerd.ToolTipText = null;
-            // 
-            // LB_FerocitySharkAttack
-            // 
-            this.LB_FerocitySharkAttack.AutoSize = true;
-            this.LB_FerocitySharkAttack.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocitySharkAttack.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocitySharkAttack.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocitySharkAttack.ImageList = this.TalentImageList;
-            this.LB_FerocitySharkAttack.Location = new System.Drawing.Point(3, 362);
-            this.LB_FerocitySharkAttack.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocitySharkAttack.Name = "LB_FerocitySharkAttack";
-            this.LB_FerocitySharkAttack.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocitySharkAttack.TabIndex = 36;
-            this.LB_FerocitySharkAttack.Text = "Shark Attack";
-            this.LB_FerocitySharkAttack.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocitySharkAttack.ToolTipText = null;
-            // 
-            // CB_FerocityRabid
-            // 
-            this.CB_FerocityRabid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityRabid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityRabid.FormattingEnabled = true;
-            this.CB_FerocityRabid.Location = new System.Drawing.Point(0, 334);
-            this.CB_FerocityRabid.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityRabid.Name = "CB_FerocityRabid";
-            this.CB_FerocityRabid.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityRabid.TabIndex = 31;
-            this.CB_FerocityRabid.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityRabid
-            // 
-            this.LB_FerocityRabid.AutoSize = true;
-            this.LB_FerocityRabid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityRabid.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityRabid.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityRabid.ImageList = this.TalentImageList;
-            this.LB_FerocityRabid.Location = new System.Drawing.Point(3, 290);
-            this.LB_FerocityRabid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityRabid.Name = "LB_FerocityRabid";
-            this.LB_FerocityRabid.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityRabid.TabIndex = 30;
-            this.LB_FerocityRabid.Text = "Rabid";
-            this.LB_FerocityRabid.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityRabid.ToolTipText = null;
-            // 
-            // CB_FerocityCallOfTheWild
-            // 
-            this.CB_FerocityCallOfTheWild.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityCallOfTheWild.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityCallOfTheWild.FormattingEnabled = true;
-            this.CB_FerocityCallOfTheWild.Location = new System.Drawing.Point(130, 334);
-            this.CB_FerocityCallOfTheWild.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityCallOfTheWild.Name = "CB_FerocityCallOfTheWild";
-            this.CB_FerocityCallOfTheWild.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityCallOfTheWild.TabIndex = 35;
-            this.CB_FerocityCallOfTheWild.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityCalloftheWild
-            // 
-            this.LB_FerocityCalloftheWild.AutoSize = true;
-            this.LB_FerocityCalloftheWild.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityCalloftheWild.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityCalloftheWild.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityCalloftheWild.ImageList = this.TalentImageList;
-            this.LB_FerocityCalloftheWild.Location = new System.Drawing.Point(133, 290);
-            this.LB_FerocityCalloftheWild.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityCalloftheWild.Name = "LB_FerocityCalloftheWild";
-            this.LB_FerocityCalloftheWild.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityCalloftheWild.TabIndex = 34;
-            this.LB_FerocityCalloftheWild.Text = "Call of the Wild";
-            this.LB_FerocityCalloftheWild.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityCalloftheWild.ToolTipText = null;
-            // 
-            // LB_FerocityLickYourWounds
-            // 
-            this.LB_FerocityLickYourWounds.AutoSize = true;
-            this.LB_FerocityLickYourWounds.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityLickYourWounds.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityLickYourWounds.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityLickYourWounds.ImageList = this.TalentImageList;
-            this.LB_FerocityLickYourWounds.Location = new System.Drawing.Point(68, 290);
-            this.LB_FerocityLickYourWounds.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityLickYourWounds.Name = "LB_FerocityLickYourWounds";
-            this.LB_FerocityLickYourWounds.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityLickYourWounds.TabIndex = 32;
-            this.LB_FerocityLickYourWounds.Text = "Lick Your Wounds";
-            this.LB_FerocityLickYourWounds.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityLickYourWounds.ToolTipText = null;
-            // 
-            // CB_FerocityLickYourWounds
-            // 
-            this.CB_FerocityLickYourWounds.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityLickYourWounds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityLickYourWounds.FormattingEnabled = true;
-            this.CB_FerocityLickYourWounds.Location = new System.Drawing.Point(65, 334);
-            this.CB_FerocityLickYourWounds.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityLickYourWounds.Name = "CB_FerocityLickYourWounds";
-            this.CB_FerocityLickYourWounds.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityLickYourWounds.TabIndex = 33;
-            this.CB_FerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityHeartOfThePhoenix
-            // 
-            this.CB_FerocityHeartOfThePhoenix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityHeartOfThePhoenix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityHeartOfThePhoenix.FormattingEnabled = true;
-            this.CB_FerocityHeartOfThePhoenix.Location = new System.Drawing.Point(65, 262);
-            this.CB_FerocityHeartOfThePhoenix.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityHeartOfThePhoenix.Name = "CB_FerocityHeartOfThePhoenix";
-            this.CB_FerocityHeartOfThePhoenix.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityHeartOfThePhoenix.TabIndex = 25;
-            this.CB_FerocityHeartOfThePhoenix.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityHeartOfThePheonix
-            // 
-            this.LB_FerocityHeartOfThePheonix.AutoSize = true;
-            this.LB_FerocityHeartOfThePheonix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityHeartOfThePheonix.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityHeartOfThePheonix.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityHeartOfThePheonix.ImageList = this.TalentImageList;
-            this.LB_FerocityHeartOfThePheonix.Location = new System.Drawing.Point(68, 218);
-            this.LB_FerocityHeartOfThePheonix.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityHeartOfThePheonix.Name = "LB_FerocityHeartOfThePheonix";
-            this.LB_FerocityHeartOfThePheonix.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityHeartOfThePheonix.TabIndex = 24;
-            this.LB_FerocityHeartOfThePheonix.Text = "Heart of the Phoenix";
-            this.LB_FerocityHeartOfThePheonix.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityHeartOfThePheonix.ToolTipText = null;
-            // 
-            // LB_FerocitySpidersBite
-            // 
-            this.LB_FerocitySpidersBite.AutoSize = true;
-            this.LB_FerocitySpidersBite.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocitySpidersBite.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocitySpidersBite.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocitySpidersBite.ImageList = this.TalentImageList;
-            this.LB_FerocitySpidersBite.Location = new System.Drawing.Point(133, 218);
-            this.LB_FerocitySpidersBite.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocitySpidersBite.Name = "LB_FerocitySpidersBite";
-            this.LB_FerocitySpidersBite.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocitySpidersBite.TabIndex = 26;
-            this.LB_FerocitySpidersBite.Text = "Spider\'s Bite";
-            this.LB_FerocitySpidersBite.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocitySpidersBite.ToolTipText = null;
-            // 
-            // CB_FerocitySpidersBite
-            // 
-            this.CB_FerocitySpidersBite.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocitySpidersBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocitySpidersBite.FormattingEnabled = true;
-            this.CB_FerocitySpidersBite.Location = new System.Drawing.Point(130, 262);
-            this.CB_FerocitySpidersBite.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocitySpidersBite.Name = "CB_FerocitySpidersBite";
-            this.CB_FerocitySpidersBite.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocitySpidersBite.TabIndex = 27;
-            this.CB_FerocitySpidersBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityLionhearted
-            // 
-            this.CB_FerocityLionhearted.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityLionhearted.FormattingEnabled = true;
-            this.CB_FerocityLionhearted.Location = new System.Drawing.Point(130, 190);
-            this.CB_FerocityLionhearted.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityLionhearted.Name = "CB_FerocityLionhearted";
-            this.CB_FerocityLionhearted.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityLionhearted.TabIndex = 19;
-            this.CB_FerocityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // LB_FerocityLionHearted
-            // 
-            this.LB_FerocityLionHearted.AutoSize = true;
-            this.LB_FerocityLionHearted.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LB_FerocityLionHearted.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.LB_FerocityLionHearted.ForeColor = System.Drawing.Color.White;
-            this.LB_FerocityLionHearted.ImageList = this.TalentImageList;
-            this.LB_FerocityLionHearted.Location = new System.Drawing.Point(133, 146);
-            this.LB_FerocityLionHearted.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.LB_FerocityLionHearted.Name = "LB_FerocityLionHearted";
-            this.LB_FerocityLionHearted.Size = new System.Drawing.Size(59, 42);
-            this.LB_FerocityLionHearted.TabIndex = 18;
-            this.LB_FerocityLionHearted.Text = "Lionhearted";
-            this.LB_FerocityLionHearted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LB_FerocityLionHearted.ToolTipText = null;
-            // 
-            // CB_FerocitySharkAttack
-            // 
-            this.CB_FerocitySharkAttack.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocitySharkAttack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocitySharkAttack.FormattingEnabled = true;
-            this.CB_FerocitySharkAttack.Location = new System.Drawing.Point(0, 406);
-            this.CB_FerocitySharkAttack.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocitySharkAttack.Name = "CB_FerocitySharkAttack";
-            this.CB_FerocitySharkAttack.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocitySharkAttack.TabIndex = 37;
-            this.CB_FerocitySharkAttack.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // CB_FerocityWildHunt
-            // 
-            this.CB_FerocityWildHunt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CB_FerocityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_FerocityWildHunt.FormattingEnabled = true;
-            this.CB_FerocityWildHunt.Location = new System.Drawing.Point(130, 406);
-            this.CB_FerocityWildHunt.Margin = new System.Windows.Forms.Padding(0);
-            this.CB_FerocityWildHunt.Name = "CB_FerocityWildHunt";
-            this.CB_FerocityWildHunt.Size = new System.Drawing.Size(65, 21);
-            this.CB_FerocityWildHunt.TabIndex = 39;
-            this.CB_FerocityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // PetBuffs
-            // 
-            this.PetBuffs.AutoScroll = true;
-            this.PetBuffs.character = null;
-            this.PetBuffs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PetBuffs.Location = new System.Drawing.Point(3, 3);
-            this.PetBuffs.Name = "PetBuffs";
-            this.PetBuffs.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.PetBuffs.Size = new System.Drawing.Size(286, 668);
-            this.PetBuffs.TabIndex = 0;
-            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3485,8 +3511,13 @@
             this.Page_03_PetTalents.PerformLayout();
             this.FLP_PetFamilies.ResumeLayout(false);
             this.GB_PetTalents_Tenacity.ResumeLayout(false);
+            this.TLP_Tenacity.ResumeLayout(false);
             this.GB_PetTalents_Cunning.ResumeLayout(false);
+            this.TLP_Cunning.ResumeLayout(false);
+            this.TLP_Cunning.PerformLayout();
             this.GB_PetTalents_Ferocity.ResumeLayout(false);
+            this.TLP_Ferocity.ResumeLayout(false);
+            this.TLP_Ferocity.PerformLayout();
             this.Page_01_Options.ResumeLayout(false);
             this.FLP_01_Options.ResumeLayout(false);
             this.GB_FightSettings.ResumeLayout(false);
@@ -3518,11 +3549,6 @@
             this.Page_05_Details.PerformLayout();
             this.GB_Rotation_Shots.ResumeLayout(false);
             this.GB_Rotation_Shots.PerformLayout();
-            this.TLP_Tenacity.ResumeLayout(false);
-            this.TLP_Cunning.ResumeLayout(false);
-            this.TLP_Cunning.PerformLayout();
-            this.TLP_Ferocity.ResumeLayout(false);
-            this.TLP_Ferocity.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3754,5 +3780,7 @@
         private System.Windows.Forms.CheckBox CK_StatsAgility;
         private System.Windows.Forms.Button BT_PetTalentsSaveDel;
         private System.Windows.Forms.ComboBox CB_PetTalentsSpecSwitcher;
+        private System.Windows.Forms.Label LB_ArmoryPets;
+        private System.Windows.Forms.ComboBox CB_ArmoryPets;
     }
 }

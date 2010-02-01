@@ -629,7 +629,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             @"Increases the contribution your pet gets from your Stamina by 20% and attack power by 15%.",
             @"Increases the contribution your pet gets from your Stamina by 40% and attack power by 30%." }, "inv_misc_horn_04");
         /// <summary>A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.</summary>
-        public readonly static PetTalentData WolverineBite = new PetTalentData(36, "Wolverine Bite", 2, new string[] {
+        public readonly static PetTalentData WolverineBite = new PetTalentData(36, "Wolverine Bite", 1, new string[] {
             @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.",
             @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried." }, "ability_druid_lacerate");
     }
@@ -732,7 +732,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         /// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
         [XmlIgnore]
         public PetTalent CobraReflexes;
-        /// <summary>When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to eb critically hit.</summary>
+        /// <summary>When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to be critically hit.</summary>
         [XmlIgnore]
         public PetTalent Cornered;
         /// <summary>Increases your pet's movement speed by 80% for 16 sec.</summary>
@@ -932,6 +932,121 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
                 ret += pt.Value.ToString();
             }
             return ret;
+        }
+
+        public static PetTalentTree FromArmoryPet(ArmoryPet pet) {
+            PetTalentTree retVal = new PetTalentTree();
+            string armoryspec = pet.Spec;
+            try {
+                retVal.Reset();
+                switch (pet.SpecKey) {
+                    case "Ferocity": {
+                        if (armoryspec.Length < 21) break;
+                        // Tier 1
+                        retVal.CobraReflexes.Value = int.Parse(armoryspec[00].ToString());
+                        //retVal.Unknown.Value = int.Parse(armoryspec[01].ToString());
+                        retVal.DiveDash.Value = int.Parse(armoryspec[02].ToString());
+                        retVal.GreatStamina.Value = int.Parse(armoryspec[03].ToString());
+                        retVal.NaturalArmor.Value = int.Parse(armoryspec[04].ToString());
+                        // Tier 2
+                        retVal.ImprovedCower.Value = int.Parse(armoryspec[05].ToString());
+                        retVal.Bloodthirsty.Value = int.Parse(armoryspec[06].ToString());
+                        retVal.SpikedCollar.Value = int.Parse(armoryspec[07].ToString());
+                        retVal.BoarsSpeed.Value = int.Parse(armoryspec[08].ToString());
+                        // Tier 3
+                        retVal.CullingTheHerd.Value = int.Parse(armoryspec[09].ToString());
+                        //retVal.Unknown.Value = int.Parse(armoryspec[10].ToString());
+                        retVal.Lionhearted.Value = int.Parse(armoryspec[11].ToString());
+                        retVal.ChargeSwoop.Value = int.Parse(armoryspec[12].ToString());
+                        // Tier 4
+                        retVal.HeartOfThePhoenix.Value = int.Parse(armoryspec[13].ToString());
+                        retVal.SpidersBite.Value = int.Parse(armoryspec[14].ToString());
+                        retVal.GreatResistance.Value = int.Parse(armoryspec[15].ToString());
+                        // Tier 5
+                        retVal.Rabid.Value = int.Parse(armoryspec[16].ToString());
+                        retVal.LickYourWounds.Value = int.Parse(armoryspec[17].ToString());
+                        retVal.CallOfTheWild.Value = int.Parse(armoryspec[18].ToString());
+                        // Tier 6
+                        retVal.SharkAttack.Value = int.Parse(armoryspec[19].ToString());
+                        retVal.WildHunt.Value = int.Parse(armoryspec[20].ToString());
+                        break;
+                    }
+                    case "Cunning": {
+                        if (armoryspec.Length < 22) break;
+                        // Tier 1
+                        retVal.CobraReflexes.Value = int.Parse(armoryspec[00].ToString());
+                        //retVal.Unknown.Value = int.Parse(armoryspec[01].ToString());
+                        retVal.DiveDash.Value = int.Parse(armoryspec[02].ToString());
+                        retVal.GreatStamina.Value = int.Parse(armoryspec[03].ToString()); // iffy
+                        retVal.NaturalArmor.Value = int.Parse(armoryspec[04].ToString()); // iffy
+                        // Tier 2
+                        retVal.BoarsSpeed.Value = int.Parse(armoryspec[05].ToString()); // iffy
+                        retVal.Mobility.Value = int.Parse(armoryspec[06].ToString()); // iffy
+                        retVal.OwlsFocus.Value = int.Parse(armoryspec[07].ToString()); // iffy
+                        //retVal.Unknown.Value = int.Parse(armoryspec[08].ToString()); // iffy
+                        retVal.SpikedCollar.Value = int.Parse(armoryspec[09].ToString());
+                        // Tier 3
+                        retVal.CullingTheHerd.Value = int.Parse(armoryspec[10].ToString());
+                        retVal.Lionhearted.Value = int.Parse(armoryspec[11].ToString());
+                        retVal.CarrionFeeder.Value = int.Parse(armoryspec[12].ToString());
+                        // Tier 4
+                        retVal.GreatResistance.Value = int.Parse(armoryspec[13].ToString());
+                        retVal.Cornered.Value = int.Parse(armoryspec[14].ToString());
+                        retVal.FeedingFrenzy.Value = int.Parse(armoryspec[15].ToString());
+                        // Tier 5
+                        retVal.WolverineBite.Value = int.Parse(armoryspec[16].ToString());
+                        retVal.RoarOfRecovery.Value = int.Parse(armoryspec[17].ToString());
+                        retVal.Bullheaded.Value = int.Parse(armoryspec[18].ToString());
+                        retVal.GraceOfTheMantis.Value = int.Parse(armoryspec[19].ToString());
+                        // Tier 6
+                        retVal.WildHunt.Value = int.Parse(armoryspec[20].ToString());
+                        retVal.RoarOfSacrifice.Value = int.Parse(armoryspec[21].ToString());
+                        break;
+                    }
+                    case "Tenacity": {
+                        if (armoryspec.Length < 20) break;
+                        // Tier 1
+                        retVal.CobraReflexes.Value = int.Parse(armoryspec[00].ToString());
+                        retVal.ChargeSwoop.Value = int.Parse(armoryspec[01].ToString());
+                        retVal.GreatStamina.Value = int.Parse(armoryspec[02].ToString());
+                        retVal.NaturalArmor.Value = int.Parse(armoryspec[03].ToString());
+                        // Tier 2
+                        retVal.SpikedCollar.Value = int.Parse(armoryspec[04].ToString());
+                        retVal.BoarsSpeed.Value = int.Parse(armoryspec[05].ToString());
+                        retVal.BloodOfTheRhino.Value = int.Parse(armoryspec[06].ToString());
+                        retVal.PetBarding.Value = int.Parse(armoryspec[07].ToString());
+                        // Tier 3
+                        retVal.CullingTheHerd.Value = int.Parse(armoryspec[08].ToString());
+                        retVal.GuardDog.Value = int.Parse(armoryspec[09].ToString());
+                        retVal.Lionhearted.Value = int.Parse(armoryspec[10].ToString());
+                        retVal.Thunderstomp.Value = int.Parse(armoryspec[11].ToString());
+                        // Tier 4
+                        retVal.GraceOfTheMantis.Value = int.Parse(armoryspec[12].ToString());
+                        retVal.GreatResistance.Value = int.Parse(armoryspec[13].ToString());
+                        // Tier 5
+                        retVal.LastStand.Value = int.Parse(armoryspec[14].ToString());
+                        retVal.Taunt.Value = int.Parse(armoryspec[15].ToString());
+                        retVal.RoarOfSacrifice.Value = int.Parse(armoryspec[16].ToString());
+                        retVal.Intervene.Value = int.Parse(armoryspec[17].ToString());
+                        // Tier 6
+                        retVal.Silverback.Value = int.Parse(armoryspec[18].ToString());
+                        retVal.WildHunt.Value = int.Parse(armoryspec[19].ToString());
+                        break;
+                    }
+                    default: { throw new Exception("Failed to determine armory pet spec key"); }
+                }
+
+                return retVal;
+            }catch(Exception ex){
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error converting Armory Pet Talents to PetTalentTree",
+                    ex.Message,
+                    "FromArmoryPet(ArmoryPet pet)",
+                    "No Additional Info",
+                    ex.StackTrace
+                );
+            }
+            return null;
         }
     }
 }

@@ -31,6 +31,11 @@ namespace Rawr //O O . .
         [XmlIgnore]
         internal ItemInstance[] _item = new ItemInstance[SlotCount];
 
+        [XmlIgnore]
+        public List<ArmoryPet> ArmoryPets = new List<ArmoryPet>();
+        [XmlElement("ArmoryPets")]
+        public List<string> ArmoryPetsXml = new List<string>();
+
         public ItemInstance[] GetItems()
         {
             return (ItemInstance[])_item.Clone();
@@ -1925,6 +1930,7 @@ namespace Rawr //O O . .
         {
 			SerializeCalculationOptions();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
+            ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
 
 			using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
@@ -1997,6 +2003,7 @@ namespace Rawr //O O . .
 					character = (Character)serializer.Deserialize(reader);
                     character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
                     character._activeBuffs.RemoveAll(buff => buff == null);
+                    character.ArmoryPets = new List<ArmoryPet>(character.ArmoryPetsXml.ConvertAll(armoryPet => ArmoryPet.GetPetByString(armoryPet)));
                     character.RecalculateSetBonuses(); // now you can call it
                     foreach (ItemInstance item in character.CustomItemInstances)
                     {
@@ -2122,4 +2129,50 @@ namespace Rawr //O O . .
 	{
 		string GetXml();
 	}
+
+    public class ArmoryPet
+    {
+        public ArmoryPet(string family, string name, string speckey, string spec)
+        {
+            Family = family;
+            Name = name;
+            SpecKey = speckey;
+            Spec = spec;
+        }
+        public string Family;
+        public string Name;
+        public string SpecKey;
+        public string Spec;
+
+        public override string ToString()
+        {
+            return Family + ": [" + Name + "] Spec: " + SpecKey + " '" + Spec + "'";
+        }
+        public static ArmoryPet GetPetByString(string input) {
+            string family = "";
+            string name = "";
+            string specKey = "";
+            string spec = "";
+            try {
+                int start = 0, end = input.IndexOf(':');
+                family = input.Substring(start, end);
+                start = input.IndexOf('[') + 1; end = input.IndexOf(']', start) - start;
+                name = input.Substring(start, end);
+                start = input.IndexOf("Spec:") + "Spec: ".Length; end = input.IndexOf(" '", start) - start;
+                specKey = input.Substring(start, end);
+                start = input.IndexOf("Spec:") + ("Spec: " + specKey + " '").Length; end = input.IndexOf("\'", start) - start;
+                spec = input.Substring(start, end);
+            } catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error converting character saved Armory Pets to class form",
+                    ex.Message,
+                    "GetPetByString(string input)",
+                    "No Additional Info",
+                    ex.StackTrace
+                    );
+            }
+
+            return new ArmoryPet(family, name, specKey, spec);
+        }
+    }
 }

@@ -14,7 +14,7 @@ namespace Rawr
         public static Character GetCharacter(CharacterRegion region, string realm, string name)
         {
             string[] ignore;
-            return GetCharacter(region, realm, name,out ignore);
+            return GetCharacter(region, realm, name, out ignore);
         }
 
 		public static Character GetCharacter(CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
@@ -261,6 +261,13 @@ namespace Rawr
 
 				InitializeAvailableItemList(character);
                 ApplyRacialandProfessionBuffs(docCharacter, character);
+
+                if (character.Class == CharacterClass.Hunter) {
+                    // Pull Pet(s) Info if you are a Hunter
+                    List<ArmoryPet> pets = GetPet(region, realm, name);
+                    if (pets != null) { character.ArmoryPets = pets; }
+                }
+
                 //I will tell you how he lived.
 				return character;
 			}
@@ -289,6 +296,48 @@ namespace Rawr
 				return null;
 			}
 		}
+
+        /// <summary>
+        /// Get the Hunter Pet off the Armory, if possible
+        /// </summary>
+        /// <param name="region">The character's Region</param>
+        /// <param name="realm">The character's Realm</param>
+        /// <param name="name">The character's Name</param>
+        /// <returns>The list of Hunter Pets in form of List(ArmoryPet)</returns>
+        public static List<ArmoryPet> GetPet(CharacterRegion region, string realm, string name) {
+            XmlDocument docTalents = null;
+            List<ArmoryPet> ArmoryPets = new List<ArmoryPet>() { };
+            try {
+                WebRequestWrapper wrw = new WebRequestWrapper();
+                docTalents = wrw.DownloadCharacterTalentTree(name, region, realm);
+                if (docTalents == null) {
+                    StatusMessaging.ReportError("Get Pet", null, "No character returned from the Armory. Is the Armory down?");
+                    return null;
+                }
+
+                foreach (XmlNode itemNode in docTalents.SelectNodes("page/characterInfo/talents/pet"))
+                {
+                    // pet found
+                    string petname = itemNode.Attributes["name"].Value;
+                    string fam = itemNode.Attributes["family"].Value;
+                    string SpecKey = itemNode.FirstChild.Attributes["key"].Value;
+                    string spec = itemNode.FirstChild.FirstChild.Attributes["value"].Value;
+                    ArmoryPets.Add(new ArmoryPet(fam, petname, SpecKey, spec));
+                }
+
+                return ArmoryPets;
+            } catch (Exception ex) {
+                //StatusMessaging.ReportError("Get Character", ex,
+                // "Rawr encountered an error retrieving the Hunter Character - " + name + "@" + region.ToString() + "-" + realm + " 's Pet(s) from the armory");
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error getting Hunter Pet from Armory",
+                    ex.Message,
+                    "GetPet(...)",
+                    "No Additional Info",
+                    ex.StackTrace);
+            }
+            return null;
+        }
 
 		/// <summary>
 		/// 09.01.01 - TankConcrete

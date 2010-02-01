@@ -342,7 +342,7 @@ namespace Rawr
 			return doc;
 		}
 
-		public XmlDocument DownloadCharacterSheet(string characterName, CharacterRegion region, string realm)
+        public XmlDocument DownloadCharacterSheet(string characterName, CharacterRegion region, string realm)
 		{
 			//http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}
 			string domain = _domains[region];
