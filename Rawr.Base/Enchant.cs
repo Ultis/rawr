@@ -716,7 +716,9 @@ namespace Rawr
             hyper.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 12f, 60f));
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", ItemSlot.Hands, hyper));
             defaultEnchants.Add(new Enchant(3860, "Reticulated Armor Webbing", ItemSlot.Hands, new Stats() { BonusArmor = 885f }));
-            defaultEnchants.Add(new Enchant(3606, "Nitro Boosts", ItemSlot.Feet, new Stats() { CritRating = 24f }));
+            Stats nitro = new Stats() { CritRating = 24f, };
+            nitro.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 1.50f, }, 5f, 3*60f));
+            defaultEnchants.Add(new Enchant(3606, "Nitro Boosts", ItemSlot.Feet, nitro));
 
             // Engineering Head enchant
             defaultEnchants.Add(new Enchant(3878, "Mind Amplification Dish", ItemSlot.Head, new Stats() { Stamina = 45f }));
