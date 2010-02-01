@@ -9,7 +9,7 @@ namespace Rawr.Rogue.FinishingMoves
 #endif
     public class Rupture : FinisherBase
     {
-        public const string NAME = "Rupture";
+        /*public const string NAME = "Rupture";
 
         public override char Id { get { return 'R'; } }
 
@@ -69,6 +69,11 @@ namespace Rawr.Rogue.FinishingMoves
             return finisherDmg / cycleTime.Duration;
         }
 
+        public float Duration(int CPs)
+        {
+            return 6 + 2 * CPs + BonusGlyphOfRuptureDuration;
+        }
+
         public static float BonusDurationFromBackstab(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, CycleTime cycleTime, float ruptureDuration)
         {
             if (!Glyphs.GlyphOfBackstab || (calcOpts.CpGenerator.Name != Backstab.NAME))
@@ -93,7 +98,7 @@ namespace Rawr.Rogue.FinishingMoves
         private static float BonusGlyphOfRuptureDuration
         {
             get { return Glyphs.GlyphOfRupture ? 4f : 0f; }
-        }
+        }*/
     }
 }
 

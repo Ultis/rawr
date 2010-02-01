@@ -8,7 +8,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 #endif
     public class Backstab : ComboPointGenerator
     {
-        public const string NAME = "Backstab";
+        /*public const string NAME = "Backstab";
 
         public override string Name { get { return NAME; } }
 
@@ -50,6 +50,6 @@ namespace Rawr.Rogue.ComboPointGenerators
             {
                 return 0f;
             }
-        }
+        }*/
     }
 }

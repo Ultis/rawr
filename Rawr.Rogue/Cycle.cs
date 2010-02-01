@@ -35,7 +35,7 @@ namespace Rawr.Rogue
             get { return _components; }
         }
 
-        public bool Includes(string componentName)
+        /*public bool Includes(string componentName)
         {
             return FindAll(componentName).Count > 0;
         }
@@ -48,7 +48,7 @@ namespace Rawr.Rogue
         public List<CycleComponent> FindAll(string name)
         {
             return _components.FindAll(c => c.Finisher.Name == name);
-        }
+        }*/
     }
 
 #if (SILVERLIGHT == false)
@@ -83,7 +83,7 @@ namespace Rawr.Rogue
             set { _finisher = value; }
         }
 
-        public float CalcFinisherDps( CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CycleTime cycleTime, CharacterCalculationsRogue displayValues )
+        /*public float CalcFinisherDps( CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CycleTime cycleTime, CharacterCalculationsRogue displayValues )
         {
             return _finisher.CalcFinisherDPS(calcOpts, stats, combatFactors, _rank, cycleTime, whiteAttacks, displayValues);
         }
@@ -91,6 +91,6 @@ namespace Rawr.Rogue
         public override string ToString()
         {
             return _rank == 0 || _finisher.Id == new NoFinisher().Id ? "" : _rank + _finisher.Id.ToString();
-        }
+        }*/
     }
 }

@@ -8,7 +8,7 @@ namespace Rawr.Rogue.FinishingMoves
     [Serializable]
 #endif
     public class SnD : FinisherBase {
-        public const string NAME = "SnD";
+        /*public const string NAME = "SnD";
         private const float BASE_HASTE_BONUS = .4f;
         public override char Id { get { return 'S'; } }
         public override string Name { get { return NAME; } }
@@ -69,6 +69,6 @@ namespace Rawr.Rogue.FinishingMoves
 
         public static float CalcHasteBonus(CalculationOptionsRogue calcOpts, CycleTime cycleTime) {
             return BASE_HASTE_BONUS * UpTime(calcOpts, cycleTime);
-        }
+        }*/
     }
 }

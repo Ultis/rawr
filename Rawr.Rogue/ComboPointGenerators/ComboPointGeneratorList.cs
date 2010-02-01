@@ -6,7 +6,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 {
     public class ComboPointGeneratorList : List<ComboPointGenerator>
     {
-        public ComboPointGeneratorList()
+        /*public ComboPointGeneratorList()
         {
             Add(new Mutilate());
             Add(new Backstab());
@@ -25,6 +25,6 @@ namespace Rawr.Rogue.ComboPointGenerators
                 }
             }
             throw new Exception("Cannot find: " + name);
-        }
+        }*/
     }
 }

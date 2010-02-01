@@ -9,7 +9,7 @@ namespace Rawr.Rogue.Poisons
 
     public class WoundPoison : PoisonBase
     {
-        private const float PROCS_PER_MINUTE = 21.43f;
+        /*private const float PROCS_PER_MINUTE = 21.43f;
 
         public override string Name
         {
@@ -63,6 +63,6 @@ namespace Rawr.Rogue.Poisons
         private static float BaseChanceToApply( Item weapon )
         {
             return PROCS_PER_MINUTE / ( 60 / weapon.Speed );
-        }
+        }*/
     }
 }

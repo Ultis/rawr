@@ -23,557 +23,571 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.CB_TargLevel = new System.Windows.Forms.ComboBox();
-            this.LB_TargLevel = new System.Windows.Forms.Label();
-            this.LB_TargArmor = new System.Windows.Forms.Label();
-            this.GB_Cycles = new System.Windows.Forms.GroupBox();
-            this.CB_Finisher3 = new System.Windows.Forms.ComboBox();
-            this.CB_ComboPoints3 = new System.Windows.Forms.ComboBox();
-            this.CB_Finisher2 = new System.Windows.Forms.ComboBox();
-            this.CB_ComboPoints2 = new System.Windows.Forms.ComboBox();
-            this.CB_Finisher1 = new System.Windows.Forms.ComboBox();
-            this.CB_ComboPoints1 = new System.Windows.Forms.ComboBox();
-            this.GB_Poisons = new System.Windows.Forms.GroupBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelRogue));
             this.CB_PoisonOH = new System.Windows.Forms.ComboBox();
             this.LB_PoisonOH = new System.Windows.Forms.Label();
             this.CB_PoisonMH = new System.Windows.Forms.ComboBox();
             this.LB_PoisonMH = new System.Windows.Forms.Label();
-            this.CB_TargArmor = new System.Windows.Forms.ComboBox();
-            this.GB_FightInfo = new System.Windows.Forms.GroupBox();
-            this.LB_Duration = new System.Windows.Forms.Label();
-            this.NUD_Duration = new System.Windows.Forms.NumericUpDown();
-            this.CB_CpGenerator = new System.Windows.Forms.ComboBox();
-            this.NUD_Hat = new System.Windows.Forms.NumericUpDown();
-            this.GB_CPG = new System.Windows.Forms.GroupBox();
-            this.LB_HemoPerCycle = new System.Windows.Forms.Label();
-            this.NUD_HemoPerCycle = new System.Windows.Forms.NumericUpDown();
-            this.LB_CPperSec = new System.Windows.Forms.Label();
-            this.LB_CPG = new System.Windows.Forms.Label();
-            this.GB_Abilities = new System.Windows.Forms.GroupBox();
             this.CK_UseTurnTheTables = new System.Windows.Forms.CheckBox();
             this.LB_TurnTheTables = new System.Windows.Forms.Label();
             this.NUD_TurnTheTablesUptimePerc = new System.Windows.Forms.NumericUpDown();
             this.LB_FeintDelay = new System.Windows.Forms.Label();
             this.NUD_FeintDelay = new System.Windows.Forms.NumericUpDown();
             this.CK_UseFeint = new System.Windows.Forms.CheckBox();
-            this.GB_Cycles.SuspendLayout();
-            this.GB_Poisons.SuspendLayout();
-            this.GB_FightInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_Duration)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_Hat)).BeginInit();
-            this.GB_CPG.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_HemoPerCycle)).BeginInit();
-            this.GB_Abilities.SuspendLayout();
+            this.label6 = new System.Windows.Forms.Label();
+            this.trackBarTrinketOffset = new System.Windows.Forms.TrackBar();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBoxCPG = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comboBoxOHPoison = new System.Windows.Forms.ComboBox();
+            this.comboBoxMHPoison = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBoxFinisher = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.checkBoxExpose = new System.Windows.Forms.CheckBox();
+            this.checkBoxRupt = new System.Windows.Forms.CheckBox();
+            this.comboBoxCPFinisher = new System.Windows.Forms.ComboBox();
+            this.comboBoxSnD = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownLagVariance = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labelTrinketOffset = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownTargetArmor = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxPoisonable = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLagVariance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
             this.SuspendLayout();
-            // 
-            // CB_TargLevel
-            // 
-            this.CB_TargLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TargLevel.FormattingEnabled = true;
-            this.CB_TargLevel.Location = new System.Drawing.Point(79, 19);
-            this.CB_TargLevel.Name = "CB_TargLevel";
-            this.CB_TargLevel.Size = new System.Drawing.Size(47, 21);
-            this.CB_TargLevel.TabIndex = 0;
-            this.CB_TargLevel.SelectedIndexChanged += new System.EventHandler(this.CB_TargLevel_SelectedIndexChanged);
-            // 
-            // LB_TargLevel
-            // 
-            this.LB_TargLevel.AutoSize = true;
-            this.LB_TargLevel.Location = new System.Drawing.Point(6, 22);
-            this.LB_TargLevel.Name = "LB_TargLevel";
-            this.LB_TargLevel.Size = new System.Drawing.Size(70, 13);
-            this.LB_TargLevel.TabIndex = 1;
-            this.LB_TargLevel.Text = "Target Level:";
-            // 
-            // LB_TargArmor
-            // 
-            this.LB_TargArmor.AutoSize = true;
-            this.LB_TargArmor.Location = new System.Drawing.Point(132, 22);
-            this.LB_TargArmor.Name = "LB_TargArmor";
-            this.LB_TargArmor.Size = new System.Drawing.Size(71, 13);
-            this.LB_TargArmor.TabIndex = 3;
-            this.LB_TargArmor.Text = "Target Armor:";
-            // 
-            // GB_Cycles
-            // 
-            this.GB_Cycles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_Cycles.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_Cycles.Controls.Add(this.CB_Finisher3);
-            this.GB_Cycles.Controls.Add(this.CB_ComboPoints3);
-            this.GB_Cycles.Controls.Add(this.CB_Finisher2);
-            this.GB_Cycles.Controls.Add(this.CB_ComboPoints2);
-            this.GB_Cycles.Controls.Add(this.CB_Finisher1);
-            this.GB_Cycles.Controls.Add(this.CB_ComboPoints1);
-            this.GB_Cycles.Location = new System.Drawing.Point(3, 152);
-            this.GB_Cycles.Name = "GB_Cycles";
-            this.GB_Cycles.Size = new System.Drawing.Size(298, 107);
-            this.GB_Cycles.TabIndex = 6;
-            this.GB_Cycles.TabStop = false;
-            this.GB_Cycles.Text = "Cycles";
-            // 
-            // CB_Finisher3
-            // 
-            this.CB_Finisher3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_Finisher3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Finisher3.FormattingEnabled = true;
-            this.CB_Finisher3.Location = new System.Drawing.Point(104, 76);
-            this.CB_Finisher3.Name = "CB_Finisher3";
-            this.CB_Finisher3.Size = new System.Drawing.Size(188, 21);
-            this.CB_Finisher3.TabIndex = 10;
-            this.CB_Finisher3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
-            // 
-            // CB_ComboPoints3
-            // 
-            this.CB_ComboPoints3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_ComboPoints3.FormattingEnabled = true;
-            this.CB_ComboPoints3.Location = new System.Drawing.Point(11, 76);
-            this.CB_ComboPoints3.Name = "CB_ComboPoints3";
-            this.CB_ComboPoints3.Size = new System.Drawing.Size(87, 21);
-            this.CB_ComboPoints3.TabIndex = 9;
-            this.CB_ComboPoints3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
-            // 
-            // CB_Finisher2
-            // 
-            this.CB_Finisher2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_Finisher2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Finisher2.FormattingEnabled = true;
-            this.CB_Finisher2.Location = new System.Drawing.Point(104, 47);
-            this.CB_Finisher2.Name = "CB_Finisher2";
-            this.CB_Finisher2.Size = new System.Drawing.Size(188, 21);
-            this.CB_Finisher2.TabIndex = 8;
-            this.CB_Finisher2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
-            // 
-            // CB_ComboPoints2
-            // 
-            this.CB_ComboPoints2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_ComboPoints2.FormattingEnabled = true;
-            this.CB_ComboPoints2.Location = new System.Drawing.Point(11, 48);
-            this.CB_ComboPoints2.Name = "CB_ComboPoints2";
-            this.CB_ComboPoints2.Size = new System.Drawing.Size(87, 21);
-            this.CB_ComboPoints2.TabIndex = 7;
-            this.CB_ComboPoints2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
-            // 
-            // CB_Finisher1
-            // 
-            this.CB_Finisher1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_Finisher1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_Finisher1.FormattingEnabled = true;
-            this.CB_Finisher1.Location = new System.Drawing.Point(104, 20);
-            this.CB_Finisher1.Name = "CB_Finisher1";
-            this.CB_Finisher1.Size = new System.Drawing.Size(188, 21);
-            this.CB_Finisher1.TabIndex = 6;
-            this.CB_Finisher1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
-            // 
-            // CB_ComboPoints1
-            // 
-            this.CB_ComboPoints1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_ComboPoints1.FormattingEnabled = true;
-            this.CB_ComboPoints1.Location = new System.Drawing.Point(11, 20);
-            this.CB_ComboPoints1.Name = "CB_ComboPoints1";
-            this.CB_ComboPoints1.Size = new System.Drawing.Size(87, 21);
-            this.CB_ComboPoints1.TabIndex = 5;
-            this.CB_ComboPoints1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
-            // 
-            // GB_Poisons
-            // 
-            this.GB_Poisons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_Poisons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_Poisons.Controls.Add(this.CB_PoisonOH);
-            this.GB_Poisons.Controls.Add(this.LB_PoisonOH);
-            this.GB_Poisons.Controls.Add(this.CB_PoisonMH);
-            this.GB_Poisons.Controls.Add(this.LB_PoisonMH);
-            this.GB_Poisons.Location = new System.Drawing.Point(3, 265);
-            this.GB_Poisons.Name = "GB_Poisons";
-            this.GB_Poisons.Size = new System.Drawing.Size(298, 77);
-            this.GB_Poisons.TabIndex = 7;
-            this.GB_Poisons.TabStop = false;
-            this.GB_Poisons.Text = "Poisons";
             // 
             // CB_PoisonOH
             // 
-            this.CB_PoisonOH.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_PoisonOH.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_PoisonOH.FormattingEnabled = true;
-            this.CB_PoisonOH.Items.AddRange(new object[] {
-            "Deadly Poison",
-            "Instant Poison"});
-            this.CB_PoisonOH.Location = new System.Drawing.Point(74, 46);
+            this.CB_PoisonOH.Location = new System.Drawing.Point(0, 0);
             this.CB_PoisonOH.Name = "CB_PoisonOH";
-            this.CB_PoisonOH.Size = new System.Drawing.Size(218, 21);
-            this.CB_PoisonOH.TabIndex = 12;
-            this.CB_PoisonOH.SelectedIndexChanged += new System.EventHandler(this.OnOHPoisonChanged);
+            this.CB_PoisonOH.Size = new System.Drawing.Size(121, 21);
+            this.CB_PoisonOH.TabIndex = 0;
             // 
             // LB_PoisonOH
             // 
-            this.LB_PoisonOH.AutoSize = true;
-            this.LB_PoisonOH.Location = new System.Drawing.Point(15, 49);
+            this.LB_PoisonOH.Location = new System.Drawing.Point(0, 0);
             this.LB_PoisonOH.Name = "LB_PoisonOH";
-            this.LB_PoisonOH.Size = new System.Drawing.Size(53, 13);
-            this.LB_PoisonOH.TabIndex = 2;
-            this.LB_PoisonOH.Text = "Off Hand:";
+            this.LB_PoisonOH.Size = new System.Drawing.Size(100, 23);
+            this.LB_PoisonOH.TabIndex = 0;
             // 
             // CB_PoisonMH
             // 
-            this.CB_PoisonMH.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_PoisonMH.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_PoisonMH.FormattingEnabled = true;
-            this.CB_PoisonMH.Location = new System.Drawing.Point(74, 19);
+            this.CB_PoisonMH.Location = new System.Drawing.Point(0, 0);
             this.CB_PoisonMH.Name = "CB_PoisonMH";
-            this.CB_PoisonMH.Size = new System.Drawing.Size(218, 21);
-            this.CB_PoisonMH.TabIndex = 11;
-            this.CB_PoisonMH.SelectedIndexChanged += new System.EventHandler(this.OnMHPoisonChanged);
+            this.CB_PoisonMH.Size = new System.Drawing.Size(121, 21);
+            this.CB_PoisonMH.TabIndex = 0;
             // 
             // LB_PoisonMH
             // 
-            this.LB_PoisonMH.AutoSize = true;
-            this.LB_PoisonMH.Location = new System.Drawing.Point(6, 22);
+            this.LB_PoisonMH.Location = new System.Drawing.Point(0, 0);
             this.LB_PoisonMH.Name = "LB_PoisonMH";
-            this.LB_PoisonMH.Size = new System.Drawing.Size(62, 13);
+            this.LB_PoisonMH.Size = new System.Drawing.Size(100, 23);
             this.LB_PoisonMH.TabIndex = 0;
-            this.LB_PoisonMH.Text = "Main Hand:";
             // 
-            // CB_TargArmor
+            // CK_UseTurnTheTables
             // 
-            this.CB_TargArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.CK_UseTurnTheTables.Location = new System.Drawing.Point(0, 0);
+            this.CK_UseTurnTheTables.Name = "CK_UseTurnTheTables";
+            this.CK_UseTurnTheTables.Size = new System.Drawing.Size(104, 24);
+            this.CK_UseTurnTheTables.TabIndex = 0;
+            // 
+            // LB_TurnTheTables
+            // 
+            this.LB_TurnTheTables.Location = new System.Drawing.Point(0, 0);
+            this.LB_TurnTheTables.Name = "LB_TurnTheTables";
+            this.LB_TurnTheTables.Size = new System.Drawing.Size(100, 23);
+            this.LB_TurnTheTables.TabIndex = 0;
+            // 
+            // NUD_TurnTheTablesUptimePerc
+            // 
+            this.NUD_TurnTheTablesUptimePerc.Location = new System.Drawing.Point(0, 0);
+            this.NUD_TurnTheTablesUptimePerc.Name = "NUD_TurnTheTablesUptimePerc";
+            this.NUD_TurnTheTablesUptimePerc.Size = new System.Drawing.Size(120, 20);
+            this.NUD_TurnTheTablesUptimePerc.TabIndex = 0;
+            // 
+            // LB_FeintDelay
+            // 
+            this.LB_FeintDelay.Location = new System.Drawing.Point(0, 0);
+            this.LB_FeintDelay.Name = "LB_FeintDelay";
+            this.LB_FeintDelay.Size = new System.Drawing.Size(100, 23);
+            this.LB_FeintDelay.TabIndex = 0;
+            // 
+            // NUD_FeintDelay
+            // 
+            this.NUD_FeintDelay.Location = new System.Drawing.Point(0, 0);
+            this.NUD_FeintDelay.Name = "NUD_FeintDelay";
+            this.NUD_FeintDelay.Size = new System.Drawing.Size(120, 20);
+            this.NUD_FeintDelay.TabIndex = 0;
+            // 
+            // CK_UseFeint
+            // 
+            this.CK_UseFeint.Location = new System.Drawing.Point(0, 0);
+            this.CK_UseFeint.Name = "CK_UseFeint";
+            this.CK_UseFeint.Size = new System.Drawing.Size(104, 24);
+            this.CK_UseFeint.TabIndex = 0;
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(14, 374);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(254, 98);
+            this.label6.TabIndex = 17;
+            this.label6.Text = resources.GetString("label6.Text");
+            // 
+            // trackBarTrinketOffset
+            // 
+            this.trackBarTrinketOffset.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarTrinketOffset.Location = new System.Drawing.Point(9, 338);
+            this.trackBarTrinketOffset.Maximum = 90;
+            this.trackBarTrinketOffset.Name = "trackBarTrinketOffset";
+            this.trackBarTrinketOffset.Size = new System.Drawing.Size(259, 45);
+            this.trackBarTrinketOffset.TabIndex = 24;
+            this.trackBarTrinketOffset.TickFrequency = 2;
+            this.trackBarTrinketOffset.Scroll += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_TargArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_TargArmor.FormattingEnabled = true;
-            this.CB_TargArmor.Items.AddRange(new object[] {
-            "83",
-            "82",
-            "81",
-            "80"});
-            this.CB_TargArmor.Location = new System.Drawing.Point(209, 19);
-            this.CB_TargArmor.Name = "CB_TargArmor";
-            this.CB_TargArmor.Size = new System.Drawing.Size(83, 21);
-            this.CB_TargArmor.TabIndex = 1;
-            this.CB_TargArmor.SelectedIndexChanged += new System.EventHandler(this.CB_TargArmor_SelectedIndexChanged);
+            this.groupBox1.Controls.Add(this.comboBoxCPG);
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.comboBoxOHPoison);
+            this.groupBox1.Controls.Add(this.comboBoxMHPoison);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.comboBoxFinisher);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.checkBoxExpose);
+            this.groupBox1.Controls.Add(this.checkBoxRupt);
+            this.groupBox1.Controls.Add(this.comboBoxCPFinisher);
+            this.groupBox1.Controls.Add(this.comboBoxSnD);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Location = new System.Drawing.Point(9, 136);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(265, 183);
+            this.groupBox1.TabIndex = 23;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Custom Rotation";
             // 
-            // GB_FightInfo
+            // comboBoxCPG
             // 
-            this.GB_FightInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBoxCPG.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_FightInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_FightInfo.Controls.Add(this.CB_TargLevel);
-            this.GB_FightInfo.Controls.Add(this.LB_Duration);
-            this.GB_FightInfo.Controls.Add(this.NUD_Duration);
-            this.GB_FightInfo.Controls.Add(this.LB_TargLevel);
-            this.GB_FightInfo.Controls.Add(this.CB_TargArmor);
-            this.GB_FightInfo.Controls.Add(this.LB_TargArmor);
-            this.GB_FightInfo.Location = new System.Drawing.Point(3, 3);
-            this.GB_FightInfo.Name = "GB_FightInfo";
-            this.GB_FightInfo.Size = new System.Drawing.Size(298, 73);
-            this.GB_FightInfo.TabIndex = 9;
-            this.GB_FightInfo.TabStop = false;
-            this.GB_FightInfo.Text = "Bosses";
+            this.comboBoxCPG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCPG.FormattingEnabled = true;
+            this.comboBoxCPG.Items.AddRange(new object[] {
+            "Mutilate",
+            "Sinister Strike",
+            "Backstab",
+            "Hemorrhage"});
+            this.comboBoxCPG.Location = new System.Drawing.Point(166, 19);
+            this.comboBoxCPG.Name = "comboBoxCPG";
+            this.comboBoxCPG.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxCPG.TabIndex = 9;
+            this.comboBoxCPG.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // LB_Duration
+            // label12
             // 
-            this.LB_Duration.AutoSize = true;
-            this.LB_Duration.Location = new System.Drawing.Point(6, 48);
-            this.LB_Duration.Name = "LB_Duration";
-            this.LB_Duration.Size = new System.Drawing.Size(102, 13);
-            this.LB_Duration.TabIndex = 5;
-            this.LB_Duration.Text = "Fight Duration (sec):";
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(102, 22);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(32, 13);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "CPG:";
             // 
-            // NUD_Duration
+            // comboBoxOHPoison
             // 
-            this.NUD_Duration.Location = new System.Drawing.Point(135, 46);
-            this.NUD_Duration.Maximum = new decimal(new int[] {
+            this.comboBoxOHPoison.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxOHPoison.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOHPoison.FormattingEnabled = true;
+            this.comboBoxOHPoison.Items.AddRange(new object[] {
+            "None / Other",
+            "Instant",
+            "Deadly",
+            "Wound",
+            "Anesthetic"});
+            this.comboBoxOHPoison.Location = new System.Drawing.Point(166, 154);
+            this.comboBoxOHPoison.Name = "comboBoxOHPoison";
+            this.comboBoxOHPoison.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxOHPoison.TabIndex = 7;
+            this.comboBoxOHPoison.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // comboBoxMHPoison
+            // 
+            this.comboBoxMHPoison.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxMHPoison.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMHPoison.FormattingEnabled = true;
+            this.comboBoxMHPoison.Items.AddRange(new object[] {
+            "None / Other",
+            "Instant",
+            "Deadly",
+            "Wound",
+            "Anesthetic"});
+            this.comboBoxMHPoison.Location = new System.Drawing.Point(166, 127);
+            this.comboBoxMHPoison.Name = "comboBoxMHPoison";
+            this.comboBoxMHPoison.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxMHPoison.TabIndex = 5;
+            this.comboBoxMHPoison.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(102, 157);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(61, 13);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "OH Poison:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(102, 130);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(62, 13);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "MH Poison:";
+            // 
+            // comboBoxFinisher
+            // 
+            this.comboBoxFinisher.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxFinisher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFinisher.FormattingEnabled = true;
+            this.comboBoxFinisher.Items.AddRange(new object[] {
+            "None",
+            "Eviscerate",
+            "Envenom"});
+            this.comboBoxFinisher.Location = new System.Drawing.Point(166, 100);
+            this.comboBoxFinisher.Name = "comboBoxFinisher";
+            this.comboBoxFinisher.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxFinisher.TabIndex = 3;
+            this.comboBoxFinisher.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(102, 103);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(46, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Finisher:";
+            // 
+            // checkBoxExpose
+            // 
+            this.checkBoxExpose.AutoSize = true;
+            this.checkBoxExpose.Location = new System.Drawing.Point(6, 48);
+            this.checkBoxExpose.Name = "checkBoxExpose";
+            this.checkBoxExpose.Size = new System.Drawing.Size(91, 17);
+            this.checkBoxExpose.TabIndex = 1;
+            this.checkBoxExpose.Text = "Expose Armor";
+            this.checkBoxExpose.UseVisualStyleBackColor = true;
+            this.checkBoxExpose.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // checkBoxRupt
+            // 
+            this.checkBoxRupt.AutoSize = true;
+            this.checkBoxRupt.Location = new System.Drawing.Point(6, 21);
+            this.checkBoxRupt.Name = "checkBoxRupt";
+            this.checkBoxRupt.Size = new System.Drawing.Size(64, 17);
+            this.checkBoxRupt.TabIndex = 1;
+            this.checkBoxRupt.Text = "Rupture";
+            this.checkBoxRupt.UseVisualStyleBackColor = true;
+            this.checkBoxRupt.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // comboBoxCPFinisher
+            // 
+            this.comboBoxCPFinisher.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCPFinisher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCPFinisher.FormattingEnabled = true;
+            this.comboBoxCPFinisher.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboBoxCPFinisher.Location = new System.Drawing.Point(207, 73);
+            this.comboBoxCPFinisher.Name = "comboBoxCPFinisher";
+            this.comboBoxCPFinisher.Size = new System.Drawing.Size(52, 21);
+            this.comboBoxCPFinisher.TabIndex = 1;
+            this.comboBoxCPFinisher.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // comboBoxSnD
+            // 
+            this.comboBoxSnD.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxSnD.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSnD.FormattingEnabled = true;
+            this.comboBoxSnD.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboBoxSnD.Location = new System.Drawing.Point(207, 46);
+            this.comboBoxSnD.Name = "comboBoxSnD";
+            this.comboBoxSnD.Size = new System.Drawing.Size(52, 21);
+            this.comboBoxSnD.TabIndex = 1;
+            this.comboBoxSnD.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(102, 49);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(96, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Slice and Dice CP:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(102, 76);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(63, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Finisher CP:";
+            // 
+            // numericUpDownLagVariance
+            // 
+            this.numericUpDownLagVariance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLagVariance.Location = new System.Drawing.Point(114, 110);
+            this.numericUpDownLagVariance.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownLagVariance.Name = "numericUpDownLagVariance";
+            this.numericUpDownLagVariance.Size = new System.Drawing.Size(160, 20);
+            this.numericUpDownLagVariance.TabIndex = 20;
+            this.numericUpDownLagVariance.ThousandsSeparator = true;
+            this.numericUpDownLagVariance.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownLagVariance.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // numericUpDownDuration
+            // 
+            this.numericUpDownDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownDuration.Location = new System.Drawing.Point(114, 84);
+            this.numericUpDownDuration.Maximum = new decimal(new int[] {
             1200,
             0,
             0,
             0});
-            this.NUD_Duration.Name = "NUD_Duration";
-            this.NUD_Duration.Size = new System.Drawing.Size(57, 20);
-            this.NUD_Duration.TabIndex = 4;
-            this.NUD_Duration.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NUD_Duration.Value = new decimal(new int[] {
-            600,
+            this.numericUpDownDuration.Minimum = new decimal(new int[] {
+            30,
             0,
             0,
             0});
-            this.NUD_Duration.ValueChanged += new System.EventHandler(this.NUD_Duration_ValueChanged);
+            this.numericUpDownDuration.Name = "numericUpDownDuration";
+            this.numericUpDownDuration.Size = new System.Drawing.Size(160, 20);
+            this.numericUpDownDuration.TabIndex = 22;
+            this.numericUpDownDuration.ThousandsSeparator = true;
+            this.numericUpDownDuration.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // CB_CpGenerator
+            // label7
             // 
-            this.CB_CpGenerator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 112);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(99, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "Lag Variance* (ms):";
+            // 
+            // labelTrinketOffset
+            // 
+            this.labelTrinketOffset.Location = new System.Drawing.Point(14, 322);
+            this.labelTrinketOffset.Name = "labelTrinketOffset";
+            this.labelTrinketOffset.Size = new System.Drawing.Size(254, 13);
+            this.labelTrinketOffset.TabIndex = 16;
+            this.labelTrinketOffset.Tag = "Trinket Offset: {0}sec";
+            this.labelTrinketOffset.Text = "Trinket Offset:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 86);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(76, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Duration (sec):";
+            // 
+            // numericUpDownTargetArmor
+            // 
+            this.numericUpDownTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_CpGenerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_CpGenerator.FormattingEnabled = true;
-            this.CB_CpGenerator.Location = new System.Drawing.Point(10, 32);
-            this.CB_CpGenerator.Name = "CB_CpGenerator";
-            this.CB_CpGenerator.Size = new System.Drawing.Size(128, 21);
-            this.CB_CpGenerator.TabIndex = 2;
-            this.CB_CpGenerator.SelectedIndexChanged += new System.EventHandler(this.CB_CpGenerator_SelectedIndexChanged);
-            // 
-            // NUD_Hat
-            // 
-            this.NUD_Hat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_Hat.DecimalPlaces = 1;
-            this.NUD_Hat.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.NUD_Hat.Location = new System.Drawing.Point(144, 33);
-            this.NUD_Hat.Maximum = new decimal(new int[] {
-            10,
+            this.numericUpDownTargetArmor.Location = new System.Drawing.Point(114, 37);
+            this.numericUpDownTargetArmor.Maximum = new decimal(new int[] {
+            15000,
             0,
             0,
             0});
-            this.NUD_Hat.Minimum = new decimal(new int[] {
-            1,
+            this.numericUpDownTargetArmor.Name = "numericUpDownTargetArmor";
+            this.numericUpDownTargetArmor.Size = new System.Drawing.Size(160, 20);
+            this.numericUpDownTargetArmor.TabIndex = 21;
+            this.numericUpDownTargetArmor.ThousandsSeparator = true;
+            this.numericUpDownTargetArmor.Value = new decimal(new int[] {
+            13083,
             0,
             0,
-            65536});
-            this.NUD_Hat.Name = "NUD_Hat";
-            this.NUD_Hat.Size = new System.Drawing.Size(73, 20);
-            this.NUD_Hat.TabIndex = 3;
-            this.NUD_Hat.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.NUD_Hat.Visible = false;
-            this.NUD_Hat.ValueChanged += new System.EventHandler(this.HatStepper_ValueChanged);
+            0});
+            this.numericUpDownTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // GB_CPG
+            // label3
             // 
-            this.GB_CPG.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 39);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Target Armor:";
+            // 
+            // comboBoxTargetLevel
+            // 
+            this.comboBoxTargetLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_CPG.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_CPG.Controls.Add(this.LB_HemoPerCycle);
-            this.GB_CPG.Controls.Add(this.NUD_HemoPerCycle);
-            this.GB_CPG.Controls.Add(this.LB_CPperSec);
-            this.GB_CPG.Controls.Add(this.LB_CPG);
-            this.GB_CPG.Controls.Add(this.NUD_Hat);
-            this.GB_CPG.Controls.Add(this.CB_CpGenerator);
-            this.GB_CPG.Location = new System.Drawing.Point(3, 82);
-            this.GB_CPG.Name = "GB_CPG";
-            this.GB_CPG.Size = new System.Drawing.Size(298, 64);
-            this.GB_CPG.TabIndex = 11;
-            this.GB_CPG.TabStop = false;
-            this.GB_CPG.Text = "Combo Point Generator";
+            this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTargetLevel.FormattingEnabled = true;
+            this.comboBoxTargetLevel.Items.AddRange(new object[] {
+            "80",
+            "81",
+            "82",
+            "83"});
+            this.comboBoxTargetLevel.Location = new System.Drawing.Point(114, 10);
+            this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(160, 21);
+            this.comboBoxTargetLevel.TabIndex = 14;
+            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // LB_HemoPerCycle
+            // label1
             // 
-            this.LB_HemoPerCycle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_HemoPerCycle.AutoSize = true;
-            this.LB_HemoPerCycle.Location = new System.Drawing.Point(220, 16);
-            this.LB_HemoPerCycle.Name = "LB_HemoPerCycle";
-            this.LB_HemoPerCycle.Size = new System.Drawing.Size(66, 13);
-            this.LB_HemoPerCycle.TabIndex = 14;
-            this.LB_HemoPerCycle.Text = "Hemo/Cycle";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(73, 13);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Target Level: ";
             // 
-            // NUD_HemoPerCycle
+            // checkBoxPoisonable
             // 
-            this.NUD_HemoPerCycle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_HemoPerCycle.DecimalPlaces = 1;
-            this.NUD_HemoPerCycle.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.NUD_HemoPerCycle.Location = new System.Drawing.Point(223, 33);
-            this.NUD_HemoPerCycle.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.NUD_HemoPerCycle.Name = "NUD_HemoPerCycle";
-            this.NUD_HemoPerCycle.Size = new System.Drawing.Size(69, 20);
-            this.NUD_HemoPerCycle.TabIndex = 4;
-            this.NUD_HemoPerCycle.ValueChanged += new System.EventHandler(this.HatStepper_ValueChanged);
+            this.checkBoxPoisonable.AutoSize = true;
+            this.checkBoxPoisonable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.checkBoxPoisonable.Location = new System.Drawing.Point(114, 63);
+            this.checkBoxPoisonable.Name = "checkBoxPoisonable";
+            this.checkBoxPoisonable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxPoisonable.TabIndex = 25;
+            this.checkBoxPoisonable.UseVisualStyleBackColor = true;
+            this.checkBoxPoisonable.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // LB_CPperSec
+            // label11
             // 
-            this.LB_CPperSec.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_CPperSec.AutoSize = true;
-            this.LB_CPperSec.Location = new System.Drawing.Point(141, 16);
-            this.LB_CPperSec.Name = "LB_CPperSec";
-            this.LB_CPperSec.Size = new System.Drawing.Size(48, 13);
-            this.LB_CPperSec.TabIndex = 12;
-            this.LB_CPperSec.Text = "CPs/sec";
-            // 
-            // LB_CPG
-            // 
-            this.LB_CPG.AutoSize = true;
-            this.LB_CPG.Location = new System.Drawing.Point(9, 16);
-            this.LB_CPG.Name = "LB_CPG";
-            this.LB_CPG.Size = new System.Drawing.Size(29, 13);
-            this.LB_CPG.TabIndex = 11;
-            this.LB_CPG.Text = "CPG";
-            // 
-            // GB_Abilities
-            // 
-            this.GB_Abilities.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_Abilities.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_Abilities.Controls.Add(this.CK_UseTurnTheTables);
-            this.GB_Abilities.Controls.Add(this.LB_TurnTheTables);
-            this.GB_Abilities.Controls.Add(this.NUD_TurnTheTablesUptimePerc);
-            this.GB_Abilities.Controls.Add(this.LB_FeintDelay);
-            this.GB_Abilities.Controls.Add(this.NUD_FeintDelay);
-            this.GB_Abilities.Controls.Add(this.CK_UseFeint);
-            this.GB_Abilities.Location = new System.Drawing.Point(3, 348);
-            this.GB_Abilities.Name = "GB_Abilities";
-            this.GB_Abilities.Size = new System.Drawing.Size(298, 70);
-            this.GB_Abilities.TabIndex = 12;
-            this.GB_Abilities.TabStop = false;
-            this.GB_Abilities.Text = "Abilities";
-            // 
-            // CK_UseTurnTheTables
-            // 
-            this.CK_UseTurnTheTables.AutoSize = true;
-            this.CK_UseTurnTheTables.Location = new System.Drawing.Point(6, 46);
-            this.CK_UseTurnTheTables.Name = "CK_UseTurnTheTables";
-            this.CK_UseTurnTheTables.Size = new System.Drawing.Size(101, 17);
-            this.CK_UseTurnTheTables.TabIndex = 5;
-            this.CK_UseTurnTheTables.Text = "Turn the Tables";
-            this.CK_UseTurnTheTables.UseVisualStyleBackColor = true;
-            this.CK_UseTurnTheTables.CheckedChanged += new System.EventHandler(this.UseTurnTheTables_CheckedChanged);
-            // 
-            // LB_TurnTheTables
-            // 
-            this.LB_TurnTheTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_TurnTheTables.AutoSize = true;
-            this.LB_TurnTheTables.Location = new System.Drawing.Point(166, 47);
-            this.LB_TurnTheTables.Name = "LB_TurnTheTables";
-            this.LB_TurnTheTables.Size = new System.Drawing.Size(51, 13);
-            this.LB_TurnTheTables.TabIndex = 4;
-            this.LB_TurnTheTables.Text = "Uptime %";
-            this.LB_TurnTheTables.Visible = false;
-            // 
-            // NUD_TurnTheTablesUptimePerc
-            // 
-            this.NUD_TurnTheTablesUptimePerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_TurnTheTablesUptimePerc.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.NUD_TurnTheTablesUptimePerc.Location = new System.Drawing.Point(223, 45);
-            this.NUD_TurnTheTablesUptimePerc.Name = "NUD_TurnTheTablesUptimePerc";
-            this.NUD_TurnTheTablesUptimePerc.Size = new System.Drawing.Size(69, 20);
-            this.NUD_TurnTheTablesUptimePerc.TabIndex = 3;
-            this.NUD_TurnTheTablesUptimePerc.Visible = false;
-            this.NUD_TurnTheTablesUptimePerc.ValueChanged += new System.EventHandler(this.TurnTheTablesUptimePercent_ValueChanged);
-            // 
-            // LB_FeintDelay
-            // 
-            this.LB_FeintDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_FeintDelay.AutoSize = true;
-            this.LB_FeintDelay.Location = new System.Drawing.Point(123, 21);
-            this.LB_FeintDelay.Name = "LB_FeintDelay";
-            this.LB_FeintDelay.Size = new System.Drawing.Size(94, 13);
-            this.LB_FeintDelay.TabIndex = 2;
-            this.LB_FeintDelay.Text = "Delay (in seconds)";
-            this.LB_FeintDelay.Visible = false;
-            // 
-            // NUD_FeintDelay
-            // 
-            this.NUD_FeintDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_FeintDelay.Location = new System.Drawing.Point(223, 19);
-            this.NUD_FeintDelay.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.NUD_FeintDelay.Name = "NUD_FeintDelay";
-            this.NUD_FeintDelay.Size = new System.Drawing.Size(69, 20);
-            this.NUD_FeintDelay.TabIndex = 1;
-            this.NUD_FeintDelay.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.NUD_FeintDelay.Visible = false;
-            this.NUD_FeintDelay.ValueChanged += new System.EventHandler(this.FeintDelayStepper_ValueChanged);
-            // 
-            // CK_UseFeint
-            // 
-            this.CK_UseFeint.AutoSize = true;
-            this.CK_UseFeint.Location = new System.Drawing.Point(6, 20);
-            this.CK_UseFeint.Name = "CK_UseFeint";
-            this.CK_UseFeint.Size = new System.Drawing.Size(49, 17);
-            this.CK_UseFeint.TabIndex = 0;
-            this.CK_UseFeint.Text = "Feint";
-            this.CK_UseFeint.UseVisualStyleBackColor = true;
-            this.CK_UseFeint.CheckedChanged += new System.EventHandler(this.Feint_CheckedChanged);
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 63);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(95, 13);
+            this.label11.TabIndex = 26;
+            this.label11.Text = "Target poisonable:";
             // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.GB_Abilities);
-            this.Controls.Add(this.GB_CPG);
-            this.Controls.Add(this.GB_Poisons);
-            this.Controls.Add(this.GB_Cycles);
-            this.Controls.Add(this.GB_FightInfo);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.checkBoxPoisonable);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.trackBarTrinketOffset);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.numericUpDownLagVariance);
+            this.Controls.Add(this.numericUpDownDuration);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.labelTrinketOffset);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.numericUpDownTargetArmor);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.comboBoxTargetLevel);
+            this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelRogue";
             this.Size = new System.Drawing.Size(304, 630);
-            this.GB_Cycles.ResumeLayout(false);
-            this.GB_Poisons.ResumeLayout(false);
-            this.GB_Poisons.PerformLayout();
-            this.GB_FightInfo.ResumeLayout(false);
-            this.GB_FightInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_Duration)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_Hat)).EndInit();
-            this.GB_CPG.ResumeLayout(false);
-            this.GB_CPG.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NUD_HemoPerCycle)).EndInit();
-            this.GB_Abilities.ResumeLayout(false);
-            this.GB_Abilities.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLagVariance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ComboBox CB_TargLevel;
-		private System.Windows.Forms.Label LB_TargLevel;
-        private System.Windows.Forms.Label LB_TargArmor;
-        private System.Windows.Forms.GroupBox GB_Cycles;
-        private System.Windows.Forms.GroupBox GB_Poisons;
         private System.Windows.Forms.Label LB_PoisonMH;
         private System.Windows.Forms.ComboBox CB_PoisonOH;
         private System.Windows.Forms.Label LB_PoisonOH;
         private System.Windows.Forms.ComboBox CB_PoisonMH;
-        private System.Windows.Forms.ComboBox CB_TargArmor;
-        private System.Windows.Forms.GroupBox GB_FightInfo;
-        private System.Windows.Forms.ComboBox CB_Finisher3;
-        private System.Windows.Forms.ComboBox CB_ComboPoints3;
-        private System.Windows.Forms.ComboBox CB_Finisher2;
-        private System.Windows.Forms.ComboBox CB_ComboPoints2;
-        private System.Windows.Forms.ComboBox CB_Finisher1;
-        private System.Windows.Forms.ComboBox CB_ComboPoints1;
-        private System.Windows.Forms.ComboBox CB_CpGenerator;
-        private System.Windows.Forms.NumericUpDown NUD_Hat;
-        private System.Windows.Forms.GroupBox GB_CPG;
-        private System.Windows.Forms.Label LB_CPperSec;
-        private System.Windows.Forms.Label LB_CPG;
-        private System.Windows.Forms.Label LB_HemoPerCycle;
-        private System.Windows.Forms.NumericUpDown NUD_HemoPerCycle;
-        private System.Windows.Forms.GroupBox GB_Abilities;
         private System.Windows.Forms.Label LB_FeintDelay;
         private System.Windows.Forms.NumericUpDown NUD_FeintDelay;
         private System.Windows.Forms.CheckBox CK_UseFeint;
         private System.Windows.Forms.CheckBox CK_UseTurnTheTables;
         private System.Windows.Forms.Label LB_TurnTheTables;
         private System.Windows.Forms.NumericUpDown NUD_TurnTheTablesUptimePerc;
-        private System.Windows.Forms.Label LB_Duration;
-        private System.Windows.Forms.NumericUpDown NUD_Duration;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TrackBar trackBarTrinketOffset;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxExpose;
+        private System.Windows.Forms.CheckBox checkBoxRupt;
+        private System.Windows.Forms.ComboBox comboBoxCPFinisher;
+        private System.Windows.Forms.ComboBox comboBoxSnD;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericUpDownLagVariance;
+        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelTrinketOffset;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericUpDownTargetArmor;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox comboBoxTargetLevel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxFinisher;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBoxOHPoison;
+        private System.Windows.Forms.ComboBox comboBoxMHPoison;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox checkBoxPoisonable;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox comboBoxCPG;
+        private System.Windows.Forms.Label label12;
     }
 }

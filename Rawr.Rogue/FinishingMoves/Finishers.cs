@@ -8,7 +8,7 @@ namespace Rawr.Rogue.FinishingMoves
 #endif
     public class Finishers : List<FinisherBase>
     {
-        public Finishers()
+        /*public Finishers()
         {
             Add(new NoFinisher());
             Add(new SnD());
@@ -27,6 +27,6 @@ namespace Rawr.Rogue.FinishingMoves
                 }
             }
             return new NoFinisher();
-        }
+        }*/
     }
 }

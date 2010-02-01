@@ -12,7 +12,7 @@ namespace Rawr.Rogue.ComboPointGenerators {
     [XmlInclude(typeof(HonorAmongThieves))]
 #endif
     public abstract class ComboPointGenerator {
-        public abstract string Name { get; }
+ /*       public abstract string Name { get; }
         public abstract float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime);
         public abstract float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts );
         public abstract float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts);
@@ -35,6 +35,6 @@ namespace Rawr.Rogue.ComboPointGenerators {
         protected float CriticalDamageMultiplier(CombatFactors combatFactors)
         {
             return combatFactors.BaseCritMultiplier * (1f + Talents.Lethality.Bonus);
-        }
+        }*/
     }
 }

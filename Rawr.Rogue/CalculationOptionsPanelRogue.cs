@@ -12,7 +12,6 @@ namespace Rawr.Rogue
     {
         private readonly Dictionary<int, string> _armorBosses = new Dictionary<int, string>();
         private static readonly CalculationOptionsRogue _calcOpts = new CalculationOptionsRogue();
-        private bool m_bLoading;
 
         public CalculationOptionsPanelRogue()
         {
@@ -23,127 +22,38 @@ namespace Rawr.Rogue
             _armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Mob");
             _armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Ulduar Bosses");
 
-            CB_TargArmor.DisplayMember = "Key";
-            CB_TargArmor.DataSource = new BindingSource(_armorBosses, null);
-
-            CB_TargLevel.DataSource = new[] {83, 82, 81, 80};
-
-            CB_ComboPoints1.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
-            CB_ComboPoints2.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
-            CB_ComboPoints3.DataSource = new[] { 0, 1, 2, 3, 4, 5 };
-
-            CB_Finisher1.DisplayMember = "Name";
-            CB_Finisher1.ValueMember = "Id";
-            CB_Finisher1.DataSource = new Finishers();
-            CB_ComboPoints1.SelectedIndex = 4;
-            CB_Finisher1.SelectedIndex = CB_Finisher1.FindString(SnD.NAME);
-
-            CB_Finisher2.DisplayMember = "Name";
-            CB_Finisher2.ValueMember = "Id";
-            CB_Finisher2.DataSource = new Finishers();
-            CB_ComboPoints2.SelectedIndex = 5;
-            CB_Finisher2.SelectedIndex = CB_Finisher2.FindString(Rupture.NAME);
-
-            CB_Finisher3.DisplayMember = "Name";
-            CB_Finisher3.ValueMember = "Id";
-            CB_Finisher3.DataSource = new Finishers();
-
             CB_PoisonMH.DisplayMember = "Name"; 
             CB_PoisonMH.DataSource = new PoisonList();
 
             CB_PoisonOH.DisplayMember = "Name";
             CB_PoisonOH.DataSource = new PoisonList();
-
-            CB_CpGenerator.DisplayMember = "Name";
-            CB_CpGenerator.DataSource = new ComboPointGeneratorList();
         }
 
         protected override void LoadCalculationOptions()
         {
-            m_bLoading = true;
-
+            _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null)
-            {
-                Character.CalculationOptions = _calcOpts;
-            }
-            else
-            {
-                CalculationOptionsRogue loadOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                Character.CalculationOptions = new CalculationOptionsRogue();
 
-                _calcOpts.TargetLevel = loadOpts.TargetLevel;
-                _calcOpts.TargetArmor = loadOpts.TargetArmor;
-                _calcOpts.Duration   = loadOpts.Duration;
-                _calcOpts.CpGenerator = loadOpts.CpGenerator;
-                _calcOpts.DpsCycle = loadOpts.DpsCycle;
-                _calcOpts.TempMainHandEnchant = loadOpts.TempMainHandEnchant;
-                _calcOpts.TempOffHandEnchant = loadOpts.TempOffHandEnchant;
+            CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+            comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+            numericUpDownTargetArmor.Value = calcOpts.TargetArmor;
+            checkBoxPoisonable.Checked = calcOpts.TargetPoisonable;
+            numericUpDownDuration.Value = calcOpts.Duration;
+            numericUpDownLagVariance.Value = calcOpts.LagVariance;
+            checkBoxRupt.Checked = calcOpts.CustomUseRupt;
+            checkBoxExpose.Checked = calcOpts.CustomUseExpose;
+            comboBoxCPG.SelectedIndex = calcOpts.CustomCPG;
+            comboBoxSnD.SelectedItem = calcOpts.CustomCPSnD.ToString();
+            comboBoxFinisher.SelectedIndex = calcOpts.CustomFinisher;
+            comboBoxCPFinisher.SelectedItem = calcOpts.CustomCPFinisher.ToString();
+            comboBoxMHPoison.SelectedIndex = calcOpts.CustomMHPoison;
+            comboBoxOHPoison.SelectedIndex = calcOpts.CustomOHPoison;
+            trackBarTrinketOffset.Value = (int)(calcOpts.TrinketOffset * 2);
 
-                _calcOpts.Feint = loadOpts.Feint;
-                _calcOpts.TurnTheTablesUptime = loadOpts.TurnTheTablesUptime;
+            labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
 
-                CB_TargLevel_SelectedIndexChanged(this, null);
-                CB_TargArmor_SelectedIndexChanged(this, null);
-                NUD_Duration_ValueChanged(this, null);
-                CB_CpGenerator_SelectedIndexChanged(this, null);
-                CycleChanged(this, null);
-                OnMHPoisonChanged(this, null);
-                OnOHPoisonChanged(this, null);
-                Feint_CheckedChanged(this, null);
-                UseTurnTheTables_CheckedChanged(this, null);
-
-                UpdateCalculations();
-            }
-
-            m_bLoading = false;
-        }
-
-        private void OnMHPoisonChanged(object sender, EventArgs e) {
-            if (!m_bLoading) {
-                _calcOpts.TempMainHandEnchant = PoisonList.Get(((ComboBox)sender).Text);
-                UpdateCalculations();
-            } else {
-                CB_PoisonMH.Text = _calcOpts.TempMainHandEnchant.Name;
-            }
-        }
-
-        private void OnOHPoisonChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                _calcOpts.TempOffHandEnchant = PoisonList.Get(((ComboBox)sender).Text);
-                UpdateCalculations();
-            }
-            else
-            {
-                CB_PoisonOH.Text = _calcOpts.TempOffHandEnchant.Name;
-            }
-        }
-
-        private void CB_TargArmor_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                var targetArmor = int.Parse(CB_TargArmor.Text);
-                _calcOpts.TargetArmor = targetArmor;
-                UpdateCalculations();
-            }
-            else
-            {
-                CB_TargArmor.Text = _calcOpts.TargetArmor.ToString();
-            }
-        }
-
-        private void CB_TargLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                _calcOpts.TargetLevel = int.Parse(CB_TargLevel.Text);
-                UpdateCalculations();
-            }
-            else
-            {
-                CB_TargLevel.Text = _calcOpts.TargetLevel.ToString();
-            }
+            _loadingCalculationOptions = false;
         }
 
         private void UpdateCalculations()
@@ -155,175 +65,30 @@ namespace Rawr.Rogue
             }
         }
 
-        private void CycleChanged(object sender, EventArgs e)
+        private bool _loadingCalculationOptions = false;
+        private void calculationOptionControl_Changed(object sender, EventArgs e)
         {
-            if (!m_bLoading)
+            if (!_loadingCalculationOptions)
             {
-            var cycle = new Cycle();
-            if ((GetCycleComponent(CB_ComboPoints1, CB_Finisher1)).Rank > 0) cycle.Components.Add(GetCycleComponent(CB_ComboPoints1, CB_Finisher1));
-            if ((GetCycleComponent(CB_ComboPoints2, CB_Finisher2)).Rank > 0) cycle.Components.Add(GetCycleComponent(CB_ComboPoints2, CB_Finisher2));
-            if ((GetCycleComponent(CB_ComboPoints3, CB_Finisher3)).Rank > 0) cycle.Components.Add(GetCycleComponent(CB_ComboPoints3, CB_Finisher3));
-            _calcOpts.DpsCycle = cycle;
-            UpdateCalculations();
-        }
-            else
-            {
-                if (_calcOpts.DpsCycle.Components.Count > 0)
-                {
-                    CB_ComboPoints1.Text = _calcOpts.DpsCycle.Components[0].Rank.ToString();
-                    CB_Finisher1.Text = _calcOpts.DpsCycle.Components[0].Finisher.Name;
-                }
-                if (_calcOpts.DpsCycle.Components.Count > 1)
-                {
-                    CB_ComboPoints2.Text = _calcOpts.DpsCycle.Components[1].Rank.ToString();
-                    CB_Finisher2.Text = _calcOpts.DpsCycle.Components[1].Finisher.Name;
-                }
-                if (_calcOpts.DpsCycle.Components.Count > 2)
-                {
-                    CB_ComboPoints3.Text = _calcOpts.DpsCycle.Components[2].Rank.ToString();
-                    CB_Finisher3.Text = _calcOpts.DpsCycle.Components[2].Finisher.Name;
-                }
-            }
-        }
+                CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+                calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
+                calcOpts.TargetPoisonable = checkBoxPoisonable.Checked;
+                calcOpts.Duration = (int)numericUpDownDuration.Value;
+                calcOpts.LagVariance = (int)numericUpDownLagVariance.Value;
+                calcOpts.CustomUseRupt = checkBoxRupt.Checked;
+                calcOpts.CustomUseExpose = checkBoxExpose.Checked;
+                calcOpts.CustomCPG = comboBoxCPG.SelectedIndex;
+                calcOpts.CustomCPSnD = int.Parse(comboBoxSnD.SelectedItem.ToString());
+                calcOpts.CustomFinisher = comboBoxFinisher.SelectedIndex;
+                calcOpts.CustomCPFinisher = int.Parse(comboBoxCPFinisher.SelectedItem.ToString());
+                calcOpts.CustomMHPoison = comboBoxMHPoison.SelectedIndex;
+                calcOpts.CustomOHPoison = comboBoxOHPoison.SelectedIndex;
+                calcOpts.TrinketOffset = (float)trackBarTrinketOffset.Value / 2f;
 
-        private static CycleComponent GetCycleComponent(ComboBox comboBoxComboPoints, ComboBox comboBoxFinisher)
-        {
+                labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
 
-            var component = new CycleComponent
-                                {
-                                    Rank = comboBoxComboPoints.Text == "" ? 0 : int.Parse(comboBoxComboPoints.Text), 
-                                    Finisher = Finishers.Get(comboBoxFinisher.Text)
-                                };
-            return component;
-        }
-
-        private void CB_CpGenerator_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                if (CB_CpGenerator.Text == new HonorAmongThieves(0f, 0f).Name)
-                {
-                SetHatVisibility(true);
-                HatStepper_ValueChanged(sender, e);
-                return;
-            }
-
-            SetHatVisibility(false);
-
-            _calcOpts.CpGenerator = ComboPointGeneratorList.Get(CB_CpGenerator.Text);
-            UpdateCalculations();
-        }
-            else
-            {
-                CB_CpGenerator.Text = _calcOpts.CpGenerator.Name;
-
-                if (CB_CpGenerator.Text == new HonorAmongThieves().Name)
-                {
-                    SetHatVisibility(true);
-
-                    //  HatStepper_ValueChanged
-                    //  SetHatVisibility
-                }
-                else
-                {
-                    SetHatVisibility(false);
-                }
-            }
-        }
-
-        private void HatStepper_ValueChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                _calcOpts.CpGenerator = new HonorAmongThieves((float)NUD_Hat.Value, (float)NUD_HemoPerCycle.Value);
-            UpdateCalculations();
-        }
-        }
-
-        private void SetHatVisibility(bool visible)
-        {
-            LB_HemoPerCycle.Visible = visible;
-            LB_CPperSec.Visible = visible;
-            NUD_Hat.Visible = visible;
-            NUD_HemoPerCycle.Visible = visible;
-        }
-
-        private void Feint_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-            NUD_FeintDelay.Visible = LB_FeintDelay.Visible = CK_UseFeint.Checked;
-            _calcOpts.Feint = CK_UseFeint.Checked ? new Feint((float)NUD_FeintDelay.Value) : new Feint(0);
-            UpdateCalculations();
-        }
-            else
-            {
-                CK_UseFeint.Checked = _calcOpts.Feint.IsNeedFeint();
-
-                NUD_FeintDelay.Visible   = CK_UseFeint.Checked;
-                LB_FeintDelay.Visible     = CK_UseFeint.Checked;
-
-                FeintDelayStepper_ValueChanged(sender, e);
-            }
-        }
-
-        private void FeintDelayStepper_ValueChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-            _calcOpts.Feint = CK_UseFeint.Checked ? new Feint((float)NUD_FeintDelay.Value) : new Feint(0);
-            UpdateCalculations();
-        }
-            else
-            {
-                NUD_FeintDelay.Text = _calcOpts.Feint.Delay().ToString();
-            }
-        }
-
-        private void UseTurnTheTables_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-            NUD_TurnTheTablesUptimePerc.Visible = LB_TurnTheTables.Visible = CK_UseTurnTheTables.Checked;
-                _calcOpts.TurnTheTablesUptime = CK_UseTurnTheTables.Checked ? (float)NUD_TurnTheTablesUptimePerc.Value / 100f : 0f;
-            UpdateCalculations();
-        }
-            else
-            {
-                CK_UseTurnTheTables.Checked = (_calcOpts.TurnTheTablesUptime > 0) ? true : false;
-
-                NUD_TurnTheTablesUptimePerc.Visible          = CK_UseTurnTheTables.Checked;
-                LB_TurnTheTables.Visible    = CK_UseTurnTheTables.Checked;
-
-                TurnTheTablesUptimePercent_ValueChanged(sender, e);
-            }
-        }
-
-        private void TurnTheTablesUptimePercent_ValueChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                _calcOpts.TurnTheTablesUptime = (float)NUD_TurnTheTablesUptimePerc.Value / 100f;
-            UpdateCalculations();
-        }
-            else
-            {
-                int value = (int)(_calcOpts.TurnTheTablesUptime * 100.0f);
-                
-                NUD_TurnTheTablesUptimePerc.Text = value.ToString();
-            }
-        }
-
-        private void NUD_Duration_ValueChanged(object sender, EventArgs e)
-        {
-            if (!m_bLoading)
-            {
-                _calcOpts.Duration = (float)NUD_Duration.Value;
-                UpdateCalculations();
-            }
-            else
-            {
-                NUD_Duration.Value = (int)_calcOpts.Duration;
+                Character.OnCalculationsInvalidated();
             }
         }
     }

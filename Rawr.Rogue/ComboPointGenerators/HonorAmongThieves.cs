@@ -7,7 +7,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 #endif
     public class HonorAmongThieves : ComboPointGenerator
     {
-        private readonly float _hemosPerCycle;
+        /*private readonly float _hemosPerCycle;
         private readonly float _cpsPersecond;
 
         public HonorAmongThieves():this(.1f, 0f){}
@@ -40,6 +40,6 @@ namespace Rawr.Rogue.ComboPointGenerators
         public override float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
         {
             return (calcOpts.ComboPointsNeededForCycle(combatFactors.T10x4ChanceOn3CPOnFinisher) - _hemosPerCycle) / _cpsPersecond;
-        }
+        }*/
     }
 }

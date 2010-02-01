@@ -143,7 +143,7 @@ namespace Rawr.Rogue {
                 energyRegen += _stats.BonusToTTEnergy / 30;                             // Assume ToTT every 30 sec
                 energyRegen -= Talents.HungerForBlood.EnergyCost.Bonus / 55f;           // Assume reactive HungerForBlood every 55 sec
                 energyRegen -= Talents.BladeFlurry.EnergyCost.Bonus;
-                energyRegen -= _calcOpts.Feint.EnergyCost();
+                //energyRegen -= _calcOpts.Feint.EnergyCost();
                 return energyRegen;
             }
         }

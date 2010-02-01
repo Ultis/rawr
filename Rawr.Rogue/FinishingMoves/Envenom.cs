@@ -9,7 +9,7 @@ namespace Rawr.Rogue.FinishingMoves
 #endif
     public class Envenom : FinisherBase
     {
-        public const string NAME = "Envenom";
+        /*public const string NAME = "Envenom";
         public override char Id
         {
             get { return 'N'; }
@@ -78,6 +78,6 @@ namespace Rawr.Rogue.FinishingMoves
         private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
             return combatFactors.ProbMhCrit + CritBonusFromTurnTheTables(calcOpts);
-        }
+        }*/
     }
 }

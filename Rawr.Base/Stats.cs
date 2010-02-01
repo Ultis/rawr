@@ -13,10 +13,12 @@ namespace Rawr {
     public enum AdditiveStat : int {
         Agility,
         AllResist,
+        AmbushBackstabCostReduction,
         ArcaneResistance,
         Armor,
         BonusArmor,
         ArmorPenetrationRating,
+        ArmorReduction,
         AshtongueTrinketProc,
         AttackPower,
         BonusAttackPower,
@@ -30,12 +32,15 @@ namespace Rawr {
         BlockValue,
         Bloodlust,
         BloodlustProc,
+        BonusBackstabCrit,
+        BonusDaggerFistCrit,
         BonusBlockValueMultiplier,
         BonusCommandingShoutHP,
         BonusLacerateDamageMultiplier,
         BonusMangleBearDamage,
         BonusMangleCatDamage,
         BonusMaxRunicPower,
+        BonusMutiCrit,
         BonusRakeDuration,
         BonusRipDamagePerCPPerTick,
         BonusRipDuration,
@@ -58,9 +63,11 @@ namespace Rawr {
         ExpertiseRating,
         FireResistance,
         FrostResistance,
+        GarrCostReduction,
         HasteRating,
         Healing,
         Health,
+        HemoCostReduction,
         PhysicalHit,
         HitRating,
         Hp5,
@@ -279,6 +286,13 @@ namespace Rawr {
         RestoShamRelicT9,
         RestoShamRelicT10,
         #endregion
+        #region Added by Rawr.Rogue
+        BonusMaceArP,
+        BonuxMaxEnergy,
+        ChanceOnMHAttackOnSwordAxeHit,
+        SStrikeCostReduction,
+        BonusMaxEnergy,
+        #endregion
         #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
         FlashOfLightMultiplier,
@@ -489,6 +503,24 @@ namespace Rawr {
         BonusHunter_T7_4P_ViperSpeed,
         BonusHunter_T8_2P_SerpDmg,
         ManaCostPerc,
+        #endregion
+        #region Added by Rawr.Rogue
+        BonusMainHandCrit,
+        BonusOffHandCrit,
+        BonusBackstabDamageMultiplier,
+        BonusCPGCritDamageMultiplier,
+        BonusEnergyRegenMultiplier,
+        BonusEnvenomDamageMultiplier,
+        BonusEvisDamageMultiplier,
+        BonusHemoDamageMultiplier,
+        BonusIPFrequencyMultiplier,
+        BonusMutiDamageMultiplier,
+        BonusOffHandDamageMultiplier,
+        BonusPoisonDamageMultiplier,
+        BonusRuptDamageMultiplier,
+        BonusSnDDurationMultiplier,
+        BonusSStrikeDamageMultiplier,
+        BonusYellowDamageMultiplier,
         #endregion
         #region Added by Rawr.Warlock
         WarlockSpellstoneDotDamageMultiplier,
@@ -2619,6 +2651,108 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.AverageAgility] = value; }
         }
         #endregion
+        #region Added by Rawr.Rogue
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Bonus Dagger and Fist Crit")]
+        public float BonusDaggerFistCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDaggerFistCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDaggerFistCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Bonus Backstab Crit")]
+        public float BonusBackstabCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusBackstabCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusBackstabCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Bonus Mutilate Crit")]
+        public float BonusMutiCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusMutiCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusMutiCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Ambush and Backstab Cost Reduction")]
+        public float AmbushBackstabCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AmbushBackstabCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AmbushBackstabCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Armor Reduction")]
+        public float ArmorReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ArmorReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ArmorReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Garrote Cost Reduction")]
+        public float GarrCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.GarrCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.GarrCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Hemorrhage Cost Reduction")]
+        public float HemoCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HemoCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HemoCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% MH Crit")]
+        [Category("Rogue")]
+        public float BonusMainHandCrit
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMainHandCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMainHandCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% OH Crit")]
+        [Category("Rogue")]
+        public float BonusOffHandCrit
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusOffHandCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusOffHandCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float BonusMaceArP
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusMaceArP]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusMaceArP] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float BonusMaxEnergy
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusMaxEnergy]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusMaxEnergy] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ChanceOnMHAttackOnSwordAxeHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnMHAttackOnSwordAxeHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOnMHAttackOnSwordAxeHit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float SStrikeCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SStrikeCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SStrikeCostReduction] = value; }
+        }
+        #endregion
         #region Added by Rawr.Retribution
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% Seal Damage")]
@@ -3952,7 +4086,6 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier] = value; }
         }
         #endregion
-
         #region Added by Rawr.Warlock
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -4034,7 +4167,6 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier] = value; }
         }
         #endregion
-
         #region Added by Rawr.DPSWarr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Rage on Crit")]
@@ -4754,8 +4886,136 @@ namespace Rawr {
         }
         
         #endregion
+        #region Added by Rawr.Rogue
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Backstab dmg")]
+        [Category("Rogue")]
+        public float BonusBackstabDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBackstabDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBackstabDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% CPG Crit dmg")]
+        [Category("Rogue")]
+        public float BonusCPGCritDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCPGCritDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCPGCritDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Energy regen")]
+        [Category("Rogue")]
+        public float BonusEnergyRegenMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnergyRegenMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnergyRegenMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Envenom dmg")]
+        [Category("Rogue")]
+        public float BonusEnvenomDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnvenomDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnvenomDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Eviscerate dmg")]
+        [Category("Rogue")]
+        public float BonusEvisDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEvisDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEvisDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hemorrhage dmg")]
+        [Category("Rogue")]
+        public float BonusHemoDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHemoDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHemoDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% IP frequency")]
+        [Category("Rogue")]
+        public float BonusIPFrequencyMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusIPFrequencyMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusIPFrequencyMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Mutilate dmg")]
+        [Category("Rogue")]
+        public float BonusMutiDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMutiDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMutiDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Offhand dmg")]
+        [Category("Rogue")]
+        public float BonusOffHandDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusOffHandDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusOffHandDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Poison dmg")]
+        [Category("Rogue")]
+        public float BonusPoisonDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPoisonDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPoisonDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Rupture dmg")]
+        [Category("Rogue")]
+        public float BonusRuptDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRuptDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRuptDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Slice and Dice duration")]
+        [Category("Rogue")]
+        public float BonusSnDDurationMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSnDDurationMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSnDDurationMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Sinister Strike dmg")]
+        [Category("Rogue")]
+        public float BonusSStrikeDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSStrikeDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSStrikeDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Yellow dmg")]
+        [Category("Rogue")]
+        public float BonusYellowDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusYellowDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusYellowDamageMultiplier] = value; }
+        }
+        #endregion
         #region Added by Rawr.ProtPaladin
-             
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("ProtPaladin")]

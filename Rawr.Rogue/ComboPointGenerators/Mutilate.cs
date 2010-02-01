@@ -9,7 +9,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 #endif
     public class Mutilate : ComboPointGenerator
     {
-        public const string NAME = "Mutilate";
+        /*public const string NAME = "Mutilate";
 
         public override string Name { get { return NAME; } }
 
@@ -80,6 +80,6 @@ namespace Rawr.Rogue.ComboPointGenerators
         public override float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
             return MhHitsNeeded(combatFactors, calcOpts);
-        }
+        }*/
     }
 }

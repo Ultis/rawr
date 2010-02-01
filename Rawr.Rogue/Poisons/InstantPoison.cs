@@ -9,7 +9,7 @@ namespace Rawr.Rogue.Poisons
 #endif
     public class InstantPoison : PoisonBase
     {
-        private const float PROCS_PER_MINUTE = 8.53f;
+        /*private const float PROCS_PER_MINUTE = 8.53f;
 
         public override string Name { get { return "Instant Poison"; } }
 
@@ -64,6 +64,6 @@ namespace Rawr.Rogue.Poisons
             if(bEnvenom)    BaseChanceToApply *= 1.75f;
 
             return (BaseChanceToApply > 1f) ? 1f : BaseChanceToApply;
-        }
+        }*/
     }
 }

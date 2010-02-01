@@ -12,7 +12,7 @@ namespace Rawr.Rogue.Poisons
 #endif
     public abstract class PoisonBase
     {
-        public abstract string Name { get; }
+        /*public abstract string Name { get; }
         public abstract bool IsDeadlyPoison { get; }
         public abstract float CalcPoisonDps(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon);
 
@@ -55,6 +55,6 @@ namespace Rawr.Rogue.Poisons
 
                 return totalPoisonDps;
             }
-        }
+        }*/
     }
 }

@@ -9,7 +9,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 
     public class Hemo : ComboPointGenerator
     {
-        public override string Name { get { return "Hemo"; } }
+        /*public override string Name { get { return "Hemo"; } }
 
         public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
@@ -42,6 +42,6 @@ namespace Rawr.Rogue.ComboPointGenerators
             var damage = combatFactors.MhNormalizedDamage;
             damage *= (1.1f + Talents.SinisterCalling.HemoAndBackstab.Bonus);
             return damage;
-        }
+        }*/
     }
 }

@@ -8,7 +8,7 @@ namespace Rawr.Rogue.FinishingMoves
 #endif
     public class Evis : FinisherBase
     {
-        public const string NAME = "Evis";
+        /*public const string NAME = "Evis";
 
         public override char Id { get { return 'E'; } }
 
@@ -48,6 +48,6 @@ namespace Rawr.Rogue.FinishingMoves
 
         private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts) {
             return (float)Math.Max(0f,Math.Min(1f,combatFactors.ProbMhCrit + (Glyphs.GlyphOfEviscerate ? 0.1f : 0f) + CritBonusFromTurnTheTables(calcOpts)));
-        }
+        }*/
     }
 }

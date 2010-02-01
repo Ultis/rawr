@@ -4,7 +4,7 @@ namespace Rawr.Rogue.Poisons
 {
 	public class PoisonList : List<PoisonBase>
     {
-        public PoisonList()
+        /*public PoisonList()
         {
             Add(new NoPoison());
             Add(new DeadlyPoison());
@@ -23,6 +23,6 @@ namespace Rawr.Rogue.Poisons
             }
 
             return new NoPoison();
-        }
+        }*/
     }
 }

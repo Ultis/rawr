@@ -8,7 +8,7 @@ namespace Rawr.Rogue.Poisons
 #endif
     public class DeadlyPoison : PoisonBase
     {
-        public override string Name { get { return "Deadly Poison"; } }
+        /*public override string Name { get { return "Deadly Poison"; } }
 
         private const float STACK_SIZE = 5f;
         private const float DURATION = 12f;
@@ -88,7 +88,7 @@ namespace Rawr.Rogue.Poisons
             if (bEnvenom) BaseChanceToApply += 0.15f;
 
             return (BaseChanceToApply > 1f) ? 1f : BaseChanceToApply;
-        }
+        }*/
     }
 }
 

@@ -14,7 +14,7 @@ namespace Rawr.Rogue.FinishingMoves
 #endif
     public abstract class FinisherBase
     {
-        public abstract char Id { get; }
+        /*public abstract char Id { get; }
         public abstract string Name { get; }
         public abstract float EnergyCost(CombatFactors combatFactors, int rank);
         public abstract float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues );
@@ -22,6 +22,6 @@ namespace Rawr.Rogue.FinishingMoves
         protected float CritBonusFromTurnTheTables(CalculationOptionsRogue calcOpts)
         {
             return calcOpts.TurnTheTablesUptime * Talents.TurnTheTables.Bonus;
-        }
+        }*/
     }
 }

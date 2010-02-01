@@ -4,7 +4,7 @@ namespace Rawr.Rogue
 {
     public class CycleTime
     {
-        public CycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
+        /*public CycleTime(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
         {
             _calcOpts = calcOpts;
             _combatFactors = combatFactors;
@@ -52,6 +52,6 @@ namespace Rawr.Rogue
             }
 
             return energyRegen;
-        }
+        }*/
     }
 }

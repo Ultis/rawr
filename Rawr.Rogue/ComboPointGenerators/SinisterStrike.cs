@@ -9,7 +9,7 @@ namespace Rawr.Rogue.ComboPointGenerators
 
     public class SinisterStrike : ComboPointGenerator
     {
-        public override string Name { get { return "Sinister Strike"; } }
+        /*public override string Name { get { return "Sinister Strike"; } }
 
         public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
@@ -47,6 +47,6 @@ namespace Rawr.Rogue.ComboPointGenerators
         {
             float CpCriRate = Crit(combatFactors, calcOpts);
             return 1 + (Talents.SealFate.Bonus * CpCriRate) + (Glyphs.GlyphOfSinisterStrike ? .5f * CpCriRate : 0f);
-        }
+        }*/
     }
 }

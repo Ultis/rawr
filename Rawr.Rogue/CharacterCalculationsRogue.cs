@@ -1,111 +1,160 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Rawr.Rogue {
-    public class CharacterCalculationsRogue : CharacterCalculationsBase {
-        public CharacterCalculationsRogue() : this(new Stats()){}
-        public CharacterCalculationsRogue(Stats stats) {
-            BasicStats = stats;
-            AddDisplayValue(DisplayValue.Health, stats.Health.ToString());
-            AddDisplayValue(DisplayValue.Stamina, stats.Stamina.ToString());
-            AddDisplayValue(DisplayValue.Strength, stats.Strength.ToString());
-            AddDisplayValue(DisplayValue.Agility, stats.Agility.ToString());
-            AddDisplayValue(DisplayValue.AttackPower, stats.AttackPower.ToString());
-            AddDisplayValue(DisplayValue.TotalDps, "0");
+namespace Rawr.Rogue
+{
+    public class CharacterCalculationsRogue : CharacterCalculationsBase
+    {
+        private float _overallPoints = 0f;
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
         }
 
-        public Stats BasicStats { get; private set; }
-
-        public override float OverallPoints { get { return TotalDPS; } set { } }
-        public override float[] SubPoints { get { return new[] { TotalDPS }; } set { } }
-        
-        public float TotalDPS {
-            get {
-                float value;
-                float.TryParse(_dictValues[DisplayValue.TotalDps].Stat, out value);
-                return value;
-            }
-            set { _dictValues[DisplayValue.TotalDps].Stat = Round(value); }
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
         }
 
-
-
-        //---------------------------------------------------------------------
-        // Hack/Workaround
-        // the base class is looking for the display values in a dictionary 
-        // with a "*" splitting up the values bewteen the value and tooltip.
-        // Formatting a string like that is a pain, so I stuff it in a object
-        // that does the tranlations for me.
-        // The DisplayValue class groups the stat and which box it goes in,
-        // then this class keeps track of the tooltips for each of the 
-        // DisplayValues.  The GetCharacterDisplayCalculationValues override
-        // then translates the DisplayValues and Tooltips into the format
-        // the UI is expecting
-
-        // the _dictValues is a horrible name, since it describes what the
-        // object is, instead of what the object does.  I just can't think
-        // of a good name for it yet
-        //---------------------------------------------------------------------
-        private readonly Dictionary<DisplayValue, StatAndToolTip> _dictValues = new Dictionary<DisplayValue, StatAndToolTip>();
-
-        public void AddDisplayValue(DisplayValue key, string value) {
-            if(!_dictValues.ContainsKey(key)) {
-                _dictValues.Add(key, new StatAndToolTip());
-            }
-            _dictValues[key].Stat = value;
+        public float DPSPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
         }
 
-        public float SpecProcDPS { get; set; }
-
-        public void AddRoundedDisplayValue(DisplayValue key, float value) { AddDisplayValue(key, Round(value)); }
-        public void AddRoundedDisplayValue(DisplayValue key, float value, string suffix) { AddDisplayValue(key, Round(value) + suffix); }
-
-        public void AddPercentageToolTip(DisplayValue key, string prefix, float value) { AddToolTip(key, prefix + Round(value*100)); }
-
-        public void AddRoundedToolTip(DisplayValue key, string text, float value) { AddToolTip(key, string.Format(text, Round(value))); }
-
-        public void AddToolTip(DisplayValue key, params string[] toolTips) {
-            if (!_dictValues.ContainsKey(key)) {
-                _dictValues.Add(key, new StatAndToolTip());
-            }
-            
-            _dictValues[key].ToolTips.AddRange(toolTips);
+        public float SurvivabilityPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
         }
 
-        private static string Round(float value) { return Math.Round(value, 2).ToString(); }
-        
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
-            var returnValue = new Dictionary<string, string>();
-            foreach(var kvp in _dictValues) {
-                var toolTip = kvp.Value.ToolTips.Count == 0 ? "" : "*" + string.Join("\r\n", kvp.Value.ToolTips.ToArray());
-                returnValue.Add(kvp.Key.Name, kvp.Value.Stat + toolTip);
-            }
-            return returnValue;
+        public Stats BasicStats { get; set; }
+        public int TargetLevel { get; set; }
+
+        public float AvoidedWhiteAttacks { get; set; }
+        public float AvoidedAttacks { get; set; }
+        public float AvoidedPoisonAttacks { get; set; }
+        public float DodgedAttacks { get; set; }
+        public float ParriedAttacks { get; set; }
+        public float MissedAttacks { get; set; }
+        public float CritChance { get; set; }
+        public float MainHandSpeed { get; set; }
+        public float OffHandSpeed { get; set; }
+        public float ArmorMitigation { get; set; }
+        public float Duration { get; set; }
+
+        public RogueAbilityStats MainHandStats { get; set; }
+        public RogueAbilityStats OffHandStats { get; set; }
+        public RogueAbilityStats BackstabStats { get; set; }
+        public RogueAbilityStats HemoStats { get; set; }
+        public RogueAbilityStats SStrikeStats { get; set; }
+        public RogueAbilityStats MutiStats { get; set; }
+        public RogueAbilityStats RuptStats { get; set; }
+        public RogueAbilityStats SnDStats { get; set; }
+        public RogueAbilityStats EvisStats { get; set; }
+        public RogueAbilityStats EnvenomStats { get; set; }
+        public RogueAbilityStats IPStats { get; set; }
+        public RogueAbilityStats DPStats { get; set; }
+        public RogueAbilityStats WPStats { get; set; }
+        public RogueAbilityStats APStats { get; set; }
+
+        public RogueRotationCalculator.RogueRotationCalculation HighestDPSRotation { get; set; }
+        public RogueRotationCalculator.RogueRotationCalculation CustomRotation { get; set; }
+
+        public string Rotations { get; set; }
+
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
+            Dictionary<string, string> dictValues = new Dictionary<string, string>();
+            dictValues.Add("Overall Points", OverallPoints.ToString());
+            dictValues.Add("DPS Points", DPSPoints.ToString());
+            dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
+
+            float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP[TargetLevel - 80] - BasicStats.PhysicalHit;
+            float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+            float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+            float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
+            float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
+            float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
+
+            string tipMiss = string.Empty;
+            if (BasicStats.HitRating > capMiss)
+                tipMiss = string.Format("*Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
+            else if (BasicStats.HitRating < capMiss)
+                tipMiss = string.Format("*Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
+            else
+                tipMiss = "*Exactly at the cap";
+
+            string tipDodge = string.Empty;
+            if (BasicStats.ExpertiseRating > capDodge)
+                tipDodge = string.Format("*Over the cap by {0} Expertise Rating", BasicStats.ExpertiseRating - capDodge);
+            else if (BasicStats.ExpertiseRating < capDodge)
+                tipDodge = string.Format("*Under the cap by {0} Expertise Rating", capDodge - BasicStats.ExpertiseRating);
+            else
+                tipDodge = "*Exactly at the cap";
+
+
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
+            dictValues.Add("Agility", BasicStats.Agility.ToString());
+            dictValues.Add("Strength", BasicStats.Strength.ToString());
+            dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
+            dictValues.Add("Hit Rating", BasicStats.HitRating.ToString() + tipMiss);
+            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString() + tipDodge);
+            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
+            dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
+            dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
+
+            dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Crit Chance", CritChance.ToString() + "%");
+            dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
+            dictValues.Add("OffHand Speed", OffHandSpeed.ToString() + "s");
+            dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
+
+            dictValues.Add("Optimal Rotation", HighestDPSRotation.ToString());
+            dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());
+            dictValues.Add("Custom Rotation DPS", CustomRotation.DPS.ToString());
+
+
+            float chanceWhiteNonAvoided = 1f - (AvoidedWhiteAttacks / 100f);
+            float chanceNonAvoided = 1f - (AvoidedAttacks / 100f);
+            float chancePoisonNonAvoided = 1f - (AvoidedPoisonAttacks / 100f);
+            dictValues.Add("MainHand", MainHandStats.GetStatsTexts(HighestDPSRotation.MainHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteNonAvoided, Duration));
+            dictValues.Add("OffHand", OffHandStats.GetStatsTexts(HighestDPSRotation.OffHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteNonAvoided, Duration));
+            dictValues.Add("Backstab", BackstabStats.GetStatsTexts(HighestDPSRotation.BackstabCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Hemorrhage", HemoStats.GetStatsTexts(HighestDPSRotation.HemoCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Sinister Strike", SStrikeStats.GetStatsTexts(HighestDPSRotation.SStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Mutilate", MutiStats.GetStatsTexts(HighestDPSRotation.MutiCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Rupture", RuptStats.GetStatsTexts(HighestDPSRotation.RuptCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Slice and Dice", SnDStats.GetStatsTexts(HighestDPSRotation.SnDCount, HighestDPSRotation.SnDCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Eviscerate", EvisStats.GetStatsTexts(HighestDPSRotation.EvisCount, HighestDPSRotation.EvisCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Envenom", EnvenomStats.GetStatsTexts(HighestDPSRotation.EnvenomCount, HighestDPSRotation.EnvenomCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Instant Poison", IPStats.GetStatsTexts(HighestDPSRotation.IPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
+            dictValues.Add("Deadly Poison", DPStats.GetStatsTexts(HighestDPSRotation.DPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
+            dictValues.Add("Wound Poison", WPStats.GetStatsTexts(HighestDPSRotation.WPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
+            dictValues.Add("Anesthetic Poison", APStats.GetStatsTexts(HighestDPSRotation.APCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
+
+            return dictValues;
         }
 
-        public override float GetOptimizableCalculationValue(string calculation) {
-            /* "Health",
-             * "Haste Rating",
-             * "Expertise Rating",
-             * "Hit Rating",
-             * "Agility",
-             * "Attack Power"
-             */
-            switch (calculation) {
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
                 case "Health": return BasicStats.Health;
-                case "Haste Rating": return BasicStats.HasteRating;
-                case "Expertise Rating": return BasicStats.ExpertiseRating;
-                case "Hit Rating": return BasicStats.HitRating;
-                case "Agility": return BasicStats.Agility;
-                case "Attack Power": return BasicStats.AttackPower;
+                case "Avoided Attacks %": return AvoidedAttacks;
+                case "Nature Resist": return BasicStats.NatureResistance;
+                case "Fire Resist": return BasicStats.FireResistance;
+                case "Frost Resist": return BasicStats.FrostResistance;
+                case "Shadow Resist": return BasicStats.ShadowResistance;
+                case "Arcane Resist": return BasicStats.ArcaneResistance;
+                case "Custom Rotation DPS": return CustomRotation.DPS;
             }
-
             return 0f;
-        }
-
-        private class StatAndToolTip {
-            public string Stat = "";
-            public readonly List<string> ToolTips = new List<string>();
         }
     }
 }
