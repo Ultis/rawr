@@ -27,9 +27,11 @@ namespace Rawr {
         AverageAgility,
         AverageArmor,
         BaseAgility,
+
         Block,
         BlockRating,
         BlockValue,
+
         Bloodlust,
         BloodlustProc,
         BonusBackstabCrit,
@@ -435,7 +437,9 @@ namespace Rawr {
         BaseArmorMultiplier,
         BonusArmorMultiplier,
         BonusBleedDamageMultiplier,
+
         BonusBlockValueMultiplier,
+
         BonusAttackPowerMultiplier,
         BonusCritMultiplier,
         BonusFireDamageMultiplier,
@@ -4051,8 +4055,8 @@ namespace Rawr {
         [DisplayName("% Block Value")]
         public float BonusBlockValueMultiplier
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusBlockValueMultiplier]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
