@@ -1757,8 +1757,8 @@ These numbers to do not include racial bonuses.",
                         {
                             // to fix this breaking apart when you're close to yellow crit cap for these abilities, namely OP
                             if (aw.ability is Skills.OverPower || aw.ability is Skills.TasteForBlood)
-                                 dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, aw.numActivates / fightDuration);
-                            else dwTicks *= (1f - aw.numActivates / fightDuration * aw.ability.MHAtkTable.Crit);
+                                 dwTicks *= (1f - aw.numActivates / fightDuration * aw.ability.MHAtkTable.Crit);
+                            else dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, aw.numActivates / fightDuration);
                         }
                     }
                 }
