@@ -739,17 +739,16 @@ These numbers to do not include racial bonuses.",
                 stats.BonusRageOnCrit
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (RelevantTriggers.Contains(effect.Trigger))
-                {
+                if (RelevantTriggers.Contains(effect.Trigger)) {
                     relevant |= HasRelevantStats(effect.Stats);
-                    if (relevant) break;
                 }
+                if (relevant) break;
             }
             return relevant;
         }
 
         private bool HasSurvivabilityStats(Stats stats) {
-            bool retVal = false;
+            bool relevant = false;
             if ((stats.Health
                 + stats.Stamina
                 + stats.BonusHealthMultiplier
@@ -757,16 +756,15 @@ These numbers to do not include racial bonuses.",
                 + stats.HealthRestore
                 + stats.HealthRestoreFromMaxHealth
                 ) > 0) {
-                retVal = true;
+                    relevant = true;
             }
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (RelevantTriggers.Contains(effect.Trigger))
-                {
-                    retVal |= HasSurvivabilityStats(effect.Stats);
-                    if (retVal) break;
+                if (RelevantTriggers.Contains(effect.Trigger)) {
+                    relevant |= HasSurvivabilityStats(effect.Stats);
                 }
+                if (relevant) break;
             }
-            return retVal;
+            return relevant;
         }
 
         private bool HasIgnoreStats(Stats stats) {

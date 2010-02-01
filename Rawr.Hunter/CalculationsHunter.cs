@@ -1627,11 +1627,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region Ranged Attack Power
             calculatedStats.apFromBase = character.Level * 2f - 20f;
             calculatedStats.apFromAGI  = stats.Agility;
-            calculatedStats.apFromSTR  = stats.Strength;
             calculatedStats.apFromGear = stats.AttackPower
                                        - calculatedStats.apFromBase
-                                       - calculatedStats.apFromAGI
-                                       - calculatedStats.apFromSTR;
+                                       - calculatedStats.apFromAGI;
 
             // use for pet calculations
             calculatedStats.apSelfBuffed = stats.AttackPower;
@@ -2538,13 +2536,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
                 float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
                 float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
-                float apFromSTR    = 0f;//(1f + totalBAPM) * (statsTotal.Strength);
+                //float apFromSTR    = (1f + totalBAPM) * (statsTotal.Strength);
                 float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
                 float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
                 float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
                 float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
                                                          + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
-                statsTotal.AttackPower = Math.Max(0f, apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
+                statsTotal.AttackPower = Math.Max(0f, apBase + apFromAGI /*+ apFromSTR*/ + apFromHvW + apFromCAim + apFromHM + apBonusOther);
                 statsTotal.RangedAttackPower = statsTotal.AttackPower;
                 #endregion
                 #region Spell Power

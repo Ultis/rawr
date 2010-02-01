@@ -96,7 +96,6 @@ namespace Rawr.Hunter
         public float apSelfBuffed { get; set; }
 		public float apFromBase { get; set; }
 		public float apFromAGI { get; set; }
-        public float apFromSTR { get; set; }
 		public float apFromGear { get; set; }
         #endregion
         
@@ -314,18 +313,17 @@ namespace Rawr.Hunter
 
             // Basic Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
-                                Environment.NewLine + "{3:00,000} : Stam Bonus",
+                                "\r\n{3:00,000} : Stam Bonus",
                                 BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
             dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
 			dictValues.Add("Agility", BasicStats.Agility.ToString("F0"));
             dictValues.Add("Ranged Attack Power",string.Format("{0:0000}*Includes:" +
-                            Environment.NewLine + "{1:0000} : Base" +
-                            Environment.NewLine + "{2:0000} : Agility" +
-                            Environment.NewLine + "{3:0000} : Strength" +
-                            Environment.NewLine + "{4:0000} : Gear" + 
-                            Environment.NewLine + "Procs were averaged out and added",
-                            apTotal, apFromBase, apFromAGI, apFromSTR, apFromGear));
+                            "\r\n{1:0000} : Base" +
+                            "\r\n{2:0000} : Agility" +
+                            "\r\n{3:0000} : Gear" +
+                            "\r\nProcs were averaged out and added",
+                            apTotal, apFromBase, apFromAGI, apFromGear));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
             // old
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
@@ -369,15 +367,15 @@ namespace Rawr.Hunter
                                 BasicStats.ArmorPenetrationRating,
                                 damageReductionFromArmor));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1:0}*Includes:" +
-                            Environment.NewLine + "{2:00.00%} : Base" +
-                            Environment.NewLine + "{3:00.00%} : Rating" +
-                            Environment.NewLine + "{4:00.00%} : Serpent's Swiftness" +
-                            Environment.NewLine + "{5:00.00%} : Buffs" +
-                            Environment.NewLine + "{6:00.00%} : Rapid Fire" +
-                            Environment.NewLine + "{7:00.00%} : Proc Effects",
-                            BasicStats.PhysicalHaste, BasicStats.HasteRating,
-                            hasteFromBase, hasteFromRating, hasteFromTalentsStatic, hasteFromRangedBuffs,
-                            hasteFromRapidFire, hasteFromProcs));
+                                "\r\n{2:00.00%} : Base" +
+                                "\r\n{3:00.00%} : Rating" +
+                                "\r\n{4:00.00%} : Serpent's Swiftness" +
+                                "\r\n{5:00.00%} : Buffs" +
+                                "\r\n{6:00.00%} : Rapid Fire" +
+                                "\r\n{7:00.00%} : Proc Effects",
+                                BasicStats.PhysicalHaste, BasicStats.HasteRating,
+                                hasteFromBase, hasteFromRating, hasteFromTalentsStatic, hasteFromRangedBuffs,
+                                hasteFromRapidFire, hasteFromProcs));
             dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 			
             // Pet Stats
