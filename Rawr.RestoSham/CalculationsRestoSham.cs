@@ -461,8 +461,7 @@ namespace Rawr.RestoSham
             //  ... + 20% if Glyphed
             if (character.ShamanTalents.GlyphofEarthShield)
                 ESHealingScale *= 1.2f;
-            ESHealingScale *= UseES ? 1 : 0;  // If ES is disabled or talent not taken, this will apply a 0 rating to ES
-            float ESChargeHeal = (337 + ESBonusHealing) * ESHealingScale; //  Heal per ES Charge
+            float ESChargeHeal = (337 + ESBonusHealing) * ESHealingScale * (UseES ? 1 : 0); //  Heal per ES Charge
             float ESHeal = ESChargeHeal * (6 + character.ShamanTalents.ImprovedEarthShield);  //  ES if all charges heal
             float ESCost = (float)Math.Round(.15 * BaseMana) * CostScale * (UseES ? 1 : 0);
             float ESTimer = (6 + character.ShamanTalents.ImprovedEarthShield) * Math.Max(ESInterval, 4);
@@ -519,12 +518,13 @@ namespace Rawr.RestoSham
             float RTHealingScale = PurificationScale;
             //  ... + 20% 2pc T9 bonus
             RTHealingScale *= 1 + stats.RestoSham2T9 * .2f;
-            float RTHeal = (1670 + RTBonusHealing) * RTHealingScale;
+            //  ... set to zero if RT talent is not taken
+            float RTHeal = (1670 + RTBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
             //  RT HoT bonus healing = spell power
             float RTHotBonusHealing = stats.SpellPower;
             //  ... * generic healing scale * HoT scale
             RTHotBonusHealing *= 1.88f * 0.5f;
-            float RTHotHeal = (1670 + RTHotBonusHealing) * RTHealingScale;
+            float RTHotHeal = (1670 + RTHotBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
             float RTHotTickHeal = RTHotHeal / 5;
             RTHotHeal = RTDuration / 3 * RTHotTickHeal;
             float RTHotHPS = RTHotTickHeal / 3;
@@ -534,10 +534,10 @@ namespace Rawr.RestoSham
             LHWBonusHealing *= 1.88f * (1.5f / 3.5f) + character.ShamanTalents.TidalWaves * .02f;
             //  LHW healing scale = purification scale
             float LHWHealingScale = PurificationScale;
+            //  ... + 20% if Glyphed, tank healing and ES is enabled
+            if (character.ShamanTalents.GlyphofLesserHealingWave && TankHeal && UseES)
+                LHWHealingScale *= 1.2f;
             float LHWHeal = (1720 + LHWBonusHealing) * LHWHealingScale;
-            //  ... + 20% if w/Glyph and tank healing + ES is enabled, effects entire heal.
-            if (TankHeal && UseES && character.ShamanTalents.GlyphofLesserHealingWave)
-                LHWHeal *= 1.2f;
             //  HW bonus healing = spell power + totem spell power bonus
             float HWBonusHealing = stats.SpellPower + stats.TotemHWSpellpower;
             //  ... * generic healing scale + bonus from TW

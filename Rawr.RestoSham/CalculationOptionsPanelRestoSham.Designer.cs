@@ -51,7 +51,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tbOverhealing_Label = new System.Windows.Forms.Label();
+            this.tbSurvival_Label = new System.Windows.Forms.Label();
             this.tbSurvival = new System.Windows.Forms.TrackBar();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -84,7 +84,7 @@
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(99, 68);
+            this.chkManaTide.Location = new System.Drawing.Point(125, 68);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(155, 17);
             this.chkManaTide.TabIndex = 14;
@@ -310,7 +310,7 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.tbOverhealing_Label);
+            this.groupBox4.Controls.Add(this.tbSurvival_Label);
             this.groupBox4.Controls.Add(this.tbSurvival);
             this.groupBox4.Location = new System.Drawing.Point(3, 491);
             this.groupBox4.Name = "groupBox4";
@@ -319,14 +319,14 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Miscellaneous";
             // 
-            // tbOverhealing_Label
+            // tbSurvival_Label
             // 
-            this.tbOverhealing_Label.AutoSize = true;
-            this.tbOverhealing_Label.Location = new System.Drawing.Point(6, 16);
-            this.tbOverhealing_Label.Name = "tbOverhealing_Label";
-            this.tbOverhealing_Label.Size = new System.Drawing.Size(102, 13);
-            this.tbOverhealing_Label.TabIndex = 5;
-            this.tbOverhealing_Label.Text = "Survival Weight (%):";
+            this.tbSurvival_Label.AutoSize = true;
+            this.tbSurvival_Label.Location = new System.Drawing.Point(6, 16);
+            this.tbSurvival_Label.Name = "tbSurvival_Label";
+            this.tbSurvival_Label.Size = new System.Drawing.Size(102, 13);
+            this.tbSurvival_Label.TabIndex = 5;
+            this.tbSurvival_Label.Text = "Survival Weight (%):";
             // 
             // tbSurvival
             // 
@@ -389,7 +389,7 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(6, 68);
+            this.chkWaterShield.Location = new System.Drawing.Point(12, 68);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
@@ -536,7 +536,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cboBurstStyle;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label tbOverhealing_Label;
+        private System.Windows.Forms.Label tbSurvival_Label;
         private System.Windows.Forms.TrackBar tbSurvival;
         private System.Windows.Forms.Label tbReplenishment_Label;
         private System.Windows.Forms.TrackBar tbReplenishment;
