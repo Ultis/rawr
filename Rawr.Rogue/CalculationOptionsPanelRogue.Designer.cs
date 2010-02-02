@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelRogue));
             this.CB_PoisonOH = new System.Windows.Forms.ComboBox();
             this.LB_PoisonOH = new System.Windows.Forms.Label();
@@ -34,9 +35,9 @@
             this.LB_FeintDelay = new System.Windows.Forms.Label();
             this.NUD_FeintDelay = new System.Windows.Forms.NumericUpDown();
             this.CK_UseFeint = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.trackBarTrinketOffset = new System.Windows.Forms.TrackBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxBleed = new System.Windows.Forms.CheckBox();
             this.comboBoxCPG = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.comboBoxOHPoison = new System.Windows.Forms.ComboBox();
@@ -62,6 +63,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxPoisonable = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
@@ -141,14 +143,6 @@
             this.CK_UseFeint.Size = new System.Drawing.Size(104, 24);
             this.CK_UseFeint.TabIndex = 0;
             // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(14, 374);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(254, 98);
-            this.label6.TabIndex = 17;
-            this.label6.Text = resources.GetString("label6.Text");
-            // 
             // trackBarTrinketOffset
             // 
             this.trackBarTrinketOffset.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -164,6 +158,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBoxBleed);
             this.groupBox1.Controls.Add(this.comboBoxCPG);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.comboBoxOHPoison);
@@ -184,6 +179,18 @@
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Rotation";
+            // 
+            // checkBoxBleed
+            // 
+            this.checkBoxBleed.AutoSize = true;
+            this.checkBoxBleed.Location = new System.Drawing.Point(6, 75);
+            this.checkBoxBleed.Name = "checkBoxBleed";
+            this.checkBoxBleed.Size = new System.Drawing.Size(82, 17);
+            this.checkBoxBleed.TabIndex = 10;
+            this.checkBoxBleed.Text = "Bleed is up*";
+            this.toolTip1.SetToolTip(this.checkBoxBleed, "Check this if a bleed will be up without you applying it");
+            this.checkBoxBleed.UseVisualStyleBackColor = true;
+            this.checkBoxBleed.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // comboBoxCPG
             // 
@@ -428,8 +435,9 @@
             this.labelTrinketOffset.Name = "labelTrinketOffset";
             this.labelTrinketOffset.Size = new System.Drawing.Size(254, 13);
             this.labelTrinketOffset.TabIndex = 16;
-            this.labelTrinketOffset.Tag = "Trinket Offset: {0}sec";
-            this.labelTrinketOffset.Text = "Trinket Offset:";
+            this.labelTrinketOffset.Tag = "Trinket Offset*: {0}sec";
+            this.labelTrinketOffset.Text = "Trinket Offset*:";
+            this.toolTip1.SetToolTip(this.labelTrinketOffset, resources.GetString("labelTrinketOffset.ToolTip"));
             // 
             // label4
             // 
@@ -522,7 +530,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label11);
             this.Controls.Add(this.checkBoxPoisonable);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.trackBarTrinketOffset);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.numericUpDownLagVariance);
@@ -561,7 +568,6 @@
         private System.Windows.Forms.CheckBox CK_UseTurnTheTables;
         private System.Windows.Forms.Label LB_TurnTheTables;
         private System.Windows.Forms.NumericUpDown NUD_TurnTheTablesUptimePerc;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TrackBar trackBarTrinketOffset;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBoxExpose;
@@ -589,5 +595,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox comboBoxCPG;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox checkBoxBleed;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

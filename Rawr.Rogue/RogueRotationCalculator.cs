@@ -75,7 +75,7 @@ namespace Rawr.Rogue
 			_chanceExtraCP[4] = c*c*c+3*c*c*h*h+c*h*h*h*h;
 		}
 
-        public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool HaSMH, bool HaSOH)
+        public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp)
 		{
             float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy + (10f * (1f + Stats.BonusEnergyRegenMultiplier) * Duration);
 			//totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
@@ -105,7 +105,9 @@ namespace Rawr.Rogue
             #region Combo Point Generator
             float cpgCount = 0f;
             float cpgEnergy = CPG == 2 ? BackstabStats.EnergyCost : CPG == 3 ? HemoStats.EnergyCost : CPG == 1 ? SStrikeStats.EnergyCost : MutiStats.EnergyCost;
-            float CPPerCPG = CPG == 0 ? TempCPPerCPG + 1 : TempCPPerCPG;
+            float CPPerCPG = TempCPPerCPG +
+                             (CPG == 0 ? 1f : 0f) +
+                             (CPG == 1 ? Stats.ChanceOnCPOnSSCrit * SStrikeStats.CritChance: 0f);
             #endregion
 
             #region Slice and Dice
@@ -119,7 +121,8 @@ namespace Rawr.Rogue
 
             float snDDuration = SnDStats.DurationAverage + 3f * Math.Min(5f, averageSnDCP);
             //    - roarRakeConflict - roarMangleConflict - roarRipConflict;
-            float snDCount = (finisher == 2 ? 1f : Duration / snDDuration);
+            float snDCount = Duration / snDDuration;
+            snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - Stats.ChanceOnSnDResetOnEnvenom): snDCount));
             float snDTotalEnergy = snDCount * SnDStats.EnergyCost;
             float snDCPRequired = snDCount * averageSnDCP;
             if (totalCPAvailable < snDCPRequired)
@@ -220,8 +223,8 @@ namespace Rawr.Rogue
             #endregion
 
             #region Extra Mainhand attacks from Hack and Slash
-            if (HaSMH) mainHandCount += Stats.ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
-            if (HaSOH) mainHandCount += Stats.ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
+            if (MainHandStats.Weapon == ItemType.OneHandAxe || MainHandStats.Weapon == ItemType.OneHandSword) mainHandCount += Stats.ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
+            if (MainHandStats.Weapon == ItemType.OneHandAxe || MainHandStats.Weapon == ItemType.OneHandSword) mainHandCount += Stats.ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
             #endregion
 
             #region Poisons
@@ -276,19 +279,21 @@ namespace Rawr.Rogue
             #endregion
 
             #region Damage Totals
-            float mainHandDamageTotal = mainHandCount * MainHandStats.DamagePerSwing;
-            float offHandDamageTotal = offHandCount * OffHandStats.DamagePerSwing;
-            float backstabDamageTotal = backstabCount * BackstabStats.DamagePerSwing;
-            float hemoDamageTotal = hemoCount * HemoStats.DamagePerSwing;
-            float sStrikeDamageTotal = sStrikeCount * SStrikeStats.DamagePerSwing;
-            float mutiDamageTotal = mutiCount * MutiStats.DamagePerSwing;
-            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * ((RuptStats.DurationAverage + (2 * RuptStats.DurationPerCP))/ 12f);
-            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP);
-            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP);
-            float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
-            float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing; ;
-            float woundPoisonTotal = wPCount * WPStats.DamagePerSwing; ;
-            float anestheticPoisonTotal = aPCount * APStats.DamagePerSwing; ;
+            float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + Stats.BonusDamageMultiplierHFB: 1f;
+
+            float mainHandDamageTotal = mainHandCount * MainHandStats.DamagePerSwing * HFBMultiplier;
+            float offHandDamageTotal = offHandCount * OffHandStats.DamagePerSwing * HFBMultiplier;
+            float backstabDamageTotal = backstabCount * BackstabStats.DamagePerSwing * HFBMultiplier;
+            float hemoDamageTotal = hemoCount * HemoStats.DamagePerSwing * HFBMultiplier;
+            float sStrikeDamageTotal = sStrikeCount * SStrikeStats.DamagePerSwing * HFBMultiplier;
+            float mutiDamageTotal = mutiCount * MutiStats.DamagePerSwing * HFBMultiplier;
+            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * ((RuptStats.DurationAverage + (2 * RuptStats.DurationPerCP)) / 12f) * HFBMultiplier;
+            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
+            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
+            float instantPoisonTotal = iPCount * IPStats.DamagePerSwing * HFBMultiplier;
+            float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing * HFBMultiplier;
+            float woundPoisonTotal = wPCount * WPStats.DamagePerSwing * HFBMultiplier;
+            float anestheticPoisonTotal = aPCount * APStats.DamagePerSwing * HFBMultiplier;
 
             float damageTotal = mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + hemoDamageTotal + sStrikeDamageTotal + 
                                   mutiDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal + anestheticPoisonTotal;

@@ -42,7 +42,6 @@ namespace Rawr {
         BonusMangleBearDamage,
         BonusMangleCatDamage,
         BonusMaxRunicPower,
-        BonusMutiCrit,
         BonusRakeDuration,
         BonusRipDamagePerCPPerTick,
         BonusRipDuration,
@@ -69,7 +68,6 @@ namespace Rawr {
         HasteRating,
         Healing,
         Health,
-        HemoCostReduction,
         PhysicalHit,
         HitRating,
         Hp5,
@@ -289,9 +287,17 @@ namespace Rawr {
         RestoShamRelicT10,
         #endregion
         #region Added by Rawr.Rogue
+        BonusEvisCrit,
         BonusMaceArP,
         BonuxMaxEnergy,
+        BonusMutiCrit,
+        BonusRuptDuration,
+        BonusSnDDuration,
+        ChanceOnCPOnSSCrit,
         ChanceOnMHAttackOnSwordAxeHit,
+        ChanceOnSnDResetOnEnvenom,
+        HemoCostReduction,
+        MutiCostReduction,
         SStrikeCostReduction,
         BonusMaxEnergy,
         #endregion
@@ -371,7 +377,6 @@ namespace Rawr {
         BonusWarrior_PvP_4P_InterceptCDReduc,
         #endregion
         #region Set Bonuses: Rogue
-        BonusSnDDuration,
         BonusSnDHaste,
         BonusCPGDamage,
         BonusEvisEnvenomDamage,
@@ -513,6 +518,7 @@ namespace Rawr {
         BonusOffHandCrit,
         BonusBackstabDamageMultiplier,
         BonusCPGCritDamageMultiplier,
+        BonusDamageMultiplierHFB,
         BonusEnergyRegenMultiplier,
         BonusEnvenomDamageMultiplier,
         BonusEvisDamageMultiplier,
@@ -1533,14 +1539,6 @@ namespace Rawr {
         #endregion
 
         #region Rogue bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Rogue")]
-        public float BonusSnDDuration
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
         public float CPOnFinisher
@@ -2682,6 +2680,30 @@ namespace Rawr {
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
+        [DisplayName("Bonus Rupture Duration")]
+        public float BonusRuptDuration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRuptDuration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRuptDuration] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Bonus Slice and Dice Duration")]
+        public float BonusSnDDuration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Bonus Eviscerate Crit")]
+        public float BonusEvisCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusEvisCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusEvisCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
         [DisplayName("Ambush and Backstab Cost Reduction")]
         public float AmbushBackstabCostReduction
         {
@@ -2711,6 +2733,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HemoCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.HemoCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Mutilate Cost Reduction")]
+        public float MutiCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MutiCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MutiCostReduction] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% MH Crit")]
@@ -2744,10 +2774,24 @@ namespace Rawr {
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
+        public float ChanceOnCPOnSSCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnCPOnSSCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOnCPOnSSCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
         public float ChanceOnMHAttackOnSwordAxeHit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnMHAttackOnSwordAxeHit]; }
             set { _rawAdditiveData[(int)AdditiveStat.ChanceOnMHAttackOnSwordAxeHit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ChanceOnSnDResetOnEnvenom
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnSnDResetOnEnvenom]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOnSnDResetOnEnvenom] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
@@ -4908,6 +4952,15 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCPGCritDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCPGCritDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Bonus Damage from Hunger For Blood")]
+        [Category("Rogue")]
+        public float BonusDamageMultiplierHFB
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierHFB]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierHFB] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]

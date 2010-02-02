@@ -14,6 +14,8 @@ namespace Rawr.Rogue
         public float DamagePerHitPerCP { get; set; }
         public float DamagePerSwingPerCP { get; set; }
         public float DurationPerCP { get; set; }
+        public ItemType Weapon { get; set; }
+        public float CritChance { get; set; }
 
         public abstract string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration);
     }

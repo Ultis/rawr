@@ -57,6 +57,12 @@ namespace Rawr.Rogue
             get { return _customUseExpose; }
             set { if (_customUseExpose != value) { _customUseExpose = value; OnPropertyChanged("CustomUseExpose"); } }
         }
+        private bool _bleedIsUp = true;
+        public bool BleedIsUp
+        {
+            get { return _bleedIsUp; }
+            set { if (_bleedIsUp != value) { _bleedIsUp = value; OnPropertyChanged("BleedIsUp"); } }
+        }
         private int _customFinisher = 1;
         public int CustomFinisher
         {

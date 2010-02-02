@@ -28,6 +28,7 @@ namespace Rawr.Rogue
             numericUpDownLagVariance.Value = calcOpts.LagVariance;
             checkBoxRupt.Checked = calcOpts.CustomUseRupt;
             checkBoxExpose.Checked = calcOpts.CustomUseExpose;
+            checkBoxBleed.Checked = calcOpts.BleedIsUp;
             comboBoxCPG.SelectedIndex = calcOpts.CustomCPG;
             comboBoxSnD.SelectedItem = calcOpts.CustomCPSnD.ToString();
             comboBoxFinisher.SelectedIndex = calcOpts.CustomFinisher;
@@ -63,6 +64,7 @@ namespace Rawr.Rogue
                 calcOpts.LagVariance = (int)numericUpDownLagVariance.Value;
                 calcOpts.CustomUseRupt = checkBoxRupt.Checked;
                 calcOpts.CustomUseExpose = checkBoxExpose.Checked;
+                calcOpts.BleedIsUp = checkBoxBleed.Checked;
                 calcOpts.CustomCPG = comboBoxCPG.SelectedIndex;
                 calcOpts.CustomCPSnD = int.Parse(comboBoxSnD.SelectedItem.ToString());
                 calcOpts.CustomFinisher = comboBoxFinisher.SelectedIndex;
