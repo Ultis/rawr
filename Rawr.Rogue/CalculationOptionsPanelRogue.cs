@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Rawr.Rogue.ComboPointGenerators;
-using Rawr.Rogue.FinishingMoves;
-using Rawr.Rogue.Poisons;
-using Rawr.Rogue.SpecialAbilities;
 
 namespace Rawr.Rogue
 {
@@ -16,17 +12,6 @@ namespace Rawr.Rogue
         public CalculationOptionsPanelRogue()
         {
             InitializeComponent();
-
-            _armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Mob");
-            _armorBosses.Add((int)StatConversion.NPC_ARMOR[81 - 80], "Level 81 Mob");
-            _armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Mob");
-            _armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Ulduar Bosses");
-
-            CB_PoisonMH.DisplayMember = "Name"; 
-            CB_PoisonMH.DataSource = new PoisonList();
-
-            CB_PoisonOH.DisplayMember = "Name";
-            CB_PoisonOH.DataSource = new PoisonList();
         }
 
         protected override void LoadCalculationOptions()
