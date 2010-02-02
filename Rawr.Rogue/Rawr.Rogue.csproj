@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{45C4E515-FDF5-4829-9C48-236ED0C83215}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -122,6 +122,8 @@
     <Compile Include="Poisons\PoisonList.cs" />
     <Compile Include="Poisons\WoundPoison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RogueAbilityStats.cs" />
+    <Compile Include="RogueRotationCalculator.cs" />
     <Compile Include="SpecialAbilities\Feint.cs" />
     <Compile Include="SpecialAbilities\SwordSpec.cs" />
     <Compile Include="ClassAbilities\Talents.cs" />
