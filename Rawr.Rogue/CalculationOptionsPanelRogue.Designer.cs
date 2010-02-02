@@ -64,6 +64,7 @@
             this.checkBoxPoisonable = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
@@ -146,7 +147,7 @@
             // trackBarTrinketOffset
             // 
             this.trackBarTrinketOffset.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarTrinketOffset.Location = new System.Drawing.Point(9, 338);
+            this.trackBarTrinketOffset.Location = new System.Drawing.Point(9, 357);
             this.trackBarTrinketOffset.Maximum = 90;
             this.trackBarTrinketOffset.Name = "trackBarTrinketOffset";
             this.trackBarTrinketOffset.Size = new System.Drawing.Size(259, 45);
@@ -158,7 +159,6 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.checkBoxBleed);
             this.groupBox1.Controls.Add(this.comboBoxCPG);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.comboBoxOHPoison);
@@ -173,7 +173,7 @@
             this.groupBox1.Controls.Add(this.comboBoxSnD);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Location = new System.Drawing.Point(9, 136);
+            this.groupBox1.Location = new System.Drawing.Point(9, 155);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(265, 183);
             this.groupBox1.TabIndex = 23;
@@ -183,12 +183,10 @@
             // checkBoxBleed
             // 
             this.checkBoxBleed.AutoSize = true;
-            this.checkBoxBleed.Location = new System.Drawing.Point(6, 75);
+            this.checkBoxBleed.Location = new System.Drawing.Point(114, 82);
             this.checkBoxBleed.Name = "checkBoxBleed";
-            this.checkBoxBleed.Size = new System.Drawing.Size(82, 17);
+            this.checkBoxBleed.Size = new System.Drawing.Size(15, 14);
             this.checkBoxBleed.TabIndex = 10;
-            this.checkBoxBleed.Text = "Bleed is up*";
-            this.toolTip1.SetToolTip(this.checkBoxBleed, "Check this if a bleed will be up without you applying it");
             this.checkBoxBleed.UseVisualStyleBackColor = true;
             this.checkBoxBleed.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
@@ -377,7 +375,7 @@
             // 
             this.numericUpDownLagVariance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownLagVariance.Location = new System.Drawing.Point(114, 110);
+            this.numericUpDownLagVariance.Location = new System.Drawing.Point(114, 128);
             this.numericUpDownLagVariance.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -398,7 +396,7 @@
             // 
             this.numericUpDownDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownDuration.Location = new System.Drawing.Point(114, 84);
+            this.numericUpDownDuration.Location = new System.Drawing.Point(114, 102);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -423,7 +421,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 112);
+            this.label7.Location = new System.Drawing.Point(9, 131);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(99, 13);
             this.label7.TabIndex = 19;
@@ -431,7 +429,7 @@
             // 
             // labelTrinketOffset
             // 
-            this.labelTrinketOffset.Location = new System.Drawing.Point(14, 322);
+            this.labelTrinketOffset.Location = new System.Drawing.Point(14, 341);
             this.labelTrinketOffset.Name = "labelTrinketOffset";
             this.labelTrinketOffset.Size = new System.Drawing.Size(254, 13);
             this.labelTrinketOffset.TabIndex = 16;
@@ -442,7 +440,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 86);
+            this.label4.Location = new System.Drawing.Point(9, 105);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 15;
@@ -508,7 +506,7 @@
             // 
             this.checkBoxPoisonable.AutoSize = true;
             this.checkBoxPoisonable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBoxPoisonable.Location = new System.Drawing.Point(114, 63);
+            this.checkBoxPoisonable.Location = new System.Drawing.Point(114, 62);
             this.checkBoxPoisonable.Name = "checkBoxPoisonable";
             this.checkBoxPoisonable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxPoisonable.TabIndex = 25;
@@ -524,10 +522,22 @@
             this.label11.TabIndex = 26;
             this.label11.Text = "Target poisonable:";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 84);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(98, 13);
+            this.label6.TabIndex = 27;
+            this.label6.Text = "Target is bleeding*:";
+            this.toolTip1.SetToolTip(this.label6, "Check this if a bleed will be up without you applying it");
+            // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.checkBoxBleed);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.checkBoxPoisonable);
             this.Controls.Add(this.trackBarTrinketOffset);
@@ -597,5 +607,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox checkBoxBleed;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label6;
     }
 }
