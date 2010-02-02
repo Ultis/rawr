@@ -277,16 +277,16 @@ namespace Rawr.Rogue
 
             #region Damage Totals
             float mainHandDamageTotal = mainHandCount * MainHandStats.DamagePerSwing;
-            float offHandDamageTotal = offHandCount * MainHandStats.DamagePerSwing;
+            float offHandDamageTotal = offHandCount * OffHandStats.DamagePerSwing;
             float backstabDamageTotal = backstabCount * BackstabStats.DamagePerSwing;
             float hemoDamageTotal = hemoCount * HemoStats.DamagePerSwing;
             float sStrikeDamageTotal = sStrikeCount * SStrikeStats.DamagePerSwing;
-            float mutiDamageTotal = mutiCount * MutiStats.DamagePerSwing * (((mHPoison > 1 && mHPoison < 4) || (oHPoison > 1 && oHPoison < 4)) ? 1f : 0.8f);
+            float mutiDamageTotal = mutiCount * MutiStats.DamagePerSwing;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * ((RuptStats.DurationAverage + (2 * RuptStats.DurationPerCP))/ 12f);
             float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP);
             float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP);
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
-            float deadlyPoisonTotal = 5f * dPCount * DPStats.DamagePerSwing; ;
+            float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing; ;
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing; ;
             float anestheticPoisonTotal = aPCount * APStats.DamagePerSwing; ;
 
