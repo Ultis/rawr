@@ -387,22 +387,20 @@ namespace Rawr.Rogue
 
             #region Attack Damages
             float baseDamage = (stats.AttackPower / 14f) + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
-            float baseOffDamage = ((stats.AttackPower / 14f) + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) + (1f + stats.BonusOffHandDamageMultiplier);
+            float baseOffDamage = ((stats.AttackPower / 14f) + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (1f + stats.BonusOffHandDamageMultiplier);
             float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
             float meleeOffDamageRaw = (baseOffDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
-            float baseYellowDamage = baseDamage * (1f + stats.BonusYellowDamageMultiplier);
-            float baseYellowOffDamage = baseOffDamage * (1f + stats.BonusYellowDamageMultiplier);
-            float backstabDamageRaw = (baseYellowDamage * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBackstabDamageMultiplier) * modArmor;
+            float backstabDamageRaw = (baseDamage * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBackstabDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
             backstabDamageRaw *= (mainHand._type == ItemType.Dagger ? 1f : 0f);
-            float hemoDamageRaw = (baseYellowDamage * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusHemoDamageMultiplier) * modArmor;
-            float sStrikeDamageRaw = (baseYellowDamage * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSStrikeDamageMultiplier) * modArmor;
-            float mutiDamageRaw = (baseYellowDamage * 1f + 181f + baseYellowOffDamage * 1f + 181f * (1f + stats.BonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMutiDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
+            float hemoDamageRaw = (baseDamage * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusHemoDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
+            float sStrikeDamageRaw = (baseDamage * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSStrikeDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
+            float mutiDamageRaw = (baseDamage * 1f + 181f + baseOffDamage * 1f + 181f * (1f + stats.BonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMutiDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
             mutiDamageRaw *= (mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
-            float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f /*+ (stats.BonusRuptDamagePerCPPerTick * 5f * 8f)*/) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRuptDamageMultiplier);
-            float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier) * modArmor;
-            float evisCPDamageRaw = ((370f + stats.AttackPower * 0.03f) + (370f + stats.AttackPower * 0.07f)) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier) * modArmor;
+            float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f /*+ (stats.BonusRuptDamagePerCPPerTick * 5f * 8f)*/) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRuptDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier);
+            float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
+            float evisCPDamageRaw = ((370f + stats.AttackPower * 0.03f) + (370f + stats.AttackPower * 0.07f)) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
             float envenomBaseDamageRaw = 0f;
-            float envenomCPDamageRaw = (215f + stats.AttackPower * 0.09f) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEnvenomDamageMultiplier);
+            float envenomCPDamageRaw = (215f + stats.AttackPower * 0.09f) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEnvenomDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier);
             float iPDamageRaw = ((300f + 400f) / 2f + stats.AttackPower * 0.09f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float dPDamageRaw = ((80f + 296f) / 2f + stats.AttackPower * 0.108f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * 5f; //*5f for the 5 stack for now
             float wPDamageRaw = ((78f + 231f) / 2f + stats.AttackPower * 0.036f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
@@ -690,7 +688,7 @@ namespace Rawr.Rogue
                 BonusSStrikeDamageMultiplier = (1f + 0.03f * talents.Aggression) * (1f + 0.05f * talents.BladeTwisting) * (1f + 0.1f * talents.SurpriseAttacks) - 1f,
                 BonusStaminaMultiplier = 0.02f * talents.Endurance,
                 //BonusStealthDamageMultiplier = 0.04f * talents.MasterOfSubtlety,
-                //BonusStealthEnergyRegen = 0.3f * talents.Overkill,
+                BonusStealthEnergyRegen = 0.3f * talents.Overkill,
                 //BonusYellowDamageBelow35 = 0.1f * talents.DirtyDeeds,
                 BonusYellowDamageMultiplier = 0.02f * talents.FindWeakness,
                 //ChanceFinisherDodgedMultiplier = talents.SurpriseAttacks >0 ? 0 : 1,

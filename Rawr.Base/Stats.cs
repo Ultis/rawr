@@ -293,6 +293,7 @@ namespace Rawr {
         BonusMutiCrit,
         BonusRuptDuration,
         BonusSnDDuration,
+        BonusStealthEnergyRegen,
         ChanceOnCPOnSSCrit,
         ChanceOnMHAttackOnSwordAxeHit,
         ChanceOnSnDResetOnEnvenom,
@@ -2771,6 +2772,13 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusMaxEnergy]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusMaxEnergy] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float BonusStealthEnergyRegen
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusStealthEnergyRegen]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusStealthEnergyRegen] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]

@@ -77,7 +77,10 @@ namespace Rawr.Rogue
 
         public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp)
 		{
-            float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy + (10f * (1f + Stats.BonusEnergyRegenMultiplier) * Duration);
+            float energyRegen = 10f * (1f + Stats.BonusEnergyRegenMultiplier);
+            float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
+                                         energyRegen * Duration +
+                                         20 * energyRegen * Stats.BonusStealthEnergyRegen;
 			//totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			/*if (BerserkDuration > 0)
 				totalEnergyAvailable += (float)Math.Ceiling((Duration - 10f) / 180f ) * (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk*/
@@ -325,7 +328,9 @@ namespace Rawr.Rogue
                 SnDCP = snDCP,
 
                 MHPoison = mHPoison,
-                OHPoison = oHPoison
+                OHPoison = oHPoison,
+
+                CutToTheChase = Stats.ChanceOnSnDResetOnEnvenom,
             };
         }
 
@@ -356,6 +361,8 @@ namespace Rawr.Rogue
             public int MHPoison { get; set; }
             public int OHPoison { get; set; }
 
+            public float CutToTheChase { get; set; }
+
             public override string ToString()
             {
                 StringBuilder rotation = new StringBuilder();
@@ -368,7 +375,8 @@ namespace Rawr.Rogue
                 if (EnvenomCount > 0) rotation.AppendFormat("En{0} ", EnvenomCP);
                 rotation.Append("SnD" + SnDCP.ToString());
 
-                if (EnvenomCount > 0) rotation.AppendFormat("*Use {0}cp Slice and Dice, kept up with Envenom.\r\n", SnDCP);
+                if (EnvenomCount > 0 && CutToTheChase == 1) rotation.AppendFormat("*Use {0}cp Slice and Dice, kept up with Envenom.\r\n", SnDCP);
+                else if (EnvenomCount > 0 && CutToTheChase > 0) rotation.AppendFormat("*Use {0}cp Slice and Dice, partially kept up with Envenom.\r\n", SnDCP);
                 else rotation.AppendFormat("*Keep {0}cp Slice and Dice up.\r\n", SnDCP);
                 if (RuptCount > 0) rotation.Append("Keep 5cp Rupture up.\r\n");
                 if (EvisCount > 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points.\r\n", EvisCP);
