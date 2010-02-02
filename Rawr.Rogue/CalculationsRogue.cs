@@ -1454,7 +1454,7 @@ namespace Rawr.Rogue {
                     stats.BonusNatureDamageMultiplier +
                     stats.BonusFrostDamageMultiplier +
                     stats.BonusFireDamageMultiplier
-                ) != 0;
+                ) > 0 && stats.SpellPower == 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use
