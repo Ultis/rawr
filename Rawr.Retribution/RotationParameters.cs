@@ -15,10 +15,20 @@ namespace Rawr.Retribution
         public float Wait;
         public float Delay;
         public float T10_Speed;
+        public float SpellGCD;
 
         public RotationParameters() { }
 
-        public RotationParameters(Ability[] Priorities, float TimeUnder20, float Wait, float Delay, bool T7_4pc, int ImpJudgements, bool GlyphConsecrate, float T10_Speed)
+        public RotationParameters(
+            Ability[] Priorities, 
+            float TimeUnder20, 
+            float Wait, 
+            float Delay, 
+            bool T7_4pc, 
+            int ImpJudgements, 
+            bool GlyphConsecrate, 
+            float T10_Speed,
+            float spellHaste)
         {
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
@@ -28,6 +38,7 @@ namespace Rawr.Retribution
             this.Delay = (float)Math.Round(Delay, 2);
             this.ImpJudgements = ImpJudgements;
             this.T10_Speed = (float)Math.Round(T10_Speed, 2);
+            SpellGCD = (float)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 2);
         }
 
         public override bool Equals(Object obj)
@@ -45,14 +56,15 @@ namespace Rawr.Retribution
                 && (TimeUnder20 == other.TimeUnder20)
                 && (Delay == other.Delay)
                 && (Wait == other.Wait)
-                && (ImpJudgements == other.ImpJudgements);
+                && (ImpJudgements == other.ImpJudgements)
+                && (SpellGCD == other.SpellGCD);
         }
 
         public override int GetHashCode()
         {
             int ret = (T7_4pc ? 512 : 0) + (GlyphConsecrate ? 1024 : 0) + int.Parse((TimeUnder20 * 100).ToString()) * 2048
                  + int.Parse((Wait * 100).ToString()) * 4096 + int.Parse((Delay * 100).ToString())
-                 * 8192 + (int)(16384 * T10_Speed);
+                 * 8192 + (int)(16384 * T10_Speed) + SpellGCD.GetHashCode();
 
             for (int i = 0; i < Priorities.Length; i++)
             {

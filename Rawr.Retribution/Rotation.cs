@@ -230,7 +230,8 @@ namespace Rawr.Retribution
                         Combats.Stats.JudgementCDReduction > 0,
                         Combats.Talents.ImprovedJudgements,
                         Combats.Talents.GlyphOfConsecration,
-                        Combats.Stats.DivineStormRefresh > 0 ? Combats.AttackSpeed : 0f);
+                        Combats.Stats.DivineStormRefresh > 0 ? Combats.AttackSpeed : 0f,
+                        (1f + Combats.Stats.SpellHaste) * (1f + Combats.Stats.HasteRating / 3278.998947f) - 1f);
         }
 
         public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)

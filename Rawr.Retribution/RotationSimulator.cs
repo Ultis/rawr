@@ -100,12 +100,14 @@ namespace Rawr.Retribution
 
             SimulatorAbility[] abilities = new SimulatorAbility[6];
 
-            abilities[(int)Ability.Judgement] = new SimulatorAbility(10 - rot.ImpJudgements - (rot.T7_4pc ? 1 : 0));
-            abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(4);
-            abilities[(int)Ability.DivineStorm] = new SimulatorAbility(10);
-            abilities[(int)Ability.Consecration] = new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8);
-            abilities[(int)Ability.Exorcism] = new SimulatorAbility(15);
-            abilities[(int)Ability.HammerOfWrath] = new SimulatorAbility(6);
+            abilities[(int)Ability.Judgement] = 
+                new SimulatorAbility(10 - rot.ImpJudgements - (rot.T7_4pc ? 1 : 0), 1.5f);
+            abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(4, 1.5f);
+            abilities[(int)Ability.DivineStorm] = new SimulatorAbility(10, 1.5f);
+            abilities[(int)Ability.Consecration] = 
+                new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8, rot.SpellGCD);
+            abilities[(int)Ability.Exorcism] = new SimulatorAbility(15, rot.SpellGCD);
+            abilities[(int)Ability.HammerOfWrath] = new SimulatorAbility(6, 1.5f);
 
             abilities[(int)Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
 

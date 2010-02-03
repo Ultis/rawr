@@ -6,10 +6,10 @@ namespace Rawr.Retribution
 {
     public class SimulatorAbility
     {
-        public SimulatorAbility(float cooldown)
+        public SimulatorAbility(float cooldown, float globalCooldown)
         {
             Cooldown = cooldown;
-            GlobalCooldown = 1.5f;
+            GlobalCooldown = globalCooldown;
             FirstUse = -1;
             LastUse = -1;
             NextUse = 0;
