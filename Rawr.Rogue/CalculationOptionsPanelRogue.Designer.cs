@@ -37,7 +37,7 @@
             this.CK_UseFeint = new System.Windows.Forms.CheckBox();
             this.trackBarTrinketOffset = new System.Windows.Forms.TrackBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxBleed = new System.Windows.Forms.CheckBox();
+            this.checkBoxTotT = new System.Windows.Forms.CheckBox();
             this.comboBoxCPG = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.comboBoxOHPoison = new System.Windows.Forms.ComboBox();
@@ -52,6 +52,7 @@
             this.comboBoxSnD = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.checkBoxBleed = new System.Windows.Forms.CheckBox();
             this.numericUpDownLagVariance = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
@@ -159,6 +160,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBoxTotT);
             this.groupBox1.Controls.Add(this.comboBoxCPG);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.comboBoxOHPoison);
@@ -180,15 +182,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Rotation";
             // 
-            // checkBoxBleed
+            // checkBoxTotT
             // 
-            this.checkBoxBleed.AutoSize = true;
-            this.checkBoxBleed.Location = new System.Drawing.Point(114, 82);
-            this.checkBoxBleed.Name = "checkBoxBleed";
-            this.checkBoxBleed.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxBleed.TabIndex = 10;
-            this.checkBoxBleed.UseVisualStyleBackColor = true;
-            this.checkBoxBleed.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.checkBoxTotT.AutoSize = true;
+            this.checkBoxTotT.Location = new System.Drawing.Point(6, 75);
+            this.checkBoxTotT.Name = "checkBoxTotT";
+            this.checkBoxTotT.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxTotT.TabIndex = 10;
+            this.checkBoxTotT.Text = "TotT";
+            this.checkBoxTotT.UseVisualStyleBackColor = true;
+            this.checkBoxTotT.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // comboBoxCPG
             // 
@@ -370,6 +373,16 @@
             this.label5.Size = new System.Drawing.Size(63, 13);
             this.label5.TabIndex = 0;
             this.label5.Text = "Finisher CP:";
+            // 
+            // checkBoxBleed
+            // 
+            this.checkBoxBleed.AutoSize = true;
+            this.checkBoxBleed.Location = new System.Drawing.Point(114, 82);
+            this.checkBoxBleed.Name = "checkBoxBleed";
+            this.checkBoxBleed.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxBleed.TabIndex = 10;
+            this.checkBoxBleed.UseVisualStyleBackColor = true;
+            this.checkBoxBleed.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // numericUpDownLagVariance
             // 
@@ -608,5 +621,6 @@
         private System.Windows.Forms.CheckBox checkBoxBleed;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBoxTotT;
     }
 }

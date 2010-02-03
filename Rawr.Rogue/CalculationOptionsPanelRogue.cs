@@ -24,11 +24,12 @@ namespace Rawr.Rogue
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             numericUpDownTargetArmor.Value = calcOpts.TargetArmor;
             checkBoxPoisonable.Checked = calcOpts.TargetPoisonable;
+            checkBoxBleed.Checked = calcOpts.BleedIsUp;
             numericUpDownDuration.Value = calcOpts.Duration;
             numericUpDownLagVariance.Value = calcOpts.LagVariance;
             checkBoxRupt.Checked = calcOpts.CustomUseRupt;
             checkBoxExpose.Checked = calcOpts.CustomUseExpose;
-            checkBoxBleed.Checked = calcOpts.BleedIsUp;
+            checkBoxTotT.Checked = calcOpts.CustomUseTotT;
             comboBoxCPG.SelectedIndex = calcOpts.CustomCPG;
             comboBoxSnD.SelectedItem = calcOpts.CustomCPSnD.ToString();
             comboBoxFinisher.SelectedIndex = calcOpts.CustomFinisher;
@@ -60,11 +61,12 @@ namespace Rawr.Rogue
                 calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
                 calcOpts.TargetPoisonable = checkBoxPoisonable.Checked;
+                calcOpts.BleedIsUp = checkBoxBleed.Checked;
                 calcOpts.Duration = (int)numericUpDownDuration.Value;
                 calcOpts.LagVariance = (int)numericUpDownLagVariance.Value;
                 calcOpts.CustomUseRupt = checkBoxRupt.Checked;
                 calcOpts.CustomUseExpose = checkBoxExpose.Checked;
-                calcOpts.BleedIsUp = checkBoxBleed.Checked;
+                calcOpts.CustomUseTotT = checkBoxTotT.Checked;
                 calcOpts.CustomCPG = comboBoxCPG.SelectedIndex;
                 calcOpts.CustomCPSnD = int.Parse(comboBoxSnD.SelectedItem.ToString());
                 calcOpts.CustomFinisher = comboBoxFinisher.SelectedIndex;

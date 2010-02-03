@@ -75,12 +75,13 @@ namespace Rawr.Rogue
 			_chanceExtraCP[4] = c*c*c+3*c*c*h*h+c*h*h*h*h;
 		}
 
-        public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp)
+        public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT)
 		{
             float energyRegen = 10f * (1f + Stats.BonusEnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
                                          energyRegen * Duration +
-                                         20 * energyRegen * Stats.BonusStealthEnergyRegen;
+                                         20 * energyRegen * Stats.BonusStealthEnergyRegen +
+                                         (useTotT ? (-15 + Stats.BonusToTTEnergy) * Duration / 30f: 0f);
 			//totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			/*if (BerserkDuration > 0)
 				totalEnergyAvailable += (float)Math.Ceiling((Duration - 10f) / 180f ) * (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk*/
@@ -98,7 +99,7 @@ namespace Rawr.Rogue
 
             float totalCPAvailable = 0f;
             float averageGCD = 1f / (1f - AvoidedAttacks);
-            float averageFinisherCP = 5f + _chanceExtraCP[4];
+            float averageFinisherCP = 5f + _chanceExtraCP[4] - Stats.CPOnFinisher;
 			
 			#region Melee
 			float mainHandCount = Duration / MainHandSpeed;
@@ -127,7 +128,7 @@ namespace Rawr.Rogue
             float snDCount = Duration / snDDuration;
             snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - Stats.ChanceOnSnDResetOnEnvenom): snDCount));
             float snDTotalEnergy = snDCount * SnDStats.EnergyCost;
-            float snDCPRequired = snDCount * averageSnDCP;
+            float snDCPRequired = snDCount * averageSnDCP - (snDCount - 1) * Stats.CPOnFinisher;
             if (totalCPAvailable < snDCPRequired)
             {
                 float cpToGenerate = snDCPRequired - totalCPAvailable;
@@ -330,6 +331,7 @@ namespace Rawr.Rogue
                 MHPoison = mHPoison,
                 OHPoison = oHPoison,
 
+                UseTotT = useTotT,
                 CutToTheChase = Stats.ChanceOnSnDResetOnEnvenom,
             };
         }
@@ -362,6 +364,7 @@ namespace Rawr.Rogue
             public int OHPoison { get; set; }
 
             public float CutToTheChase { get; set; }
+            public bool UseTotT { get; set; }
 
             public override string ToString()
             {
@@ -390,11 +393,12 @@ namespace Rawr.Rogue
                 else if (MHPoison == 2) rotation.Append("Use Deadly Poison on Mainhand.\r\n");
                 else if (MHPoison == 3) rotation.Append("Use Wound Poison on Mainhand.\r\n");
                 else if (MHPoison == 4) rotation.Append("Use Anesthetic Poison on Mainhand.\r\n");
-                if (OHPoison == 0) rotation.Append("Use no damage poison on Offhand.");
-                else if (OHPoison == 1) rotation.Append("Use Instant Poison on Offhand.");
-                else if (OHPoison == 2) rotation.Append("Use Deadly Poison on Offhand.");
-                else if (OHPoison == 3) rotation.Append("Use Wound Poison on Offhand.");
-                else if (OHPoison == 4) rotation.Append("Use Anesthetic Poison on Offhand.");
+                if (OHPoison == 0) rotation.Append("Use no damage poison on Offhand.\r\n");
+                else if (OHPoison == 1) rotation.Append("Use Instant Poison on Offhand.\r\n");
+                else if (OHPoison == 2) rotation.Append("Use Deadly Poison on Offhand.\r\n");
+                else if (OHPoison == 3) rotation.Append("Use Wound Poison on Offhand.\r\n");
+                else if (OHPoison == 4) rotation.Append("Use Anesthetic Poison on Offhand.\r\n");
+                if (UseTotT) rotation.Append("Use Tricks of the Trade every cooldown.");
 
                 return rotation.ToString();
             }

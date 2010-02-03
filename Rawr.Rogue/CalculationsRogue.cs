@@ -572,17 +572,18 @@ namespace Rawr.Rogue
                             for (int mHPoison = 0 ; usePoisons ? mHPoison < 5 : mHPoison < 1 ; mHPoison++)
                                 for (int oHPoison = 0; usePoisons ? oHPoison < 5 : oHPoison < 1; oHPoison++)
                                     for (int useRupt = 0; useRupt < 2; useRupt++)
+                                        for (int useTotT = 0; useTotT < 2; useTotT++)
                                         {
                                             RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
                                                 rotationCalculator.GetRotationCalculations(
-                                                CPG, useRupt == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp);
+                                                CPG, useRupt == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT == 1);
                                             if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
                                                 rotationCalculationDPS = rotationCalculation;
                                         }
 
             calculatedStats.HighestDPSRotation = rotationCalculationDPS;
             calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
-                calcOpts.CustomCPG, calcOpts.CustomUseRupt, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp);
+                calcOpts.CustomCPG, calcOpts.CustomUseRupt, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT);
 
             if (character.RogueTalents.GlyphOfBackstab && rotationCalculationDPS.BackstabCount > 0)
             {
@@ -702,7 +703,7 @@ namespace Rawr.Rogue
                 ChanceOnSnDResetOnEnvenom = 0.2f * talents.CutToTheChase,
                 //CDOnExtraVanish = 8 * talents.Preparation,
                 //CPGCritIncreaseOnRaidAvoid = 0.02f * talents.TurnTheTables,
-                CPOnFinisher = 0.2f * talents.Ruthlessness,
+                CPOnFinisher = 0.2f * talents.Ruthlessness + 0.36f * statsItems.ChanceOn3CPOnFinisher,
                 Dodge = 0.02f * talents.LightningReflexes,
                 Expertise = 5 * talents.WeaponExpertise,
                 //ExposeCostReduction = 5 * talents.ImprovedExposeArmor,
