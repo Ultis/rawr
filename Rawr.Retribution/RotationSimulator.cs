@@ -111,7 +111,7 @@ namespace Rawr.Retribution
 
             float gcdFinishTime = 0;
             Random rand = new Random(6021987);
-            int swingCount = 0;
+            float nextSwingTime = rot.T10_Speed;
 
             float currentTime = 0;
             while (currentTime < sol.FightLength)
@@ -131,11 +131,7 @@ namespace Rawr.Retribution
                 }
 
                 float nextTime = sol.FightLength;
-                if (gcdFinishTime > currentTime)
-                {
-                    nextTime = Math.Min(nextTime, gcdFinishTime);
-                }
-                else
+                if (currentTime >= gcdFinishTime)
                 {
                     foreach (SimulatorAbility ability in abilities)
                     {
@@ -144,18 +140,22 @@ namespace Rawr.Retribution
                             nextTime = Math.Min(nextTime, nextUseTime);
                     }
                 }
+                else
+                {
+                    nextTime = Math.Min(nextTime, gcdFinishTime);
+                }
 
                 if (rot.T10_Speed > 0)
                 {
-                    while (nextTime > rot.Delay + (swingCount + 1) * rot.T10_Speed)
+                    while (nextTime > nextSwingTime)
                     {
-                        swingCount++;
                         if (rand.NextDouble() < t10ProcChance)
                         {
-                            abilities[(int)Ability.DivineStorm].ResetCD();
-                            nextTime = rot.Delay + swingCount * rot.T10_Speed;
-                            break;
+                            abilities[(int)Ability.DivineStorm].ResetCooldown(nextSwingTime);
+                            nextTime = nextSwingTime;
                         }
+
+                        nextSwingTime += rot.T10_Speed;
                     }
                 }
 

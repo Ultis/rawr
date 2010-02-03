@@ -25,9 +25,10 @@ namespace Rawr.Retribution
         public float NextUse { get; set; }
         public int Uses { get; set; }
 
-        public void ResetCD()
+        public void ResetCooldown(float currentTime)
         {
-            NextUse = LastUse;
+            // CD reset will be visible only after delay
+            NextUse = Math.Min(NextUse, currentTime + Delay);
         }
 
         /// <summary>
