@@ -81,7 +81,7 @@ namespace Rawr.Rogue
             float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
                                          energyRegen * Duration +
                                          20 * energyRegen * Stats.BonusStealthEnergyRegen +
-                                         (useTotT ? (-15 + Stats.BonusToTTEnergy) * Duration / 30f: 0f);
+                                         (useTotT ? (-15 + Stats.BonusToTTEnergy) * (Duration - 5) / 30f: 0f);
 			//totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			/*if (BerserkDuration > 0)
 				totalEnergyAvailable += (float)Math.Ceiling((Duration - 10f) / 180f ) * (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk*/
@@ -104,6 +104,9 @@ namespace Rawr.Rogue
 			#region Melee
 			float mainHandCount = Duration / MainHandSpeed;
             float offHandCount = Duration / OffHandSpeed;
+            totalEnergyAvailable += offHandCount * Stats.ChanceOnEnergyOnOHAttack * AvoidedWhiteAttacks +
+                                    Stats.ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
+                                    Stats.ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
 			#endregion
 
             #region Combo Point Generator

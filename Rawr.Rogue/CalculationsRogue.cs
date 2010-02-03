@@ -438,15 +438,15 @@ namespace Rawr.Rogue
             #endregion
 
             #region Energy Costs
-            float ambushEnergyRaw = 60f - stats.AmbushBackstabCostReduction;
+            float ambushEnergyRaw = 60f - stats.AmbushBackstabCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
             float garrEnergyRaw = 50f - stats.GarrCostReduction;
-            float backstabEnergyRaw = 60f - stats.AmbushBackstabCostReduction;
-            float hemoEnergyRaw = 35f - stats.HemoCostReduction;
-            float sStrikeEnergyRaw = 45f - stats.SStrikeCostReduction;
-            float mutiEnergyRaw = 60f - stats.MutiCostReduction;
+            float backstabEnergyRaw = 60f - stats.AmbushBackstabCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritBackstab;
+            float hemoEnergyRaw = 35f - stats.HemoCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
+            float sStrikeEnergyRaw = 45f - stats.SStrikeCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
+            float mutiEnergyRaw = 60f - stats.MutiCostReduction - 2 * stats.ChanceOnEnergyOnCrit * chanceCritMuti;
             float ruptEnergyRaw = 25f;
-            float evisEnergyRaw = 35f;
-            float envenomEnergyRaw = 35f;
+            float evisEnergyRaw = 35f - stats.ChanceOnEnergyOnCrit * chanceCritEvis;
+            float envenomEnergyRaw = 35f - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
             float snDEnergyRaw = 25f;
 
             //[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
@@ -468,24 +468,28 @@ namespace Rawr.Rogue
                 DamagePerHit = meleeDamageRaw,
                 DamagePerSwing = meleeDamageAverage,
                 Weapon = mainHand._type,
+                CritChance = chanceCritWhiteMain,
             };
             RogueAbilityStats offHandStats = new RogueOHStats()
             {
                 DamagePerHit = meleeOffDamageRaw,
                 DamagePerSwing = meleeOffDamageAverage,
                 Weapon = offHand._type,
+                CritChance = chanceCritWhiteOff,
             };
             RogueAbilityStats backstabStats = new RogueBackstabStats()
             {
                 DamagePerHit = backstabDamageRaw,
                 DamagePerSwing = backstabDamageAverage,
                 EnergyCost = backstabEnergyAverage,
+                CritChance = chanceCritBackstab,
             };
             RogueAbilityStats hemoStats = new RogueHemoStats()
             {
                 DamagePerHit = hemoDamageRaw,
                 DamagePerSwing = hemoDamageAverage,
                 EnergyCost = hemoEnergyAverage,
+                CritChance = chanceCritYellow,
             };
             RogueAbilityStats sStrikeStats = new RogueSStrikeStats()
             {
@@ -499,6 +503,7 @@ namespace Rawr.Rogue
                 DamagePerHit = mutiDamageRaw,
                 DamagePerSwing = mutiDamageAverage,
                 EnergyCost = mutiEnergyAverage,
+                CritChance = chanceCritMuti,
             };
             RogueAbilityStats ruptStats = new RogueRuptStats()
             {
@@ -516,6 +521,7 @@ namespace Rawr.Rogue
                 DamagePerHitPerCP = evisCPDamageRaw,
                 DamagePerSwingPerCP = evisCPDamageAverage,
                 EnergyCost = evisEnergyAverage,
+                CritChance = chanceCritEvis,
             };
             RogueAbilityStats envenomStats = new RogueEnvenomStats()
             {
@@ -524,6 +530,7 @@ namespace Rawr.Rogue
                 DamagePerHitPerCP = envenomCPDamageRaw,
                 DamagePerSwingPerCP = envenomCPDamageAverage,
                 EnergyCost = envenomEnergyAverage,
+                CritChance = chanceCritYellow,
             };
             RogueAbilityStats snDStats = new RogueSnDStats()
             {
@@ -695,15 +702,15 @@ namespace Rawr.Rogue
                 //ChanceFinisherDodgedMultiplier = talents.SurpriseAttacks >0 ? 0 : 1,
                 //ChanceOnCPOnAmbushGarrCS = talents.Initiative > 2 ? 1 : 0.33f * talents.Initiative,
                 ChanceOnCPOnSSCrit = talents.GlyphOfSinisterStrike ? 0.5f : 0f,
-                //ChanceOnEnergyOnCrit = talents.FocusedAttacks > 2 ? 1f : (0.33f * talents.FocusedAttacks),
-                //ChanceOnEnergyOnOHAttack = 3 * 0.2f * talents.CombatPotency,
+                ChanceOnEnergyOnCrit = 2f * (talents.FocusedAttacks > 2 ? 1f : (0.33f * talents.FocusedAttacks)),
+                ChanceOnEnergyOnOHAttack = 3 * 0.2f * talents.CombatPotency,
                 //ChanceOnEnergyPerCPFinisher = 25 * 0.04 * talents.RelentlessStrikes,
                 ChanceOnMHAttackOnSwordAxeHit = 0.01f * talents.HackAndSlash,
                 //ChanceOnNoDPConsumeOnEvenom = talents.MasterPoisoner == 3 ? 1f : (0.33f * talents.MasterPoisoner),
                 ChanceOnSnDResetOnEnvenom = 0.2f * talents.CutToTheChase,
                 //CDOnExtraVanish = 8 * talents.Preparation,
                 //CPGCritIncreaseOnRaidAvoid = 0.02f * talents.TurnTheTables,
-                CPOnFinisher = 0.2f * talents.Ruthlessness + 0.36f * statsItems.ChanceOn3CPOnFinisher,
+                CPOnFinisher = 0.2f * talents.Ruthlessness + 3f * statsItems.ChanceOn3CPOnFinisher,
                 Dodge = 0.02f * talents.LightningReflexes,
                 Expertise = 5 * talents.WeaponExpertise,
                 //ExposeCostReduction = 5 * talents.ImprovedExposeArmor,
@@ -711,7 +718,6 @@ namespace Rawr.Rogue
                 GarrCostReduction = 10 * talents.DirtyDeeds,
                 HemoCostReduction = 1 * talents.SlaughterFromTheShadows,
                 MutiCostReduction = talents.GlyphOfMutilate ? 5 : 0,
-                //PercentSnDMaxDurationReset = 0.2f * talents.CutToTheChase,
                 PhysicalHit = 0.01f * talents.Precision,
                 PhysicalHaste = 0.04f * talents.LightningReflexes,
                 //PrepCDReduction = 90 * talents.FilthyTricks,

@@ -289,18 +289,19 @@ namespace Rawr {
         #region Added by Rawr.Rogue
         BonusEvisCrit,
         BonusMaceArP,
-        BonuxMaxEnergy,
+        BonusMaxEnergy,
         BonusMutiCrit,
         BonusRuptDuration,
         BonusSnDDuration,
         BonusStealthEnergyRegen,
         ChanceOnCPOnSSCrit,
+        ChanceOnEnergyOnCrit,
+        ChanceOnEnergyOnOHAttack,
         ChanceOnMHAttackOnSwordAxeHit,
         ChanceOnSnDResetOnEnvenom,
         HemoCostReduction,
         MutiCostReduction,
         SStrikeCostReduction,
-        BonusMaxEnergy,
         #endregion
         #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
@@ -2786,6 +2787,20 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnCPOnSSCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.ChanceOnCPOnSSCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ChanceOnEnergyOnCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyOnCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyOnCrit] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ChanceOnEnergyOnOHAttack
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyOnOHAttack]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyOnOHAttack] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
