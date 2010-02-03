@@ -1378,6 +1378,12 @@ namespace Rawr.Optimizer
             return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements, out ignore);
         }
 
+        public static float GetOptimizationValue(Character character, CalculationsBase model, bool referenceCalculation)
+        {
+            float ignore;
+            return GetCalculationsValue(character, model.GetCharacterCalculations(character, null, referenceCalculation, false, false), character.CalculationToOptimize, character.OptimizationRequirements, out ignore);
+        }
+
         public static float GetOptimizationValue(Character character, CharacterCalculationsBase valuation)
         {
             float ignore;

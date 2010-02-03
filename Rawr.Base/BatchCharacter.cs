@@ -28,7 +28,7 @@ namespace Rawr
                     absolutePath = Path.GetFullPath(relativePath);
                     Directory.SetCurrentDirectory(curDir);
 
-                    score = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(Character, Model);
+                    score = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(Character, Model, true);
 
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Score"));
@@ -76,7 +76,7 @@ namespace Rawr
         void character_CalculationsInvalidated(object sender, EventArgs e)
         {
             unsavedChanges = true;
-            newScore = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(Character, Model);
+            newScore = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(Character, Model, true);
 
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("NewScore"));

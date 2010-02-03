@@ -41,6 +41,8 @@ namespace Rawr
 
         // optimize state
         int optimizerRound;
+        Character bestRoundCharacter;
+        float bestRoundValue;
 
         // build upgrade list state
         int upgradeListPhase;
@@ -249,6 +251,7 @@ namespace Rawr
                     {
                         if (e.Cancelled || e.Error != null)
                         {
+                            bestRoundCharacter = null;
                             currentOperation = AsyncOperation.None;
                             UpdateStatusLabel();
                             if (OperationCompleted != null)
@@ -257,18 +260,77 @@ namespace Rawr
                             }
                             break;
                         }
-                        // since we're injecting the character we'll always get at least what we started with
-                        Character _character = CurrentBatchCharacter.Character;
-                        Character bestCharacter = e.OptimizedCharacter;
-                        _character.SetItems(bestCharacter);
-                        // we have to perform item restrictions on the active item generator
-                        // so that we don't regem/reenchant already used items
-                        itemGenerator.AddItemRestrictions(bestCharacter);
-                        // move to next batch character
-                        do
+                        // try to find at least same value, although sometimes it's possible it doesn't exist
+                        // anymore due to restrictions
+                        if (e.OptimizedCharacterValue > bestRoundValue + 0.00001f)
                         {
-                            batchIndex++;
-                        } while (batchIndex < BatchCharacterList.Count && (CurrentBatchCharacter.Character == null || CurrentBatchCharacter.Locked));
+                            bestRoundCharacter = e.OptimizedCharacter;
+                            bestRoundValue = e.OptimizedCharacterValue;
+                        }
+
+                        if (e.OptimizedCharacterValue > e.CurrentCharacterValue + 0.00001f)
+                        {
+                            Character _character = CurrentBatchCharacter.Character;
+                            Character bestCharacter = e.OptimizedCharacter;
+                            _character.SetItems(bestCharacter);
+
+                            optimizerRound = 0;
+                        }
+                        else if (Math.Abs(e.OptimizedCharacterValue - e.CurrentCharacterValue) < 0.00001f && !e.CurrentCharacterInjected)
+                        {
+                            optimizerRound = maxRounds;
+                        }
+                        else
+                        {
+                            optimizerRound++;
+                        }
+                        if (optimizerRound >= maxRounds)
+                        {
+                            // we have to use the best one we get, even if it's lower value than what we had before
+                            Character _character = CurrentBatchCharacter.Character;
+                            // verify if it's actually different so we don't make it dirty when not necessary
+                            bool dirty = false;
+                            for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+                            {
+                                if (slot != (int)CharacterSlot.OffHand || bestRoundCharacter.CurrentCalculations.IncludeOffHandInCalculations(bestRoundCharacter))
+                                {
+                                    if (slot == (int)CharacterSlot.Finger1 || slot == (int)CharacterSlot.Trinket1)
+                                    {
+                                        // ignore if we have 1/2 swap
+                                        if (!((_character._item[slot] == bestRoundCharacter._item[slot] && _character._item[slot + 1] == bestRoundCharacter._item[slot + 1]) ||
+                                            (_character._item[slot] == bestRoundCharacter._item[slot + 1] && _character._item[slot + 1] == bestRoundCharacter._item[slot])))
+                                        {
+                                            dirty = true;
+                                            break;
+                                        }
+                                        slot++;
+                                    }
+                                    else
+                                    {
+                                        if (_character._item[slot] != bestRoundCharacter._item[slot])
+                                        {
+                                            dirty = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (dirty)
+                            {
+                                _character.SetItems(bestRoundCharacter);
+                            }
+                            // we have to perform item restrictions on the active item generator
+                            // so that we don't regem/reenchant already used items
+                            itemGenerator.AddItemRestrictions(bestRoundCharacter);
+                            // move to next batch character
+                            do
+                            {
+                                batchIndex++;
+                            } while (batchIndex < BatchCharacterList.Count && (CurrentBatchCharacter.Character == null || CurrentBatchCharacter.Locked));
+                            bestRoundCharacter = null;
+                            bestRoundValue = float.NegativeInfinity;
+                            optimizerRound = 0;
+                        }
 
                         if (batchIndex < BatchCharacterList.Count)
                         {
@@ -281,6 +343,7 @@ namespace Rawr
                         }
                         else
                         {
+                            bestRoundCharacter = null;
                             currentOperation = AsyncOperation.None;
                             UpdateStatusLabel();
                             if (OperationCompleted != null)
@@ -1164,6 +1227,8 @@ namespace Rawr
 
             batchIndex = 0;
             optimizerRound = 0;
+            bestRoundCharacter = null;
+            bestRoundValue = float.NegativeInfinity;
 
             int _thoroughness = Thoroughness;
             if (CurrentBatchCharacter != null)
