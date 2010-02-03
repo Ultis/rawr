@@ -406,12 +406,12 @@ namespace Rawr
 		}
 
 
-        public XmlDocument DownloadUpgradesWowhead(string site, string filter)
+        public string DownloadUpgradesWowhead(string site, string filter)
         {
-            XmlDocument doc = null;
+            string doc = null;
             if (!string.IsNullOrEmpty(site) && !string.IsNullOrEmpty(filter))
             {
-                doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadUpgradeURI, site, filter), true);
+                doc = DownloadText(string.Format(NetworkSettingsProvider.ItemWowheadUpgradeURI, site, filter));
             }
             return doc;
         }

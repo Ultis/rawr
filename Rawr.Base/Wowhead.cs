@@ -2201,7 +2201,7 @@ namespace Rawr
         {
             WebRequestWrapper.ResetFatalErrorIndicator();
 
-            XmlDocument docUpgradeSearch = null;
+            string docUpgradeSearch = null;
             try
             {
                 string site = usePTR ? "ptr" : "www";
@@ -2212,12 +2212,12 @@ namespace Rawr
                 {
                     // at this stage have an HTML doc that has upgrades in a <div class="listview-void"> block
                     // need to get the itemID list out and then load them and add to cache
-                    int startpos = docUpgradeSearch.InnerXml.IndexOf("<div class=\"listview-void\">");
+                    int startpos = docUpgradeSearch.IndexOf("<div class=\"listview-void\">");
                     if (startpos > 1)
                     {
-                        int endpos = docUpgradeSearch.InnerXml.IndexOf("</div>", startpos);
+                        int endpos = docUpgradeSearch.IndexOf("</div>", startpos);
                         XmlDocument doc = new XmlDocument();
-                        doc.InnerXml = docUpgradeSearch.InnerXml.Substring(startpos, endpos - startpos + 6);
+                        doc.InnerXml = docUpgradeSearch.Substring(startpos, endpos - startpos + 6);
                         XmlNodeList nodeList = doc.SelectNodes("//a/@href");
 
                         for (int i = 0; i < nodeList.Count; i++)
@@ -2251,7 +2251,7 @@ namespace Rawr
             if (cancel != null && cancel())
                 return;
 
-            XmlDocument docUpgradeSearch = null;
+            string docUpgradeSearch = null;
             try
             {
                 string site = usePTR ? "ptr" : "www";
@@ -2269,12 +2269,12 @@ namespace Rawr
                     {
                         // at this stage have an HTML doc that has upgrades in a <div class="listview-void"> block
                         // need to get the itemID list out and then load them and add to cache if better than itemToUpgrade
-                        int startpos = docUpgradeSearch.InnerXml.IndexOf("<div class=\"listview-void\">");
+                        int startpos = docUpgradeSearch.IndexOf("<div class=\"listview-void\">");
                         if (startpos > 1)
                         {
-                            int endpos = docUpgradeSearch.InnerXml.IndexOf("</div>", startpos);
+                            int endpos = docUpgradeSearch.IndexOf("</div>", startpos);
                             XmlDocument doc = new XmlDocument();
-                            doc.InnerXml = docUpgradeSearch.InnerXml.Substring(startpos, endpos - startpos + 6);
+                            doc.InnerXml = docUpgradeSearch.Substring(startpos, endpos - startpos + 6);
                             XmlNodeList nodeList = doc.SelectNodes("//a/@href");
 
                             for (int i = 0; i < nodeList.Count; i++)
