@@ -89,10 +89,11 @@ namespace Rawr.Retribution
 
         public static RotationSolution SimulateRotation(RotationParameters rot)
         {
+            const float t10ProcChance = 0.4f;
+
             if (SavedSolutions.ContainsKey(rot)) return SavedSolutions[rot];
 
             RotationSolution sol = new RotationSolution();
-            float currentTime = 0;
             sol.FightLength = 2000000;
             SimulatorAbility.Delay = rot.Delay;
             SimulatorAbility.Wait = rot.Wait;
@@ -108,38 +109,57 @@ namespace Rawr.Retribution
 
             abilities[(int)Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
 
-            bool gcdUsed;
-            float minNext, tryUse, timeElapsed = 0;
+            float gcdFinishTime = 0;
             Random rand = new Random(6021987);
+            int swingCount = 0;
 
+            float currentTime = 0;
             while (currentTime < sol.FightLength)
             {
-                gcdUsed = false;
-                foreach (Ability ability in rot.Priorities)
+                if (currentTime >= gcdFinishTime)
                 {
-                    tryUse = abilities[(int)ability].UseAbility(currentTime);
-                    if (tryUse > 0)
+                    foreach (Ability ability in rot.Priorities)
                     {
-                        timeElapsed = tryUse - currentTime;
-                        currentTime = tryUse;
-                        gcdUsed = true;
-                        break;
+                        if (abilities[(int)ability].ShouldAbilityBeUsedNext(currentTime))
+                        {
+                            if (abilities[(int)ability].CanAbilityBeUsedNow(currentTime))
+                                gcdFinishTime = abilities[(int)ability].UseAbility(currentTime);
+
+                            break;
+                        }
                     }
                 }
-                if (!gcdUsed)
+
+                float nextTime = sol.FightLength;
+                if (gcdFinishTime > currentTime)
                 {
-                    minNext = sol.FightLength;
-                    foreach (Ability ab in rot.Priorities)
-                    {
-                        if (abilities[(int)ab].NextUse < minNext) minNext = abilities[(int)ab].NextUse;
-                    }
-                    timeElapsed = minNext - currentTime;
-                    currentTime = minNext;
+                    nextTime = Math.Min(nextTime, gcdFinishTime);
                 }
+                else
+                {
+                    foreach (SimulatorAbility ability in abilities)
+                    {
+                        float nextUseTime = ability.GetNextUseTime(currentTime);
+                        if (nextUseTime > currentTime)
+                            nextTime = Math.Min(nextTime, nextUseTime);
+                    }
+                }
+
                 if (rot.T10_Speed > 0)
                 {
-                    if (rand.NextDouble() < (0.4 * timeElapsed / rot.T10_Speed)) abilities[(int)Ability.DivineStorm].ResetCD();
+                    while (nextTime > rot.Delay + (swingCount + 1) * rot.T10_Speed)
+                    {
+                        swingCount++;
+                        if (rand.NextDouble() < t10ProcChance)
+                        {
+                            abilities[(int)Ability.DivineStorm].ResetCD();
+                            nextTime = rot.Delay + swingCount * rot.T10_Speed;
+                            break;
+                        }
+                    }
                 }
+
+                currentTime = nextTime;
             }
 
             sol.Judgement = abilities[(int)Ability.Judgement].Uses;

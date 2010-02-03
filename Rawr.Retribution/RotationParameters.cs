@@ -6,14 +6,6 @@ namespace Rawr.Retribution
 {
     public class RotationParameters
     {
-        public class RotationComparer : IEqualityComparer<RotationParameters>
-        {
-
-            public bool Equals(RotationParameters one, RotationParameters two) { return one.Equals(two); }
-
-            public int GetHashCode(RotationParameters obj) { return obj.GetHashCode(); }
-
-        }
 
         public bool T7_4pc;
         public int ImpJudgements;

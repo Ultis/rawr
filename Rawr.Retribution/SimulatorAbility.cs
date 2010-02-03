@@ -9,6 +9,7 @@ namespace Rawr.Retribution
         public SimulatorAbility(float cooldown)
         {
             Cooldown = cooldown;
+            GlobalCooldown = 1.5f;
             FirstUse = -1;
             LastUse = -1;
             NextUse = 0;
@@ -17,6 +18,7 @@ namespace Rawr.Retribution
         public static float Wait { get; set; }
         public static float Delay { get; set; }
 
+        public float GlobalCooldown { get; set; }
         public float Cooldown { get; set; }
         public float FirstUse { get; set; }
         public float LastUse { get; set; }
@@ -28,18 +30,36 @@ namespace Rawr.Retribution
             NextUse = LastUse;
         }
 
+        /// <summary>
+        /// Uses the ability next time it's available.
+        /// </summary>
+        /// <param name="currentTime">Current time</param>
+        /// <returns>GCD finish time</returns>
         public float UseAbility(float currentTime)
         {
-            if (NextUse <= currentTime + Wait)
-            {
-                if (NextUse > currentTime) { currentTime = NextUse; }
-                if (FirstUse < 0) { FirstUse = currentTime; }
-                LastUse = currentTime;
-                NextUse = currentTime + Cooldown + Delay;
-                Uses++;
-                return currentTime + 1.5f + Delay;
-            }
-            else { return -1; }
+            var usageTime = currentTime + Delay;
+
+            if (FirstUse < 0) 
+                FirstUse = usageTime;
+            LastUse = usageTime;
+            NextUse = usageTime + Cooldown;
+            Uses++;
+            return usageTime + GlobalCooldown;
+        }
+
+        public bool ShouldAbilityBeUsedNext(float currentTime)
+        {
+            return NextUse <= currentTime + Wait;
+        }
+
+        public bool CanAbilityBeUsedNow(float currentTime)
+        {
+            return currentTime >= NextUse;
+        }
+
+        public float GetNextUseTime(float currentTime)
+        {
+            return Math.Max(currentTime, NextUse);
         }
 
         public float EffectiveCooldown() { return (LastUse - FirstUse) / (Uses - 1); }
