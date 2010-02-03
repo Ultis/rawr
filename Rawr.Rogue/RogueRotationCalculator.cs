@@ -80,23 +80,11 @@ namespace Rawr.Rogue
             float energyRegen = 10f * (1f + Stats.BonusEnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
                                          energyRegen * Duration +
-                                         20 * energyRegen * Stats.BonusStealthEnergyRegen +
-                                         (useTotT ? (-15 + Stats.BonusToTTEnergy) * (Duration - 5) / 30f: 0f);
-			//totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
-			/*if (BerserkDuration > 0)
-				totalEnergyAvailable += (float)Math.Ceiling((Duration - 10f) / 180f ) * (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk*/
-			/*if (OmenOfClarity)
-			{
-				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made more accurate than that, but that's close at least
-				if (ClearcastOnBleedChance > 0)
-				{
-					float dotTicks = (1f / 3f + 1f / 2f) * Duration;
-					oocProcs += dotTicks * ClearcastOnBleedChance;
-				}
-				float cpgEnergyRaw = (useShred ? ShredStats.EnergyCost : MangleStats.EnergyCost) / CPGEnergyCostMultiplier;
-				totalEnergyAvailable += oocProcs * (cpgEnergyRaw * (1f - AvoidedAttacks) + cpgEnergyRaw * AvoidedAttacks * 0.2f);
-			}*/
-
+                                         20f * energyRegen * Stats.BonusStealthEnergyRegen +
+                                         (useTotT ? (-15f + Stats.BonusToTTEnergy) * (Duration - 5f) / 30f : 0f) +
+                                         (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
+                                         energyRegen * 2f * Stats.BonusEnergyRegen * (Duration / 180) -
+                                         (Stats.BonusFlurryHaste > 0 ? (25f - Stats.FlurryCostReduction) * Duration / 120f : 0f);
             float totalCPAvailable = 0f;
             float averageGCD = 1f / (1f - AvoidedAttacks);
             float averageFinisherCP = 5f + _chanceExtraCP[4] - Stats.CPOnFinisher;

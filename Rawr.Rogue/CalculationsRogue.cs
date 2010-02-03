@@ -261,7 +261,8 @@ namespace Rawr.Rogue
             float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
             float critMultiplierPoison = 2f * (1f + stats.BonusCritMultiplier);
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
+            hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) *
+                         (1f + stats.BonusFlurryHaste * 15f / 120f) - 1f;
             float speedModifier = 1f / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
             float mainHandSpeed = mainHand == null ? 0f : mainHand._speed * speedModifier;
             float offHandSpeed = offHand == null ? 0f : offHand._speed * speedModifier;
@@ -295,6 +296,10 @@ namespace Rawr.Rogue
             float chanceHitBackstab = 0f;
             float chanceCritMuti = 0f;
             float chanceHitMuti = 0f;
+            float chanceCritSStrike = 0f;
+            float chanceHitSStrike = 0f;
+            float chanceCritHemo = 0f;
+            float chanceHitHemo = 0f;
             float chanceCritEvis = 0f;
             float chanceHitEvis = 0f;
             //float chanceCritBleed = 0f;
@@ -325,12 +330,20 @@ namespace Rawr.Rogue
                 float cpPerCPGTemp = (chanceHitYellowTemp + chanceCritYellowTemp * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
 
                 //Backstab - Identical to Yellow, with higher crit chance
-                float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusBackstabCrit);
+                float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusBackstabCrit + stats.BonusCPGCritChance);
                 float chanceHitBackstabTemp = 1f - chanceCritBackstabTemp;
 
                 //Mutilate - Identical to Yellow, with higher crit chance
-                float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusMutiCrit);
+                float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusMutiCrit + stats.BonusCPGCritChance);
                 float chanceHitMutiTemp = 1f - chanceCritMutiTemp;
+
+                //Sinister Strike - Identical to Yellow, with higher crit chance
+                float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
+                float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
+
+                //Hemorrhage - Identical to Yellow, with higher crit chance
+                float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
+                float chanceHitHemoTemp = 1f - chanceCritHemoTemp;
 
                 //Eviscerate - Identical to Yellow, with higher crit chance
                 float chanceCritEvisTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusEvisCrit);
@@ -393,9 +406,10 @@ namespace Rawr.Rogue
             float backstabDamageRaw = (baseDamage * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBackstabDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
             backstabDamageRaw *= (mainHand._type == ItemType.Dagger ? 1f : 0f);
             float hemoDamageRaw = (baseDamage * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusHemoDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
+            hemoDamageRaw *= character.RogueTalents.Hemorrhage > 0 ? 1f : 0f;
             float sStrikeDamageRaw = (baseDamage * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSStrikeDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
             float mutiDamageRaw = (baseDamage * 1f + 181f + baseOffDamage * 1f + 181f * (1f + stats.BonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMutiDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
-            mutiDamageRaw *= (mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
+            mutiDamageRaw *= (character.RogueTalents.Mutilate > 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
             float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f /*+ (stats.BonusRuptDamagePerCPPerTick * 5f * 8f)*/) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRuptDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier);
             float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
             float evisCPDamageRaw = ((370f + stats.AttackPower * 0.03f) + (370f + stats.AttackPower * 0.07f)) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier) * (1f + stats.BonusYellowDamageMultiplier) * modArmor;
@@ -441,8 +455,8 @@ namespace Rawr.Rogue
             float ambushEnergyRaw = 60f - stats.AmbushBackstabCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
             float garrEnergyRaw = 50f - stats.GarrCostReduction;
             float backstabEnergyRaw = 60f - stats.AmbushBackstabCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritBackstab;
-            float hemoEnergyRaw = 35f - stats.HemoCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
-            float sStrikeEnergyRaw = 45f - stats.SStrikeCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritYellow;
+            float hemoEnergyRaw = 35f - stats.HemoCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritHemo;
+            float sStrikeEnergyRaw = 45f - stats.SStrikeCostReduction - stats.ChanceOnEnergyOnCrit * chanceCritSStrike;
             float mutiEnergyRaw = 60f - stats.MutiCostReduction - 2 * stats.ChanceOnEnergyOnCrit * chanceCritMuti;
             float ruptEnergyRaw = 25f;
             float evisEnergyRaw = 35f - stats.ChanceOnEnergyOnCrit * chanceCritEvis;
@@ -668,10 +682,12 @@ namespace Rawr.Rogue
                 BonusCPOnCrit = 0.2f * talents.SealFate,
                 //BonusCPOnGroupCrit = talents.HonorAmongThieves > 2 ? 1 : 0.33f * talents.HonorAmongThieves,
                 BonusCritMultiplier = (1f + 0.01f * talents.Malice) * (1f + 0.04f * talents.PreyOnTheWeak) * (1f + (targetPoisonable ? 0.03f * talents.MasterPoisoner : 0)) - 1f,
+                BonusFlurryHaste = 0.2f * talents.BladeFlurry,
                 BonusMainHandCrit = (character.MainHand != null) ? ((character.MainHand.Type == ItemType.Dagger || character.MainHand.Type == ItemType.FistWeapon) ? 0.02f * talents.CloseQuartersCombat : 0f) : 0f,
                 BonusDamageMultiplier = 0.02f * talents.Murder,
-                BonusDamageMultiplierHFB = 0.05f * talents.HungerForBlood + (talents.GlyphOfHungerforBlood ? 0.03f : 0f),
+                BonusDamageMultiplierHFB = (0.05f + (talents.GlyphOfHungerforBlood ? 0.03f : 0f)) * talents.HungerForBlood,
                 //BonusDPApplyChance = 0.04f * talents.ImprovedPoisons,
+                BonusEnergyRegen = (15 + (talents.GlyphOfAdrenalineRush ? 5f : 0f)) * talents.AdrenalineRush,
                 BonusEnergyRegenMultiplier = 0.08f * talents.Vitality,
                 BonusEnvenomDamageMultiplier = 0.07f * talents.VilePoisons,
                 BonusEvisCrit = talents.GlyphOfEviscerate ? 0.1f : 0f,
@@ -715,6 +731,7 @@ namespace Rawr.Rogue
                 Expertise = 5 * talents.WeaponExpertise,
                 //ExposeCostReduction = 5 * talents.ImprovedExposeArmor,
                 FinisherEnergyOnAvoid = 0.4f * talents.QuickRecovery,
+                FlurryCostReduction = talents.GlyphOfBladeFlurry ? 25 : 0,
                 GarrCostReduction = 10 * talents.DirtyDeeds,
                 HemoCostReduction = 1 * talents.SlaughterFromTheShadows,
                 MutiCostReduction = talents.GlyphOfMutilate ? 5 : 0,
@@ -994,99 +1011,6 @@ namespace Rawr.Rogue
             return base.IsEnchantRelevant(enchant, character);
         }
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsRogue calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
-
-            #region Racials to Force Enable
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
-            #endregion
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
-                }
-            }
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
-            #endregion
-
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }*/
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            return statsBuffs;
-        }
-
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats {
                Agility = stats.Agility,
@@ -1253,7 +1177,7 @@ namespace Rawr.Rogue
                     stats.BonusNatureDamageMultiplier +
                     stats.BonusFrostDamageMultiplier +
                     stats.BonusFireDamageMultiplier
-                ) > 0 && stats.SpellPower == 0;
+                ) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use
@@ -1270,6 +1194,111 @@ namespace Rawr.Rogue
                 }
             }
             return relevant;
+        }
+
+        public override bool IsItemRelevant(Item item)
+        {
+            if (item.Slot == ItemSlot.OffHand && item.Type == ItemType.None)
+                return false;
+            return true;
+        }
+        
+        public Stats GetBuffsStats(Character character, CalculationOptionsRogue calcOpts)
+        {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Racials to Force Enable
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffsAdd(("Heroic Presence"));
+            }
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }*/
+            #endregion
+
+            #region Special Pot Handling
+            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs)
+            {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs)
+            {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd(("Horn of Winter"));
+            character.ActiveBuffsAdd(("Battle Shout"));
+            character.ActiveBuffsAdd(("Unleashed Rage"));
+            character.ActiveBuffsAdd(("Improved Moonkin Form"));
+            character.ActiveBuffsAdd(("Leader of the Pack"));
+            character.ActiveBuffsAdd(("Improved Icy Talons"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Sunder Armor"));
+            character.ActiveBuffsAdd(("Faerie Fire"));
+            character.ActiveBuffsAdd(("Totem of Wrath"));
+            character.ActiveBuffsAdd(("Flask of Endless Rage"));
+            character.ActiveBuffsAdd(("Agility Food"));
+            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
+
+            if (character.PrimaryProfession == Profession.Alchemy ||
+                character.SecondaryProfession == Profession.Alchemy)
+                character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
+
+            //character.DruidTalents.GlyphOfSavageRoar = true;
+            //character.DruidTalents.GlyphOfShred = true;
+            //character.DruidTalents.GlyphOfRip = true;
         }
 
         private static List<string> _relevantGlyphs = null;

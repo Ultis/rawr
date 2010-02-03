@@ -64,7 +64,6 @@ namespace Rawr {
         ExpertiseRating,
         FireResistance,
         FrostResistance,
-        GarrCostReduction,
         HasteRating,
         Healing,
         Health,
@@ -287,6 +286,7 @@ namespace Rawr {
         RestoShamRelicT10,
         #endregion
         #region Added by Rawr.Rogue
+        BonusEnergyRegen,
         BonusEvisCrit,
         BonusMaceArP,
         BonusMaxEnergy,
@@ -299,6 +299,8 @@ namespace Rawr {
         ChanceOnEnergyOnOHAttack,
         ChanceOnMHAttackOnSwordAxeHit,
         ChanceOnSnDResetOnEnvenom,
+        FlurryCostReduction,
+        GarrCostReduction,
         HemoCostReduction,
         MutiCostReduction,
         SStrikeCostReduction,
@@ -521,6 +523,7 @@ namespace Rawr {
         BonusBackstabDamageMultiplier,
         BonusCPGCritDamageMultiplier,
         BonusDamageMultiplierHFB,
+        BonusFlurryHaste,
         BonusEnergyRegenMultiplier,
         BonusEnvenomDamageMultiplier,
         BonusEvisDamageMultiplier,
@@ -2722,6 +2725,14 @@ namespace Rawr {
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
+        [DisplayName("Blade Flurry Cost Reduction")]
+        public float FlurryCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FlurryCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlurryCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
         [DisplayName("Garrote Cost Reduction")]
         public float GarrCostReduction
         {
@@ -2743,6 +2754,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MutiCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.MutiCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        [DisplayName("Bonus Energy regen")]
+        public float BonusEnergyRegen
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusEnergyRegen]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusEnergyRegen] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% MH Crit")]
@@ -4984,6 +5003,15 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierHFB]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplierHFB] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Bonus Blade Flurry Haste")]
+        [Category("Rogue")]
+        public float BonusFlurryHaste
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFlurryHaste]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFlurryHaste] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
