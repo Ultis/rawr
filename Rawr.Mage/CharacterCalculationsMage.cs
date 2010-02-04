@@ -1205,6 +1205,11 @@ namespace Rawr.Mage
             ManaUsage["Summon Water Elemental"] = 0.0f;
             ManaUsage["Summon Mirror Image"] = 0.0f;
             float spiritFactor = 0.003345f;
+            CastingState evoBaseState = BaseState;
+            if (CalculationOptions.Enable2T10Evocation && BaseStats.Mage2T10 > 0)
+            {
+                evoBaseState = BaseState.Tier10TwoPieceState;
+            }
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)
@@ -1238,7 +1243,7 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.EvocationIV:
@@ -1248,7 +1253,7 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.2f;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed * 1.2f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins))
@@ -1268,7 +1273,7 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.3f;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed * 1.3f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.Heroism))
@@ -1288,7 +1293,7 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.2f * 1.3f;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed * 1.2f * 1.3f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism))

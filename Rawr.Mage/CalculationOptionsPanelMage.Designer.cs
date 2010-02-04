@@ -96,6 +96,8 @@
             this.label13 = new System.Windows.Forms.Label();
             this.checkBoxHeroism = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label128 = new System.Windows.Forms.Label();
+            this.checkBoxPVP = new System.Windows.Forms.CheckBox();
             this.textBoxMovementDuration = new System.Windows.Forms.TextBox();
             this.label106 = new System.Windows.Forms.Label();
             this.textBoxMovementFrequency = new System.Windows.Forms.TextBox();
@@ -302,6 +304,8 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label127 = new System.Windows.Forms.Label();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.label107 = new System.Windows.Forms.Label();
             this.checkBoxMode33 = new System.Windows.Forms.CheckBox();
             this.label85 = new System.Windows.Forms.Label();
@@ -353,10 +357,8 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label127 = new System.Windows.Forms.Label();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.label128 = new System.Windows.Forms.Label();
-            this.checkBoxPVP = new System.Windows.Forms.CheckBox();
+            this.label129 = new System.Windows.Forms.Label();
+            this.checkBoxEnable2T10Evocation = new System.Windows.Forms.CheckBox();
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -583,6 +585,8 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.label129);
+            this.tabPage2.Controls.Add(this.checkBoxEnable2T10Evocation);
             this.tabPage2.Controls.Add(this.label126);
             this.tabPage2.Controls.Add(this.checkBoxMirrorImage);
             this.tabPage2.Controls.Add(this.textBoxFrostbiteUtilization);
@@ -661,7 +665,7 @@
             // textBoxFrostbiteUtilization
             // 
             this.textBoxFrostbiteUtilization.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostbiteUtilization", true));
-            this.textBoxFrostbiteUtilization.Location = new System.Drawing.Point(141, 434);
+            this.textBoxFrostbiteUtilization.Location = new System.Drawing.Point(141, 454);
             this.textBoxFrostbiteUtilization.Name = "textBoxFrostbiteUtilization";
             this.textBoxFrostbiteUtilization.Size = new System.Drawing.Size(75, 20);
             this.textBoxFrostbiteUtilization.TabIndex = 202;
@@ -669,7 +673,7 @@
             // label110
             // 
             this.label110.AutoSize = true;
-            this.label110.Location = new System.Drawing.Point(-1, 437);
+            this.label110.Location = new System.Drawing.Point(-1, 457);
             this.label110.Name = "label110";
             this.label110.Size = new System.Drawing.Size(129, 13);
             this.label110.TabIndex = 201;
@@ -680,7 +684,7 @@
             // textBoxWarlockSpellPower
             // 
             this.textBoxWarlockSpellPower.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "WarlockSpellPower", true));
-            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(141, 486);
+            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(141, 506);
             this.textBoxWarlockSpellPower.Name = "textBoxWarlockSpellPower";
             this.textBoxWarlockSpellPower.Size = new System.Drawing.Size(75, 20);
             this.textBoxWarlockSpellPower.TabIndex = 200;
@@ -688,7 +692,7 @@
             // label109
             // 
             this.label109.AutoSize = true;
-            this.label109.Location = new System.Drawing.Point(-1, 489);
+            this.label109.Location = new System.Drawing.Point(-1, 509);
             this.label109.Name = "label109";
             this.label109.Size = new System.Drawing.Size(116, 13);
             this.label109.TabIndex = 199;
@@ -738,7 +742,7 @@
             // textBoxFocusMagicRate
             // 
             this.textBoxFocusMagicRate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FocusMagicTargetCritRate", true));
-            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(141, 460);
+            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(141, 480);
             this.textBoxFocusMagicRate.Name = "textBoxFocusMagicRate";
             this.textBoxFocusMagicRate.Size = new System.Drawing.Size(75, 20);
             this.textBoxFocusMagicRate.TabIndex = 194;
@@ -746,7 +750,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(-1, 463);
+            this.label36.Location = new System.Drawing.Point(-1, 483);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(104, 13);
             this.label36.TabIndex = 193;
@@ -757,7 +761,7 @@
             // textBoxSlowedTime
             // 
             this.textBoxSlowedTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SnaredTime", true));
-            this.textBoxSlowedTime.Location = new System.Drawing.Point(141, 408);
+            this.textBoxSlowedTime.Location = new System.Drawing.Point(141, 428);
             this.textBoxSlowedTime.Name = "textBoxSlowedTime";
             this.textBoxSlowedTime.Size = new System.Drawing.Size(75, 20);
             this.textBoxSlowedTime.TabIndex = 192;
@@ -765,7 +769,7 @@
             // label79
             // 
             this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(-1, 411);
+            this.label79.Location = new System.Drawing.Point(-1, 431);
             this.label79.Name = "label79";
             this.label79.Size = new System.Drawing.Size(101, 13);
             this.label79.TabIndex = 191;
@@ -775,7 +779,7 @@
             // 
             // buttonCustomSpellMix
             // 
-            this.buttonCustomSpellMix.Location = new System.Drawing.Point(162, 364);
+            this.buttonCustomSpellMix.Location = new System.Drawing.Point(162, 384);
             this.buttonCustomSpellMix.Name = "buttonCustomSpellMix";
             this.buttonCustomSpellMix.Size = new System.Drawing.Size(54, 20);
             this.buttonCustomSpellMix.TabIndex = 190;
@@ -786,7 +790,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(-1, 388);
+            this.label48.Location = new System.Drawing.Point(-1, 408);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(95, 13);
             this.label48.TabIndex = 189;
@@ -797,7 +801,7 @@
             // 
             this.checkBoxCustomSpellMixOnly.AutoSize = true;
             this.checkBoxCustomSpellMixOnly.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "CustomSpellMixOnly", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxCustomSpellMixOnly.Location = new System.Drawing.Point(141, 388);
+            this.checkBoxCustomSpellMixOnly.Location = new System.Drawing.Point(141, 408);
             this.checkBoxCustomSpellMixOnly.Name = "checkBoxCustomSpellMixOnly";
             this.checkBoxCustomSpellMixOnly.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCustomSpellMixOnly.TabIndex = 188;
@@ -806,7 +810,7 @@
             // label47
             // 
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(-1, 368);
+            this.label47.Location = new System.Drawing.Point(-1, 388);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(97, 13);
             this.label47.TabIndex = 187;
@@ -817,7 +821,7 @@
             // 
             this.checkBoxCustomSpellMixEnabled.AutoSize = true;
             this.checkBoxCustomSpellMixEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "CustomSpellMixEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxCustomSpellMixEnabled.Location = new System.Drawing.Point(141, 368);
+            this.checkBoxCustomSpellMixEnabled.Location = new System.Drawing.Point(141, 388);
             this.checkBoxCustomSpellMixEnabled.Name = "checkBoxCustomSpellMixEnabled";
             this.checkBoxCustomSpellMixEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCustomSpellMixEnabled.TabIndex = 186;
@@ -846,7 +850,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(-1, 348);
+            this.label42.Location = new System.Drawing.Point(-1, 368);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(69, 13);
             this.label42.TabIndex = 183;
@@ -857,7 +861,7 @@
             // 
             this.checkBoxManaGemEnabled.AutoSize = true;
             this.checkBoxManaGemEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ManaGemEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(141, 348);
+            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(141, 368);
             this.checkBoxManaGemEnabled.Name = "checkBoxManaGemEnabled";
             this.checkBoxManaGemEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxManaGemEnabled.TabIndex = 182;
@@ -866,7 +870,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(-1, 328);
+            this.label41.Location = new System.Drawing.Point(-1, 348);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(77, 13);
             this.label41.TabIndex = 181;
@@ -877,7 +881,7 @@
             // 
             this.checkBoxManaPotionEnabled.AutoSize = true;
             this.checkBoxManaPotionEnabled.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ManaPotionEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(141, 328);
+            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(141, 348);
             this.checkBoxManaPotionEnabled.Name = "checkBoxManaPotionEnabled";
             this.checkBoxManaPotionEnabled.Size = new System.Drawing.Size(15, 14);
             this.checkBoxManaPotionEnabled.TabIndex = 180;
@@ -1161,6 +1165,26 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fight";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label128
+            // 
+            this.label128.AutoSize = true;
+            this.label128.Location = new System.Drawing.Point(0, 565);
+            this.label128.Name = "label128";
+            this.label128.Size = new System.Drawing.Size(38, 13);
+            this.label128.TabIndex = 191;
+            this.label128.Text = "PVP: *";
+            this.toolTipMage.SetToolTip(this.label128, "When enabled follows PVP rules.");
+            // 
+            // checkBoxPVP
+            // 
+            this.checkBoxPVP.AutoSize = true;
+            this.checkBoxPVP.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "PVP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxPVP.Location = new System.Drawing.Point(128, 565);
+            this.checkBoxPVP.Name = "checkBoxPVP";
+            this.checkBoxPVP.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxPVP.TabIndex = 190;
+            this.checkBoxPVP.UseVisualStyleBackColor = true;
             // 
             // textBoxMovementDuration
             // 
@@ -3239,6 +3263,27 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label127
+            // 
+            this.label127.AutoSize = true;
+            this.label127.Location = new System.Drawing.Point(0, 127);
+            this.label127.Name = "label127";
+            this.label127.Size = new System.Drawing.Size(133, 13);
+            this.label127.TabIndex = 214;
+            this.label127.Text = "Cycle Level Haste Procs: *";
+            this.toolTipMage.SetToolTip(this.label127, "Evaluates cycle level haste proc interactions, but at a significant performance c" +
+                    "ost.");
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "AdvancedHasteProcs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox5.Location = new System.Drawing.Point(209, 127);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(15, 14);
+            this.checkBox5.TabIndex = 213;
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
             // label107
             // 
             this.label107.AutoSize = true;
@@ -3786,46 +3831,26 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label127
+            // label129
             // 
-            this.label127.AutoSize = true;
-            this.label127.Location = new System.Drawing.Point(0, 127);
-            this.label127.Name = "label127";
-            this.label127.Size = new System.Drawing.Size(133, 13);
-            this.label127.TabIndex = 214;
-            this.label127.Text = "Cycle Level Haste Procs: *";
-            this.toolTipMage.SetToolTip(this.label127, "Evaluates cycle level haste proc interactions, but at a significant performance c" +
-                    "ost.");
+            this.label129.AutoSize = true;
+            this.label129.Location = new System.Drawing.Point(-1, 328);
+            this.label129.Name = "label129";
+            this.label129.Size = new System.Drawing.Size(93, 13);
+            this.label129.TabIndex = 206;
+            this.label129.Text = "2T10 Evocation: *";
+            this.toolTipMage.SetToolTip(this.label129, "Enable this to use Evocation with 2T10 buff, only has effect if you actually have" +
+                    " 2T10 equipped.");
             // 
-            // checkBox5
+            // checkBoxEnable2T10Evocation
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "AdvancedHasteProcs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox5.Location = new System.Drawing.Point(209, 127);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(15, 14);
-            this.checkBox5.TabIndex = 213;
-            this.checkBox5.UseVisualStyleBackColor = true;
-            // 
-            // label128
-            // 
-            this.label128.AutoSize = true;
-            this.label128.Location = new System.Drawing.Point(0, 565);
-            this.label128.Name = "label128";
-            this.label128.Size = new System.Drawing.Size(38, 13);
-            this.label128.TabIndex = 191;
-            this.label128.Text = "PVP: *";
-            this.toolTipMage.SetToolTip(this.label128, "When enabled follows PVP rules.");
-            // 
-            // checkBoxPVP
-            // 
-            this.checkBoxPVP.AutoSize = true;
-            this.checkBoxPVP.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "PVP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxPVP.Location = new System.Drawing.Point(128, 565);
-            this.checkBoxPVP.Name = "checkBoxPVP";
-            this.checkBoxPVP.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxPVP.TabIndex = 190;
-            this.checkBoxPVP.UseVisualStyleBackColor = true;
+            this.checkBoxEnable2T10Evocation.AutoSize = true;
+            this.checkBoxEnable2T10Evocation.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Enable2T10Evocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxEnable2T10Evocation.Location = new System.Drawing.Point(141, 328);
+            this.checkBoxEnable2T10Evocation.Name = "checkBoxEnable2T10Evocation";
+            this.checkBoxEnable2T10Evocation.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxEnable2T10Evocation.TabIndex = 205;
+            this.checkBoxEnable2T10Evocation.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -4202,6 +4227,8 @@
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.Label label128;
         private System.Windows.Forms.CheckBox checkBoxPVP;
+        private System.Windows.Forms.Label label129;
+        private System.Windows.Forms.CheckBox checkBoxEnable2T10Evocation;
 
     }
 }

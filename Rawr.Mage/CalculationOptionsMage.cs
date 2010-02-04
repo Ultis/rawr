@@ -505,6 +505,13 @@ namespace Rawr.Mage
             set { _EnableHastedEvocation = value; OnPropertyChanged("EnableHastedEvocation"); }
         }
 
+        private bool _Enable2T10Evocation;
+        public bool Enable2T10Evocation
+        {
+            get { return _Enable2T10Evocation; }
+            set { _Enable2T10Evocation = value; OnPropertyChanged("Enable2T10Evocation"); }
+        }
+
         private bool _AdvancedHasteProcs;
         public bool AdvancedHasteProcs
         {
@@ -1214,6 +1221,7 @@ namespace Rawr.Mage
             MaxUseAssumption = true;
             FrostbiteUtilization = 1.0f;
             MirrorImageEnabled = true;
+            Enable2T10Evocation = true;
             Encounter = new Encounter();
         }
 

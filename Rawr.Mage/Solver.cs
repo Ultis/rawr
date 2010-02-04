@@ -1767,17 +1767,22 @@ namespace Rawr.Mage
                 calculationResult.EvocationStats = calculationResult.BaseStats;
                 if (evocationAvailable)
                 {
+                    CastingState evoBaseState = calculationResult.BaseState;
+                    if (calculationOptions.Enable2T10Evocation && baseStats.Mage2T10 > 0)
+                    {
+                        evoBaseState = calculationResult.BaseState.Tier10TwoPieceState;
+                    }
                     int evocationSegments = (restrictManaUse) ? segmentList.Count : 1;
-                    double evocationDuration = (8f + baseStats.EvocationExtension) / calculationResult.BaseState.CastingSpeed;
+                    double evocationDuration = (8f + baseStats.EvocationExtension) / evoBaseState.CastingSpeed;
                     calculationResult.EvocationDuration = evocationDuration;
                     calculationResult.EvocationDurationIV = evocationDuration / 1.2;
                     calculationResult.EvocationDurationHero = evocationDuration / 1.3;
                     calculationResult.EvocationDurationIVHero = evocationDuration / 1.2 / 1.3;
                     float evocationMana = baseStats.Mana;
-                    calculationResult.EvocationRegen = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed;
-                    calculationResult.EvocationRegenIV = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
-                    calculationResult.EvocationRegenHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3;
-                    calculationResult.EvocationRegenIVHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3;
+                    calculationResult.EvocationRegen = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed;
+                    calculationResult.EvocationRegenIV = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2;
+                    calculationResult.EvocationRegenHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.3;
+                    calculationResult.EvocationRegenIVHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2 * 1.3;
                     if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
                     {
                         Stats evocationRawStats = rawStats.Clone();
@@ -1806,15 +1811,15 @@ namespace Rawr.Mage
                         Stats evocationStats = calculations.GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
                         float spiritFactor = 0.003345f;
                         double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * spiritFactor * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + 15732 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + evocationStats.ManaRestoreFromMaxManaPerSecond * evocationStats.Mana);
-                        double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
+                        double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * evoBaseState.CastingSpeed;
                         if (evocationRegen > calculationResult.EvocationRegen)
                         {
                             calculationResult.EvocationStats = evocationStats;
                             evocationMana = evocationStats.Mana;
                             calculationResult.EvocationRegen = evocationRegen;
-                            calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
-                            calculationResult.EvocationRegenHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3;
-                            calculationResult.EvocationRegenIVHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3;
+                            calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2;
+                            calculationResult.EvocationRegenHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.3;
+                            calculationResult.EvocationRegenIVHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2 * 1.3;
                         }
                     }
                     if (calculationResult.EvocationRegen * evocationDuration > baseStats.Mana)
