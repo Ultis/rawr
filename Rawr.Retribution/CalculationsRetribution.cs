@@ -555,6 +555,7 @@ namespace Rawr.Retribution
                 talentCrit - (targetLevel == 83 ? 0.03f : 0f);
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + stats.HasteRating * 1.3f / 3278.998947f) * (1f + stats.Bloodlust) - 1f;
+            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) * (1f + stats.Bloodlust) - 1f;
             
             stats.SpellPower += stats.Strength * .2f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
         }
