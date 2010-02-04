@@ -35,6 +35,7 @@ namespace Rawr.TankDK {
 
             numThreatWeight.Value = (decimal)options.ThreatWeight;
             numSurvivalWeight.Value = (decimal)options.SurvivalWeight;
+            numMitigationWeight.Value = (decimal)options.MitigationWeight;
             cb_AdditiveMitigation.Checked = options.AdditiveMitigation;
             cbExperimental.Checked = options.bExperimental;
             numBossAttackSpeed.Value = (decimal)options.BossAttackSpeed;
@@ -80,6 +81,15 @@ namespace Rawr.TankDK {
                 Character.OnCalculationsInvalidated();
             }
         }
+        private void numMitigationWeight_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.MitigationWeight = (float)(numMitigationWeight.Value);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void numIncomingDamage_ValueChanged(object sender, EventArgs e) {
             if (!_loadingCalculationOptions) {
                 options. IncomingDamage = (uint)(numIncomingDamage.Value);
@@ -124,34 +134,6 @@ namespace Rawr.TankDK {
                 options.cType = (CalculationType)comboChartType.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
-        }
-
-        private Stats[] BuildStatsList()
-        {
-            List<Stats> statsList = new List<Stats>();
-                statsList.Add(new Stats() { Strength = 1f });
-                statsList.Add(new Stats() { Agility = 1f });
-                statsList.Add(new Stats() { AttackPower = 2f });
-                statsList.Add(new Stats() { CritRating = 1f });
-                statsList.Add(new Stats() { HitRating = 1f });
-                statsList.Add(new Stats() { ExpertiseRating = 1f });
-                statsList.Add(new Stats() { HasteRating = 1f });
-                statsList.Add(new Stats() { ArmorPenetrationRating = 1f });
-                statsList.Add(new Stats() { DefenseRating = 1f });
-                statsList.Add(new Stats() { DodgeRating = 1f });
-                statsList.Add(new Stats() { ParryRating = 1f });
-            return statsList.ToArray();
-        }
-
-        private void btnStatsGraph_Click_1(object sender, EventArgs e)
-        {
-            Stats[] statsList = BuildStatsList();
-            Graph graph = new Graph();
-            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your Overall Score.\n\nAt the Zero position is your current Overall.\n" +
-                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
-                         "The vertical axis shows the amount of Overall points added or lost";
-            graph.SetupStatsGraph(Character, statsList, 1000, explanatoryText, null);
-            graph.Show();
         }
 
         private void cb_AdditiveMitigation_CheckedChanged(object sender, EventArgs e)
@@ -208,5 +190,38 @@ namespace Rawr.TankDK {
             }
 
         }
+
+        #region StatsGraph
+        private Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            statsList.Add(new Stats() { Strength = 1f });
+            statsList.Add(new Stats() { Stamina = 1f });
+            statsList.Add(new Stats() { Agility = 1f });
+            statsList.Add(new Stats() { AttackPower = 2f });
+            statsList.Add(new Stats() { CritRating = 1f });
+            statsList.Add(new Stats() { HitRating = 1f });
+            statsList.Add(new Stats() { ExpertiseRating = 1f });
+            statsList.Add(new Stats() { HasteRating = 1f });
+            statsList.Add(new Stats() { ArmorPenetrationRating = 1f });
+            statsList.Add(new Stats() { DefenseRating = 1f });
+            statsList.Add(new Stats() { DodgeRating = 1f });
+            statsList.Add(new Stats() { ParryRating = 1f });
+            return statsList.ToArray();
+        }
+
+        private void btnStatsGraph_Click_1(object sender, EventArgs e)
+        {
+            Stats[] statsList = BuildStatsList();
+            Graph graph = new Graph();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your Overall Score.\n\nAt the Zero position is your current Overall.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of Overall points added or lost";
+            graph.SetupStatsGraph(Character, statsList, 1000, explanatoryText, null);
+            graph.Show();
+        }
+        #endregion
+
+
     }
 }

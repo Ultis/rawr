@@ -22,7 +22,7 @@ namespace Rawr.TankDK {
                 }
                 else
                 {
-                    return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); 
+                    return ((Survival * SurvivalWeight) + (Mitigation * MitigationWeight) + (Threat * ThreatWeight)); 
                 }
             } 
             set 
@@ -45,6 +45,7 @@ namespace Rawr.TankDK {
         public float Threat { get; set; }
 
         public float SurvivalWeight { get; set; }
+        public float MitigationWeight { get; set; }
         public float ThreatWeight { get; set; }
 
         public float MagicDamageReduction { get; set; }
@@ -78,7 +79,7 @@ namespace Rawr.TankDK {
                 }
                 else
                 {
-                    return new float[] { Survival * SurvivalWeight, Mitigation, Threat * ThreatWeight };
+                    return new float[] { Survival * SurvivalWeight, Mitigation * MitigationWeight, Threat * ThreatWeight };
                 }
             }
             set 
@@ -151,7 +152,7 @@ namespace Rawr.TankDK {
             dict["Threat"] = Threat.ToString("F1"); // Unmodified Threat.
             dict["Overall"] = OverallPoints.ToString("F1");  
             dict["Modified Survival"] = (Survival * SurvivalWeight).ToString("F1"); // another place of duplicate math.
-            dict["Modified Mitigation"] = (Mitigation).ToString("F1");
+            dict["Modified Mitigation"] = (Mitigation * MitigationWeight).ToString("F1");
             dict["Modified Threat"] = (Threat * ThreatWeight).ToString("F1"); // another place of duplicate math.
 
             return dict;

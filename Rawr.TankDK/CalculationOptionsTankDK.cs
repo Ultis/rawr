@@ -43,15 +43,28 @@ namespace Rawr.TankDK
         private float _SurvivalWeight = 1;
         public float SurvivalWeight
         {
-            get 
+            get
             {
-                if ( _SurvivalWeight < 0)
+                if (_SurvivalWeight < 0)
                 {
                     _SurvivalWeight = 1f;
                 }
-                return _SurvivalWeight; 
+                return _SurvivalWeight;
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
+        }
+        private float _MitigationWeight = 4;
+        public float MitigationWeight
+        {
+            get 
+            {
+                if (_MitigationWeight < 0)
+                {
+                    _MitigationWeight = 1f;
+                }
+                return _MitigationWeight; 
+            }
+            set { _MitigationWeight = value; OnPropertyChanged("MitigationWeight"); }
         }
         #region Physical Damage
         private uint _IncomingDamage = 10000u;

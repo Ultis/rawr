@@ -153,9 +153,6 @@ namespace Rawr.TankDK
             if (character.MainHand != null)
             {
                 MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
-//                calcs.MHAttackSpeed = MH.hastedSpeed;
-//                calcs.MHWeaponDamage = MH.damage;
-//                calcs.MHExpertise = MH.effectiveExpertise;
                 if (character.MainHand.Item.Type == ItemType.TwoHandAxe
                     || character.MainHand.Item.Type == ItemType.TwoHandMace
                     || character.MainHand.Item.Type == ItemType.TwoHandSword
@@ -1090,6 +1087,7 @@ namespace Rawr.TankDK
             DPSPoints += fDamRuneStrike;
 
             // Multiply by Frost Presence modifier:
+            // TODO: this may be causing a double factoring of frost presence.
             DPSPoints *= 2.0735f;
             // Figure out how much damage may have been done when factoring in missrate.
             // This currenty is just physicalhit not spell hit.  Need to fix that.

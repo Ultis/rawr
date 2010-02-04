@@ -3,12 +3,19 @@
 Currently targeting: 
 * Wow version 3.3.0
 
+2.3.9:
+No Defect: Fixed some tool tips
+Defect 15732: Finally rooted out the expertise problem in experimental code.
+Defect 16144: Removing legacy mitigation code and adding the Mitigation multiplier to help with balancing issues until we can fine-tune it.
+
+2.3.8:
 2.3.7:
+RSVs still go hay-wire when using certain blood talents.
 * Defect 15829: Armor miscalculated - based on the comments, moving the frost presence application to the end of my accumulate work.
 * Defect 14569: Adjusting Survival by providing a more focused means of inputing the kinds of damage seen.  This is related to the BossHandler work.
 * Defect 15844: Provide a user-checkbox to enable/disable Parry Haste.
 * No Defect: Updating some of the tool tips to help with clarification.
-RSVs still go hay-wire when using certain blood talents.
+* No Defect: Adding some abilities to future migration to the sim model.  Updating the calcs to ensure that we're pulling the right data.
 
 2.3.6:
 * No Defect: Factor in the DAMAGE procs, not just the healing procs of items.  This probably needs to be refactored.  Also the specials proc rate for OnMeleeHit was wrong.  

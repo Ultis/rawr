@@ -61,6 +61,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.numBleedTickFreq = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
+            this.numMitigationWeight = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
@@ -73,6 +75,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numIncMagicDamage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBleedPerTick)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBleedTickFreq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMitigationWeight)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -130,7 +133,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 28);
+            this.label3.Location = new System.Drawing.Point(3, 23);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 4;
@@ -144,7 +147,7 @@
             0,
             0,
             131072});
-            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 28);
+            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 23);
             this.numSurvivalWeight.Maximum = new decimal(new int[] {
             10,
             0,
@@ -536,8 +539,43 @@
             this.label11.TabIndex = 68;
             this.label11.Text = "Bleed Tick Frequency";
             // 
+            // numMitigationWeight
+            // 
+            this.numMitigationWeight.DecimalPlaces = 2;
+            this.numMitigationWeight.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numMitigationWeight.Location = new System.Drawing.Point(150, 41);
+            this.numMitigationWeight.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numMitigationWeight.Name = "numMitigationWeight";
+            this.numMitigationWeight.Size = new System.Drawing.Size(105, 20);
+            this.numMitigationWeight.TabIndex = 72;
+            this.numMitigationWeight.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numMitigationWeight.ValueChanged += new System.EventHandler(this.numMitigationWeight_ValueChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 41);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(120, 13);
+            this.label12.TabIndex = 73;
+            this.label12.Text = "Mitigation Weight (secs)";
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.numMitigationWeight);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.numBleedPerTick);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.numBleedTickFreq);
@@ -581,6 +619,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numIncMagicDamage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBleedPerTick)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numBleedTickFreq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMitigationWeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -621,5 +660,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown numBleedTickFreq;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numMitigationWeight;
+        private System.Windows.Forms.Label label12;
     }
 }
