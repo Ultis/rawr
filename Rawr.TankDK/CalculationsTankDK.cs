@@ -1162,7 +1162,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         {
             s.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
             // Patch 3.2: Replace 10% Health w/ 6% Stamina
-            s.BonusStaminaMultiplier += .06f; // Bonus 6% Stamina
+            s.BonusStaminaMultiplier += .08f; // Bonus 8% Stamina
             s.DamageTakenMultiplier -= .08f;// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
             s.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
         }
@@ -1612,11 +1612,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + FullCharacterStats.BonusIceboundFortitudeDuration);
             // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
             float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
-            float ibfReduction = 0.2f + (ibfDefense * 0.0015f);
+            float ibfReduction = 0.3f + (ibfDefense * 0.0015f);
             if (character.DeathKnightTalents.GlyphofIceboundFortitude)
             {
                 // The glyph provides a MIN of 30% damage reduction, but doesn't help if your def takes you over that.
-                ibfReduction = Math.Max(0.3f, ibfReduction);
+                ibfReduction = Math.Max(0.4f, ibfReduction);
             }
             newStats = new Stats();
             newStats.DamageTakenMultiplier -= ibfReduction;
