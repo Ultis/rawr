@@ -2781,6 +2781,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         case Trigger.HunterAutoShotHit:
                         case Trigger.SteadyShotHit:
                         case Trigger.PetClawBiteSmackCrit:
+                            _stats = new Stats();
+                            weight = 1.0f;
+                            if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                                weight = uptime;
+                                _stats.ArmorPenetrationRating = arpToHardCap;
+                            } else {
+                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
+                            }
+                            statsProcs.Accumulate(_stats, weight);
+                            break;
                         case Trigger.SerpentWyvernStingsDoDamage:
                             _stats = new Stats();
                             weight = 1.0f;

@@ -64,7 +64,7 @@ namespace Rawr.Hunter {
 
                 // shots which require talents
                 if (priorities[i] != null && priorities[i].Type == Shots.BlackArrow && Talents.BlackArrow == 0){ priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
-                if (priorities[i] != null && priorities[i].Type == Shots.ChimeraShot && Talents.ChimeraShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
+                if (priorities[i] != null && priorities[i].Type == Shots.ChimearaShot && Talents.ChimeraShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].Type == Shots.AimedShot && Talents.AimedShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].Type == Shots.ExplosiveShot && Talents.ExplosiveShot == 0){priorities[i].FailReason_LackTalent = true; priorities[i] = null;}
                 if (priorities[i] != null && priorities[i].Type == Shots.BeastialWrath && Talents.BestialWrath == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
@@ -91,7 +91,7 @@ namespace Rawr.Hunter {
             // store some derived facts about the rotation for later use
             chimeraRefreshesSerpent = false;
             chimeraRefreshesViper = false;
-            if (containsShot(Shots.ChimeraShot))
+            if (containsShot(Shots.ChimearaShot))
             {
                 if (containsShot(Shots.SerpentSting)) chimeraRefreshesSerpent = true;
                 if (containsShot(Shots.ViperSting)) chimeraRefreshesViper = true;

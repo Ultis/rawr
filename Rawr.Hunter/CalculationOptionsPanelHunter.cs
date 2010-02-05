@@ -522,7 +522,7 @@ namespace Rawr.Hunter
                 CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
                 CB_ShotPriority_02.SelectedIndex = 19; // Readiness
                 CB_ShotPriority_03.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_04.SelectedIndex = 17; // Chimera Shot
+                CB_ShotPriority_04.SelectedIndex = 17; // Chimeara Shot
                 CB_ShotPriority_05.SelectedIndex = 9; // Kill Shot
                 CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
                 CB_ShotPriority_07.SelectedIndex = 7; // Silencing Shot
@@ -548,7 +548,7 @@ namespace Rawr.Hunter
                 CB_ShotPriority_02.SelectedIndex = 20; // Bestial Wrath
                 CB_ShotPriority_03.SelectedIndex = 19; // Readiness
                 CB_ShotPriority_04.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_05.SelectedIndex = 17; // Chimera Shot
+                CB_ShotPriority_05.SelectedIndex = 17; // Chimeara Shot
                 CB_ShotPriority_06.SelectedIndex = 9; // Kill Shot
                 CB_ShotPriority_07.SelectedIndex = 10; // Explosive Shot
                 CB_ShotPriority_08.SelectedIndex = 11; // Black Arrow
@@ -649,7 +649,7 @@ namespace Rawr.Hunter
                 case PetFamily.Boar:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.Gore }; break;
                 case PetFamily.CarrionBird: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.DemoralizingScreech }; break;
                 case PetFamily.Cat:         familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Rake, PetAttacks.Prowl }; break;
-                case PetFamily.Chimera:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FroststormBreath }; break;
+                case PetFamily.Chimaera:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FroststormBreath }; break;
                 case PetFamily.CoreHound:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.LavaBreath }; break;
                 case PetFamily.Crab:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pin }; break;
                 case PetFamily.Crocolisk:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.BadAttitude }; break;
@@ -848,11 +848,9 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void initTalentValues(ComboBox cmbBox, int max)
-        {
+        private void initTalentValues(ComboBox cmbBox, int max) {
             cmbBox.Items.Clear();
-            for (int i = 0; i <= max; i++)
-            {
+            for (int i = 0; i <= max; i++) {
                 cmbBox.Items.Add(i);
             }
             cmbBox.SelectedIndex = 0;
@@ -863,7 +861,7 @@ namespace Rawr.Hunter
             switch ((PetFamily)CB_PetFamily.SelectedItem)
             {
                 case PetFamily.Bat:
-                case PetFamily.Chimera:
+                case PetFamily.Chimaera:
                 case PetFamily.Dragonhawk:
                 case PetFamily.NetherRay:
                 case PetFamily.Ravager:
@@ -915,21 +913,17 @@ namespace Rawr.Hunter
             CalcOpts.PetTalents.Reset();
             populatePetTalentCombos();
         }
-        private void talentSpecButton_Click(object sender, EventArgs e)
-        {
-            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null)
-            {
+        private void talentSpecButton_Click(object sender, EventArgs e) {
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
                 List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
                 foreach (SavedPetTalentSpec spec in _savedPetTalents) {
                     /*if (spec.Class == Character.Class)*/ classTalents.Add(spec);
                 }
                 FormSavePetTalentSpec form = new FormSavePetTalentSpec(classTalents);
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
+                if (form.ShowDialog(this) == DialogResult.OK) {
                     SavedPetTalentSpec spec = form.PetTalentSpec();
                     String specName = form.PetTalentSpecName();
-                    if (spec == null)
-                    {
+                    if (spec == null) {
                         spec = new SavedPetTalentSpec(specName, _pettalents, _treeCount);
                         _savedPetTalents.Add(spec);
                     }
@@ -939,9 +933,7 @@ namespace Rawr.Hunter
                     Character.OnCalculationsInvalidated();
                 }
                 form.Dispose();
-            }
-            else
-            {
+            } else {
                 _savedPetTalents.Remove((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem);
                 UpdateSavedTalents();
                 SavePetTalentSpecs();
@@ -1211,12 +1203,12 @@ namespace Rawr.Hunter
             // Save the Index
             calcOpts.SelectedArmoryPet = CB_ArmoryPets.SelectedIndex;
             ArmoryPet CurrentPet = (ArmoryPet)CB_ArmoryPets.SelectedItem;
-            // Convert the ArmoryPet spec to our spec
-            PetTalentTree pt = PetTalentTree.FromArmoryPet(CurrentPet);
             // Populate the Pet Family
             isLoading = true;
             CB_PetFamily.Text = CurrentPet.Family;
             isLoading = false;
+            // Convert the ArmoryPet spec to our spec
+            PetTalentTree pt = PetTalentTree.FromArmoryPet(CurrentPet);
             // Populate the Pet Specs box
             {
                 CalcOpts.PetTalents = pt;

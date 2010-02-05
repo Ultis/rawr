@@ -139,7 +139,7 @@ namespace Rawr.Hunter
             #region Variable setup
 
             // these are used by both the frequency rotation and here in the rotation test
-            bool chimeraRefreshesSerpent = containsShot(Shots.ChimeraShot) && containsShot(Shots.SerpentSting);
+            bool chimeraRefreshesSerpent = containsShot(Shots.ChimearaShot) && containsShot(Shots.SerpentSting);
 
             currentShot = 1;
             currentTime = 0;
@@ -571,7 +571,7 @@ namespace Rawr.Hunter
                             ISSProcsArcane++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
-                        } else if (thisShot == Shots.ChimeraShot) {
+                        } else if (thisShot == Shots.ChimearaShot) {
                             ISSProcsChimera++;
                             ISSDuration = -1;
                             //Cells(row, col + 5).value = Cells(row, col + 5).value + "(ISS proc)"
@@ -725,7 +725,7 @@ namespace Rawr.Hunter
             this.IAotHUptime      = this.TestTimeElapsed > 0 ? 1.0f * this.IAotHTime / this.TestTimeElapsed : 0;
             this.ISSAimedUptime   = this.ISSProcsAimed   > 0 ? 1.0f * this.ISSProcsAimed / shotData[Shots.AimedShot].countUsed : 0;
             this.ISSArcaneUptime  = this.ISSProcsArcane  > 0 ? 1.0f * this.ISSProcsArcane / shotData[Shots.ArcaneShot].countUsed : 0;
-            this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? 1.0f * this.ISSProcsChimera / shotData[Shots.ChimeraShot].countUsed : 0;
+            this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? 1.0f * this.ISSProcsChimera / shotData[Shots.ChimearaShot].countUsed : 0;
 
             #endregion
             /*

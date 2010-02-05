@@ -152,7 +152,7 @@ namespace Rawr.Hunter
         public ShotData freezingTrap = new ShotData(Shots.FreezingTrap, true, false, true);
         public ShotData frostTrap = new ShotData(Shots.FrostTrap, true, false, true);
         public ShotData volley = new ShotData(Shots.Volley, false, true, true);
-        public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, false, true, true);
+        public ShotData chimeraShot = new ShotData(Shots.ChimearaShot, false, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, true, false, false);
         public ShotData readiness = new ShotData(Shots.Readiness, true, false, true);
         public ShotData beastialWrath = new ShotData(Shots.BeastialWrath, true, false, false);

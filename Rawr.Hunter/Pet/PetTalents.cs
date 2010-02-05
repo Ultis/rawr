@@ -977,13 +977,13 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
                         retVal.CobraReflexes.Value = int.Parse(armoryspec[00].ToString());
                         //retVal.Unknown.Value = int.Parse(armoryspec[01].ToString());
                         retVal.DiveDash.Value = int.Parse(armoryspec[02].ToString());
-                        retVal.GreatStamina.Value = int.Parse(armoryspec[03].ToString()); // iffy
-                        retVal.NaturalArmor.Value = int.Parse(armoryspec[04].ToString()); // iffy
+                        retVal.GreatStamina.Value = int.Parse(armoryspec[03].ToString());
+                        retVal.NaturalArmor.Value = int.Parse(armoryspec[04].ToString());
                         // Tier 2
-                        retVal.BoarsSpeed.Value = int.Parse(armoryspec[05].ToString()); // iffy
-                        //retVal.Unknown.Value = int.Parse(armoryspec[06].ToString()); // iffy
-                        retVal.Mobility.Value = int.Parse(armoryspec[07].ToString()); // iffy
-                        retVal.OwlsFocus.Value = int.Parse(armoryspec[08].ToString()); // iffy
+                        retVal.BoarsSpeed.Value = int.Parse(armoryspec[05].ToString());
+                        //retVal.Unknown.Value = int.Parse(armoryspec[06].ToString());
+                        retVal.Mobility.Value = int.Parse(armoryspec[07].ToString());
+                        retVal.OwlsFocus.Value = int.Parse(armoryspec[08].ToString());
                         retVal.SpikedCollar.Value = int.Parse(armoryspec[09].ToString());
                         // Tier 3
                         retVal.CullingTheHerd.Value = int.Parse(armoryspec[10].ToString());
