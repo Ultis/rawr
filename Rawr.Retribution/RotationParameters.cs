@@ -16,6 +16,8 @@ namespace Rawr.Retribution
         public float Delay;
         public float T10_Speed;
         public float SpellGCD;
+        public float BloodlustSpellGCD;
+        public float BloodlustUptime;
 
         public RotationParameters() { }
 
@@ -28,8 +30,11 @@ namespace Rawr.Retribution
             int ImpJudgements, 
             bool GlyphConsecrate, 
             float T10_Speed,
-            float spellHaste)
+            float spellHaste,
+            float bloodlustUptime)
         {
+            const float bloodlustHaste = 0.3f;
+
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
             this.GlyphConsecrate = GlyphConsecrate;
@@ -38,7 +43,10 @@ namespace Rawr.Retribution
             this.Delay = (float)Math.Round(Delay, 2);
             this.ImpJudgements = ImpJudgements;
             this.T10_Speed = (float)Math.Round(T10_Speed, 2);
-            SpellGCD = (float)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 2);
+            BloodlustUptime = (float)Math.Round(bloodlustUptime, 3);
+            SpellGCD = GetSpellGCD(spellHaste);
+            BloodlustSpellGCD = 
+                BloodlustUptime == 0 ? SpellGCD : GetSpellGCD((1 + spellHaste) * (1 + bloodlustHaste) - 1);
         }
 
         public override bool Equals(Object obj)
@@ -132,6 +140,12 @@ namespace Rawr.Retribution
                 ret += ShortAbilityString(a) + ", ";
             }
             return ret;
+        }
+
+
+        private static float GetSpellGCD(float spellHaste)
+        {
+            return (float)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 2);
         }
 
     }

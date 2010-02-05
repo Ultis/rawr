@@ -105,8 +105,8 @@ namespace Rawr.Retribution
             abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(4, 1.5f);
             abilities[(int)Ability.DivineStorm] = new SimulatorAbility(10, 1.5f);
             abilities[(int)Ability.Consecration] = 
-                new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8, rot.SpellGCD);
-            abilities[(int)Ability.Exorcism] = new SimulatorAbility(15, rot.SpellGCD);
+                new SimulatorAbility(rot.GlyphConsecrate ? 10 : 8, rot.BloodlustSpellGCD);
+            abilities[(int)Ability.Exorcism] = new SimulatorAbility(15, rot.BloodlustSpellGCD);
             abilities[(int)Ability.HammerOfWrath] = new SimulatorAbility(6, 1.5f);
 
             abilities[(int)Ability.HammerOfWrath].NextUse = sol.FightLength * (1f - rot.TimeUnder20);
@@ -114,10 +114,19 @@ namespace Rawr.Retribution
             float gcdFinishTime = 0;
             Random rand = new Random(6021987);
             float nextSwingTime = rot.T10_Speed;
+            bool isBloodlustActive = true;
+            float bloodlustFinishTime = sol.FightLength * rot.BloodlustUptime;
 
             float currentTime = 0;
             while (currentTime < sol.FightLength)
             {
+                if (isBloodlustActive && (currentTime >= bloodlustFinishTime))
+                {
+                    isBloodlustActive = false;
+                    abilities[(int)Ability.Consecration].GlobalCooldown = rot.SpellGCD;
+                    abilities[(int)Ability.Exorcism].GlobalCooldown = rot.SpellGCD;
+                }
+
                 if (currentTime >= gcdFinishTime)
                 {
                     foreach (Ability ability in rot.Priorities)

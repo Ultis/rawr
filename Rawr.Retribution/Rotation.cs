@@ -223,15 +223,21 @@ namespace Rawr.Retribution
 
         private RotationParameters Parameters(Ability[] rotation)
         {
-            return new RotationParameters(rotation,
-                        Combats.CalcOpts.TimeUnder20,
-                        Combats.CalcOpts.Wait,
-                        Combats.CalcOpts.Delay,
-                        Combats.Stats.JudgementCDReduction > 0,
-                        Combats.Talents.ImprovedJudgements,
-                        Combats.Talents.GlyphOfConsecration,
-                        Combats.Stats.DivineStormRefresh > 0 ? Combats.AttackSpeed : 0f,
-                        Combats.Stats.SpellHaste);
+            const float bloodlustDuration = 40f;
+
+            return new RotationParameters(
+                rotation,
+                Combats.CalcOpts.TimeUnder20,
+                Combats.CalcOpts.Wait,
+                Combats.CalcOpts.Delay,
+                Combats.Stats.JudgementCDReduction > 0,
+                Combats.Talents.ImprovedJudgements,
+                Combats.Talents.GlyphOfConsecration,
+                Combats.Stats.DivineStormRefresh > 0 ? Combats.AttackSpeed : 0f,
+                Combats.Stats.SpellHaste,
+                Combats.CalcOpts.Bloodlust && (Combats.Stats.Bloodlust == 0) ?
+                    Math.Min(1f, Combats.CalcOpts.FightLength / bloodlustDuration) : 
+                    0);
         }
 
         public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
