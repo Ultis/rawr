@@ -981,9 +981,9 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
                         retVal.NaturalArmor.Value = int.Parse(armoryspec[04].ToString()); // iffy
                         // Tier 2
                         retVal.BoarsSpeed.Value = int.Parse(armoryspec[05].ToString()); // iffy
-                        retVal.Mobility.Value = int.Parse(armoryspec[06].ToString()); // iffy
-                        retVal.OwlsFocus.Value = int.Parse(armoryspec[07].ToString()); // iffy
-                        //retVal.Unknown.Value = int.Parse(armoryspec[08].ToString()); // iffy
+                        //retVal.Unknown.Value = int.Parse(armoryspec[06].ToString()); // iffy
+                        retVal.Mobility.Value = int.Parse(armoryspec[07].ToString()); // iffy
+                        retVal.OwlsFocus.Value = int.Parse(armoryspec[08].ToString()); // iffy
                         retVal.SpikedCollar.Value = int.Parse(armoryspec[09].ToString());
                         // Tier 3
                         retVal.CullingTheHerd.Value = int.Parse(armoryspec[10].ToString());
