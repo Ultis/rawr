@@ -512,7 +512,7 @@ focus on Survival Points.",
                 BonusBlockValueMultiplier = talents.Redoubt * 0.1f,
                 BonusDamageMultiplier = (1.0f + talents.Crusade * 0.01f) *
                     (talents.OneHandedWeaponSpecialization > 0 ? 1.0f + talents.OneHandedWeaponSpecialization * .03f + .01f : 1.0f) - 1.0f,
-                BonusStaminaMultiplier = (1.0f + talents.SacredDuty * 0.04f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f,
+                BonusStaminaMultiplier = (1.0f + talents.SacredDuty * 0.02f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f,
                 BonusIntellectMultiplier = talents.DivineIntellect * 0.03f,
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,

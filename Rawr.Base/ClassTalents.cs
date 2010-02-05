@@ -1139,8 +1139,8 @@ namespace Rawr
         /// Increases your total Stamina by [4 * Pts]%, reduces the cooldown of your Divine Shield and Divine Protection spells by [30 * Pts] sec.
         /// </summary>
         [TalentData(39, "Sacred Duty", 2, 1, 1, 6, -1, new[] {
-@"Increases your total Stamina by 4%, reduces the cooldown of your Divine Shield and Divine Protection spells by 30 sec.",
-@"Increases your total Stamina by 8%, reduces the cooldown of your Divine Shield and Divine Protection spells by 60 sec.",}, "spell_holy_divineintervention")]
+@"Increases your total Stamina by 2%, reduces the cooldown of your Divine Shield and Divine Protection spells by 30 sec.",
+@"Increases your total Stamina by 4%, reduces the cooldown of your Divine Shield and Divine Protection spells by 60 sec.",}, "spell_holy_divineintervention")]
         public int SacredDuty { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
         /// Increases all damage you deal when a one-handed melee weapon is equipped by [10 / 3 * Pts]%.
