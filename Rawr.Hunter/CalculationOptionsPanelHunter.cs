@@ -120,13 +120,14 @@ namespace Rawr.Hunter
         protected override void LoadCalculationOptions() {
             try {
                 isLoading = true;
-                if (Character != null && Character.CalculationOptions == null)
-                {
+                if (Character != null && Character.CalculationOptions == null) {
                     // If it's broke, make a new one with the defaults
                     Character.CalculationOptions = new CalculationOptionsHunter();
                     isLoading = true;
                 }
                 CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+
+                Character.TalentChangedEvent += new System.EventHandler(this.CharTalents_Changed);
 
                 for (int i = 0; i < CB_TargetLevel.Items.Count; i++) {
                     if (CB_TargetLevel.Items[i] as string == CalcOpts.TargetLevel.ToString()) {
@@ -221,26 +222,10 @@ namespace Rawr.Hunter
                 CB_ShotPriority_08.SelectedIndex = CalcOpts.PriorityIndex8;
                 CB_ShotPriority_09.SelectedIndex = CalcOpts.PriorityIndex9;
                 CB_ShotPriority_10.SelectedIndex = CalcOpts.PriorityIndex10;
-                CB_PriorityDefaults.SelectedIndex = 0;
-                if (CalcOpts.PriorityIndex1
-                    + CalcOpts.PriorityIndex2
-                    + CalcOpts.PriorityIndex3
-                    + CalcOpts.PriorityIndex4
-                    + CalcOpts.PriorityIndex5
-                    + CalcOpts.PriorityIndex6
-                    + CalcOpts.PriorityIndex7
-                    + CalcOpts.PriorityIndex8
-                    + CalcOpts.PriorityIndex9
-                    + CalcOpts.PriorityIndex10
-                    == 0)
-                {
-                    // No Shot Priority set up, use a default based on talent spec
+                CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
+                if (ShotRotationIsntSet) {
                     isLoading = false;
-                    int specIndex = 0;
-                    if (Character.HunterTalents.BestialWrath > 0) { specIndex = 1; }
-                    if (Character.HunterTalents.MasterMarksman > 0) { specIndex = 2; }
-                    if (Character.HunterTalents.LightningReflexes > 0) { specIndex = 3; }
-                    CB_PriorityDefaults.SelectedIndex = specIndex;
+                    CB_PriorityDefaults.SelectedIndex = ShotRotationGetRightSpec;
                     isLoading = true;
                 }
                 //
@@ -262,60 +247,38 @@ namespace Rawr.Hunter
         }
 
         private static readonly string _SavedFilePath;
-        static CalculationOptionsPanelHunter()
-        {
+        static CalculationOptionsPanelHunter() {
 			_SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
                 "Data" + Path.DirectorySeparatorChar + "PetTalents.xml");
         }
 
         private SavedPetTalentSpecList _savedPetTalents;
-        private void LoadPetTalentSpecs()
-        {
-            try
-            {
-                if (File.Exists(_SavedFilePath))
-                {
-                    using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8))
-                    {
+        private void LoadPetTalentSpecs() {
+            try {
+                if (File.Exists(_SavedFilePath)) {
+                    using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8)) {
                         XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
                         _savedPetTalents = (SavedPetTalentSpecList)serializer.Deserialize(reader);
                         reader.Close();
                     }
                 }
-            }
-            catch (Exception)
-            {
-                ;
-            }
-            if (_savedPetTalents == null)
-            {
-                _savedPetTalents = new SavedPetTalentSpecList(10);
-            }
+            } catch (Exception) { }
+            if (_savedPetTalents == null) { _savedPetTalents = new SavedPetTalentSpecList(10); }
         }
-        private void SavePetTalentSpecs()
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8))
-                {
+        private void SavePetTalentSpecs() {
+            try {
+                using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8)) {
                     XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
                     serializer.Serialize(writer, _savedPetTalents);
                     writer.Close();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex.Message);
-                Log.Write(ex.StackTrace);
-            }
+            } catch (Exception ex) { Log.Write(ex.Message); Log.Write(ex.StackTrace); }
         }
 
         private PetTalentTree _pettalents = null;
-        public PetTalentTree PetTalents
-        {
+        public PetTalentTree PetTalents {
             get { return _pettalents; }
-            set
-            {
+            set {
                 _pettalents = value;
                 CalcOpts.PetTalents = _pettalents;
                 //if (_character != null) _character.CurrentTalents = value;
@@ -324,26 +287,21 @@ namespace Rawr.Hunter
         }
 
         public SavedPetTalentSpec CustomPetSpec { get; set; }
-        public List<SavedPetTalentSpec> SpecsFor(PetFamilyTree petClass)
-        {
+        public List<SavedPetTalentSpec> SpecsFor(PetFamilyTree petClass) {
             List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
-            foreach (SavedPetTalentSpec spec in _savedPetTalents)
-            {
-                /*if (spec.Class == _character.Class)
-                {*/
+            foreach (SavedPetTalentSpec spec in _savedPetTalents) {
+                //if (spec.Class == _character.Class) {
                     classTalents.Add(spec);
-                /*}*/
+                //}
             }
-            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null)
-            {
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
                 CustomPetSpec = new SavedPetTalentSpec("Custom", _pettalents, _treeCount);
                 classTalents.Add(CustomPetSpec);
             }
             return classTalents;
         }
 
-        public SavedPetTalentSpec CurrentPetSpec()
-        {
+        public SavedPetTalentSpec CurrentPetSpec() {
             if (CB_PetTalentsSpecSwitcher.SelectedItem == null) return CustomPetSpec;
             else if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) return CustomPetSpec;
             else return (SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem;
@@ -351,19 +309,14 @@ namespace Rawr.Hunter
 
         private int _treeCount;
 
-        private void UpdatePetTrees()
-        {
-            populatePetTalentCombos();
-        }
+        private void UpdatePetTrees() { populatePetTalentCombos(); }
 
         private bool _updateSaved = false;
-        private void UpdateSavedTalents()
-        {
+        private void UpdateSavedTalents() {
             //if (_character != null) {
                 List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
                 SavedPetTalentSpec current = null;
-                foreach (SavedPetTalentSpec spec in _savedPetTalents)
-                {
+                foreach (SavedPetTalentSpec spec in _savedPetTalents) {
                     //if (spec.Class == _character.Class) {
                         classTalents.Add(spec);
                         if (spec.Equals(_pettalents)) current = spec;
@@ -541,7 +494,6 @@ namespace Rawr.Hunter
                 CB_ShotPriority_09.SelectedIndex = 0;
                 CB_ShotPriority_10.SelectedIndex = 0;
             }
-
 
             /* I want to do a conglomerate one:
                 CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
@@ -1220,6 +1172,100 @@ namespace Rawr.Hunter
                 SavePetTalentSpecs();
             }
             comboBoxTalentSpec_SelectedIndexChanged(null, null);
+        }
+
+        private bool ShotRotationIsntSet {
+            get {
+                return ((CalcOpts.PriorityIndex1 + CalcOpts.PriorityIndex2 +
+                         CalcOpts.PriorityIndex3 + CalcOpts.PriorityIndex4 +
+                         CalcOpts.PriorityIndex5 + CalcOpts.PriorityIndex6 +
+                         CalcOpts.PriorityIndex7 + CalcOpts.PriorityIndex8 +
+                         CalcOpts.PriorityIndex9 + CalcOpts.PriorityIndex10)
+                        == 0);
+            }
+        }
+        private int ShotRotationGetRightSpec {
+            get {
+                int specIndex = 0;
+                int Iter = 0;
+                int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += Character.HunterTalents.Data[Iter]; }
+                int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += Character.HunterTalents.Data[Iter]; }
+                int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += Character.HunterTalents.Data[Iter]; }
+                // No Shot Priority set up, use a default based on talent spec
+                if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)Specs.BeastMaster; }
+                if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)Specs.Marksman; }
+                if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)Specs.Survival; }
+                return specIndex;
+            }
+        }
+        /// <summary>
+        /// This is to figure out which of the default rotations (if any) are in use
+        /// </summary>
+        /// <returns>The combobox index to use</returns>
+        private int ShotRotationIndexCheck() {
+            int specIndex = 0;
+
+            if // Beast Master
+               (CB_ShotPriority_01.SelectedIndex == 18 && // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex == 20 && // Bestial Wrath
+                CB_ShotPriority_03.SelectedIndex ==  9 && // Kill Shot
+                CB_ShotPriority_04.SelectedIndex ==  1 && // Aimed Shot
+                CB_ShotPriority_05.SelectedIndex ==  2 && // Arcane Shot
+                CB_ShotPriority_06.SelectedIndex ==  4 && // Serpent Sting
+                CB_ShotPriority_07.SelectedIndex ==  8 && // Steady Shot
+                CB_ShotPriority_08.SelectedIndex ==  0 &&
+                CB_ShotPriority_09.SelectedIndex ==  0 &&
+                CB_ShotPriority_10.SelectedIndex ==  0) {
+                    specIndex = (int)Specs.BeastMaster;
+            } else if // Marksman
+               (CB_ShotPriority_01.SelectedIndex == 18 && // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex == 19 && // Readiness
+                CB_ShotPriority_03.SelectedIndex ==  4 && // Serpent Sting
+                CB_ShotPriority_04.SelectedIndex == 17 && // Chimeara Shot
+                CB_ShotPriority_05.SelectedIndex ==  9 && // Kill Shot
+                CB_ShotPriority_06.SelectedIndex ==  1 && // Aimed Shot
+                CB_ShotPriority_07.SelectedIndex ==  7 && // Silencing Shot
+                CB_ShotPriority_08.SelectedIndex ==  8 && // Steady Shot
+                CB_ShotPriority_09.SelectedIndex ==  0 &&
+                CB_ShotPriority_10.SelectedIndex ==  0) {
+                    specIndex = (int)Specs.Marksman;
+            } else if // Survival
+               (CB_ShotPriority_01.SelectedIndex == 18 && // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex ==  9 && // Kill Shot
+                CB_ShotPriority_03.SelectedIndex == 10 && // Explosive Shot
+                CB_ShotPriority_04.SelectedIndex == 11 && // Black Arrow
+                CB_ShotPriority_05.SelectedIndex ==  4 && // Serpent Sting
+                CB_ShotPriority_06.SelectedIndex ==  1 && // Aimed Shot
+                CB_ShotPriority_07.SelectedIndex ==  8 && // Steady Shot
+                CB_ShotPriority_08.SelectedIndex ==  0 &&
+                CB_ShotPriority_09.SelectedIndex ==  0 &&
+                CB_ShotPriority_10.SelectedIndex ==  0) {
+                    specIndex = (int)Specs.Survival;
+            }
+            
+            return specIndex;
+        }
+
+        private int _CurrentSpec;
+        private int CurrentSpec {
+            get { return _CurrentSpec; }
+            set { _CurrentSpec = value; }
+        }
+        private enum Specs { BeastMaster=1, Marksman, Survival }
+
+        private void CharTalents_Changed(object sender, EventArgs e) {
+            if (isLoading) return;
+            //CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            //ErrorBox eb = new ErrorBox("Event fired", "yay!", "CharTalents_Changed");
+            int rightSpec = ShotRotationGetRightSpec;
+            if (ShotRotationIsntSet) {
+                 // No Shot Priority set up, use a default based on talent spec
+                CB_PriorityDefaults.SelectedIndex = ShotRotationGetRightSpec;
+            } else if (rightSpec != 0 && CurrentSpec != rightSpec) {
+                // The rotation setup needs to change, user has changed to a totally different spec
+                CB_PriorityDefaults.SelectedIndex = rightSpec;
+            }
+            CurrentSpec = CB_PriorityDefaults.SelectedIndex;
         }
     }
 }

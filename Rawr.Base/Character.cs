@@ -1483,6 +1483,9 @@ namespace Rawr //O O . .
 				AvailableItemsChanged(this, EventArgs.Empty);
 		}
 		
+        public event EventHandler TalentChangedEvent;
+        public void OnTalentChange() { TalentChangedEvent(this, EventArgs.Empty); }
+
 		public event EventHandler CalculationsInvalidated;
 		public void OnCalculationsInvalidated()
 		{

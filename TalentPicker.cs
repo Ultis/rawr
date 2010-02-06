@@ -326,14 +326,12 @@ namespace Rawr
             talentTree3.Reset();
         }
 
-        private void glyph_ValueChanged(object sender, EventArgs e)
-        {
-            if (!Character.IsLoading)
-            {
-                Talents.GlyphData[(int)((CheckBox)sender).Tag] = ((CheckBox)sender).Checked;
-                UpdateSavedTalents();
-                _character.OnCalculationsInvalidated();
-            }
+        private void glyph_ValueChanged(object sender, EventArgs e) {
+            if (Character.IsLoading) return;
+            Talents.GlyphData[(int)((CheckBox)sender).Tag] = ((CheckBox)sender).Checked;
+            UpdateSavedTalents();
+            _character.OnTalentChange();
+            _character.OnCalculationsInvalidated();
         }
 
         private void item_CurrentRankChanged(object sender, EventArgs e)
@@ -350,6 +348,7 @@ namespace Rawr
 					Talents.Data[item.Index] = item.CurrentRank;
 				}
 				UpdateSavedTalents();
+                _character.OnTalentChange();
 				_character.OnCalculationsInvalidated();
 			}
 			if( _tree1Count + _tree2Count + _tree3Count < _character.Level-9 )
@@ -407,6 +406,5 @@ namespace Rawr
                 _character.OnCalculationsInvalidated();
             }
         }
-
 	}
 }
