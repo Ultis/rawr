@@ -397,9 +397,9 @@ namespace Rawr.DPSDK
                 case "Haste Rating":
                     return BasicStats.HasteRating;
                 case "Target Miss %":
-                    return MissedAttacks;
+                    return MissedAttacks * 100f;
                 case "Target Dodge %":
-                    return DodgedAttacks;
+                    return DodgedAttacks * 100f;
             }
             return 0;
         }
