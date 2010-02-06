@@ -29,6 +29,8 @@ namespace Rawr.ProtWarr
         {
             get { return AttackTable.AnyHit; }
         }
+        public bool IsAvoidable { get; private set; }
+        public bool IsWeaponAttack { get; private set; }
 
         private void CalculateDamage()
         {
@@ -45,7 +47,7 @@ namespace Rawr.ProtWarr
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) + (222.0f * (1.0f + Talents.ImprovedCleave * 0.4f));
                     break;
                 case Ability.ConcussionBlow:
-                    baseDamage = Stats.AttackPower * 0.75f;
+                    baseDamage = Stats.AttackPower * 0.38f;
                     break;
                 case Ability.DamageShield:
                     baseDamage = Stats.BlockValue * (Talents.DamageShield * 0.1f);
@@ -57,8 +59,8 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.Devastate:
                     // Assumes 5 stacks of Sunder Armor debuff
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, true) + (202.0f * 5.0f);
-                    DamageMultiplier *= (1.0f + Stats.BonusDevastateDamage);
+                    baseDamage = (Lookup.WeaponDamage(Character, Stats, true) + (202.0f * 5.0f)) * 1.2f;
+                    DamageMultiplier *= (1.0f + Stats.BonusDevastateDamage) ;
                     break;
                 case Ability.HeroicStrike:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) + 495.0f;
@@ -83,12 +85,15 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Talents.ImprovedRevenge * 0.1f) * (1.0f + Talents.UnrelentingAssault * 0.1f);
                     break;
                 case Ability.ShieldSlam:
-                    if (Stats.BlockValue < 2400.0f)
+                    Stats.BlockValue = 2472f;
+                    float softCap = 24.5f * Character.Level;
+                    float hardCap = 39.5f * Character.Level;
+                    if (Stats.BlockValue < softCap)
                         baseDamage = 1015.0f + Stats.BlockValue;
-                    else if (Stats.BlockValue < 3160.0f)
-                        baseDamage = 1015.0f + 2400.0f + (0.95f * (Stats.BlockValue - 2400.0f)) - (0.000625f * (float)Math.Pow((double)(Stats.BlockValue - 2400.0f), 2.0d));
                     else
-                        baseDamage = 1015.0f + 2400.0f + 361.0f;
+                        baseDamage = 1015.0f + softCap 
+                            + (0.98f * (Math.Min(Stats.BlockValue, hardCap) - softCap)) 
+                            - (0.00073885f * (float)Math.Pow((double)(Math.Min(Stats.BlockValue, hardCap) - softCap), 2.0d));
                     DamageMultiplier *= (1.0f + Stats.BonusShieldSlamDamage);
                     break;
                 case Ability.Shockwave:
@@ -109,14 +114,13 @@ namespace Rawr.ProtWarr
 
             // All damage multipliers
             baseDamage *= DamageMultiplier;
-            // Average critical strike bonuses
-            baseDamage = (baseDamage * (1.0f - AttackTable.Critical)) + (baseDamage * critMultiplier * AttackTable.Critical);
-            // Average glancing blow reduction
-            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character, Options.TargetLevel) * AttackTable.Glance));
             // Armor reduction
             baseDamage *= (1.0f - ArmorReduction);
-            // Missed attacks
-            baseDamage *= (1.0f - AttackTable.AnyMiss);
+            // Combat table adjustments
+            baseDamage *= 
+                AttackTable.Hit + 
+                AttackTable.Critical * critMultiplier + 
+                AttackTable.Glance * Lookup.GlancingReduction(Character, Options.TargetLevel);
 
             Damage = baseDamage;
         }
@@ -130,6 +134,9 @@ namespace Rawr.ProtWarr
             {
                 case Ability.Cleave:
                     abilityThreat += 225.0f;
+                    break;
+                case Ability.ConcussionBlow:
+                    abilityThreat *= 2.0f;
                     break;
                 case Ability.Devastate:
                     // Glyph of Devastate doubles bonus threat
@@ -158,6 +165,7 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.ShieldSlam:
                     abilityThreat += 770.0f;
+                    abilityThreat *= 1.3f;
                     break;
                 case Ability.Slam:
                     abilityThreat += 140.0f;
@@ -195,6 +203,8 @@ namespace Rawr.ProtWarr
             Name                = Lookup.Name(Ability);
             ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats, Options.TargetArmor);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
+            IsAvoidable         = Lookup.IsAvoidable(Ability);
+            IsWeaponAttack      = Lookup.IsWeaponAttack(Ability);
 
             CalculateDamage();
             CalculateThreat();

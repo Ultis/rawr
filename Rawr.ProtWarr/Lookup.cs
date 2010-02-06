@@ -249,6 +249,26 @@ namespace Rawr.ProtWarr
             }
         }
 
+        public static bool IsWeaponAttack(Ability ability)
+        {
+            switch (ability)
+            {
+                case Ability.None:
+                case Ability.Cleave:
+                case Ability.ConcussionBlow:
+                case Ability.Devastate:
+                case Ability.HeroicStrike:
+                case Ability.MockingBlow:
+                case Ability.Revenge:
+                case Ability.ShieldSlam:
+                case Ability.Shockwave:
+                case Ability.Slam:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public static string Name(Ability ability)
         {
             switch (ability)

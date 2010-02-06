@@ -145,6 +145,7 @@ namespace Rawr.ProtWarr
                     "Offensive Stats:Missed Attacks",
                     "Offensive Stats:Total Damage/sec",
                     "Offensive Stats:Total Threat/sec",
+                    "Offensive Stats:Rotation",
 
                     "Resistances:Nature Resist",
 					"Resistances:Fire Resist",
@@ -220,6 +221,8 @@ threat and limited threat scaled by the threat scale.",
                     _customChartNames = new string[] {
                     "Ability Damage",
                     "Ability Threat",
+                    //"Rotation Damage",
+                    //"Rotation Threat",
 					"Combat Table",
 					"Item Budget",
 					};
@@ -382,12 +385,8 @@ threat and limited threat scaled by the threat scale.",
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
             Stats stats = GetCharacterStats(character, additionalItem, options);
 
-            AttackModelMode amm = AttackModelMode.FullProtection;
-            if (character.WarriorTalents.UnrelentingAssault > 0)
-                amm = AttackModelMode.UnrelentingAssault;
-
             DefendModel dm = new DefendModel(character, stats, options);
-            AttackModel am = new AttackModel(character, stats, options, amm);
+            AttackModel am = new AttackModel(character, stats, options, AttackModelMode.Optimal);
 
             if (needsDisplayCalculations)
             {
@@ -447,6 +446,7 @@ threat and limited threat scaled by the threat scale.",
 
             calculatedStats.HeroicStrikeFrequency = options.HeroicStrikeFrequency;
             calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
+            calculatedStats.ThreatModelName = am.ShortName;
             calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
@@ -481,7 +481,7 @@ threat and limited threat scaled by the threat scale.",
                     calculatedStats.MitigationPoints = dm.Mitigation * options.BossAttackValue * options.MitigationScale * 100.0f;
                     break;
             }
-            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+            //calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 
             return calculatedStats;
         }
@@ -590,15 +590,7 @@ threat and limited threat scaled by the threat scale.",
             if (character.MainHand != null)
                 weaponSpeed = character.MainHand.Speed;
 
-            AttackModelMode amm = AttackModelMode.Basic;
-            if (character.WarriorTalents.UnrelentingAssault > 0)
-                amm = AttackModelMode.UnrelentingAssault;
-            else if (character.WarriorTalents.Shockwave > 0)
-                amm = AttackModelMode.FullProtection;
-            else if (character.WarriorTalents.Devastate > 0)
-                amm = AttackModelMode.Devastate;
-
-            AttackModel am = new AttackModel(character, stats, options, amm);
+            AttackModel am = new AttackModel(character, stats, options, AttackModelMode.Optimal);
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -653,6 +645,36 @@ threat and limited threat scaled by the threat scale.",
 
             switch (chartName)
             {
+                #region Rotation Damage and Threat
+                case "Rotation Damage":
+                case "Rotation Threat":
+                    {
+                        CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
+                        string[] rotations = Enum.GetNames(typeof(AttackModelMode));
+                        // Optimal rotation will need to be ignored as it is outside the scope of this
+                        ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[rotations.Length - 1];
+
+                        int j = 0;
+                        for (int i = 0; i < rotations.Length; i++)
+                        {
+                            if (rotations[i] != "Optimal")
+                            {
+                                AttackModel am = new AttackModel(character, calculations.BasicStats, options, (AttackModelMode)Enum.Parse(typeof(AttackModelMode), rotations[i]));
+                                ComparisonCalculationProtWarr comparison = new ComparisonCalculationProtWarr();
+                                comparison.Name = am.Name;
+
+                                if (chartName == "Rotation Damage")
+                                    comparison.ThreatPoints = am.DamagePerSecond;
+                                else
+                                    comparison.ThreatPoints = am.ThreatPerSecond;
+
+                                comparisons[j] = comparison;
+                                j++;
+                            }
+                        }
+                        return comparisons;
+                    }
+                #endregion
                 #region Ability Damage and Threat
                 case "Ability Damage":
                 case "Ability Threat":

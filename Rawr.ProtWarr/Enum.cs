@@ -28,10 +28,14 @@ namespace Rawr.ProtWarr
 
     public enum AttackModelMode
     {
+        Optimal,
         Basic,
         Devastate,
+        DevastateRevenge,
         SwordAndBoard,
+        SwordAndBoardRevenge,
         FullProtection,
+        FullProtectionRevenge,
         UnrelentingAssault,
     }
 

@@ -31,6 +31,10 @@ namespace Rawr.ProtWarr
         }
 
         public string Name { get; private set; }
+        public string ShortName 
+        {
+            get { return Name.Replace("Sword and Board", "SnB").Replace("Revenge + Shockwave", "Rev + Shockwave"); }
+        }
         public string Description { get; private set; }
         public float ThreatPerSecond { get; private set; }
         public float DamagePerSecond { get; private set; }
@@ -42,6 +46,7 @@ namespace Rawr.ProtWarr
 
         private void Calculate()
         {
+            Dictionary<Ability, float> modelAbilities = new Dictionary<Ability, float>();
             float modelLength = 0.0f;
             float modelThreat = 0.0f;
             float modelDamage = 0.0f;
@@ -49,189 +54,140 @@ namespace Rawr.ProtWarr
             float modelHits = 0.0f;
             float modelWeaponAttacks = 0.0f;
 
+            // Rotation Auto-Detection
+            if (AttackModelMode == AttackModelMode.Optimal)
+            {
+                if (Talents.Shockwave == 1 && Talents.SwordAndBoard == 3)
+                    if (Talents.ImprovedRevenge > 0)
+                        AttackModelMode = AttackModelMode.FullProtectionRevenge;
+                    else
+                        AttackModelMode = AttackModelMode.FullProtection;
+                else if(Talents.SwordAndBoard == 3)
+                    if (Talents.ImprovedRevenge > 0)
+                        AttackModelMode = AttackModelMode.SwordAndBoardRevenge;
+                    else
+                        AttackModelMode = AttackModelMode.SwordAndBoard;
+                else if(Talents.Devastate == 1)
+                    if (Talents.ImprovedRevenge > 0)
+                        AttackModelMode = AttackModelMode.DevastateRevenge;
+                    else
+                        AttackModelMode = AttackModelMode.Devastate;
+                else if(Talents.UnrelentingAssault == 1)
+                    AttackModelMode = AttackModelMode.UnrelentingAssault;
+                else
+                    AttackModelMode = AttackModelMode.Basic;                   
+            }
+
             switch (AttackModelMode)
             {
                 case AttackModelMode.Basic:
-                    {
-                        // Basic Rotation
-                        // Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor
-                        Name        = "Basic Cycle";
-                        Description = "Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor";
-                        modelLength = 6.0f;
-                        modelThreat = 
-                            Abilities[Ability.ShieldSlam].Threat + 
-                            Abilities[Ability.Revenge].Threat + 
-                            Abilities[Ability.SunderArmor].Threat * 2;
-                        modelDamage = 
-                            Abilities[Ability.ShieldSlam].Damage +
-                            Abilities[Ability.Revenge].Damage;
-                        modelHits =
-                            Abilities[Ability.ShieldSlam].HitPercentage +
-                            Abilities[Ability.Revenge].HitPercentage;
-                        modelCrits  = 
-                            Abilities[Ability.ShieldSlam].CritPercentage +
-                            Abilities[Ability.Revenge].CritPercentage;
-                        modelWeaponAttacks = 2.0f;
-                        break;
-                    }
+                {
+                    // Basic Rotation
+                    // Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor
+                    Name        = "Basic Cycle";
+                    Description = "Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor";
+                    modelLength = 6.0f;
+                    modelAbilities.Add(Ability.ShieldSlam, 1.0f);
+                    modelAbilities.Add(Ability.Revenge, 1.0f);
+                    modelAbilities.Add(Ability.SunderArmor, 2.0f);
+                    break;
+                }
                 case AttackModelMode.Devastate:
-                    {
-                        // Devastate Rotation
-                        // Shield Slam -> Revenge -> Devastate -> Devastate
-                        if (Character.WarriorTalents.Devastate == 1)
-                        {
-                            Name = "Devastate";
-                            Description = "Shield Slam -> Revenge -> Devastate -> Devastate";
-                            modelLength = 6.0f;
-                            modelThreat =
-                                Abilities[Ability.ShieldSlam].Threat +
-                                Abilities[Ability.Revenge].Threat +
-                                Abilities[Ability.Devastate].Threat * 2;
-                            modelDamage =
-                                Abilities[Ability.ShieldSlam].Damage +
-                                Abilities[Ability.Revenge].Damage +
-                                Abilities[Ability.Devastate].Damage * 2;
-                            modelHits =
-                               Abilities[Ability.ShieldSlam].HitPercentage +
-                               Abilities[Ability.Revenge].HitPercentage +
-                               Abilities[Ability.Devastate].HitPercentage * 2;
-                            modelCrits =
-                                Abilities[Ability.ShieldSlam].CritPercentage +
-                                Abilities[Ability.Revenge].CritPercentage +
-                                Abilities[Ability.Devastate].CritPercentage * 2;
-                            modelWeaponAttacks = 4.0f;
-                        }
-                        else
-                        {
-                            AttackModelMode = AttackModelMode.Basic;
-                            goto case AttackModelMode.Basic;
-                        }
-                        break;
-                    }
+                {
+                    // Devastate Rotation
+                    // Shield Slam -> Devastate -> Devastate -> Devastate
+                    Name = "Devastate";
+                    Description = "Shield Slam -> Devastate -> Devastate -> Devastate";
+                    modelLength = 6.0f;
+                    modelAbilities.Add(Ability.ShieldSlam, 1.0f);
+                    modelAbilities.Add(Ability.Devastate, 3.0f);
+                    break;
+                }
+                case AttackModelMode.DevastateRevenge:
+                {
+                    // Devastate + Revenge Rotation
+                    // Shield Slam -> Revenge -> Devastate -> Devastate
+                    Name = "Devastate + Revenge";
+                    Description = "Shield Slam -> Revenge -> Devastate -> Devastate";
+                    modelLength = 6.0f;
+                    modelAbilities.Add(Ability.ShieldSlam, 1.0f);
+                    modelAbilities.Add(Ability.Revenge, 1.0f);
+                    modelAbilities.Add(Ability.Devastate, 2.0f);
+                    break;
+                }
                 case AttackModelMode.SwordAndBoard:
-                    {
-                        // Sword And Board Rotation
-                        // Requires 3 points in Sword and Board
-                        // Shield Slam > Revenge > Devastate
-                        // The distribution of abilities in the model is as follows:
-                        // 1.0 * Shield Slam + 0.73 * Revenge + 1.4596 * Devastate
-                        // The cycle length is 4.7844s, abilities per cycle is 3.1896
-                        if (Character.WarriorTalents.SwordAndBoard == 3)
-                        {
-                            Name = "Sword And Board";
-                            Description = "Shield Slam > Revenge > Devastate";
-                            modelLength = 4.7844f;
-                            modelThreat =
-                                (1.0f * Abilities[Ability.ShieldSlam].Threat) +
-                                (0.73f * Abilities[Ability.Revenge].Threat) +
-                                (1.4596f * Abilities[Ability.Devastate].Threat);
-                            modelDamage =
-                                (1.0f * Abilities[Ability.ShieldSlam].Damage) +
-                                (0.73f * Abilities[Ability.Revenge].Damage) +
-                                (1.4596f * Abilities[Ability.Devastate].Damage);
-                            modelHits =
-                                (1.0f * Abilities[Ability.ShieldSlam].HitPercentage) +
-                                (0.73f * Abilities[Ability.Revenge].HitPercentage) +
-                                (1.4596f * Abilities[Ability.Devastate].HitPercentage);
-                            modelCrits =
-                                (1.0f * Abilities[Ability.ShieldSlam].CritPercentage) +
-                                (0.73f * Abilities[Ability.Revenge].CritPercentage) +
-                                (1.4596f * Abilities[Ability.Devastate].CritPercentage);
-                            modelWeaponAttacks = 1.0f + 0.73f + 1.4596f;
-                        }
-                        else
-                        {
-                            AttackModelMode = AttackModelMode.Devastate;
-                            goto case AttackModelMode.Devastate;
-                        }
-                        break;
-                    }
+                case AttackModelMode.SwordAndBoardRevenge:
                 case AttackModelMode.FullProtection:
+                case AttackModelMode.FullProtectionRevenge:
+                {
+                    // Sword And Board Rotation
+                    // Shield Slam > Revenge > Devastate
+                    // The distribution of abilities in the model is as follows:
+                    // 1.0 * Shield Slam + 0.73 * Revenge + 1.4596 * Devastate
+                    // -or-
+                    // Shield Slam > Revenge > Devastate @ 3s Shield Slam Cooldown > Shockwave > Devastate
+                    // The distribution of abilities in the model is as follows:
+                    // 1.0 * Shield Slam + 0.73 * Revenge + 1.133 * Devastate + 0.3266 * (Concussion Blow/Shockwave/Devastate)
+                    // The cycle length is 4.7844s, abilities per cycle is 3.1896
+                    Name = "Sword and Board";
+                    Description = "Shield Slam > ";
+                    if (AttackModelMode == AttackModelMode.SwordAndBoardRevenge || AttackModelMode == AttackModelMode.FullProtectionRevenge)
                     {
-                        // Sword And Board + Shockwave/Concussion Blow Rotation
-                        // Requires 3 points in Sword and Board, Shockwave, and Concussion Blow
-                        // Shield Slam > Revenge > Devastate @ 3s Shield Slam Cooldown > Concussion Blow > Shockwave > Devastate
-                        // The distribution of abilities in the model is as follows:
-                        // 1.0 * Shield Slam + 0.73 * Revenge + 1.133 * Devastate + 0.3266 * (Concussion Blow/Shockwave/Devastate)
-                        // The cycle length is 4.7844s, abilities per cycle is 3.1896
-                        if (Character.WarriorTalents.SwordAndBoard == 3 && Character.WarriorTalents.ConcussionBlow == 1 && Character.WarriorTalents.Shockwave == 1)
-                        {
-                            AbilityModel shieldSlam = Abilities[Ability.ShieldSlam];
-                            AbilityModel revenge = Abilities[Ability.Revenge];
-                            AbilityModel devastate = Abilities[Ability.Devastate];
-                            AbilityModel concussionBlow = Abilities[Ability.ConcussionBlow];
-                            AbilityModel shockwave = Abilities[Ability.Shockwave];
-                            Name = "Sword And Board + CB/SW";
-                            Description = "Shield Slam > Revenge > Devastate\n@ 3s Shield Slam Cooldown: Concussion Blow > Shockwave > Devastate";
-                            modelLength = 4.7844f;
-                            modelThreat =
-                                (1.0f * shieldSlam.Threat) +
-                                (0.73f * revenge.Threat) +
-                                (1.133f * devastate.Threat) +
-                                (0.3266f * ((
-                                    concussionBlow.Threat +
-                                    shockwave.Threat +
-                                    devastate.Threat
-                                    ) / 3));
-                            modelDamage =
-                                (1.0f * shieldSlam.Damage) +
-                                (0.73f * revenge.Damage) +
-                                (1.133f * devastate.Damage) +
-                                (0.3266f * ((
-                                    concussionBlow.Damage +
-                                    shockwave.Damage +
-                                    devastate.Damage
-                                    ) / 3));
-                            modelHits =
-                                (1.0f * shieldSlam.HitPercentage) +
-                                (0.73f * revenge.HitPercentage) +
-                                (1.133f * devastate.HitPercentage) +
-                                (0.3266f * ((
-                                    concussionBlow.HitPercentage +
-                                    shockwave.HitPercentage +
-                                    devastate.HitPercentage
-                                    ) / 3));
-                            modelCrits =
-                                (1.0f * shieldSlam.CritPercentage) +
-                                (0.73f * revenge.CritPercentage) +
-                                (1.133f * devastate.CritPercentage) +
-                                (0.3266f * ((
-                                    concussionBlow.CritPercentage +
-                                    shockwave.CritPercentage +
-                                    devastate.CritPercentage
-                                    ) / 3));
-                            modelWeaponAttacks = 1.0f + 0.73f + 1.133f + 0.3266f;
-                        }
-                        else
-                        {
-                            AttackModelMode = AttackModelMode.SwordAndBoard;
-                            goto case AttackModelMode.SwordAndBoard;
-                        }
-                        break;
+                        Name += " + Revenge";
+                        Description += "Revenge > Devastate";
                     }
+                    else
+                        Description += "Devastate";
+                    if (AttackModelMode == AttackModelMode.FullProtection || AttackModelMode == AttackModelMode.FullProtectionRevenge)
+                    {
+                        Name += " + Shockwave";
+                        Description += "\n@ 1.5s Shield Slam Cooldown: Shockwave > Devastate";
+                    }
+
+                    modelLength = 4.7844f;
+                    modelAbilities.Add(Ability.ShieldSlam, 1.0f);
+                    modelAbilities.Add(Ability.Devastate, 1.133f);
+                    
+                    // Add Revenge, if applicable
+                    if (AttackModelMode == AttackModelMode.SwordAndBoardRevenge || AttackModelMode == AttackModelMode.FullProtectionRevenge)
+                        modelAbilities.Add(Ability.Revenge, 0.73f);
+                    else
+                        modelAbilities[Ability.Devastate] += 0.73f;
+                    
+                    // Add Shockwave, if applicable
+                    if (AttackModelMode == AttackModelMode.FullProtection || AttackModelMode == AttackModelMode.FullProtectionRevenge)
+                    {
+                        modelAbilities.Add(Ability.Shockwave, (0.3266f / 3.0f));
+                        modelAbilities[Ability.Devastate] += (0.3266f / 3.0f) * 2.0f;
+                    }
+                    else
+                        modelAbilities[Ability.Devastate] += 0.3266f;
+
+                    break;
+                }
                 case AttackModelMode.UnrelentingAssault:
-                    {
-                        // Unrelenting Assault 'Protection' Build
-                        // Requires 2 points in Unrelenting Assault
-                        // Shield Slam -> Revenge -> Revenge -> Revenge
-                        if (Character.WarriorTalents.UnrelentingAssault == 2)
-                        {
-                            Name = "Unrelenting Assault";
-                            Description = "Revenge";
-                            modelLength = 1.0f;
-                            modelThreat = Abilities[Ability.Revenge].Threat;
-                            modelDamage = Abilities[Ability.Revenge].Damage;
-                            modelHits = Abilities[Ability.Revenge].HitPercentage;
-                            modelCrits = Abilities[Ability.Revenge].CritPercentage;
-                            modelWeaponAttacks = 1.0f;
-                        }
-                        else
-                        {
-                            AttackModelMode = AttackModelMode.FullProtection;
-                            goto case AttackModelMode.FullProtection;
-                        }
-                        break;
-                    }
+                {
+                    Name = "Unrelenting Assault";
+                    Description = "Revenge Only";
+                    modelLength = 1.0f;
+                    modelAbilities.Add(Ability.Revenge, 1.0f);
+                    break;
+                }
+            }
+
+            // Accumulate base model statistics
+            foreach (KeyValuePair<Ability, float> modelAbility in modelAbilities)
+            {
+                AbilityModel ability = Abilities[modelAbility.Key];
+                modelThreat += ability.Threat * modelAbility.Value;
+                modelDamage += ability.Damage * modelAbility.Value;
+                if (ability.Damage > 0.0f)
+                {
+                    modelHits += ability.HitPercentage * modelAbility.Value;
+                    modelCrits += ability.CritPercentage * modelAbility.Value;
+                }
+                if (ability.IsWeaponAttack)
+                    modelWeaponAttacks += modelAbility.Value;
             }
 
             // Simple GCD-Based Latency Adjustment

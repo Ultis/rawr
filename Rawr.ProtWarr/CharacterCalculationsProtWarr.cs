@@ -10,11 +10,10 @@ namespace Rawr.ProtWarr
         public List<Buff> ActiveBuffs { get; set; }
         public AbilityModelList Abilities { get; set; }
 
-        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
+            get { return _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            set { }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
@@ -98,6 +97,7 @@ namespace Rawr.ProtWarr
         public float ThreatPerSecond { get; set; }
         public float HeroicStrikeFrequency { get; set; }
         public string ThreatModel { get; set; }
+        public string ThreatModelName { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -172,8 +172,9 @@ namespace Rawr.ProtWarr
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
-            dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond) + "*" + ThreatModel);
+            dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond));
             dictValues.Add("Total Threat/sec", string.Format("{0:0.0}*{1:0%} of Swings converted to Heroic Strikes", ThreatPerSecond, HeroicStrikeFrequency));
+            dictValues.Add("Rotation", ThreatModelName + "*" + ThreatModel);
 
             switch (RankingMode)
             {

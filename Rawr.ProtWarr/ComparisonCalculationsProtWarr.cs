@@ -20,11 +20,10 @@ namespace Rawr.ProtWarr
             set { _desc = value; }
         }
 
-        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
+            get { return _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            set { }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
