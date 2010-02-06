@@ -252,7 +252,7 @@ namespace Rawr {
                 {
                     damage = 27008; // enter value for heroic when it becomes known
                 }
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.01f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
             }
             else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140."))
 			{ // Essence of Gossamer - probably not quite right?!
