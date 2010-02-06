@@ -1142,6 +1142,7 @@ namespace Rawr.Mage
             float weight = weight0 + weight1 + weight2 + weight3;
             cycle.CastTime += weight * rawSpell.CastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
+            cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
@@ -1166,6 +1167,7 @@ namespace Rawr.Mage
             float weight = weight0 + weight1 + weight2 + weight3 + weight4;
             cycle.CastTime += weight * rawSpell.CastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
+            cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
@@ -1366,6 +1368,7 @@ namespace Rawr.Mage
             float weight = weight0 + weight1 + weight2 + weight3 + weight4;
             cycle.CastTime += weight * rawSpell.CastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
+            cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
             cycle.Ticks += weight * rawSpell.Ticks;
             cycle.HitProcs += weight * rawSpell.HitProcs;
