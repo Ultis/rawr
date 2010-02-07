@@ -85,7 +85,6 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Talents.ImprovedRevenge * 0.1f) * (1.0f + Talents.UnrelentingAssault * 0.1f);
                     break;
                 case Ability.ShieldSlam:
-                    Stats.BlockValue = 2472f;
                     float softCap = 24.5f * Character.Level;
                     float hardCap = 39.5f * Character.Level;
                     if (Stats.BlockValue < softCap)
