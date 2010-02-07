@@ -30,6 +30,11 @@ namespace Rawr
             MaxItemLevel = 1000;
             MinItemQuality = ItemQuality.Temp;
             MaxItemQuality = ItemQuality.Heirloom;
+            BoA = true;
+            BoE = true;
+            BoP = true;
+            BoU = true;
+            BoN = true;
             AdditiveFilter = true;
             AppliesToItems = true;
             AppliesToGems = true;
@@ -87,8 +92,7 @@ namespace Rawr
             }
         }
 
-        public bool IsMatch(Item item)
-        {
+        public bool IsMatch(Item item) {
             if (string.IsNullOrEmpty(_pattern)
                 || (!string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description))
                 || (!string.IsNullOrEmpty(item.LocationInfo[0].Note) && Regex.IsMatch(item.LocationInfo[0].Note))
@@ -98,28 +102,18 @@ namespace Rawr
                     && Regex.IsMatch(item.LocationInfo[0].Description + " and" + item.LocationInfo[1].Description.Replace("Purchasable with","")))
             )
             {
-                if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
-                {
-                    if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)
-                    {
-                        // no bind specified - we fine
-                        if (!(BoA || BoE || BoP || BoU || BoN) || (!BoN && item.Bind == BindsOn.None) )
-                        return true;
-
-                        if (BoA && item.Bind == BindsOn.BoA)
-                            return true;
-
-                        if (BoE && item.Bind == BindsOn.BoE)
-                            return true;
-
-                        if (BoP && item.Bind == BindsOn.BoP)
-                            return true;
-
-                        if (BoU && item.Bind == BindsOn.BoU)
-                            return true;
-
-                        if (BoN && item.Bind == BindsOn.None)
-                            return true;
+                if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel) {
+                    if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality) {
+                        // no bind specified on the filter - we fine
+                        /*if (!(BoA || BoE || BoP || BoU || BoN)) return true;
+                        // item doesn't have real bind data, force it to show
+                        else*/ if (!BoN && !AdditiveFilter && item.Bind == BindsOn.None) return true;
+                        // There's Bind data set on the filter and Item has valid bind data
+                        else if (BoA && item.Bind == BindsOn.BoA) return true;
+                        else if (BoE && item.Bind == BindsOn.BoE) return true;
+                        else if (BoP && item.Bind == BindsOn.BoP) return true;
+                        else if (BoU && item.Bind == BindsOn.BoU) return true;
+                        else if (BoN && item.Bind == BindsOn.None) return true;
                     }
                 }
             }

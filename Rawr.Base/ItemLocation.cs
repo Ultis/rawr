@@ -33,16 +33,16 @@ namespace Rawr
         Honored,
         Revered,
         Exalted,
-    };
+    }
 
     public enum BindsOn
     {
-        None,   // 0: no soulbonding
-        BoP,    // 1:
-        BoE,    // 2:
-        BoA,    // 3: binds on account
-        BoU,    // 4: binds when used
-    };
+        None,   // 0: No Soulbonding
+        BoP,    // 1: Binds on Pickup
+        BoE,    // 2: Binds on Equip
+        BoA,    // 3: Binds on Account
+        BoU,    // 4: Binds on Use
+    }
 
     delegate ItemLocation Construct();
     

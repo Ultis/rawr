@@ -191,17 +191,11 @@ namespace Rawr
         public static string Bind2Text( BindsOn bind )
         {
             // TODO: add localization here? or we better stick with invariant EN, so we'll use this function from XML parsing too
-            if (bind == BindsOn.BoA)
-                return "Binds to account";
-
-            if (bind == BindsOn.BoE)
-                return "Binds when equipped";
-
-            if (bind == BindsOn.BoP)
-                return "Binds when picked up";
-
-            if (bind == BindsOn.BoU)
-                return "Binds when used";
+            if (bind == BindsOn.BoA) return "Binds to account";
+            if (bind == BindsOn.BoE) return "Binds when equipped";
+            if (bind == BindsOn.BoP) return "Binds when picked up";
+            if (bind == BindsOn.BoU) return "Binds when used";
+            if (bind == BindsOn.None) return "Doesn't Bind or No Bind Data";
 
             return string.Empty;
         }

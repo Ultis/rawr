@@ -78,7 +78,7 @@ namespace Rawr
             this.OKButton.Location = new System.Drawing.Point(213, 484);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 25);
-            this.OKButton.TabIndex = 1;
+            this.OKButton.TabIndex = 0;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             // 
@@ -89,7 +89,7 @@ namespace Rawr
             this.cancelButton.Location = new System.Drawing.Point(132, 484);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 25);
-            this.cancelButton.TabIndex = 2;
+            this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
@@ -105,7 +105,7 @@ namespace Rawr
             this.labelName.Location = new System.Drawing.Point(3, 183);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(59, 24);
-            this.labelName.TabIndex = 1;
+            this.labelName.TabIndex = 2;
             this.labelName.Text = "Name:";
             this.labelName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -118,7 +118,7 @@ namespace Rawr
             this.textBoxName.Margin = new System.Windows.Forms.Padding(1);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(208, 20);
-            this.textBoxName.TabIndex = 2;
+            this.textBoxName.TabIndex = 3;
             // 
             // textBoxPattern
             // 
@@ -130,7 +130,7 @@ namespace Rawr
             this.textBoxPattern.Multiline = true;
             this.textBoxPattern.Name = "textBoxPattern";
             this.textBoxPattern.Size = new System.Drawing.Size(208, 60);
-            this.textBoxPattern.TabIndex = 4;
+            this.textBoxPattern.TabIndex = 5;
             // 
             // labelPattern
             // 
@@ -139,7 +139,7 @@ namespace Rawr
             this.labelPattern.Location = new System.Drawing.Point(3, 207);
             this.labelPattern.Name = "labelPattern";
             this.labelPattern.Size = new System.Drawing.Size(59, 62);
-            this.labelPattern.TabIndex = 3;
+            this.labelPattern.TabIndex = 4;
             this.labelPattern.Text = "Pattern:";
             this.labelPattern.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -151,7 +151,7 @@ namespace Rawr
             this.textBoxMinItemLevel.Margin = new System.Windows.Forms.Padding(1);
             this.textBoxMinItemLevel.Name = "textBoxMinItemLevel";
             this.textBoxMinItemLevel.Size = new System.Drawing.Size(63, 20);
-            this.textBoxMinItemLevel.TabIndex = 6;
+            this.textBoxMinItemLevel.TabIndex = 7;
             // 
             // label1
             // 
@@ -161,7 +161,7 @@ namespace Rawr
             this.label1.Margin = new System.Windows.Forms.Padding(1);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 24);
-            this.label1.TabIndex = 5;
+            this.label1.TabIndex = 6;
             this.label1.Text = "Item Level:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -173,7 +173,7 @@ namespace Rawr
             this.textBoxMaxItemLevel.Margin = new System.Windows.Forms.Padding(1);
             this.textBoxMaxItemLevel.Name = "textBoxMaxItemLevel";
             this.textBoxMaxItemLevel.Size = new System.Drawing.Size(78, 20);
-            this.textBoxMaxItemLevel.TabIndex = 8;
+            this.textBoxMaxItemLevel.TabIndex = 9;
             // 
             // label3
             // 
@@ -184,7 +184,7 @@ namespace Rawr
             this.label3.Margin = new System.Windows.Forms.Padding(1);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(128, 24);
-            this.label3.TabIndex = 9;
+            this.label3.TabIndex = 10;
             this.label3.Text = "Min Item Quality:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -199,7 +199,7 @@ namespace Rawr
             this.comboBoxMinItemQuality.Margin = new System.Windows.Forms.Padding(1);
             this.comboBoxMinItemQuality.Name = "comboBoxMinItemQuality";
             this.comboBoxMinItemQuality.Size = new System.Drawing.Size(143, 21);
-            this.comboBoxMinItemQuality.TabIndex = 10;
+            this.comboBoxMinItemQuality.TabIndex = 11;
             // 
             // comboBoxMaxItemQuality
             // 
@@ -212,7 +212,7 @@ namespace Rawr
             this.comboBoxMaxItemQuality.Margin = new System.Windows.Forms.Padding(1);
             this.comboBoxMaxItemQuality.Name = "comboBoxMaxItemQuality";
             this.comboBoxMaxItemQuality.Size = new System.Drawing.Size(143, 21);
-            this.comboBoxMaxItemQuality.TabIndex = 12;
+            this.comboBoxMaxItemQuality.TabIndex = 13;
             // 
             // label4
             // 
@@ -223,7 +223,7 @@ namespace Rawr
             this.label4.Margin = new System.Windows.Forms.Padding(1);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(128, 24);
-            this.label4.TabIndex = 11;
+            this.label4.TabIndex = 12;
             this.label4.Text = "Max Item Quality:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -236,7 +236,7 @@ namespace Rawr
             this.label5.Margin = new System.Windows.Forms.Padding(1);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(128, 24);
-            this.label5.TabIndex = 13;
+            this.label5.TabIndex = 20;
             this.label5.Text = "Additive Filter:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -249,7 +249,7 @@ namespace Rawr
             this.labelBind.Margin = new System.Windows.Forms.Padding(1);
             this.labelBind.Name = "labelBind";
             this.labelBind.Size = new System.Drawing.Size(128, 24);
-            this.labelBind.TabIndex = 13;
+            this.labelBind.TabIndex = 14;
             this.labelBind.Text = "Item bind type:";
             this.labelBind.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -260,7 +260,7 @@ namespace Rawr
             this.checkBoA.Location = new System.Drawing.Point(198, 376);
             this.checkBoA.Name = "checkBoA";
             this.checkBoA.Size = new System.Drawing.Size(66, 17);
-            this.checkBoA.TabIndex = 18;
+            this.checkBoA.TabIndex = 19;
             this.checkBoA.Text = "Account";
             // 
             // checkBoE
@@ -270,7 +270,7 @@ namespace Rawr
             this.checkBoE.Location = new System.Drawing.Point(133, 350);
             this.checkBoE.Name = "checkBoE";
             this.checkBoE.Size = new System.Drawing.Size(53, 17);
-            this.checkBoE.TabIndex = 19;
+            this.checkBoE.TabIndex = 16;
             this.checkBoE.Text = "Equip";
             // 
             // checkBoP
@@ -280,7 +280,7 @@ namespace Rawr
             this.checkBoP.Location = new System.Drawing.Point(198, 350);
             this.checkBoP.Name = "checkBoP";
             this.checkBoP.Size = new System.Drawing.Size(47, 17);
-            this.checkBoP.TabIndex = 20;
+            this.checkBoP.TabIndex = 17;
             this.checkBoP.Text = "Pick";
             // 
             // checkBoU
@@ -290,7 +290,7 @@ namespace Rawr
             this.checkBoU.Location = new System.Drawing.Point(133, 376);
             this.checkBoU.Name = "checkBoU";
             this.checkBoU.Size = new System.Drawing.Size(45, 17);
-            this.checkBoU.TabIndex = 21;
+            this.checkBoU.TabIndex = 18;
             this.checkBoU.Text = "Use";
             // 
             // checkBoN
@@ -300,7 +300,7 @@ namespace Rawr
             this.checkBoN.Location = new System.Drawing.Point(68, 376);
             this.checkBoN.Name = "checkBoN";
             this.checkBoN.Size = new System.Drawing.Size(46, 17);
-            this.checkBoN.TabIndex = 21;
+            this.checkBoN.TabIndex = 15;
             this.checkBoN.Text = "N/A";
             // 
             // checkBoxAdditiveFilter
@@ -312,7 +312,7 @@ namespace Rawr
             this.checkBoxAdditiveFilter.Margin = new System.Windows.Forms.Padding(1);
             this.checkBoxAdditiveFilter.Name = "checkBoxAdditiveFilter";
             this.checkBoxAdditiveFilter.Size = new System.Drawing.Size(63, 24);
-            this.checkBoxAdditiveFilter.TabIndex = 14;
+            this.checkBoxAdditiveFilter.TabIndex = 21;
             this.checkBoxAdditiveFilter.UseVisualStyleBackColor = true;
             // 
             // checkBoxAppliesToItems
@@ -324,7 +324,7 @@ namespace Rawr
             this.checkBoxAppliesToItems.Margin = new System.Windows.Forms.Padding(1);
             this.checkBoxAppliesToItems.Name = "checkBoxAppliesToItems";
             this.checkBoxAppliesToItems.Size = new System.Drawing.Size(63, 18);
-            this.checkBoxAppliesToItems.TabIndex = 16;
+            this.checkBoxAppliesToItems.TabIndex = 23;
             this.checkBoxAppliesToItems.UseVisualStyleBackColor = true;
             // 
             // label6
@@ -336,7 +336,7 @@ namespace Rawr
             this.label6.Margin = new System.Windows.Forms.Padding(1);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(128, 18);
-            this.label6.TabIndex = 15;
+            this.label6.TabIndex = 22;
             this.label6.Text = "Applies to Items:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -349,7 +349,7 @@ namespace Rawr
             this.checkBoxAppliesToGems.Margin = new System.Windows.Forms.Padding(1);
             this.checkBoxAppliesToGems.Name = "checkBoxAppliesToGems";
             this.checkBoxAppliesToGems.Size = new System.Drawing.Size(63, 19);
-            this.checkBoxAppliesToGems.TabIndex = 18;
+            this.checkBoxAppliesToGems.TabIndex = 25;
             this.checkBoxAppliesToGems.UseVisualStyleBackColor = true;
             // 
             // label7
@@ -361,7 +361,7 @@ namespace Rawr
             this.label7.Margin = new System.Windows.Forms.Padding(1);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(128, 19);
-            this.label7.TabIndex = 17;
+            this.label7.TabIndex = 24;
             this.label7.Text = "Applies to Gems:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -487,7 +487,7 @@ namespace Rawr
             this.label2.Margin = new System.Windows.Forms.Padding(1);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 24);
-            this.label2.TabIndex = 7;
+            this.label2.TabIndex = 8;
             this.label2.Text = "to";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -501,7 +501,7 @@ namespace Rawr
             this.itemFilterTreeView.Margin = new System.Windows.Forms.Padding(1);
             this.itemFilterTreeView.Name = "itemFilterTreeView";
             this.itemFilterTreeView.Size = new System.Drawing.Size(273, 155);
-            this.itemFilterTreeView.TabIndex = 0;
+            this.itemFilterTreeView.TabIndex = 1;
             this.itemFilterTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.itemFilterTreeView_AfterSelect);
             // 
             // panel1
@@ -517,13 +517,14 @@ namespace Rawr
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(275, 26);
-            this.panel1.TabIndex = 28;
+            this.panel1.TabIndex = 0;
             // 
             // FormItemFilter
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(308, 531);
             this.Controls.Add(this.LayoutPanel);
             this.Controls.Add(this.OKButton);
