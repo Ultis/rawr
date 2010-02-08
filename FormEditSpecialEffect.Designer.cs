@@ -84,6 +84,7 @@
             // 
             // nudCooldown
             // 
+            this.nudCooldown.DecimalPlaces = 2;
             this.nudCooldown.Location = new System.Drawing.Point(85, 258);
             this.nudCooldown.Maximum = new decimal(new int[] {
             3600,
