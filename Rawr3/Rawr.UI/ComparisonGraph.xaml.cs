@@ -212,8 +212,14 @@ namespace Rawr.UI
                     item.NameGrid.MouseLeftButtonDown += new MouseButtonEventHandler(NameGrid_MouseLeftButtonDown);
                 }
                 else item = comparisonItems[i];
-
-                item.Title = c.Name;
+                bool isGem = c.Item.Slot == ItemSlot.Meta
+                          || c.Item.Slot == ItemSlot.Red
+                          || c.Item.Slot == ItemSlot.Yellow
+                          || c.Item.Slot == ItemSlot.Blue
+                          || c.Item.Slot == ItemSlot.Prismatic;
+                string s = c.Name;
+                if (c.Item.ItemLevel != 0 && c.Item != null && !isGem) { s += string.Format(" [{0}]", c.Item.ItemLevel); }
+                item.Title = s;
                 item.Equipped = c.Equipped;
                 item.OtherItem = c.Item;
                 item.ItemInstance = c.ItemInstance;

@@ -386,7 +386,7 @@ namespace Rawr
 
                         #region Graph Ticks
                         float graphStart = GraphBarStart; // 160f;
-                        float graphWidth = this.Width - 160f;
+                        float graphWidth = this.Width - GraphBarStart - 10;
                         float graphEnd = graphStart + graphWidth;
 
                         Dictionary<float, float> ticks = new Dictionary<float, float>();
@@ -484,32 +484,33 @@ namespace Rawr
                             {
                                 bgColor = Color.FromArgb(64, 0, 255, 0);
                             }
+                            bool isGem = false;
                             if (item.Item != null)
                                 switch (item.Item.Slot)
                                 {
                                     case ItemSlot.Red:
-                                        bgColor = Color.FromArgb(64, Color.Red);
+                                        bgColor = Color.FromArgb(64, Color.Red); isGem = true;
                                         break;
                                     case ItemSlot.Orange:
-                                        bgColor = Color.FromArgb(64, Color.Orange);
+                                        bgColor = Color.FromArgb(64, Color.Orange); isGem = true;
                                         break;
                                     case ItemSlot.Yellow:
-                                        bgColor = Color.FromArgb(64, Color.Yellow);
+                                        bgColor = Color.FromArgb(64, Color.Yellow); isGem = true;
                                         break;
                                     case ItemSlot.Green:
-                                        bgColor = Color.FromArgb(64, Color.Green);
+                                        bgColor = Color.FromArgb(64, Color.Green); isGem = true;
                                         break;
                                     case ItemSlot.Blue:
-                                        bgColor = Color.FromArgb(64, Color.Blue);
+                                        bgColor = Color.FromArgb(64, Color.Blue); isGem = true;
                                         break;
                                     case ItemSlot.Purple:
-                                        bgColor = Color.FromArgb(64, Color.Purple);
+                                        bgColor = Color.FromArgb(64, Color.Purple); isGem = true;
                                         break;
                                     case ItemSlot.Meta:
-                                        bgColor = Color.FromArgb(64, Color.Silver);
+                                        bgColor = Color.FromArgb(64, Color.Silver); isGem = true;
                                         break;
                                     case ItemSlot.Prismatic:
-                                        bgColor = Color.FromArgb(64, Color.DarkGray);
+                                        bgColor = Color.FromArgb(64, Color.DarkGray); isGem = true;
                                         break;
                                 }
 
@@ -552,7 +553,9 @@ namespace Rawr
                                 }
                             }
 
-                            g.DrawString(item.Name, this.Font, brushItemNames, rectItemName, formatItemNames);
+                            string s = item.Name;
+                            if (Rawr.Properties.GeneralSettings.Default.DisplayExtraItemInfo && item.Item != null && item.Item.ItemLevel != 0 && !isGem) { s += string.Format(" [{0}]", item.Item.ItemLevel); }
+                            g.DrawString(s, this.Font, brushItemNames, rectItemName, formatItemNames);
                             #endregion
 
                             int posStart = (int)graphZero + 1;
