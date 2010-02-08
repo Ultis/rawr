@@ -130,5 +130,17 @@ namespace Rawr.Properties {
                 this["HideProfEnchants"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ItemNameWidthSetting {
+            get {
+                return ((int)(this["ItemNameWidthSetting"]));
+            }
+            set {
+                this["ItemNameWidthSetting"] = value;
+            }
+        }
     }
 }

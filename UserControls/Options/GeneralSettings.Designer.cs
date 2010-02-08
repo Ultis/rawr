@@ -41,14 +41,16 @@
             this.CK_BuffSource = new System.Windows.Forms.CheckBox();
             this.CK_GemNames = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
+            this.CB_ProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
             this.CK_DisplayItemIds = new System.Windows.Forms.CheckBox();
             this.rbZhTW = new System.Windows.Forms.RadioButton();
             this.rbZhCn = new System.Windows.Forms.RadioButton();
             this.rbKr = new System.Windows.Forms.RadioButton();
-            this.comboBoxEffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
+            this.CB_EffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.CK_HideEnchantsBasedOnProfs = new System.Windows.Forms.CheckBox();
+            this.CB_ItemNameWidthSetting = new System.Windows.Forms.ComboBox();
+            this.LB_ItemNameWidthSetting = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -123,15 +125,15 @@
             // 
             // comboBoxProcEffectCalculationMode
             // 
-            this.comboBoxProcEffectCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxProcEffectCalculationMode.FormattingEnabled = true;
-            this.comboBoxProcEffectCalculationMode.Items.AddRange(new object[] {
+            this.CB_ProcEffectCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_ProcEffectCalculationMode.FormattingEnabled = true;
+            this.CB_ProcEffectCalculationMode.Items.AddRange(new object[] {
             resources.GetString("comboBoxProcEffectCalculationMode.Items"),
             resources.GetString("comboBoxProcEffectCalculationMode.Items1"),
             resources.GetString("comboBoxProcEffectCalculationMode.Items2"),
             resources.GetString("comboBoxProcEffectCalculationMode.Items3")});
-            resources.ApplyResources(this.comboBoxProcEffectCalculationMode, "comboBoxProcEffectCalculationMode");
-            this.comboBoxProcEffectCalculationMode.Name = "comboBoxProcEffectCalculationMode";
+            resources.ApplyResources(this.CB_ProcEffectCalculationMode, "comboBoxProcEffectCalculationMode");
+            this.CB_ProcEffectCalculationMode.Name = "comboBoxProcEffectCalculationMode";
             // 
             // CK_DisplayItemIds
             // 
@@ -162,14 +164,14 @@
             // 
             // comboBoxEffectCombinationsCalculationMode
             // 
-            this.comboBoxEffectCombinationsCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxEffectCombinationsCalculationMode.FormattingEnabled = true;
-            this.comboBoxEffectCombinationsCalculationMode.Items.AddRange(new object[] {
+            this.CB_EffectCombinationsCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_EffectCombinationsCalculationMode.FormattingEnabled = true;
+            this.CB_EffectCombinationsCalculationMode.Items.AddRange(new object[] {
             resources.GetString("comboBoxEffectCombinationsCalculationMode.Items"),
             resources.GetString("comboBoxEffectCombinationsCalculationMode.Items1"),
             resources.GetString("comboBoxEffectCombinationsCalculationMode.Items2")});
-            resources.ApplyResources(this.comboBoxEffectCombinationsCalculationMode, "comboBoxEffectCombinationsCalculationMode");
-            this.comboBoxEffectCombinationsCalculationMode.Name = "comboBoxEffectCombinationsCalculationMode";
+            resources.ApplyResources(this.CB_EffectCombinationsCalculationMode, "comboBoxEffectCombinationsCalculationMode");
+            this.CB_EffectCombinationsCalculationMode.Name = "comboBoxEffectCombinationsCalculationMode";
             // 
             // label3
             // 
@@ -182,18 +184,36 @@
             this.CK_HideEnchantsBasedOnProfs.Name = "CK_HideEnchantsBasedOnProfs";
             this.CK_HideEnchantsBasedOnProfs.UseVisualStyleBackColor = true;
             // 
+            // CB_ItemNameWidthSetting
+            // 
+            this.CB_ItemNameWidthSetting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_ItemNameWidthSetting.FormattingEnabled = true;
+            this.CB_ItemNameWidthSetting.Items.AddRange(new object[] {
+            resources.GetString("CB_ItemNameWidthSetting.Items"),
+            resources.GetString("CB_ItemNameWidthSetting.Items1"),
+            resources.GetString("CB_ItemNameWidthSetting.Items2")});
+            resources.ApplyResources(this.CB_ItemNameWidthSetting, "CB_ItemNameWidthSetting");
+            this.CB_ItemNameWidthSetting.Name = "CB_ItemNameWidthSetting";
+            // 
+            // LB_ItemNameWidthSetting
+            // 
+            resources.ApplyResources(this.LB_ItemNameWidthSetting, "LB_ItemNameWidthSetting");
+            this.LB_ItemNameWidthSetting.Name = "LB_ItemNameWidthSetting";
+            // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.CB_ItemNameWidthSetting);
+            this.Controls.Add(this.LB_ItemNameWidthSetting);
             this.Controls.Add(this.CK_HideEnchantsBasedOnProfs);
             this.Controls.Add(this.rbKr);
             this.Controls.Add(this.rbZhCn);
             this.Controls.Add(this.rbZhTW);
-            this.Controls.Add(this.comboBoxEffectCombinationsCalculationMode);
+            this.Controls.Add(this.CB_EffectCombinationsCalculationMode);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.CK_DisplayItemIds);
-            this.Controls.Add(this.comboBoxProcEffectCalculationMode);
+            this.Controls.Add(this.CB_ProcEffectCalculationMode);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.CK_GemNames);
             this.Controls.Add(this.CK_BuffSource);
@@ -223,15 +243,17 @@
         private System.Windows.Forms.RadioButton rbGerman;
         private System.Windows.Forms.CheckBox CK_BuffSource;
         private System.Windows.Forms.CheckBox CK_GemNames;
-        private System.Windows.Forms.ComboBox comboBoxProcEffectCalculationMode;
+        private System.Windows.Forms.ComboBox CB_ProcEffectCalculationMode;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox CK_DisplayItemIds;
         private System.Windows.Forms.RadioButton rbZhCn;
         private System.Windows.Forms.RadioButton rbZhTW;
         private System.Windows.Forms.RadioButton rbKr;
-        private System.Windows.Forms.ComboBox comboBoxEffectCombinationsCalculationMode;
+        private System.Windows.Forms.ComboBox CB_EffectCombinationsCalculationMode;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox CK_HideEnchantsBasedOnProfs;
+        private System.Windows.Forms.ComboBox CB_ItemNameWidthSetting;
+        private System.Windows.Forms.Label LB_ItemNameWidthSetting;
 
 
 	}

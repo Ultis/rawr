@@ -48,6 +48,8 @@ namespace Rawr.UI
 
             ProcEffectModeCombo.SelectedIndex = GeneralSettings.Default.ProcEffectMode;
             EffectCombinationsCalculationMode.SelectedIndex = GeneralSettings.Default.CombinationEffectMode;
+
+            CB_ItemNameWidthSetting.SelectedIndex = GeneralSettings.Default.ItemNameWidthSetting;
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -59,6 +61,7 @@ namespace Rawr.UI
             GeneralSettings.Default.DisplayGemNames   = CK_GemNames.IsChecked.GetValueOrDefault();
             //GeneralSettings.Default.DisplayExtraItemInfo = CK_DisplayExtraItemInfo.IsChecked.GetValueOrDefault();
             GeneralSettings.Default.HideProfEnchants  = CK_HideEnchantsBasedOnProfs.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.ItemNameWidthSetting = CB_ItemNameWidthSetting.SelectedIndex;
             switch (OptimizationMethodCombo.SelectedIndex)
             {
                 case 0:

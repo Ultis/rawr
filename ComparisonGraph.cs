@@ -227,7 +227,13 @@ namespace Rawr
             else if (number < 100000) return sign + Math.Round(number / 1000, 1).ToString() + "k";
             else if (number < 1000000) return sign + Math.Round(number / 1000).ToString() + "k";
             else return sign + Math.Round(number / 1000000, 2).ToString() + "m";
-         }
+        }
+
+        private float _GraphBarStart = 120f;
+        public float GraphBarStart {
+            get { return _GraphBarStart + (Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20); }
+            set { _GraphBarStart = value; }
+        }
 
         private Bitmap _prerenderedGraph = null;
         public Bitmap PrerenderedGraph
@@ -379,7 +385,7 @@ namespace Rawr
                         #endregion
 
                         #region Graph Ticks
-                        float graphStart = 120f;
+                        float graphStart = GraphBarStart; // 160f;
                         float graphWidth = this.Width - 160f;
                         float graphEnd = graphStart + graphWidth;
 
@@ -727,7 +733,7 @@ namespace Rawr
         {
             //if (e.Button == MouseButtons.Right)
             //{
-            if (e.X <= 106)
+            if (e.X <= (GraphBarStart - 5))//106
             {
                 int itemIndex = (int) Math.Floor(((float) (e.Y - 44f + _scrollBar.Value)) / 36f);
                 if (itemIndex >= 0 && itemIndex < ItemCalculations.Length && ItemCalculations[itemIndex].Item != null && ItemCalculations[itemIndex].Item.Id != 0)
@@ -796,7 +802,7 @@ namespace Rawr
             {
                 _lastPoint = e.Location;
                 Cursor cursor = Cursors.Default;
-                if (e.X <= 118)
+                if (e.X <= (GraphBarStart - 2))//118
                 {
                     int itemIndex = (int) Math.Floor(((float) (e.Y - 44f + _scrollBar.Value)) / 36f);
                     if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
@@ -804,7 +810,7 @@ namespace Rawr
                         if (ItemCalculations[itemIndex].Description != null && 
                             ItemCalculations[itemIndex].Description != "")
                         {
-                            int tipX = 118;
+                            int tipX = ((int)GraphBarStart - 2);//118
                             if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
                                 tipX = -249;
 
@@ -821,7 +827,7 @@ namespace Rawr
 
                             if (item != _tooltipItem)
                             {
-                                int tipX = 118;
+                                int tipX = ((int)GraphBarStart - 2);//118
                                 if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
                                     tipX = -249;
                                 if (itemInstance != null)

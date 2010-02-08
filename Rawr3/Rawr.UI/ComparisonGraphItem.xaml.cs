@@ -138,11 +138,19 @@ namespace Rawr.UI
 		{
 			// Required to initialize variables
 			InitializeComponent();
+            NameGrid.Width = GraphBarStart;
 		}
+
+        private float _GraphBarStart = 142f;
+        public float GraphBarStart
+        {
+            get { return _GraphBarStart + (Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20); }
+            set { _GraphBarStart = value; }
+        }
 
 		private void ChangedSize(object sender, System.Windows.SizeChangedEventArgs e)
 		{
-            if (ActualWidth > 150)
+            if (ActualWidth > (GraphBarStart + 8))//150
             {
                 PositiveStack.Children.Clear();
                 NegativeStack.Children.Clear();
@@ -167,15 +175,16 @@ namespace Rawr.UI
                 {
                     if (values[i] > 0)
                     {
-                        rects[i].Width = (ActualWidth - 151) * (values[i] / (MaxScale - MinScale));
+                        rects[i].Width = (ActualWidth - (GraphBarStart + 9)) * (values[i] / (MaxScale - MinScale)); // 151
                         PositiveStack.Children.Add(rects[i]);
                     }
                     else
                     {
-                        rects[i].Width = (ActualWidth - 151) * (-values[i] / (MaxScale - MinScale));
+                        rects[i].Width = (ActualWidth - (GraphBarStart + 9)) * (-values[i] / (MaxScale - MinScale)); // 151
                         NegativeStack.Children.Add(rects[i]);
                     }
                 }
+                NameGrid.Width = GraphBarStart;
                 PositiveStack.Children.Add(TotalLabel);
             }
 		}

@@ -25,7 +25,7 @@ namespace Rawr.Properties
             //_default.DisplayExtraItemInfo = false;
 			_default.ProcEffectMode = 0;
 			_default.CombinationEffectMode = 0;
-
+            _default.ItemNameWidthSetting = 0;
 		}
 
 		private static GeneralSettings _default;
@@ -40,5 +40,6 @@ namespace Rawr.Properties
 		//public bool DisplayExtraItemInfo { get; set; }
         public bool HideProfEnchants { get; set; }
 		public int CombinationEffectMode { get; set; }
+        public int ItemNameWidthSetting { get; set; } // 0 = Normal (142 px), 1 = Wide (162 px), 2 = Widest (182 px)
 	}
 }

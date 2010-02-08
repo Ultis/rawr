@@ -20,10 +20,13 @@ namespace Rawr.UserControls.Options
             CK_UseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
             CK_BuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
             CK_GemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
-            comboBoxProcEffectCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ProcEffectMode;
-            comboBoxEffectCombinationsCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.CombinationEffectMode;
+            CB_ProcEffectCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ProcEffectMode;
+            CB_EffectCombinationsCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.CombinationEffectMode;
             CK_DisplayItemIds.Checked = Rawr.Properties.GeneralSettings.Default.DisplayExtraItemInfo;
             CK_HideEnchantsBasedOnProfs.Checked = Rawr.Properties.GeneralSettings.Default.HideProfEnchants;
+
+            CB_ItemNameWidthSetting.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting;
+
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
 
@@ -71,8 +74,9 @@ namespace Rawr.UserControls.Options
             Rawr.Properties.GeneralSettings.Default.DisplayExtraItemInfo = CK_DisplayItemIds.Checked;
             Rawr.Properties.GeneralSettings.Default.HideProfEnchants = CK_HideEnchantsBasedOnProfs.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
-            Rawr.Properties.GeneralSettings.Default.ProcEffectMode = comboBoxProcEffectCalculationMode.SelectedIndex;
-            Rawr.Properties.GeneralSettings.Default.CombinationEffectMode = comboBoxEffectCombinationsCalculationMode.SelectedIndex;
+            Rawr.Properties.GeneralSettings.Default.ProcEffectMode = CB_ProcEffectCalculationMode.SelectedIndex;
+            Rawr.Properties.GeneralSettings.Default.CombinationEffectMode = CB_EffectCombinationsCalculationMode.SelectedIndex;
+            Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting = CB_ItemNameWidthSetting.SelectedIndex;
 			Rawr.Properties.GeneralSettings.Default.Save();
             switch(_locale)
             {

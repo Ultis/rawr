@@ -18,7 +18,7 @@
       <ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
-		<Grid x:Name="NameGrid" Grid.Column="0" Margin="2,2,6,2" Background="#FFFFFFFF">
+		<Grid x:Name="NameGrid" Grid.Column="0" Margin="2,2,6,2" Background="#FFFFFFFF" Width="142">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="15"/>
 				<ColumnDefinition Width="*"/>
