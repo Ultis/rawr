@@ -645,6 +645,7 @@ threat and limited threat scaled by the threat scale.",
 
             switch (chartName)
             {
+                /*
                 #region Rotation Damage and Threat
                 case "Rotation Damage":
                 case "Rotation Threat":
@@ -675,6 +676,7 @@ threat and limited threat scaled by the threat scale.",
                         return comparisons;
                     }
                 #endregion
+                */
                 #region Ability Damage and Threat
                 case "Ability Damage":
                 case "Ability Threat":
