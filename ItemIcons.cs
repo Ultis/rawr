@@ -54,7 +54,8 @@ namespace Rawr
 				if (_talentIcons == null)
 				{
 					_talentIcons = new ImageList();
-					_talentIcons.ImageSize = new Size(45, 47);
+					_talentIcons.ImageSize = new Size(33, 35);
+                    //_talentIcons.ImageSize = new Size(45, 47);
 					_talentIcons.ColorDepth = ColorDepth.Depth24Bit;
 				}
 				return _talentIcons;
@@ -279,7 +280,7 @@ namespace Rawr
 
 					if (returnImage != null)
 					{
-						returnImage = Offset(returnImage, new Size(2, 2));
+						returnImage = Offset(returnImage, new Size(4, 4));
 						TalentIcons.Images.Add(key, returnImage);
 					}
 				}
@@ -361,7 +362,8 @@ namespace Rawr
 
 		private static Image Offset(Image img, Size offset)
 		{
-			Bitmap bmp = new Bitmap(img.Width + offset.Width, img.Height + offset.Height, PixelFormat.Format32bppArgb);
+            int smallCheck = (img.Width < 40 ? 10 : 0);
+            Bitmap bmp = new Bitmap(img.Width + offset.Width + smallCheck, img.Height + offset.Height + smallCheck, PixelFormat.Format32bppArgb);
 			Graphics g = Graphics.FromImage(bmp);
 			g.DrawImageUnscaled(img, offset.Width, offset.Height);
 			g.Dispose();

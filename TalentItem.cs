@@ -170,8 +170,7 @@ namespace Rawr
             //It seems that the recent armory update changed the size of the talent icons from 43x43 down to 31x31!
             //This results in talent icons that are too small for the current layout :/
             //The simplest fix is to scale the (new) talent icons from 31x31 up to 43x43 via DrawImage().
-            //g.DrawImageUnscaled(_icon, x, y);
-            g.DrawImage(_icon, x, y, 43, 43);
+            g.DrawImage(_icon, x, y, 44, 44);
             g.DrawImageUnscaled(_overlay, x, y);
             g.DrawString(rank, font, brush, x + 31, y + 39);
 

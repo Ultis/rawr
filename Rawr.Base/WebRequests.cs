@@ -502,8 +502,8 @@ namespace Rawr
                         DownloadFile(uri, fullPathToSave, CONTENT_JPG);
                     }
                 }
-			if (!File.Exists(fullPathToSave))
-			{
+			    if (!File.Exists(fullPathToSave))
+			    {
                     fullPathToSave = null;
                 }
                 return fullPathToSave;
