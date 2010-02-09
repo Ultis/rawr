@@ -89,6 +89,7 @@ namespace Rawr
         InsectSwarmTick,
         MoonfireCast,
         MoonfireTick,
+        InsectSwarmOrMoonfireTick,
         RejuvenationTick,
         MangleCatHit,
         MangleBearHit,

@@ -403,9 +403,8 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats(){ AttackPower = (float)int.Parse(match.Groups["amount"].Value), }, 10, 0));
             }
             else if ((match = new Regex(@"The periodic damage from your Insect Swarm and Moonfire spells grants 44 critical strike rating for 15 sec Stacks up to 5 times.").Match(line)).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { CritRating = 44, }, 15, 0, 1f, 5));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MoonfireTick, new Stats() { CritRating = 44, }, 15, 0, 1f, 5));
+            { // Idol of the Lunar Eclipse
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmOrMoonfireTick, new Stats() { CritRating = 44, }, 15, 0, 1f, 5));
             }
             else if (line.StartsWith("Increases periodic damage done by Rip by "))
             {
