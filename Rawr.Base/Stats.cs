@@ -304,6 +304,8 @@ namespace Rawr {
         HemoCostReduction,
         MutiCostReduction,
         SStrikeCostReduction,
+        VanishCDReduction,
+        ToTTCDReduction,
         #endregion
         #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
@@ -2841,6 +2843,20 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SStrikeCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.SStrikeCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float VanishCDReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.VanishCDReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.VanishCDReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ToTTCDReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ToTTCDReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ToTTCDReduction] = value; }
         }
         #endregion
         #region Added by Rawr.Retribution

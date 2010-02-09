@@ -740,7 +740,8 @@ namespace Rawr.Rogue
                 //PrepCDReduction = 90 * talents.FilthyTricks,
                 SpellHit = 0.01f * talents.Precision,
                 SStrikeCostReduction = 3 * talents.ImprovedSinisterStrike,
-                //VanishCDReduction = 30 * talents.Elusiveness,
+                ToTTCDReduction = 5 * talents.FilthyTricks,
+                VanishCDReduction = 30 * talents.Elusiveness,
             };
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;

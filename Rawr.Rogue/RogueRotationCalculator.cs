@@ -35,7 +35,7 @@ namespace Rawr.Rogue
 		private float[] _chanceExtraCP = new float[5];
 
         public RogueRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainBleed,
-			/*float berserkDuration,*/ float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedPoisonAttacks,
+			float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, 
@@ -80,8 +80,8 @@ namespace Rawr.Rogue
             float energyRegen = 10f * (1f + Stats.BonusEnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
                                          energyRegen * Duration +
-                                         20f * energyRegen * Stats.BonusStealthEnergyRegen +
-                                         (useTotT ? (-15f + Stats.BonusToTTEnergy) * (Duration - 5f) / 30f : 0f) +
+                                         (Duration / (180 - Stats.VanishCDReduction)) * 20f * energyRegen * Stats.BonusStealthEnergyRegen +
+                                         (useTotT ? (-15f + Stats.BonusToTTEnergy) * (Duration - 5f) / (30f - Stats.ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
                                          energyRegen * 2f * Stats.BonusEnergyRegen * (Duration / 180) -
                                          (Stats.BonusFlurryHaste > 0 ? (25f - Stats.FlurryCostReduction) * Duration / 120f : 0f);
