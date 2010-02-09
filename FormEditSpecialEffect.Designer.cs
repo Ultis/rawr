@@ -141,10 +141,11 @@
             // cmbTrigger
             // 
             this.cmbTrigger.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTrigger.DropDownWidth = 250;
             this.cmbTrigger.FormattingEnabled = true;
             this.cmbTrigger.Location = new System.Drawing.Point(85, 205);
             this.cmbTrigger.Name = "cmbTrigger";
-            this.cmbTrigger.Size = new System.Drawing.Size(106, 21);
+            this.cmbTrigger.Size = new System.Drawing.Size(156, 21);
             this.cmbTrigger.TabIndex = 3;
             // 
             // label5

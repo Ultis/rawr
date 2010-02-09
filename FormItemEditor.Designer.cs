@@ -876,6 +876,7 @@ namespace Rawr
             // cmbSpecialEffects
             // 
             this.cmbSpecialEffects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSpecialEffects.DropDownWidth = 400;
             this.cmbSpecialEffects.FormattingEnabled = true;
             this.cmbSpecialEffects.Location = new System.Drawing.Point(7, 16);
             this.cmbSpecialEffects.Name = "cmbSpecialEffects";

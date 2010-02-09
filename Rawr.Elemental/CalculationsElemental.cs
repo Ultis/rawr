@@ -505,7 +505,8 @@ namespace Rawr.Elemental
                     effect.Trigger == Trigger.DamageSpellHit || 
                     effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || 
-                    effect.Trigger == Trigger.ShamanLightningBolt || 
+                    effect.Trigger == Trigger.ShamanLightningBolt ||
+                    effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
                     effect.Trigger == Trigger.ShamanShock)
 				{
 					if (HasRelevantStats(effect.Stats))
@@ -591,7 +592,8 @@ namespace Rawr.Elemental
                     effect.Trigger == Trigger.DamageSpellHit || 
                     effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || 
-                    effect.Trigger == Trigger.ShamanLightningBolt || 
+                    effect.Trigger == Trigger.ShamanLightningBolt ||
+                    effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
                     effect.Trigger == Trigger.ShamanShock)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
