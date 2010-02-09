@@ -229,19 +229,23 @@ namespace Rawr.Rogue
             float dPCount = 0f;
             float wPCount = 0f;
             float aPCount = 0f;
+            float iPPPS = 8.53f * (1f + Stats.BonusIPFrequencyMultiplier) / 60f;
+            float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
-                iPCount += mHHitCount * MainHandSpeed * (8.53f * (1f + Stats.BonusIPFrequencyMultiplier)) / 60f;
+                iPCount += mHHitCount * MainHandSpeed * iPPPS * ((Duration - envenomBuffTime) / Duration +
+                                                                 1.75f * envenomBuffTime / Duration);
             else if (mHPoison == 2)
             {
-                float dPCountTemp = Duration / 3f;
+                float dPCountTemp = mHHitCount * 0.3f * ((Duration - envenomBuffTime) / Duration +
+                                                         1.15f * envenomBuffTime / Duration);
                 dPCount = dPCountTemp;
                 if (oHPoison == 1)
-                    iPCount += dPCountTemp;
+                    iPCount += dPCountTemp - 5;
                 else if (oHPoison == 3)
-                    wPCount += dPCountTemp;
+                    wPCount += dPCountTemp - 5;
                 else if (oHPoison == 4)
-                    aPCount += dPCountTemp;
+                    aPCount += dPCountTemp - 5;
             }
             else if (mHPoison == 3)
                 wPCount += mHHitCount * MainHandSpeed * 21.43f / 60f;
@@ -250,17 +254,19 @@ namespace Rawr.Rogue
             #endregion
             #region OffHand Poison
             if (oHPoison == 1)
-                iPCount += oHHitCount * OffHandSpeed * (8.53f * (1f + Stats.BonusIPFrequencyMultiplier)) / 60f;
+                iPCount += oHHitCount * OffHandSpeed * iPPPS * ((Duration - envenomBuffTime) / Duration +
+                                                                1.75f * envenomBuffTime / Duration);
             else if (oHPoison == 2)
             {
-                float dPCountTemp = Duration / 3f;
+                float dPCountTemp = oHHitCount * 0.3f * ((Duration - envenomBuffTime) / Duration +
+                                                         1.15f * envenomBuffTime / Duration);
                 dPCount = dPCountTemp;
                 if (mHPoison == 1)
-                    iPCount += dPCountTemp;
+                    iPCount += dPCountTemp - 5;
                 else if (mHPoison == 3)
-                    wPCount += dPCountTemp;
+                    wPCount += dPCountTemp - 5;
                 else if (mHPoison == 4)
-                    aPCount += dPCountTemp;
+                    aPCount += dPCountTemp - 5;
             }
             else if (oHPoison == 3)
                 wPCount += oHHitCount * OffHandSpeed * 21.43f / 60f;
