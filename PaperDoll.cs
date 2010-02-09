@@ -11,7 +11,7 @@ namespace Rawr
     public partial class PaperDoll : UserControl
     {
         private Character _character = null;
-        private Color _defaultColor = Color.White;
+        private Color _defaultColor = SystemColors.Control;
         private bool _loadingCharacter = false;
 
         public PaperDoll()
