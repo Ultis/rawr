@@ -937,11 +937,12 @@ namespace Rawr.Optimizer
             if (positiveCostItemsAvailable)
             {
                 // add items that have positive cost and are not available yet in any form
+                // but DONT add the item if it requires a different class
                 lock (ItemCache.Items)
                 {
                     foreach (Item citem in ItemCache.Items.Values)
                     {
-                        if (citem.Cost > 0.0f)
+                        if (citem.Cost > 0.0f && (citem.RequiredClasses != null && citem.RequiredClasses.Contains(characters[0].Class.ToString())))
                         {
                             string key = citem.Id.ToString();
                             if (!gemmedIdMap.ContainsKey(key))
