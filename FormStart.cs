@@ -86,7 +86,7 @@ namespace Rawr
 		private void DisplayDidYouKnow(object dyk)
 		{
 			if (this.Visible || this.Disposing || this.IsDisposed)
-				labelDidYouKnow.Text = dyk.ToString();
+				labelDidYouKnow.Text = dyk.ToString().Replace("#39;","\'");
 		}
 
 		private void DownloadKnownIssues(object ignored)
