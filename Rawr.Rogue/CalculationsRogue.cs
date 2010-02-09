@@ -714,7 +714,7 @@ namespace Rawr.Rogue
                 //BonusStealthDamageMultiplier = 0.04f * talents.MasterOfSubtlety,
                 BonusStealthEnergyRegen = 0.3f * talents.Overkill,
                 //BonusYellowDamageBelow35 = 0.1f * talents.DirtyDeeds,
-                BonusYellowDamageMultiplier = 0.02f * talents.FindWeakness,
+                BonusYellowDamageMultiplier = (1f + 0.02f * talents.FindWeakness) + (1f + 0.35f * 0.2f * talents.DirtyDeeds) - 1f,
                 //ChanceFinisherDodgedMultiplier = talents.SurpriseAttacks >0 ? 0 : 1,
                 //ChanceOnCPOnAmbushGarrCS = talents.Initiative > 2 ? 1 : 0.33f * talents.Initiative,
                 ChanceOnCPOnSSCrit = talents.GlyphOfSinisterStrike ? 0.5f : 0f,
