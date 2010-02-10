@@ -66,8 +66,8 @@ namespace Rawr.Retribution
             if (Priorities.Length != other.Priorities.Length) 
                 return false;
 
-            for (int i = 0; i < Priorities.Length; i++)
-                if (Priorities[i] != other.Priorities[i])
+            for (int priorityIndex = 0; priorityIndex < Priorities.Length; priorityIndex++)
+                if (Priorities[priorityIndex] != other.Priorities[priorityIndex])
                     return false;
 
             return (T7_4pc == other.T7_4pc) &&
@@ -85,22 +85,19 @@ namespace Rawr.Retribution
 
         public override int GetHashCode()
         {
-            int hashCode = 
-                (T7_4pc ? 512 : 0) ^ 
-                (GlyphConsecrate ? 1024 : 0) ^ 
-                (int.Parse((TimeUnder20 * 100).ToString()) * 2048) ^ 
-                (int.Parse((Wait * 100).ToString()) * 4096) ^ 
-                (int.Parse((Delay * 100).ToString()) * 8192) ^ 
-                ((int)(16384 * T10_Speed)) ^ 
-                SpellGCD.GetHashCode() ^ 
-                BloodlustSpellGCD.GetHashCode() ^
-                BloodlustT10Speed.GetHashCode() ^ 
-                BloodlustUptime.GetHashCode();
-
-            for (int i = 0; i < Priorities.Length; i++)
-                hashCode ^= (int)Priorities[i] << (2 * i);
-
-            return hashCode;
+            return Utilities.GetCombinedHashCode(
+                T7_4pc,
+                ImpJudgements,
+                GlyphConsecrate,
+                TimeUnder20,
+                Wait,
+                Delay,
+                T10_Speed,
+                SpellGCD,
+                BloodlustSpellGCD,
+                BloodlustT10Speed,
+                BloodlustUptime,
+                Utilities.GetCombinedHashCode(Priorities));
         }
 
         public static string ShortAbilityString(Ability ability)
