@@ -1167,6 +1167,10 @@ namespace Rawr.Rogue
                     stats.SpellCrit +
                     stats.SpellCritOnTarget +
 
+                    // Trinket Procs
+                    stats.Paragon +
+                    stats.DeathbringerProc +
+
                     // Damage Procs
                     stats.ShadowDamage +
                     stats.ArcaneDamage +
