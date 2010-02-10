@@ -198,91 +198,116 @@ namespace Rawr.Optimizer
             // from now on we only have to care about the slots that are nondefault (note we know all nondefault slots are not null)            
 
             // now what we'll do is first make sure we meet all needed socket bonuses in some way
-            foreach (Stats socketBonus in matchedSocketBonuses)
+            bool[] matchedSocketBonusesCovered = new bool[matchedSocketBonuses.Count];
+
+            for (int bonusCounter = 0; bonusCounter < matchedSocketBonuses.Count; bonusCounter++)
             {
                 // find an item with this socket bonus, with an item instance that has gems that are still available
                 bool found = false;
                 int bestSlot = -1;
+                int bestBonusIndex = -1;
                 int differentGems = 4;
                 ItemInstance bestItem = null;
-                for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+                for (int bonusIndex = 0; bonusIndex < matchedSocketBonuses.Count; bonusIndex++)
                 {
-                    if (!slotFilled[slot])
+                    if (!matchedSocketBonusesCovered[bonusIndex])
                     {
-                        ItemInstance item = character._item[slot];
-                        ItemInstance defaultItem = item.Item.AvailabilityInformation.DefaultItemInstance;
-                        if (item.Item.SocketBonus == socketBonus)
+                        Stats socketBonus = matchedSocketBonuses[bonusIndex];
+                        // if we already did this socket bonus in this round we can skip it
+                        bool repeat = false;
+                        for (int i = 0; i < bonusIndex; i++)
                         {
-                            // check all available items
-                            // only select those that match socket bonus and enchant and compare how much it differs from the default
-                            foreach (ItemInstance itemInstance in item.Item.AvailabilityInformation.ItemList)
+                            if (!matchedSocketBonusesCovered[i] && socketBonus == matchedSocketBonuses[i])
                             {
-                                if (itemInstance.MatchesSocketBonus && itemInstance.Enchant == item.Enchant)
+                                repeat = true;
+                                break;
+                            }
+                        }
+                        if (repeat)
+                        {
+                            continue;
+                        }
+                        for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+                        {
+                            if (!slotFilled[slot])
+                            {
+                                ItemInstance item = character._item[slot];
+                                ItemInstance defaultItem = item.Item.AvailabilityInformation.DefaultItemInstance;
+                                if (item.Item.SocketBonus == socketBonus)
                                 {
-                                    Dictionary<Item, int> gemCount = new Dictionary<Item, int>();
-                                    // count gems
-                                    gemCount.Clear();
-                                    for (int gem = 1; gem <= 3; gem++)
+                                    // check all available items
+                                    // only select those that match socket bonus and enchant and compare how much it differs from the default
+                                    foreach (ItemInstance itemInstance in item.Item.AvailabilityInformation.ItemList)
                                     {
-                                        Item g = itemInstance.GetGem(gem);
-                                        if (g != null)
+                                        if (itemInstance.MatchesSocketBonus && itemInstance.Enchant == item.Enchant)
                                         {
-                                            int count;
-                                            gemCount.TryGetValue(g, out count);
-                                            gemCount[g] = count + 1;
-                                        }
-                                    }
-                                    // make sure the needed counts are still available
-                                    bool available = true;
-                                    foreach (KeyValuePair<Item, int> kvp in gemCount)
-                                    {
-                                        int count;
-                                        gems.TryGetValue(kvp.Key, out count);
-                                        if (count < kvp.Value)
-                                        {
-                                            available = false;
-                                            break;
-                                        }
-                                    }
-                                    if (available)
-                                    {
-                                        // we found an item instance with matched enchant that matches socket bonus and has all needed gems at disposal
-                                        found = true;
-                                        // how much does it differ from default?
-                                        int diff;
-                                        if (defaultItem == null)
-                                        {
-                                            diff = 0; // nothing to base from, we can make any gemming we want
-                                        }
-                                        else
-                                        {
-                                            diff = 0;
+                                            Dictionary<Item, int> gemCount = new Dictionary<Item, int>();
+                                            // count gems
+                                            gemCount.Clear();
                                             for (int gem = 1; gem <= 3; gem++)
                                             {
-                                                Item g = defaultItem.GetGem(gem);
+                                                Item g = itemInstance.GetGem(gem);
                                                 if (g != null)
                                                 {
                                                     int count;
                                                     gemCount.TryGetValue(g, out count);
-                                                    if (count > 0)
-                                                    {
-                                                        gemCount[g] = count - 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        diff++;
-                                                    }
+                                                    gemCount[g] = count + 1;
                                                 }
                                             }
-                                        }
-                                        if (diff < differentGems)
-                                        {
-                                            bestSlot = slot;
-                                            bestItem = itemInstance;
-                                            differentGems = diff;
-                                            if (diff == 0)
+                                            // make sure the needed counts are still available
+                                            bool available = true;
+                                            foreach (KeyValuePair<Item, int> kvp in gemCount)
                                             {
-                                                goto FILLSLOT;
+                                                int count;
+                                                gems.TryGetValue(kvp.Key, out count);
+                                                if (count < kvp.Value)
+                                                {
+                                                    available = false;
+                                                    break;
+                                                }
+                                            }
+                                            if (available)
+                                            {
+                                                // we found an item instance with matched enchant that matches socket bonus and has all needed gems at disposal
+                                                found = true;
+                                                // how much does it differ from default?
+                                                int diff;
+                                                if (defaultItem == null)
+                                                {
+                                                    diff = 0; // nothing to base from, we can make any gemming we want
+                                                }
+                                                else
+                                                {
+                                                    diff = 0;
+                                                    for (int gem = 1; gem <= 3; gem++)
+                                                    {
+                                                        Item g = defaultItem.GetGem(gem);
+                                                        if (g != null)
+                                                        {
+                                                            int count;
+                                                            gemCount.TryGetValue(g, out count);
+                                                            if (count > 0)
+                                                            {
+                                                                gemCount[g] = count - 1;
+                                                            }
+                                                            else
+                                                            {
+                                                                diff++;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if (diff < differentGems)
+                                                {
+                                                    bestSlot = slot;
+                                                    bestBonusIndex = bonusIndex;
+                                                    bestItem = itemInstance;
+                                                    differentGems = diff;
+                                                    if (diff == 0)
+                                                    {
+                                                        goto FILLSLOT;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -296,6 +321,7 @@ namespace Rawr.Optimizer
                 {
                     items[bestSlot] = bestItem;
                     slotFilled[bestSlot] = true;
+                    matchedSocketBonusesCovered[bestBonusIndex] = true;
                     // remove used up gems
                     for (int gem = 1; gem <= 3; gem++)
                     {
@@ -306,7 +332,7 @@ namespace Rawr.Optimizer
                             gems.TryGetValue(g, out count);
                             gems[g] = count - 1;
                         }
-                    }                    
+                    }
                 }
                 else
                 {
