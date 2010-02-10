@@ -297,6 +297,7 @@ namespace Rawr {
         ChanceOnCPOnSSCrit,
         ChanceOnEnergyOnCrit,
         ChanceOnEnergyOnOHAttack,
+        ChanceOnEnergyPerCPFinisher,
         ChanceOnMHAttackOnSwordAxeHit,
         ChanceOnSnDResetOnEnvenom,
         FlurryCostReduction,
@@ -2822,6 +2823,13 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyOnOHAttack]; }
             set { _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyOnOHAttack] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ChanceOnEnergyPerCPFinisher
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyPerCPFinisher]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChanceOnEnergyPerCPFinisher] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]

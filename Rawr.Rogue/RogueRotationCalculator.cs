@@ -129,7 +129,7 @@ namespace Rawr.Rogue
                 totalCPAvailable += cpToGenerate;
             }
             totalCPAvailable -= snDCPRequired;
-            totalEnergyAvailable -= snDTotalEnergy;
+            totalEnergyAvailable -= snDTotalEnergy - 25 * Stats.ChanceOnEnergyPerCPFinisher * snDCount * averageSnDCP;
             #endregion
 
             #region Damage Finishers
@@ -154,7 +154,7 @@ namespace Rawr.Rogue
 
                 ruptCount += ruptsFromNewCP;
                 cpgCount += (averageFinisherCP / CPPerCPG) * ruptsFromNewCP;
-                totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP;
+                totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP + 25 * Stats.ChanceOnEnergyPerCPFinisher * ruptCount * averageFinisherCP;
                 #endregion
             }
             if (finisher == 1 && finisherCP > 0)
@@ -175,7 +175,7 @@ namespace Rawr.Rogue
 
                 evisCount += evisFromNewCP * evisDamageMultiplier;
                 cpgCount += evisFromNewCP * (averageEvisCP / CPPerCPG);
-                totalEnergyAvailable = 0f;
+                totalEnergyAvailable = 0f + 25 * Stats.ChanceOnEnergyPerCPFinisher * evisCount * averageEvisCP;
                 #endregion
             }
             else if (finisher == 2 && finisherCP > 0)
@@ -196,7 +196,7 @@ namespace Rawr.Rogue
 
                 envenomCount += envenomFromNewCP * envenomDamageMultiplier;
                 cpgCount += envenomFromNewCP * (averageEnvenomCP / CPPerCPG);
-                totalEnergyAvailable = 0f;
+                totalEnergyAvailable = 0f + 25 * Stats.ChanceOnEnergyPerCPFinisher * envenomCount * averageEnvenomCP;
                 #endregion
             }
             #endregion

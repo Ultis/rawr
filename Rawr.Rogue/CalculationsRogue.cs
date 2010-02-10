@@ -590,17 +590,17 @@ namespace Rawr.Rogue
                 for (int finisher = 0; finisher < 3; finisher++)
                     for (int finisherCP = 1; finisherCP < 6; finisherCP++)
                         for (int CPG = (character.RogueTalents.Mutilate > 0 ? 0 : 1); CPG < (character.RogueTalents.Hemorrhage > 0 ? 4 : 3); CPG++)
-                            for (int mHPoison = 0 ; usePoisons ? mHPoison < 4 : mHPoison < 1 ; mHPoison++)
-                                for (int oHPoison = 0; usePoisons ? oHPoison < 4 : oHPoison < 1; oHPoison++)
+                            for (int mHPoison = 1 ; usePoisons ? mHPoison < 4 : mHPoison < 1 ; mHPoison++)
+                                for (int oHPoison = 1; usePoisons ? oHPoison < 4 : oHPoison < 1; oHPoison++)
                                     for (int useRupt = 0; useRupt < 2; useRupt++)
-                                        for (int useTotT = 0; useTotT < 2; useTotT++)
-                                        {
-                                            RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                rotationCalculator.GetRotationCalculations(
-                                                CPG, useRupt == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT == 1);
-                                            if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
-                                                rotationCalculationDPS = rotationCalculation;
-                                        }
+                                    {
+                                        bool useTotT = stats.ToTTCDReduction > 15;
+                                        RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
+                                            rotationCalculator.GetRotationCalculations(
+                                            CPG, useRupt == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT);
+                                        if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                            rotationCalculationDPS = rotationCalculation;
+                                    }
 
             calculatedStats.HighestDPSRotation = rotationCalculationDPS;
             calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
@@ -720,7 +720,7 @@ namespace Rawr.Rogue
                 ChanceOnCPOnSSCrit = talents.GlyphOfSinisterStrike ? 0.5f : 0f,
                 ChanceOnEnergyOnCrit = 2f * (talents.FocusedAttacks > 2 ? 1f : (0.33f * talents.FocusedAttacks)),
                 ChanceOnEnergyOnOHAttack = 3 * 0.2f * talents.CombatPotency,
-                //ChanceOnEnergyPerCPFinisher = 25 * 0.04 * talents.RelentlessStrikes,
+                ChanceOnEnergyPerCPFinisher = 0.04f * talents.RelentlessStrikes,
                 ChanceOnMHAttackOnSwordAxeHit = 0.01f * talents.HackAndSlash,
                 //ChanceOnNoDPConsumeOnEvenom = talents.MasterPoisoner == 3 ? 1f : (0.33f * talents.MasterPoisoner),
                 ChanceOnSnDResetOnEnvenom = 0.2f * talents.CutToTheChase,
