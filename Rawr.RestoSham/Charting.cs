@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rawr.RestoSham
+{
+    // Delegate function that lets us specify the calculator method for a chart
+    delegate ICollection<ComparisonCalculationBase> ChartCalculator(Character character, CalculationsRestoSham baseCalculations);
+
+    /// <summary>
+    /// Class used by stat relative weights custom chart.
+    /// </summary>
+    sealed class StatRelativeWeight
+    {
+        public StatRelativeWeight(string name, Stats stat)
+        {
+            this.Stat = stat;
+            this.Name = name;
+            this.Change = 0f;
+        }
+
+        public Stats Stat { get; set; }
+        public string Name { get; set; }
+        public float Change { get; set; }
+    }
+
+    /// <summary>
+    /// Class used to describe custom charts
+    /// </summary>
+    sealed class CustomChart
+    {
+        public string ChartName { get; set; }
+        public ChartCalculator ChartCalculatorMethod { get; set; }
+        public override string ToString()
+        {
+            return this.ChartName;
+        }
+    }
+
+    /// <summary>
+    /// Class used to define the available custom charts
+    /// </summary>
+    static class CustomCharts
+    {
+        static CustomChart[] Charts = {
+            new CustomChart() { ChartName = "Mana Available per Second", ChartCalculatorMethod = ChartCalculators.CalculateMAPSChart },
+            new CustomChart() { ChartName = "Healing Sequences", ChartCalculatorMethod = ChartCalculators.CalculateSequencesChart }
+        };
+
+        public static string[] CustomChartNames
+        {
+            get
+            {
+                if (Charts == null || Charts.Length == 0)
+                    return null;
+
+                string[] chartNames = new string[Charts.Length];
+                for (int i = 0; i < Charts.Length; i++)
+                {
+                    chartNames[i] = Charts[i].ToString();
+                }
+                return chartNames;
+            }
+        }
+        public static ChartCalculator GetChartCalculator(string chartName)
+        {
+            foreach (CustomChart c in Charts)
+            {
+                if (c.ChartName == chartName)
+                    return c.ChartCalculatorMethod;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Class used to define the various calculator methods for the custom charts
+    /// </summary>
+    static class ChartCalculators
+    {
+        #region Chart Calculator Methods
+        public static ICollection<ComparisonCalculationBase> CalculateMAPSChart(Character character, CalculationsRestoSham baseCalculations)
+        {
+            List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
+            CharacterCalculationsRestoSham calc = baseCalculations.GetCharacterCalculations(character) as CharacterCalculationsRestoSham;
+            if (calc == null)
+                calc = new CharacterCalculationsRestoSham();
+
+            StatRelativeWeight[] stats = new StatRelativeWeight[] {
+                      new StatRelativeWeight("Intellect", new Stats() { Intellect = 10f }),
+                      new StatRelativeWeight("Haste Rating", new Stats() { HasteRating = 10f }),
+                      new StatRelativeWeight("Spellpower", new Stats() { SpellPower = 10f}),
+                      new StatRelativeWeight("MP5", new Stats() { Mp5 = 10f }),
+                      new StatRelativeWeight("Crit Rating", new Stats() { CritRating = 10f })};
+
+            // Get the percentage total healing is changed by a change in a single stat:
+            foreach (StatRelativeWeight weight in stats)
+            {
+                CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)baseCalculations.GetCharacterCalculations(character, null, weight.Stat);
+                weight.Change = (statCalc.MAPS - calc.MAPS);
+            }
+
+            // Create the chart data points:
+            foreach (StatRelativeWeight weight in stats)
+            {
+                ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(weight.Name);
+                comp.OverallPoints = weight.Change;
+                comp.SubPoints = new float[] { 0f, weight.Change, 0f };
+                comp.Description = string.Format("If you added 10 more {0}.", weight.Name);
+                list.Add(comp);
+            }
+
+            return list;
+        }
+        public static ICollection<ComparisonCalculationBase> CalculateSequencesChart(Character character, CalculationsRestoSham baseCalculations)
+        {
+            List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
+            CalculationOptionsRestoSham originalOptions = character.CalculationOptions as CalculationOptionsRestoSham;
+            if (originalOptions == null)
+                originalOptions = new CalculationOptionsRestoSham();
+            
+            CalculationOptionsRestoSham opts = originalOptions;
+            string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
+            string[] descs = new string[] {
+                        "All chain heal, all the time.  \nMana available for use per minute added to sustained.",
+                        "All healing wave, all the time  \nMana available for use per minute added to sustained.",
+                        "All lesser healing wave, all the time  \nMana available for use per minute added to sustained.",
+                        "Riptide + Healing Wave.  \nMana available for use per minute added to sustained.", 
+                        "Riptide + Chain Heal.  \nMana available for use per minute added to sustained.", 
+                        "Riptide + Lesser Healing Wave.\nMana available for use per minute added to sustained." 
+                    };
+            for (int i = 0; i < styles.Length; i++)
+            {
+                opts.SustStyle = styles[i];
+                opts.BurstStyle = styles[i];
+                character.CalculationOptions = opts;
+                CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)baseCalculations.GetCharacterCalculations(character);
+
+                // normalize the mana a bit to make a better chart
+                float mana = statCalc.ManaUsed / (opts.FightLength);
+
+                ComparisonCalculationRestoSham hsComp = new ComparisonCalculationRestoSham(styles[i]);
+                hsComp.OverallPoints = statCalc.BurstHPS + statCalc.SustainedHPS + mana;
+                hsComp.SubPoints = new float[] { statCalc.BurstHPS, statCalc.SustainedHPS + mana, 0f };
+                hsComp.Description = descs[i];
+                list.Add(hsComp);
+            }
+
+            return list;
+        }
+        #endregion
+    }
+}

@@ -247,7 +247,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-                return new string[] { "Mana Available per Second", "Healing Sequences" };
+                return CustomCharts.CustomChartNames;
             }
         }
 
@@ -1006,100 +1006,19 @@ namespace Rawr.RestoSham
         }
         #endregion
         #region Chart data area
-        
-        //
-        // Class used by stat relative weights custom chart.
-        //
-        class StatRelativeWeight
-        {
-            public StatRelativeWeight(string name, Stats stat)
-            {
-                this.Stat = stat;
-                this.Name = name;
-                this.Change = 0f;
-            }
-
-            public Stats Stat;
-            public string Name;
-            public float Change;
-        }
-
         //
         // Data for custom charts:
         //
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            CharacterCalculationsRestoSham calc = GetCharacterCalculations(character) as CharacterCalculationsRestoSham;
-            if (calc == null)
-                calc = new CharacterCalculationsRestoSham();
+            ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
+            if (chartCalc == null)
+                return new ComparisonCalculationBase[0];
 
-            CalculationOptionsRestoSham originalOptions = character.CalculationOptions as CalculationOptionsRestoSham;
-            if (originalOptions == null)
-                originalOptions = new CalculationOptionsRestoSham();
-
-            List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
-            switch (chartName)
-            {
-                case "Mana Available per Second":
-                    StatRelativeWeight[] stats = new StatRelativeWeight[] {
-                      new StatRelativeWeight("Intellect", new Stats() { Intellect = 10f }),
-                      new StatRelativeWeight("Haste Rating", new Stats() { HasteRating = 10f }),
-                      new StatRelativeWeight("Spellpower", new Stats() { SpellPower = 10f}),
-                      new StatRelativeWeight("MP5", new Stats() { Mp5 = 10f }),
-                      new StatRelativeWeight("Crit Rating", new Stats() { CritRating = 10f })};
-
-                    // Get the percentage total healing is changed by a change in a single stat:
-                    foreach (StatRelativeWeight weight in stats)
-                    {
-                        CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character, null, weight.Stat);
-                        weight.Change = (statCalc.MAPS - calc.MAPS);
-                    }
-
-                    // Create the chart data points:
-                    foreach (StatRelativeWeight weight in stats)
-                    {
-                        ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(weight.Name);
-                        comp.OverallPoints = weight.Change;
-                        comp.SubPoints = new float[] { 0f, weight.Change, 0f };
-                        comp.Description = string.Format("If you added 10 more {0}.", weight.Name);
-                        list.Add(comp);
-                    }
-
-                    break;
-                case "Healing Sequences":
-
-                    CalculationOptionsRestoSham opts = originalOptions;
-                    string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
-                    string[] descs = new string[] {
-                        "All chain heal, all the time.  \nMana available for use per minute added to sustained.",
-                        "All healing wave, all the time  \nMana available for use per minute added to sustained.",
-                        "All lesser healing wave, all the time  \nMana available for use per minute added to sustained.",
-                        "Riptide + Healing Wave.  \nMana available for use per minute added to sustained.", 
-                        "Riptide + Chain Heal.  \nMana available for use per minute added to sustained.", 
-                        "Riptide + Lesser Healing Wave.\nMana available for use per minute added to sustained." 
-                    };
-                    for (int i = 0; i < styles.Length; i++)
-                    {
-                        opts.SustStyle = styles[i];
-                        opts.BurstStyle = styles[i];
-                        character.CalculationOptions = opts;
-                        CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character);
-
-                        // normalize the mana a bit to make a better chart
-                        float mana = statCalc.ManaUsed / (opts.FightLength);
-
-                        ComparisonCalculationRestoSham hsComp = new ComparisonCalculationRestoSham(styles[i]);
-                        hsComp.OverallPoints = statCalc.BurstHPS + statCalc.SustainedHPS + mana;
-                        hsComp.SubPoints = new float[] { statCalc.BurstHPS, statCalc.SustainedHPS + mana, 0f };
-                        hsComp.Description = descs[i];
-                        list.Add(hsComp);
-                    }
-                    break;
-            }
-
+            ICollection<ComparisonCalculationBase> list = chartCalc(character, this);
             ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
             if (list.Count > 0)
-                list.CopyTo(retVal);
+                list.CopyTo(retVal, 0);
             return retVal;
         }
 
