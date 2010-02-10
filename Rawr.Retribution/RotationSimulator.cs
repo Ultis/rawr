@@ -113,9 +113,9 @@ namespace Rawr.Retribution
 
             float gcdFinishTime = 0;
             Random rand = new Random(6021987);
-            float nextSwingTime = rot.T10_Speed;
             bool isBloodlustActive = true;
             float bloodlustFinishTime = sol.FightLength * rot.BloodlustUptime;
+            float nextSwingTime = bloodlustFinishTime > 0 ? rot.BloodlustT10Speed : rot.T10_Speed;
 
             float currentTime = 0;
             while (currentTime < sol.FightLength)
@@ -158,6 +158,9 @@ namespace Rawr.Retribution
 
                 if (rot.T10_Speed > 0)
                 {
+                    if (isBloodlustActive)
+                        nextTime = Math.Min(nextTime, bloodlustFinishTime);
+
                     while (nextTime > nextSwingTime)
                     {
                         if (rand.NextDouble() < t10ProcChance)
@@ -166,7 +169,7 @@ namespace Rawr.Retribution
                             nextTime = nextSwingTime;
                         }
 
-                        nextSwingTime += rot.T10_Speed;
+                        nextSwingTime += isBloodlustActive ? rot.BloodlustT10Speed : rot.T10_Speed;
                     }
                 }
 

@@ -233,7 +233,9 @@ namespace Rawr.Retribution
                 Combats.Stats.JudgementCDReduction > 0,
                 Combats.Talents.ImprovedJudgements,
                 Combats.Talents.GlyphOfConsecration,
-                Combats.Stats.DivineStormRefresh > 0 ? Combats.AttackSpeed : 0f,
+                Combats.Stats.DivineStormRefresh > 0 ? 
+                    Combats.BaseWeaponSpeed / (1 + Combats.Stats.PhysicalHaste) : 
+                    0f,
                 Combats.Stats.SpellHaste,
                 Combats.CalcOpts.Bloodlust && (Combats.Stats.Bloodlust == 0) ?
                     Math.Min(1f, Combats.CalcOpts.FightLength / bloodlustDuration) : 

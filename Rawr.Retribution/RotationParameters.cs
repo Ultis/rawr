@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    public class RotationParameters
+    public class RotationParameters : IEquatable<RotationParameters>
     {
 
         public bool T7_4pc;
@@ -17,6 +17,7 @@ namespace Rawr.Retribution
         public float T10_Speed;
         public float SpellGCD;
         public float BloodlustSpellGCD;
+        public float BloodlustT10Speed;
         public float BloodlustUptime;
 
         public RotationParameters() { }
@@ -47,39 +48,59 @@ namespace Rawr.Retribution
             SpellGCD = GetSpellGCD(spellHaste);
             BloodlustSpellGCD = 
                 BloodlustUptime == 0 ? SpellGCD : GetSpellGCD((1 + spellHaste) * (1 + bloodlustHaste) - 1);
+            BloodlustT10Speed = BloodlustUptime == 0 ? 
+                T10_Speed : 
+                (float)Math.Round(T10_Speed / (1 + bloodlustHaste), 2);
         }
 
         public override bool Equals(Object obj)
         {
-            RotationParameters other = obj as RotationParameters;
-            if (other == null) return false;
-            if (Priorities.Length != other.Priorities.Length) return false;
+            return Equals(obj as RotationParameters);
+        }
+
+        public bool Equals(RotationParameters other)
+        {
+            if (other == null) 
+                return false;
+
+            if (Priorities.Length != other.Priorities.Length) 
+                return false;
+
             for (int i = 0; i < Priorities.Length; i++)
-            {
-                if (Priorities[i] != other.Priorities[i]) { return false; }
-            }
-            return (T7_4pc == other.T7_4pc)
-                && (T10_Speed == other.T10_Speed)
-                && (GlyphConsecrate == other.GlyphConsecrate)
-                && (TimeUnder20 == other.TimeUnder20)
-                && (Delay == other.Delay)
-                && (Wait == other.Wait)
-                && (ImpJudgements == other.ImpJudgements)
-                && (SpellGCD == other.SpellGCD);
+                if (Priorities[i] != other.Priorities[i])
+                    return false;
+
+            return (T7_4pc == other.T7_4pc) &&
+                (T10_Speed == other.T10_Speed) &&
+                (GlyphConsecrate == other.GlyphConsecrate) &&
+                (TimeUnder20 == other.TimeUnder20) &&
+                (Delay == other.Delay) &&
+                (Wait == other.Wait) &&
+                (ImpJudgements == other.ImpJudgements) &&
+                (SpellGCD == other.SpellGCD) &&
+                (BloodlustSpellGCD == other.BloodlustSpellGCD) &&
+                (BloodlustT10Speed == other.BloodlustT10Speed) &&
+                (BloodlustUptime == other.BloodlustUptime);
         }
 
         public override int GetHashCode()
         {
-            int ret = (T7_4pc ? 512 : 0) + (GlyphConsecrate ? 1024 : 0) + int.Parse((TimeUnder20 * 100).ToString()) * 2048
-                 + int.Parse((Wait * 100).ToString()) * 4096 + int.Parse((Delay * 100).ToString())
-                 * 8192 + (int)(16384 * T10_Speed) + SpellGCD.GetHashCode();
+            int hashCode = 
+                (T7_4pc ? 512 : 0) ^ 
+                (GlyphConsecrate ? 1024 : 0) ^ 
+                (int.Parse((TimeUnder20 * 100).ToString()) * 2048) ^ 
+                (int.Parse((Wait * 100).ToString()) * 4096) ^ 
+                (int.Parse((Delay * 100).ToString()) * 8192) ^ 
+                ((int)(16384 * T10_Speed)) ^ 
+                SpellGCD.GetHashCode() ^ 
+                BloodlustSpellGCD.GetHashCode() ^
+                BloodlustT10Speed.GetHashCode() ^ 
+                BloodlustUptime.GetHashCode();
 
             for (int i = 0; i < Priorities.Length; i++)
-            {
-                ret += (int)Priorities[i] * (4 ^ i);
-            }
+                hashCode ^= (int)Priorities[i] << (2 * i);
 
-            return ret;
+            return hashCode;
         }
 
         public static string ShortAbilityString(Ability ability)
@@ -149,4 +170,5 @@ namespace Rawr.Retribution
         }
 
     }
+
 }
