@@ -4,7 +4,12 @@ using System.Text;
 
 namespace Rawr.RestoSham
 {
-    // Delegate function that lets us specify the calculator method for a chart
+    /// <summary>
+    /// Delegate function that lets us specify the calculator method for a chart
+    /// </summary>
+    /// <param name="character">Character object to chart</param>
+    /// <param name="baseCalculations">The calculation object for the character</param>
+    /// <returns>ICollection of the calculation comparison values</returns>
     delegate ICollection<ComparisonCalculationBase> ChartCalculator(Character character, CalculationsRestoSham baseCalculations);
 
     /// <summary>

@@ -53,7 +53,6 @@ namespace Rawr.RestoSham
 
                 return new List<GemmingTemplate>()
 				{
-
 					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //Max Spellpower
 						RedId = Runed[0], YellowId = Runed[0], BlueId = Runed[0], PrismaticId = Runed[0], MetaId = Ember },
 					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //SP Int
@@ -122,9 +121,10 @@ namespace Rawr.RestoSham
         }
         #endregion
         #region Labels and Charts info
-        //
-        // Character calulcations display labels:
-        //
+        /// <summary>
+        /// Sets the defaults for a RestoShaman character
+        /// </summary>
+        /// <param name="character">The character object to set the defaults for</param>
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd(("Improved Moonkin Form"));
@@ -132,21 +132,19 @@ namespace Rawr.RestoSham
             character.ActiveBuffsAdd(("Arcane Intellect"));
             character.ActiveBuffsAdd(("Vampiric Touch"));
             character.ActiveBuffsAdd(("Mana Spring Totem"));
-                character.ActiveBuffsAdd(("Restorative Totems"));
+            character.ActiveBuffsAdd(("Restorative Totems"));
             character.ActiveBuffsAdd(("Moonkin Form"));
             character.ActiveBuffsAdd(("Wrath of Air Totem"));
             character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
             character.ActiveBuffsAdd(("Power Word: Fortitude"));
-                character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
             character.ActiveBuffsAdd(("Mark of the Wild"));
-                character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
             character.ActiveBuffsAdd(("Blessing of Kings"));
             character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
             character.ActiveBuffsAdd(("Spell Power Food"));
             character.ActiveBuffsAdd(("Earthliving Weapon"));
         }
-        private string[] _characterDisplayCalcLabels = null;
-
 
         private Dictionary<string, Color> _subpointColors = null;
         public override Dictionary<string, Color> SubPointNameColors
@@ -164,6 +162,7 @@ namespace Rawr.RestoSham
             }
         }
 
+        private string[] _characterDisplayCalcLabels = null;
         public override string[] CharacterDisplayCalculationLabels
         {
             get
@@ -912,79 +911,18 @@ namespace Rawr.RestoSham
         {
             return GetCharacterStats(character, additionalItem, null);
         }
-
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
-            #region Create the statistics for a given character
-            Stats statsRace;
-            switch (character.Race)
-            {
-                case CharacterRace.Draenei:
-                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 135, Intellect = 141, Spirit = 145 };
-                    break;
-
-                case CharacterRace.Tauren:
-                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 138, Intellect = 135, Spirit = 145 };
-                    statsRace.BonusHealthMultiplier = 0.05f;
-                    break;
-
-                case CharacterRace.Orc:
-                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 138, Intellect = 137, Spirit = 146 };
-                    break;
-
-                case CharacterRace.Troll:
-                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 137, Intellect = 124, Spirit = 144 };
-                    break;
-
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-            #endregion
+            Stats statsRace = GetRaceStats(character);
             #region Other Final Stats
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            //Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            Stats statsBuffs = GetBuffsStats(character);
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
             if (statModifier != null)
                 statsTotal += statModifier;
-            #region Proc Handling
-            Stats statsProcs = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-            {
-                switch (effect.Trigger)
-                {
-                    case (Trigger.HealingSpellCast):
-                        if (HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.HealingSpellHit):
-                        if (HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.HealingSpellCrit):
-                        if (CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.SpellCast):
-                        if (HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.SpellHit):
-                        if (HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.SpellCrit):
-                        if (CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs, 0f, 1f, 0f, FightSeconds, effect.MaxStack);
-                        break;
-                }
-            }
-            #endregion
-            statsTotal += statsProcs;
+            statsTotal += GetProcStats(statsTotal);
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
@@ -999,36 +937,15 @@ namespace Rawr.RestoSham
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
-
-            // Fight options:
             #endregion
             return statsTotal;
         }
-        #endregion
-        #region Chart data area
-        //
-        // Data for custom charts:
-        //
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-            ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
-            if (chartCalc == null)
-                return new ComparisonCalculationBase[0];
-
-            ICollection<ComparisonCalculationBase> list = chartCalc(character, this);
-            ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
-            if (list.Count > 0)
-                list.CopyTo(retVal, 0);
-            return retVal;
-        }
-
-        #endregion
-        #region Relevant Stats
+        #region Basic Stats Methods
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats relevantStats = new Stats();
             Type statsType = typeof(Stats);
-            
+
             foreach (string relevantStat in RelevantStats.StatList)
             {
                 float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
@@ -1055,7 +972,6 @@ namespace Rawr.RestoSham
 
             return relevantStats;
         }
-
         public override bool HasRelevantStats(Stats stats)
         {
             float statTotal = 0f;
@@ -1072,10 +988,10 @@ namespace Rawr.RestoSham
             // if statTotal > 0 then we have relevant stats
             return statTotal > 0;
         }
-        public Stats GetBuffsStats(Character character, CalculationOptionsRestoSham calcOpts)
+        public Stats GetBuffsStats(Character character/*, CalculationOptionsRestoSham calcOpts*/)
         {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
+            //List<Buff> removedBuffs = new List<Buff>();
+            //List<Buff> addedBuffs = new List<Buff>();
 
             //float hasRelevantBuff;
 
@@ -1160,19 +1076,107 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs)
+            /*foreach (Buff b in removedBuffs)
             {
                 character.ActiveBuffsAdd(b);
             }
             foreach (Buff b in addedBuffs)
             {
                 character.ActiveBuffs.Remove(b);
-            }
+            }*/
 
             return statsBuffs;
         }
+        private Stats GetProcStats(Stats statsTotal)
+        {
+            Stats statsProcs = new Stats();
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            {
+                switch (effect.Trigger)
+                {
+                    case (Trigger.HealingSpellCast):
+                        if (HealPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), 1f, 0f, FightSeconds);
+                        break;
+                    case (Trigger.HealingSpellHit):
+                        if (HealHitPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                        break;
+                    case (Trigger.HealingSpellCrit):
+                        if (CritPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), 1f, 0f, FightSeconds);
+                        break;
+                    case (Trigger.SpellCast):
+                        if (HealPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), 1f, 0f, FightSeconds);
+                        break;
+                    case (Trigger.SpellHit):
+                        if (HealHitPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                        break;
+                    case (Trigger.SpellCrit):
+                        if (CritPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), 1f, 0f, FightSeconds);
+                        break;
+                    case Trigger.Use:
+                        effect.AccumulateAverageStats(statsProcs, 0f, 1f, 0f, FightSeconds, effect.MaxStack);
+                        break;
+                }
+            }
+            return statsProcs;
+        }
+        private static Stats GetRaceStats(Character character)
+        {
+            #region Create the statistics for a given character
+            Stats statsRace;
+            switch (character.Race)
+            {
+                case CharacterRace.Draenei:
+                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 135, Intellect = 141, Spirit = 145 };
+                    break;
+
+                case CharacterRace.Tauren:
+                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 138, Intellect = 135, Spirit = 145 };
+                    statsRace.BonusHealthMultiplier = 0.05f;
+                    break;
+
+                case CharacterRace.Orc:
+                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 138, Intellect = 137, Spirit = 146 };
+                    break;
+
+                case CharacterRace.Troll:
+                    statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 137, Intellect = 124, Spirit = 144 };
+                    break;
+
+                default:
+                    statsRace = new Stats();
+                    break;
+            }
+            return statsRace;
+            #endregion
+        }
+        #endregion
+        #endregion
+        
+        #region Chart data area
+        //
+        // Data for custom charts:
+        //
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
+            if (chartCalc == null)
+                return new ComparisonCalculationBase[0];
+
+            ICollection<ComparisonCalculationBase> list = chartCalc(character, this);
+            ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
+            if (list.Count > 0)
+                list.CopyTo(retVal, 0);
+            return retVal;
+        }
 
         #endregion
+        
         #region Retrieve our options from XML:
         //
         public override ICalculationOptionBase DeserializeDataObject(string xml)
