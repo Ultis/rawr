@@ -81,7 +81,7 @@ namespace Rawr.Rogue
             float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
                                          energyRegen * Duration +
                                          (Duration / (180 - Stats.VanishCDReduction)) * 20f * energyRegen * Stats.BonusStealthEnergyRegen +
-                                         (useTotT ? (-15f + Stats.BonusToTTEnergy) * (Duration - 5f) / (30f - Stats.ToTTCDReduction) : 0f) +
+                                         (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + Stats.ToTTCDReduction)) * (Duration - 5f) / (30f - Stats.ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
                                          energyRegen * 2f * Stats.BonusEnergyRegen * (Duration / 180) -
                                          (Stats.BonusFlurryHaste > 0 ? (25f - Stats.FlurryCostReduction) * Duration / 120f : 0f);
@@ -274,7 +274,7 @@ namespace Rawr.Rogue
                 aPCount += oHHitCount * 0.5f;
             #endregion
             iPCount *= (1f - AvoidedPoisonAttacks);
-            dPCount *= (1f - AvoidedPoisonAttacks);
+            dPCount = (dPCount > 0 ? (Duration - 5) / 3f : 0) * (1f - AvoidedPoisonAttacks);
             wPCount *= (1f - AvoidedPoisonAttacks);
             aPCount *= (1f - AvoidedPoisonAttacks);
             #endregion
