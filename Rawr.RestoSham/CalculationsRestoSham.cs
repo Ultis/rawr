@@ -249,6 +249,10 @@ namespace Rawr.RestoSham
                 return CustomCharts.CustomChartNames;
             }
         }
+        public override string[] CustomRenderedChartNames
+        {
+            get { return CustomCharts.CustomRenderedChartNames; }
+        }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
@@ -1173,6 +1177,13 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
             if (list.Count > 0)
                 list.CopyTo(retVal, 0);
             return retVal;
+        }
+        public override void RenderCustomChart(Character character, string chartName, Graphics g, int width, int height)
+        {
+            string calc = chartName.Substring(0, chartName.IndexOf("Stats Graph") - 1);
+            Base.Graph.RenderStatsGraph(g, width, height, character,
+                CustomCharts.StatsGraphStatsList, CustomCharts.StatsGraphColors,
+                200, "", calc, Base.Graph.Style.DpsWarr);
         }
 
         #endregion

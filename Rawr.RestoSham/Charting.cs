@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 
 namespace Rawr.RestoSham
 {
@@ -50,6 +51,26 @@ namespace Rawr.RestoSham
         static CustomChart[] Charts = {
             new CustomChart() { ChartName = "Mana Available per Second", ChartCalculatorMethod = ChartCalculators.CalculateMAPSChart },
             new CustomChart() { ChartName = "Healing Sequences", ChartCalculatorMethod = ChartCalculators.CalculateSequencesChart }
+        };
+
+        public static string[] CustomRenderedChartNames = { 
+            "Burst Stats Graph",
+            "Sustained Stats Graph",
+            "Overall Rating Stats Graph"
+        };
+        public static Stats[] StatsGraphStatsList = new Stats[] {
+            new Stats() { SpellPower = 1 },
+            new Stats() { Mp5 = 1 },
+            new Stats() { CritRating = 1 },
+            new Stats() { HasteRating = 1 },
+            new Stats() { Intellect = 1 }
+        };
+        public static Color[] StatsGraphColors = new Color[] { 
+            Color.FromArgb(255, 255, 0, 0), 
+            Color.DarkBlue, 
+            Color.FromArgb(255, 255, 165, 0), 
+            Color.Olive, 
+            Color.FromArgb(255, 154, 205, 50)
         };
 
         public static string[] CustomChartNames
