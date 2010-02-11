@@ -556,13 +556,22 @@ namespace Rawr
             #endregion
 
             #region Physical Critical Strike Chance
-            defaultBuffs.Add(new Buff
+            defaultBuffs.Add(buff = new Buff
             {
                 Name = "Leader of the Pack",
                 Source = "Feral Druid",
                 Group = "Physical Critical Strike Chance",
-                Stats = { PhysicalCrit = 0.05f }
+                Stats = { PhysicalCrit = 0.05f },
+                Improvements = new List<Buff>(){
+                    new Buff() {
+                        Name = "Improved Leader of the Pack",
+                        Source = "Feral Druid",
+                        Stats = new Stats(),
+                    }
+                }
             });
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
+                new Stats() { HealthRestoreFromMaxHealth = 0.04f, ManaorEquivRestore = 0.08f }, 0f, 6f));
             defaultBuffs.Add(new Buff
             {
                 Name = "Rampage",
