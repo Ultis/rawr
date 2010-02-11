@@ -485,7 +485,7 @@ the Threat Scale defined on the Options tab.",
 			crits *= (1f - calculatedStats.ConstantDamageReduction) * 2f;
 			//crushes *= (100f - calculatedStats.Mitigation) * .015f;
 			hits *= (1f - calculatedStats.ConstantDamageReduction);
-			calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * parryHasteDamageMuliplier;
+            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * parryHasteDamageMuliplier * (1f + stats.BossAttackSpeedMultiplier);
 			calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
 
 			calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.ConstantDamageReduction));
