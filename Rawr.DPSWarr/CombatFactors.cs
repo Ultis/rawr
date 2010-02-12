@@ -477,11 +477,11 @@ namespace Rawr.DPSWarr {
             // Critical Hit
             Crit = 0;
             if (isWhite) {
-                float critValueToUse = (isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit);
+                float critValueToUse = (isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit)
+                                            + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level];
                 foreach (WeightedStat ws in combatFactors.critProcs)
                 {
-                    float modCritChance = Math.Min(1f - tableSize, critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class))
-                        + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level];
+                    float modCritChance = Math.Min(1f - tableSize, critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class));
                     Crit += ws.Chance * modCritChance;
                 }
                 tableSize += Crit;
