@@ -239,6 +239,12 @@ namespace Rawr.ShadowPriest {
                 CritChance = stats.SpellCrit
                     + character.PriestTalents.MindMelt * 0.03f
                     + stats.PriestDPS_T10_2pc;
+                foreach (SpecialEffect se in stats.SpecialEffects())
+                {
+                    if (se.Stats.CritRating > 0 && se.Trigger == Trigger.Use)
+                    // Special Handling for Nevermelting Ice Crystal (and similar?)
+                        CritChance += StatConversion.GetSpellCritFromRating(se.Stats.CritRating);
+                }
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
                 // Apparently made SPriests too good.
                 //    DebuffDuration /= (1f + stats.SpellHaste);
