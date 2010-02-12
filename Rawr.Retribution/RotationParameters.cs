@@ -12,12 +12,12 @@ namespace Rawr.Retribution
         public bool GlyphConsecrate;
         public Ability[] Priorities;
         public float TimeUnder20;
-        public float Wait;
-        public float Delay;
-        public float T10_Speed;
-        public float SpellGCD;
-        public float BloodlustSpellGCD;
-        public float BloodlustT10Speed;
+        public decimal Wait;
+        public decimal Delay;
+        public decimal T10_Speed;
+        public decimal SpellGCD;
+        public decimal BloodlustSpellGCD;
+        public decimal BloodlustT10Speed;
         public float BloodlustUptime;
 
         public RotationParameters() { }
@@ -40,17 +40,17 @@ namespace Rawr.Retribution
             this.T7_4pc = T7_4pc;
             this.GlyphConsecrate = GlyphConsecrate;
             this.TimeUnder20 = TimeUnder20;
-            this.Wait = (float)Math.Round(Wait, 2);
-            this.Delay = (float)Math.Round(Delay, 2);
+            this.Wait = (decimal)Math.Round(Wait, 2);
+            this.Delay = (decimal)Math.Round(Delay, 2);
             this.ImpJudgements = ImpJudgements;
-            this.T10_Speed = (float)Math.Round(T10_Speed, 2);
-            BloodlustUptime = (float)Math.Round(bloodlustUptime, 3);
+            this.T10_Speed = (decimal)Math.Round(T10_Speed, 2);
+            BloodlustUptime = bloodlustUptime;
             SpellGCD = GetSpellGCD(spellHaste);
             BloodlustSpellGCD = 
                 BloodlustUptime == 0 ? SpellGCD : GetSpellGCD((1 + spellHaste) * (1 + bloodlustHaste) - 1);
             BloodlustT10Speed = BloodlustUptime == 0 ? 
-                T10_Speed : 
-                (float)Math.Round(T10_Speed / (1 + bloodlustHaste), 2);
+                this.T10_Speed : 
+                (decimal)Math.Round(T10_Speed / (1 + bloodlustHaste), 2);
         }
 
         public override bool Equals(Object obj)
@@ -161,9 +161,9 @@ namespace Rawr.Retribution
         }
 
 
-        private static float GetSpellGCD(float spellHaste)
+        private static decimal GetSpellGCD(float spellHaste)
         {
-            return (float)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 2);
+            return (decimal)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 2);
         }
 
     }

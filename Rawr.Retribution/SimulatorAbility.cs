@@ -6,7 +6,8 @@ namespace Rawr.Retribution
 {
     public class SimulatorAbility
     {
-        public SimulatorAbility(float cooldown, float globalCooldown)
+
+        public SimulatorAbility(int cooldown, int globalCooldown)
         {
             Cooldown = cooldown;
             GlobalCooldown = globalCooldown;
@@ -15,17 +16,17 @@ namespace Rawr.Retribution
             NextUse = 0;
         }
 
-        public static float Wait { get; set; }
-        public static float Delay { get; set; }
+        public static int Wait { get; set; }
+        public static int Delay { get; set; }
 
-        public float GlobalCooldown { get; set; }
-        public float Cooldown { get; set; }
-        public float FirstUse { get; set; }
-        public float LastUse { get; set; }
-        public float NextUse { get; set; }
+        public int GlobalCooldown { get; set; }
+        public int Cooldown { get; set; }
+        public int FirstUse { get; set; }
+        public int LastUse { get; set; }
+        public int NextUse { get; set; }
         public int Uses { get; set; }
 
-        public void ResetCooldown(float currentTime)
+        public void ResetCooldown(int currentTime)
         {
             // CD reset will be visible only after delay
             NextUse = Math.Min(NextUse, currentTime + Delay);
@@ -36,9 +37,9 @@ namespace Rawr.Retribution
         /// </summary>
         /// <param name="currentTime">Current time</param>
         /// <returns>GCD finish time</returns>
-        public float UseAbility(float currentTime)
+        public int UseAbility(int currentTime)
         {
-            var usageTime = currentTime + Delay;
+            int usageTime = currentTime + Delay;
 
             if (FirstUse < 0) 
                 FirstUse = usageTime;
@@ -48,21 +49,25 @@ namespace Rawr.Retribution
             return usageTime + GlobalCooldown;
         }
 
-        public bool ShouldAbilityBeUsedNext(float currentTime)
+        public bool ShouldAbilityBeUsedNext(int currentTime)
         {
             return NextUse <= currentTime + Wait;
         }
 
-        public bool CanAbilityBeUsedNow(float currentTime)
+        public bool CanAbilityBeUsedNow(int currentTime)
         {
             return currentTime >= NextUse;
         }
 
-        public float GetNextUseTime(float currentTime)
+        public int GetNextUseTime(int currentTime)
         {
             return Math.Max(currentTime, NextUse);
         }
 
-        public float EffectiveCooldown() { return (LastUse - FirstUse) / (Uses - 1); }
+        public float EffectiveCooldown() 
+        { 
+            return  ((float)(LastUse - FirstUse)) / (Uses - 1); 
+        }
+
     }
 }
