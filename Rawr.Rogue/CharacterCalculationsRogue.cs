@@ -74,20 +74,40 @@ namespace Rawr.Rogue
             dictValues.Add("DPS Points", DPSPoints.ToString());
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 
-            float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP[TargetLevel - 80] - BasicStats.PhysicalHit;
+            float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP_DW[TargetLevel - 80] - BasicStats.PhysicalHit;
+            float baseYellowMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[TargetLevel - 80] - BasicStats.PhysicalHit;
+            float basePoisonMiss = StatConversion.GetSpellMiss(80 - TargetLevel, false) - BasicStats.SpellHit;
             float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
             float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
             float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
+            float capYellowMiss = (float)Math.Ceiling(baseYellowMiss * 100f * 32.78998947f);
+            float capPoisonMiss = (float)Math.Ceiling(basePoisonMiss * 100f * 26.23f);
             float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
             float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
 
-            string tipMiss = string.Empty;
+            string tipMiss = "*White: ";
             if (BasicStats.HitRating > capMiss)
-                tipMiss = string.Format("*Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
+                tipMiss += string.Format("Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
             else if (BasicStats.HitRating < capMiss)
-                tipMiss = string.Format("*Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
+                tipMiss += string.Format("Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
             else
-                tipMiss = "*Exactly at the cap";
+                tipMiss += "Exactly at the cap";
+
+            tipMiss += "\r\nYellow: ";
+            if (BasicStats.HitRating > capYellowMiss)
+                tipMiss += string.Format("Over the cap by {0} Hit Rating", BasicStats.HitRating - capYellowMiss);
+            else if (BasicStats.HitRating < capYellowMiss)
+                tipMiss += string.Format("Under the cap by {0} Hit Rating", capYellowMiss - BasicStats.HitRating);
+            else
+                tipMiss += "Exactly at the cap";
+
+            tipMiss += "\r\nPoison: ";
+            if (BasicStats.HitRating > capPoisonMiss)
+                tipMiss += string.Format("Over the cap by {0} Hit Rating", BasicStats.HitRating - capPoisonMiss);
+            else if (BasicStats.HitRating < capPoisonMiss)
+                tipMiss += string.Format("Under the cap by {0} Hit Rating", capPoisonMiss - BasicStats.HitRating);
+            else
+                tipMiss += "Exactly at the cap";
 
             string tipDodge = string.Empty;
             if (BasicStats.ExpertiseRating > capDodge)

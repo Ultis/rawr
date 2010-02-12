@@ -370,6 +370,10 @@ namespace Rawr.Rogue
                 chanceHitBackstab += iStat.Chance * chanceHitBackstabTemp;
                 chanceCritMuti += iStat.Chance * chanceCritMutiTemp;
                 chanceHitMuti += iStat.Chance * chanceHitMutiTemp;
+                chanceCritSStrike = iStat.Chance * chanceCritSStrikeTemp;
+                chanceHitSStrike = iStat.Chance * chanceHitSStrikeTemp;
+                chanceCritHemo = iStat.Chance * chanceCritHemoTemp;
+                chanceHitHemo = iStat.Chance * chanceHitHemoTemp;
                 chanceCritEvis += iStat.Chance * chanceCritEvisTemp;
                 chanceHitEvis += iStat.Chance * chanceHitEvisTemp;
                 //chanceCritBleed += iStat.Chance * chanceCritBleedTemp;
@@ -992,17 +996,6 @@ namespace Rawr.Rogue
                     return new ComparisonCalculationBase[0];
             }
         }
-
-        /*public override bool IsBuffRelevant(Buff buff)
-        {
-            if (!buff.AllowedClasses.Contains(CharacterClass.Rogue)) { return false; }
-            if (buff.Name == "Focus Magic") { return false; }
-
-            if (buff.SetName == "Strength of the Clefthoof") { return false; }
-            if (buff.SetName == "Skyshatter Regalia") { return false; }
-
-            return base.IsBuffRelevant(buff);
-        }*/
 
         public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {

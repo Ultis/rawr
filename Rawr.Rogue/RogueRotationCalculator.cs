@@ -389,12 +389,10 @@ namespace Rawr.Rogue
                 else if (MHPoison == 1) rotation.Append("Use Instant Poison on Mainhand.\r\n");
                 else if (MHPoison == 2) rotation.Append("Use Deadly Poison on Mainhand.\r\n");
                 else if (MHPoison == 3) rotation.Append("Use Wound Poison on Mainhand.\r\n");
-                else if (MHPoison == 4) rotation.Append("Use Anesthetic Poison on Mainhand.\r\n");
                 if (OHPoison == 0) rotation.Append("Use no damage poison on Offhand.\r\n");
                 else if (OHPoison == 1) rotation.Append("Use Instant Poison on Offhand.\r\n");
                 else if (OHPoison == 2) rotation.Append("Use Deadly Poison on Offhand.\r\n");
                 else if (OHPoison == 3) rotation.Append("Use Wound Poison on Offhand.\r\n");
-                else if (OHPoison == 4) rotation.Append("Use Anesthetic Poison on Offhand.\r\n");
                 if (UseTotT) rotation.Append("Use Tricks of the Trade every cooldown.");
 
                 return rotation.ToString();
