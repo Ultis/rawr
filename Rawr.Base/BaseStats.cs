@@ -322,8 +322,8 @@ namespace Rawr
                     #region Paladin
                     case CharacterClass.Paladin:
                         // Blood Elf, Draenei, Dwarf, Human
-                        S.Mana = 4394;
-                        S.Health = 6934;
+                        S.Mana = 4394-280;
+                        S.Health = 6934-180;
                         S.Armor = 0;
                         S.AttackPower = 240;
                         S.PhysicalCrit = 0.0327f;
@@ -345,8 +345,8 @@ namespace Rawr
                             case CharacterRace.Draenei:
                                 S.Strength = 152;
                                 S.Agility = 87;
-                                S.Stamina = 142;
-                                S.Intellect = 99;
+                                S.Stamina = 143;
+                                S.Intellect = 98;
                                 S.Spirit = 107;
                                 break;
                             case CharacterRace.Dwarf:
