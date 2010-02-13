@@ -49,26 +49,26 @@ namespace Rawr
 			MinimumY = MaximumY = 0f;
 			string[] rotations;
 			float[] graphData = BuildGraphData(character, out MinimumY, out MaximumY, out rotations);
-			MinimumY = (float)Math.Floor(MinimumY / 10f) * 10f;
-			MaximumY = (float)Math.Ceiling(MaximumY / 10f) * 10f;
+			MinimumY = 0f;//(float)Math.Floor(MinimumY / 10f) * 10f;
+			MaximumY = 5f;//(float)Math.Ceiling(MaximumY / 10f) * 10f;
 			//RangeX = MaximumX - MinimumX;
 			//RangeY = MaximumY - MinimumY;
 			ConversionX = (width - 16f) / (MaximumX - MinimumX);
 			ConversionY = (height - 24f) / (MaximumY - MinimumY);
 
 			PointF[] points = new PointF[graphData.Length + 2];
-			points[0] = GetScreenPoint(MinimumX, MinimumY);
-			points[points.Length - 1] = GetScreenPoint(MaximumX, MinimumY);
+			points[0] = GetScreenPoint(MinimumX, 0);
+			points[points.Length - 1] = GetScreenPoint(MaximumX, 0);
 			byte[] types = new byte[points.Length];
 			types[0] = (byte)PathPointType.Start;
 			types[types.Length - 1] = (byte)PathPointType.Line;
-			float x = 0; // integralY = 0f, 
+			float x = 0, integralY = 0f; 
 			for (int i = 1; i <= graphData.Length; i++)
 			{
 				x = MinimumX + (float)(i - 1) / (float)GranularityX;
-				//integralY = 0f;
-				//if (i < graphData.Length - 1) integralY = (graphData[i] - graphData[i - 1]);
-				points[i] = GetScreenPoint(x, graphData[i - 1]);
+				integralY = 0f;
+				if (i < graphData.Length - 1) integralY = (graphData[i] - graphData[i - 1]);
+				points[i] = GetScreenPoint(x, integralY);
 				types[i] = (byte)PathPointType.Line;
 			}
 

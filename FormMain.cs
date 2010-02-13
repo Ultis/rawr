@@ -2522,7 +2522,9 @@ namespace Rawr
 				Calculations.Instance.StatGraphRenderer.MaximumX = int.Parse(textBox2.Text);
 				Calculations.Instance.StatGraphRenderer.GranularityX = int.Parse(textBox3.Text);
 				Calculations.Instance.StatGraphRenderer.StatX = textBox4.Text;
+				itemComparison1.Invalidate();
 				itemComparison1.Refresh();
+				itemComparison1.LoadCustomRenderedChart("Stat Graph");
 			}
 			catch { }
         }

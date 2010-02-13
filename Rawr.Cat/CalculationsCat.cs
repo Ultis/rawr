@@ -407,7 +407,7 @@ namespace Rawr.Cat
 
 				//White
 				float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
-				float chanceCritWhiteTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+				float chanceCritWhiteTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceAvoided);
 				float chanceHitWhiteTemp = 1f - chanceCritWhiteTemp - chanceAvoided - chanceGlanceTemp;
 
 				chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
