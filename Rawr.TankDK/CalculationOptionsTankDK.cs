@@ -9,7 +9,9 @@ namespace Rawr.TankDK
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsTankDK : ICalculationOptionBase
+	public class CalculationOptionsTankDK : 
+        ICalculationOptionBase,
+        INotifyPropertyChanged
 	{
         // No one will ever tank in anything other than Frost.
         //		public enum Presence { Blood, Frost, Unholy }

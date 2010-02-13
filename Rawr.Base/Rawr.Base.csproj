@@ -152,6 +152,7 @@
     <Compile Include="GemmingTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ICharacterCalculationOptions.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemCache.cs" />
     <Compile Include="ItemFilter.cs" />

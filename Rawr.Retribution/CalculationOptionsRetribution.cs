@@ -6,7 +6,10 @@ using System.Xml.Serialization;
 
 namespace Rawr.Retribution
 {
-    public class CalculationOptionsRetribution : ICalculationOptionBase, INotifyPropertyChanged
+    public class CalculationOptionsRetribution : 
+        ICalculationOptionBase, 
+        INotifyPropertyChanged,
+        ICharacterCalculationOptions
     {
         public string GetXml()
         {

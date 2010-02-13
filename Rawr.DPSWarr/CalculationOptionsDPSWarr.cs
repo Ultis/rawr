@@ -8,7 +8,9 @@ namespace Rawr.DPSWarr {
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsDPSWarr : ICalculationOptionBase
+	public class CalculationOptionsDPSWarr : 
+        ICalculationOptionBase,
+        INotifyPropertyChanged
     {
         #region Constructors
         public CalculationOptionsDPSWarr()

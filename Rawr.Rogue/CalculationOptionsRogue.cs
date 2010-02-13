@@ -9,7 +9,10 @@ namespace Rawr.Rogue
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsRogue : ICalculationOptionBase
+	public class CalculationOptionsRogue : 
+        ICalculationOptionBase,
+        INotifyPropertyChanged,
+        ICharacterCalculationOptions
     {
         public string GetXml()
         {
@@ -118,7 +121,6 @@ namespace Rawr.Rogue
             set { if (_lagVariance != value) { _lagVariance = value; OnPropertyChanged("LagVariance"); } }
         }
 
-        [XmlIgnore]
         private Character _character;
         [XmlIgnore]
         public Character Character

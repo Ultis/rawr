@@ -9,7 +9,9 @@ namespace Rawr.Hunter
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsHunter : ICalculationOptionBase
+	public class CalculationOptionsHunter : 
+        ICalculationOptionBase,
+        INotifyPropertyChanged
 	{
 		private int _TargetLevel = 83;
 		private int _TargetArmor = 10643; //Wrath boss armor

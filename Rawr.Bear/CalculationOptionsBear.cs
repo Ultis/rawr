@@ -9,7 +9,10 @@ namespace Rawr.Bear
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsBear : ICalculationOptionBase, INotifyPropertyChanged
+	public class CalculationOptionsBear : 
+        ICalculationOptionBase, 
+        INotifyPropertyChanged, 
+        ICharacterCalculationOptions
 	{
 		public string GetXml()
 		{
@@ -95,7 +98,6 @@ namespace Rawr.Bear
             set { if (_customUseLacerate != value) { _customUseLacerate = value; OnPropertyChanged("CustomUseLacerate"); } }
         }
 
-        [XmlIgnore]
         private Character _character;
         [XmlIgnore]
         public Character Character

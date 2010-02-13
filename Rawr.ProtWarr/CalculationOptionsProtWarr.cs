@@ -8,7 +8,9 @@ namespace Rawr.ProtWarr
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsProtWarr : ICalculationOptionBase
+	public class CalculationOptionsProtWarr : 
+        ICalculationOptionBase,
+        INotifyPropertyChanged
 	{
 		public string GetXml()
 		{

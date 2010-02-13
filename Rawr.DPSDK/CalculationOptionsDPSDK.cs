@@ -8,7 +8,9 @@ namespace Rawr.DPSDK
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsDPSDK : ICalculationOptionBase
+	public class CalculationOptionsDPSDK : 
+        ICalculationOptionBase,
+        INotifyPropertyChanged
 	{
 		public string GetXml()
 		{

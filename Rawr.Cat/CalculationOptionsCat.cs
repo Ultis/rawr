@@ -9,7 +9,10 @@ namespace Rawr.Cat
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-    public class CalculationOptionsCat : ICalculationOptionBase, INotifyPropertyChanged
+    public class CalculationOptionsCat : 
+        ICalculationOptionBase, 
+        INotifyPropertyChanged,
+        ICharacterCalculationOptions
 	{
 		public string GetXml()
 		{
@@ -83,7 +86,6 @@ namespace Rawr.Cat
             set { if (_lagVariance != value) { _lagVariance = value; OnPropertyChanged("LagVariance"); } }
         }
 
-        [XmlIgnore]
         private Character _character;
         [XmlIgnore]
         public Character Character

@@ -171,18 +171,25 @@ namespace Rawr //O O . .
 
         [XmlElement("CalculationOptions")]
         public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
-        [XmlIgnore]
+
         private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
 		[XmlIgnore]
 		public ICalculationOptionBase CalculationOptions {
-			get {
+			get 
+            {
                 ICalculationOptionBase ret;
                 _calculationOptions.TryGetValue(CurrentModel, out ret);
-                if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel)) {
-                    ret = Calculations.GetModel(CurrentModel).DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+                if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel)) 
+                {
+                    ret = Calculations.GetModel(CurrentModel)
+                        .DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+
                     // set parent Character for models that need backward link
-                    System.Reflection.PropertyInfo propertyInfo = ret.GetType().GetProperty("Character", typeof(Character));
-                    if (propertyInfo != null) propertyInfo.SetValue(ret, this, null);
+                    ICharacterCalculationOptions characterCalculationOptions =
+                        ret as ICharacterCalculationOptions;
+                    if (characterCalculationOptions != null)
+                        characterCalculationOptions.Character = this;
+
                     _calculationOptions[CurrentModel] = ret;
                 }
                 return ret;
