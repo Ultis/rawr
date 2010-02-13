@@ -324,13 +324,36 @@ namespace Rawr.Retribution
             return clone;
         }
 
-        #region INotifyPropertyChanged Members
-        private void OnPropertyChanged(string name)
+        [XmlIgnore]
+        private Character _character;
+        [XmlIgnore]
+        public Character Character
         {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
+            get
+            {
+                return _character;
+            }
+            set
+            {
+                _character = value;
+            }
         }
 
+        #region INotifyPropertyChanged Members
+
         public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+            if (Character != null)
+            {
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         #endregion
     }
 }
