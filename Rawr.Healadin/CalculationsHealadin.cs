@@ -317,9 +317,6 @@ namespace Rawr.Healadin
             float fightLength = calcOpts.Length * 60;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
-            statsRace.Health -= 180f;
-            statsRace.Mana -= 280f;
-
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats stats = statsBaseGear + statsBuffs + statsRace;
