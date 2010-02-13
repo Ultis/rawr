@@ -7760,7 +7760,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Naxxramas (10)</Area>
+          <Area>Naxxramas</Area>
           <Heroic>false</Heroic>
           <Boss>Grand Widow Faerlina</Boss>
         </ItemLocation>
@@ -16857,8 +16857,8 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Naxxramas</Area>
-          <Heroic>true</Heroic>
+          <Area>Naxxramas (25)</Area>
+          <Heroic>false</Heroic>
           <Boss>Sapphiron</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
@@ -28779,7 +28779,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Vault of Archavon</Area>
+          <Area>Vault of Archavon (10)</Area>
           <Heroic>false</Heroic>
           <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
@@ -28794,7 +28794,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Vault of Archavon (25)</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>false</Heroic>
           <Boss>Koralon the Flame Watcher</Boss>
         </ItemLocation>
@@ -30833,7 +30833,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="QuestItem">
-          <Area>Unknown - -364</Area>
+          <Area>Darkmoon Faire</Area>
           <Quest>Darkmoon Prisms Deck</Quest>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -30882,7 +30882,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="QuestItem">
-          <Area>Unknown - -364</Area>
+          <Area>Darkmoon Faire</Area>
           <Quest>Darkmoon Nobles Deck</Quest>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -30979,7 +30979,12 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Darkmoon Faire</Area>
+          <Quest>Darkmoon Undeath Deck</Quest>
+          <MinLevel>0</MinLevel>
+          <Party>0</Party>
+        </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
     </value>
@@ -34023,7 +34028,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="QuestItem">
-          <Area>Unknown - -364</Area>
+          <Area>Darkmoon Faire</Area>
           <Quest>Darkmoon Nobles Deck</Quest>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -34039,7 +34044,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="QuestItem">
-          <Area>Unknown - -364</Area>
+          <Area>Darkmoon Faire</Area>
           <Quest>Darkmoon Nobles Deck</Quest>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -34103,7 +34108,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="QuestItem">
-          <Area>Unknown - -364</Area>
+          <Area>Darkmoon Faire</Area>
           <Quest>Darkmoon Nobles Deck</Quest>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -35311,9 +35316,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -35906,9 +35911,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -37852,7 +37857,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Ulduar (10)</Area>
           <Heroic>false</Heroic>
           <Boss>Flame Leviathan</Boss>
         </ItemLocation>
@@ -44275,9 +44280,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44409,9 +44414,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44509,9 +44514,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44558,9 +44563,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44575,9 +44580,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44592,9 +44597,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44773,9 +44778,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -44907,9 +44912,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>25</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -45927,7 +45932,11 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ulduar (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>Yogg-Saron</Boss>
+        </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
     </value>
@@ -69146,7 +69155,6 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Blackrock Depths</Area>
           <Heroic>false</Heroic>
           <Boss>Coren Direbrew</Boss>
         </ItemLocation>
@@ -69161,7 +69169,6 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Blackrock Depths</Area>
           <Heroic>false</Heroic>
           <Boss>Coren Direbrew</Boss>
         </ItemLocation>
@@ -69176,7 +69183,6 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Blackrock Depths</Area>
           <Heroic>false</Heroic>
           <Boss>Coren Direbrew</Boss>
         </ItemLocation>
@@ -69435,9 +69441,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
           <Points>0</Points>
-          <TokenType>Wintergrasp Mark of Honor</TokenType>
-          <TokenCount>15</TokenCount>
+          <TokenCount>0</TokenCount>
           <PointsA>0</PointsA>
           <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
@@ -69766,7 +69772,6 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Blackrock Depths</Area>
           <Heroic>false</Heroic>
           <Boss>Coren Direbrew</Boss>
         </ItemLocation>
@@ -70926,7 +70931,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Halls of Reflection</Area>
+          <Area>Forge of Souls</Area>
           <Heroic>false</Heroic>
           <Boss>Devourer of Souls</Boss>
         </ItemLocation>
@@ -71001,7 +71006,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Halls of Reflection</Area>
+          <Area>Forge of Souls</Area>
           <Heroic>false</Heroic>
           <Boss>Devourer of Souls</Boss>
         </ItemLocation>
@@ -73916,7 +73921,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Halls of Reflection</Area>
+          <Area>Forge of Souls</Area>
           <Heroic>true</Heroic>
           <Boss>Devourer of Souls</Boss>
         </ItemLocation>
@@ -73962,7 +73967,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Halls of Reflection</Area>
+          <Area>Forge of Souls</Area>
           <Heroic>true</Heroic>
           <Boss>Devourer of Souls</Boss>
         </ItemLocation>
@@ -75243,11 +75248,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="VendorItem">
-          <Token>Emblem of Frost</Token>
-          <Count>60</Count>
-          <Cost>0</Cost>
-          <VendorArea>Dalaran</VendorArea>
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel</Area>
+          <Heroic>false</Heroic>
+          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75338,11 +75342,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="VendorItem">
-          <Token>Emblem of Frost</Token>
-          <Count>60</Count>
-          <Cost>0</Cost>
-          <VendorArea>Dalaran</VendorArea>
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel</Area>
+          <Heroic>false</Heroic>
+          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75498,11 +75501,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="VendorItem">
-          <Token>Emblem of Frost</Token>
-          <Count>60</Count>
-          <Cost>0</Cost>
-          <VendorArea>Dalaran</VendorArea>
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel</Area>
+          <Heroic>false</Heroic>
+          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75530,11 +75532,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="VendorItem">
-          <Token>Emblem of Frost</Token>
-          <Count>60</Count>
-          <Cost>0</Cost>
-          <VendorArea>Dalaran</VendorArea>
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel</Area>
+          <Heroic>false</Heroic>
+          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75699,7 +75700,8 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="ContainerItem">
-          <Heroic>false</Heroic>
+          <Heroic>true</Heroic>
+          <Area>Icecrown Citadel (25)</Area>
           <Container>Deathbringer's Cache</Container>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -76969,11 +76971,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="VendorItem">
-          <Token>Emblem of Frost</Token>
-          <Count>30</Count>
-          <Cost>0</Cost>
-          <VendorArea>Dalaran</VendorArea>
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel</Area>
+          <Heroic>false</Heroic>
+          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78767,6 +78768,7 @@
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="ContainerItem">
           <Heroic>false</Heroic>
+          <Area>Icecrown Citadel (10)</Area>
           <Container>Deathbringer's Cache</Container>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -85095,7 +85097,8 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="ContainerItem">
-          <Heroic>false</Heroic>
+          <Heroic>true</Heroic>
+          <Area>Icecrown Citadel (10)</Area>
           <Container>Deathbringer's Cache</Container>
           <MinLevel>0</MinLevel>
           <Party>0</Party>
@@ -86349,8 +86352,8 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Naxxramas</Area>
-          <Heroic>true</Heroic>
+          <Area>Naxxramas (25)</Area>
+          <Heroic>false</Heroic>
           <Boss>Maexxna</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
@@ -86422,6 +86425,68 @@
         <ItemLocation xsi:type="WorldDrop">
           <Location>Utgarde Pinnacle</Location>
           <Heroic>true</Heroic>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50398</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49118</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Heroic>false</Heroic>
+          <Boss>Coren Direbrew</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49116</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Heroic>false</Heroic>
+          <Boss>Coren Direbrew</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51378</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="PvpItem">
+          <PointType>PvP</PointType>
+          <Points>0</Points>
+          <TokenCount>0</TokenCount>
+          <PointsA>0</PointsA>
+          <RequiredArenaRating>0</RequiredArenaRating>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>

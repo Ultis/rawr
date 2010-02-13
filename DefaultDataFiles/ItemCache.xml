@@ -1098,6 +1098,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Tome of Arcane Phenomena</Name>
     <Id>36972</Id>
@@ -1163,6 +1164,7 @@
     <MinDamage>187</MinDamage>
     <MaxDamage>338</MaxDamage>
     <Speed>2.4</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Malygos' Favor</Name>
     <Id>36975</Id>
@@ -1511,6 +1513,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Seal of the Pantheon</Name>
     <Id>36993</Id>
@@ -1905,6 +1908,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signet of Ranulf</Name>
     <Id>37058</Id>
@@ -1928,6 +1932,7 @@
     <MinDamage>59</MinDamage>
     <MaxDamage>175</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Jeweled Coronation Sword</Name>
     <Id>37060</Id>
@@ -1989,6 +1994,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Vestige of Haldor</Name>
     <Id>37064</Id>
@@ -2133,6 +2139,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Enchanted Wire Stitching</Name>
     <Id>37079</Id>
@@ -2319,6 +2326,7 @@
     <MinDamage>166</MinDamage>
     <MaxDamage>297</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sempiternal Staff</Name>
     <Id>37099</Id>
@@ -2471,6 +2479,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Soul Preserver</Name>
     <Id>37111</Id>
@@ -2929,6 +2938,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sphere of Red Dragon's Blood</Name>
     <Id>37166</Id>
@@ -3353,6 +3363,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Annhylde's Ring</Name>
     <Id>37192</Id>
@@ -3419,6 +3430,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Band of Enchanted Growth</Name>
     <Id>37195</Id>
@@ -3572,6 +3584,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Essence of Gossamer</Name>
     <Id>37220</Id>
@@ -3664,6 +3677,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of the Traitor King</Name>
     <Id>37232</Id>
@@ -4053,6 +4067,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Pendulum of Telluric Currents</Name>
     <Id>37264</Id>
@@ -4227,6 +4242,7 @@
     <MinDamage>197</MinDamage>
     <MaxDamage>354</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Staff of Draconic Combat</Name>
     <Id>37360</Id>
@@ -4457,6 +4473,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of the Frenzied Wolvar</Name>
     <Id>37371</Id>
@@ -4548,6 +4565,7 @@
     <MinDamage>93</MinDamage>
     <MaxDamage>234</MaxDamage>
     <Speed>1.8</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Netherbreath Spellblade</Name>
     <Id>37377</Id>
@@ -4594,6 +4612,7 @@
     <MinDamage>193</MinDamage>
     <MaxDamage>356</MaxDamage>
     <Speed>2.4</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Staff of Wayward Principles</Name>
     <Id>37384</Id>
@@ -4648,6 +4667,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Meteorite Whetstone</Name>
     <Id>37390</Id>
@@ -5091,6 +5111,7 @@
     <MinDamage>168</MinDamage>
     <MaxDamage>311</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Staff of Sinister Claws</Name>
     <Id>37617</Id>
@@ -5523,6 +5544,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Offering of Sacrifice</Name>
     <Id>37638</Id>
@@ -5775,6 +5797,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The Prospector's Prize</Name>
     <Id>37651</Id>
@@ -5910,6 +5933,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Spark of Life</Name>
     <Id>37657</Id>
@@ -5963,6 +5987,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Forge Ember</Name>
     <Id>37660</Id>
@@ -6509,6 +6534,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Band of Guile</Name>
     <Id>37694</Id>
@@ -6675,6 +6701,7 @@
     <MinDamage>57</MinDamage>
     <MaxDamage>183</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Cursed Lich Blade</Name>
     <Id>37721</Id>
@@ -6725,6 +6752,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Incisor Fragment</Name>
     <Id>37723</Id>
@@ -6889,6 +6917,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Spectral Seal of the Prophet</Name>
     <Id>37732</Id>
@@ -6941,6 +6970,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Talisman of Troll Divinity</Name>
     <Id>37734</Id>
@@ -7227,6 +7257,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Je'Tze's Bell</Name>
     <Id>37835</Id>
@@ -7340,6 +7371,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Winged Talisman</Name>
     <Id>37844</Id>
@@ -7594,6 +7626,7 @@
     <MinDamage>135</MinDamage>
     <MaxDamage>203</MaxDamage>
     <Speed>1.3</Speed>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Librarian's Paper Cutter</Name>
     <Id>37856</Id>
@@ -7739,6 +7772,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Globule Signet</Name>
     <Id>37869</Id>
@@ -7842,6 +7876,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mark of the War Prisoner</Name>
     <Id>37873</Id>
@@ -8080,6 +8115,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ringlet of Repose</Name>
     <Id>38611</Id>
@@ -8421,6 +8457,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Band of Neglected Pleas</Name>
     <Id>39193</Id>
@@ -8573,6 +8610,7 @@
     <MaxDamage>226</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Grieving Spellblade</Name>
     <Id>39200</Id>
@@ -8779,6 +8817,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Embrace of the Spider</Name>
     <Id>39229</Id>
@@ -8821,6 +8860,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Timeworn Silken Band</Name>
     <Id>39231</Id>
@@ -9077,6 +9117,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of the Fated</Name>
     <Id>39244</Id>
@@ -9206,6 +9247,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of Holy Cleansing</Name>
     <Id>39250</Id>
@@ -9315,6 +9357,7 @@
     <MinDamage>173</MinDamage>
     <MaxDamage>330</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sulfur Stave</Name>
     <Id>39256</Id>
@@ -9345,6 +9388,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Loatheb's Shadow</Name>
     <Id>39257</Id>
@@ -9532,6 +9576,7 @@
     <MaxDamage>226</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Blade of Dormant Memories</Name>
     <Id>39271</Id>
@@ -9887,6 +9932,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Repelling Charge</Name>
     <Id>39292</Id>
@@ -10321,6 +10367,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Spirit-World Glass</Name>
     <Id>39388</Id>
@@ -10342,6 +10389,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signet of the Malevolent</Name>
     <Id>39389</Id>
@@ -10453,6 +10501,7 @@
     <MinDamage>243</MinDamage>
     <MaxDamage>483</MaxDamage>
     <Speed>3.2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Charmed Cierge</Name>
     <Id>39394</Id>
@@ -10678,6 +10727,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Circle of Life</Name>
     <Id>39407</Id>
@@ -10928,6 +10978,7 @@
     <MaxDamage>257</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The Soulblade</Name>
     <Id>39424</Id>
@@ -16869,6 +16920,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Lost Jewel</Name>
     <Id>40080</Id>
@@ -17234,6 +17286,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Seized Beauty</Name>
     <Id>40108</Id>
@@ -19455,6 +19508,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Dying Curse</Name>
     <Id>40255</Id>
@@ -19462,8 +19516,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>35361</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_trinket_naxxramas04</IconPath>
     <Stats>
       <SpecialEffects>
@@ -19485,6 +19539,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Grim Toll</Name>
     <Id>40256</Id>
@@ -19515,6 +19570,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Defender's Code</Name>
     <Id>40257</Id>
@@ -19546,6 +19602,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Forethought Talisman</Name>
     <Id>40258</Id>
@@ -20341,6 +20398,7 @@
     <MinDamage>287</MinDamage>
     <MaxDamage>548</MaxDamage>
     <Speed>3.2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Spire of Sunset</Name>
     <Id>40300</Id>
@@ -20626,6 +20684,7 @@
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Idol of the Shooting Star</Name>
     <Id>40321</Id>
@@ -20982,6 +21041,7 @@
     <MaxDamage>247</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Life and Death</Name>
     <Id>40336</Id>
@@ -21247,6 +21307,7 @@
     <MinDamage>202</MinDamage>
     <MaxDamage>373</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Damnation</Name>
     <Id>40348</Id>
@@ -21550,6 +21611,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Bandit's Insignia</Name>
     <Id>40371</Id>
@@ -21611,6 +21673,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Extract of Necromantic Power</Name>
     <Id>40373</Id>
@@ -21652,6 +21715,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of Decaying Beauty</Name>
     <Id>40375</Id>
@@ -21823,6 +21887,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Soul of the Dead</Name>
     <Id>40382</Id>
@@ -22004,6 +22069,7 @@
     <MaxDamage>270</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The Turning Tide</Name>
     <Id>40396</Id>
@@ -22050,6 +22116,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signet of Manifested Pain</Name>
     <Id>40399</Id>
@@ -22228,6 +22295,7 @@
     <MaxDamage>247</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Haunting Call</Name>
     <Id>40408</Id>
@@ -22689,6 +22757,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Majestic Dragon Figurine</Name>
     <Id>40430</Id>
@@ -22718,6 +22787,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Fury of the Five Flights</Name>
     <Id>40431</Id>
@@ -22747,6 +22817,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Illustration of the Dragon Soul</Name>
     <Id>40432</Id>
@@ -22768,6 +22839,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Wyrmrest Band</Name>
     <Id>40433</Id>
@@ -23084,6 +23156,7 @@
     <MinDamage>287</MinDamage>
     <MaxDamage>548</MaxDamage>
     <Speed>3.2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Staff of Restraint</Name>
     <Id>40455</Id>
@@ -23646,6 +23719,7 @@
     <MinDamage>202</MinDamage>
     <MaxDamage>373</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Greatstaff of the Nexus</Name>
     <Id>40489</Id>
@@ -24665,6 +24739,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mark of Norgannon</Name>
     <Id>40531</Id>
@@ -24695,6 +24770,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Living Ice Crystals</Name>
     <Id>40532</Id>
@@ -25748,6 +25824,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signet of the Kirin Tor</Name>
     <Id>40585</Id>
@@ -26031,6 +26108,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sundial of the Exiled</Name>
     <Id>40682</Id>
@@ -26061,6 +26139,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Valor Medal of the First War</Name>
     <Id>40683</Id>
@@ -26091,6 +26170,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mirror of Truth</Name>
     <Id>40684</Id>
@@ -26121,6 +26201,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The Egg of Mortal Essence</Name>
     <Id>40685</Id>
@@ -26645,6 +26726,7 @@
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Idol of Steadfast Renewal</Name>
     <Id>40712</Id>
@@ -26788,6 +26870,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Band of Channeled Magic</Name>
     <Id>40719</Id>
@@ -26809,6 +26892,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Renewal of Life</Name>
     <Id>40720</Id>
@@ -32627,6 +32711,7 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Gnomish Lightning Generator</Name>
     <Id>41121</Id>
@@ -44515,6 +44600,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Band of Dominance</Name>
     <Id>42110</Id>
@@ -44596,6 +44682,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Band of Ascendancy</Name>
     <Id>42114</Id>
@@ -44637,6 +44724,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Furious Gladiator's Band of Dominance</Name>
     <Id>42116</Id>
@@ -44678,6 +44766,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Relentless Gladiator's Band of Ascendancy</Name>
     <Id>42118</Id>
@@ -44716,6 +44805,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Medallion of the Horde</Name>
     <Id>42122</Id>
@@ -44734,6 +44824,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Medallion of the Alliance</Name>
     <Id>42123</Id>
@@ -44752,6 +44843,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Medallion of the Alliance</Name>
     <Id>42124</Id>
@@ -44770,6 +44862,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Medallion of the Horde</Name>
     <Id>42126</Id>
@@ -44785,7 +44878,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>3385</Health>
+            <BattlemasterHealth>3385</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44799,6 +44892,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Hostility</Name>
     <Id>42128</Id>
@@ -44814,7 +44908,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>3385</Health>
+            <BattlemasterHealth>3385</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44828,6 +44922,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Accuracy</Name>
     <Id>42129</Id>
@@ -44843,7 +44938,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>3385</Health>
+            <BattlemasterHealth>3385</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44857,6 +44952,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Avidity</Name>
     <Id>42130</Id>
@@ -44872,7 +44968,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>3385</Health>
+            <BattlemasterHealth>3385</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44886,6 +44982,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Conviction</Name>
     <Id>42131</Id>
@@ -44901,7 +44998,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>3385</Health>
+            <BattlemasterHealth>3385</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44915,6 +45012,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Bravery</Name>
     <Id>42132</Id>
@@ -44930,7 +45028,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4608</Health>
+            <BattlemasterHealth>4608</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44944,6 +45042,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Fury</Name>
     <Id>42133</Id>
@@ -44959,7 +45058,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4608</Health>
+            <BattlemasterHealth>4608</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -44973,6 +45072,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Precision</Name>
     <Id>42134</Id>
@@ -44988,7 +45088,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4608</Health>
+            <BattlemasterHealth>4608</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -45002,6 +45102,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Vivacity</Name>
     <Id>42135</Id>
@@ -45017,7 +45118,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4608</Health>
+            <BattlemasterHealth>4608</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -45031,6 +45132,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Rage</Name>
     <Id>42136</Id>
@@ -45046,7 +45148,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4608</Health>
+            <BattlemasterHealth>4608</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -45060,6 +45162,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Battlemaster's Ruination</Name>
     <Id>42137</Id>
@@ -47428,6 +47531,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>
@@ -47455,6 +47559,7 @@
     <MinDamage>57</MinDamage>
     <MaxDamage>183</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's Spellblade</Name>
     <Id>42343</Id>
@@ -47501,6 +47606,7 @@
     <MinDamage>62</MinDamage>
     <MaxDamage>201</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Spellblade</Name>
     <Id>42345</Id>
@@ -47524,6 +47630,7 @@
     <MinDamage>69</MinDamage>
     <MaxDamage>220</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Spellblade</Name>
     <Id>42346</Id>
@@ -47547,6 +47654,7 @@
     <MinDamage>79</MinDamage>
     <MaxDamage>251</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -47573,6 +47681,7 @@
     <MinDamage>80</MinDamage>
     <MaxDamage>269</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -47697,6 +47806,7 @@
     <MinDamage>160</MinDamage>
     <MaxDamage>296</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's Battle Staff</Name>
     <Id>42356</Id>
@@ -47720,6 +47830,7 @@
     <MinDamage>176</MinDamage>
     <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Battle Staff</Name>
     <Id>42359</Id>
@@ -47743,6 +47854,7 @@
     <MinDamage>192</MinDamage>
     <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Battle Staff</Name>
     <Id>42362</Id>
@@ -47766,6 +47878,7 @@
     <MinDamage>220</MinDamage>
     <MaxDamage>406</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -47793,6 +47906,7 @@
     <MinDamage>242</MinDamage>
     <MaxDamage>447</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -47820,6 +47934,7 @@
     <MinDamage>160</MinDamage>
     <MaxDamage>296</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's Energy Staff</Name>
     <Id>42382</Id>
@@ -47843,6 +47958,7 @@
     <MinDamage>176</MinDamage>
     <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Energy Staff</Name>
     <Id>42383</Id>
@@ -47866,6 +47982,7 @@
     <MinDamage>192</MinDamage>
     <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Energy Staff</Name>
     <Id>42384</Id>
@@ -47889,6 +48006,7 @@
     <MinDamage>220</MinDamage>
     <MaxDamage>406</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -47916,6 +48034,7 @@
     <MinDamage>242</MinDamage>
     <MaxDamage>447</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -48073,6 +48192,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -48107,6 +48227,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -48128,6 +48249,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -49792,7 +49914,7 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>34953</DisplayId>
+    <DisplayId>3495380</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_relics_idolofhealth</IconPath>
     <Stats>
@@ -49805,7 +49927,7 @@
           <Duration>6</Duration>
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
+          <MaxStack>0</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -49813,6 +49935,7 @@
     <Quality>Rare</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's Idol of Steadfastness</Name>
     <Id>42575</Id>
@@ -49820,13 +49943,14 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>9659</DisplayId>
+    <DisplayId>965980</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>spell_nature_naturetouchgrow</IconPath>
     <Stats />
     <Quality>Rare</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's Idol of Tenacity</Name>
     <Id>42576</Id>
@@ -49834,13 +49958,14 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>9659</DisplayId>
+    <DisplayId>965980</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>spell_nature_naturetouchgrow</IconPath>
     <Stats />
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Idol of Tenacity</Name>
     <Id>42577</Id>
@@ -49848,13 +49973,14 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>9659</DisplayId>
+    <DisplayId>965980</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>spell_nature_naturetouchgrow</IconPath>
     <Stats />
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Idol of Tenacity</Name>
     <Id>42578</Id>
@@ -49862,13 +49988,14 @@
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
-    <DisplayId>9659</DisplayId>
+    <DisplayId>965980</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>spell_nature_naturetouchgrow</IconPath>
     <Stats />
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Furious Gladiator's Idol of Tenacity</Name>
     <Id>42579</Id>
@@ -49883,6 +50010,7 @@
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Relentless Gladiator's Idol of Tenacity</Name>
     <Id>42580</Id>
@@ -49890,7 +50018,7 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>34953</DisplayId>
+    <DisplayId>3495380</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_relics_idolofhealth</IconPath>
     <Stats>
@@ -49903,7 +50031,7 @@
           <Duration>6</Duration>
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
+          <MaxStack>0</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -49911,6 +50039,7 @@
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Idol of Steadfastness</Name>
     <Id>42582</Id>
@@ -49918,7 +50047,7 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>34953</DisplayId>
+    <DisplayId>3495380</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_relics_idolofhealth</IconPath>
     <Stats>
@@ -49939,6 +50068,7 @@
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Idol of Steadfastness</Name>
     <Id>42583</Id>
@@ -49946,7 +50076,7 @@
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
-    <DisplayId>34953</DisplayId>
+    <DisplayId>3495380</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_relics_idolofhealth</IconPath>
     <Stats>
@@ -49967,6 +50097,7 @@
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Furious Gladiator's Idol of Steadfastness</Name>
     <Id>42584</Id>
@@ -49995,6 +50126,7 @@
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Relentless Gladiator's Idol of Steadfastness</Name>
     <Id>42585</Id>
@@ -50744,6 +50876,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -51223,6 +51356,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Darkmoon Card: Greatness</Name>
     <Id>42987</Id>
@@ -51253,6 +51387,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Darkmoon Card: Illusion</Name>
     <Id>42988</Id>
@@ -51275,16 +51410,14 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>56179</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_inscription_tarotdeath</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
           <Trigger>DamageDone</Trigger>
           <Stats>
-            <ProcdShadowDamageMin>1750</ProcdShadowDamageMin>
-            <ProcdShadowDamageMax>2250</ProcdShadowDamageMax>
             <ShadowDamage>2000</ShadowDamage>
           </Stats>
           <Duration>0</Duration>
@@ -51301,6 +51434,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Darkmoon Card: Death</Name>
     <Id>42990</Id>
@@ -51489,6 +51623,7 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Lion's Head Ring</Name>
     <Id>43180</Id>
@@ -51653,6 +51788,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -51675,6 +51811,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <HitRating>4</HitRating>
@@ -52434,6 +52571,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Solitaire of Reflecting Beams</Name>
     <Id>43408</Id>
@@ -53178,6 +53316,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <HasteRating>4</HasteRating>
@@ -53309,6 +53448,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Tears of Bitter Anguish</Name>
     <Id>43573</Id>
@@ -53327,6 +53467,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <Stamina>6</Stamina>
@@ -54476,6 +54617,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
     <SocketBonus>
@@ -54513,6 +54655,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Frenzyheart Insignia of Fury</Name>
     <Id>44073</Id>
@@ -54529,6 +54672,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Oracle Talisman of Ablution</Name>
     <Id>44074</Id>
@@ -55033,6 +55177,7 @@
     <MinDamage>65</MinDamage>
     <MaxDamage>206</MaxDamage>
     <Speed>1.8</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Flameheart Spell Scalpel</Name>
     <Id>44173</Id>
@@ -55897,6 +56042,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Darkmoon Card: Greatness</Name>
     <Id>44253</Id>
@@ -55937,6 +56083,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Darkmoon Card: Greatness</Name>
     <Id>44254</Id>
@@ -55977,6 +56124,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Darkmoon Card: Greatness</Name>
     <Id>44255</Id>
@@ -56058,6 +56206,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signet of Hopeful Light</Name>
     <Id>44283</Id>
@@ -56359,6 +56508,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mercurial Alchemist Stone</Name>
     <Id>44322</Id>
@@ -56378,6 +56528,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Indestructible Alchemist's Stone</Name>
     <Id>44323</Id>
@@ -56397,6 +56548,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mighty Alchemist's Stone</Name>
     <Id>44324</Id>
@@ -56759,6 +56911,7 @@
     <MinDamage>160</MinDamage>
     <MaxDamage>296</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's War Staff</Name>
     <Id>44415</Id>
@@ -56782,6 +56935,7 @@
     <MinDamage>160</MinDamage>
     <MaxDamage>296</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Savage Gladiator's Focus Staff</Name>
     <Id>44416</Id>
@@ -56805,6 +56959,7 @@
     <MinDamage>176</MinDamage>
     <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's War Staff</Name>
     <Id>44417</Id>
@@ -56828,6 +56983,7 @@
     <MinDamage>176</MinDamage>
     <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Hateful Gladiator's Focus Staff</Name>
     <Id>44418</Id>
@@ -56851,6 +57007,7 @@
     <MinDamage>192</MinDamage>
     <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's War Staff</Name>
     <Id>44419</Id>
@@ -56874,6 +57031,7 @@
     <MinDamage>192</MinDamage>
     <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deadly Gladiator's Focus Staff</Name>
     <Id>44420</Id>
@@ -56897,6 +57055,7 @@
     <MinDamage>220</MinDamage>
     <MaxDamage>406</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -56924,6 +57083,7 @@
     <MinDamage>220</MinDamage>
     <MaxDamage>406</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -56951,6 +57111,7 @@
     <MinDamage>242</MinDamage>
     <MaxDamage>447</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -56978,6 +57139,7 @@
     <MinDamage>242</MinDamage>
     <MaxDamage>447</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -57327,6 +57489,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Frenzyheart Insignia of Fury</Name>
     <Id>44869</Id>
@@ -57343,6 +57506,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Oracle Talisman of Ablution</Name>
     <Id>44870</Id>
@@ -57883,6 +58047,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Flow of Knowledge</Name>
     <Id>44912</Id>
@@ -57913,6 +58078,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Anvil of Titans</Name>
     <Id>44914</Id>
@@ -57974,6 +58140,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Loop of the Kirin Tor</Name>
     <Id>44934</Id>
@@ -58144,6 +58311,7 @@
     <MinDamage>58</MinDamage>
     <MaxDamage>188</MaxDamage>
     <Speed>1.5</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Dagger of Lunar Purity</Name>
     <Id>45078</Id>
@@ -58167,6 +58335,7 @@
     <MaxDamage>315</MaxDamage>
     <Speed>2.5</Speed>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Titansteel Spellblade</Name>
     <Id>45085</Id>
@@ -58363,6 +58532,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Glowing Ring of Reclamation</Name>
     <Id>45113</Id>
@@ -58533,6 +58703,7 @@
     <MaxDamage>226</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Gnomeregan Bonechopper</Name>
     <Id>45129</Id>
@@ -58566,12 +58737,26 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_banner_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalHit</Trigger>
+          <Stats>
+            <CritRating>328</CritRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Resilience>73</Resilience>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Jouster's Fury</Name>
     <Id>45131</Id>
@@ -58985,6 +59170,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Living Flame</Name>
     <Id>45148</Id>
@@ -59202,6 +59388,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Heart of Iron</Name>
     <Id>45158</Id>
@@ -59422,6 +59609,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Pyrelight Circle</Name>
     <Id>45168</Id>
@@ -59485,6 +59673,7 @@
     <MinDamage>231</MinDamage>
     <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Intensity</Name>
     <Id>45171</Id>
@@ -59782,6 +59971,7 @@
     <MaxDamage>226</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Blade of the Keening Banshee</Name>
     <Id>45208</Id>
@@ -59912,6 +60102,7 @@
     <MinDamage>58</MinDamage>
     <MaxDamage>188</MaxDamage>
     <Speed>1.5</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Scalpel of the Royal Apothecary</Name>
     <Id>45214</Id>
@@ -60006,12 +60197,26 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_banner_03</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalHit</Trigger>
+          <Stats>
+            <CritRating>328</CritRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Resilience>73</Resilience>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Jouster's Fury</Name>
     <Id>45219</Id>
@@ -60281,6 +60486,7 @@
     <MinDamage>231</MinDamage>
     <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Rapture</Name>
     <Id>45234</Id>
@@ -60302,6 +60508,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Radiant Seal</Name>
     <Id>45235</Id>
@@ -60934,6 +61141,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Wrathstone</Name>
     <Id>45263</Id>
@@ -61088,6 +61296,7 @@
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Idol of the Crying Wind</Name>
     <Id>45270</Id>
@@ -61327,6 +61536,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Pyrite Infuser</Name>
     <Id>45286</Id>
@@ -61351,6 +61561,7 @@
     <MaxDamage>229</MaxDamage>
     <Speed>1.6</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Firesoul</Name>
     <Id>45287</Id>
@@ -61448,6 +61659,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Energy Siphon</Name>
     <Id>45292</Id>
@@ -61570,6 +61782,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -61826,6 +62039,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Eye of the Broodmother</Name>
     <Id>45308</Id>
@@ -61943,6 +62157,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Furnace Stone</Name>
     <Id>45313</Id>
@@ -62316,6 +62531,7 @@
     <MaxDamage>257</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Stormtip</Name>
     <Id>45332</Id>
@@ -64507,6 +64723,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Lady Maye's Sapphire Ring</Name>
     <Id>45418</Id>
@@ -64980,6 +65197,7 @@
     <MaxDamage>282</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Runescribed Blade</Name>
     <Id>45437</Id>
@@ -65001,6 +65219,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of the Faithful Servant</Name>
     <Id>45438</Id>
@@ -65314,6 +65533,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Frozen Loop</Name>
     <Id>45451</Id>
@@ -65456,6 +65676,7 @@
     <MinDamage>244</MinDamage>
     <MaxDamage>450</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -65655,6 +65876,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Scale of Fates</Name>
     <Id>45466</Id>
@@ -65869,6 +66091,7 @@
     <MinDamage>231</MinDamage>
     <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The Lifebinder</Name>
     <Id>45479</Id>
@@ -66135,6 +66358,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Pandora's Plea</Name>
     <Id>45490</Id>
@@ -66251,6 +66475,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -66450,25 +66675,13 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_misc_ahnqirajtrinket_05</IconPath>
     <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
-          <Stats>
-            <DamageTakenMultiplier>-0.01</DamageTakenMultiplier>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>1</Cooldown>
-          <Chance>0.05</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>107</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The General's Heart</Name>
     <Id>45507</Id>
@@ -66662,6 +66875,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ring of the Vacant Eye</Name>
     <Id>45515</Id>
@@ -66741,6 +66955,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Flare of the Heavens</Name>
     <Id>45518</Id>
@@ -66844,6 +67059,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Blood of the Old God</Name>
     <Id>45522</Id>
@@ -66940,6 +67156,7 @@
     <MaxDamage>282</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Soulscribe</Name>
     <Id>45527</Id>
@@ -66982,6 +67199,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sanity's Bond</Name>
     <Id>45530</Id>
@@ -67112,6 +67330,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Show of Faith</Name>
     <Id>45535</Id>
@@ -68066,6 +68285,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Comet's Trail</Name>
     <Id>45609</Id>
@@ -68190,6 +68410,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -68336,6 +68557,7 @@
     <MaxDamage>297</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -68574,6 +68796,7 @@
     <MaxDamage>257</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Plasma Foil</Name>
     <Id>45685</Id>
@@ -68665,6 +68888,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Inscribed Loop of the Kirin Tor</Name>
     <Id>45689</Id>
@@ -68706,6 +68930,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Inscribed Signet of the Kirin Tor</Name>
     <Id>45691</Id>
@@ -68900,6 +69125,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Emerald Signet Ring</Name>
     <Id>45702</Id>
@@ -68918,6 +69144,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Spark of Hope</Name>
     <Id>45703</Id>
@@ -69098,6 +69325,7 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Runed Mana Band</Name>
     <Id>45808</Id>
@@ -69949,6 +70177,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Elemental Focus Stone</Name>
     <Id>45866</Id>
@@ -70294,6 +70523,7 @@
     <MinDamage>231</MinDamage>
     <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>
@@ -70511,6 +70741,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sif's Remembrance</Name>
     <Id>45929</Id>
@@ -70567,6 +70798,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mjolnir Runestone</Name>
     <Id>45931</Id>
@@ -70613,6 +70845,7 @@
     <MinDamage>211</MinDamage>
     <MaxDamage>390</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Unraveling Reach</Name>
     <Id>45934</Id>
@@ -70842,6 +71075,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <Mp5>2</Mp5>
@@ -71025,6 +71259,7 @@
     <MinDamage>232</MinDamage>
     <MaxDamage>428</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -71052,6 +71287,7 @@
     <MinDamage>232</MinDamage>
     <MaxDamage>428</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -71079,6 +71315,7 @@
     <MinDamage>232</MinDamage>
     <MaxDamage>428</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -71106,6 +71343,7 @@
     <MinDamage>232</MinDamage>
     <MaxDamage>428</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -71458,6 +71696,7 @@
     <MinDamage>82</MinDamage>
     <MaxDamage>264</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -71722,6 +71961,7 @@
     <MaxDamage>288</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <HitRating>4</HitRating>
@@ -72147,6 +72387,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Royal Seal of King Llane</Name>
     <Id>46021</Id>
@@ -72212,6 +72453,7 @@
     <MinDamage>211</MinDamage>
     <MaxDamage>390</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Devotion</Name>
     <Id>46025</Id>
@@ -72464,6 +72706,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Dark Matter</Name>
     <Id>46038</Id>
@@ -72655,6 +72898,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -72772,6 +73016,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Meteorite Crystal</Name>
     <Id>46051</Id>
@@ -73369,6 +73614,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Titan-Forged Rune of Audacity</Name>
     <Id>46081</Id>
@@ -73387,6 +73633,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Titan-Forged Rune of Determination</Name>
     <Id>46082</Id>
@@ -73405,6 +73652,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Titan-Forged Rune of Accuracy</Name>
     <Id>46083</Id>
@@ -73423,6 +73671,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Titan-Forged Rune of Cruelty</Name>
     <Id>46084</Id>
@@ -73441,6 +73690,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Titan-Forged Rune of Alacrity</Name>
     <Id>46085</Id>
@@ -73471,6 +73721,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Platinum Disks of Battle</Name>
     <Id>46086</Id>
@@ -73488,6 +73739,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Platinum Disks of Sorcery</Name>
     <Id>46087</Id>
@@ -73518,6 +73770,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Platinum Disks of Swiftness</Name>
     <Id>46088</Id>
@@ -73564,6 +73817,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <Spirit>4</Spirit>
@@ -76207,6 +76461,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Vanquished Clutches of Yogg-Saron</Name>
     <Id>46312</Id>
@@ -76326,6 +76581,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -76562,6 +76818,7 @@
     <MinDamage>291</MinDamage>
     <MaxDamage>538</MaxDamage>
     <Speed>2.9</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Pillar of Fortitude</Name>
     <Id>46350</Id>
@@ -77151,6 +77408,7 @@
     <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Blade of Tarasque</Name>
     <Id>46979</Id>
@@ -77175,6 +77433,7 @@
     <MaxDamage>342</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -77653,6 +77912,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Solace of the Defeated</Name>
     <Id>47041</Id>
@@ -77785,6 +78045,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Band of Deplorable Violence</Name>
     <Id>47054</Id>
@@ -77882,6 +78143,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Solace of the Defeated</Name>
     <Id>47059</Id>
@@ -78353,7 +78615,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4610</Health>
+            <BattlemasterHealth>4610</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -78368,6 +78630,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Satrina's Impeding Scarab</Name>
     <Id>47080</Id>
@@ -78557,7 +78820,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>5186</Health>
+            <BattlemasterHealth>5186</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -78572,6 +78835,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Satrina's Impeding Scarab</Name>
     <Id>47088</Id>
@@ -79102,6 +79366,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Death's Verdict</Name>
     <Id>47115</Id>
@@ -79254,6 +79519,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Death's Verdict</Name>
     <Id>47131</Id>
@@ -80031,6 +80297,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Reign of the Unliving</Name>
     <Id>47182</Id>
@@ -80182,6 +80449,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Reign of the Unliving</Name>
     <Id>47188</Id>
@@ -80423,6 +80691,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signet of Purity</Name>
     <Id>47200</Id>
@@ -80740,6 +81009,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Abyssal Rune</Name>
     <Id>47213</Id>
@@ -80770,6 +81040,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Banner of Victory</Name>
     <Id>47214</Id>
@@ -80800,6 +81071,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Tears of the Vanquished</Name>
     <Id>47215</Id>
@@ -80830,6 +81102,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>The Black Heart</Name>
     <Id>47216</Id>
@@ -80992,6 +81265,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Ring of the Darkmender</Name>
     <Id>47223</Id>
@@ -81013,6 +81287,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -81317,6 +81592,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -81791,6 +82067,7 @@
     <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Barb of Tarasque</Name>
     <Id>47261</Id>
@@ -82037,6 +82314,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Solace of the Fallen</Name>
     <Id>47271</Id>
@@ -82190,6 +82468,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Circle of the Darkmender</Name>
     <Id>47278</Id>
@@ -82462,7 +82741,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4610</Health>
+            <BattlemasterHealth>4610</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -82477,6 +82756,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Juggernaut's Vitality</Name>
     <Id>47290</Id>
@@ -82785,6 +83065,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Death's Choice</Name>
     <Id>47303</Id>
@@ -83082,6 +83363,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Reign of the Dead</Name>
     <Id>47316</Id>
@@ -83340,6 +83622,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Lurid Manifestation</Name>
     <Id>47327</Id>
@@ -83682,6 +83965,7 @@
     <MaxDamage>342</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -83944,6 +84228,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Solace of the Fallen</Name>
     <Id>47432</Id>
@@ -84108,6 +84393,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -84402,7 +84688,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>5186</Health>
+            <BattlemasterHealth>5186</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -84417,6 +84703,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Juggernaut's Vitality</Name>
     <Id>47451</Id>
@@ -84747,6 +85034,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Death's Choice</Name>
     <Id>47464</Id>
@@ -85068,6 +85356,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Reign of the Dead</Name>
     <Id>47477</Id>
@@ -85339,6 +85628,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -85807,6 +86097,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sinner's Confession</Name>
     <Id>47512</Id>
@@ -85935,6 +86226,7 @@
     <MaxDamage>342</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -85962,6 +86254,7 @@
     <MaxDamage>342</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -86118,6 +86411,7 @@
     <MinDamage>280</MinDamage>
     <MaxDamage>517</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>
@@ -86145,6 +86439,7 @@
     <MinDamage>280</MinDamage>
     <MaxDamage>517</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>
@@ -86721,6 +87016,7 @@
     <MaxDamage>257</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -87919,6 +88215,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Firestorm Ring</Name>
     <Id>47618</Id>
@@ -88324,6 +88621,7 @@
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Idol of Lunar Fury</Name>
     <Id>47670</Id>
@@ -89616,6 +89914,7 @@
     <MaxDamage>282</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -89661,6 +89960,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Victor's Call</Name>
     <Id>47725</Id>
@@ -89678,6 +89978,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Talisman of Volatile Power</Name>
     <Id>47726</Id>
@@ -89689,12 +89990,38 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_talisman_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>DamageTaken</Trigger>
+                <Stats>
+                  <BonusArmor>1265</BonusArmor>
+                </Stats>
+                <Duration>INF</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>5</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>114</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Fervor of the Frostborn</Name>
     <Id>47727</Id>
@@ -89712,6 +90039,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Binding Light</Name>
     <Id>47728</Id>
@@ -89795,6 +90123,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Band of the Invoker</Name>
     <Id>47732</Id>
@@ -89816,6 +90145,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Heartmender Circle</Name>
     <Id>47733</Id>
@@ -89846,6 +90176,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mark of Supremacy</Name>
     <Id>47734</Id>
@@ -89876,6 +90207,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Glyph of Indomitability</Name>
     <Id>47735</Id>
@@ -90069,6 +90401,7 @@
     <MinDamage>342</MinDamage>
     <MaxDamage>631</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
     <SocketBonus>
@@ -91955,6 +92288,7 @@
     <MinDamage>231</MinDamage>
     <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -92496,6 +92830,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Firestorm Band</Name>
     <Id>47862</Id>
@@ -92770,6 +93105,7 @@
     <MaxDamage>282</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -92888,6 +93224,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Fetish of Volatile Power</Name>
     <Id>47879</Id>
@@ -92905,6 +93242,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Binding Stone</Name>
     <Id>47880</Id>
@@ -92947,6 +93285,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Vengeance of the Forsaken</Name>
     <Id>47881</Id>
@@ -92958,12 +93297,38 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_talisman_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>DamageTaken</Trigger>
+                <Stats>
+                  <BonusArmor>1265</BonusArmor>
+                </Stats>
+                <Duration>INF</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>5</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>114</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Eitrigg's Oath</Name>
     <Id>47882</Id>
@@ -93205,6 +93570,7 @@
     <MinDamage>342</MinDamage>
     <MaxDamage>631</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
     <SocketBonus>
@@ -93399,6 +93765,7 @@
     <MinDamage>231</MinDamage>
     <MaxDamage>427</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -94057,6 +94424,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -94380,6 +94748,7 @@
     <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -94500,6 +94869,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Talisman of Volatile Power</Name>
     <Id>47946</Id>
@@ -94517,6 +94887,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Binding Light</Name>
     <Id>47947</Id>
@@ -94559,6 +94930,7 @@
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Victor's Call</Name>
     <Id>47948</Id>
@@ -94570,12 +94942,38 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_talisman_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>DamageTaken</Trigger>
+                <Stats>
+                  <BonusArmor>1422</BonusArmor>
+                </Stats>
+                <Duration>INF</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>5</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>126</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Alliance</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Fervor of the Frostborn</Name>
     <Id>47949</Id>
@@ -94849,6 +95247,7 @@
     <MinDamage>376</MinDamage>
     <MaxDamage>693</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
     <SocketColor3>Yellow</SocketColor3>
@@ -95055,6 +95454,7 @@
     <MinDamage>254</MinDamage>
     <MaxDamage>469</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>
@@ -95886,6 +96286,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -96182,6 +96583,7 @@
     <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -96302,6 +96704,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Fetish of Volatile Power</Name>
     <Id>48018</Id>
@@ -96319,6 +96722,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Binding Stone</Name>
     <Id>48019</Id>
@@ -96361,6 +96765,7 @@
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Vengeance of the Forsaken</Name>
     <Id>48020</Id>
@@ -96372,12 +96777,38 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_talisman_02</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>DamageTaken</Trigger>
+                <Stats>
+                  <BonusArmor>1422</BonusArmor>
+                </Stats>
+                <Duration>INF</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>5</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>126</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Horde</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Eitrigg's Oath</Name>
     <Id>48021</Id>
@@ -96758,6 +97189,7 @@
     <MinDamage>376</MinDamage>
     <MaxDamage>693</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Yellow</SocketColor2>
     <SocketColor3>Yellow</SocketColor3>
@@ -96990,6 +97422,7 @@
     <MinDamage>254</MinDamage>
     <MaxDamage>469</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>
@@ -105782,6 +106215,7 @@
     <MinDamage>95</MinDamage>
     <MaxDamage>304</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -105808,6 +106242,7 @@
     <MinDamage>266</MinDamage>
     <MaxDamage>492</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -105835,6 +106270,7 @@
     <MinDamage>266</MinDamage>
     <MaxDamage>492</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -105862,6 +106298,7 @@
     <MinDamage>267</MinDamage>
     <MaxDamage>493</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -107898,6 +108335,7 @@
     <MinDamage>266</MinDamage>
     <MaxDamage>492</MaxDamage>
     <Speed>2</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -111598,6 +112036,7 @@
     <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -111678,6 +112117,7 @@
     <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -111913,6 +112353,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Shard of the Crystal Heart</Name>
     <Id>48722</Id>
@@ -111943,6 +112384,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Talisman of Resurgence</Name>
     <Id>48724</Id>
@@ -112011,6 +112453,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Etched Loop of the Kirin Tor</Name>
     <Id>48955</Id>
@@ -112052,6 +112495,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Etched Signet of the Kirin Tor</Name>
     <Id>48957</Id>
@@ -112531,6 +112975,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Titan-Forged Band of Ascendancy</Name>
     <Id>48999</Id>
@@ -112609,6 +113054,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Coren's Chromium Coaster</Name>
     <Id>49074</Id>
@@ -112639,6 +113085,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Mithril Pocketwatch</Name>
     <Id>49076</Id>
@@ -112669,6 +113116,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ancient Pickled Egg</Name>
     <Id>49078</Id>
@@ -112699,6 +113147,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Brawler's Souvenir</Name>
     <Id>49080</Id>
@@ -112751,6 +113200,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Bitter Balebrew Charm</Name>
     <Id>49116</Id>
@@ -112768,6 +113218,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Bubbling Brightbrew Charm</Name>
     <Id>49118</Id>
@@ -112930,6 +113381,7 @@
     <MinDamage>80</MinDamage>
     <MaxDamage>269</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -112956,6 +113408,7 @@
     <MinDamage>95</MinDamage>
     <MaxDamage>304</MaxDamage>
     <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -112978,6 +113431,7 @@
     <MinDamage>55</MinDamage>
     <MaxDamage>178</MaxDamage>
     <Speed>1.7</Speed>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <Name>Skoll's Fang</Name>
     <Id>49227</Id>
@@ -113224,6 +113678,7 @@
     <MinDamage>118</MinDamage>
     <MaxDamage>376</MaxDamage>
     <Speed>2.4</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Glinting Azuresong Mageblade</Name>
     <Id>49298</Id>
@@ -113363,6 +113818,7 @@
     <MinDamage>73</MinDamage>
     <MaxDamage>235</MaxDamage>
     <Speed>1.5</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sharpened Fang of the Mystics</Name>
     <Id>49304</Id>
@@ -113472,6 +113928,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Runed Ring of Binding</Name>
     <Id>49309</Id>
@@ -113490,6 +113947,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Purified Shard of the Scale</Name>
     <Id>49310</Id>
@@ -114664,6 +115122,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Polished Dragonslayer's Signet</Name>
     <Id>49486</Id>
@@ -114683,6 +115142,7 @@
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Purified Onyxia Blood Talisman</Name>
     <Id>49487</Id>
@@ -114701,6 +115161,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Shiny Shard of the Scale</Name>
     <Id>49488</Id>
@@ -114725,6 +115186,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Signified Ring of Binding</Name>
     <Id>49489</Id>
@@ -114833,6 +115295,7 @@
     <MinDamage>81</MinDamage>
     <MaxDamage>259</MaxDamage>
     <Speed>1.5</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Honed Fang of the Mystics</Name>
     <Id>49494</Id>
@@ -114972,6 +115435,7 @@
     <MinDamage>130</MinDamage>
     <MaxDamage>414</MaxDamage>
     <Speed>2.4</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Polished Azuresong Mageblade</Name>
     <Id>49499</Id>
@@ -115232,6 +115696,7 @@
     <MinDamage>312</MinDamage>
     <MaxDamage>576</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Blood Boil Lancet</Name>
     <Id>49790</Id>
@@ -115445,6 +115910,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Spiteful Signet</Name>
     <Id>49800</Id>
@@ -115468,6 +115934,7 @@
     <MinDamage>281</MinDamage>
     <MaxDamage>519</MaxDamage>
     <Speed>2.8</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Unspeakable Secret</Name>
     <Id>49801</Id>
@@ -116138,6 +116605,7 @@
     <MaxDamage>229</MaxDamage>
     <Speed>1.6</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Splintered Icecrown Parapet</Name>
     <Id>49833</Id>
@@ -116425,6 +116893,7 @@
     <MaxDamage>257</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <CritRating>4</CritRating>
@@ -117260,6 +117729,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -117287,6 +117757,7 @@
     <MaxDamage>358</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Frozen Bonespike</Name>
     <Id>49968</Id>
@@ -117353,6 +117824,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -117619,6 +118091,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
       <SpellPower>5</SpellPower>
@@ -117658,6 +118131,19 @@
     <DisplaySlot>17</DisplaySlot>
     <IconPath>inv_staff_109</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellCast</Trigger>
+          <Stats>
+            <ValkyrDamage>27008</ValkyrDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.02</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>99</Stamina>
       <Intellect>107</Intellect>
       <SpellPower>741</SpellPower>
@@ -117668,6 +118154,7 @@
     <MinDamage>293</MinDamage>
     <MaxDamage>541</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -118683,6 +119170,7 @@
     <MaxDamage>378</MaxDamage>
     <Speed>2.1</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Quel'Delar, Lens of the Mind</Name>
     <Id>50047</Id>
@@ -119028,9 +119516,10 @@
     <Type>OneHandSword</Type>
     <Faction>Neutral</Faction>
     <MinDamage>112</MinDamage>
-    <MaxDamage>359</MaxDamage>
+    <MaxDamage>358</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Rigormortis</Name>
     <Id>50068</Id>
@@ -119872,8 +120361,11 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
     <Name>Valanar's Other Signet Ring</Name>
     <Id>50170</Id>
     <Slot>Finger</Slot>
@@ -119960,8 +120452,11 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
     <Name>Incarnadine Band of Mending</Name>
     <Id>50174</Id>
     <Slot>Finger</Slot>
@@ -120114,11 +120609,14 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>336</MinDamage>
-    <MaxDamage>585</MaxDamage>
+    <MaxDamage>584</MaxDamage>
     <Speed>2.1</Speed>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketColor3>Blue</SocketColor3>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
     <Name>Dying Light</Name>
     <Id>50181</Id>
     <Slot>TwoHand</Slot>
@@ -120481,6 +120979,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Needle-Encrusted Scorpion</Name>
     <Id>50198</Id>
@@ -120683,6 +121182,7 @@
     <MinDamage>108</MinDamage>
     <MaxDamage>345</MaxDamage>
     <Speed>2.2</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Seethe</Name>
     <Id>50210</Id>
@@ -120815,6 +121315,7 @@
     <MaxDamage>282</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Surgeon's Needle</Name>
     <Id>50227</Id>
@@ -120937,7 +121438,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>4104</Health>
+            <BattlemasterHealth>4104</BattlemasterHealth>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -120952,6 +121453,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ick's Rotting Thumb</Name>
     <Id>50235</Id>
@@ -121104,6 +121606,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoA</Bind>
     <SocketBonus />
     <Name>Dread Pirate Ring</Name>
     <Id>50255</Id>
@@ -121147,6 +121650,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Nevermelting Ice Crystal</Name>
     <Id>50259</Id>
@@ -121175,7 +121679,7 @@
             <ManaRestore>11</ManaRestore>
           </Stats>
           <Duration>0</Duration>
-          <Cooldown>0.25</Cooldown>
+          <Cooldown>0.33</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
@@ -121186,6 +121690,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ephemeral Snowflake</Name>
     <Id>50260</Id>
@@ -121449,6 +121954,7 @@
     <MinDamage>331</MinDamage>
     <MaxDamage>611</MaxDamage>
     <Speed>3</Speed>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Engraved Gargoyle Femur</Name>
     <Id>50273</Id>
@@ -122175,6 +122681,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Oath of Empress Zoe</Name>
     <Id>50313</Id>
@@ -122445,6 +122952,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sliver of Pure Ice</Name>
     <Id>50339</Id>
@@ -122475,6 +122983,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Muradin's Spyglass</Name>
     <Id>50340</Id>
@@ -122505,6 +123014,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Unidentifiable Organ</Name>
     <Id>50341</Id>
@@ -122535,6 +123045,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Whispering Fanged Skull</Name>
     <Id>50342</Id>
@@ -122565,6 +123076,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Whispering Fanged Skull</Name>
     <Id>50343</Id>
@@ -122595,6 +123107,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Unidentifiable Organ</Name>
     <Id>50344</Id>
@@ -122625,6 +123138,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Muradin's Spyglass</Name>
     <Id>50345</Id>
@@ -122655,6 +123169,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sliver of Pure Ice</Name>
     <Id>50346</Id>
@@ -122666,12 +123181,26 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_trinket_01</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <SpellPower>665.5</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <HasteRating>170</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Dislodged Foreign Object</Name>
     <Id>50348</Id>
@@ -122689,6 +123218,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Corpse Tongue Coin</Name>
     <Id>50349</Id>
@@ -122706,6 +123236,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Tiny Abomination in a Jar</Name>
     <Id>50351</Id>
@@ -122723,6 +123254,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Corpse Tongue Coin</Name>
     <Id>50352</Id>
@@ -122734,12 +123266,26 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_trinket_01</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <SpellPower>577.5</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <HasteRating>155</HasteRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Dislodged Foreign Object</Name>
     <Id>50353</Id>
@@ -122757,6 +123303,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Bauble of True Blood</Name>
     <Id>50354</Id>
@@ -122787,6 +123334,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Cost>60</Cost>
     <Name>Herkuml War Token</Name>
@@ -122805,6 +123353,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Cost>60</Cost>
     <Name>Corroded Skeleton Key</Name>
@@ -122836,6 +123385,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Cost>60</Cost>
     <Name>Maghia's Misguided Quill</Name>
@@ -122861,12 +123411,13 @@
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <SpellPower>153</SpellPower>
+      <SpellPower>179</SpellPower>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Purified Lunar Dust</Name>
     <Id>50358</Id>
@@ -122897,6 +123448,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Althor's Abacus</Name>
     <Id>50359</Id>
@@ -122914,6 +123466,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Phylactery of the Nameless Lich</Name>
     <Id>50360</Id>
@@ -122931,6 +123484,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sindragosa's Flawless Fang</Name>
     <Id>50361</Id>
@@ -122938,8 +123492,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>64244</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_trinket_04</IconPath>
     <Stats>
       <SpecialEffects>
@@ -122961,6 +123515,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deathbringer's Will</Name>
     <Id>50362</Id>
@@ -122991,6 +123546,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Deathbringer's Will</Name>
     <Id>50363</Id>
@@ -123008,6 +123564,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Sindragosa's Flawless Fang</Name>
     <Id>50364</Id>
@@ -123025,6 +123582,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Phylactery of the Nameless Lich</Name>
     <Id>50365</Id>
@@ -123055,6 +123613,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Althor's Abacus</Name>
     <Id>50366</Id>
@@ -123118,6 +123677,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ashen Band of Destruction</Name>
     <Id>50377</Id>
@@ -123139,6 +123699,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ashen Band of Wisdom</Name>
     <Id>50378</Id>
@@ -123160,6 +123721,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ashen Band of Greater Destruction</Name>
     <Id>50384</Id>
@@ -123181,6 +123743,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Ashen Band of Greater Wisdom</Name>
     <Id>50386</Id>
@@ -123363,10 +123926,61 @@
   </Item>
   <Item>
     <ItemLevel>277</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>63960</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_jewelry_ring_83</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <SpellPower>285</SpellPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Stamina>73</Stamina>
+      <Intellect>73</Intellect>
+      <SpellPower>101</SpellPower>
+      <HitRating>51</HitRating>
+      <HasteRating>64</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Ashen Band of Endless Destruction</Name>
+    <Id>50398</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>277</ItemLevel>
+    <DisplayId>63949</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
     <IconPath>inv_jewelry_ring_85</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellCast</Trigger>
+          <Stats>
+            <SpellPower>285</SpellPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>73</Stamina>
       <Intellect>73</Intellect>
       <SpellPower>101</SpellPower>
@@ -123377,6 +123991,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Ashen Band of Endless Wisdom</Name>
@@ -123674,8 +124289,11 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
     <Name>Memory of Malygos</Name>
     <Id>50424</Id>
     <Slot>Finger</Slot>
@@ -123953,11 +124571,26 @@
     <DisplayId>64624</DisplayId>
     <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_offhand_1h_ulduarraid_d_01</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>InsectSwarmOrMoonfireTick</Trigger>
+          <Stats>
+            <CritRating>44</CritRating>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>5</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Idol</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Cost>30</Cost>
     <Name>Idol of the Lunar Eclipse</Name>
@@ -124471,7 +125104,8 @@
     <MaxDamage>414</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
     <SocketBonus />
     <Name>Frozen Bonespike</Name>
     <Id>50608</Id>
@@ -124514,7 +125148,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Marrowgar's Frigid Eye</Name>
     <Id>50610</Id>
@@ -124604,7 +125239,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
     <SocketBonus />
     <Name>Loop of the Endless Labyrinth</Name>
     <Id>50614</Id>
@@ -125077,7 +125713,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Memory of Malygos</Name>
     <Id>50636</Id>
@@ -125230,7 +125867,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Ring of Maddening Whispers</Name>
     <Id>50644</Id>
@@ -125309,6 +125947,19 @@
     <DisplaySlot>17</DisplaySlot>
     <IconPath>inv_staff_109</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellCast</Trigger>
+          <Stats>
+            <ValkyrDamage>27008</ValkyrDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.02</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>103</Stamina>
       <Intellect>115</Intellect>
       <SpellPower>837</SpellPower>
@@ -125319,8 +125970,10 @@
     <MinDamage>345</MinDamage>
     <MaxDamage>620</MaxDamage>
     <Speed>2.1</Speed>
-    <SocketColor2>Red</SocketColor2>
-    <SocketColor3>Blue</SocketColor3>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketColor3>Yellow</SocketColor3>
     <SocketBonus />
     <Name>Nibelung</Name>
     <Id>50648</Id>
@@ -125657,7 +126310,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
     <SocketBonus />
     <Name>Ring of Rapid Ascent</Name>
     <Id>50664</Id>
@@ -126509,7 +127163,8 @@
     <MaxDamage>414</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
     <SocketBonus />
     <Name>Rigormortis</Name>
     <Id>50704</Id>
@@ -126550,6 +127205,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Tiny Abomination in a Jar</Name>
     <Id>50706</Id>
@@ -126742,7 +127398,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
     <SocketBonus />
     <Name>Valanar's Other Signet Ring</Name>
     <Id>50714</Id>
@@ -126875,7 +127532,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Blue</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
     <SocketBonus />
     <Name>Incarnadine Band of Mending</Name>
     <Id>50720</Id>
@@ -126988,8 +127646,10 @@
     <MinDamage>388</MinDamage>
     <MaxDamage>663</MaxDamage>
     <Speed>2.1</Speed>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketColor3>Blue</SocketColor3>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketColor3>Red</SocketColor3>
     <SocketBonus />
     <Name>Dying Light</Name>
     <Id>50725</Id>
@@ -127007,6 +127667,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Bauble of True Blood</Name>
     <Id>50726</Id>
@@ -127375,6 +128036,7 @@
     <MaxDamage>324</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Frost Needle</Name>
     <Id>50771</Id>
@@ -127913,6 +128575,7 @@
     <MaxDamage>324</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Midnight Sun</Name>
     <Id>50793</Id>
@@ -128208,6 +128871,7 @@
     <MinDamage>392</MinDamage>
     <MaxDamage>724</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -129717,6 +130381,7 @@
     <MinDamage>266</MinDamage>
     <MaxDamage>491</MaxDamage>
     <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus>
@@ -130229,15 +130894,19 @@
     <Stats>
       <Stamina>61</Stamina>
       <Intellect>61</Intellect>
-      <SpellPower>94</SpellPower>
-      <HasteRating>53</HasteRating>
+      <SpellPower>85</SpellPower>
+      <HasteRating>45</HasteRating>
       <Mp5>27</Mp5>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
     <Name>Signet of Putrefaction</Name>
     <Id>50986</Id>
     <Slot>Finger</Slot>
@@ -136266,6 +136935,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Medallion of the Horde</Name>
     <Id>51378</Id>
@@ -136333,8 +137003,11 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Red</SocketColor2>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
     <Name>Cerise Coiled Ring</Name>
     <Id>51381</Id>
     <Slot>Finger</Slot>
@@ -136674,6 +137347,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Runed Signet of the Kirin Tor</Name>
     <Id>51557</Id>
@@ -136695,6 +137369,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Runed Loop of the Kirin Tor</Name>
     <Id>51558</Id>
@@ -136894,11 +137569,14 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>330</MinDamage>
-    <MaxDamage>609</MaxDamage>
+    <MaxDamage>608</MaxDamage>
     <Speed>2.6</Speed>
-    <SocketColor2>Red</SocketColor2>
-    <SocketColor3>Yellow</SocketColor3>
-    <SocketBonus />
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
     <Name>Sister Svalna's Aether Staff</Name>
     <Id>51582</Id>
     <Slot>TwoHand</Slot>
@@ -137190,9 +137868,10 @@
     <Type>Dagger</Type>
     <Faction>Neutral</Faction>
     <MinDamage>102</MinDamage>
-    <MaxDamage>325</MaxDamage>
+    <MaxDamage>324</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
+    <Bind>BoP</Bind>
     <SocketBonus />
     <Name>Bleak Coldarra Carver</Name>
     <Id>51788</Id>
@@ -137400,7 +138079,8 @@
     <MaxDamage>359</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
-    <SocketColor2>Red</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
     <SocketBonus />
     <Name>Bleak Coldarra Carver</Name>
     <Id>51815</Id>
@@ -137696,8 +138376,10 @@
     <MinDamage>387</MinDamage>
     <MaxDamage>695</MaxDamage>
     <Speed>2.6</Speed>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
     <SocketColor2>Red</SocketColor2>
-    <SocketColor3>Red</SocketColor3>
+    <SocketColor3>Yellow</SocketColor3>
     <SocketBonus />
     <Name>Sister Svalna's Aether Staff</Name>
     <Id>51828</Id>
@@ -138177,7 +138859,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Red</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
     <SocketBonus />
     <Name>Cerise Coiled Ring</Name>
     <Id>51849</Id>
@@ -138981,7 +139664,8 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
-    <SocketColor2>Red</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
     <SocketBonus />
     <Name>Signet of Putrefaction</Name>
     <Id>51884</Id>
@@ -139050,8 +139734,10 @@
     <MinDamage>293</MinDamage>
     <MaxDamage>542</MaxDamage>
     <Speed>2.1</Speed>
-    <SocketColor2>Red</SocketColor2>
-    <SocketColor3>Blue</SocketColor3>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketColor3>Yellow</SocketColor3>
     <SocketBonus />
     <Name>Abracadaver</Name>
     <Id>51887</Id>
@@ -139306,6 +139992,7 @@
     <MinDamage>434</MinDamage>
     <MaxDamage>800</MaxDamage>
     <Speed>3.1</Speed>
+    <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketColor3>Blue</SocketColor3>
@@ -139601,7 +140288,8 @@
     <MaxDamage>359</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Midnight Sun</Name>
     <Id>51910</Id>
@@ -140110,7 +140798,8 @@
     <MaxDamage>359</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
-    <SocketColor2>Yellow</SocketColor2>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
     <SocketBonus />
     <Name>Frost Needle</Name>
     <Id>51932</Id>

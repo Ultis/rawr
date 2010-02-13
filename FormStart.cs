@@ -18,21 +18,29 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.4.0
- - More improvements to Wowhead/Armory parsing.
- - More special effect handling improvements.
- - Added an ilvl 259-276 filter group.
- - Added a warning if you have too many/few talent points allocated.
- - Fix for a couple enchants being missing, or mistagged as requiring a profession.
- - Rawr.ProtPaladin: Fix for DK rune enchants showing up.
- - Rawr.Hunter: Improved the UI of the options screen. Fix for DK rune enchants showing up. Fix for armor penetration debuffs applying to pets. Fix for happiness being applied twice to pets.
- - Rawr.DPSWarr: Fix for crit depression calculations. Displayed crit chance is now locked at your basic crit chance against equal level mobs (ie, should match character screen). Fix for a bug with very low amounts of armor penetration. Fix for DBW trinket calculations.
- - Rawr.RestoSham: Support for more special effects.
- - Rawr.Elemental: Updated T9 set bonuses.
- - Rawr.Tree: Added option to save/load spell profiles, and included several defaults. Added an MPS chart.
- - Rawr.Warlock: There's still a big updating coming, but it's still not quite ready. We're sorry that it keeps getting dragged out.
- - Rawr.Cat: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. NOTE: It's currently undervaluing Idol of the Crying Moon; this idol is indeed better than Mutilation for Cats, assuming you can keep the buff up for the fight duration.
- - Rawr.Bear: Slight fix to Idol of Mutilation Calculations. Added support for Idol of the Crying Moon. ";
+			labelVersionHistory.Text = @"v2.3.9.0
+ - More improvements to the default item filters.
+ - Improved proc calculation of Bryntoll and Shadowstrike.
+ - Improved parsing of source data from Wowhead.
+ - Improvements to batch optimizations.
+ - Fix for Cost optimization ignoring class restrictions.
+ - Improvement for optimizer postprocessing gem swapping.
+ - Rawr.Rogue: Significant rewrite to be much more up to date (this model had been untouched for quite a while and had grown quite out of date). Please report any issues you discover, and we'll do our best to get them resolved asap.
+ - Rawr.Cat: Expanded the default gemming templates. Fix for white crit cap.
+ - Rawr.Bear: Added support for target attack speed debuffs (remember to drop your target attack speed on the options panel back down to undebuffed values!).
+ - Rawr.Hunter: Updated Zod Bow proc to show its effect in its tooltip. Implemented crit caps and floors. Several tooltip improvements for calculations. Now loads all pet data from the Armory. Automatically selects a Shot Priority for you based on your spec, when loading from the Armory. Swapping specs will also automatically swap your Shot Priority.
+ - Rawr.Enhance: Export of calcs now forces ""simulate_mana"" to on.
+ - Rawr.DPSWarr: Improved flurry calculations. Significantly improved many calculation tooltips. Fix for Deep Wounds tick rate at very high crit rates. Fix for white crit cap.
+ - Rawr.Mage: Added support for ABSpam034MBAM rotation. Support for Evocation being hasted by 2T10. Improved modeling of Nibelung.
+ - Rawr.TankDK: Fixed a bug with expertise calculations. Updated to model the hotfixed changes to Frost Presence and Icebound Fortitude.
+ - Rawr.RestoSham: Fixed healing style charts to correctly display burst styles. Many significant calculation fixes and improvements.
+ - Rawr.Retribution: Improved 2T10 calculations. Fix for Exorcism and Consecration being hasted by spell haste.
+ - Rawr.ProtPaladin: Updated to model the hotfixed reduction in Sacred Duty effect.
+ - Rawr.DPSDK: Fix for Target Dodge % and Target Miss % optimizable values not behaving as expected.
+ - Rawr.ProtWarr: Updated Shield Slam, Devastate, and Concussion Blow for their correct 3.3.2 damage and threat values. Changed optimal rotation detection to be more robust. Added non-Revenge rotations if no points are spent in Improved Revenge. Made some minor fixes to the way average ability damage takes into account avoidance, crits, and glancing blows.
+ - Rawr.Moonkin: Fix for Idol of the Lunar Eclipse modeling.
+ - Rawr.Elemental: Fix for Bizuri's Totem of Shattered Ice modeling.
+ - Rawr.ShadowPriest: Added better handling of Nevermelting Ice Crystal trinket.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
