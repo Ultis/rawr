@@ -47,11 +47,21 @@ namespace Rawr.Retribution
         public float AttackSpeed { get; set; }
         public Stats BasicStats { get; set; }
 
+        // Add calculated values to the values dictionary.
+        // These values are then available for display via the CharacterDisplayCalculationLabels
+        // member defined in CalculationsRetribution.cs
+        // While possible, there's little reason to add values to the dictionary that are not being
+        // used by the CharacterDisplayCalculationLabels.
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
+
+            // Status text
             dictValues["Status"] = string.Format("{0} dps", DPSPoints.ToString("N0"));
+
+            // Basic stats
             dictValues["Health"] = BasicStats.Health.ToString("N0");
+            dictValues["Mana"] = BasicStats.Mana.ToString("N0");
             dictValues["Strength"] = BasicStats.Strength.ToString("N0");
             dictValues["Agility"] = string.Format("{0:0}", BasicStats.Agility);
             dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
@@ -59,10 +69,11 @@ namespace Rawr.Retribution
             dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
             dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
             dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating);
-
             dictValues["Weapon Damage"] = WeaponDamage.ToString("N2");
             dictValues["Attack Speed"] = AttackSpeed.ToString("N2");
 
+            // DPS Breakdown
+            dictValues["Total DPS"] = OverallPoints.ToString("N0");
             dictValues["White"] = string.Format("{0}*{1}", WhiteDPS.ToString("N0"), WhiteSkill.ToString());
             dictValues["Seal"] = string.Format("{0}*{1}", SealDPS.ToString("N0"), SealSkill.ToString());
             dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeDPS.ToString("N0"), CrusaderStrikeSkill.ToString());
@@ -73,10 +84,10 @@ namespace Rawr.Retribution
             dictValues["Hammer of Wrath"] = string.Format("{0}*{1}", HammerOfWrathDPS.ToString("N0"), HammerOfWrathSkill.ToString());
             dictValues["Hand of Reckoning"] = string.Format("{0}*{1}", HandOfReckoningDPS.ToString("N0"), HandOfReckoningSkill.ToString());
             dictValues["Other"] = OtherDPS.ToString("N0");
-            dictValues["Total DPS"] = OverallPoints.ToString("N0");
 
-            dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
+            // Rotation Info:
             dictValues["Chosen Rotation"] = Rotation == null ? "n/a" : RotationParameters.ShortRotationString(Rotation);
+            dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
             dictValues["SoV Overtake"] = string.Format("{0} sec", SoVOvertake.ToString("N2"));
             dictValues["Crusader Strike CD"] = Solution.CrusaderStrikeCD.ToString("N2");
             dictValues["Judgement CD"] = Solution.JudgementCD.ToString("N2");
