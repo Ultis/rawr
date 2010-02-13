@@ -7,7 +7,7 @@ namespace Rawr.Retribution
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin)]
     public class CalculationsRetribution : CalculationsBase
     {
-
+        #region Model Properties
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -109,11 +109,13 @@ namespace Rawr.Retribution
                     MetaId = relentless
                 });
 
-
                 return retval;
             }
         }
 
+        /// <summary>
+        /// Buffs that will be enabled by default in the given character object
+        /// </summary>
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd(("Strength of Earth Totem"));
@@ -146,6 +148,9 @@ namespace Rawr.Retribution
         }
 
         private static List<string> _relevantGlyphs;
+        /// <summary>
+        /// List of glyphs that will be available in the Glyph subtab of the Talents tab.
+        /// </summary>
         public override List<string> GetRelevantGlyphs()
         {
             if (_relevantGlyphs == null)
@@ -168,7 +173,7 @@ namespace Rawr.Retribution
 
         private string[] _optimizableCalculationLabels = null;
         /// <summary>
-        /// Labels of the stats available to the Optimizer 
+        /// Labels of the stats available to the Optimizer.
         /// </summary>
         public override string[] OptimizableCalculationLabels
         {
@@ -182,6 +187,7 @@ namespace Rawr.Retribution
                 return _optimizableCalculationLabels;
             }
         }
+
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
         /// and a color for each. These colors will be used in the charts.
@@ -214,12 +220,26 @@ namespace Rawr.Retribution
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
                 }
                 return _subPointNameColors;
             }
         }
 #endif
+
+        /// <summary>
+        /// Creates the CalculationOptionPanel
+        /// </summary>
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
+        {
+            get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRetribution()); }
+        }
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
@@ -238,6 +258,9 @@ namespace Rawr.Retribution
         ///		"Advanced Stats:Dodge",
         ///		"Advanced Stats:Miss*Chance to be missed"
         /// };
+        /// 
+        /// Values used here need to be defined via the GetCharacterDisplayCalculationValues() member
+        /// in CharacterCalculationsRetribution.cs
         /// </summary>
         public override string[] CharacterDisplayCalculationLabels
         {
@@ -248,6 +271,7 @@ namespace Rawr.Retribution
                     List<string> labels = new List<string>(new string[]
                     {
                         "Basic Stats:Health",
+                        "Basic Stats:Mana",
                         "Basic Stats:Strength",
                         "Basic Stats:Agility",
                         "Basic Stats:Attack Power",
@@ -283,50 +307,7 @@ namespace Rawr.Retribution
                 return _characterDisplayCalculationLabels;
             }
         }
-
-        private string[] _customChartNames = null;
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                if (_customChartNames == null)
-                {
-                    _customChartNames = new string[] { "Seals", "Weapon Speed", "Rotations" };
-                }
-                return _customChartNames;
-            }
-        }
-
-#if RAWR3
-        private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
-        {
-            get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRetribution()); }
-        }
-
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
-                {
-                    ItemType.None,
-                    ItemType.Leather,
-                    ItemType.Mail,
-                    ItemType.Plate,
-                    ItemType.Libram,
-                    ItemType.Polearm,
-                    ItemType.TwoHandAxe,
-                    ItemType.TwoHandMace,
-                    ItemType.TwoHandSword
-                }));
-            }
-        }
+        #endregion
 
         public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation()
@@ -419,53 +400,57 @@ namespace Rawr.Retribution
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-            float fightLength = calcOpts.FightLength * 60f;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            if (character.Race == CharacterRace.Dwarf && character.MainHand != null &&
-                    character.MainHand.Type == ItemType.TwoHandMace)
-                statsRace.Expertise += 5f;
-            if (character.Race == CharacterRace.Human && character.MainHand != null &&
-                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.TwoHandSword))
-                statsRace.Expertise += 3f;
-            statsRace.Health -= 180f;
-            statsRace.Mana -= 280f;
+            // Adjust expertise for racial passive and for using Seal of Vengeance combined with the SoV glyph.
+            statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
+            if (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance)
+                statsRace.Expertise += 10f;
 
+            // Combine stats
             Stats stats = statsBaseGear + statsBuffs + statsRace;
-            
-            stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
-            ConvertRatings(stats, talents, calcOpts.TargetLevel);
-
+         
+            // If wanted, Average out any Proc and OnUse effects into the stats
             if (computeAverageStats)
             {
+                float fightLength = calcOpts.FightLength * 60f;
                 Rotation rot;
 
                 CombatStats combats = new CombatStats(character, stats);
-                if (calcOpts.SimulateRotation) rot = new Simulator(combats);
-                else rot = new EffectiveCooldown(combats);
+                if (calcOpts.SimulateRotation) 
+                    rot = new Simulator(combats);
+                else 
+                    rot = new EffectiveCooldown(combats);
 
+                // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
                     statsAverage.Accumulate(ProcessSpecialEffect(effect, rot, calcOpts.Seal, combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset));
                 }
+                stats += statsAverage;
 
-                stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
+                // Death's Verdict/Vengeance (TOTC)
+                // Known issue: We haven't yet accounted for bonus multipliers on str and agi
+                if (stats.Strength > stats.Agility)
+                    stats.Strength += stats.HighestStat + stats.Paragon;
+                else
+                    stats.Agility += stats.HighestStat + stats.Paragon;
 
-                if (stats.Strength > stats.Agility)  stats.Strength += stats.HighestStat + stats.Paragon;
-                else stats.Agility += stats.HighestStat + stats.Paragon;
-
+                // Deathbringer's Will (ICC, Saurfang)
+                // Paladins get str, hasterating and crit procs.  They're all equally likely so we'll divide the proc by 3
                 stats.Strength += stats.DeathbringerProc / 3f;
                 stats.HasteRating += stats.DeathbringerProc / 3f;
                 stats.CritRating += stats.DeathbringerProc / 3f;
-                
-                stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
-
-                ConvertRatings(stats, talents, calcOpts.TargetLevel);
             }
+
+            // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
+            // should affect the averaged stats also.
+            ConvertRatings(stats, talents, calcOpts.TargetLevel);
+
             return stats;
         }
 
@@ -535,155 +520,157 @@ namespace Rawr.Retribution
             else return effect.GetAverageStats(trigger, procChance, baseWeaponSpeed, fightLength);
         }
 
+        // Combine talents and buffs into primary and secondary stats.
+        // Convert ratings into their percentage values.
         private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel)
         {
+            // Primary stats
             stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
-            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
-            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
             stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
-            stats.Health += stats.Stamina * 10;
+            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
 
-            stats.PhysicalHit += stats.HitRating / 3278.998947f;
-            stats.SpellHit += stats.HitRating / 2623.199272f;
-            stats.Expertise += talents.CombatExpertise * 2 + stats.ExpertiseRating * 4f / 32.78998947f;
+            // Secondary stats
+            stats.Mana +=  StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
+            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
+            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
+
+            // Combat ratings
+            stats.Expertise += talents.CombatExpertise * 2 +  StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
+            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
+            stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin);
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
-            stats.PhysicalCrit = stats.PhysicalCrit + stats.CritRating / 4590.598679f +
-                stats.Agility / 5208.333333f + talentCrit - (targetLevel == 83 ? 0.048f : 0f);
-            stats.SpellCrit = stats.SpellCrit + stats.SpellCritOnTarget + stats.CritRating / 4590.598679f + stats.Intellect / 16666.66709f +
-                talentCrit - (targetLevel == 83 ? 0.03f : 0f);
+            stats.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin)
+                                + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin)
+                                + talentCrit
+                                - StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80];    // Mob crit suppression
+            stats.SpellCrit += stats.SpellCritOnTarget
+                            + StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
+                            + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
+                            + talentCrit
+                            - StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];    // Mob crit suppression
 
-            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + stats.HasteRating * 1.3f / 3278.998947f) * (1f + stats.Bloodlust) - 1f;
-            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + stats.HasteRating / 3278.998947f) * (1f + stats.Bloodlust) - 1f;
-            
-            stats.SpellPower += stats.Strength * .2f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
+            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * (1f + stats.Bloodlust) - 1f;
+            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * (1f + stats.Bloodlust) - 1f;
+
+            stats.SpellPower += stats.Strength * talents.TouchedByTheLight * .2f 
+                              + stats.AttackPower * talents.SheathOfLight * .1f;
         }
 
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            //float hasRelevantBuff;
+
+            #region Racials to Force Enable
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffsAdd(("Heroic Presence"));
+            }
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }
+            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            {
+                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
+                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
+                Buff a = Buff.GetBuffByName("Hunter's Mark");
+                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
+                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
+                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
+                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
+                // If we have an enhanced Hunter's Mark, kill the Buff
+                if (hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
+                }
+            }
+            /* [More Buffs to Come to this method]
+             * Ferocious Inspiration | Sanctified Retribution
+             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
+             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
+             */
+            #endregion
+
+            #region Special Pot Handling
+            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }*/
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
+
+
+        #region Relevancy Methods
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
-            if (chartName == "Seals")
+            get
             {
-
-                CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
-
-                Character baseChar = character.Clone();
-                CalculationOptionsRetribution baseOpts = initOpts.Clone();
-                baseChar.CalculationOptions = baseOpts;
-                baseOpts.Seal = SealOf.None;
-                CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(baseChar);
-
-                Character deltaChar = character.Clone();
-                CalculationOptionsRetribution deltaOpts = initOpts.Clone();
-                deltaChar.CalculationOptions = deltaOpts;
-
-                ComparisonCalculationBase Command;
-                deltaOpts.Seal = SealOf.Command;
-                Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == SealOf.Command);
-                Command.Item = null;
-
-                ComparisonCalculationBase Righteousness;
-                deltaOpts.Seal = SealOf.Righteousness;
-                Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == SealOf.Righteousness);
-                Righteousness.Item = null;
-
-                ComparisonCalculationBase Vengeance;
-                deltaOpts.Seal = SealOf.Vengeance;
-                Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == SealOf.Vengeance);
-                Vengeance.Item = null;
-
-                return new ComparisonCalculationBase[] { Command, Righteousness, Vengeance };
-            }
-            if (chartName == "Rotations")
-            {
-                List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                Character baseChar = character.Clone();
-                CalculationOptionsRetribution baseOpts = ((CalculationOptionsRetribution)character.CalculationOptions).Clone();
-                baseChar.CalculationOptions = baseOpts;
-
-                int selected = ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character)).RotationIndex;
-
-                for (int i = 0; i < baseOpts.Rotations.Count; i++)
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
                 {
-                    baseOpts.ForceRotation = i;
-                    ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
-                        Calculations.GetCharacterCalculations(baseChar),
-                        RotationParameters.RotationString(baseOpts.Rotations[i]), i == selected);
-                    compare.Item = null;
-                    comparisons.Add(compare);
-                }
-
-                return comparisons.ToArray();
+                    ItemType.None,
+                    ItemType.Leather,
+                    ItemType.Mail,
+                    ItemType.Plate,
+                    ItemType.Libram,
+                    ItemType.Polearm,
+                    ItemType.TwoHandAxe,
+                    ItemType.TwoHandMace,
+                    ItemType.TwoHandSword
+                }));
             }
-            if (chartName == "Weapon Speed")
-            {
-                if (character.MainHand != null)
-                {
-                    CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
-                    CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
-
-                    Item newMH;
-                    float baseSpeed = character.MainHand.Speed;
-                    int minDamage = character.MainHand.MinDamage;
-                    int maxDamage = character.MainHand.MaxDamage;
-
-                    Character deltaChar = character.Clone();
-                    deltaChar.IsLoading = true;
-
-                    ComparisonCalculationBase three;
-                    newMH = character.MainHand.Item.Clone();
-                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.3f);
-                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.3f);
-                    newMH.Speed = 3.3f;
-                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
-                    three = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.3 Speed", baseSpeed == newMH.Speed);
-                    three.Item = null;
-
-                    ComparisonCalculationBase four;
-                    newMH = character.MainHand.Item.Clone();
-                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.4f);
-                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.4f);
-                    newMH.Speed = 3.4f;
-                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
-                    four = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.4 Speed", baseSpeed == newMH.Speed);
-                    four.Item = null;
-
-                    ComparisonCalculationBase five;
-                    newMH = character.MainHand.Item.Clone();
-                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.5f);
-                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.5f);
-                    newMH.Speed = 3.5f;
-                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
-                    five = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.5 Speed", baseSpeed == newMH.Speed);
-                    five.Item = null;
-
-                    ComparisonCalculationBase six;
-                    newMH = character.MainHand.Item.Clone();
-                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.6f);
-                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.6f);
-                    newMH.Speed = 3.6f;
-                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
-                    six = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.6 Speed", baseSpeed == newMH.Speed);
-                    six.Item = null;
-
-                    ComparisonCalculationBase seven;
-                    newMH = character.MainHand.Item.Clone();
-                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.7f);
-                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.7f);
-                    newMH.Speed = 3.7f;
-                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
-                    seven = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.7 Speed", baseSpeed == newMH.Speed);
-                    seven.Item = null;
-
-                    return new ComparisonCalculationBase[] { three, four, five, six, seven };
-                }
-                else return new ComparisonCalculationBase[0];
-            }
-            else
-            {
-                return new ComparisonCalculationBase[0];
-            }
-
         }
 
         public override bool IsItemRelevant(Item item)
@@ -835,98 +822,149 @@ namespace Rawr.Retribution
             }
             return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));
         }
+        #endregion
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
+        #region Custom Charts
+        // Custom charts are extra charts which can be defined per model.
+        // The charts are available via the "Slot" menu of the righthand Rawr chart panel.
 
-            //float hasRelevantBuff;
-
-            #region Racials to Force Enable
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames
+        {
+            get
             {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
-            #endregion
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
+                if (_customChartNames == null)
                 {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                    _customChartNames = new string[] { "Seals", "Weapon Speed", "Rotations" };
                 }
+                return _customChartNames;
             }
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*//* }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*//* }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*//* }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*//* }
-                }
-            }
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
-            #endregion
-
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }*/
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            return statsBuffs;
         }
+
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            if (chartName == "Seals")
+            {
+                CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+
+                Character baseChar = character.Clone();
+                CalculationOptionsRetribution baseOpts = initOpts.Clone();
+                baseChar.CalculationOptions = baseOpts;
+                baseOpts.Seal = SealOf.None;
+                CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(baseChar);
+
+                Character deltaChar = character.Clone();
+                CalculationOptionsRetribution deltaOpts = initOpts.Clone();
+                deltaChar.CalculationOptions = deltaOpts;
+
+                ComparisonCalculationBase Command;
+                deltaOpts.Seal = SealOf.Command;
+                Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == SealOf.Command);
+                Command.Item = null;
+
+                ComparisonCalculationBase Righteousness;
+                deltaOpts.Seal = SealOf.Righteousness;
+                Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == SealOf.Righteousness);
+                Righteousness.Item = null;
+
+                ComparisonCalculationBase Vengeance;
+                deltaOpts.Seal = SealOf.Vengeance;
+                Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == SealOf.Vengeance);
+                Vengeance.Item = null;
+
+                return new ComparisonCalculationBase[] { Command, Righteousness, Vengeance };
+            }
+            if (chartName == "Rotations")
+            {
+                List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                Character baseChar = character.Clone();
+                CalculationOptionsRetribution baseOpts = ((CalculationOptionsRetribution)character.CalculationOptions).Clone();
+                baseChar.CalculationOptions = baseOpts;
+
+                int selected = ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character)).RotationIndex;
+
+                for (int i = 0; i < baseOpts.Rotations.Count; i++)
+                {
+                    baseOpts.ForceRotation = i;
+                    ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
+                        Calculations.GetCharacterCalculations(baseChar),
+                        RotationParameters.RotationString(baseOpts.Rotations[i]), i == selected);
+                    compare.Item = null;
+                    comparisons.Add(compare);
+                }
+
+                return comparisons.ToArray();
+            }
+            if (chartName == "Weapon Speed")
+            {
+                if (character.MainHand != null)
+                {
+                    CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+                    CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
+
+                    Item newMH;
+                    float baseSpeed = character.MainHand.Speed;
+                    int minDamage = character.MainHand.MinDamage;
+                    int maxDamage = character.MainHand.MaxDamage;
+
+                    Character deltaChar = character.Clone();
+                    deltaChar.IsLoading = true;
+
+                    ComparisonCalculationBase three;
+                    newMH = character.MainHand.Item.Clone();
+                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.3f);
+                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.3f);
+                    newMH.Speed = 3.3f;
+                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                    three = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.3 Speed", baseSpeed == newMH.Speed);
+                    three.Item = null;
+
+                    ComparisonCalculationBase four;
+                    newMH = character.MainHand.Item.Clone();
+                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.4f);
+                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.4f);
+                    newMH.Speed = 3.4f;
+                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                    four = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.4 Speed", baseSpeed == newMH.Speed);
+                    four.Item = null;
+
+                    ComparisonCalculationBase five;
+                    newMH = character.MainHand.Item.Clone();
+                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.5f);
+                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.5f);
+                    newMH.Speed = 3.5f;
+                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                    five = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.5 Speed", baseSpeed == newMH.Speed);
+                    five.Item = null;
+
+                    ComparisonCalculationBase six;
+                    newMH = character.MainHand.Item.Clone();
+                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.6f);
+                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.6f);
+                    newMH.Speed = 3.6f;
+                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                    six = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.6 Speed", baseSpeed == newMH.Speed);
+                    six.Item = null;
+
+                    ComparisonCalculationBase seven;
+                    newMH = character.MainHand.Item.Clone();
+                    newMH.MinDamage = (int)Math.Round(minDamage / baseSpeed * 3.7f);
+                    newMH.MaxDamage = (int)Math.Round(maxDamage / baseSpeed * 3.7f);
+                    newMH.Speed = 3.7f;
+                    deltaChar.MainHand = new ItemInstance(newMH, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                    seven = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "3.7 Speed", baseSpeed == newMH.Speed);
+                    seven.Item = null;
+
+                    return new ComparisonCalculationBase[] { three, four, five, six, seven };
+                }
+                else return new ComparisonCalculationBase[0];
+            }
+            else
+            {
+                return new ComparisonCalculationBase[0];
+            }
+
+        }
+        #endregion
     }
 }
