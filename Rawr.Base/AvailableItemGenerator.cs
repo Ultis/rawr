@@ -139,13 +139,14 @@ namespace Rawr.Optimizer
 
             Stats zeroStats = new Stats();
             List<Stats> matchedSocketBonuses = new List<Stats>();
+            List<int> matchedSocketBonusCount = new List<int>();
+            int matchedBonusTotal = 0;
             Dictionary<Item, int> gems = new Dictionary<Item, int>();
 
             bool[] slotDefault = new bool[Character.OptimizableSlotCount];
             bool[] slotFilled = new bool[Character.OptimizableSlotCount];
+            int[] socketBonusIndex = new int[Character.OptimizableSlotCount];
             bool[] hasSocketBonus = new bool[Character.OptimizableSlotCount];
-            bool[] defaultMatchedSocketBonus = new bool[Character.OptimizableSlotCount];
-            bool[] matchedSocketBonus = new bool[Character.OptimizableSlotCount];
 
             ItemInstance[] items = new ItemInstance[Character.OptimizableSlotCount];
 
@@ -167,17 +168,28 @@ namespace Rawr.Optimizer
                                 gems[g] = count + 1;
                             }
                         }
-                        hasSocketBonus[slot] = item.Item.SocketBonus > zeroStats;
-                        if (hasSocketBonus[slot])
+                        if (item.Item.SocketBonus > zeroStats)
                         {
-                            if (item.Item.AvailabilityInformation.DefaultItemInstance != null)
+                            hasSocketBonus[slot] = true;
+                            if (item.MatchesSocketBonus)
                             {
-                                defaultMatchedSocketBonus[slot] = item.Item.AvailabilityInformation.DefaultItemInstance.MatchesSocketBonus;
-                            }
-                            matchedSocketBonus[slot] = item.MatchesSocketBonus;
-                            if (matchedSocketBonus[slot])
-                            {
-                                matchedSocketBonuses.Add(item.Item.SocketBonus);
+                                matchedBonusTotal++;
+                                // check if we have it in list already
+                                bool found = false;
+                                for (int i = 0; i < matchedSocketBonuses.Count; i++)
+                                {
+                                    if (matchedSocketBonuses[i] == item.Item.SocketBonus)
+                                    {
+                                        matchedSocketBonusCount[i]++;
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found)
+                                {
+                                    matchedSocketBonuses.Add(item.Item.SocketBonus);
+                                    matchedSocketBonusCount.Add(1);
+                                }
                             }
                         }
                     }
@@ -195,12 +207,35 @@ namespace Rawr.Optimizer
                 }
             }
 
-            // from now on we only have to care about the slots that are nondefault (note we know all nondefault slots are not null)            
+            for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+            {
+                if (!slotFilled[slot])
+                {
+                    if (hasSocketBonus[slot])
+                    {
+                        ItemInstance item = character._item[slot];
+                        for (int i = 0; i < matchedSocketBonuses.Count; i++)
+                        {
+                            if (matchedSocketBonuses[i] == item.Item.SocketBonus)
+                            {
+                                socketBonusIndex[slot] = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // from now on we only have to care about the slots that are nondefault (note we know all nondefault slots are not null)
 
             // now what we'll do is first make sure we meet all needed socket bonuses in some way
-            bool[] matchedSocketBonusesCovered = new bool[matchedSocketBonuses.Count];
 
-            for (int bonusCounter = 0; bonusCounter < matchedSocketBonuses.Count; bonusCounter++)
+            // just going greedy about it doesn't always work
+            // it can happen that by going for minimizing differences you run out of options
+            // to fulfill socket bonuses, so it's necessary to keep track of colors you have left
+            // to make sure you don't lock yourself out
+
+            for (int bonusCounter = 0; bonusCounter < matchedBonusTotal; bonusCounter++)
             {
                 // find an item with this socket bonus, with an item instance that has gems that are still available
                 bool found = false;
@@ -210,23 +245,9 @@ namespace Rawr.Optimizer
                 ItemInstance bestItem = null;
                 for (int bonusIndex = 0; bonusIndex < matchedSocketBonuses.Count; bonusIndex++)
                 {
-                    if (!matchedSocketBonusesCovered[bonusIndex])
+                    if (matchedSocketBonusCount[bonusIndex] > 0)
                     {
                         Stats socketBonus = matchedSocketBonuses[bonusIndex];
-                        // if we already did this socket bonus in this round we can skip it
-                        bool repeat = false;
-                        for (int i = 0; i < bonusIndex; i++)
-                        {
-                            if (!matchedSocketBonusesCovered[i] && socketBonus == matchedSocketBonuses[i])
-                            {
-                                repeat = true;
-                                break;
-                            }
-                        }
-                        if (repeat)
-                        {
-                            continue;
-                        }
                         for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
                         {
                             if (!slotFilled[slot])
@@ -243,7 +264,6 @@ namespace Rawr.Optimizer
                                         {
                                             Dictionary<Item, int> gemCount = new Dictionary<Item, int>();
                                             // count gems
-                                            gemCount.Clear();
                                             for (int gem = 1; gem <= 3; gem++)
                                             {
                                                 Item g = itemInstance.GetGem(gem);
@@ -266,7 +286,7 @@ namespace Rawr.Optimizer
                                                     break;
                                                 }
                                             }
-                                            if (available)
+                                            if (available && RemainingSocketBonusesCanBeMatched(character, slotFilled, slot, matchedSocketBonusCount, hasSocketBonus, socketBonusIndex, bonusIndex, gemCount, gems)) // we could move this check further down, but make sure to make a copy of gemCount
                                             {
                                                 // we found an item instance with matched enchant that matches socket bonus and has all needed gems at disposal
                                                 found = true;
@@ -321,7 +341,7 @@ namespace Rawr.Optimizer
                 {
                     items[bestSlot] = bestItem;
                     slotFilled[bestSlot] = true;
-                    matchedSocketBonusesCovered[bestBonusIndex] = true;
+                    matchedSocketBonusCount[bestBonusIndex]--;
                     // remove used up gems
                     for (int gem = 1; gem <= 3; gem++)
                     {
@@ -434,7 +454,7 @@ namespace Rawr.Optimizer
                     {
                         items[slot] = bestItem;
                         slotFilled[slot] = true;
-                        // remove used up gems
+                        // remove used up gems and slots
                         for (int gem = 1; gem <= 3; gem++)
                         {
                             Item g = bestItem.GetGem(gem);
@@ -457,6 +477,444 @@ namespace Rawr.Optimizer
 
             // we were able to fill all slots, that is greedy min diff character
             character.SetItems(items);
+        }
+
+        private bool RemainingSocketBonusesCanBeMatched(Character character, bool[] slotFilled, int slot, List<int> matchedSocketBonusCount, bool[] hasSocketBonus, int[] socketBonusIndex, int bonusIndex, Dictionary<Item, int> gemCount, Dictionary<Item, int> gems)
+        {
+            // we need this wrapper because we can have several instances of same socket bonus, but we only need some of them matched, and they need not all have same sockets
+            // we have to do an exhaustive enumeration of which items are actually used to fill sockets
+            // only if all are bad the whole thing is bad
+
+            bool[] hasMatchingSocketBonus = new bool[Character.OptimizableSlotCount];
+            int[] bonusCount = new int[matchedSocketBonusCount.Count];
+            int[] bonusCountActual = new int[matchedSocketBonusCount.Count];
+            int matchCount = 0;
+            for (int i = 0; i < matchedSocketBonusCount.Count; i++)
+            {
+                bonusCount[i] = matchedSocketBonusCount[i];
+                matchCount += bonusCount[i];
+            }
+            bonusCount[bonusIndex]--;
+            matchCount--;
+
+            List<int> matchingIndex = new List<int>();
+            for (int s = 0; s < Character.OptimizableSlotCount; s++)
+            {
+                if (!slotFilled[s] && s != slot)
+                {
+                    if (hasSocketBonus[s])
+                    {
+                        int sbindex = socketBonusIndex[s];
+                        if (bonusCount[sbindex] > 0)
+                        {
+                            matchingIndex.Add(s);
+                            hasMatchingSocketBonus[s] = true;
+                        }
+                    }
+                }
+            }
+
+            // we could do decomposition on type of actual bonus and do a cross product on components
+            // but we'll just do a simpler thing and do combinations of matchCount out of matchingIndex.Count
+
+            bool[] selected = new bool[matchingIndex.Count];
+            for (int i = matchingIndex.Count - matchCount; i < matchingIndex.Count; i++)
+            {
+                selected[i] = true;
+            }
+
+            do
+            {
+                // check if this combination is a valid selection of bonuses
+                Array.Clear(bonusCountActual, 0, bonusCountActual.Length);
+                int R = 0, Y = 0, B = 0;
+                for (int k = 0; k < selected.Length; k++)
+                {
+                    if (selected[k])
+                    {
+                        bonusCountActual[socketBonusIndex[matchingIndex[k]]]++;
+                        ItemInstance item = character._item[matchingIndex[k]];
+                        for (int gem = 1; gem <= 3; gem++)
+                        {
+                            switch (item.Item.GetSocketColor(gem))
+                            {
+                                case ItemSlot.Red:
+                                    R++;
+                                    break;
+                                case ItemSlot.Blue:
+                                    B++;
+                                    break;
+                                case ItemSlot.Yellow:
+                                    Y++;
+                                    break;
+                            }
+                        }
+                    }
+                }
+                bool valid = true;
+                for (int k = 0; k < matchedSocketBonusCount.Count; k++)
+                {
+                    if (bonusCountActual[k] != bonusCount[k])
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (valid)
+                {
+                    if (RemainingSocketsCanBeMatched(gems, gemCount, R, B, Y))
+                    {
+                        return true;
+                    }
+                }
+
+                // move to next combination
+                int i = selected.Length - 1;
+                if (i == 0)
+                {
+                    // we enumerated all combinations, time to fail
+                    return false;
+                }
+
+                while (selected[i - 1] || !selected[i])
+                {
+                    i = i - 1;
+                    if (i == 0)
+                    {
+                        // we enumerated all combinations, time to fail
+                        return false;
+                    }
+                }
+
+                int j = selected.Length;
+
+                while (!selected[j - 1] || selected[i - 1]) j = j - 1;
+
+                // swap values at positions (i-1) and (j-1)
+                bool tmp = selected[i - 1];
+                selected[i - 1] = selected[j - 1];
+                selected[j - 1] = tmp;
+
+                i++; j = selected.Length;
+
+                while (i < j)
+                {
+                    // swap values at positions (i-1) and (j-1)
+                    tmp = selected[i - 1];
+                    selected[i - 1] = selected[j - 1];
+                    selected[j - 1] = tmp;
+                    i++;
+                    j--;
+                }
+            } while (true);
+        }
+
+        /// <summary>
+        /// Checks if we can still match the socket colors.
+        /// </summary>
+        /// <param name="gemsAll">All gems available.</param>
+        /// <param name="gemCount">Proposed gems to use.</param>
+        /// <returns>Returns true if we can match the sockets.</returns>
+        private bool RemainingSocketsCanBeMatched(Dictionary<Item, int> gemsAll, Dictionary<Item, int> gemCount, int R, int B, int Y)
+        {
+            // we'll do this by first matching pure colors, then bicolor and prismatic
+
+            // init gems
+            Dictionary<Item, int> gems = new Dictionary<Item, int>(gemsAll);
+            foreach (var kvp in gemCount)
+            {
+                int v;
+                gems.TryGetValue(kvp.Key, out v);
+                gems[kvp.Key] = v - kvp.Value;
+            }
+
+            // pure pass
+            int N = 0, O = 0, P = 0, G = 0;
+            foreach (var kvp in gems)
+            {
+                ItemSlot color = kvp.Key.Slot;
+                switch (color)
+                {
+                    case ItemSlot.Red:
+                        R = Math.Max(0, R - kvp.Value);
+                        break;
+                    case ItemSlot.Yellow:
+                        Y = Math.Max(0, Y - kvp.Value);
+                        break;
+                    case ItemSlot.Blue:
+                        B = Math.Max(0, B - kvp.Value);
+                        break;
+                    case ItemSlot.Green:
+                        G += kvp.Value;
+                        break;
+                    case ItemSlot.Purple:
+                        P += kvp.Value;
+                        break;
+                    case ItemSlot.Orange:
+                        O += kvp.Value;
+                        break;
+                    case ItemSlot.Prismatic:
+                        N += kvp.Value;
+                        break;
+                }
+            }
+
+            // let's do some math
+            // we have socket color values to fill and bicolor gem counts
+            // each bicolor if used will be in one of the two colors, split the variable in two based on which one
+            // vars: SocketRed, SocketBlue, SocketYellow
+            //       GemPurple, GemGreen, GemOrange, GemPrismatic
+            //       GemPurpleRed, GemPurpleBlue, GemGreenYellow, GemGreenBlue, GemOrangeYellow, GemOrangeRed
+            //       GemPrismaticRed, GemPrismaticYellow, GemPrismaticBlue
+            // GemPurple >= GemPurpleRed + GemPurpleBlue
+            // GemGreen >= GemGreenYellow + GemGreenBlue
+            // GemOrange >= GemOrangeYellow + GemOrangeRed
+            // GemPrismatic >= GemPrismaticRed + GemPrismaticYellow + GemPrismaticBlue
+            // if we can match the sockets then the following equations must hold
+            // GemPurpleRed + GemOrangeRed + GemPrismaticRed >= SocketRed
+            // GemPurpleBlue + GemGreenBlue + GemPrismaticBlue >= SocketBlue
+            // GemGreenYellow + GemOrangeYellow + GemPrismaticYellow >= SocketYellow
+
+            // this code is prone to copy/paste error
+            // it tries to see if there is a solution in a way reminiscing phase I LP
+            // if someone has a more elegant solution please replace
+            int PR = P, PB = 0, GY = G, GB = 0, OY = O, OR = 0, NR = N, NY = 0, NB = 0;
+            do
+            {
+                int Rdiff = R - PR - OR - NR;
+                int Bdiff = B - PB - GB - NB;
+                int Ydiff = Y - GY - OY - NY;
+                if (Rdiff <= 0 && Bdiff <= 0 && Ydiff <= 0)
+                {
+                    // we can match all constraints
+                    return true;
+                }
+                if (Rdiff > 0 && Bdiff < 0)
+                {
+                    // move from blue to red
+                    if (NB > 0)
+                    {
+                        int move = Math.Min(NB, Rdiff);
+                        NB -= move;
+                        NR += move;
+                        continue;
+                    }
+                    if (PB > 0)
+                    {
+                        int move = Math.Min(PB, Rdiff);
+                        PB -= move;
+                        PR += move;
+                        continue;
+                    }
+                    // via yellow
+                    if (GB > 0 && OY > 0)
+                    {
+                        int move = Math.Min(Math.Min(GB, Rdiff), OY);
+                        GB -= move;
+                        GY += move;
+                        OY -= move;
+                        OR += move;
+                        continue;
+                    }
+                    if (GB > 0 && NY > 0)
+                    {
+                        int move = Math.Min(Math.Min(GB, Rdiff), NY);
+                        GB -= move;
+                        GY += move;
+                        NY -= move;
+                        NR += move;
+                        continue;
+                    }
+                }
+                if (Rdiff > 0 && Ydiff < 0)
+                {
+                    // move from yellow to red
+                    if (NY > 0)
+                    {
+                        int move = Math.Min(NY, Rdiff);
+                        NY -= move;
+                        NR += move;
+                        continue;
+                    }
+                    if (OY > 0)
+                    {
+                        int move = Math.Min(OY, Rdiff);
+                        OY -= move;
+                        OR += move;
+                        continue;
+                    }
+                    // via blue
+                    if (GY > 0 && PB > 0)
+                    {
+                        int move = Math.Min(Math.Min(GY, Rdiff), PB);
+                        GY -= move;
+                        GB += move;
+                        PB -= move;
+                        PR += move;
+                        continue;
+                    }
+                    if (GY > 0 && NB > 0)
+                    {
+                        int move = Math.Min(Math.Min(GY, Rdiff), NB);
+                        GY -= move;
+                        GB += move;
+                        NB -= move;
+                        NR += move;
+                        continue;
+                    }
+                }
+                if (Bdiff > 0 && Rdiff < 0)
+                {
+                    // move from red to blue
+                    if (NR > 0)
+                    {
+                        int move = Math.Min(NR, Bdiff);
+                        NR -= move;
+                        NB += move;
+                        continue;
+                    }
+                    if (PR > 0)
+                    {
+                        int move = Math.Min(PR, Bdiff);
+                        PR -= move;
+                        PB += move;
+                        continue;
+                    }
+                    // via yellow
+                    if (OR > 0 && GY > 0)
+                    {
+                        int move = Math.Min(Math.Min(OR, Bdiff), GY);
+                        OR -= move;
+                        OY += move;
+                        GY -= move;
+                        GB += move;
+                        continue;
+                    }
+                    if (OR > 0 && NY > 0)
+                    {
+                        int move = Math.Min(Math.Min(OR, Bdiff), NY);
+                        OR -= move;
+                        OY += move;
+                        NY -= move;
+                        NB += move;
+                        continue;
+                    }
+                }
+                if (Bdiff > 0 && Ydiff < 0)
+                {
+                    // move from yellow to blue
+                    if (NY > 0)
+                    {
+                        int move = Math.Min(NY, Bdiff);
+                        NY -= move;
+                        NB += move;
+                        continue;
+                    }
+                    if (GY > 0)
+                    {
+                        int move = Math.Min(GY, Bdiff);
+                        GY -= move;
+                        GB += move;
+                        continue;
+                    }
+                    // via red
+                    if (OY > 0 && PR > 0)
+                    {
+                        int move = Math.Min(Math.Min(OY, Bdiff), PR);
+                        OY -= move;
+                        OR += move;
+                        PR -= move;
+                        PB += move;
+                        continue;
+                    }
+                    if (OY > 0 && NR > 0)
+                    {
+                        int move = Math.Min(Math.Min(OY, Bdiff), NR);
+                        OY -= move;
+                        OR += move;
+                        NR -= move;
+                        NB += move;
+                        continue;
+                    }
+                }
+                if (Ydiff > 0 && Bdiff < 0)
+                {
+                    // move from blue to yellow
+                    if (NB > 0)
+                    {
+                        int move = Math.Min(NB, Ydiff);
+                        NB -= move;
+                        NY += move;
+                        continue;
+                    }
+                    if (GB > 0)
+                    {
+                        int move = Math.Min(GB, Ydiff);
+                        GB -= move;
+                        GY += move;
+                        continue;
+                    }
+                    // via red
+                    if (PB > 0 && OR > 0)
+                    {
+                        int move = Math.Min(Math.Min(PB, Ydiff), OR);
+                        PB -= move;
+                        PR += move;
+                        OR -= move;
+                        OY += move;
+                        continue;
+                    }
+                    if (PB > 0 && NR > 0)
+                    {
+                        int move = Math.Min(Math.Min(PB, Ydiff), NR);
+                        PB -= move;
+                        PR += move;
+                        NR -= move;
+                        NY += move;
+                        continue;
+                    }
+                }
+                if (Ydiff > 0 && Rdiff < 0)
+                {
+                    // move from red to yellow
+                    if (NR > 0)
+                    {
+                        int move = Math.Min(NR, Ydiff);
+                        NR -= move;
+                        NY += move;
+                        continue;
+                    }
+                    if (OR > 0)
+                    {
+                        int move = Math.Min(OR, Ydiff);
+                        OR -= move;
+                        OY += move;
+                        continue;
+                    }
+                    // via blue
+                    if (PR > 0 && GB > 0)
+                    {
+                        int move = Math.Min(Math.Min(PR, Ydiff), GB);
+                        PR -= move;
+                        PB += move;
+                        GB -= move;
+                        GY += move;
+                        continue;
+                    }
+                    if (PR > 0 && NB > 0)
+                    {
+                        int move = Math.Min(Math.Min(PR, Ydiff), NB);
+                        PR -= move;
+                        PB += move;
+                        NB -= move;
+                        NY += move;
+                        continue;
+                    }
+                }
+                // if we found no valid move this means the system is not feasible
+                return false;
+            } while (true);
         }
 
         /// <summary>

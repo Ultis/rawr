@@ -842,14 +842,16 @@ namespace Rawr.Optimizer
                     MarkEquippedItemsAsValid(_character);
                 }
 
+                OptimizerCharacter optCharacter;
                 if (injectCharacter || _thoroughness == 1)
                 {
-                    optimizedCharacter = Optimize(new OptimizerCharacter(character, optimizeFood, optimizeElixirs, optimizeTalents), out bestValue, out injected).Character;
+                    optCharacter = Optimize(new OptimizerCharacter(character, optimizeFood, optimizeElixirs, optimizeTalents), out bestValue, out injected);
                 }
                 else
                 {
-                    optimizedCharacter = Optimize(out bestValue).Character;
+                    optCharacter = Optimize(out bestValue);
                 }
+                optimizedCharacter = optCharacter != null ? optCharacter.Character : null;
             }
             catch (Exception ex)
             {
