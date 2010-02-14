@@ -5014,7 +5014,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Conquest</Name>
-          <Pattern>Emblem of Conquest</Pattern>
+          <Pattern>Emblem of Conquest|Arcanist Firael</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5109,7 +5109,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Armor Tokens</Name>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph|Mark of Sanctification|Sanctified</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph|Mark of Sanctification|Sanctified|Champion Isimode</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5127,7 +5127,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Special Currency (Badges, Rings, etc.)</Name>
-      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot</Pattern>
+      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot|Champion Isimode|Arcanist Firael|Arcanist Adurin</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5549,7 +5549,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Mark of Honor</Name>
-          <Pattern>Mark of Honor</Pattern>
+          <Pattern>Mark of Honor|Knight Dameron</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5643,7 +5643,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>PVP</Name>
-      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP|Grex Brainboiler|Kezzik the Striker</Pattern>
+      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP|Grex Brainboiler|Kezzik the Striker|Knight Dameron|Lieutenant Tristia</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5893,7 +5893,7 @@
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable PvP</Name>
-          <Pattern>Points</Pattern>
+          <Pattern>Points|Stone Keeper's Shard</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>

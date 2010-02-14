@@ -1247,7 +1247,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public float ConstrainCrit(float lvlDifMOD, float chance) { return Math.Min(1f + lvlDifMOD, Math.Max(0f, chance)); }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
-            bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+            bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        {
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
@@ -2305,8 +2306,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // iLevel 264 | x = 4
             // iLevel 277 | x = 5
             calculatedStats.BonusAttackProcsDPS = 0f;
-            if (stats.ZodProc > 0){//character.Ranged != null && (character.Ranged.Item.Id == 50638 || character.Ranged.Item.Id == 50034)) {
-                float Chance = stats.ZodProc;//(character.Ranged.Item.Id == 50638 ? 0.05f : (character.Ranged.Item.Id == 50034 ? 0.04f : 0f));
+            if (stats.ZodProc > 0) {
+                float Chance = stats.ZodProc;
                 float ProcDamage = rangedWeaponDamage
                                  + rangedAmmoDamage
                                  + stats.WeaponDamage

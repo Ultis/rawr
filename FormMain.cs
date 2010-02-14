@@ -1008,15 +1008,16 @@ namespace Rawr
             FinishedProcessing();
         }
 
-
         private void reloadCurrentCharacterFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
 			CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), comboBoxRegion.SelectedItem.ToString());
             if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
             {
-                MessageBox.Show("A valid character has not been loaded, unable to reload.","No Character Loaded",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("A valid character has not been loaded, unable to reload.", 
+                    "No Character Loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (MessageBox.Show("Confirm reloading " + textBoxName.Text + " from the " + textBoxRealm.Text + "@" + region + " realm ", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            else if (MessageBox.Show("Confirm reloading " + textBoxName.Text + " from the " + textBoxRealm.Text + "@" + region + " realm ",
+                "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 StartProcessing();
                 BackgroundWorker bw = new BackgroundWorker();
@@ -1896,14 +1897,11 @@ namespace Rawr
 			string[] itemsOnChar;
 			Character character = Armory.GetCharacter(region, realm, name, out itemsOnChar);
             StatusMessaging.UpdateStatusFinished("Get Character From Armory");
-            if (itemsOnChar != null)
-            {
+            if (itemsOnChar != null) {
                 _loadingCharacter = true; // suppress item changed event
                 EnsureItemsLoaded(itemsOnChar);
                 _loadingCharacter = false;
-            }
-            else
-            {
+            } else {
                 StatusMessaging.UpdateStatusFinished("Update Item Cache");
                 StatusMessaging.UpdateStatusFinished("Cache Item Icons");
 

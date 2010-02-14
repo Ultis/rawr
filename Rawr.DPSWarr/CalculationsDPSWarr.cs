@@ -1315,7 +1315,7 @@ These numbers to do not include racial bonuses.",
 
                 // Survivability
                 if (stats.HealthRestoreFromMaxHealth > 0) {
-                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth * stats.Health * calcOpts.Duration;
+                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth / 100f * stats.Health * calcOpts.Duration;
                 }
 
                 float Health2Surv  = (stats.Health) / 100f; 
@@ -1870,11 +1870,27 @@ These numbers to do not include racial bonuses.",
                     } 
                     else */
                     
-                    if (effect.Stats.ManaorEquivRestore > 0f) {
+                    float numProcs = 0;
+                    if (effect.Stats.ManaorEquivRestore > 0f && effect.Stats.HealthRestoreFromMaxHealth > 0f) {
                         // effect.Duration = 0, so GetAverageStats won't work
-                        float numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
+                        float value1 = effect.Stats.Clone().ManaorEquivRestore;
+                        float value2 = effect.Stats.Clone().HealthRestoreFromMaxHealth;
+                        SpecialEffect dummy = new SpecialEffect(effect.Trigger, new Stats() { ManaorEquivRestore = value1, HealthRestoreFromMaxHealth = value2 }, effect.Duration, effect.Cooldown, effect.Chance);
+                        numProcs = dummy.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
+                        statsProcs.ManaorEquivRestore += dummy.Stats.ManaorEquivRestore * numProcs;
+                        dummy.Stats.ManaorEquivRestore = 0f;
+                        //numProcs = effect.GetAverageProcsPerSecond(triggerIntervals[Trigger.PhysicalCrit], triggerChances[Trigger.PhysicalCrit], 0f, 0f) * fightDuration;
+                        //statsProcs.HealthRestoreFromMaxHealth += effect.Stats.HealthRestoreFromMaxHealth * numProcs;
+                        ApplySpecialEffect(dummy, charStruct, triggerIntervals, triggerChances, ref statsProcs);
+                    } else if (effect.Stats.ManaorEquivRestore > 0f) {
+                        // effect.Duration = 0, so GetAverageStats won't work
+                        numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
                         statsProcs.ManaorEquivRestore += effect.Stats.ManaorEquivRestore * numProcs;
-                    } else {
+                    } /*else if (effect.Stats.HealthRestoreFromMaxHealth > 0f) {
+                        // effect.Duration = 0, so GetAverageStats won't work
+                        numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
+                        statsProcs.HealthRestoreFromMaxHealth += effect.Stats.HealthRestoreFromMaxHealth * numProcs;
+                    }*/ else {
                         ApplySpecialEffect(effect, charStruct, triggerIntervals, triggerChances, ref statsProcs);
                     }
                 }
