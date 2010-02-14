@@ -531,7 +531,8 @@ namespace Rawr.Retribution
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
 
             // Secondary stats
-            stats.Mana +=  StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
+            // GetManaFromIntellect/GetHealthFromStamina account for the fact that the first 20 Int/Sta only give 1 Mana/Health each.
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
             stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
             stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
 

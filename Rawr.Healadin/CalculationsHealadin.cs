@@ -372,8 +372,10 @@ namespace Rawr.Healadin
                 * (1f + stats.HasteRating / 3278.998947f)
                 - 1f;
 
-            stats.Mana = (stats.Mana + stats.Intellect * 15) * (1f + stats.BonusManaMultiplier);
-            stats.Health = stats.Health + stats.Stamina * 10f;
+            // GetManaFromIntellect/GetHealthFromStamina account for the fact that the first 20 Int/Sta only give 1 Mana/Health each.
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
+            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
+
             stats.PhysicalHit += stats.HitRating / 3278.998947f;
         }
         #endregion
