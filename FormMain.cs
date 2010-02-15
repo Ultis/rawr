@@ -174,7 +174,7 @@ namespace Rawr
             itemFilterTreeView = new ItemFilterTreeView();
             itemFilterTreeView.EditMode = false;
             itemFilterTreeView.BorderStyle = BorderStyle.None;
-            itemFilterTreeView.Size = new Size(200, 400);
+            itemFilterTreeView.Size = new Size(275, 400);
 
             ToolStripDropDown dropDown = new ToolStripDropDown();
             dropDown.Items.Add(new ToolStripControlHost(itemFilterTreeView));

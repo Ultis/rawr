@@ -5930,7 +5930,25 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable Blue Level Gems</Name>
+          <Name>Disable Epic Level Gems</Name>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Epic</MinItemQuality>
+          <MaxItemQuality>Epic</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>false</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable Blue Level Gems (Hides Metas Too)</Name>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5956,8 +5974,8 @@
           <BoN>true</BoN>
           <MinItemLevel>70</MinItemLevel>
           <MaxItemLevel>70</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <MinItemQuality>Poor</MinItemQuality>
+          <MaxItemQuality>Uncommon</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
