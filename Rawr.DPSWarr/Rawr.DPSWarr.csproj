@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculationOptionsDPSWarr.cs" />
+    <Compile Include="CombatTable.cs" />
     <Compile Include="Markov\StateSpaceArms.cs" />
     <Compile Include="Rotation.Arms.cs" />
     <Compile Include="Rotation.Fury.cs" />
