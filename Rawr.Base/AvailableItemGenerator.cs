@@ -1426,7 +1426,7 @@ namespace Rawr.Optimizer
                 {
                     foreach (Item citem in ItemCache.Items.Values)
                     {
-                        if (citem.Cost > 0.0f && (citem.RequiredClasses != null && citem.RequiredClasses.Contains(characters[0].Class.ToString())))
+                        if (citem.Cost > 0.0f && (citem.RequiredClasses == null || (citem.RequiredClasses != null && citem.RequiredClasses.Contains(characters[0].Class.ToString()))))
                         {
                             string key = citem.Id.ToString();
                             if (!gemmedIdMap.ContainsKey(key))
