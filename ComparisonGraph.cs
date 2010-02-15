@@ -386,7 +386,7 @@ namespace Rawr
 
                         #region Graph Ticks
                         float graphStart = GraphBarStart; // 160f;
-                        float graphWidth = this.Width - GraphBarStart - 10;
+                        float graphWidth = this.Width - GraphBarStart - 45;
                         float graphEnd = graphStart + graphWidth;
 
                         Dictionary<float, float> ticks = new Dictionary<float, float>();
