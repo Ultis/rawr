@@ -66,6 +66,13 @@ namespace Rawr
 		[XmlElement("Unique")]
 		public bool _unique;
 
+        /// <summary>
+        /// List of Ids that cannot be used together with this item (other than this item).
+        /// Unique should be set to true if this is not empty.
+        /// </summary>
+        [XmlElement("UniqueId")]
+        public List<int> UniqueId { get; set; }
+
         [DefaultValueAttribute(BindsOn.None)]
         [XmlElement("Bind")]
         public BindsOn _bind;
@@ -577,6 +584,7 @@ namespace Rawr
 				Speed = this.Speed,
 				RequiredClasses = this.RequiredClasses,
 				Unique = this.Unique,
+                UniqueId = new List<int>(this.UniqueId),
                 LocalizedName = this.LocalizedName
 			};
 		}
@@ -725,6 +733,11 @@ namespace Rawr
 			bool temp;
 			return MeetsRequirements(character, out temp);
 		}
+
+        public static bool ItemsAreConsideredUniqueEqual(Item itema, Item itemb)
+        {
+            return (object)itema != null && (object)itemb != null && itema.Unique && (itema.Id == itemb.Id || (itema.UniqueId != null && itema.UniqueId.Contains(itemb.Id)));
+        }
 
         public static bool OptimizerManagedVolatiliy { get; set; }
 

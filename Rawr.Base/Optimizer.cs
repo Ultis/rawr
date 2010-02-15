@@ -301,7 +301,13 @@ namespace Rawr.Optimizer
         {
             public override bool IsValid(object[] items)
             {
-                return !(items[StartSlot] != null && items[EndSlot] != null && ((ItemInstance)items[StartSlot]).Id == ((ItemInstance)items[EndSlot]).Id && ((ItemInstance)items[StartSlot]).Item.Unique);
+                if (items[StartSlot] != null && items[EndSlot] != null)
+                {
+                    Item itema = ((ItemInstance)items[StartSlot]).Item;
+                    Item itemb = ((ItemInstance)items[EndSlot]).Item;
+                    return !(itema.Unique && (itema.Id == itemb.Id || (itema.UniqueId != null && itema.UniqueId.Contains(itemb.Id))));
+                }
+                return true;
             }
         }
 
@@ -968,21 +974,21 @@ namespace Rawr.Optimizer
                             lockedSlot = slot;
                             List<object> savedItems = slotItems[(int)lockedSlot];
                             slotItems[(int)lockedSlot] = lockedItems;
-                            if (lockedSlot == CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Finger1 && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item))
                             {
                                 lockedSlot = CharacterSlot.Finger2;
                             }
-                            if (lockedSlot == CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Trinket1 && Item.ItemsAreConsideredUniqueEqual(_character.Trinket2.Item, item))
                             {
                                 lockedSlot = CharacterSlot.Trinket2;
                             }
                             __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
-                            if (lockedSlot == CharacterSlot.MainHand && item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.MainHand && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
                             {
                                 // can't dual wield unique items, so make the other slot empty
                                 __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
                             }
-                            if (lockedSlot == CharacterSlot.OffHand && item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.OffHand && Item.ItemsAreConsideredUniqueEqual(_character.MainHand.Item, item))
                             {
                                 // can't dual wield unique items, so make the other slot empty
                                 __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
@@ -1095,23 +1101,23 @@ namespace Rawr.Optimizer
                     {
                         lockedItems = new List<object>() { item };
                         lockedSlot = slot;
-                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && (_character.Finger2.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.Finger2.Id))))
                         {
                             lockedSlot = CharacterSlot.Finger2;
                         }
-                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && (_character.Trinket2.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.Trinket2.Id))))
                         {
                             lockedSlot = CharacterSlot.Trinket2;
                         }
                         List<object> savedItems = slotItems[(int)lockedSlot];
                         slotItems[(int)lockedSlot] = lockedItems;
                         __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, upgrade);
-                        if (lockedSlot == CharacterSlot.MainHand && item.Item.Unique && (object)_character.OffHand != null && _character.OffHand.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.MainHand && item.Item.Unique && (object)_character.OffHand != null && (_character.OffHand.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.OffHand.Id))))
                         {
                             // can't dual wield unique items, so make the other slot empty
                             __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
                         }
-                        if (lockedSlot == CharacterSlot.OffHand && item.Item.Unique && (object)_character.MainHand != null && _character.MainHand.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.OffHand && item.Item.Unique && (object)_character.MainHand != null && (_character.MainHand.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.MainHand.Id))))
                         {
                             // can't dual wield unique items, so make the other slot empty
                             __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
@@ -2402,7 +2408,7 @@ namespace Rawr.Optimizer
                         if (fc > max)
                         {
                             // we need a unique check otherwise we can end in a dead loop because the min computed above underestimates
-                            if ((object)m != null && m.Item.Unique && slot > 0 && items[slot - 1] != null && ((ItemInstance)items[slot - 1]).Id == m.Id)
+                            if ((object)m != null && m.Item.Unique && slot > 0 && items[slot - 1] != null && (((ItemInstance)items[slot - 1]).Id == m.Id || (m.Item.UniqueId != null && m.Item.UniqueId.Contains(((ItemInstance)items[slot - 1]).Id))))
                             {
                                 return f;
                             }
@@ -2410,7 +2416,7 @@ namespace Rawr.Optimizer
                         }
                         else if (mc > max)
                         {
-                            if ((object)f != null && f.Item.Unique && slot > 0 && items[slot - 1] != null && ((ItemInstance)items[slot - 1]).Id == f.Id)
+                            if ((object)f != null && f.Item.Unique && slot > 0 && items[slot - 1] != null && (((ItemInstance)items[slot - 1]).Id == f.Id || (f.Item.UniqueId != null && f.Item.UniqueId.Contains(((ItemInstance)items[slot - 1]).Id))))
                             {
                                 return m;
                             }
@@ -2749,7 +2755,7 @@ namespace Rawr.Optimizer
             {
                 Item item1 = items[StartSlot] as Item;
                 Item item2 = items[EndSlot] as Item;
-                return !(item1 != null && item2 != null && item1.Id == item2.Id && item1.Unique);
+                return !(item1 != null && item2 != null && item1.Unique && (item1.Id == item2.Id || (item1.UniqueId != null && item1.UniqueId.Contains(item2.Id))));
             }
         }
 
@@ -3233,11 +3239,11 @@ namespace Rawr.Optimizer
                             List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
                             lockedSlot = slot;
-                            if (lockedSlot == CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && (_character.Finger2.Id == item.Id || (item.UniqueId != null && item.UniqueId.Contains(_character.Finger2.Id))))
                             {
                                 lockedSlot = CharacterSlot.Finger2;
                             }
-                            if (lockedSlot == CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                            if (lockedSlot == CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && (_character.Trinket2.Id == item.Id || (item.UniqueId != null && item.UniqueId.Contains(_character.Trinket2.Id))))
                             {
                                 lockedSlot = CharacterSlot.Trinket2;
                             }
@@ -3342,11 +3348,11 @@ namespace Rawr.Optimizer
                     {
                         lockedItems = new List<ItemInstance>() { item };
                         lockedSlot = slot;
-                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && (_character.Finger2.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.Finger2.Id))))
                         {
                             lockedSlot = CharacterSlot.Finger2;
                         }
-                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        if (lockedSlot == CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && (_character.Trinket2.Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(_character.Trinket2.Id))))
                         {
                             lockedSlot = CharacterSlot.Trinket2;
                         }
@@ -3767,7 +3773,7 @@ namespace Rawr.Optimizer
             foreach (ItemInstance item in items)
             {
                 int pairSlot = pairSlotMap[(int)slot];
-                if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(CharacterSlot)pairSlot] != null && bestCharacter[(CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
+                if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(CharacterSlot)pairSlot] != null && item.Item.Unique && (bestCharacter[(CharacterSlot)pairSlot].Id == item.Id || (item.Item.UniqueId != null && item.Item.UniqueId.Contains(bestCharacter[(CharacterSlot)pairSlot].Id)))))
                 {
                     itemList[(int)slot] = item;
                     charSwap = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions,

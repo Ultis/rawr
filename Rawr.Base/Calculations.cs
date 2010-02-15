@@ -1280,29 +1280,34 @@ namespace Rawr
 		{
             if (item != null && item.Unique && !ignoreUnique)
             {
-                if (slot == CharacterSlot.Finger1)
+                CharacterSlot otherSlot;
+                switch (slot)
                 {
-                    if (character[CharacterSlot.Finger2] != null && item.Id == character[CharacterSlot.Finger2].Item.Id) return false;
+                    case CharacterSlot.Finger1:
+                        otherSlot = CharacterSlot.Finger2;
+                        break;
+                    case CharacterSlot.Finger2:
+                        otherSlot = CharacterSlot.Finger1;
+                        break;
+                    case CharacterSlot.Trinket1:
+                        otherSlot = CharacterSlot.Trinket2;
+                        break;
+                    case CharacterSlot.Trinket2:
+                        otherSlot = CharacterSlot.Trinket1;
+                        break;
+                    case CharacterSlot.MainHand:
+                        otherSlot = CharacterSlot.OffHand;
+                        break;
+                    case CharacterSlot.OffHand:
+                        otherSlot = CharacterSlot.MainHand;
+                        break;
+                    default:
+                        otherSlot = CharacterSlot.None;
+                        break;
                 }
-                else if (slot == CharacterSlot.Finger2)
+                if (otherSlot != CharacterSlot.None)
                 {
-                    if (character[CharacterSlot.Finger1] != null && item.Id == character[CharacterSlot.Finger1].Item.Id) return false;
-                }
-                else if (slot == CharacterSlot.Trinket1)
-                {
-                    if (character[CharacterSlot.Trinket2] != null && item.Id == character[CharacterSlot.Trinket2].Item.Id) return false;
-                }
-                else if (slot == CharacterSlot.Trinket2)
-                {
-                    if (character[CharacterSlot.Trinket1] != null && item.Id == character[CharacterSlot.Trinket1].Item.Id) return false;
-                }
-                else if (slot == CharacterSlot.MainHand)
-                {
-                    if (character[CharacterSlot.OffHand] != null && item.Id == character[CharacterSlot.OffHand].Item.Id) return false;
-                }
-                else if (slot == CharacterSlot.OffHand)
-                {
-                    if (character[CharacterSlot.MainHand] != null && item.Id == character[CharacterSlot.MainHand].Item.Id) return false;
+                    if (character[otherSlot] != null && (item.Id == character[otherSlot].Item.Id || (item.UniqueId != null && item.UniqueId.Contains(character[otherSlot].Id)))) return false;
                 }
             }
 			return item.FitsInSlot(slot);

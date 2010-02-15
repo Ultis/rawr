@@ -123,7 +123,16 @@ namespace Rawr.Optimizer
         {
             public override bool IsValid(object[] items)
             {
-                return !(items[StartSlot] != null && items[EndSlot] != null && ((Item)items[StartSlot]).Id == ((Item)items[EndSlot]).Id && ((Item)items[StartSlot]).Unique);
+                if (items[StartSlot] != null && items[EndSlot] != null)
+                {
+                    Item itema = (Item)items[StartSlot];
+                    Item itemb = (Item)items[EndSlot];
+                    return !(itema.Unique && (itema.Id == itemb.Id || (itema.UniqueId != null && itema.UniqueId.Contains(itemb.Id))));
+                }
+                else
+                {
+                    return true;
+                }
             }
         }
 

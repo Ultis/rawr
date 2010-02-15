@@ -44,6 +44,8 @@ namespace Rawr
         public static Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetUnfilteredRelevantItems(model, race); }
         public static Item[] GetRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetRelevantItems(model, race); }
 
+        public static void AutoSetUniqueId(Item item) { _instance.AutoSetUniqueId(item); }
+
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
 #if RAWR3
         public static void Save(TextWriter writer) { _instance.Save(writer); }
@@ -153,6 +155,7 @@ namespace Rawr
                 }
                 item.LastChange = DateTime.Now;
                 Items[item.Id] = item;
+                AutoSetUniqueId(item);
 #if RAWR3
             Items.OrderBy(kvp => kvp.Key);
 #endif
@@ -337,6 +340,82 @@ namespace Rawr
             }
             // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.
             if (ItemsChanged != null) ItemsChanged(null, null);
+        }
+
+        /// <summary>
+        /// Matches the item against known rules for unique item groups and sets the UniqueId list.
+        /// </summary>
+        /// <param name="item">Item for which to auto set the UniqueId list.</param>
+        public void AutoSetUniqueId(Item item)
+        {
+            if (item.Unique) // all items that have UniqueId rules are marked as Unique
+            {
+                // find all items in item cache with same name
+                Item item251 = null, item264 = null, item277 = null;
+                lock (Items)
+                {
+                    // we want the loop on Items because we don't want to trigger AllItems cache rebuilds
+                    foreach (Item i in Items.Values)
+                    {
+                        if (i.Name == item.Name)
+                        {
+                            if (i.ItemLevel == 251)
+                            {
+                                item251 = i;
+                            }
+                            else if (i.ItemLevel == 264)
+                            {
+                                item264 = i;
+                            }
+                            else if (i.ItemLevel == 277)
+                            {
+                                item277 = i;
+                            }
+                        }
+                    }
+                }
+
+                // normal/heroic pair 10 man ICC with same name
+                if ((object)item251 != null && (object)item264 != null)
+                {
+                    item251.UniqueId = new List<int>() { item251.Id, item264.Id };
+                    item264.UniqueId = new List<int>() { item251.Id, item264.Id };
+                }
+
+                // normal/heroic pair 25 man ICC with same name
+                if ((object)item264 != null && (object)item277 != null)
+                {
+                    item264.UniqueId = new List<int>() { item264.Id, item277.Id };
+                    item277.UniqueId = new List<int>() { item264.Id, item277.Id };
+                }
+
+                // special rules for Ashen Verdict Rings
+                // Ashen Band of Courage
+                if (item.Id == 50375 || item.Id == 50404 || item.Id == 50388 || item.Id == 50403)
+                {
+                    item.UniqueId = new List<int>() { 50375, 50404, 50388, 50403 };
+                }
+                // Ashen Band of Destruction
+                else if (item.Id == 50377 || item.Id == 50398 || item.Id == 50384 || item.Id == 50397)
+                {
+                    item.UniqueId = new List<int>() { 50377, 50398, 50384, 50397 };
+                }
+                // Ashen Band of Might
+                else if (item.Id == 52572 || item.Id == 52570 || item.Id == 52569 || item.Id == 52571)
+                {
+                    item.UniqueId = new List<int>() { 52572, 52570, 52569, 52571 };
+                }
+                // Ashen Band of Vengeance
+                else if (item.Id == 50402 || item.Id == 50387 || item.Id == 50401 || item.Id == 50376)
+                {
+                    item.UniqueId = new List<int>() { 50402, 50387, 50401, 50376 };
+                }
+                // Ashen Band of Wisdom
+                else if (item.Id == 50400 || item.Id == 50386 || item.Id == 50399 || item.Id == 50378)
+                {
+                    item.UniqueId = new List<int>() { 50400, 50386, 50399, 50378 };
+                }
+            }
         }
 
 #if RAWR3
