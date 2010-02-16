@@ -425,6 +425,8 @@ namespace Rawr {
         BonusRPFromScourgeStrike,
         BonusRuneStrikeMultiplier,
         BonusScourgeStrikeCrit,
+        TankDK_T10_2pc,
+        TankDK_T10_4pc,
         #endregion
         #region Runeforges
         BonusFrostWeaponDamage,
@@ -1931,6 +1933,26 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Increase damage by DnD")]
+        public float TankDK_T10_2pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TankDK_T10_2pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TankDK_T10_2pc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Damage Reduction by Blood Tap")]
+        public float TankDK_T10_4pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TankDK_T10_4pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TankDK_T10_4pc] = value; }
         }
         #endregion
 

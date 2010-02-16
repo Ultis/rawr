@@ -2461,13 +2461,39 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
             #endregion
+            #region Plate
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgelord's Plate 2T10",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = {
+                    TankDK_T10_2pc = .20f,                    
+                },
+                SetName = "Scourgelord's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgelord's Plate 4T10",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { 
+                    TankDK_T10_4pc = .12f,
+                },
+                SetName = "Scourgelord's Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
             #endregion
             #endregion
             #endregion
 
             #region Druid
             #region TBC
-/*
+            /*
             #region Tier 4 | Malorne
             #region Harness
             defaultBuffs.Add(new Buff()
@@ -4042,7 +4068,6 @@ namespace Rawr
             #region PvP
             #endregion
             #endregion
-            #endregion
 
             #region Shaman
             #region TBC
@@ -4692,11 +4717,12 @@ namespace Rawr
             });
             #endregion
             #endregion
+            #endregion // Set Bonuses
 
             #region Professions
             #region Tailoring
             #region TBC
-/*
+            /*
             defaultBuffs.Add(new Buff()
             {
                 Name = "Spellfire 3 Piece Bonus",

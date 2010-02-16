@@ -486,6 +486,21 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
 
+            #region T10 4PC
+            // T10 4PC bonus:
+            if (stats.TankDK_T10_4pc != 0)
+            {
+                // Blood Tap:
+                // 6% of base health Instant 1 min cooldown
+                // Turns a blood rune to Death rune
+                // Blood Armor:
+                // When you activate Blood Tap, you gain 12% damage reduction from all attacks for 10 sec.
+                // For now, we're going to assume that Blood Tap is used at every opportunity.
+                SpecialEffect SE4T10 = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -(stats.TankDK_T10_4pc) }, 10f, 60f);
+                stats.AddSpecialEffect(SE4T10);
+            }
+            #endregion 
+
             #region Special Effects
             // For now we just factor them in once.
             StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
@@ -1173,7 +1188,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Patch 3.2: Replace 10% Health w/ 6% Stamina
             s.BonusStaminaMultiplier += .08f; // Bonus 8% Stamina
             s.DamageTakenMultiplier -= .08f;// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
-            s.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
+//            s.ThreatIncreaseMultiplier += .45f; // Pulling this out since the threat bonus is normalized at 2.0735 as per multiple 
+            // Tankspot and EJ conversations.
         }
 
         /// <summary>Build the talent special effects.</summary>
@@ -1945,6 +1961,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			    BonusHealingReceived = stats.BonusHealingReceived,
                 RPp5 = stats.RPp5,
                 BonusMaxRunicPower = stats.BonusMaxRunicPower,
+                TankDK_T10_2pc = stats.TankDK_T10_2pc,
+                TankDK_T10_4pc = stats.TankDK_T10_4pc,
 
                 // Resistances
                 ArcaneResistance = stats.ArcaneResistance,
@@ -2128,6 +2146,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.BonusHealingReceived != 0);
             bResults |= (stats.RPp5 != 0);
             bResults |= (stats.BonusMaxRunicPower != 0);
+            bResults |= (stats.TankDK_T10_2pc != 0);
+            bResults |= (stats.TankDK_T10_4pc != 0);
 
             // Resistances
             bResults |= (stats.ArcaneResistance != 0);

@@ -702,9 +702,9 @@ namespace Rawr.TankDK
                     float DNDCD = 30f - (talents.Morbidity * 5f); // 30 sec cool down modified by Morbidity
                     float DNDDur = 10f; // 10 sec duration
                     float DNDDmg = (62 + DeathNDecayAPMult * stats.AttackPower * DNDDur) * (talents.GlyphofDeathandDecay ? 1.2f : 1f);
-                    fDamDeathNDecay = DNDDmg * (Math.Min(calcOpts.m_Rotation.DeathNDecay, (fDuration / DNDCD)));
+                    fDamDeathNDecay = DNDDmg * (Math.Min(calcOpts.m_Rotation.DeathNDecay, (fDuration / DNDCD))) ;
                     float DNDCritDmgMult = 1.5f * (1f + stats.BonusSpellCritMultiplier);
-                    float DNDCrit = 1f + (this.spellCrits * DNDCritDmgMult);
+                    float DNDCrit = 1f + (this.spellCrits * DNDCritDmgMult );
                     fDamDeathNDecay *= DNDCrit;
                     // Threat: damage × 1.90
                     fDamDeathNDecay *= 1.9f;
@@ -847,7 +847,8 @@ namespace Rawr.TankDK
             float BloodwormsMult = 1f + commandMult;
             float HeartStrikeMult = 1f;
             float HowlingBlastMult = 1f;
-            float DeathNDecayMult = 1f;
+            // Adding the multiplier from the T10 set bonus.
+            float DeathNDecayMult = 1f + stats.TankDK_T10_2pc;
             float IcyTouchMult = 1f;
             float NecrosisMult = 1f;
             float ObliterateMult = 1f;

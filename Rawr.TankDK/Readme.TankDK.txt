@@ -2,12 +2,14 @@
 
 Currently targeting: 
 * Wow version 3.3.2
+2.3.10:
+* No Defect: Actually implement the T10 set bonuses. Some how these didn't get in.
 
 2.3.9:
-No Defect: Fixed some tool tips
-Defect 15732: Finally rooted out the expertise problem in experimental code.
-Defect 16144: Removing legacy mitigation code and adding the Mitigation multiplier to help with balancing issues until we can fine-tune it.
-No Defect: New buffs for DK tanks to Frost Presence and IBF.
+* No Defect: Fixed some tool tips
+* Defect 15732: Finally rooted out the expertise problem in experimental code.
+* Defect 16144: Removing legacy mitigation code and adding the Mitigation multiplier to help with balancing issues until we can fine-tune it.
+* No Defect: New buffs for DK tanks to Frost Presence and IBF.
 
 2.3.8:
 2.3.7:
