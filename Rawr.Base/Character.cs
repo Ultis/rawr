@@ -702,7 +702,16 @@ namespace Rawr //O O . .
                 {
                     if (item.Item != null && item.Item.FitsInSlot(slot, this)) // item.Item can be null if you're loading character with custom items that are not present on this install
                     {
-                        if (!items.Contains(item)) items.Add(item);
+                        // if it's already in make sure to set force visible to true
+                        int index = items.IndexOf(item);
+                        if (index >= 0)
+                        {
+                            items[index] = item;
+                        }
+                        else
+                        {
+                            items.Add(item);
+                        }
                     }
                 }
                 // add available instances
