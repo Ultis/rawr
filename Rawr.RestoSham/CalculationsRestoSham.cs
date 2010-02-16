@@ -1178,6 +1178,7 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
                 list.CopyTo(retVal, 0);
             return retVal;
         }
+#if !RAWR3
         public override void RenderCustomChart(Character character, string chartName, Graphics g, int width, int height)
         {
             string calc = chartName.Substring(0, chartName.IndexOf("Stats Graph") - 1);
@@ -1185,6 +1186,7 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
                 CustomCharts.StatsGraphStatsList, CustomCharts.StatsGraphColors,
                 200, "", calc, Base.Graph.Style.DpsWarr);
         }
+#endif
 
         #endregion
         

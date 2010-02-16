@@ -86,6 +86,9 @@
     <Compile Include="..\..\Rawr.Hunter\Pet\PetTalents.cs">
       <Link>Pet\PetTalents.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Hunter\Rotation.cs">
+      <Link>Rotation.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Hunter\RotationTest.cs">
       <Link>RotationTest.cs</Link>
     </Compile>

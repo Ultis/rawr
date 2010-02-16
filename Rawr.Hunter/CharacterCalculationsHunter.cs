@@ -18,6 +18,7 @@ namespace Rawr.Hunter
         private float _customDPS;
         public Character character = null;
         public CalculationOptionsHunter calcOpts = null;
+        public Skills.WhiteAttacks Whites { get; set; }
         //Drizz: Added
         private double _piercingShotsDPS;
         private double _piercingShotsDPSSteadyShot;
@@ -299,12 +300,14 @@ namespace Rawr.Hunter
             set { _subPoints[3] = value; }
         }
 
-		public Stats BasicStats
-		{
-			get { return _basicStats; }
-			set { _basicStats = value; }
-		}
-		public List<string> ActiveBuffs { get; set; }
+        public Stats BasicStats { get { return _basicStats; } set { _basicStats = value; } }
+        public Stats AverageStats { get; set; }
+        public Stats MaximumStats { get; set; }
+        public Stats UnbuffedStats { get; set; }
+        public Stats BuffedStats { get; set; }
+        public Stats BuffsStats { get; set; } // The actual stats that come from Buffs
+
+        public List<string> ActiveBuffs { get; set; }
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();

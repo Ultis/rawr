@@ -13,6 +13,13 @@ using System.Diagnostics;
 using Rawr.Hunter.Skills;
 
 namespace Rawr.Hunter {
+    public struct HunterCharacter
+    {
+        public Character Char;
+        public Rotation Rot;
+        public CombatFactors combatFactors;
+        public CalculationOptionsHunter calcOpts;
+    }
     [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
 	public class CalculationsHunter : CalculationsBase {
         #region Variables and Properties

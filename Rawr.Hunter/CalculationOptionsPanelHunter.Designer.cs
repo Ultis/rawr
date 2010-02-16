@@ -257,6 +257,7 @@
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
             this.BT_Calculate = new System.Windows.Forms.Button();
+            this.CK_SE_UseDur = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
@@ -2714,6 +2715,7 @@
             // 
             // GB_Misc
             // 
+            this.GB_Misc.Controls.Add(this.CK_SE_UseDur);
             this.GB_Misc.Controls.Add(this.NUD_SurvScale);
             this.GB_Misc.Controls.Add(this.LB_SurvScale);
             this.GB_Misc.Controls.Add(this.CK_PTRMode);
@@ -3499,6 +3501,18 @@
             this.BT_Calculate.UseVisualStyleBackColor = true;
             this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
             // 
+            // CK_SE_UseDur
+            // 
+            this.CK_SE_UseDur.AutoSize = true;
+            this.CK_SE_UseDur.Enabled = false;
+            this.CK_SE_UseDur.Location = new System.Drawing.Point(104, 65);
+            this.CK_SE_UseDur.Name = "CK_SE_UseDur";
+            this.CK_SE_UseDur.Size = new System.Drawing.Size(177, 17);
+            this.CK_SE_UseDur.TabIndex = 5;
+            this.CK_SE_UseDur.Text = "Use Duration for Special Effects";
+            this.CK_SE_UseDur.ToolTipText = "";
+            this.CK_SE_UseDur.CheckedChanged += new System.EventHandler(this.CK_SE_UseDur_CheckedChanged);
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3782,5 +3796,6 @@
         private System.Windows.Forms.ComboBox CB_PetTalentsSpecSwitcher;
         private System.Windows.Forms.Label LB_ArmoryPets;
         private System.Windows.Forms.ComboBox CB_ArmoryPets;
+        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_SE_UseDur;
     }
 }

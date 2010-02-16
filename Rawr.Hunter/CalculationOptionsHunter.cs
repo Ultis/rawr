@@ -330,6 +330,96 @@ namespace Rawr.Hunter
             set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
         }
 
+        private bool _SE_UseDur = true;
+        public bool SE_UseDur
+        {
+            get { return _SE_UseDur; }
+            set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); }
+        }
+
+        private bool[] _Maintenance;
+        public enum Maintenances
+        {
+            _RageGen__ = 0,
+            BerserkerRage_,
+            Bloodrage_,
+            _Maintenance__,
+            ShoutChoice_,
+            BattleShout_,
+            CommandingShout_,
+            DemoralizingShout_,
+            SunderArmor_,
+            ThunderClap_,
+            Hamstring_,
+            _Periodics__,
+            ShatteringThrow_,
+            SweepingStrikes_,
+            DeathWish_,
+            Recklessness_,
+            EnragedRegeneration_,
+            _DamageDealers__,
+            Fury_,
+            Whirlwind_,
+            Bloodthirst_,
+            Bloodsurge_,
+            Arms_,
+            Bladestorm_,
+            MortalStrike_,
+            Rend_,
+            Overpower_,
+            TasteForBlood_,
+            SuddenDeath_,
+            Slam_,
+            ExecuteSpam_,
+            _RageDumps__,
+            Cleave_,
+            HeroicStrike_
+        };
+        public bool[] Maintenance
+        {
+            get
+            {
+                return _Maintenance ??
+                    (_Maintenance = new bool[] {
+                        true,  // == Rage Gen ==
+                            true,  // Berserker Rage
+                            true,  // Bloodrage
+                        false, // == Maintenance ==
+                            false, // Shout Choice
+                                false, // Battle Shout
+                                false, // Commanding Shout
+                            false, // Demoralizing Shout
+                            false, // Sunder Armor
+                            false, // Thunder Clap
+                            false, // Hamstring
+                        true,  // == Periodics ==
+                            true,  // Shattering Throw
+                            true,  // Sweeping Strikes
+                            true,  // DeathWish
+                            true,  // Recklessness
+                            false, // Enraged Regeneration
+                        true,  // == Damage Dealers ==
+                            true,  // Fury
+                                true,  // Whirlwind
+                                true,  // Bloodthirst
+                                true,  // Bloodsurge
+                            true,  // Arms
+                                true,  // Bladestorm
+                                true,  // Mortal Strike
+                                true,  // Rend
+                                true,  // Overpower
+                                true,  // Taste for Blood
+                                true,  // Sudden Death
+                                true,  // Slam
+                            true,  // <20% Execute Spamming
+                        true,  // == Rage Dumps ==
+                            true,  // Cleave
+                            true   // Heroic Strike
+                    });
+            }
+            set { _Maintenance = value; OnPropertyChanged("Maintenance"); }
+        }
+
         #region ICalculationOptionBase Members
 		public string GetXml()
 		{

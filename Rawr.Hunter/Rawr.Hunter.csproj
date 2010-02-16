@@ -166,6 +166,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Rotation.cs" />
     <Compile Include="RotationTest.cs" />
     <Compile Include="ShotData.cs" />
     <Compile Include="ShotPriority.cs">

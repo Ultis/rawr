@@ -32,7 +32,6 @@ namespace Rawr.Hunter.Skills
         private CalculationOptionsHunter CalcOpts;
         private float TARGETS;
         public AttackTable RWAtkTable;
-        public AttackTable OHAtkTable;
         private float OVDOVERDUR_HS;
         private float OVDOVERDUR_CL;
         private float FightDuration;
@@ -125,9 +124,9 @@ namespace Rawr.Hunter.Skills
             if (RwActivates <= 0f) { return 0f; }
             return (RWAtkTable.Miss * rageCost) / (abilInterval * ((RwActivates /* * (MHSwingRage + MHUWProcValue)*/) / FightDuration));
         }
-        public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH)
+        public virtual float GetXActs(AttackTableSelector i, float acts)
         {
-            AttackTable table = (isMH ? RWAtkTable : OHAtkTable);
+            AttackTable table = RWAtkTable;
             float retVal = 0f;
             switch (i)
             {
@@ -146,13 +145,13 @@ namespace Rawr.Hunter.Skills
         {
             // ==== MAIN HAND ====
             float acts = RwActivates;
-            float misses = GetXActs(AttackTableSelector.Missed, acts, true), missesPerc = (acts == 0f ? 0f : misses / acts);
-            float dodges = GetXActs(AttackTableSelector.Dodged, acts, true), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
-            float parrys = GetXActs(AttackTableSelector.Parried, acts, true), parrysPerc = (acts == 0f ? 0f : parrys / acts);
-            float blocks = GetXActs(AttackTableSelector.Blocked, acts, true), blocksPerc = (acts == 0f ? 0f : blocks / acts);
-            float crits = GetXActs(AttackTableSelector.Crit, acts, true), critsPerc = (acts == 0f ? 0f : crits / acts);
-            float glncs = GetXActs(AttackTableSelector.Glance, acts, true), glncsPerc = (acts == 0f ? 0f : glncs / acts);
-            float hits = GetXActs(AttackTableSelector.Hit, acts, true), hitsPerc = (acts == 0f ? 0f : hits / acts);
+            float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
+            float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
+            float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
+            float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
+            float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
+            float glncs = GetXActs(AttackTableSelector.Glance, acts), glncsPerc = (acts == 0f ? 0f : glncs / acts);
+            float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
 
             bool showmisss = misses > 0f;
             bool showdodge = dodges > 0f;
@@ -365,7 +364,10 @@ namespace Rawr.Hunter.Skills
         protected float FightDuration { get { return CalcOpts.Duration; } }
         protected bool UseSpellHit { get { return USESPELLHIT; } set { USESPELLHIT = value; } }
         protected bool UseHitTable { get { return USEHITTABLE; } set { USEHITTABLE = value; } }
-
+        public bool isMaint { get; protected set; }
+        public bool UsesGCD { get; protected set; }
+        public float GCDTime { get; protected set; } // In Seconds
+        public float UseTime { get { return CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1.5f, CastTime), GCDTime); } }
         private bool? validatedSet = null;
         public virtual bool Validated
         {

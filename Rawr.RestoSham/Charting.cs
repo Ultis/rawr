@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+#if RAWR3
+using System.Windows.Media;
+#else
 using System.Drawing;
+#endif
+using System.Text;
 
 namespace Rawr.RestoSham
 {
@@ -67,9 +71,9 @@ namespace Rawr.RestoSham
         };
         public static Color[] StatsGraphColors = new Color[] { 
             Color.FromArgb(255, 255, 0, 0), 
-            Color.DarkBlue, 
+            Color.FromArgb(255, 0, 0, 156), // DarkBlue doesnt work in Rawr3, using RGB instead
             Color.FromArgb(255, 255, 165, 0), 
-            Color.Olive, 
+            Color.FromArgb(255, 128, 128, 0), // Olive Doesn't work in Rawr3, using RGB instead
             Color.FromArgb(255, 154, 205, 50)
         };
 

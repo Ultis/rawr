@@ -29,6 +29,7 @@ namespace Rawr.DPSWarr
         public float AnyLand { get { return _anyLand; } }
         public float AnyNotLand { get { return _anyNotLand; } }
         private bool _alwaysHit = false;
+
         protected virtual void Calculate() {
             _anyNotLand = Dodge + Parry + Miss;
             _anyLand = 1f - _anyNotLand;

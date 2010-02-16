@@ -164,6 +164,9 @@ namespace Rawr.Hunter
 
                 NUD_Latency.Value = (decimal)(CalcOpts.Latency * 1000.0);
 
+                // Special Effects Special Option
+                CK_SE_UseDur.Checked = CalcOpts.SE_UseDur;
+
                 CK_MultipleTargets.Checked = CalcOpts.MultipleTargets;
                 NUD_MultiTargsUptime.Enabled = CalcOpts.MultipleTargets;
                 NUD_MultiTargsUptime.Value = (int)(CalcOpts.MultipleTargetsPerc * 100f);
@@ -1266,6 +1269,15 @@ namespace Rawr.Hunter
                 CB_PriorityDefaults.SelectedIndex = rightSpec;
             }
             CurrentSpec = CB_PriorityDefaults.SelectedIndex;
+        }
+
+        // Special Effects Modifier
+        private void CK_SE_UseDur_CheckedChanged(object sender, EventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.SE_UseDur = CK_SE_UseDur.Checked;
+            Character.OnCalculationsInvalidated();
         }
     }
 }

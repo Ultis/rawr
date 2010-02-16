@@ -28,6 +28,7 @@ namespace Rawr.Hunter
         private float _anyNotLand = 1f;
         public float AnyLand { get { return _anyLand; } }
         public float AnyNotLand { get { return _anyNotLand; } }
+        private bool _alwaysHit = false;
 
         protected virtual void Calculate() {
             _anyNotLand = Dodge + Parry + Miss;
@@ -66,6 +67,17 @@ namespace Rawr.Hunter
             // Start a calc            
             if (alwaysHit) CalculateAlwaysHit();
             else Calculate();            
+        }
+
+        protected void Reset(bool alwaysHit)
+        {
+            if (alwaysHit) CalculateAlwaysHit();
+            else Calculate();
+        }
+        public void Reset()
+        {
+            if (_alwaysHit) return;
+            Reset(false);
         }
 
         public override string ToString() {
