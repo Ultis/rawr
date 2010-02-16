@@ -286,8 +286,9 @@ namespace Rawr {
 			}
 			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
 			{ // Darkmoon Card: Greatness
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+                //stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+                //stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
 			}
             else if ((match = Regex.Match(line, @"Each time you deal melee or ranged damage to an opponent, you gain (?<amount>\d+) attack power for the next 10 sec, stacking up to 20 times\.")).Success)
             {

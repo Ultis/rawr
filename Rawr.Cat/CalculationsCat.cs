@@ -712,6 +712,7 @@ namespace Rawr.Cat
 			triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
 			triggerIntervals[Trigger.DoTTick] = 1.5f;
 			triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
+            triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to Add Self-Heals
 			triggerIntervals[Trigger.RakeTick] = 3f + (float)calcOpts.LagVariance / 3000f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
 				triggerIntervals[Trigger.MangleCatHit] = talents.GlyphOfMangle ? 18f : 12f;
@@ -723,6 +724,7 @@ namespace Rawr.Cat
 			triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
 			triggerChances[Trigger.DoTTick] = 1f;
 			triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
+            triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to Add Self-Heals
 			triggerChances[Trigger.RakeTick] = 1f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
 				triggerChances[Trigger.MangleCatHit] = 1f;
@@ -984,7 +986,7 @@ namespace Rawr.Cat
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
 					|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.RakeTick
-					|| effect.Trigger == Trigger.MangleCatOrShredHit)
+					|| effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.DamageOrHealingDone)
 				{
 					if (HasRelevantStats(effect.Stats))
 					{
@@ -1016,7 +1018,7 @@ namespace Rawr.Cat
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.RakeTick
-					|| effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit)
+					|| effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.DamageOrHealingDone)
 				{
 					relevant |= HasRelevantStats(effect.Stats);
 					if (relevant) break;

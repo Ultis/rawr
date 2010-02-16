@@ -1204,6 +1204,11 @@ namespace Rawr.Mage
                                             triggers += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
                                             procs += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
                                             break;
+                                        case Trigger.DamageOrHealingDone:
+                                            // Need to add Self-Heals
+                                            triggers += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
+                                            procs += (float)calculations.Solution[j] * c.DamageProcs / c.CastTime;
+                                            break;
                                     }
                                 }
                             }
@@ -1645,7 +1650,7 @@ namespace Rawr.Mage
                 {
                     if (effect.Stats.SpellPower > 0)
                     {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone)
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone)
                         {
                             s.AddSpecialEffect(effect);
                             continue;
@@ -1653,7 +1658,7 @@ namespace Rawr.Mage
                     }
                     if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0)
                     {
-                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
+                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                         {
                             s.AddSpecialEffect(effect);
                             continue;
@@ -1679,7 +1684,7 @@ namespace Rawr.Mage
                     }
                     if (effect.Stats.ManaRestore > 0 || effect.Stats.Mp5 > 0)
                     {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone)
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone)
                         {
                             s.AddSpecialEffect(effect);
                             continue;
@@ -1755,14 +1760,14 @@ namespace Rawr.Mage
                 {
                     if (effect.Stats.SpellPower > 0)
                     {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone)
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone)
                         {
                             return true;
                         }
                     }
                     if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0)
                     {
-                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
+                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                         {
                             return true;
                         }
@@ -1784,7 +1789,7 @@ namespace Rawr.Mage
                     }
                     if (effect.Stats.ManaRestore > 0 || effect.Stats.Mp5 > 0)
                     {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone)
+                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone)
                         {
                             return true;
                         }

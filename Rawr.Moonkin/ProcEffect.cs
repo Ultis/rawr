@@ -42,6 +42,10 @@ namespace Rawr.Moonkin
                         case Trigger.DamageDone:    // DMC: Death
                             triggerInterval = r.Duration / (r.CastCount + r.DotTicks);
                             break;
+                        case Trigger.DamageOrHealingDone:    // DMC: Greatness
+                            // Need to add Self-Heals
+                            triggerInterval = r.Duration / (r.CastCount + r.DotTicks);
+                            break;
                         default:
                             return 0.0f;
                     }
@@ -110,6 +114,7 @@ namespace Rawr.Moonkin
                 };
             }
             else if (Effect.Trigger == Trigger.DamageDone ||
+                Effect.Trigger == Trigger.DamageOrHealingDone ||
                 Effect.Trigger == Trigger.DamageSpellCast ||
                 Effect.Trigger == Trigger.DamageSpellCrit ||
                 Effect.Trigger == Trigger.DamageSpellHit ||

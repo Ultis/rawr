@@ -955,6 +955,7 @@ namespace Rawr.Enhance
                     trigger == Trigger.PhysicalHit ||
                     trigger == Trigger.PhysicalCrit ||
                     trigger == Trigger.DamageDone ||
+                    trigger == Trigger.DamageOrHealingDone ||
                     trigger == Trigger.ShamanLightningBolt ||
                     trigger == Trigger.ShamanLavaLash ||
                     trigger == Trigger.ShamanShock ||

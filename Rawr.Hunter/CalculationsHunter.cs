@@ -417,6 +417,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                      effect.Trigger == Trigger.PhysicalHit ||
                      effect.Trigger == Trigger.DoTTick ||
                      effect.Trigger == Trigger.DamageDone ||
+                     effect.Trigger == Trigger.DamageOrHealingDone ||
                      effect.Trigger == Trigger.DamageTaken ||
                      // Hunter Specific
                      effect.Trigger == Trigger.RangedHit ||
@@ -512,6 +513,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
                 if (e.Trigger == Trigger.DamageDone
+                    || e.Trigger == Trigger.DamageOrHealingDone
                     || e.Trigger == Trigger.DoTTick
                     || e.Trigger == Trigger.PhysicalCrit
                     || e.Trigger == Trigger.PhysicalHit
@@ -2687,6 +2689,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             triggerIntervals.Add(Trigger.PhysicalCrit, 1f / totalShotsPerSecond);
             triggerIntervals.Add(Trigger.DoTTick, talents.PiercingShots > 0 ? 1f : 0f);
             triggerIntervals.Add(Trigger.DamageDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f))));
+            triggerIntervals.Add(Trigger.DamageOrHealingDone, Math.Max(0f, 1f / (totalShotsPerSecond + ((talents.PiercingShots > 0 ? 1f : 0f) > 0 ? 1f / (talents.PiercingShots > 0 ? 1f : 0f) : 0f)))); // Need to add Self-Heals
             triggerIntervals.Add(Trigger.HunterAutoShotHit, 1f / autoShotsPerSecond);
             triggerIntervals.Add(Trigger.SteadyShotHit, calculatedStats.steadyShot.Cd);
             triggerIntervals.Add(Trigger.PetClawBiteSmackCrit, Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
@@ -2704,6 +2707,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             triggerChances.Add(Trigger.PhysicalCrit, Math.Min(1f + critMOD, Math.Max(0f, statsTotal.PhysicalCrit)));
             triggerChances.Add(Trigger.DoTTick, 1f);
             triggerChances.Add(Trigger.DamageDone, 1f);
+            triggerChances.Add(Trigger.DamageOrHealingDone, 1f);
             triggerChances.Add(Trigger.HunterAutoShotHit, (1f - ChanceToMiss));
             triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
             triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
@@ -2786,6 +2790,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         case Trigger.PhysicalCrit:
                         case Trigger.DoTTick:
                         case Trigger.DamageDone: // physical and dots
+                        case Trigger.DamageOrHealingDone: // physical and dots
                         case Trigger.HunterAutoShotHit:
                         case Trigger.SteadyShotHit:
                         case Trigger.PetClawBiteSmackCrit:

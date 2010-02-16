@@ -54,6 +54,12 @@ namespace Rawr.DPSDK
                         chance = (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial)) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
+                    case Trigger.DamageOrHealingDone:
+                        // Need to add Self Healing
+                        trigger = 1f / (((rotation.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + rotation.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
+                        chance = (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial)) * (1f - combatTable.totalMHMiss);
+                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
                     case Trigger.DamageSpellHit:

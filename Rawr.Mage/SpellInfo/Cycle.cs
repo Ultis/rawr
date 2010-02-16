@@ -317,6 +317,13 @@ namespace Rawr.Mage
                                 spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
                             }
                             break;
+                        case Trigger.DamageOrHealingDone:
+                            // Need to Add Self-Heals
+                            if (DamageProcs > 0)
+                            {
+                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                            }
+                            break;
                     }
                 }
                 if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
@@ -363,6 +370,11 @@ namespace Rawr.Mage
                             interval = CastTime / Ticks;
                             break;
                         case Trigger.DamageDone:
+                            chance = 1;
+                            interval = CastTime / DamageProcs;
+                            break;
+                        case Trigger.DamageOrHealingDone:
+                            // Need to Add Self-Heals
                             chance = 1;
                             interval = CastTime / DamageProcs;
                             break;
@@ -504,6 +516,13 @@ namespace Rawr.Mage
                             manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
                         }
                         break;
+                    case Trigger.DamageOrHealingDone:
+                        // Need to Add Self-Heals
+                        if (DamageProcs > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
+                        }
+                        break;
                 }
             }
             foreach (SpecialEffect effect in CastingState.Calculations.Mp5Effects)
@@ -535,6 +554,12 @@ namespace Rawr.Mage
                         }
                         break;
                     case Trigger.DamageDone:
+                        if (DamageProcs > 0)
+                        {
+                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, fight);
+                        }
+                        break;
+                    case Trigger.DamageOrHealingDone:
                         if (DamageProcs > 0)
                         {
                             manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, fight);
@@ -614,6 +639,13 @@ namespace Rawr.Mage
                             dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
                         }
                         break;
+                    case Trigger.DamageOrHealingDone:
+                        // Need to Add Self-Heals
+                        if (DamageProcs > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
+                        }
+                        break;
                 }
             }
             foreach (SpecialEffect effect in CastingState.Calculations.Mp5Effects)
@@ -645,6 +677,13 @@ namespace Rawr.Mage
                         }
                         break;
                     case Trigger.DamageDone:
+                        if (DamageProcs > 0)
+                        {
+                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
+                        }
+                        break;
+                    case Trigger.DamageOrHealingDone:
+                        // Need to add Self-Heals
                         if (DamageProcs > 0)
                         {
                             dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
@@ -717,6 +756,11 @@ namespace Rawr.Mage
                             interval = CastTime / Ticks;
                             break;
                         case Trigger.DamageDone:
+                            chance = 1;
+                            interval = CastTime / DamageProcs;
+                            break;
+                        case Trigger.DamageOrHealingDone:
+                            // Need to add Self-Heals
                             chance = 1;
                             interval = CastTime / DamageProcs;
                             break;

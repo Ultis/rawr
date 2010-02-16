@@ -703,6 +703,10 @@ focus on Survival Points.",
                         case Trigger.DamageDone:
                             statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageDone, chanceDamageDone));
                             break;
+                        case Trigger.DamageOrHealingDone:
+                            // Need to add Self-Heals
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageDone, chanceDamageDone));
+                            break;
                         case Trigger.DamageTaken:
                             statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed));
                             break;
@@ -735,6 +739,15 @@ focus on Survival Points.",
                             break;
                     }
                 }
+            }
+
+            // Darkmoon card greatness procs
+            if (statsSpecialEffects.HighestStat > 0 || statsSpecialEffects.Paragon > 0)
+            {
+                if (statsSpecialEffects.Strength >= statsSpecialEffects.Agility) { statsSpecialEffects.Strength += statsSpecialEffects.HighestStat + statsSpecialEffects.Paragon; }
+                else if (statsSpecialEffects.Agility > statsSpecialEffects.Strength) { statsSpecialEffects.Agility += statsSpecialEffects.HighestStat + statsSpecialEffects.Paragon; }
+                statsSpecialEffects.HighestStat = 0;
+                statsSpecialEffects.Paragon = 0;
             }
 
             // Base Stats
@@ -1189,6 +1202,8 @@ focus on Survival Points.",
                 FrostResistanceBuff = stats.FrostResistanceBuff,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
                 DeathbringerProc = stats.DeathbringerProc,
+                HighestStat = stats.HighestStat,
+                Paragon = stats.Paragon,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1223,8 +1238,8 @@ focus on Survival Points.",
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
-                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
+                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
                     effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.HammeroftheRighteous || effect.Trigger == Trigger.SpellCast ||
                     effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
                 {
@@ -1307,6 +1322,7 @@ focus on Survival Points.",
                 stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.ConsecrationSpellPower +
                 stats.HighestStat +
+                stats.Paragon +
                 stats.ArcaneDamage +
                 stats.ShadowDamage +
                 stats.Healed +
@@ -1345,7 +1361,7 @@ focus on Survival Points.",
                     effect.Trigger == Trigger.MeleeHit     || effect.Trigger == Trigger.PhysicalHit    ||
                     effect.Trigger == Trigger.MeleeCrit    || effect.Trigger == Trigger.PhysicalCrit   || 
                     effect.Trigger == Trigger.DoTTick      || effect.Trigger == Trigger.SpellCast      ||
-                    effect.Trigger == Trigger.DamageDone   || effect.Trigger == Trigger.DamageTaken    ||
+                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.DamageTaken ||
                     effect.Trigger == Trigger.SpellHit     || effect.Trigger == Trigger.DamageSpellHit ||
                     effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield     ||
                     effect.Trigger == Trigger.ShieldofRighteousness ||

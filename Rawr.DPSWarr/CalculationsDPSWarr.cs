@@ -563,6 +563,7 @@ These numbers to do not include racial bonuses.",
                     Trigger.DamageTaken,
                     Trigger.DamageAvoided,
                     Trigger.HSorSLHit,
+                    Trigger.DamageOrHealingDone,
                 });
             }
             set { _RelevantTriggers = value; }
@@ -1804,6 +1805,9 @@ These numbers to do not include racial bonuses.",
 
             triggerIntervals[Trigger.DamageDone] = dmgDoneInterval;
             triggerChances[Trigger.DamageDone] = 1f;
+
+            triggerIntervals[Trigger.DamageOrHealingDone] = dmgDoneInterval; // Need to add Self Heals
+            triggerChances[Trigger.DamageOrHealingDone] = 1f;
 
             triggerIntervals[Trigger.DamageTaken] = dmgTakenInterval;
             triggerChances[Trigger.DamageTaken] = 1f;

@@ -775,7 +775,8 @@ namespace Rawr.Warlock
                 effect.Trigger == Trigger.SpellHit ||
                 effect.Trigger == Trigger.SpellMiss ||
                 effect.Trigger == Trigger.DoTTick ||
-                effect.Trigger == Trigger.DamageDone)
+                effect.Trigger == Trigger.DamageDone ||
+                effect.Trigger == Trigger.DamageOrHealingDone)
             {
                 return _HasRelevantStats(effect.Stats);
             }

@@ -44,6 +44,12 @@ namespace Rawr.TankDK
                         chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
+                    case Trigger.DamageDone:
+                    case Trigger.DamageOrHealingDone:
+                        trigger = (1f / rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
+                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
                     case Trigger.DamageSpellHit:

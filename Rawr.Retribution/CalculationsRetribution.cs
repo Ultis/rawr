@@ -473,6 +473,11 @@ namespace Rawr.Retribution
             {
                 trigger = 1f / rot.GetPhysicalAttacksPerSec();
             }
+            else if (effect.Trigger == Trigger.DamageOrHealingDone)
+            {
+                // Need to add Self-heals
+                trigger = 1f / rot.GetPhysicalAttacksPerSec();
+            }
             else if (effect.Trigger == Trigger.CrusaderStrikeHit)
             {
                 trigger = rot.GetCrusaderStrikeCD();
@@ -785,7 +790,7 @@ namespace Rawr.Retribution
         {
             if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit|| effect.Trigger == Trigger.MeleeHit
                 || effect.Trigger == Trigger.CrusaderStrikeHit || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.SealOfVengeanceTick
-                || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit)
+                || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.JudgementHit)
             {
                 Stats stats = effect.Stats;
                 foreach (SpecialEffect subeffect in stats.SpecialEffects())

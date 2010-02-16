@@ -72,6 +72,9 @@ namespace Rawr
         DoTTick,
         #endregion
 
+        /// <summary>The player deals any form of damage, regardless of where it comes from or performs a heal (on self or other).</summary>
+        DamageOrHealingDone,
+
         // Class Specific
         #region Added by Death Knight
         BloodStrikeHit,

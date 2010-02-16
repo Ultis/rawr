@@ -1381,6 +1381,7 @@ namespace Rawr.DPSDK
                 if (HasRelevantStats(effect.Stats))
                 {
                     if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageOrHealingDone ||
                         effect.Trigger == Trigger.DamageSpellCast ||
                         effect.Trigger == Trigger.DamageSpellCrit ||
                         effect.Trigger == Trigger.DamageSpellHit ||
@@ -1418,6 +1419,7 @@ namespace Rawr.DPSDK
                 if (relevantStats(effect.Stats))
                 {
                     if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageOrHealingDone ||
                         effect.Trigger == Trigger.DamageSpellCast ||
                         effect.Trigger == Trigger.DamageSpellCrit ||
                         effect.Trigger == Trigger.DamageSpellHit ||

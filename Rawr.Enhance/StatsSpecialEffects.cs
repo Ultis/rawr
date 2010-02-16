@@ -110,6 +110,12 @@ namespace Rawr.Enhance
                     chance = (float)Math.Min(1.0f, _cs.AverageWhiteHit + _cs.ChanceSpellHit); // limit to 100% chance
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
+                case Trigger.DamageOrHealingDone:
+                    // Need to add Self Heals
+                    trigger = (_cs.HastedMHSpeed + 1f / _cs.GetSpellAttacksPerSec()) / 2f;
+                    chance = (float)Math.Min(1.0f, _cs.AverageWhiteHit + _cs.ChanceSpellHit); // limit to 100% chance
+                    unhastedAttackSpeed = _cs.UnhastedMHSpeed;
+                    break;
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
                     trigger = _cs.HastedMHSpeed;

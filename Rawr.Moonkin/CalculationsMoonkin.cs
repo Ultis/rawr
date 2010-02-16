@@ -962,6 +962,7 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellMiss ||
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone ||
                     effect.Trigger == Trigger.InsectSwarmOrMoonfireTick ||
                     effect.Trigger == Trigger.InsectSwarmTick ||
                     effect.Trigger == Trigger.MoonfireTick ||
@@ -1009,6 +1010,7 @@ namespace Rawr.Moonkin
                     effect.Trigger == Trigger.SpellMiss ||
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone ||
                     effect.Trigger == Trigger.InsectSwarmTick ||
                     effect.Trigger == Trigger.InsectSwarmOrMoonfireTick ||
                     effect.Trigger == Trigger.MoonfireTick ||

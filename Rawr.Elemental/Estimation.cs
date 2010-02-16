@@ -206,6 +206,11 @@ namespace Rawr.Elemental
             // flameshock ticks are not taken into account. the chance would be slightly higher.
             triggerChances[Trigger.DamageDone] = WeightedHitChance;
 
+            triggerIntervals[Trigger.DamageOrHealingDone] = 1f / (rot.getCastsPerSecond() + 1f / rot.FS.PeriodicTickTime);
+            // flameshock ticks are not taken into account. the chance would be slightly higher.
+            // Need to add Self-Heals
+            triggerChances[Trigger.DamageOrHealingDone] = WeightedHitChance;
+
             triggerIntervals[Trigger.SpellMiss] = CastInterval;
             triggerChances[Trigger.SpellMiss] = 1f - WeightedHitChance;
 
@@ -317,6 +322,12 @@ namespace Rawr.Elemental
                 if (effect.Trigger == Trigger.DamageDone)
                 {
                     trigger = 1f / ( rot.getCastsPerSecond() + 1f/rot.FS.PeriodicTickTime );
+                    procChance = rot.getWeightedHitchance(); //flameshock ticks are not taken into account. the chance would be slightly higher.
+                }
+                else if (effect.Trigger == Trigger.DamageOrHealingDone)
+                {
+                    // Need to Add Self-Heals
+                    trigger = 1f / (rot.getCastsPerSecond() + 1f / rot.FS.PeriodicTickTime);
                     procChance = rot.getWeightedHitchance(); //flameshock ticks are not taken into account. the chance would be slightly higher.
                 }
                 else if (effect.Trigger == Trigger.SpellMiss)

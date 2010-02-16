@@ -467,7 +467,6 @@ namespace Rawr.Hunter {
             if (!aw.ability.Validated) return 0f;
 
             float Abil_GCDs = Math.Min(GCDsAvailable, aw.ability.Activates * (1f - totalPercTimeLost));
-            Abil_GCDs = Abil_GCDs;
             aw.numActivates = Abil_GCDs;
             //availGCDs -= Abil_GCDs;
             if (_needDisplayCalcs && Abil_GCDs > 0)

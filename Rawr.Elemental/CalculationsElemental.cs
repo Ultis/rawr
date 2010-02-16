@@ -504,7 +504,8 @@ namespace Rawr.Elemental
                     effect.Trigger == Trigger.DamageSpellCrit || 
                     effect.Trigger == Trigger.DamageSpellHit || 
                     effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || 
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone || 
                     effect.Trigger == Trigger.ShamanLightningBolt ||
                     effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
                     effect.Trigger == Trigger.ShamanShock)
@@ -591,7 +592,8 @@ namespace Rawr.Elemental
                     effect.Trigger == Trigger.DamageSpellCrit || 
                     effect.Trigger == Trigger.DamageSpellHit || 
                     effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || 
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone || 
                     effect.Trigger == Trigger.ShamanLightningBolt ||
                     effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
                     effect.Trigger == Trigger.ShamanShock)

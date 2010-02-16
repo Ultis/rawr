@@ -623,6 +623,9 @@ threat and limited threat scaled by the threat scale.",
                     case Trigger.DamageDone:
                         effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
+                    case Trigger.DamageOrHealingDone:
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
+                        break;
                     case Trigger.DamageTaken:
                         effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond));
                         break;
@@ -1083,6 +1086,7 @@ threat and limited threat scaled by the threat scale.",
                     effect.Trigger == Trigger.PhysicalHit ||
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone ||
                     effect.Trigger == Trigger.DamageTaken) && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
@@ -1140,6 +1144,7 @@ threat and limited threat scaled by the threat scale.",
                         effect.Trigger == Trigger.PhysicalHit ||
                         effect.Trigger == Trigger.DoTTick ||
                         effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageOrHealingDone ||
                         effect.Trigger == Trigger.DamageTaken)
                     {
                         relevant |= HasRelevantStats(effect.Stats);

@@ -797,6 +797,7 @@ namespace Rawr.Rogue
             triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
             triggerIntervals[Trigger.DoTTick] = 0f;
             triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
+            triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to add Self-heals
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
@@ -804,6 +805,7 @@ namespace Rawr.Rogue
             triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.DoTTick] = 1f;
             triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
+            triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to add Self-heals
 
             // Handle Trinket procs
             Stats statsProcs = new Stats();
@@ -1087,7 +1089,7 @@ namespace Rawr.Rogue
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
                 || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.SpellHit)
+                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellHit)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1187,6 +1189,7 @@ namespace Rawr.Rogue
                     || effect.Trigger == Trigger.PhysicalCrit
                     || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone
+                    || effect.Trigger == Trigger.DamageOrHealingDone
                     || effect.Trigger == Trigger.SpellHit) // For Poison Hits
                 {
                     relevant |= HasRelevantStats(effect.Stats);

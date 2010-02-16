@@ -499,6 +499,15 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 }
                 statSE.Accumulate(sse.getSpecialEffects(opts, e));
             }
+            // Darkmoon card greatness procs
+            if (statSE.HighestStat > 0 || statSE.Paragon > 0)
+            {
+                if (statSE.Strength >= statSE.Agility) { statSE.Strength += statSE.HighestStat + statSE.Paragon; }
+                else if (statSE.Agility > statSE.Strength) { statSE.Agility += statSE.HighestStat + statSE.Paragon; }
+                statSE.HighestStat = 0;
+                statSE.Paragon = 0;
+            }
+
             // Any Modifiers from stats need to be applied to statSE
             statSE.Strength = StatConversion.ApplyMultiplier(statSE.Strength, stats.BonusStrengthMultiplier);
             statSE.Agility = StatConversion.ApplyMultiplier(statSE.Agility, stats.BonusAgilityMultiplier);
@@ -1844,6 +1853,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 Health = stats.Health,
                 BattlemasterHealth = stats.BattlemasterHealth,
 
+                HighestStat = stats.HighestStat,
+                Paragon = stats.Paragon,
+                DeathbringerProc = stats.DeathbringerProc,
+
                 DefenseRating = stats.DefenseRating,
                 ParryRating = stats.ParryRating,
                 DodgeRating = stats.DodgeRating,
@@ -1971,6 +1984,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (relevantStats(effect.Stats)) {
                     if (effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageOrHealingDone ||
                         effect.Trigger == Trigger.DamageTaken ||
                         effect.Trigger == Trigger.DamageSpellCast ||
                         effect.Trigger == Trigger.DamageSpellCrit ||
@@ -2021,6 +2035,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.BonusArmor != 0);
             bResults |= (stats.Health != 0);
             bResults |= (stats.BattlemasterHealth != 0);
+
+            bResults |= (stats.HighestStat != 0);
+            bResults |= (stats.Paragon != 0);
+            bResults |= (stats.DeathbringerProc != 0);
 
             // Defense stats
             bResults |= (stats.DodgeRating != 0);
