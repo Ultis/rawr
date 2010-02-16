@@ -75,7 +75,7 @@ namespace Rawr.Healadin
             calc.ManaOther += jotp.Casts() * jotp.ManaRestored(Character.MainHand == null ? 1.8f : Character.MainHand.Speed);
             if (Stats.HighestStat > 0)
             {
-                float greatnessMana = Stats.HighestStat * 15;
+                float greatnessMana = Stats.HighestStat * StatConversion.RATING_PER_MANA;
                 calc.ManaReplenishment += Stats.ManaRestoreFromMaxManaPerSecond * FightLength * greatnessMana * CalcOpts.Replenishment; // Replenishment
                 calc.ManaDivinePlea += DivinePleas * greatnessMana * .25f; // Divine Plea
             }

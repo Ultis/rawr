@@ -527,17 +527,23 @@ namespace Rawr.Retribution
             // Primary stats
             stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
-            stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
+            stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * 
+                (1f + talents.SacredDuty * .04f) * 
+                (1f + talents.CombatExpertise * .02f);
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
 
             // Secondary stats
-            // GetManaFromIntellect/GetHealthFromStamina account for the fact that the first 20 Int/Sta only give 1 Mana/Health each.
-            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
+            // GetManaFromIntellect/GetHealthFromStamina account for the fact 
+            // that the first 20 Int/Sta only give 1 Mana/Health each.
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * 
+                (1f + stats.BonusManaMultiplier);
             stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
-            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
+            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * 
+                (1 + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
-            stats.Expertise += talents.CombatExpertise * 2 +  StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
+            stats.Expertise += talents.CombatExpertise * 2 + 
+                StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
             stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
             stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin);
 

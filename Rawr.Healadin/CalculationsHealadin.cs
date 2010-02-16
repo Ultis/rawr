@@ -361,22 +361,40 @@ namespace Rawr.Healadin
         private void ConvertRatings(Stats stats, PaladinTalents talents, CalculationOptionsHealadin calcOpts)
         {
             stats.Stamina *= 1 + stats.BonusStaminaMultiplier;
+
+            // Intellect is used to calculate initial mana pool.
+            // To avoid temporary intellect from highest stat procs changing initial mana pool
+            // we track temporary intellect separatly in HighestStat property and combine it with intellect
+            // when needed.
+            // TODO: However this doesn't help to deal with pure temporary intellect procs (if there are any).
+            // NOTE: If we add highest stat to intellect after we calculate mana, the only visible change
+            // will be the displayed intellect for the character.
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .02f);
             stats.HighestStat *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .02f);
-            stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat) * talents.HolyGuidance;
-            stats.SpellCrit = stats.SpellCrit + (stats.Intellect + stats.HighestStat) / 16666.66709f
-                + stats.CritRating / 4590.598679f + talents.SanctityOfBattle * .01f + talents.Conviction * .01f;
 
-            stats.SpellHaste = (1f + talents.JudgementsOfThePure * (calcOpts.JotP ? .03f : 0f))
-                * (1f + stats.SpellHaste)
-                * (1f + stats.HasteRating / 3278.998947f)
+            stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat) * talents.HolyGuidance;
+            stats.SpellCrit = stats.SpellCrit + 
+                StatConversion.GetSpellCritFromIntellect(
+                    stats.Intellect + stats.HighestStat, 
+                    CharacterClass.Paladin) + 
+                StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
+                talents.SanctityOfBattle * .01f + 
+                talents.Conviction * .01f;
+
+            stats.SpellHaste = (1f + talents.JudgementsOfThePure * (calcOpts.JotP ? .03f : 0f)) * 
+                (1f + stats.SpellHaste) *
+                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
                 - 1f;
 
-            // GetManaFromIntellect/GetHealthFromStamina account for the fact that the first 20 Int/Sta only give 1 Mana/Health each.
-            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
+            // GetManaFromIntellect/GetHealthFromStamina account for the fact 
+            // that the first 20 Int/Sta only give 1 Mana/Health each.
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * 
+                (1f + stats.BonusManaMultiplier);
             stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
 
-            stats.PhysicalHit += stats.HitRating / 3278.998947f;
+            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(
+                stats.HitRating, 
+                CharacterClass.Paladin);
         }
         #endregion
 

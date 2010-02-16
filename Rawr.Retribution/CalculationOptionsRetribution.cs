@@ -327,7 +327,6 @@ namespace Rawr.Retribution
             return clone;
         }
 
-        [XmlIgnore]
         private Character _character;
         [XmlIgnore]
         public Character Character
