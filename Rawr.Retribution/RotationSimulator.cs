@@ -58,7 +58,17 @@ namespace Rawr.Retribution
                 }
             }
 #endif
-            if (sols == null) sols = new SerializableDictionary<RotationParameters, RotationSolution>();
+            if (sols == null) 
+                sols = new SerializableDictionary<RotationParameters, RotationSolution>();
+
+#if !RAWR3
+            string latestVersion = RotationParameters.GetLatestVersion();
+            List<RotationParameters> rotations = new List<RotationParameters>(sols.Keys);
+            foreach (var rotation in rotations)
+                if (rotation.Version != latestVersion)
+                    sols.Remove(rotation);
+#endif
+
             return sols;
         }
 

@@ -20,6 +20,17 @@ namespace Rawr.Retribution
         public decimal BloodlustT10Speed;
         public float BloodlustUptime;
 
+#if !RAWR3
+        /// <summary>
+        /// Version is used to ensure that serialized data was calculated
+        /// using the most recent Rawr version.
+        /// </summary>
+        public string Version;
+#endif
+
+        /// <summary>
+        /// This constructor is for XML serialization only.
+        /// </summary>
         public RotationParameters() { }
 
         public RotationParameters(
@@ -36,7 +47,11 @@ namespace Rawr.Retribution
         {
             const float bloodlustHaste = 0.3f;
 
-            this.Priorities = Priorities;
+#if !RAWR3
+            Version = GetLatestVersion();
+#endif
+
+            this.Priorities = (Ability[])Priorities.Clone();
             this.T7_4pc = T7_4pc;
             this.GlyphConsecrate = GlyphConsecrate;
             this.TimeUnder20 = TimeUnder20;
@@ -149,6 +164,15 @@ namespace Rawr.Retribution
             return new Ability[] { Ability.CrusaderStrike, Ability.HammerOfWrath, Ability.Judgement,
                 Ability.Consecration, Ability.DivineStorm, Ability.Exorcism };
         }
+
+#if !RAWR3
+        public static string GetLatestVersion()
+        {
+            // Version is used to ensure that serialized data was calculated
+            // using the most recent Rawr version.
+            return typeof(Rotation).Assembly.GetName().Version.ToString();
+        }
+#endif
 
         public override string ToString()
         {
