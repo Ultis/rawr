@@ -99,7 +99,9 @@ namespace Rawr.Rogue
 					"Basic Stats:Armor Penetration Rating",
 					"Basic Stats:Weapon Damage",
 					
-					"Complex Stats:Avoided Attacks",
+					"Complex Stats:Avoided White Attacks",
+					"Complex Stats:Avoided Yellow Attacks",
+					"Complex Stats:Avoided Poison Attacks",
 					"Complex Stats:Crit Chance",
 					"Complex Stats:MainHand Speed",
 					"Complex Stats:OffHand Speed",
@@ -267,8 +269,8 @@ namespace Rawr.Rogue
             float mainHandSpeed = mainHand == null ? 0f : mainHand._speed * speedModifier;
             float offHandSpeed = offHand == null ? 0f : offHand._speed * speedModifier;
 
-            float normalizedMainHandSpeed = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
-            float normalizedOffHandSpeed = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
+            float mainHandSpeedNorm = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
+            float offHandSpeedNorm = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
 
             float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Rogue);
             float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating, CharacterClass.Rogue);
@@ -370,10 +372,10 @@ namespace Rawr.Rogue
                 chanceHitBackstab += iStat.Chance * chanceHitBackstabTemp;
                 chanceCritMuti += iStat.Chance * chanceCritMutiTemp;
                 chanceHitMuti += iStat.Chance * chanceHitMutiTemp;
-                chanceCritSStrike = iStat.Chance * chanceCritSStrikeTemp;
-                chanceHitSStrike = iStat.Chance * chanceHitSStrikeTemp;
-                chanceCritHemo = iStat.Chance * chanceCritHemoTemp;
-                chanceHitHemo = iStat.Chance * chanceHitHemoTemp;
+                chanceCritSStrike += iStat.Chance * chanceCritSStrikeTemp;
+                chanceHitSStrike += iStat.Chance * chanceHitSStrikeTemp;
+                chanceCritHemo += iStat.Chance * chanceCritHemoTemp;
+                chanceHitHemo += iStat.Chance * chanceHitHemoTemp;
                 chanceCritEvis += iStat.Chance * chanceCritEvisTemp;
                 chanceHitEvis += iStat.Chance * chanceHitEvisTemp;
                 //chanceCritBleed += iStat.Chance * chanceCritBleedTemp;
@@ -388,7 +390,9 @@ namespace Rawr.Rogue
 
             calculatedStats.DodgedAttacks = chanceDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
+            calculatedStats.MissedWhiteAttacks = chanceWhiteMiss * 100f;
             calculatedStats.MissedAttacks = chanceMiss * 100f;
+            calculatedStats.MissedPoisonAttacks = chancePoisonMiss * 100f;
 
             float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
             float lagVariance = (float)calcOpts.LagVariance / 1000f;
@@ -399,20 +403,21 @@ namespace Rawr.Rogue
             float ruptDurationUptime = 8f + stats.BonusRuptDuration;
             float ruptDurationAverage = ruptDurationUptime + timeToReapplyDebuffs + lagVariance;
             float snDBonusDuration = stats.BonusSnDDuration - lagVariance;
-            //float berserkDuration = character.DruidTalents.Berserk > 0 ? (character.DruidTalents.GlyphOfBerserk ? 20f : 15f) : 0f;
             #endregion
 
             #region Attack Damages
-            float baseDamage = (stats.AttackPower / 14f) + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
-            float baseOffDamage = ((stats.AttackPower / 14f) + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (1f + stats.BonusOffHandDamageMultiplier);
-            float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
-            float meleeOffDamageRaw = (baseOffDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
-            float backstabDamageRaw = (baseDamage * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBackstabDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
+            float baseDamage = mainHandSpeed * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
+            float baseDamageNorm = mainHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
+            float baseOffDamage = (offHandSpeed * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f * (1f + stats.BonusOffHandDamageMultiplier));
+            float baseOffDamageNorm = (offHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f * (1f + stats.BonusOffHandDamageMultiplier));
+            float meleeDamageRaw = (baseDamageNorm) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+            float meleeOffDamageRaw = (baseOffDamageNorm) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+            float backstabDamageRaw = (baseDamageNorm * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBackstabDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
             backstabDamageRaw *= (mainHand._type == ItemType.Dagger ? 1f : 0f);
-            float hemoDamageRaw = (baseDamage * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusHemoDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
+            float hemoDamageRaw = (baseDamageNorm * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusHemoDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
             hemoDamageRaw *= character.RogueTalents.Hemorrhage > 0 ? 1f : 0f;
-            float sStrikeDamageRaw = (baseDamage * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSStrikeDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
-            float mutiDamageRaw = (baseDamage * 1f + 181f + baseOffDamage * 1f + 181f * (1f + stats.BonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMutiDamageMultiplier + stats.BonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
+            float sStrikeDamageRaw = (baseDamageNorm * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSStrikeDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
+            float mutiDamageRaw = (baseDamageNorm * 1f + 181f + baseOffDamageNorm * 1f + 181f * (1f + stats.BonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMutiDamageMultiplier + stats.BonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
             mutiDamageRaw *= (character.RogueTalents.Mutilate > 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
             float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f /*+ (stats.BonusRuptDamagePerCPPerTick * 5f * 8f)*/) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRuptDamageMultiplier + stats.BonusYellowDamageMultiplier);
             float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEvisDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
@@ -420,7 +425,7 @@ namespace Rawr.Rogue
             float envenomBaseDamageRaw = 0f;
             float envenomCPDamageRaw = (215f + stats.AttackPower * 0.09f) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEnvenomDamageMultiplier + stats.BonusYellowDamageMultiplier);
             float iPDamageRaw = ((300f + 400f) / 2f + stats.AttackPower * 0.09f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
-            float dPDamageRaw = ((80f + 296f) / 2f + stats.AttackPower * 0.108f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * 5f; //*5f for the 5 stack for now
+            float dPDamageRaw = ((80f + 296f) / 2f + stats.AttackPower * 0.108f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float wPDamageRaw = ((78f + 231f) / 2f + stats.AttackPower * 0.036f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float aPDamageRaw = ((218f + 280f) / 2f) + (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
 
@@ -726,7 +731,7 @@ namespace Rawr.Rogue
                 ChanceOnEnergyOnOHAttack = 3 * 0.2f * talents.CombatPotency,
                 ChanceOnEnergyPerCPFinisher = 0.04f * talents.RelentlessStrikes,
                 ChanceOnMHAttackOnSwordAxeHit = 0.01f * talents.HackAndSlash,
-                //ChanceOnNoDPConsumeOnEvenom = talents.MasterPoisoner == 3 ? 1f : (0.33f * talents.MasterPoisoner),
+                ChanceOnNoDPConsumeOnEvenom = talents.MasterPoisoner == 3 ? 1f : (0.33f * talents.MasterPoisoner),
                 ChanceOnSnDResetOnEnvenom = 0.2f * talents.CutToTheChase,
                 //CDOnExtraVanish = 8 * talents.Preparation,
                 //CPGCritIncreaseOnRaidAvoid = 0.02f * talents.TurnTheTables,

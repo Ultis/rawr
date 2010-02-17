@@ -235,17 +235,18 @@ namespace Rawr.Rogue
             if (mHPoison == 1)
                 iPCount += mHHitCount * MainHandSpeed * iPPPS * ((Duration - envenomBuffTime) / Duration +
                                                                  1.75f * envenomBuffTime / Duration);
-            else if (mHPoison == 2)
+            else if (mHPoison == 2 && oHPoison != 2)
             {
-                float dPCountTemp = mHHitCount * 0.3f * ((Duration - envenomBuffTime) / Duration +
-                                                         1.15f * envenomBuffTime / Duration);
-                dPCount = dPCountTemp;
+                float dPCountTemp = mHHitCount * 0.3f * (1f - AvoidedPoisonAttacks) *
+                                    ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
+                dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
+                dPCount = 5 * dPCountTemp + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10 + 10;
                 if (oHPoison == 1)
-                    iPCount += dPCountTemp - 5;
+                    iPCount += dPCountTemp;
                 else if (oHPoison == 3)
-                    wPCount += dPCountTemp - 5;
+                    wPCount += dPCountTemp;
                 else if (oHPoison == 4)
-                    aPCount += dPCountTemp - 5;
+                    aPCount += dPCountTemp;
             }
             else if (mHPoison == 3)
                 wPCount += mHHitCount * MainHandSpeed * 21.43f / 60f;
@@ -256,17 +257,18 @@ namespace Rawr.Rogue
             if (oHPoison == 1)
                 iPCount += oHHitCount * OffHandSpeed * iPPPS * ((Duration - envenomBuffTime) / Duration +
                                                                 1.75f * envenomBuffTime / Duration);
-            else if (oHPoison == 2)
+            else if (oHPoison == 2 && mHPoison != 2)
             {
-                float dPCountTemp = oHHitCount * 0.3f * ((Duration - envenomBuffTime) / Duration +
-                                                         1.15f * envenomBuffTime / Duration);
-                dPCount = dPCountTemp;
+                float dPCountTemp = oHHitCount * 0.3f * (1f - AvoidedPoisonAttacks) *
+                                    ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
+                dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
+                dPCount = 5 * dPCountTemp + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10 + 10;
                 if (mHPoison == 1)
-                    iPCount += dPCountTemp - 5;
+                    iPCount += dPCountTemp;
                 else if (mHPoison == 3)
-                    wPCount += dPCountTemp - 5;
+                    wPCount += dPCountTemp;
                 else if (mHPoison == 4)
-                    aPCount += dPCountTemp - 5;
+                    aPCount += dPCountTemp;
             }
             else if (oHPoison == 3)
                 wPCount += oHHitCount * OffHandSpeed * 21.43f / 60f;
@@ -274,7 +276,6 @@ namespace Rawr.Rogue
                 aPCount += oHHitCount * 0.5f;
             #endregion
             iPCount *= (1f - AvoidedPoisonAttacks);
-            dPCount = (dPCount > 0 ? (Duration - 5) / 3f : 0) * (1f - AvoidedPoisonAttacks);
             wPCount *= (1f - AvoidedPoisonAttacks);
             aPCount *= (1f - AvoidedPoisonAttacks);
             #endregion

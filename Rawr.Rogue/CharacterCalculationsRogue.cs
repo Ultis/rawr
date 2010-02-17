@@ -40,7 +40,9 @@ namespace Rawr.Rogue
         public float AvoidedPoisonAttacks { get; set; }
         public float DodgedAttacks { get; set; }
         public float ParriedAttacks { get; set; }
+        public float MissedWhiteAttacks { get; set; }
         public float MissedAttacks { get; set; }
+        public float MissedPoisonAttacks { get; set; }
         public float CritChance { get; set; }
         public float MainHandSpeed { get; set; }
         public float OffHandSpeed { get; set; }
@@ -129,7 +131,9 @@ namespace Rawr.Rogue
             dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
             dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
 
-            dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Avoided White Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedWhiteAttacks, DodgedAttacks, MissedWhiteAttacks));
+            dictValues.Add("Avoided Yellow Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Avoided Poison Attacks", string.Format("{0}%*{1}% Dodged", AvoidedPoisonAttacks, MissedPoisonAttacks));
             dictValues.Add("Crit Chance", CritChance.ToString() + "%");
             dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
             dictValues.Add("OffHand Speed", OffHandSpeed.ToString() + "s");
