@@ -983,7 +983,7 @@ namespace Rawr.Optimizer
                                 lockedSlot = CharacterSlot.Trinket2;
                             }
                             __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
-                            if (lockedSlot == CharacterSlot.MainHand && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
+                            if (lockedSlot == CharacterSlot.MainHand && _character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
                             {
                                 // can't dual wield unique items, so make the other slot empty
                                 __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
