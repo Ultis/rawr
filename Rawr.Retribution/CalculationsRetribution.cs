@@ -454,55 +454,71 @@ namespace Rawr.Retribution
             return stats;
         }
 
-        private Stats ProcessSpecialEffect(SpecialEffect effect, Rotation rot, SealOf seal, float baseWeaponSpeed, float fightLength, int stackTrinketReset)
+        private Stats ProcessSpecialEffect(
+            SpecialEffect effect, 
+            Rotation rot, 
+            SealOf seal, 
+            float baseWeaponSpeed, 
+            float fightLength, 
+            int stackTrinketReset)
         {
-            float trigger = 0f; float procChance = 1f;
-            if (effect.Trigger == Trigger.MeleeCrit)
+            float trigger = 0f; 
+            float procChance = 1f;
+
+            switch (effect.Trigger)
             {
-                trigger = 1f / rot.GetMeleeCritsPerSec();
-            }
-            else if (effect.Trigger == Trigger.MeleeHit)
-            {
-                trigger = 1f / rot.GetMeleeAttacksPerSec();
-            }
-            else if (effect.Trigger == Trigger.PhysicalCrit)
-            {
-                trigger = 1f / rot.GetPhysicalCritsPerSec();
-            }
-            else if (effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone)
-            {
-                trigger = 1f / rot.GetPhysicalAttacksPerSec();
-            }
-            else if (effect.Trigger == Trigger.DamageOrHealingDone)
-            {
-                // Need to add Self-heals
-                trigger = 1f / rot.GetPhysicalAttacksPerSec();
-            }
-            else if (effect.Trigger == Trigger.CrusaderStrikeHit)
-            {
-                trigger = rot.GetCrusaderStrikeCD();
-                procChance = rot.CS.ChanceToLand();
-            }
-            else if (effect.Trigger == Trigger.JudgementHit)
-            {
-                trigger = rot.GetJudgementCD();
-                procChance = rot.Judge.ChanceToLand();
-            }
-            else if (effect.Trigger == Trigger.SealOfVengeanceTick)
-            {
-                if (seal == SealOf.Vengeance)
-                {
-                    trigger = 3f;
+                case Trigger.MeleeCrit:
+                    trigger = 1f / rot.GetMeleeCritsPerSec();
+                    break;
+
+                case Trigger.MeleeHit:
+                    trigger = 1f / rot.GetMeleeAttacksPerSec();
+                    break;
+
+                case Trigger.PhysicalCrit:
+                    trigger = 1f / rot.GetPhysicalCritsPerSec();
+                    break;
+
+                case Trigger.PhysicalHit:
+                case Trigger.DamageDone:
+                    trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    break;
+
+                case Trigger.DamageOrHealingDone:
+                    // Need to add Self-heals
+                    trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    break;
+
+                case Trigger.CrusaderStrikeHit:
+                    trigger = rot.GetCrusaderStrikeCD();
+                    procChance = rot.CS.ChanceToLand();
+                    break;
+
+                case Trigger.JudgementHit:
+                    trigger = rot.GetJudgementCD();
+                    procChance = rot.Judge.ChanceToLand();
+                    break;
+
+                case Trigger.SealOfVengeanceTick:
+                    if (seal == SealOf.Vengeance)
+                    {
+                        trigger = 3f;
+                        procChance = 1f;
+                    }
+                    else
+                    {
+                        goto default;
+                    }
+                    break;
+
+                case Trigger.Use:
+                    trigger = 0f;
                     procChance = 1f;
-                }
-                else new Stats();
+                    break;
+
+                default:
+                    return new Stats();
             }
-            else if (effect.Trigger == Trigger.Use)
-            {
-                trigger = 0f;
-                procChance = 1f;
-            }
-            else new Stats();
 
             if (effect.MaxStack > 1)
             {
