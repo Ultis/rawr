@@ -97,6 +97,17 @@ namespace Rawr
             return GetCombinedHashCode((IEnumerable<object>)objects);
         }
 
+        public static int GetArrayHashCode<T>(T[] array)
+        {
+            if (array == null)
+                return 0;
+
+            object[] values = new object[array.Length];
+            Array.Copy(array, values, array.Length);
+
+            return GetCombinedHashCode(values);
+        }
+
     }
 
 }

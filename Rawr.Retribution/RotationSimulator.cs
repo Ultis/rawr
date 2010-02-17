@@ -14,88 +14,25 @@ namespace Rawr.Retribution
 {
     static class RotationSimulator
     {
-        private static SerializableDictionary<RotationParameters, RotationSolution> savedSolutions = null;
-        private static SerializableDictionary<RotationParameters, RotationSolution> SavedSolutions
+
+        private static IDictionary<RotationParameters, RotationSolution> savedSolutions;
+        private static readonly object savedSolutionLock = new object();
+
+
+        /// <summary>
+        /// Solution cache. Not thread-safe. Should only be used inside lock on savedSolutionLock.
+        /// </summary>
+        private static IDictionary<RotationParameters, RotationSolution> SavedSolutions
         {
             get
             {
-                if (savedSolutions == null) savedSolutions = LoadDictionary();
+                if (savedSolutions == null)
+                    savedSolutions = new Dictionary<RotationParameters, RotationSolution>();
+
                 return savedSolutions;
             }
         }
 
-#if !RAWR3
-        private static string SaveFilePath()
-        {
-            return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
-                "Data" + System.IO.Path.DirectorySeparatorChar + "RetRotations.xml");
-        }
-#endif
-
-        private static SerializableDictionary<RotationParameters, RotationSolution> LoadDictionary()
-        {
-            SerializableDictionary<RotationParameters, RotationSolution> sols = null;
-#if RAWR3
-
-#else
-            string path = SaveFilePath();
-            if (File.Exists(path))
-            {
-                try
-                {
-                    using (TextReader reader = new StreamReader(path, Encoding.UTF8))
-                    {
-                        XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
-                        sols = (SerializableDictionary<RotationParameters, RotationSolution>)serializer.Deserialize(reader);
-                    }
-
-                }
-                catch (Exception)
-                {
-#if DEBUG
-                    MessageBox.Show(":(");
-#endif
-                }
-            }
-#endif
-            if (sols == null) 
-                sols = new SerializableDictionary<RotationParameters, RotationSolution>();
-
-#if !RAWR3
-            string latestVersion = RotationParameters.GetLatestVersion();
-            List<RotationParameters> rotations = new List<RotationParameters>(sols.Keys);
-            foreach (var rotation in rotations)
-                if (rotation.Version != latestVersion)
-                    sols.Remove(rotation);
-#endif
-
-            return sols;
-        }
-
-        private static void SaveDictionary(SerializableDictionary<RotationParameters, RotationSolution> sols)
-        {
-#if RAWR3
- 
-#else
-            lock (sols)
-            {
-                try
-                {
-                    using (TextWriter writer = new StreamWriter(SaveFilePath(), false, Encoding.UTF8))
-                    {
-                        XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<RotationParameters, RotationSolution>));
-                        serializer.Serialize(writer, sols);
-                    }
-                }
-                catch (Exception) { }
-            }
-#endif
-        }
-
-        public static void ClearCache()
-        {
-            savedSolutions.Clear();
-        }
 
         public static RotationSolution SimulateRotation(RotationParameters rot)
         {
@@ -104,7 +41,14 @@ namespace Rawr.Retribution
             const int fightLength = 2000000 * timeUnitsPerSecond;
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
 
-            if (SavedSolutions.ContainsKey(rot)) return SavedSolutions[rot];
+            // TODO: Avoid the same rotation parameters to be simulated in parallel
+
+            lock (savedSolutionLock)
+            {
+                RotationSolution cachedSolution;
+                if (SavedSolutions.TryGetValue(rot, out cachedSolution))
+                    return cachedSolution;
+            }
 
             int bloodlustSpellGcd = (int)(rot.BloodlustSpellGCD * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
@@ -224,8 +168,8 @@ namespace Rawr.Retribution
             sol.HammerOfWrathCD = 
                 abilities[(int)Ability.HammerOfWrath].EffectiveCooldown() / timeUnitsPerSecond;
 
-            SavedSolutions[rot] = sol;
-            SaveDictionary(SavedSolutions);
+            lock (savedSolutionLock)
+                SavedSolutions[rot] = sol;
 
             return sol;
         }
