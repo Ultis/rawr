@@ -18,8 +18,33 @@ namespace Rawr.Hunter
         private float _customDPS;
         public Character character = null;
         public CalculationOptionsHunter calcOpts = null;
+
+        #region Skills
         public Skills.WhiteAttacks Whites { get; set; }
-        //Drizz: Added
+        public Skills.ExplosiveShot Explosive { get; set; }
+        public Skills.SteadyShot Steady { get; set; }
+        public Skills.AimedShot Aimed { get; set; }
+        public Skills.MultiShot Multi { get; set; }
+        public Skills.ArcaneShot Arcane { get; set; }
+        public Skills.KillShot Kill { get; set; }
+        public Skills.SilencingShot Silencing { get; set; }
+        public Skills.Volley Volley { get; set; }
+        public Skills.BlackArrowDoT BlackArrowD { get; set; }
+        public Skills.BlackArrowBuff BlackArrowB { get; set; }
+        public Skills.PiercingShots Piercing { get; set; }
+        public Skills.SerpentSting Serpent { get; set; }
+        public Skills.ChimeraShot_Serpent Chimera { get; set; }
+        public Skills.ScorpidSting Scorpid { get; set; }
+        public Skills.ViperSting Viper { get; set; }
+        public Skills.ImmolationTrap Immolation { get; set; }
+        public Skills.ExplosiveTrap ExplosiveT { get; set; }
+        public Skills.FreezingTrap Freezing { get; set; }
+        public Skills.FrostTrap Frost { get; set; }
+        public Skills.Readiness Ready { get; set; }
+        public Skills.BeastialWrath Beastial { get; set; }
+        public Skills.RapidFire Rapid { get; set; }
+        #endregion
+
         private double _piercingShotsDPS;
         private double _piercingShotsDPSSteadyShot;
         private double _piercingShotsDPSAimedShot;

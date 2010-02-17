@@ -10,7 +10,7 @@ namespace Rawr.Hunter {
             public AbilWrapper(Skills.Ability abil) { ability = abil; }
             public Skills.Ability ability { get; set; }
             public float numActivates { get; set; }
-            public float Rage { get { return ability.GetRageUseOverDur(numActivates); } }
+            public float Mana { get { return ability.GetManaUseOverDur(numActivates); } }
             public float DPS { get { return ability.GetDPS(numActivates); } }
             public float HPS { get { return ability.GetHPS(numActivates); } }
             public bool isDamaging { get { return ability.DamageOverride > 0f; } }
@@ -60,53 +60,50 @@ namespace Rawr.Hunter {
         public bool _needDisplayCalcs = true;
         
         protected float FightDuration;
-        protected float TimeLostGDCs;
+        protected float TimeLostGCDs;
         protected float RageGainedWhileMoving;
         public float TimesStunned = 0f;
         public float TimesFeared = 0f;
         public float TimesRooted = 0f;
         public float TimesDisarmed = 0f;
         
-        /*
         #region Abilities
         // Anti-DeBuff
-        public Skills.HeroicFury HF;
-        public Skills.EveryManForHimself EM;
-        public Skills.Charge CH;
-        public Skills.Intercept IN;
-        public Skills.Intervene IV;
+        //public Skills.HeroicFury HF;
+        //public Skills.EveryManForHimself EM;
+        //public Skills.Charge CH;
+        //public Skills.Intercept IN;
+        //public Skills.Intervene IV;
         // Rage Generators
-        public Skills.SecondWind SndW;
-        public Skills.BerserkerRage BZ;
-        public Skills.Bloodrage BR;
+        //public Skills.SecondWind SndW;
+        //public Skills.BerserkerRage BZ;
+        //public Skills.Bloodrage BR;
         // Maintenance
-        public Skills.BattleShout BTS;
-        public Skills.CommandingShout CS;
-        public Skills.DemoralizingShout DS;
-        public Skills.SunderArmor SN;
-        public Skills.ThunderClap TH;
-        public Skills.Hamstring HMS;
-        public Skills.EnragedRegeneration ER;
+        //public Skills.BattleShout BTS;
+        //public Skills.CommandingShout CS;
+        //public Skills.DemoralizingShout DS;
+        //public Skills.SunderArmor SN;
+        //public Skills.ThunderClap TH;
+        //public Skills.Hamstring HMS;
+        //public Skills.EnragedRegeneration ER;
         // Periodics
-        public Skills.ShatteringThrow ST;
-        public Skills.SweepingStrikes SW;
-        public Skills.DeathWish Death;
-        public Skills.Recklessness RK;
-        // Fury that's shared with Arms
-        public Skills.WhirlWind WW;
-        // Arms that's shared with Fury
-        public Skills.Slam SL;
-        public float _SL_DPS = 0f, _SL_HPS = 0f, _SL_GCDs = 0f;
-        public float _WW_DPS = 0f, _WW_HPS = 0f, _WW_GCDs = 0f;
+        //public Skills.ShatteringThrow ST;
+        //public Skills.SweepingStrikes SW;
+        //public Skills.DeathWish Death;
+        //public Skills.Recklessness RK;
+        // Shots
+        public Skills.MultiShot Multi;
+        public Skills.SteadyShot Steady;
+
+        public float _Steady_DPS = 0f, _Steady_HPS = 0f, _Steady_GCDs = 0f;
+        public float _Multi_DPS = 0f, _Multi_HPS = 0f, _Multi_GCDs = 0f;
         
         // Generic
-        public Skills.DeepWounds DW;
-        public Skills.Cleave CL;
-        public Skills.HeroicStrike HS;
-        public Skills.Execute EX;
+        public Skills.PiercingShots Piercing;
+        //public Skills.Cleave CL;
+        //public Skills.HeroicStrike HS;
+        public Skills.KillShot Kill;
         #endregion
-        */
-        //public Skills.DeepWounds DW;
 
         #endregion
         #region Get/Set
@@ -127,15 +124,13 @@ namespace Rawr.Hunter {
         /// <summary>
         /// How many GCDs have been used by the rotation
         /// </summary>
-        protected float GCDsUsed
-        {
-            get
-            {
+        protected float GCDsUsed {
+            get {
                 float gcds = 0f;
-                foreach (AbilWrapper aw in GetAbilityList())
-                {
-                    if (aw.ability.UsesGCD)
+                foreach (AbilWrapper aw in GetAbilityList()) {
+                    if (aw.ability.UsesGCD) {
                         gcds += aw.numActivates * aw.ability.UseTime / LatentGCD;
+                    }
                 }
                 return gcds;
             }
@@ -144,7 +139,7 @@ namespace Rawr.Hunter {
         /// <summary>
         /// How many GCDs are still available in the rotation
         /// </summary>
-        protected float GCDsAvailable { get { return Math.Max(0f, NumGCDs - GCDsUsed - TimeLostGDCs); } }
+        protected float GCDsAvailable { get { return Math.Max(0f, NumGCDs - GCDsUsed - TimeLostGCDs); } }
         
         #endregion
         #region Functions
@@ -158,8 +153,7 @@ namespace Rawr.Hunter {
             // Whites
             calcs.Whites = WhiteAtks;
             // Anti-Debuff
-            /*
-            calcs.HF = HF;
+            /*calcs.HF = HF;
             calcs.EM = EM;
             calcs.CH = CH;
             calcs.IN = IN;
@@ -180,19 +174,18 @@ namespace Rawr.Hunter {
             calcs.ST = ST;
             calcs.SW = SW;
             calcs.Death = Death;
-            calcs.RK = RK;
+            calcs.RK = RK;*/
             
             // Shared Instants
-            calcs.WW = WW;
-            calcs.SL = SL;
+            calcs.Multi = Multi;
+            calcs.Steady = Steady;
             // Arms
             
             // Generic
-            calcs.CL = CL;
-            calcs.DW = DW;
-            calcs.HS = HS;
-            calcs.EX = EX;*/
-            //calcs.DW = DW;
+            //calcs.CL = CL;
+            calcs.Piercing = Piercing;
+            //calcs.HS = HS;
+            calcs.Kill = Kill;
         }
         public virtual void Initialize() { initAbilities(); /*doIterations();*/ }
 
@@ -202,60 +195,60 @@ namespace Rawr.Hunter {
 
         protected virtual void initAbilities() {
             AbilityList.Clear();
-            /*WhiteAtks.InvalidateCache();
+            WhiteAtks.InvalidateCache();
             // Whites
             //WhiteAtks = new Skills.WhiteAtks(Char, StatS, CombatFactors);
             // Anti-Debuff
-            AddAbility(new AbilWrapper(new Skills.HeroicFury(        Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Intervene(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.HeroicFury(        Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Intervene(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
             // Rage Generators
-            AddAbility(new AbilWrapper(new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
             // Maintenance
-            AddAbility(new AbilWrapper(new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
             // Periodics
-            AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            Slam SL = new Skills.Slam(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            AddAbility(new AbilWrapper(SL));
-            Skills.Ability WW = new Skills.WhirlWind(          Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            AddAbility(new AbilWrapper(WW));
+            SteadyShot Steady = new Skills.SteadyShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Steady));
+            Skills.Ability Multi = new Skills.MultiShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Multi));
             
-            AddAbility(new AbilWrapper(new Skills.Cleave(             Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.HeroicStrike(       Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            Skills.Ability EX = new Skills.Execute(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            AddAbility(new AbilWrapper(EX));
+            //AddAbility(new AbilWrapper(new Skills.Cleave(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.HeroicStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            Skills.Ability Kill = new Skills.KillShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Kill));
 
             // Arms abilities
-            AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, WW)));
-            AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            Skills.Ability SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            AddAbility(new AbilWrapper(SS));
-            AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SS)));
-            AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, EX)));
+            //AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, WW)));
+            //AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //Skills.Ability SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            //AddAbility(new AbilWrapper(SS));
+            //AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SS)));
+            //AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            //AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, EX)));
             
             // Fury abilities
-            Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            AddAbility(new AbilWrapper(BT));
-            AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
+            //Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            //AddAbility(new AbilWrapper(BT));
+            //AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
 
-            DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);*/
+            Piercing = new Skills.PiercingShots(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
 
         }
 
@@ -283,18 +276,18 @@ namespace Rawr.Hunter {
         }
 
         #region Attacks over Duration
-        public enum SwingResult : int { Attempt=0, Land, Crit, Parry, Dodge };
+        public enum ShotResult : int { Attempt=0, Land, Crit };
         public enum AttackType : int { Yellow=0, White, Both };
-        private float[,] _atkOverDurs = new float[5, 3];
-        public float GetAttackOverDuration(SwingResult swingResult, AttackType attackType)
+        private float[,] _atkOverDurs = new float[5,3];
+        public float GetAttackOverDuration(ShotResult shotResult, AttackType attackType)
         {
-            if (_atkOverDurs[(int)swingResult, (int)attackType] == -1f)
+            if (_atkOverDurs[(int)shotResult, (int)attackType] == -1f)
             {
-                SetTable(swingResult, attackType);
+                SetTable(shotResult, attackType);
             }
-            return _atkOverDurs[(int)swingResult, (int)attackType];
+            return _atkOverDurs[(int)shotResult, (int)attackType];
         }
-        private void SetTable(SwingResult sr, AttackType at)
+        private void SetTable(ShotResult sr, AttackType at)
         {
             float count = 0f;
             float mod;
@@ -306,7 +299,7 @@ namespace Rawr.Hunter {
                     if (!abil.ability.Validated) { continue; }
                     table = abil.ability.RWAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += abil.numActivates * abil.ability.AvgTargets /* * abil.ability.SwingsPerActivate*/ * mod;
+                    count += abil.numActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
                 }
             }
             if (at != AttackType.Yellow) {
@@ -317,45 +310,40 @@ namespace Rawr.Hunter {
             
             _atkOverDurs[(int)sr, (int)at] = count;
         }
-        private float GetTableFromSwingResult(SwingResult sr, CombatTable table)
+        private float GetTableFromSwingResult(ShotResult sr, CombatTable table)
         {
             if (table == null) return 0f;
             switch (sr)
             {
-                case SwingResult.Attempt:
-                    return 1f;
-                case SwingResult.Crit:
-                    return table.Crit;
-                case SwingResult.Dodge:
-                    return table.Dodge;
-                case SwingResult.Land:
-                    return table.AnyLand;
-                case SwingResult.Parry:
-                    return table.Parry;
-                default:
-                   return 0f;
+                case ShotResult.Attempt: return 1f;
+                case ShotResult.Crit: return table.Crit;
+                //case ShotResult.Dodge: return table.Dodge;
+                case ShotResult.Land: return table.AnyLand;
+                //case ShotResult.Parry: return table.Parry;
+                default: return 0f;
             }
         }
 
-        public float AttemptedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Attempt, AttackType.Both); } }
-        public float AttemptedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Attempt, AttackType.Yellow); } }
-        public float LandedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Land, AttackType.Both); } }
-        public float CriticalAtksOverDur { get { return GetAttackOverDuration(SwingResult.Crit, AttackType.Both); } }
+        public float AttemptedAtksOverDur { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Both); } }
+        public float AttemptedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Yellow); } }
+        public float LandedAtksOverDur { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
+        public float CriticalAtksOverDur { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Both); } }
 
-        public float AttemptedAtksOverDurMH { get { return GetAttackOverDuration(SwingResult.Attempt, AttackType.Both); } }
-        public float LandedAtksOverDurMH { get { return GetAttackOverDuration(SwingResult.Land, AttackType.Both); } }
+        public float AttemptedAtksOverDurMH { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Both); } }
+        public float LandedAtksOverDurMH { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
 
-        public float AttemptedAtksOverDurOH { get { return GetAttackOverDuration(SwingResult.Attempt, AttackType.Both); } }
-        public float LandedAtksOverDurOH { get { return GetAttackOverDuration(SwingResult.Land, AttackType.Both); } }
+        public float AttemptedAtksOverDurOH { get { return GetAttackOverDuration(ShotResult.Attempt, AttackType.Both); } }
+        public float LandedAtksOverDurOH { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
 
-        public float CriticalYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Crit, AttackType.Both); } }
-        public float LandedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Land, AttackType.Both); } }
+        public float CriticalYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Both); } }
+        public float LandedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Land, AttackType.Both); } }
 
-        public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(SwingResult.Crit, AttackType.Yellow); } }
-        public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(SwingResult.Crit, AttackType.Yellow); } }
+        public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Yellow); } }
+        public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(ShotResult.Crit, AttackType.Yellow); } }
         
-        public float DodgedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Dodge, AttackType.Yellow); } }
-        public float ParriedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Parry, AttackType.Yellow); } }
+        //public float DodgedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Dodge, AttackType.Yellow); } }
+        //public float ParriedYellowsOverDur { get { return GetAttackOverDuration(ShotResult.Parry, AttackType.Yellow); } }
+
         public virtual float CritHsSlamOverDur {
             get {
                 return 0f;
@@ -412,8 +400,8 @@ namespace Rawr.Hunter {
 
                     foreach (AbilWrapper aw in GetAbilityList())
                     {
-                        if (aw.Rage < 0) 
-                            rage += (-1f) * aw.Rage;
+                        if (aw.Mana < 0) 
+                            rage += (-1f) * aw.Mana;
                     }
 
                     // 4pcT7
@@ -430,8 +418,8 @@ namespace Rawr.Hunter {
                 float rage = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
-                    if (aw.Rage > 0f) 
-                        rage += aw.Rage;
+                    if (aw.Mana > 0f) 
+                        rage += aw.Mana;
                 }
                 return rage;
             }
@@ -474,7 +462,7 @@ namespace Rawr.Hunter {
 
             _HPS_TTL += aw.HPS;
             _DPS_TTL += aw.DPS;
-            return aw.ability.GetRageUseOverDur(Abil_GCDs);
+            return aw.ability.GetManaUseOverDur(Abil_GCDs);
         }
         #endregion
 
@@ -489,7 +477,7 @@ namespace Rawr.Hunter {
         protected float CalculateTimeLost(Ability MS)
         {
             _emActs = 0f; //_emRecovery = 0f; _emRecoveryTotal = 0f;
-            TimeLostGDCs = 0;
+            TimeLostGCDs = 0;
             RageGainedWhileMoving = 0; 
 
             float percTimeInMovement = CalculateMovement(MS);
@@ -910,15 +898,6 @@ namespace Rawr.Hunter {
             }*/
         }
 
-        internal void ResetHitTables()
-        {
-            foreach (AbilWrapper aw in GetAbilityList())
-            {
-                if (aw.ability.CanCrit)
-                {
-                    aw.ability.RWAtkTable.Reset();
-                }
-            }
-        }
+        internal void ResetHitTables() { foreach (AbilWrapper aw in GetAbilityList()) { if (aw.ability.CanCrit) { aw.ability.RWAtkTable.Reset(); } } }
     }
 }
