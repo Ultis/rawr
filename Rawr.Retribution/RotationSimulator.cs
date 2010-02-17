@@ -1,54 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
-
-#else
-using System.Xml;
-using System.IO;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-#endif
+using Rawr.Base.Algorithms;
 
 namespace Rawr.Retribution
 {
     static class RotationSimulator
     {
 
-        private static IDictionary<RotationParameters, RotationSolution> savedSolutions;
-        private static readonly object savedSolutionLock = new object();
-
-
-        /// <summary>
-        /// Solution cache. Not thread-safe. Should only be used inside lock on savedSolutionLock.
-        /// </summary>
-        private static IDictionary<RotationParameters, RotationSolution> SavedSolutions
-        {
-            get
-            {
-                if (savedSolutions == null)
-                    savedSolutions = new Dictionary<RotationParameters, RotationSolution>();
-
-                return savedSolutions;
-            }
-        }
+        private static CalculationCache<RotationParameters, RotationSolution> solutionCache =
+            new CalculationCache<RotationParameters, RotationSolution>(SimulateRotationCore);
 
 
         public static RotationSolution SimulateRotation(RotationParameters rot)
+        {
+            return solutionCache.GetResult(rot);
+        }
+
+
+        private static RotationSolution SimulateRotationCore(RotationParameters rot)
         {
             const float t10ProcChance = 0.4f;
             const int timeUnitsPerSecond = 100;
             const int fightLength = 2000000 * timeUnitsPerSecond;
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
-
-            // TODO: Avoid the same rotation parameters to be simulated in parallel
-
-            lock (savedSolutionLock)
-            {
-                RotationSolution cachedSolution;
-                if (SavedSolutions.TryGetValue(rot, out cachedSolution))
-                    return cachedSolution;
-            }
 
             int bloodlustSpellGcd = (int)(rot.BloodlustSpellGCD * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
@@ -60,25 +35,25 @@ namespace Rawr.Retribution
             SimulatorAbility[] abilities = new SimulatorAbility[6];
 
             abilities[(int)Ability.Judgement] = new SimulatorAbility(
-                (10 - rot.ImpJudgements - (rot.T7_4pc ? 1 : 0)) * timeUnitsPerSecond, 
+                (10 - rot.ImpJudgements - (rot.T7_4pc ? 1 : 0)) * timeUnitsPerSecond,
                 meleeAbilityGcd);
             abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(
-                4 * timeUnitsPerSecond, 
+                4 * timeUnitsPerSecond,
                 meleeAbilityGcd);
             abilities[(int)Ability.DivineStorm] = new SimulatorAbility(
-                10 * timeUnitsPerSecond, 
+                10 * timeUnitsPerSecond,
                 meleeAbilityGcd);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(
-                (rot.GlyphConsecrate ? 10 : 8) * timeUnitsPerSecond, 
+                (rot.GlyphConsecrate ? 10 : 8) * timeUnitsPerSecond,
                 bloodlustSpellGcd);
             abilities[(int)Ability.Exorcism] = new SimulatorAbility(
-                15 * timeUnitsPerSecond, 
+                15 * timeUnitsPerSecond,
                 bloodlustSpellGcd);
             abilities[(int)Ability.HammerOfWrath] = new SimulatorAbility(
-                6 * timeUnitsPerSecond, 
+                6 * timeUnitsPerSecond,
                 meleeAbilityGcd);
 
-            abilities[(int)Ability.HammerOfWrath].NextUse = 
+            abilities[(int)Ability.HammerOfWrath].NextUse =
                 (int)Math.Round((double)fightLength * (1d - rot.TimeUnder20));
 
             int gcdFinishTime = 0;
@@ -152,7 +127,7 @@ namespace Rawr.Retribution
             sol.JudgementCD = abilities[(int)Ability.Judgement].EffectiveCooldown() / timeUnitsPerSecond;
 
             sol.CrusaderStrike = abilities[(int)Ability.CrusaderStrike].Uses;
-            sol.CrusaderStrikeCD = 
+            sol.CrusaderStrikeCD =
                 abilities[(int)Ability.CrusaderStrike].EffectiveCooldown() / timeUnitsPerSecond;
 
             sol.DivineStorm = abilities[(int)Ability.DivineStorm].Uses;
@@ -165,13 +140,11 @@ namespace Rawr.Retribution
             sol.ExorcismCD = abilities[(int)Ability.Exorcism].EffectiveCooldown() / timeUnitsPerSecond;
 
             sol.HammerOfWrath = abilities[(int)Ability.HammerOfWrath].Uses;
-            sol.HammerOfWrathCD = 
+            sol.HammerOfWrathCD =
                 abilities[(int)Ability.HammerOfWrath].EffectiveCooldown() / timeUnitsPerSecond;
-
-            lock (savedSolutionLock)
-                SavedSolutions[rot] = sol;
 
             return sol;
         }
+
     }
 }

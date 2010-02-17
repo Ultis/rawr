@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\ArrayPool.cs" />
+    <Compile Include="Algorithms\CalculationCache.cs" />
     <Compile Include="Algorithms\LU.cs" />
     <Compile Include="Algorithms\StateSpace.cs" />
     <Compile Include="Armory.cs" />
