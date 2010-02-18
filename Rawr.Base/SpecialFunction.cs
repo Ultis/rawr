@@ -51,7 +51,7 @@ using System.IO;
 
 namespace Rawr
 {
-    public class SpecialFunction
+    public static class SpecialFunction
     {
         // Machine constants
 
@@ -63,12 +63,6 @@ namespace Rawr
         private const double SQRTH = 7.07106781186547524401E-1;
         private const double LOGPI = 1.14472988584940017414;
 
-        /// <summary>
-        /// Don't let anyone instantiate this class. 
-        /// </summary>
-        private SpecialFunction()
-        {
-        }
 
         /// <summary>
         /// Returns the hyperbolic arc cosine of the specified number.
@@ -362,6 +356,10 @@ namespace Rawr
         public static double Fac(double x)
         {
             double d = Math.Abs(x);
+
+            // TODO: Using integer version for large parameter values (like 20) may result in overflow
+            // however double could store many such values with just some loss of precision.
+
             if (Math.Floor(d) == d) return (double)Fac((int)x);
             else return Gamma(x + 1.0);
         }
@@ -374,6 +372,8 @@ namespace Rawr
         /// <returns></returns>
         public static int Fac(int j)
         {
+            // TODO: Unchecked arithmetical operations can easily overflow here.
+
             int i = j;
             int d = 1;
             if (j < 0) i = Math.Abs(j);

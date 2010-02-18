@@ -118,33 +118,33 @@ namespace Rawr.Retribution
         /// </summary>
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Strength of Earth Totem"));
-            character.ActiveBuffsAdd(("Blessing of Might"));
-            character.ActiveBuffsAdd(("Improved Blessing of Might"));
-            character.ActiveBuffsAdd(("Unleashed Rage"));
-            character.ActiveBuffsAdd(("Sanctified Retribution"));
-            character.ActiveBuffsAdd(("Swift Retribution"));
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Commanding Shout"));
-            character.ActiveBuffsAdd(("Leader of the Pack"));
-            character.ActiveBuffsAdd(("Windfury Totem"));
-            character.ActiveBuffsAdd(("Elemental Oath"));
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
-            character.ActiveBuffsAdd(("Sunder Armor"));
-            character.ActiveBuffsAdd(("Faerie Fire"));
-            character.ActiveBuffsAdd(("Heart of the Crusader"));
-            character.ActiveBuffsAdd(("Blood Frenzy"));
-            character.ActiveBuffsAdd(("Improved Scorch"));
-            character.ActiveBuffsAdd(("Curse of the Elements"));
-            character.ActiveBuffsAdd(("Misery"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffsAdd(("Blessing of Kings (Str/Sta Bonus)"));
-            character.ActiveBuffsAdd(("Flask of Endless Rage"));
-            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd("Strength of Earth Totem");
+            character.ActiveBuffsAdd("Blessing of Might");
+            character.ActiveBuffsAdd("Improved Blessing of Might");
+            character.ActiveBuffsAdd("Unleashed Rage");
+            character.ActiveBuffsAdd("Sanctified Retribution");
+            character.ActiveBuffsAdd("Swift Retribution");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Commanding Shout");
+            character.ActiveBuffsAdd("Leader of the Pack");
+            character.ActiveBuffsAdd("Windfury Totem");
+            character.ActiveBuffsAdd("Elemental Oath");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Improved Power Word: Fortitude");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Improved Mark of the Wild");
+            character.ActiveBuffsAdd("Sunder Armor");
+            character.ActiveBuffsAdd("Faerie Fire");
+            character.ActiveBuffsAdd("Heart of the Crusader");
+            character.ActiveBuffsAdd("Blood Frenzy");
+            character.ActiveBuffsAdd("Improved Scorch");
+            character.ActiveBuffsAdd("Curse of the Elements");
+            character.ActiveBuffsAdd("Misery");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Blessing of Kings (Str/Sta Bonus)");
+            character.ActiveBuffsAdd("Flask of Endless Rage");
+            character.ActiveBuffsAdd("Fish Feast");
         }
 
         private static List<string> _relevantGlyphs;
@@ -507,7 +507,7 @@ namespace Rawr.Retribution
                     }
                     else
                     {
-                        goto default;
+                        return new Stats();
                     }
                     break;
 
