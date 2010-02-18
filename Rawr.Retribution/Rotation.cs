@@ -269,7 +269,7 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
-            // - Weapon swing hits caused by Tiny Abomination in a Jar 
+            // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
 
             return 
@@ -285,7 +285,7 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
 
             return 
@@ -301,7 +301,7 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
-            // - Weapon swing hits caused by Tiny Abomination in a Jar
+            // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
             // - Judgement hits
             // - Hammer of Wrath hits
@@ -317,7 +317,7 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
             // - Judgement crits
             // - Hammer of Wrath crits
@@ -394,7 +394,7 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
-            // - Weapon swing hits caused by Tiny Abomination in a Jar 
+            // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
 
             return 
@@ -412,7 +412,7 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
 
             return 
@@ -430,7 +430,7 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
-            // - Weapon swing hits caused by Tiny Abomination in a Jar
+            // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
             // - Judgement hits
             // - Hammer of Wrath hits
@@ -447,7 +447,7 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
             // - Judgement crits
             // - Hammer of Wrath crits

@@ -1,19 +1,22 @@
 ﻿Melee crit procs can be triggered by:
 - Crusader Strike crits
 - Divine Storm crits on each target
-- Weapon swing crits (including the ones caused by Tiny Abomination in a Jar)
+- Weapon swing crits
+- Tiny Abomination in a Jar releasing attack crits
 
 
 Melee hit procs can be triggered by:
 - Crusader Strike hits
 - Divine Storm hits
-- Weapon swing hits (including the ones caused by Tiny Abomination in a Jar)
+- Weapon swing hits 
+- Tiny Abomination in a Jar releasing attack hits
 
 
 Physical crit procs can be triggered by:
 - Crusader Strike crits
 - Divine Storm crits on each target
-- Weapon swing crits (including the ones caused by Tiny Abomination in a Jar)
+- Weapon swing crits
+- Tiny Abomination in a Jar releasing attack crits
 - Judgement crits
 - Hammer of Wrath crits
 
@@ -21,7 +24,8 @@ Physical crit procs can be triggered by:
 Physical hit procs can be triggered by:
 - Crusader Strike hits
 - Divine Storm hits
-- Weapon swing hits (including the ones caused by Tiny Abomination in a Jar)
+- Weapon swing hits 
+- Tiny Abomination in a Jar releasing attack hits
 - Judgement hits
 - Hammer of Wrath hits
 
@@ -29,7 +33,8 @@ Physical hit procs can be triggered by:
 Damage done procs can be triggered by:
 - Crusader Strike damage
 - Divine Storm damage
-- Weapon swing damage (including the swings caused by Tiny Abomination in a Jar)
+- Weapon swing damage
+- Tiny Abomination in a Jar releasing attack hits
 - Judgement damage
 - Hammer of Wrath damage
 
@@ -37,7 +42,8 @@ Damage done procs can be triggered by:
 Damage or healing done procs can be triggered by:
 - Crusader Strike damage
 - Divine Storm damage
-- Weapon swing damage (including the swings caused by Tiny Abomination in a Jar)
+- Weapon swing damage
+- Tiny Abomination in a Jar releasing attack hits
 - Judgement damage
 - Hammer of Wrath damage
 
