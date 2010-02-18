@@ -265,30 +265,66 @@ namespace Rawr.Retribution
 
         public override float GetMeleeAttacksPerSec()
         {
-            return Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets()
-                + Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets()
-                + White.ChanceToLand() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToLand();
+            // Melee hit procs can be triggered by:
+            // - Crusader Strike hits
+            // - Divine Storm hits
+            // - Weapon swing hits
+            // - Weapon swing hits caused by Tiny Abomination in a Jar 
+            // (2 multiplier needs to be moved to another place)
+
+            return 
+                Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets() + 
+                Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets() + 
+                White.ChanceToLand() / Combats.AttackSpeed + 
+                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand();
         }
 
         public override float GetMeleeCritsPerSec()
         {
-            return Solution.CrusaderStrike * CS.ChanceToCrit() / Solution.FightLength * CS.Targets()
-                + Solution.DivineStorm * DS.ChanceToCrit() / Solution.FightLength * DS.Targets()
-                + White.ChanceToCrit() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToCrit();
+            // Melee crit procs can be triggered by:
+            // - Crusader Strike crits
+            // - Divine Storm crits on each target
+            // - Weapon swing crits
+            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // (2 multiplier needs to be moved to another place)
+
+            return 
+                Solution.CrusaderStrike * CS.ChanceToCrit() / Solution.FightLength * CS.Targets() + 
+                Solution.DivineStorm * DS.ChanceToCrit() / Solution.FightLength * DS.Targets() + 
+                White.ChanceToCrit() / Combats.AttackSpeed + 
+                Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit();
         }
 
         public override float GetPhysicalAttacksPerSec()
         {
-            return GetMeleeAttacksPerSec()
-                + Solution.Judgement * Judge.ChanceToLand() / Solution.FightLength * Judge.Targets()
-                + Solution.HammerOfWrath * HoW.ChanceToLand() / Solution.FightLength * HoW.Targets();
+            // Physical hit procs, damage done procs and damage or healing done procs can be triggered by:
+            // - Crusader Strike hits
+            // - Divine Storm hits
+            // - Weapon swing hits
+            // - Weapon swing hits caused by Tiny Abomination in a Jar
+            // (2 multiplier needs to be moved to another place)
+            // - Judgement hits
+            // - Hammer of Wrath hits
+
+            return GetMeleeAttacksPerSec() + 
+                Solution.Judgement * Judge.ChanceToLand() / Solution.FightLength * Judge.Targets() + 
+                Solution.HammerOfWrath * HoW.ChanceToLand() / Solution.FightLength * HoW.Targets();
         }
 
         public override float GetPhysicalCritsPerSec()
         {
-            return GetMeleeCritsPerSec()
-                + Solution.Judgement * Judge.ChanceToCrit() / Solution.FightLength * Judge.Targets()
-                + Solution.HammerOfWrath * HoW.ChanceToCrit() / Solution.FightLength * HoW.Targets();
+            // Physical crit procs can be triggered by:
+            // - Crusader Strike crits
+            // - Divine Storm crits on each target
+            // - Weapon swing crits
+            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // (2 multiplier needs to be moved to another place)
+            // - Judgement crits
+            // - Hammer of Wrath crits
+
+            return GetMeleeCritsPerSec() + 
+                Solution.Judgement * Judge.ChanceToCrit() / Solution.FightLength * Judge.Targets() + 
+                Solution.HammerOfWrath * HoW.ChanceToCrit() / Solution.FightLength * HoW.Targets();
         }
 
         public override float GetCrusaderStrikeCD() { return Solution.FightLength / Solution.CrusaderStrike; }
@@ -354,36 +390,72 @@ namespace Rawr.Retribution
 
         public override float GetMeleeAttacksPerSec()
         {
-            return White.ChanceToLand() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToLand()
-                + (CS.ChanceToLand() / _calcOpts.CSCD * CS.Targets()
-                + DS.ChanceToLand() / _calcOpts.DSCD * DS.Targets()) * (1f - _calcOpts.TimeUnder20)
-                + (CS.ChanceToLand() / _calcOpts.CSCD20 * CS.Targets()
-                + DS.ChanceToLand() / _calcOpts.DSCD20 * DS.Targets()) * _calcOpts.TimeUnder20;
+            // Melee hit procs can be triggered by:
+            // - Crusader Strike hits
+            // - Divine Storm hits
+            // - Weapon swing hits
+            // - Weapon swing hits caused by Tiny Abomination in a Jar 
+            // (2 multiplier needs to be moved to another place)
+
+            return 
+                White.ChanceToLand() / Combats.AttackSpeed + 
+                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() + 
+                (CS.ChanceToLand() / _calcOpts.CSCD * CS.Targets() + 
+                    DS.ChanceToLand() / _calcOpts.DSCD * DS.Targets()) * (1f - _calcOpts.TimeUnder20) + 
+                (CS.ChanceToLand() / _calcOpts.CSCD20 * CS.Targets() + 
+                    DS.ChanceToLand() / _calcOpts.DSCD20 * DS.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetMeleeCritsPerSec()
         {
-            return White.ChanceToCrit() / Combats.AttackSpeed + Combats.Stats.MoteOfAnger * 2f * White.ChanceToCrit()
-                + (Judge.ChanceToCrit() / _calcOpts.CSCD * CS.Targets()
-                + DS.ChanceToCrit() / _calcOpts.DSCD * DS.Targets()) * (1f - _calcOpts.TimeUnder20)
-                + (Judge.ChanceToCrit() / _calcOpts.CSCD20 * CS.Targets()
-                + DS.ChanceToCrit() / _calcOpts.DSCD20 * DS.Targets()) * _calcOpts.TimeUnder20;
+            // Melee crit procs can be triggered by:
+            // - Crusader Strike crits
+            // - Divine Storm crits on each target
+            // - Weapon swing crits
+            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // (2 multiplier needs to be moved to another place)
+
+            return 
+                White.ChanceToCrit() / Combats.AttackSpeed + 
+                Combats.Stats.MoteOfAnger * 2f * White.ChanceToCrit() + 
+                (Judge.ChanceToCrit() / _calcOpts.CSCD * CS.Targets() + 
+                    DS.ChanceToCrit() / _calcOpts.DSCD * DS.Targets()) * (1f - _calcOpts.TimeUnder20) + 
+                (Judge.ChanceToCrit() / _calcOpts.CSCD20 * CS.Targets() + 
+                    DS.ChanceToCrit() / _calcOpts.DSCD20 * DS.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetPhysicalAttacksPerSec()
         {
-            return GetMeleeAttacksPerSec()
-                + (Judge.ChanceToLand() / _calcOpts.JudgeCD * Judge.Targets()) * (1f - _calcOpts.TimeUnder20)
-                + (Judge.ChanceToLand() / _calcOpts.JudgeCD20 * Judge.Targets()
-                + HoW.ChanceToLand() / _calcOpts.HoWCD20 * HoW.Targets()) * _calcOpts.TimeUnder20;
+            // Physical hit procs, damage done procs and damage or healing done procs can be triggered by:
+            // - Crusader Strike hits
+            // - Divine Storm hits
+            // - Weapon swing hits
+            // - Weapon swing hits caused by Tiny Abomination in a Jar
+            // (2 multiplier needs to be moved to another place)
+            // - Judgement hits
+            // - Hammer of Wrath hits
+
+            return GetMeleeAttacksPerSec() + 
+                (Judge.ChanceToLand() / _calcOpts.JudgeCD * Judge.Targets()) * (1f - _calcOpts.TimeUnder20) + 
+                (Judge.ChanceToLand() / _calcOpts.JudgeCD20 * Judge.Targets() + 
+                    HoW.ChanceToLand() / _calcOpts.HoWCD20 * HoW.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetPhysicalCritsPerSec()
         {
-            return GetMeleeCritsPerSec()
-                + (Judge.ChanceToCrit() / _calcOpts.JudgeCD * Judge.Targets()) * (1f - _calcOpts.TimeUnder20)
-                + (Judge.ChanceToCrit() / _calcOpts.JudgeCD20 * Judge.Targets()
-                + HoW.ChanceToCrit() / _calcOpts.HoWCD20 * HoW.Targets()) * _calcOpts.TimeUnder20;
+            // Physical crit procs can be triggered by:
+            // - Crusader Strike crits
+            // - Divine Storm crits on each target
+            // - Weapon swing crits
+            // - Weapon swing crits caused by Tiny Abomination in a Jar
+            // (2 multiplier needs to be moved to another place)
+            // - Judgement crits
+            // - Hammer of Wrath crits
+
+            return GetMeleeCritsPerSec() + 
+                (Judge.ChanceToCrit() / _calcOpts.JudgeCD * Judge.Targets()) * (1f - _calcOpts.TimeUnder20) + 
+                (Judge.ChanceToCrit() / _calcOpts.JudgeCD20 * Judge.Targets() + 
+                    HoW.ChanceToCrit() / _calcOpts.HoWCD20 * HoW.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetCrusaderStrikeCD()

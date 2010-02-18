@@ -25,6 +25,8 @@ namespace Rawr.Retribution
             const int fightLength = 2000000 * timeUnitsPerSecond;
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
 
+            // TODO: Add TAinJ + 2T10 modelling
+
             int bloodlustSpellGcd = (int)(rot.BloodlustSpellGCD * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
             int bloodlustT10Speed = (int)(rot.BloodlustT10Speed * timeUnitsPerSecond);

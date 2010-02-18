@@ -524,6 +524,8 @@ namespace Rawr.Retribution
             {
                 if (effect.Stats.MoteOfAnger > 0)
                 {
+                    // When in effect stats, MoteOfAnger is % of melee hits
+                    // When in character stats, MoteOfAnger is average procs per second
                     return new Stats() { MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(trigger, procChance, baseWeaponSpeed, fightLength) / effect.MaxStack };
                 }
                 else
