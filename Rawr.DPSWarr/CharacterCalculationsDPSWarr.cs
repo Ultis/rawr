@@ -549,45 +549,6 @@ namespace Rawr.DPSWarr {
                 case "% Chance to be Dodged": return combatFactors._c_mhdodge * 100f;
                 case "% Chance to be Parried": return combatFactors._c_mhparry * 100f;
                 case "% Chance to be Avoided (Yellow/Dodge)": return combatFactors._c_ymiss * 100f + combatFactors._c_mhdodge * 100f;
-                case "Respect Highest ArP Proc Cap":
-                    float highestProc = 0f;
-                    float gapWeCanFill = 0f;
-                    try {
-                        int LevelDif = combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level;
-
-                        if (BuffedStats._rawSpecialEffectData != null)
-                        {
-                            foreach (SpecialEffect effect in BuffedStats._rawSpecialEffectData)
-                            {
-                                if (effect == null) { continue; }
-                                float value = effect.Stats.ArmorPenetrationRating;
-                                if (value > 0 && value > highestProc)
-                                {
-                                    highestProc = value;
-                                }
-                            }
-                        }
-                        if (highestProc <= 0f) { return 0f; } // There's no ArP procs so skip the rest
-
-                        float arpenBuffs =
-                            ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? combatFactors.Char.WarriorTalents.MaceSpecialization * 0.03f : 0.00f) +
-                            (!combatFactors.CalcOpts.FuryStance ? (0.10f + BuffedStats.BonusWarrior_T9_2P_ArP) : 0.0f);
-
-                        float RealRatingCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - arpenBuffs);
-
-                        gapWeCanFill = Math.Max(0f, RealRatingCap - highestProc);
-
-                        float ArPRatingWeHave = BuffedStats.ArmorPenetrationRating;
-
-                        return ArPRatingWeHave - gapWeCanFill;
-                    } catch (Exception ex) {
-                        Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Problem with Respect ArP Proc Cap Req",
-                            ex.Message,
-                            "GetOptimizableCalculationValue(...)",
-                            "No Additional Info",
-                            ex.StackTrace);
-                    }
-                    return gapWeCanFill;
             }
             return 0.0f;
         }

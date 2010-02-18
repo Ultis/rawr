@@ -238,7 +238,6 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
-
         
         #if RAWR3
             public ICalculationOptionsPanel _calculationOptionsPanel = null;
@@ -377,7 +376,6 @@ These numbers to do not include racial bonuses.",
                         "% Chance to be Dodged",
                         "% Chance to be Parried",
                         "% Chance to be Avoided (Yellow/Dodge)",
-                        "Respect Highest ArP Proc Cap",
 					};
                 return _optimizableCalculationLabels;
             }

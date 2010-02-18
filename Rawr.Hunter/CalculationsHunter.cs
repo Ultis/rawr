@@ -232,7 +232,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             get {
                 if (_subPointNameColorsDPS == null) {
                     _subPointNameColorsDPS = new Dictionary<string, Color>();
-                    _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(255, 0, 128, 255));
+                    _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(255, 255, 0, 0));
                     _subPointNameColorsDPS.Add("Pet DPS", Color.FromArgb(255, 255, 100, 0));
                     _subPointNameColorsDPS.Add("Hunter Survivability", Color.FromArgb(255, 64, 128, 32));
                     _subPointNameColorsDPS.Add("Pet Survivability", Color.FromArgb(255, 29, 131, 87));

@@ -1,7 +1,4 @@
-﻿// Maek TalentHandler.cs
-// Fix Serendipity
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 #if RAWR3
 using System.Windows.Media;
