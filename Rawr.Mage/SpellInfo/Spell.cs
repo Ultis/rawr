@@ -371,6 +371,7 @@ namespace Rawr.Mage
                 NukeProcs = spell.NukeProcs;
                 CritProcs = spell.CritProcs;
                 IgniteProcs = spell.IgniteProcs;
+                DotProcs = spell.DotProcs;
                 TargetProcs = spell.TargetProcs;
                 DamageProcs = spell.HitProcs + spell.DotProcs;
                 damagePerSecond = spell.AverageDamage / spell.CastTime;

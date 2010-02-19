@@ -166,6 +166,7 @@ namespace Rawr.Mage
             NukeProcs = 0;
             CritProcs = 0;
             IgniteProcs = 0;
+            DotProcs = 0;
             CastTime = 0;
             TargetProcs = 0;
             DamageProcs = 0;
@@ -240,6 +241,7 @@ namespace Rawr.Mage
         public float CastProcs2; // variant with only one proc from AM
         public float NukeProcs;
         public float CritProcs;
+        public float DotProcs;
         public float IgniteProcs;
         public float CastTime;
         public float TargetProcs;
@@ -274,6 +276,7 @@ namespace Rawr.Mage
                 double k = Math.Exp(-2 * rate);
                 double ticks = k * (1 + k);
                 DamageProcs += (float)(IgniteProcs * ticks);
+                DotProcs += (float)(IgniteProcs * ticks);
             }
         }
 
@@ -312,16 +315,16 @@ namespace Rawr.Mage
                             }
                             break;
                         case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
                             if (DamageProcs > 0)
                             {
                                 spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
                             }
                             break;
-                        case Trigger.DamageOrHealingDone:
-                            // Need to Add Self-Heals
-                            if (DamageProcs > 0)
+                        case Trigger.DoTTick:
+                            if (DotProcs > 0)
                             {
-                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
                             }
                             break;
                     }
@@ -370,13 +373,13 @@ namespace Rawr.Mage
                             interval = CastTime / Ticks;
                             break;
                         case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
                             chance = 1;
                             interval = CastTime / DamageProcs;
                             break;
-                        case Trigger.DamageOrHealingDone:
-                            // Need to Add Self-Heals
+                        case Trigger.DoTTick:
                             chance = 1;
-                            interval = CastTime / DamageProcs;
+                            interval = CastTime / DotProcs;
                             break;
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
@@ -511,16 +514,16 @@ namespace Rawr.Mage
                         }
                         break;
                     case Trigger.DamageDone:
+                    case Trigger.DamageOrHealingDone:
                         if (DamageProcs > 0)
                         {
                             manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
                         }
                         break;
-                    case Trigger.DamageOrHealingDone:
-                        // Need to Add Self-Heals
-                        if (DamageProcs > 0)
+                    case Trigger.DoTTick:
+                        if (DotProcs > 0)
                         {
-                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
+                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DotProcs, 1, 3, fight);
                         }
                         break;
                 }
@@ -554,15 +557,16 @@ namespace Rawr.Mage
                         }
                         break;
                     case Trigger.DamageDone:
+                    case Trigger.DamageOrHealingDone:
                         if (DamageProcs > 0)
                         {
                             manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, fight);
                         }
                         break;
-                    case Trigger.DamageOrHealingDone:
-                        if (DamageProcs > 0)
+                    case Trigger.DoTTick:
+                        if (DotProcs > 0)
                         {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, fight);
+                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DotProcs, 1f, 3, fight);
                         }
                         break;
                 }
@@ -634,16 +638,16 @@ namespace Rawr.Mage
                         }
                         break;
                     case Trigger.DamageDone:
+                    case Trigger.DamageOrHealingDone:
                         if (DamageProcs > 0)
                         {
                             dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
                         }
                         break;
-                    case Trigger.DamageOrHealingDone:
-                        // Need to Add Self-Heals
-                        if (DamageProcs > 0)
+                    case Trigger.DoTTick:
+                        if (DotProcs > 0)
                         {
-                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
+                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DotProcs, 1, 3, fight);
                         }
                         break;
                 }
@@ -677,16 +681,16 @@ namespace Rawr.Mage
                         }
                         break;
                     case Trigger.DamageDone:
+                    case Trigger.DamageOrHealingDone:
                         if (DamageProcs > 0)
                         {
                             dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
                         }
                         break;
-                    case Trigger.DamageOrHealingDone:
-                        // Need to add Self-Heals
-                        if (DamageProcs > 0)
+                    case Trigger.DoTTick:
+                        if (DotProcs > 0)
                         {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
+                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DotProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
                         }
                         break;
                 }
@@ -756,13 +760,13 @@ namespace Rawr.Mage
                             interval = CastTime / Ticks;
                             break;
                         case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
                             chance = 1;
                             interval = CastTime / DamageProcs;
                             break;
-                        case Trigger.DamageOrHealingDone:
-                            // Need to add Self-Heals
+                        case Trigger.DoTTick:
                             chance = 1;
-                            interval = CastTime / DamageProcs;
+                            interval = CastTime / DotProcs;
                             break;
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
@@ -948,6 +952,7 @@ namespace Rawr.Mage
             CastProcs2 += spell.CastProcs2;
             CritProcs += spell.CritProcs;
             IgniteProcs += spell.IgniteProcs;
+            DotProcs += spell.DotProcs;
             TargetProcs += spell.TargetProcs;
             DamageProcs += spell.HitProcs + spell.DotProcs;
             damagePerSecond += spell.AverageDamage;
@@ -972,6 +977,7 @@ namespace Rawr.Mage
             CastProcs2 += spell.CastProcs2;
             CritProcs += spell.CritProcs;
             IgniteProcs += spell.IgniteProcs;
+            DotProcs += dotUptime * spell.DotProcs;
             TargetProcs += spell.TargetProcs;
             DamageProcs += spell.HitProcs + dotUptime * spell.DotProcs;
             damagePerSecond += (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
@@ -1074,6 +1080,7 @@ namespace Rawr.Mage
             HitProcs += weight * cycle.HitProcs;
             CritProcs += weight * cycle.CritProcs;
             IgniteProcs += weight * cycle.IgniteProcs;
+            DotProcs += weight * cycle.DotProcs;
             TargetProcs += weight * cycle.TargetProcs;
             DamageProcs += weight * cycle.DamageProcs;
             costPerSecond += weight * cycle.CastTime * cycle.costPerSecond;
@@ -1097,6 +1104,7 @@ namespace Rawr.Mage
             HitProcs += weight * spell.HitProcs;
             CritProcs += weight * spell.CritProcs;
             IgniteProcs += weight * spell.IgniteProcs;
+            DotProcs += weight * spell.DotProcs;
             TargetProcs += weight * spell.TargetProcs;
             DamageProcs += weight * (spell.HitProcs + spell.DotProcs);
             costPerSecond += weight * spell.AverageCost;
@@ -1120,6 +1128,7 @@ namespace Rawr.Mage
             HitProcs += weight * spell.HitProcs;
             CritProcs += weight * spell.CritProcs;
             IgniteProcs += weight * spell.IgniteProcs;
+            DotProcs += weight * dotUptime * spell.DotProcs;
             TargetProcs += weight * spell.TargetProcs;
             DamageProcs += weight * (spell.HitProcs + dotUptime * spell.DotProcs);
             costPerSecond += weight * spell.AverageCost;

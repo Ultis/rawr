@@ -295,6 +295,13 @@ namespace Rawr {
                 // Fury of the Five Flights
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f, 1f, 20));
             }
+            else if ((match = new Regex(@"Each time one of your spells deals periodic damage, you have a chance to gain (?<spellPower>\d\d*) spell power for (?<duration>\d\d*) sec").Match(line)).Success)
+            {
+                // Phylactery of the Nameless Lich
+                float procRate = 0.3f;
+                float internalCooldown = 90.0f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), internalCooldown, procRate));
+            }
             else if ((match = Regex.Match(line, @"Each time you deal spell damage to an opponent, you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times\.")).Success)
             {
                 // Muradin's Spyglass and similar
