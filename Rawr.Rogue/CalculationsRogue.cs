@@ -359,10 +359,10 @@ namespace Rawr.Rogue
                 //White
                 float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
                 //White Mainhand
-                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp + (mainHand.Type == ItemType.Dagger || mainHand.Type == ItemType.FistWeapon ? stats.BonusDaggerFistCrit : 0), 1f - chanceGlanceTemp - chanceWhiteAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
                 float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteAvoided - chanceGlanceTemp;
                 //White Offhand
-                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp + (offHand.Type == ItemType.Dagger || offHand.Type == ItemType.FistWeapon ? stats.BonusDaggerFistCrit : 0), 1f - chanceGlanceTemp - chanceWhiteAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteAvoided + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
                 float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteAvoided - chanceGlanceTemp;
 
                 chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
