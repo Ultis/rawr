@@ -1208,7 +1208,7 @@ namespace Rawr.Rogue
         {
             if (item.Slot == ItemSlot.OffHand && item.Type == ItemType.None)
                 return false;
-            return true;
+            return base.IsItemRelevant(item);
         }
         
         public Stats GetBuffsStats(Character character, CalculationOptionsRogue calcOpts)
