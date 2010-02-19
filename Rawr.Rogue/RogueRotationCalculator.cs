@@ -240,7 +240,10 @@ namespace Rawr.Rogue
                 float dPCountTemp = mHHitCount * 0.3f * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
                 dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
-                dPCount = 5 * dPCountTemp + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10 + 10;
+                float dPStackTime = 5f / (0.3f * (1f - AvoidedPoisonAttacks)) * MainHandSpeed;
+                dPCount = (Duration - dPStackTime - (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * dPStackTime) / 3 * 5 +
+                          10 + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10;
+                dPCount = Math.Min(dPCount, dPCountTemp);
                 if (oHPoison == 1)
                     iPCount += dPCountTemp;
                 else if (oHPoison == 3)
@@ -262,7 +265,10 @@ namespace Rawr.Rogue
                 float dPCountTemp = oHHitCount * 0.3f * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
                 dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
-                dPCount = 5 * dPCountTemp + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10 + 10;
+                float dPStackTime = 5f / (0.3f * (1f - AvoidedPoisonAttacks)) * OffHandSpeed;
+                dPCount = (Duration - dPStackTime - (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * dPStackTime) / 3 * 5 +
+                          10 + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10;
+                dPCount = Math.Min(dPCount, dPCountTemp);
                 if (mHPoison == 1)
                     iPCount += dPCountTemp;
                 else if (mHPoison == 3)
@@ -386,12 +392,10 @@ namespace Rawr.Rogue
                 else if (HemoCount > 0) rotation.Append("Use Hemorrhage for combo points.\r\n");
                 else if (SStrikeCount > 0) rotation.Append("Use Sinister Strike for combo points.\r\n");
                 else rotation.Append("Use Mutilate for combo points.\r\n");
-                if (MHPoison == 0) rotation.Append("Use no damage poison on Mainhand.\r\n");
-                else if (MHPoison == 1) rotation.Append("Use Instant Poison on Mainhand.\r\n");
+                if (MHPoison == 1) rotation.Append("Use Instant Poison on Mainhand.\r\n");
                 else if (MHPoison == 2) rotation.Append("Use Deadly Poison on Mainhand.\r\n");
                 else if (MHPoison == 3) rotation.Append("Use Wound Poison on Mainhand.\r\n");
-                if (OHPoison == 0) rotation.Append("Use no damage poison on Offhand.\r\n");
-                else if (OHPoison == 1) rotation.Append("Use Instant Poison on Offhand.\r\n");
+                if (OHPoison == 1) rotation.Append("Use Instant Poison on Offhand.\r\n");
                 else if (OHPoison == 2) rotation.Append("Use Deadly Poison on Offhand.\r\n");
                 else if (OHPoison == 3) rotation.Append("Use Wound Poison on Offhand.\r\n");
                 if (UseTotT) rotation.Append("Use Tricks of the Trade every cooldown.");

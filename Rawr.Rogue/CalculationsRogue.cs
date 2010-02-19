@@ -425,7 +425,7 @@ namespace Rawr.Rogue
             float envenomBaseDamageRaw = 0f;
             float envenomCPDamageRaw = (215f + stats.AttackPower * 0.09f) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusEnvenomDamageMultiplier + stats.BonusYellowDamageMultiplier);
             float iPDamageRaw = ((300f + 400f) / 2f + stats.AttackPower * 0.09f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
-            float dPDamageRaw = ((80f + 296f) / 2f + stats.AttackPower * 0.108f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
+            float dPDamageRaw = (296f + stats.AttackPower * 0.108f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float wPDamageRaw = ((78f + 231f) / 2f + stats.AttackPower * 0.036f) * (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float aPDamageRaw = ((218f + 280f) / 2f) + (1f + stats.BonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
 
@@ -592,15 +592,14 @@ namespace Rawr.Rogue
                 ruptStats, evisStats, envenomStats, snDStats, iPStats, dPStats, wPStats, aPStats);
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
 
-            bool usePoisons = targetPoisonable && (mainHand != null || offHand != null);
             bool bleedIsUp = calcOpts.BleedIsUp;
 
             for (int snDCP = 1; snDCP < 6; snDCP++)
                 for (int finisher = 0; finisher < 3; finisher++)
                     for (int finisherCP = 1; finisherCP < 6; finisherCP++)
                         for (int CPG = (character.RogueTalents.Mutilate > 0 ? 0 : 1); CPG < (character.RogueTalents.Hemorrhage > 0 ? 4 : 3); CPG++)
-                            for (int mHPoison = 1 ; usePoisons ? mHPoison < 4 : mHPoison < 1 ; mHPoison++)
-                                for (int oHPoison = 1; usePoisons ? oHPoison < 4 : oHPoison < 1; oHPoison++)
+                            for (int mHPoison = targetPoisonable || mainHand == null ? 1 : 0; targetPoisonable ? mHPoison < 4 : mHPoison < 1; mHPoison++)
+                                for (int oHPoison = targetPoisonable || offHand == null ? 1 : 0; targetPoisonable ? oHPoison < 4 : oHPoison < 1; oHPoison++)
                                     for (int useRupt = 0; useRupt < 2; useRupt++)
                                     {
                                         bool useTotT = stats.BonusToTTEnergy > 0;
