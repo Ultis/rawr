@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculationOptionsDPSWarr.cs" />
+    <Compile Include="Markov\BloodSurgeMatrix.cs" />
     <Compile Include="Markov\FuryGenerator.cs" />
     <Compile Include="CombatTable.cs" />
     <Compile Include="Markov\StateSpaceArms.cs" />
