@@ -915,7 +915,8 @@ namespace Rawr.Retribution
 
                 for (int i = 0; i < baseOpts.Rotations.Count; i++)
                 {
-                    baseOpts.ForceRotation = i;
+                    baseOpts.ForceRotation = i; // Force this rotation rather than having the calculations try all and use the best one.
+                                                // We don't need to set this back to off, since we're working in a cloned CalculationOptionsRetribution
                     ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
                         Calculations.GetCharacterCalculations(baseChar),
                         RotationParameters.RotationString(baseOpts.Rotations[i]), i == selected);
