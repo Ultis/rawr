@@ -338,9 +338,9 @@ namespace Rawr
                             case CharacterRace.BloodElf:
                                 S.Strength = 148;
                                 S.Agility = 92;
-                                S.Stamina = 141;
-                                S.Intellect = 102;
-                                S.Spirit = 104;
+                                S.Stamina = 143;
+                                S.Intellect = 101;
+                                S.Spirit = 103;
                                 break;
                             case CharacterRace.Draenei:
                                 S.Strength = 152;
