@@ -1132,7 +1132,7 @@ namespace Rawr.Mage
                 Cycle s = BaseState.GetCycle(cycle);
                 if (s != null)
                 {
-                    dictValues.Add(s.Name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\nAverage Cast Time: {3:F} sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastTime));
+                    dictValues.Add(s.Name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{8:F} Dps per Spell Power\r\n{3:F} Cast Procs / Sec\r\n{4:F} Hit Procs / Sec\r\n{7:F} Crit Procs / Sec\r\n{5:F} Damage Procs / Sec\r\n{6:F} Dot Procs / Sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastProcs / s.CastTime, s.HitProcs / s.CastTime, s.DamageProcs / s.CastTime, s.DotProcs / s.CastTime, s.CritProcs / s.CastTime, s.DpsPerSpellPower));
                 }
             }
             Spell bs;
