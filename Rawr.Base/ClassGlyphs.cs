@@ -641,7 +641,7 @@ namespace Rawr
         public bool GlyphOfDeadlyThrow { get { return _glyphData[25]; } set{ _glyphData[25] = value;} }
         [GlyphData(26, "Glyph of Cloak of Shadows", true, @"While Cloak of Shadows is active, you take 40% less physical damage.")]
         public bool GlyphOfCloakOfShadows { get { return _glyphData[26]; } set{ _glyphData[26] = value;} }
-        [GlyphData(27, "Glyph of Tricks of the Trade", true, @"Your Tricks of the Trade grants an additional 10% bonus damage to your target.")]
+        [GlyphData(27, "Glyph of Tricks of the Trade", true, @"The bonus damage and threat redirection granted by your Tricks of the Trade ability lasts an additional 4 sec.")]
         public bool GlyphOfTricksOfTheTrade { get { return _glyphData[27]; } set{ _glyphData[27] = value;} }
 
         //minor glyphs
