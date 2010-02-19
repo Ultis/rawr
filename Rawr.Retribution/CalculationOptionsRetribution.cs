@@ -22,24 +22,27 @@ namespace Rawr.Retribution
 
         public CalculationOptionsRetribution()
         {
-            targetLevel = 83;
+            // Tab - Fight Parameters
+            fightLength = 5f;
             mob = MobType.Humanoid;
             seal = SealOf.Vengeance;
-            fightLength = 5f;
+            targetLevel = 83;
             timeUnder20 = .18f;
-            delay = .05f;
-            wait = .05f;
+            stackTrinketReset = 0;
             targets = 1f;
             inFront = 0f;
             consEff = 1f;
-            hoREff = 0f;
             bloodlust = true;
-            stackTrinketReset = 0;
+            hoREff = 0f;
             targetSwitches = 0f;
 
+            // Tab - Rotation
             simulateRotation = true;
-            forceRotation = -1;
-
+            // Tab - Rotation - FCFS
+            rotations = new List<Ability[]>();
+            delay = .05f;
+            wait = .05f;
+            // Tab - Rotation - Effective CD's
             judgeCD = 7.1f;
             cSCD = 7.1f;
             dSCD = 10.5f;
@@ -53,14 +56,68 @@ namespace Rawr.Retribution
             exoCD20 = 25f;
             hoWCD20 = 6.4f;
 
-            rotations = new List<Ability[]>();
+            // Tab - Misc
+            experimental = "";
+
+            // Extra, no UI available
+            forceRotation = -1;
         }
 
-        private int targetLevel;
-        public int TargetLevel
+        public CalculationOptionsRetribution Clone()
         {
-            get { return targetLevel; }
-            set { targetLevel = value; OnPropertyChanged("TargetLevel"); }
+            CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
+
+            // Tab - Fight Parameters
+            clone.FightLength = FightLength;
+            clone.Mob = Mob;
+            clone.Seal = Seal;
+            clone.TargetLevel = TargetLevel;
+            clone.TimeUnder20 = TimeUnder20;
+            clone.StackTrinketReset = StackTrinketReset;
+            clone.Targets = Targets;
+            clone.InFront = InFront;
+            clone.ConsEff = ConsEff;
+            clone.Bloodlust = Bloodlust;
+            clone.HoREff = HoREff;
+            clone.TargetSwitches = TargetSwitches;
+
+            // Tab - Rotation
+            clone.SimulateRotation = SimulateRotation;
+            // Tab - Rotation - FCFS
+            clone.Rotations = new List<Ability[]>(Rotations);
+            clone.Delay = Delay;
+            clone.Wait = Wait;
+            // Tab - Rotation - Effective CD's
+            clone.JudgeCD = JudgeCD;
+            clone.CSCD = CSCD;
+            clone.DSCD = DSCD;
+            clone.ConsCD = ConsCD;
+            clone.ExoCD = ExoCD;
+
+            clone.JudgeCD20 = JudgeCD20;
+            clone.CSCD20 = CSCD20;
+            clone.DSCD20 = DSCD20;
+            clone.ConsCD20 = ConsCD20;
+            clone.ExoCD20 = ExoCD20;
+            clone.HoWCD20 = HoWCD20;
+
+            // Tab - Misc
+            experimental = "";
+
+            // Extra, no UI available
+            forceRotation = -1;
+
+            return clone;
+        }
+
+        #region Property 'CacheVars'
+
+        // Tab - Fight Parameters
+        private float fightLength;
+        public float FightLength
+        {
+            get { return fightLength; }
+            set { fightLength = value; OnPropertyChanged("FightLength"); }
         }
 
         private MobType mob;
@@ -70,13 +127,6 @@ namespace Rawr.Retribution
             set { mob = value; OnPropertyChanged("Mob"); }
         }
 
-        [XmlIgnore]
-        public int MobIndex
-        {
-            get { return (int)mob; }
-            set { mob = (MobType)value; OnPropertyChanged("MobIndex"); }
-        }
-
         private SealOf seal;
         public SealOf Seal
         {
@@ -84,19 +134,11 @@ namespace Rawr.Retribution
             set { seal = value; OnPropertyChanged("Seal"); }
         }
 
-        [XmlIgnore]
-        public int SealIndex
+        private int targetLevel;
+        public int TargetLevel
         {
-            get { return (int)seal; }
-            set { seal = (SealOf)value; OnPropertyChanged("SealIndex"); }
-        }
-
-
-        private float fightLength;
-        public float FightLength
-        {
-            get { return fightLength; }
-            set { fightLength = value; OnPropertyChanged("FightLength"); }
+            get { return targetLevel; }
+            set { targetLevel = value; OnPropertyChanged("TargetLevel"); }
         }
 
         private float timeUnder20;
@@ -106,18 +148,11 @@ namespace Rawr.Retribution
             set { timeUnder20 = value; OnPropertyChanged("TimeUnder20"); }
         }
 
-        private float delay;
-        public float Delay
+        private int stackTrinketReset;
+        public int StackTrinketReset
         {
-            get { return delay; }
-            set { delay = value; OnPropertyChanged("Delay"); }
-        }
-
-        private float wait;
-        public float Wait
-        {
-            get { return wait; }
-            set { wait = value; OnPropertyChanged("Wait"); }
+            get { return stackTrinketReset; }
+            set { stackTrinketReset = value; OnPropertyChanged("StackTrinketReset"); }
         }
 
         private float targets;
@@ -141,13 +176,6 @@ namespace Rawr.Retribution
             set { consEff = value; OnPropertyChanged("ConsEff"); }
         }
 
-        private float hoREff;
-        public float HoREff
-        {
-            get { return hoREff; }
-            set { hoREff = value; OnPropertyChanged("HoREff"); }
-        }
-
         private bool bloodlust;
         public bool Bloodlust
         {
@@ -155,11 +183,11 @@ namespace Rawr.Retribution
             set { bloodlust = value; OnPropertyChanged("Bloodlust"); }
         }
 
-        private int stackTrinketReset;
-        public int StackTrinketReset
+        private float hoREff;
+        public float HoREff
         {
-            get { return stackTrinketReset; }
-            set { stackTrinketReset = value; OnPropertyChanged("StackTrinketReset"); }
+            get { return hoREff; }
+            set { hoREff = value; OnPropertyChanged("HoREff"); }
         }
 
         private float targetSwitches;
@@ -169,47 +197,42 @@ namespace Rawr.Retribution
             set { targetSwitches = value; OnPropertyChanged("TargetSwitches"); }
         }
 
-        private bool simulateRotation;
+        // Tab - Rotation
+        private bool simulateRotation;    // FCFS Simulator (true) or Effective CD's (false)
         public bool SimulateRotation
         {
             get { return simulateRotation; }
             set { simulateRotation = value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
         }
 
-        private int forceRotation;
-        [XmlIgnore]
-        public int ForceRotation
-        {
-            get { return forceRotation; }
-            set { forceRotation = value; }
-        }
-
-        [XmlIgnore]
-        public bool EffectiveCD
-        {
-            get { return !SimulateRotation; }
-            set { SimulateRotation = !value; }
-        }
-
-        [XmlIgnore]
-        public Ability[] Order
-        {
-            get { return rotations.Count > 0 ? rotations[0] : null; }
-            set { rotations[0] = value; }
-        }
-
-        [XmlIgnore]
-        public bool[] Selected
-        {
-            get { return null; }
-            set { ; }
-        }
-
+        // Tab - Rotation - FCFS
         private List<Ability[]> rotations;
         public List<Ability[]> Rotations
         {
             get { return rotations; }
             set { rotations = value; OnPropertyChanged("Rotations"); }
+        }
+
+        private float delay;
+        public float Delay
+        {
+            get { return delay; }
+            set { delay = value; OnPropertyChanged("Delay"); }
+        }
+
+        private float wait;
+        public float Wait
+        {
+            get { return wait; }
+            set { wait = value; OnPropertyChanged("Wait"); }
+        }
+
+        // Tab - Rotation - Effective CD's
+        [XmlIgnore]
+        public bool EffectiveCD
+        {
+            get { return !SimulateRotation; }
+            set { SimulateRotation = !value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
         }
 
         private float judgeCD;
@@ -289,43 +312,31 @@ namespace Rawr.Retribution
             set { hoWCD20 = value; OnPropertyChanged("HoWCD20"); }
         }
 
-        public CalculationOptionsRetribution Clone()
+        // Tab - Misc
+        private string experimental;
+        public string Experimental
         {
-            CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
-
-            clone.TargetLevel = TargetLevel;
-            clone.Mob = Mob;
-            clone.Seal = Seal;
-            clone.FightLength = FightLength;
-            clone.TimeUnder20 = TimeUnder20;
-            clone.Delay = Delay;
-            clone.Wait = Wait;
-            clone.SimulateRotation = SimulateRotation;
-            clone.Targets = Targets;
-            clone.InFront = InFront;
-            clone.ConsEff = ConsEff;
-            clone.HoREff = HoREff;
-            clone.Bloodlust = Bloodlust;
-            clone.StackTrinketReset = StackTrinketReset;
-            clone.TargetSwitches = TargetSwitches;
-
-            clone.JudgeCD = JudgeCD;
-            clone.CSCD = CSCD;
-            clone.DSCD = DSCD;
-            clone.ConsCD = ConsCD;
-            clone.ExoCD = ExoCD;
-
-            clone.JudgeCD20 = JudgeCD20;
-            clone.CSCD20 = CSCD20;
-            clone.DSCD20 = DSCD20;
-            clone.ConsCD20 = ConsCD20;
-            clone.ExoCD20 = ExoCD20;
-            clone.HoWCD20 = HoWCD20;
-
-            clone.Rotations = new List<Ability[]>(Rotations);
-
-            return clone;
+            get { return experimental; }
+            set { experimental = value; OnPropertyChanged("Experimental"); }
         }
+
+        // No UI
+        /// <summary>
+        /// forceRotation has no UI, it is enabled from source only. when set to -1, all 
+        /// defined rotations will be tested and the best one applied.
+        /// When set to a value >=0, forceRotation is an index into the Rotations<> list.
+        /// Only that rotation is tried and applied.
+        /// This is used during the creation of the 'Rotations' custom chart.
+        /// </summary>
+        private int forceRotation;  
+        [XmlIgnore]
+        public int ForceRotation
+        {
+            get { return forceRotation; }
+            set { forceRotation = value; }
+        }
+
+        #endregion
 
         private Character _character;
         [XmlIgnore]

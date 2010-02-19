@@ -64,15 +64,20 @@ namespace Rawr.Retribution
             nudExo20.Value = (decimal)calcOpts.ExoCD20;
             nudHoW20.Value = (decimal)calcOpts.HoWCD20;
 
-            if (calcOpts.Rotations.Count == 0) calcOpts.Rotations.Add(RotationParameters.DefaultRotation());
+            if (calcOpts.Rotations.Count == 0) 
+                calcOpts.Rotations.Add(RotationParameters.DefaultRotation());
             butDelRotation.Enabled = calcOpts.Rotations.Count > 1;
             buildRotationCombo();
             cmbRotations.SelectedIndex = 0;
             showRotation(0);
 
-            if (calcOpts.SimulateRotation) radRotSim.Checked = true;
-            else radEffectiveCD.Checked = true;
+            if (calcOpts.SimulateRotation) 
+                radRotSim.Checked = true;
+            else 
+                radEffectiveCD.Checked = true;
             SetSimulateRotation(calcOpts.SimulateRotation);
+
+            textExperimental.Text = calcOpts.Experimental;
 
             loading = false;
         }
@@ -505,6 +510,16 @@ namespace Rawr.Retribution
             butDelRotation.Enabled = calcOpts.Rotations.Count > 1;
 
             Character.OnCalculationsInvalidated();
+        }
+
+        private void textExperimental_TextChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.Experimental = textExperimental.Text;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
     }

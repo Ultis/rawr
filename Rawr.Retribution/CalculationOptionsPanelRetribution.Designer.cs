@@ -65,6 +65,7 @@
             this.labelsTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.label13 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbSeal = new System.Windows.Forms.ComboBox();
             this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
@@ -81,7 +82,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.nudConsEff = new System.Windows.Forms.NumericUpDown();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabFightParm = new System.Windows.Forms.TabPage();
             this.label31 = new System.Windows.Forms.Label();
             this.nudTargetSwitch = new System.Windows.Forms.NumericUpDown();
             this.label29 = new System.Windows.Forms.Label();
@@ -89,11 +90,13 @@
             this.label30 = new System.Windows.Forms.Label();
             this.chkBloodlust = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabRotation = new System.Windows.Forms.TabPage();
             this.listRotation = new System.Windows.Forms.ListBox();
             this.butDelRotation = new System.Windows.Forms.Button();
             this.butNewRotation = new System.Windows.Forms.Button();
             this.cmbRotations = new System.Windows.Forms.ComboBox();
+            this.tabMisc = new System.Windows.Forms.TabPage();
+            this.textExperimental = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -138,10 +141,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudInFront)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudConsEff)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabFightParm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoR)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.tabRotation.SuspendLayout();
+            this.tabMisc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -164,7 +168,7 @@
             this.cmbMobType.Location = new System.Drawing.Point(146, 33);
             this.cmbMobType.Name = "cmbMobType";
             this.cmbMobType.Size = new System.Drawing.Size(114, 21);
-            this.cmbMobType.TabIndex = 4;
+            this.cmbMobType.TabIndex = 3;
             this.cmbMobType.SelectedIndexChanged += new System.EventHandler(this.cmbMobType_SelectedIndexChanged);
             // 
             // label1
@@ -173,7 +177,7 @@
             this.label1.Location = new System.Drawing.Point(86, 36);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 13);
-            this.label1.TabIndex = 3;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Mob type:";
             // 
             // label2
@@ -182,7 +186,7 @@
             this.label2.Location = new System.Drawing.Point(74, 89);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 13);
-            this.label2.TabIndex = 7;
+            this.label2.TabIndex = 6;
             this.label2.Text = "Target level:";
             // 
             // lblWait
@@ -191,7 +195,7 @@
             this.lblWait.Location = new System.Drawing.Point(119, 152);
             this.lblWait.Name = "lblWait";
             this.lblWait.Size = new System.Drawing.Size(36, 13);
-            this.lblWait.TabIndex = 21;
+            this.lblWait.TabIndex = 9;
             this.lblWait.Text = "Wait*:";
             this.labelsTooltip.SetToolTip(this.lblWait, "Amount of time you will be willing to wait to use an ability of higher priority.");
             // 
@@ -211,7 +215,7 @@
             0});
             this.nudWait.Name = "nudWait";
             this.nudWait.Size = new System.Drawing.Size(48, 20);
-            this.nudWait.TabIndex = 22;
+            this.nudWait.TabIndex = 10;
             this.nudWait.ValueChanged += new System.EventHandler(this.nudWait_ValueChanged);
             // 
             // nudHoW20
@@ -235,7 +239,7 @@
             0});
             this.nudHoW20.Name = "nudHoW20";
             this.nudHoW20.Size = new System.Drawing.Size(52, 20);
-            this.nudHoW20.TabIndex = 58;
+            this.nudHoW20.TabIndex = 30;
             this.nudHoW20.Value = new decimal(new int[] {
             6,
             0,
@@ -264,7 +268,7 @@
             0});
             this.nudExo20.Name = "nudExo20";
             this.nudExo20.Size = new System.Drawing.Size(52, 20);
-            this.nudExo20.TabIndex = 56;
+            this.nudExo20.TabIndex = 28;
             this.nudExo20.Value = new decimal(new int[] {
             6,
             0,
@@ -293,7 +297,7 @@
             0});
             this.nudExo.Name = "nudExo";
             this.nudExo.Size = new System.Drawing.Size(52, 20);
-            this.nudExo.TabIndex = 55;
+            this.nudExo.TabIndex = 27;
             this.nudExo.Value = new decimal(new int[] {
             6,
             0,
@@ -322,7 +326,7 @@
             0});
             this.nudCons20.Name = "nudCons20";
             this.nudCons20.Size = new System.Drawing.Size(52, 20);
-            this.nudCons20.TabIndex = 54;
+            this.nudCons20.TabIndex = 25;
             this.nudCons20.Value = new decimal(new int[] {
             6,
             0,
@@ -351,7 +355,7 @@
             0});
             this.nudCons.Name = "nudCons";
             this.nudCons.Size = new System.Drawing.Size(52, 20);
-            this.nudCons.TabIndex = 53;
+            this.nudCons.TabIndex = 24;
             this.nudCons.Value = new decimal(new int[] {
             6,
             0,
@@ -380,7 +384,7 @@
             0});
             this.nudDS20.Name = "nudDS20";
             this.nudDS20.Size = new System.Drawing.Size(52, 20);
-            this.nudDS20.TabIndex = 52;
+            this.nudDS20.TabIndex = 22;
             this.nudDS20.Value = new decimal(new int[] {
             6,
             0,
@@ -409,7 +413,7 @@
             0});
             this.nudDS.Name = "nudDS";
             this.nudDS.Size = new System.Drawing.Size(52, 20);
-            this.nudDS.TabIndex = 51;
+            this.nudDS.TabIndex = 21;
             this.nudDS.Value = new decimal(new int[] {
             6,
             0,
@@ -438,7 +442,7 @@
             0});
             this.nudCS20.Name = "nudCS20";
             this.nudCS20.Size = new System.Drawing.Size(52, 20);
-            this.nudCS20.TabIndex = 50;
+            this.nudCS20.TabIndex = 19;
             this.nudCS20.Value = new decimal(new int[] {
             6,
             0,
@@ -467,7 +471,7 @@
             0});
             this.nudCS.Name = "nudCS";
             this.nudCS.Size = new System.Drawing.Size(52, 20);
-            this.nudCS.TabIndex = 49;
+            this.nudCS.TabIndex = 18;
             this.nudCS.Value = new decimal(new int[] {
             6,
             0,
@@ -496,7 +500,7 @@
             0});
             this.nudJudge20.Name = "nudJudge20";
             this.nudJudge20.Size = new System.Drawing.Size(52, 20);
-            this.nudJudge20.TabIndex = 48;
+            this.nudJudge20.TabIndex = 16;
             this.nudJudge20.Value = new decimal(new int[] {
             6,
             0,
@@ -525,7 +529,7 @@
             0});
             this.nudJudge.Name = "nudJudge";
             this.nudJudge.Size = new System.Drawing.Size(52, 20);
-            this.nudJudge.TabIndex = 47;
+            this.nudJudge.TabIndex = 15;
             this.nudJudge.Value = new decimal(new int[] {
             6,
             0,
@@ -538,7 +542,7 @@
             this.lblPost20.Location = new System.Drawing.Point(164, 202);
             this.lblPost20.Name = "lblPost20";
             this.lblPost20.Size = new System.Drawing.Size(51, 13);
-            this.lblPost20.TabIndex = 46;
+            this.lblPost20.TabIndex = 13;
             this.lblPost20.Text = "Post 20%";
             // 
             // lblPre20
@@ -546,7 +550,7 @@
             this.lblPre20.Location = new System.Drawing.Point(106, 202);
             this.lblPre20.Name = "lblPre20";
             this.lblPre20.Size = new System.Drawing.Size(51, 13);
-            this.lblPre20.TabIndex = 45;
+            this.lblPre20.TabIndex = 12;
             this.lblPre20.Text = " Pre 20%";
             // 
             // lblExo
@@ -555,7 +559,7 @@
             this.lblExo.Location = new System.Drawing.Point(6, 325);
             this.lblExo.Name = "lblExo";
             this.lblExo.Size = new System.Drawing.Size(49, 13);
-            this.lblExo.TabIndex = 44;
+            this.lblExo.TabIndex = 26;
             this.lblExo.Text = "Exorcism";
             // 
             // lblCons
@@ -564,7 +568,7 @@
             this.lblCons.Location = new System.Drawing.Point(6, 299);
             this.lblCons.Name = "lblCons";
             this.lblCons.Size = new System.Drawing.Size(69, 13);
-            this.lblCons.TabIndex = 43;
+            this.lblCons.TabIndex = 23;
             this.lblCons.Text = "Consecration";
             // 
             // lblHoW
@@ -573,7 +577,7 @@
             this.lblHoW.Location = new System.Drawing.Point(6, 351);
             this.lblHoW.Name = "lblHoW";
             this.lblHoW.Size = new System.Drawing.Size(90, 13);
-            this.lblHoW.TabIndex = 42;
+            this.lblHoW.TabIndex = 29;
             this.lblHoW.Text = "Hammer of Wrath";
             // 
             // lblDS
@@ -582,7 +586,7 @@
             this.lblDS.Location = new System.Drawing.Point(6, 273);
             this.lblDS.Name = "lblDS";
             this.lblDS.Size = new System.Drawing.Size(67, 13);
-            this.lblDS.TabIndex = 41;
+            this.lblDS.TabIndex = 20;
             this.lblDS.Text = "Divine Storm";
             // 
             // lblCS
@@ -591,7 +595,7 @@
             this.lblCS.Location = new System.Drawing.Point(6, 247);
             this.lblCS.Name = "lblCS";
             this.lblCS.Size = new System.Drawing.Size(79, 13);
-            this.lblCS.TabIndex = 40;
+            this.lblCS.TabIndex = 17;
             this.lblCS.Text = "Crusader Strike";
             // 
             // lblJudge
@@ -600,7 +604,7 @@
             this.lblJudge.Location = new System.Drawing.Point(6, 221);
             this.lblJudge.Name = "lblJudge";
             this.lblJudge.Size = new System.Drawing.Size(59, 13);
-            this.lblJudge.TabIndex = 39;
+            this.lblJudge.TabIndex = 14;
             this.lblJudge.Text = "Judgement";
             // 
             // radEffectiveCD
@@ -609,7 +613,7 @@
             this.radEffectiveCD.Location = new System.Drawing.Point(6, 182);
             this.radEffectiveCD.Name = "radEffectiveCD";
             this.radEffectiveCD.Size = new System.Drawing.Size(122, 17);
-            this.radEffectiveCD.TabIndex = 37;
+            this.radEffectiveCD.TabIndex = 11;
             this.radEffectiveCD.Text = "Effective Cooldowns";
             this.radEffectiveCD.UseVisualStyleBackColor = true;
             // 
@@ -620,7 +624,7 @@
             this.radRotSim.Location = new System.Drawing.Point(6, 6);
             this.radRotSim.Name = "radRotSim";
             this.radRotSim.Size = new System.Drawing.Size(97, 17);
-            this.radRotSim.TabIndex = 15;
+            this.radRotSim.TabIndex = 0;
             this.radRotSim.TabStop = true;
             this.radRotSim.Text = "FCFS Simulator";
             this.radRotSim.UseVisualStyleBackColor = true;
@@ -642,7 +646,7 @@
             0});
             this.nudDelay.Name = "nudDelay";
             this.nudDelay.Size = new System.Drawing.Size(48, 20);
-            this.nudDelay.TabIndex = 20;
+            this.nudDelay.TabIndex = 8;
             this.nudDelay.ValueChanged += new System.EventHandler(this.nudDelay_ValueChanged);
             // 
             // lblDelay
@@ -651,7 +655,7 @@
             this.lblDelay.Location = new System.Drawing.Point(8, 152);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(41, 13);
-            this.lblDelay.TabIndex = 19;
+            this.lblDelay.TabIndex = 7;
             this.lblDelay.Text = "Delay*:";
             this.labelsTooltip.SetToolTip(this.lblDelay, "Amount of time inbetween each ability use due to lag.");
             // 
@@ -660,7 +664,7 @@
             this.butRotationDown.Location = new System.Drawing.Point(186, 85);
             this.butRotationDown.Name = "butRotationDown";
             this.butRotationDown.Size = new System.Drawing.Size(23, 23);
-            this.butRotationDown.TabIndex = 18;
+            this.butRotationDown.TabIndex = 5;
             this.butRotationDown.Text = "-";
             this.butRotationDown.UseVisualStyleBackColor = true;
             this.butRotationDown.Click += new System.EventHandler(this.butRotationDown_Click);
@@ -670,7 +674,7 @@
             this.butRotationUp.Location = new System.Drawing.Point(186, 56);
             this.butRotationUp.Name = "butRotationUp";
             this.butRotationUp.Size = new System.Drawing.Size(23, 23);
-            this.butRotationUp.TabIndex = 17;
+            this.butRotationUp.TabIndex = 4;
             this.butRotationUp.Text = "+";
             this.butRotationUp.UseVisualStyleBackColor = true;
             this.butRotationUp.Click += new System.EventHandler(this.butRotationUp_Click);
@@ -681,7 +685,7 @@
             this.label11.Location = new System.Drawing.Point(56, 115);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(84, 13);
-            this.label11.TabIndex = 9;
+            this.label11.TabIndex = 8;
             this.label11.Text = "Below 20% time:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -691,7 +695,7 @@
             this.label12.Location = new System.Drawing.Point(75, 9);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(65, 13);
-            this.label12.TabIndex = 1;
+            this.label12.TabIndex = 0;
             this.label12.Text = "Fight length:";
             // 
             // cmbLength
@@ -715,7 +719,7 @@
             0});
             this.cmbLength.Name = "cmbLength";
             this.cmbLength.Size = new System.Drawing.Size(60, 20);
-            this.cmbLength.TabIndex = 2;
+            this.cmbLength.TabIndex = 1;
             this.cmbLength.Value = new decimal(new int[] {
             5,
             0,
@@ -729,7 +733,7 @@
             this.label13.Location = new System.Drawing.Point(6, 219);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(134, 13);
-            this.label13.TabIndex = 42;
+            this.label13.TabIndex = 19;
             this.label13.Text = "Consecrate effectiveness*:";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelsTooltip.SetToolTip(this.label13, "The percent of time that mobs are standing in your consecrate.");
@@ -745,13 +749,24 @@
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelsTooltip.SetToolTip(this.label19, "The percent of time that mobs are standing in your consecrate.");
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(6, 9);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(77, 13);
+            this.label32.TabIndex = 0;
+            this.label32.Text = "Experimental: *";
+            this.labelsTooltip.SetToolTip(this.label32, "Experimental development settings\r\nKeep this field blank unless explicitely instr" +
+                    "ucted by a Rawr.Retribution developer to do otherwise.");
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(109, 63);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(31, 13);
-            this.label3.TabIndex = 5;
+            this.label3.TabIndex = 4;
             this.label3.Text = "Seal:";
             // 
             // cmbSeal
@@ -767,7 +782,7 @@
             this.cmbSeal.Location = new System.Drawing.Point(146, 60);
             this.cmbSeal.Name = "cmbSeal";
             this.cmbSeal.Size = new System.Drawing.Size(114, 21);
-            this.cmbSeal.TabIndex = 6;
+            this.cmbSeal.TabIndex = 5;
             this.cmbSeal.SelectedIndexChanged += new System.EventHandler(this.cmbSeal_SelectedIndexChanged);
             // 
             // nudTargetLevel
@@ -785,7 +800,7 @@
             0});
             this.nudTargetLevel.Name = "nudTargetLevel";
             this.nudTargetLevel.Size = new System.Drawing.Size(60, 20);
-            this.nudTargetLevel.TabIndex = 8;
+            this.nudTargetLevel.TabIndex = 7;
             this.nudTargetLevel.Value = new decimal(new int[] {
             80,
             0,
@@ -820,7 +835,7 @@
             this.nudTimeUnder20.Location = new System.Drawing.Point(146, 113);
             this.nudTimeUnder20.Name = "nudTimeUnder20";
             this.nudTimeUnder20.Size = new System.Drawing.Size(60, 20);
-            this.nudTimeUnder20.TabIndex = 10;
+            this.nudTimeUnder20.TabIndex = 9;
             this.nudTimeUnder20.Value = new decimal(new int[] {
             80,
             0,
@@ -834,7 +849,7 @@
             this.label5.Location = new System.Drawing.Point(212, 115);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(15, 13);
-            this.label5.TabIndex = 37;
+            this.label5.TabIndex = 10;
             this.label5.Text = "%";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -844,7 +859,7 @@
             this.label6.Location = new System.Drawing.Point(212, 141);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(31, 13);
-            this.label6.TabIndex = 38;
+            this.label6.TabIndex = 13;
             this.label6.Text = "times";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -869,7 +884,7 @@
             0});
             this.nudTargets.Name = "nudTargets";
             this.nudTargets.Size = new System.Drawing.Size(60, 20);
-            this.nudTargets.TabIndex = 14;
+            this.nudTargets.TabIndex = 15;
             this.nudTargets.Value = new decimal(new int[] {
             10,
             0,
@@ -883,7 +898,7 @@
             this.label7.Location = new System.Drawing.Point(94, 167);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(46, 13);
-            this.label7.TabIndex = 13;
+            this.label7.TabIndex = 14;
             this.label7.Text = "Targets:";
             // 
             // label8
@@ -892,7 +907,7 @@
             this.label8.Location = new System.Drawing.Point(212, 193);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(15, 13);
-            this.label8.TabIndex = 41;
+            this.label8.TabIndex = 18;
             this.label8.Text = "%";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -901,7 +916,7 @@
             this.nudInFront.Location = new System.Drawing.Point(146, 191);
             this.nudInFront.Name = "nudInFront";
             this.nudInFront.Size = new System.Drawing.Size(60, 20);
-            this.nudInFront.TabIndex = 40;
+            this.nudInFront.TabIndex = 17;
             this.nudInFront.Value = new decimal(new int[] {
             80,
             0,
@@ -915,7 +930,7 @@
             this.label9.Location = new System.Drawing.Point(40, 193);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(100, 13);
-            this.label9.TabIndex = 39;
+            this.label9.TabIndex = 16;
             this.label9.Text = "Time infront of mob:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -925,7 +940,7 @@
             this.label10.Location = new System.Drawing.Point(212, 219);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(15, 13);
-            this.label10.TabIndex = 44;
+            this.label10.TabIndex = 21;
             this.label10.Text = "%";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -934,7 +949,7 @@
             this.nudConsEff.Location = new System.Drawing.Point(146, 217);
             this.nudConsEff.Name = "nudConsEff";
             this.nudConsEff.Size = new System.Drawing.Size(60, 20);
-            this.nudConsEff.TabIndex = 43;
+            this.nudConsEff.TabIndex = 20;
             this.nudConsEff.Value = new decimal(new int[] {
             80,
             0,
@@ -944,52 +959,53 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(9, 3);
+            this.tabControl1.Controls.Add(this.tabFightParm);
+            this.tabControl1.Controls.Add(this.tabRotation);
+            this.tabControl1.Controls.Add(this.tabMisc);
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(288, 410);
-            this.tabControl1.TabIndex = 45;
+            this.tabControl1.Size = new System.Drawing.Size(294, 544);
+            this.tabControl1.TabIndex = 0;
             // 
-            // tabPage1
+            // tabFightParm
             // 
-            this.tabPage1.Controls.Add(this.label31);
-            this.tabPage1.Controls.Add(this.nudTargetSwitch);
-            this.tabPage1.Controls.Add(this.label29);
-            this.tabPage1.Controls.Add(this.nudHoR);
-            this.tabPage1.Controls.Add(this.label30);
-            this.tabPage1.Controls.Add(this.chkBloodlust);
-            this.tabPage1.Controls.Add(this.label14);
-            this.tabPage1.Controls.Add(this.label12);
-            this.tabPage1.Controls.Add(this.label10);
-            this.tabPage1.Controls.Add(this.cmbMobType);
-            this.tabPage1.Controls.Add(this.nudConsEff);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.label13);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.cmbLength);
-            this.tabPage1.Controls.Add(this.nudInFront);
-            this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.cmbSeal);
-            this.tabPage1.Controls.Add(this.nudTargets);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.label7);
-            this.tabPage1.Controls.Add(this.nudTargetLevel);
-            this.tabPage1.Controls.Add(this.label6);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.nudStackTrinket);
-            this.tabPage1.Controls.Add(this.nudTimeUnder20);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(280, 384);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Fight Parameters";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabFightParm.Controls.Add(this.label31);
+            this.tabFightParm.Controls.Add(this.nudTargetSwitch);
+            this.tabFightParm.Controls.Add(this.label29);
+            this.tabFightParm.Controls.Add(this.nudHoR);
+            this.tabFightParm.Controls.Add(this.label30);
+            this.tabFightParm.Controls.Add(this.chkBloodlust);
+            this.tabFightParm.Controls.Add(this.label14);
+            this.tabFightParm.Controls.Add(this.label12);
+            this.tabFightParm.Controls.Add(this.label10);
+            this.tabFightParm.Controls.Add(this.cmbMobType);
+            this.tabFightParm.Controls.Add(this.nudConsEff);
+            this.tabFightParm.Controls.Add(this.label1);
+            this.tabFightParm.Controls.Add(this.label13);
+            this.tabFightParm.Controls.Add(this.label2);
+            this.tabFightParm.Controls.Add(this.label8);
+            this.tabFightParm.Controls.Add(this.cmbLength);
+            this.tabFightParm.Controls.Add(this.nudInFront);
+            this.tabFightParm.Controls.Add(this.label11);
+            this.tabFightParm.Controls.Add(this.label9);
+            this.tabFightParm.Controls.Add(this.cmbSeal);
+            this.tabFightParm.Controls.Add(this.nudTargets);
+            this.tabFightParm.Controls.Add(this.label3);
+            this.tabFightParm.Controls.Add(this.label7);
+            this.tabFightParm.Controls.Add(this.nudTargetLevel);
+            this.tabFightParm.Controls.Add(this.label6);
+            this.tabFightParm.Controls.Add(this.label4);
+            this.tabFightParm.Controls.Add(this.label5);
+            this.tabFightParm.Controls.Add(this.nudStackTrinket);
+            this.tabFightParm.Controls.Add(this.nudTimeUnder20);
+            this.tabFightParm.Location = new System.Drawing.Point(4, 22);
+            this.tabFightParm.Name = "tabFightParm";
+            this.tabFightParm.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFightParm.Size = new System.Drawing.Size(286, 518);
+            this.tabFightParm.TabIndex = 0;
+            this.tabFightParm.Text = "Fight Parameters";
+            this.tabFightParm.UseVisualStyleBackColor = true;
             // 
             // label31
             // 
@@ -997,7 +1013,7 @@
             this.label31.Location = new System.Drawing.Point(51, 291);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(85, 13);
-            this.label31.TabIndex = 50;
+            this.label31.TabIndex = 27;
             this.label31.Text = "Target switches:";
             // 
             // nudTargetSwitch
@@ -1011,7 +1027,7 @@
             0});
             this.nudTargetSwitch.Name = "nudTargetSwitch";
             this.nudTargetSwitch.Size = new System.Drawing.Size(60, 20);
-            this.nudTargetSwitch.TabIndex = 51;
+            this.nudTargetSwitch.TabIndex = 28;
             this.nudTargetSwitch.Value = new decimal(new int[] {
             5,
             0,
@@ -1025,7 +1041,7 @@
             this.label29.Location = new System.Drawing.Point(212, 265);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(15, 13);
-            this.label29.TabIndex = 49;
+            this.label29.TabIndex = 26;
             this.label29.Text = "%";
             this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1034,7 +1050,7 @@
             this.nudHoR.Location = new System.Drawing.Point(146, 263);
             this.nudHoR.Name = "nudHoR";
             this.nudHoR.Size = new System.Drawing.Size(60, 20);
-            this.nudHoR.TabIndex = 48;
+            this.nudHoR.TabIndex = 25;
             this.nudHoR.Value = new decimal(new int[] {
             80,
             0,
@@ -1048,7 +1064,7 @@
             this.label30.Location = new System.Drawing.Point(38, 265);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(98, 13);
-            this.label30.TabIndex = 47;
+            this.label30.TabIndex = 24;
             this.label30.Text = "HoR effectiveness:";
             this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1058,7 +1074,7 @@
             this.chkBloodlust.Location = new System.Drawing.Point(146, 243);
             this.chkBloodlust.Name = "chkBloodlust";
             this.chkBloodlust.Size = new System.Drawing.Size(15, 14);
-            this.chkBloodlust.TabIndex = 46;
+            this.chkBloodlust.TabIndex = 23;
             this.chkBloodlust.UseVisualStyleBackColor = true;
             this.chkBloodlust.CheckedChanged += new System.EventHandler(this.chkBloodlust_CheckedChanged);
             // 
@@ -1068,49 +1084,49 @@
             this.label14.Location = new System.Drawing.Point(87, 243);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 13);
-            this.label14.TabIndex = 45;
+            this.label14.TabIndex = 22;
             this.label14.Text = "Bloodlust:";
             // 
-            // tabPage2
+            // tabRotation
             // 
-            this.tabPage2.Controls.Add(this.listRotation);
-            this.tabPage2.Controls.Add(this.butDelRotation);
-            this.tabPage2.Controls.Add(this.butNewRotation);
-            this.tabPage2.Controls.Add(this.cmbRotations);
-            this.tabPage2.Controls.Add(this.lblWait);
-            this.tabPage2.Controls.Add(this.radRotSim);
-            this.tabPage2.Controls.Add(this.nudWait);
-            this.tabPage2.Controls.Add(this.butRotationUp);
-            this.tabPage2.Controls.Add(this.nudHoW20);
-            this.tabPage2.Controls.Add(this.butRotationDown);
-            this.tabPage2.Controls.Add(this.nudExo20);
-            this.tabPage2.Controls.Add(this.nudExo);
-            this.tabPage2.Controls.Add(this.lblDelay);
-            this.tabPage2.Controls.Add(this.nudCons20);
-            this.tabPage2.Controls.Add(this.nudDelay);
-            this.tabPage2.Controls.Add(this.nudCons);
-            this.tabPage2.Controls.Add(this.radEffectiveCD);
-            this.tabPage2.Controls.Add(this.nudDS20);
-            this.tabPage2.Controls.Add(this.lblJudge);
-            this.tabPage2.Controls.Add(this.nudDS);
-            this.tabPage2.Controls.Add(this.lblCS);
-            this.tabPage2.Controls.Add(this.nudCS20);
-            this.tabPage2.Controls.Add(this.lblDS);
-            this.tabPage2.Controls.Add(this.nudCS);
-            this.tabPage2.Controls.Add(this.lblHoW);
-            this.tabPage2.Controls.Add(this.nudJudge20);
-            this.tabPage2.Controls.Add(this.lblCons);
-            this.tabPage2.Controls.Add(this.nudJudge);
-            this.tabPage2.Controls.Add(this.lblExo);
-            this.tabPage2.Controls.Add(this.lblPost20);
-            this.tabPage2.Controls.Add(this.lblPre20);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(280, 384);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Rotation";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabRotation.Controls.Add(this.listRotation);
+            this.tabRotation.Controls.Add(this.butDelRotation);
+            this.tabRotation.Controls.Add(this.butNewRotation);
+            this.tabRotation.Controls.Add(this.cmbRotations);
+            this.tabRotation.Controls.Add(this.lblWait);
+            this.tabRotation.Controls.Add(this.radRotSim);
+            this.tabRotation.Controls.Add(this.nudWait);
+            this.tabRotation.Controls.Add(this.butRotationUp);
+            this.tabRotation.Controls.Add(this.nudHoW20);
+            this.tabRotation.Controls.Add(this.butRotationDown);
+            this.tabRotation.Controls.Add(this.nudExo20);
+            this.tabRotation.Controls.Add(this.nudExo);
+            this.tabRotation.Controls.Add(this.lblDelay);
+            this.tabRotation.Controls.Add(this.nudCons20);
+            this.tabRotation.Controls.Add(this.nudDelay);
+            this.tabRotation.Controls.Add(this.nudCons);
+            this.tabRotation.Controls.Add(this.radEffectiveCD);
+            this.tabRotation.Controls.Add(this.nudDS20);
+            this.tabRotation.Controls.Add(this.lblJudge);
+            this.tabRotation.Controls.Add(this.nudDS);
+            this.tabRotation.Controls.Add(this.lblCS);
+            this.tabRotation.Controls.Add(this.nudCS20);
+            this.tabRotation.Controls.Add(this.lblDS);
+            this.tabRotation.Controls.Add(this.nudCS);
+            this.tabRotation.Controls.Add(this.lblHoW);
+            this.tabRotation.Controls.Add(this.nudJudge20);
+            this.tabRotation.Controls.Add(this.lblCons);
+            this.tabRotation.Controls.Add(this.nudJudge);
+            this.tabRotation.Controls.Add(this.lblExo);
+            this.tabRotation.Controls.Add(this.lblPost20);
+            this.tabRotation.Controls.Add(this.lblPre20);
+            this.tabRotation.Location = new System.Drawing.Point(4, 22);
+            this.tabRotation.Name = "tabRotation";
+            this.tabRotation.Padding = new System.Windows.Forms.Padding(3);
+            this.tabRotation.Size = new System.Drawing.Size(286, 518);
+            this.tabRotation.TabIndex = 1;
+            this.tabRotation.Text = "Rotation";
+            this.tabRotation.UseVisualStyleBackColor = true;
             // 
             // listRotation
             // 
@@ -1125,14 +1141,14 @@
             this.listRotation.Location = new System.Drawing.Point(6, 56);
             this.listRotation.Name = "listRotation";
             this.listRotation.Size = new System.Drawing.Size(174, 82);
-            this.listRotation.TabIndex = 62;
+            this.listRotation.TabIndex = 3;
             // 
             // butDelRotation
             // 
             this.butDelRotation.Location = new System.Drawing.Point(215, 56);
             this.butDelRotation.Name = "butDelRotation";
             this.butDelRotation.Size = new System.Drawing.Size(59, 21);
-            this.butDelRotation.TabIndex = 61;
+            this.butDelRotation.TabIndex = 6;
             this.butDelRotation.Text = "Delete";
             this.butDelRotation.UseVisualStyleBackColor = true;
             this.butDelRotation.Click += new System.EventHandler(this.butDelRotation_Click);
@@ -1142,7 +1158,7 @@
             this.butNewRotation.Location = new System.Drawing.Point(215, 29);
             this.butNewRotation.Name = "butNewRotation";
             this.butNewRotation.Size = new System.Drawing.Size(59, 21);
-            this.butNewRotation.TabIndex = 60;
+            this.butNewRotation.TabIndex = 2;
             this.butNewRotation.Text = "New";
             this.butNewRotation.UseVisualStyleBackColor = true;
             this.butNewRotation.Click += new System.EventHandler(this.butNewRotation_Click);
@@ -1154,8 +1170,28 @@
             this.cmbRotations.Location = new System.Drawing.Point(6, 29);
             this.cmbRotations.Name = "cmbRotations";
             this.cmbRotations.Size = new System.Drawing.Size(203, 21);
-            this.cmbRotations.TabIndex = 59;
+            this.cmbRotations.TabIndex = 1;
             this.cmbRotations.SelectedIndexChanged += new System.EventHandler(this.cmbRotations_SelectedIndexChanged);
+            // 
+            // tabMisc
+            // 
+            this.tabMisc.Controls.Add(this.textExperimental);
+            this.tabMisc.Controls.Add(this.label32);
+            this.tabMisc.Location = new System.Drawing.Point(4, 22);
+            this.tabMisc.Name = "tabMisc";
+            this.tabMisc.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMisc.Size = new System.Drawing.Size(286, 518);
+            this.tabMisc.TabIndex = 2;
+            this.tabMisc.Text = "Misc";
+            this.tabMisc.UseVisualStyleBackColor = true;
+            // 
+            // textExperimental
+            // 
+            this.textExperimental.Location = new System.Drawing.Point(100, 6);
+            this.textExperimental.Name = "textExperimental";
+            this.textExperimental.Size = new System.Drawing.Size(180, 20);
+            this.textExperimental.TabIndex = 1;
+            this.textExperimental.TextChanged += new System.EventHandler(this.textExperimental_TextChanged);
             // 
             // label15
             // 
@@ -1452,7 +1488,7 @@
             this.AutoScroll = true;
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelRetribution";
-            this.Size = new System.Drawing.Size(300, 447);
+            this.Size = new System.Drawing.Size(300, 550);
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).EndInit();
@@ -1474,12 +1510,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudInFront)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudConsEff)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabFightParm.ResumeLayout(false);
+            this.tabFightParm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoR)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tabRotation.ResumeLayout(false);
+            this.tabRotation.PerformLayout();
+            this.tabMisc.ResumeLayout(false);
+            this.tabMisc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
@@ -1544,8 +1582,8 @@
         private System.Windows.Forms.NumericUpDown nudConsEff;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabFightParm;
+        private System.Windows.Forms.TabPage tabRotation;
         private System.Windows.Forms.CheckBox chkBloodlust;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label29;
@@ -1581,6 +1619,9 @@
         private System.Windows.Forms.ComboBox cmbRotations;
         private System.Windows.Forms.Button butDelRotation;
         private System.Windows.Forms.ListBox listRotation;
+        private System.Windows.Forms.TabPage tabMisc;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox textExperimental;
 
     }
 }
