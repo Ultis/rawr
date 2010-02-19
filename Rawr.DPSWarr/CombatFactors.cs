@@ -225,7 +225,7 @@ namespace Rawr.DPSWarr {
                 {
                     _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, Skills.Ability.NULL, false, false, false);
                 }
-                return _AttackTableBasicMH;
+                return _AttackTableBasicOH;
             }
         }
         #region Hit Rating

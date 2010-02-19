@@ -1225,8 +1225,10 @@ These numbers to do not include racial bonuses.",
                  
                 if (calcOpts.UseMarkov)
                 {
-                    Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
-                    b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts);
+                    //Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
+                    //b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts);
+                    Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
+                    b.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts);
                 }
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
