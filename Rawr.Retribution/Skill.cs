@@ -130,6 +130,11 @@ namespace Rawr.Retribution
         public virtual float AbilityCritChance() { return 0; }
         public virtual float Targets() { return 1f; }
 
+        public virtual float TickCount()
+        {
+            return 1;
+        }
+
         public override string ToString()
         {
             return string.Format("Average Damage: {0}\nAverage Hit: {1}\nCrit Chance: {2}%\nAvoid Chance: {3}%",
@@ -299,6 +304,12 @@ namespace Rawr.Retribution
         public override float Targets()
         {
             return Combats.CalcOpts.Targets;
+        }
+
+        public override float TickCount()
+        {
+            // Every second for 8 seconds
+            return 8;
         }
 
     }

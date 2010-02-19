@@ -169,6 +169,7 @@ namespace Rawr.Retribution
         public abstract float GetPhysicalAttacksPerSec();
         public abstract float GetMeleeCritsPerSec();
         public abstract float GetPhysicalCritsPerSec();
+        public abstract float GetAttacksPerSec();
 
         public abstract float GetJudgementCD();
         public abstract float GetCrusaderStrikeCD();
@@ -297,7 +298,7 @@ namespace Rawr.Retribution
 
         public override float GetPhysicalAttacksPerSec()
         {
-            // Physical hit procs, damage done procs and damage or healing done procs can be triggered by:
+            // Physical hit procs can be triggered by:
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
@@ -325,6 +326,25 @@ namespace Rawr.Retribution
             return GetMeleeCritsPerSec() + 
                 Solution.Judgement * Judge.ChanceToCrit() / Solution.FightLength * Judge.Targets() + 
                 Solution.HammerOfWrath * HoW.ChanceToCrit() / Solution.FightLength * HoW.Targets();
+        }
+
+        public override float GetAttacksPerSec()
+        {
+            // Damage done procs and damage or healing done procs can be triggered by:
+            // - Crusader Strike hits
+            // - Divine Storm hits
+            // - Weapon swing hits
+            // - Tiny Abomination in a Jar releasing attack hits
+            // (2 multiplier needs to be moved to another place)
+            // - Judgement hits
+            // - Hammer of Wrath hits
+            // - Consecration damage ticks
+            // - Exorcism hits
+
+            return GetPhysicalAttacksPerSec() +
+                Solution.Consecration * Cons.ChanceToLand() / Solution.FightLength * 
+                    Cons.Targets() * Cons.TickCount() +
+                Solution.Exorcism * Exo.ChanceToLand() / Solution.FightLength * Exo.Targets();
         }
 
         public override float GetCrusaderStrikeCD() { return Solution.FightLength / Solution.CrusaderStrike; }
@@ -426,7 +446,7 @@ namespace Rawr.Retribution
 
         public override float GetPhysicalAttacksPerSec()
         {
-            // Physical hit procs, damage done procs and damage or healing done procs can be triggered by:
+            // Physical hit procs can be triggered by:
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
@@ -456,6 +476,26 @@ namespace Rawr.Retribution
                 (Judge.ChanceToCrit() / _calcOpts.JudgeCD * Judge.Targets()) * (1f - _calcOpts.TimeUnder20) + 
                 (Judge.ChanceToCrit() / _calcOpts.JudgeCD20 * Judge.Targets() + 
                     HoW.ChanceToCrit() / _calcOpts.HoWCD20 * HoW.Targets()) * _calcOpts.TimeUnder20;
+        }
+
+        public override float GetAttacksPerSec()
+        {
+            // Damage done procs and damage or healing done procs can be triggered by:
+            // - Crusader Strike hits
+            // - Divine Storm hits
+            // - Weapon swing hits
+            // - Tiny Abomination in a Jar releasing attack hits
+            // (2 multiplier needs to be moved to another place)
+            // - Judgement hits
+            // - Hammer of Wrath hits
+            // - Consecration damage ticks
+            // - Exorcism hits
+
+            return GetPhysicalAttacksPerSec() +
+                (Cons.ChanceToLand() / _calcOpts.ConsCD * Cons.Targets() * Cons.TickCount() +
+                    Exo.ChanceToLand() / _calcOpts.ExoCD * Exo.Targets()) * (1f - _calcOpts.TimeUnder20) +
+                (Cons.ChanceToLand() / _calcOpts.ConsCD20 * Cons.Targets() * Cons.TickCount() +
+                    Exo.ChanceToLand() / _calcOpts.ExoCD20 * Exo.Targets()) * _calcOpts.TimeUnder20;
         }
 
         public override float GetCrusaderStrikeCD()

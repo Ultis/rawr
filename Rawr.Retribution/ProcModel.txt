@@ -37,6 +37,8 @@ Damage done procs can be triggered by:
 - Tiny Abomination in a Jar releasing attack hits
 - Judgement damage
 - Hammer of Wrath damage
+- Consecration damage ticks
+- Exorcism hits
 
 
 Damage or healing done procs can be triggered by:
@@ -46,7 +48,11 @@ Damage or healing done procs can be triggered by:
 - Tiny Abomination in a Jar releasing attack hits
 - Judgement damage
 - Hammer of Wrath damage
-
+- Consecration damage ticks
+- Exorcism hits
+(Divine Storm heal effect heals only if there damaged people nearby (or you), 
+  which is very unstable and should probably be ignored,
+  or should we add an "average people with damage nearby" option?)
 
 Tiny Abomination in a Jar doesn't have a proc currently. 
 But it's modelled as it's actually triggered twice as much as its trigger describes.

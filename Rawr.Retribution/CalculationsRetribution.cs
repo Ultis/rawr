@@ -480,13 +480,16 @@ namespace Rawr.Retribution
                     break;
 
                 case Trigger.PhysicalHit:
-                case Trigger.DamageDone:
                     trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    break;
+
+                case Trigger.DamageDone:
+                    trigger = 1f / rot.GetAttacksPerSec();
                     break;
 
                 case Trigger.DamageOrHealingDone:
                     // Need to add Self-heals
-                    trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    trigger = 1f / rot.GetAttacksPerSec();
                     break;
 
                 case Trigger.CrusaderStrikeHit:
