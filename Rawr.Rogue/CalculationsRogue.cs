@@ -779,12 +779,20 @@ namespace Rawr.Rogue
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
             float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed + hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed + hasteBonus));
+
+            //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand
+            float iPPS = 8.53f * (1f + statsTotal.BonusIPFrequencyMultiplier) / 60f;
+            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed + hasteBonus) * 0.3f;
+            float poisonHitInterval = 1 / (iPPS + dPPS);
+            
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
+            float spellHitBonus = statsTotal.SpellHit + StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.Rogue);
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
             float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80] - hitBonus);
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+            float chancePoisonAvoided = Math.Max(0f, StatConversion.GetSpellMiss(80 - targetLevel, false) - spellHitBonus);
 
             float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating)
                                 + StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Rogue)
@@ -803,6 +811,7 @@ namespace Rawr.Rogue
             triggerIntervals[Trigger.DoTTick] = 0f;
             triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
             triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to add Self-heals
+            triggerIntervals[Trigger.SpellHit] = poisonHitInterval;
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
@@ -811,6 +820,7 @@ namespace Rawr.Rogue
             triggerChances[Trigger.DoTTick] = 1f;
             triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
             triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to add Self-heals
+            triggerChances[Trigger.SpellHit] = Math.Max(0f, 1f - chancePoisonAvoided);
 
             // Handle Trinket procs
             Stats statsProcs = new Stats();
