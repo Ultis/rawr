@@ -720,7 +720,14 @@ namespace Rawr.Mage
             if (calculations.MageTalents.GlyphOfFireball)
             {
                 BasePeriodicDamage = 0.0f;
-                BaseCritRate += 0.05f;
+                if (calculations.CalculationOptions.Mode333)
+                {
+                    BaseCastTime -= 0.15f;
+                }
+                else
+                {
+                    BaseCritRate += 0.05f;
+                }
             }
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch + 0.05f * calculations.BaseStats.Mage4T9;
             DotDuration = 8;
