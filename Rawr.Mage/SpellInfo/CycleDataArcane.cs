@@ -4,6 +4,44 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    public static class FrostWardCycle
+    {
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
+        {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "Frost Ward+" + baseCycle.Name;
+
+            Spell FrostWard = castingState.GetSpell(SpellId.FrostWard);
+
+            // 1 ward every 30 seconds
+
+            cycle.AddSpell(needsDisplayCalculations, FrostWard, 1);
+            cycle.AddCycle(needsDisplayCalculations, baseCycle, (30 - FrostWard.CastTime) / baseCycle.CastTime);
+            cycle.Calculate();
+
+            return cycle;
+        }
+    }
+
+    public static class FireWardCycle
+    {
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
+        {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "Fire Ward+" + baseCycle.Name;
+
+            Spell FireWard = castingState.GetSpell(SpellId.FireWard);
+
+            // 1 ward every 30 seconds
+
+            cycle.AddSpell(needsDisplayCalculations, FireWard, 1);
+            cycle.AddCycle(needsDisplayCalculations, baseCycle, (30 - FireWard.CastTime) / baseCycle.CastTime);
+            cycle.Calculate();
+
+            return cycle;
+        }
+    }
+
     public static class ABAM
     {
         public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)

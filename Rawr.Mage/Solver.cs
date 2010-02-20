@@ -95,7 +95,7 @@ namespace Rawr.Mage
         private bool restrictManaUse;
         private bool needsTimeExtension;
         private bool conjureManaGem;
-        private bool wardsAvailable;
+        //private bool wardsAvailable;
 
         private bool heroismAvailable;
         private bool arcanePowerAvailable;
@@ -133,7 +133,7 @@ namespace Rawr.Mage
         private int rowPotion = -1;
         private int rowManaPotion = -1;
         private int rowConjureManaGem = -1;
-        private int rowWard = -1;
+        //private int rowWard = -1;
         private int rowManaGem = -1;
         private int rowManaGemMax = -1;
         private int rowHeroism = -1;
@@ -1605,7 +1605,7 @@ namespace Rawr.Mage
             needsTimeExtension = false;
             bool afterFightRegen = calculationOptions.FarmingMode;
             conjureManaGem = calculationOptions.ManaGemEnabled && calculationOptions.FightDuration > 500.0f;
-            wardsAvailable = calculationResult.IncomingDamageDpsFire + calculationResult.IncomingDamageDpsFrost > 0.0 && talents.FrostWarding > 0;
+            //wardsAvailable = calculationResult.IncomingDamageDpsFire + calculationResult.IncomingDamageDpsFrost > 0.0 && talents.FrostWarding > 0;
 
             minimizeTime = false;
             if (calculationOptions.TargetDamage > 0)
@@ -1625,12 +1625,13 @@ namespace Rawr.Mage
 
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateIndexList.Count) * segmentList.Count, calculationResult, segmentList.Count);
+            lp = new SolverLP(rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateIndexList.Count * (1 + (calculationOptions.UseFireWard ? 1 : 0) + (calculationOptions.UseFrostWard ? 1 : 0))) * segmentList.Count, calculationResult, segmentList.Count);
             calculationResult.ArraySet = lp.ArraySet;
 
             stateList = GetStateList(stateIndexList);
 
             SetCalculationReuseReferences();
+            AddWardStates();
 
             double tps, mps, dps;
             if (needsSolutionVariables)
@@ -2576,7 +2577,7 @@ namespace Rawr.Mage
                 }
                 #endregion
                 #region Fire/Frost Ward
-                if (wardsAvailable)
+                /*if (wardsAvailable)
                 {
 
                     int wardSegments = (restrictManaUse) ? segmentList.Count : 1;
@@ -2618,7 +2619,7 @@ namespace Rawr.Mage
                             }
                         }
                     }
-                }
+                }*/
                 #endregion
                 #region Spells
                 if (useIncrementalOptimizations)
@@ -2749,6 +2750,33 @@ namespace Rawr.Mage
                         break;
                     }
                 }
+            }
+        }
+
+        private void AddWardStates()
+        {
+            if (calculationOptions.UseFireWard || calculationOptions.UseFrostWard)
+            {
+                List<CastingState> newStates = new List<CastingState>();
+                foreach (CastingState state in stateList)
+                {
+                    newStates.Add(state);
+                    if (calculationOptions.UseFireWard)
+                    {
+                        CastingState s = new CastingState(calculationResult, state.Effects, false, 0);
+                        s.UseFireWard = true;
+                        s.ReferenceCastingState = state;
+                        newStates.Add(s);
+                    }
+                    if (calculationOptions.UseFrostWard)
+                    {
+                        CastingState s = new CastingState(calculationResult, state.Effects, false, 0);
+                        s.UseFrostWard = true;
+                        s.ReferenceCastingState = state;
+                        newStates.Add(s);
+                    }
+                }
+                stateList = newStates.ToArray();
             }
         }
 
@@ -2990,7 +3018,7 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGem, Math.Min(3, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem));
             lp.SetRHSUnsafe(rowManaGemMax, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, calculationResult.MaxConjureManaGem * calculationResult.ConjureManaGem.CastTime);
-            if (wardsAvailable) lp.SetRHSUnsafe(rowWard, calculationResult.MaxWards * calculationResult.Ward.CastTime);
+            //if (wardsAvailable) lp.SetRHSUnsafe(rowWard, calculationResult.MaxWards * calculationResult.Ward.CastTime);
 
             foreach (EffectCooldown cooldown in cooldownList)
             {
@@ -3243,10 +3271,10 @@ namespace Rawr.Mage
             {
                 rowConjureManaGem = rowCount++;
             }
-            if (wardsAvailable)
+            /*if (wardsAvailable)
             {
                 rowWard = rowCount++;
-            }
+            }*/
             //if (heroismAvailable) rowHeroism = rowCount++;
             //if (arcanePowerAvailable) rowArcanePower = rowCount++;
             //if (powerInfusionAvailable) rowPowerInfusion = rowCount++;

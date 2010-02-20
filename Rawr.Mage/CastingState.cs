@@ -125,6 +125,8 @@ namespace Rawr.Mage
         public bool MirrorImage { get; private set; }
         public bool PowerInfusion { get; private set; }
         public bool Frozen { get; set; }
+        public bool UseFireWard { get; set; }
+        public bool UseFrostWard { get; set; }
 
         private int effects;
         public int Effects
@@ -285,6 +287,8 @@ namespace Rawr.Mage
             CastingState state = calculations.NeedsDisplayCalculations ? new CastingState() : calculations.ArraySet.NewCastingState();
             state.Calculations = calculations;
             state.ReferenceCastingState = null;
+            state.UseFireWard = false;
+            state.UseFrostWard = false;
             state.Effects = effects;
             state.buffLabel = null;
             state.SpellsCount = 0;
@@ -296,6 +300,8 @@ namespace Rawr.Mage
         public void Initialize(CharacterCalculationsMage calculations, int effects, bool frozen, float procHasteRating)
         {
             frozenState = null;
+            UseFireWard = false;
+            UseFrostWard = false;
             maintainSnareState = null;
             tier10TwoPieceState = null;
             ReferenceCastingState = null;            
@@ -461,6 +467,15 @@ namespace Rawr.Mage
             }
             if (c != null)
             {
+                if (UseFireWard)
+                {
+                    c = FireWardCycle.GetCycle(Calculations.NeedsDisplayCalculations, this, c);
+                }
+                else if (UseFrostWard)
+                {
+                    c = FrostWardCycle.GetCycle(Calculations.NeedsDisplayCalculations, this, c);
+                }
+
                 c.CycleId = cycleId;
                 //Cycles[(int)cycleId] = c;
                 //Cycles.Add(c);

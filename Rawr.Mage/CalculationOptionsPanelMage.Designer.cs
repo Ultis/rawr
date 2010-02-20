@@ -358,6 +358,10 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.label130 = new System.Windows.Forms.Label();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.label131 = new System.Windows.Forms.Label();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -2702,6 +2706,10 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.label131);
+            this.tabPage5.Controls.Add(this.checkBox7);
+            this.tabPage5.Controls.Add(this.label130);
+            this.tabPage5.Controls.Add(this.checkBox6);
             this.tabPage5.Controls.Add(this.textBoxChanceToLiveAttenuation);
             this.tabPage5.Controls.Add(this.label90);
             this.tabPage5.Controls.Add(this.textBoxAbsorptionPerSecond);
@@ -3845,6 +3853,46 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // label130
+            // 
+            this.label130.AutoSize = true;
+            this.label130.Location = new System.Drawing.Point(-1, 395);
+            this.label130.Name = "label130";
+            this.label130.Size = new System.Drawing.Size(85, 13);
+            this.label130.TabIndex = 243;
+            this.label130.Text = "Use Fire Ward: *";
+            this.toolTipMage.SetToolTip(this.label130, "Allows use of Fire Ward every 30 seconds.");
+            // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "UseFireWard", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox6.Location = new System.Drawing.Point(128, 395);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(15, 14);
+            this.checkBox6.TabIndex = 242;
+            this.checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // label131
+            // 
+            this.label131.AutoSize = true;
+            this.label131.Location = new System.Drawing.Point(-1, 415);
+            this.label131.Name = "label131";
+            this.label131.Size = new System.Drawing.Size(91, 13);
+            this.label131.TabIndex = 245;
+            this.label131.Text = "Use Frost Ward: *";
+            this.toolTipMage.SetToolTip(this.label131, "Allows use of Frost Ward every 30 seconds.");
+            // 
+            // checkBox7
+            // 
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "UseFrostWard", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox7.Location = new System.Drawing.Point(128, 415);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(15, 14);
+            this.checkBox7.TabIndex = 244;
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
             // calculationOptionsMageBindingSource
             // 
             this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
@@ -4227,6 +4275,10 @@
         private System.Windows.Forms.CheckBox checkBoxPVP;
         private System.Windows.Forms.Label label129;
         private System.Windows.Forms.CheckBox checkBoxEnable2T10Evocation;
+        private System.Windows.Forms.Label label131;
+        private System.Windows.Forms.CheckBox checkBox7;
+        private System.Windows.Forms.Label label130;
+        private System.Windows.Forms.CheckBox checkBox6;
 
     }
 }

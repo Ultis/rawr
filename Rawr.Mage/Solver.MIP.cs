@@ -2196,9 +2196,9 @@ namespace Rawr.Mage
                 case VariableType.ConjureManaGem:
                     row = rowConjureManaGem;
                     break;
-                case VariableType.Ward:
+                /*case VariableType.Ward:
                     row = rowWard;
-                    break;
+                    break;*/
             }
             if (!valid)
             {

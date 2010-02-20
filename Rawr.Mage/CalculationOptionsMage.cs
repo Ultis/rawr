@@ -65,6 +65,20 @@ namespace Rawr.Mage
             set { _Mode333 = value; OnPropertyChanged("Mode333"); }
         }
 
+        private bool _UseFireWard;
+        public bool UseFireWard
+        {
+            get { return _UseFireWard; }
+            set { _UseFireWard = value; OnPropertyChanged("UseFireWard"); }
+        }
+
+        private bool _UseFrostWard;
+        public bool UseFrostWard
+        {
+            get { return _UseFrostWard; }
+            set { _UseFrostWard = value; OnPropertyChanged("UseFrostWard"); }
+        }
+
         private float _FrostbiteUtilization;
         public float FrostbiteUtilization
         {

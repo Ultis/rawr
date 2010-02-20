@@ -968,6 +968,7 @@ namespace Rawr.Mage
             DotProcs += weight * cycle.DotProcs;
             TargetProcs += weight * cycle.TargetProcs;
             DamageProcs += weight * cycle.DamageProcs;
+            Absorbed += weight * cycle.Absorbed;
             costPerSecond += weight * cycle.CastTime * cycle.costPerSecond;
             damagePerSecond += weight * cycle.CastTime * cycle.damagePerSecond;
             threatPerSecond += weight * cycle.CastTime * cycle.threatPerSecond;
@@ -992,6 +993,7 @@ namespace Rawr.Mage
             DotProcs += weight * spell.DotProcs;
             TargetProcs += weight * spell.TargetProcs;
             DamageProcs += weight * (spell.HitProcs + spell.DotProcs);
+            Absorbed += weight * spell.TotalAbsorb;
             costPerSecond += weight * spell.AverageCost;
             damagePerSecond += weight * spell.AverageDamage;
             threatPerSecond += weight * spell.AverageThreat;
@@ -1016,6 +1018,7 @@ namespace Rawr.Mage
             DotProcs += weight * dotUptime * spell.DotProcs;
             TargetProcs += weight * spell.TargetProcs;
             DamageProcs += weight * (spell.HitProcs + dotUptime * spell.DotProcs);
+            Absorbed += weight * spell.TotalAbsorb;
             costPerSecond += weight * spell.AverageCost;
             damagePerSecond += weight * (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
             threatPerSecond += weight * (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
