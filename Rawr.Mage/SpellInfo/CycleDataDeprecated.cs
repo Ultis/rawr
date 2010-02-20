@@ -69,7 +69,7 @@ namespace Rawr.Mage
         }
     }*/
 
-    class ABP : StaticCycle
+    /*class ABP : StaticCycle
     {
         public ABP(CastingState castingState)
             : base(3)
@@ -83,7 +83,7 @@ namespace Rawr.Mage
 
             Calculate(castingState);
         }
-    }
+    }*/
 
     class ABarAM : DynamicCycle
     {
@@ -204,7 +204,7 @@ namespace Rawr.Mage
         }
     }
 
-    class FBABarSlow : DynamicCycle
+    /*class FBABarSlow : DynamicCycle
     {
         public FBABarSlow(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -343,9 +343,9 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-    }
+    }*/
 
-    class ABABarY : DynamicCycle
+    /*class ABABarY : DynamicCycle
     {
         public ABABarY(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -399,7 +399,7 @@ namespace Rawr.Mage
             AddCycle(needsDisplayCalculations, chain2, S1);
             Calculate();
         }
-    }
+    }*/
 
     class AB2ABarMBAM : DynamicCycle
     {
@@ -462,7 +462,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3ABar : DynamicCycle
+    /*class AB3ABar : DynamicCycle
     {
         public AB3ABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -982,9 +982,9 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-    }
+    }*/
 
-    class FBABar : DynamicCycle
+    /*class FBABar : DynamicCycle
     {
         public FBABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1042,9 +1042,9 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-    }
+    }*/
 
-    class FrBABar : DynamicCycle
+    /*class FrBABar : DynamicCycle
     {
         public FrBABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1161,7 +1161,7 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-    }
+    }*/
 
     /*class AB : Cycle
     {
@@ -1370,7 +1370,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB32AMABar : DynamicCycle
+    /*class AB32AMABar : DynamicCycle
     {
         public AB32AMABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1524,7 +1524,7 @@ namespace Rawr.Mage
             AddCycle(needsDisplayCalculations, chain2, K2);
             Calculate();
         }
-    }
+    }*/
 
     /*class AB3AMSc : StaticCycle
     {
@@ -1554,7 +1554,7 @@ namespace Rawr.Mage
         }
     }*/
 
-    class ABABar : StaticCycle
+    /*class ABABar : StaticCycle
     {
         public ABABar(CastingState castingState)
             : base(3)
@@ -1570,7 +1570,7 @@ namespace Rawr.Mage
 
             Calculate(castingState);
         }
-    }
+    }*/
 
     /*class ABAM3Sc : StaticCycle
     {
@@ -2871,4 +2871,114 @@ class ABAM3CCAM : DynamicCycle
         }
     }
 }*/
+
+    /*class FBSc : StaticCycle
+    {
+        public FBSc(CastingState castingState)
+            : base(33)
+        {
+            Name = "FBSc";
+
+            Spell FB = castingState.GetSpell(SpellId.Fireball);
+            Spell Sc = castingState.GetSpell(SpellId.Scorch);
+
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                // in this case just Fireball, scorch debuff won't be applied
+                AddSpell(FB, castingState);
+                Calculate(castingState);
+            }
+            else
+            {
+                ProvidesScorch = true;
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+                int extraScorches = 0;
+                double timeOnScorch = 30;
+                int fbCount = 0;
+
+                while (timeOnScorch > FB.CastTime + (averageScorchesNeeded + extraScorches) * Sc.CastTime) // one extra scorch gap to account for possible resist
+                {
+                    AddSpell(FB, castingState);
+                    fbCount++;
+                    timeOnScorch -= FB.CastTime;
+                }
+                for (int i = 0; i < averageScorchesNeeded; i++)
+                {
+                    AddSpell(Sc, castingState);
+                }
+
+                Calculate(castingState);
+            }
+        }
+    }
+
+    class FBFBlast : StaticCycle
+    {
+        public FBFBlast(CastingState castingState)
+            : base(33)
+        {
+            Name = "FBFBlast";
+
+            Spell FB = castingState.GetSpell(SpellId.Fireball);
+            Spell Blast = castingState.GetSpell(SpellId.FireBlast);
+            Spell Sc = castingState.GetSpell(SpellId.Scorch);
+
+            if (castingState.MageTalents.ImprovedScorch == 0 || !castingState.CalculationOptions.MaintainScorch)
+            {
+                // in this case just Fireball/Fire Blast, scorch debuff won't be applied
+                float blastCooldown = Blast.Cooldown - Blast.CastTime;
+                AddSpell(Blast, castingState);
+                while (blastCooldown > 0)
+                {
+                    AddSpell(FB, castingState);
+                    blastCooldown -= FB.CastTime;
+                }
+                Calculate(castingState);
+            }
+            else
+            {
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+                int extraScorches = 0;
+                double timeOnScorch = 30;
+                int fbCount = 0;
+                float blastCooldown = 0;
+
+                do
+                {
+                    float expectedTimeWithBlast = Blast.CastTime + (int)((timeOnScorch - (blastCooldown > 0f ? blastCooldown : 0f) - Blast.CastTime - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / FB.CastTime) * FB.CastTime + averageScorchesNeeded * Sc.CastTime;
+                    if (expectedTimeWithBlast > Blast.Cooldown && (blastCooldown <= 0 || (Blast.AverageDamage / (Blast.CastTime + blastCooldown) > FB.DamagePerSecond)))
+                    {
+                        if (blastCooldown > 0)
+                        {
+                            AddPause(blastCooldown);
+                            timeOnScorch -= blastCooldown;
+                        }
+                        AddSpell(Blast, castingState);
+                        fbCount++;
+                        timeOnScorch -= Blast.CastTime;
+                        blastCooldown = Blast.Cooldown - Blast.CastTime;
+                    }
+                    else if (timeOnScorch > FB.CastTime + (averageScorchesNeeded + extraScorches) * Sc.CastTime) // one extra scorch gap to account for possible resist
+                    {
+                        AddSpell(FB, castingState);
+                        fbCount++;
+                        timeOnScorch -= FB.CastTime;
+                        blastCooldown -= FB.CastTime;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+                for (int i = 0; i < averageScorchesNeeded; i++)
+                {
+                    AddSpell(Sc, castingState);
+                    blastCooldown -= Sc.CastTime;
+                }
+                if (blastCooldown > 0) AddPause(blastCooldown);
+
+                Calculate(castingState);
+            }
+        }
+    }*/
 }

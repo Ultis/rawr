@@ -1527,7 +1527,7 @@ namespace Rawr.Mage
             calculationResult.IncomingDamageDpsHoly = calculationResult.IncomingDamageAmpHoly * (calculationOptions.HolyDps * (1 + Math.Max(0, calculationOptions.HolyCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.HolyDot);
 
             calculationResult.IncomingDamageDps = calculationResult.IncomingDamageDpsMelee + calculationResult.IncomingDamageDpsPhysical + calculationResult.IncomingDamageDpsArcane + calculationResult.IncomingDamageDpsFire + calculationResult.IncomingDamageDpsFrost + calculationResult.IncomingDamageDpsShadow + calculationResult.IncomingDamageDpsNature + calculationResult.IncomingDamageDpsHoly;
-            float incanterSpellPower = Math.Min((float)Math.Min(calculationOptions.AbsorptionPerSecond, calculationResult.IncomingDamageDps) * 0.05f * talents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
+            //float incanterSpellPower = Math.Min((float)Math.Min(calculationOptions.AbsorptionPerSecond, calculationResult.IncomingDamageDps) * 0.05f * talents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
             if (calculationOptions.AbsorptionPerSecond > calculationResult.IncomingDamageDps)
             {
                 calculationResult.IncomingDamageDps = 0.0f;
@@ -1537,12 +1537,12 @@ namespace Rawr.Mage
                 calculationResult.IncomingDamageDps -= calculationOptions.AbsorptionPerSecond;
             }
 
-            calculationResult.BaseArcaneSpellPower = baseStats.SpellArcaneDamageRating + baseStats.SpellPower + incanterSpellPower;
-            calculationResult.BaseFireSpellPower = baseStats.SpellFireDamageRating + baseStats.SpellPower + incanterSpellPower;
-            calculationResult.BaseFrostSpellPower = baseStats.SpellFrostDamageRating + baseStats.SpellPower + incanterSpellPower;
-            calculationResult.BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower + incanterSpellPower;
-            calculationResult.BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower + incanterSpellPower;
-            calculationResult.BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower + incanterSpellPower;
+            calculationResult.BaseArcaneSpellPower = baseStats.SpellArcaneDamageRating + baseStats.SpellPower;
+            calculationResult.BaseFireSpellPower = baseStats.SpellFireDamageRating + baseStats.SpellPower;
+            calculationResult.BaseFrostSpellPower = baseStats.SpellFrostDamageRating + baseStats.SpellPower;
+            calculationResult.BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower;
+            calculationResult.BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
+            calculationResult.BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
         }
 
         private float EvaluateSurvivability()
@@ -3883,14 +3883,7 @@ namespace Rawr.Mage
                             {
                                 list.Add(CycleId.FBScLBPyro);
                             }
-                            if (talents.HotStreak > 0)
-                            {
-                                list.Add(CycleId.FBScPyro);
-                            }
-                            else
-                            {
-                                list.Add(CycleId.FBSc);
-                            }
+                            list.Add(CycleId.FBScPyro);
                         }
                     }
                     else
@@ -3900,14 +3893,7 @@ namespace Rawr.Mage
                             list.Add(CycleId.FBScLBPyro);
                             list.Add(CycleId.ScLBPyro);
                         }
-                        if (talents.HotStreak > 0)
-                        {
-                            list.Add(CycleId.FBScPyro);
-                        }
-                        else
-                        {
-                            list.Add(CycleId.FBSc);
-                        }
+                        list.Add(CycleId.FBScPyro);
                         if (calculationOptions.PlayerLevel >= 75)
                         {
                             list.Add(CycleId.FFBScPyro);
@@ -3916,7 +3902,6 @@ namespace Rawr.Mage
                                 list.Add(CycleId.FFBScLBPyro);
                             }
                         }
-                        list.Add(CycleId.FBFBlast);
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
                             list.Add(CycleId.ABABarSc);
@@ -4042,7 +4027,6 @@ namespace Rawr.Mage
                             list.Add(CycleId.FFBPyro);
                             if (talents.LivingBomb > 0) list.Add(CycleId.FFBLBPyro);
                         }
-                        list.Add(CycleId.FBFBlast);
                         if (talents.LivingBomb > 0) list.Add(CycleId.FBLBPyro);
                         list.Add(CycleId.FrostboltFOF);
                         if (talents.BrainFreeze > 0) list.Add(CycleId.FrBFB);

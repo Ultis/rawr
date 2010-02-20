@@ -164,13 +164,6 @@ namespace Rawr.Mage
         }
     }
 
-    public class AbsorbSpell : Spell
-    {
-        public AbsorbSpell(SpellTemplate template) : base(template) { }
-
-        public float Absorb;
-    }
-
     public class Spell
     {
         public SpellId SpellId; // set in CastingState.GetSpell
@@ -215,6 +208,8 @@ namespace Rawr.Mage
         public float AverageDamage;
         public float AverageThreat;
         public float AverageCost;
+        public float Absorb; // max absorb on single impact
+        public float TotalAbsorb; // total absorb with combined warding negates
         //public float IgniteDamagePerSecond;
         //public float IgniteDpsPerSpellPower;
         public float IgniteDamage;
@@ -381,6 +376,7 @@ namespace Rawr.Mage
                 OO5SR = spell.OO5SR;
                 AreaEffect = spell.AreaEffect;
                 DpsPerSpellPower = spell.DamagePerSpellPower / spell.CastTime;
+                Absorbed = spell.TotalAbsorb;
                 if (AreaEffect) AoeSpell = spell;
             }
 
@@ -459,6 +455,8 @@ namespace Rawr.Mage
             s.IgniteDamage = reference.IgniteDamage;
             s.IgniteDamagePerSpellPower = reference.IgniteDamagePerSpellPower;
             s.DamagePerSpellPower = reference.DamagePerSpellPower;
+            s.Absorb = reference.Absorb;
+            s.TotalAbsorb = reference.TotalAbsorb;
 
             s.RecalculateCastTime(castingState);
 
@@ -636,6 +634,9 @@ namespace Rawr.Mage
                 CastTime *= (1 - ChannelReduction);
             }
             AverageCost = CalculateCost(castingState.Calculations, round);
+
+            Absorb = 0;
+            TotalAbsorb = 0;
 
             if (outOfFiveSecondRule)
             {

@@ -438,7 +438,7 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            AbsorbSpell spell = new AbsorbSpell(this);
+            Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState);
             // 70% absorbed, 30% negated
@@ -448,6 +448,7 @@ namespace Rawr.Mage
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FireSpellPower;
             spell.Absorb = absorb;
+            spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             return spell;
         }
@@ -485,12 +486,13 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            AbsorbSpell spell = new AbsorbSpell(this);
+            Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState);
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FrostSpellPower;
             spell.Absorb = absorb;
+            spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
             return spell;
         }

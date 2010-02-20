@@ -33,7 +33,6 @@
             this.tabControlFight2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label89 = new System.Windows.Forms.Label();
             this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -48,6 +47,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label129 = new System.Windows.Forms.Label();
+            this.checkBoxEnable2T10Evocation = new System.Windows.Forms.CheckBox();
             this.label126 = new System.Windows.Forms.Label();
             this.checkBoxMirrorImage = new System.Windows.Forms.CheckBox();
             this.textBoxFrostbiteUtilization = new System.Windows.Forms.TextBox();
@@ -357,11 +358,9 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label129 = new System.Windows.Forms.Label();
-            this.checkBoxEnable2T10Evocation = new System.Windows.Forms.CheckBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage8.SuspendLayout();
@@ -382,6 +381,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
             this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlFight2
@@ -436,11 +436,6 @@
             this.textBoxChannelLatency.Name = "textBoxChannelLatency";
             this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxChannelLatency.TabIndex = 159;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label89
             // 
@@ -641,6 +636,27 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label129
+            // 
+            this.label129.AutoSize = true;
+            this.label129.Location = new System.Drawing.Point(-1, 328);
+            this.label129.Name = "label129";
+            this.label129.Size = new System.Drawing.Size(93, 13);
+            this.label129.TabIndex = 206;
+            this.label129.Text = "2T10 Evocation: *";
+            this.toolTipMage.SetToolTip(this.label129, "Enable this to use Evocation with 2T10 buff, only has effect if you actually have" +
+                    " 2T10 equipped.");
+            // 
+            // checkBoxEnable2T10Evocation
+            // 
+            this.checkBoxEnable2T10Evocation.AutoSize = true;
+            this.checkBoxEnable2T10Evocation.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Enable2T10Evocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxEnable2T10Evocation.Location = new System.Drawing.Point(141, 328);
+            this.checkBoxEnable2T10Evocation.Name = "checkBoxEnable2T10Evocation";
+            this.checkBoxEnable2T10Evocation.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxEnable2T10Evocation.TabIndex = 205;
+            this.checkBoxEnable2T10Evocation.UseVisualStyleBackColor = true;
             // 
             // label126
             // 
@@ -3289,22 +3305,20 @@
             this.label107.AutoSize = true;
             this.label107.Location = new System.Drawing.Point(0, 147);
             this.label107.Name = "label107";
-            this.label107.Size = new System.Drawing.Size(63, 13);
+            this.label107.Size = new System.Drawing.Size(72, 13);
             this.label107.TabIndex = 212;
-            this.label107.Text = "Patch 3.3: *";
-            this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.");
-            this.label107.Visible = false;
+            this.label107.Text = "Patch 3.3.3: *";
+            this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.3.");
             // 
             // checkBoxMode33
             // 
             this.checkBoxMode33.AutoSize = true;
-            this.checkBoxMode33.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode33", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMode33.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode333", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxMode33.Location = new System.Drawing.Point(209, 147);
             this.checkBoxMode33.Name = "checkBoxMode33";
             this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMode33.TabIndex = 211;
             this.checkBoxMode33.UseVisualStyleBackColor = true;
-            this.checkBoxMode33.Visible = false;
             // 
             // label85
             // 
@@ -3831,26 +3845,10 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label129
+            // calculationOptionsMageBindingSource
             // 
-            this.label129.AutoSize = true;
-            this.label129.Location = new System.Drawing.Point(-1, 328);
-            this.label129.Name = "label129";
-            this.label129.Size = new System.Drawing.Size(93, 13);
-            this.label129.TabIndex = 206;
-            this.label129.Text = "2T10 Evocation: *";
-            this.toolTipMage.SetToolTip(this.label129, "Enable this to use Evocation with 2T10 buff, only has effect if you actually have" +
-                    " 2T10 equipped.");
-            // 
-            // checkBoxEnable2T10Evocation
-            // 
-            this.checkBoxEnable2T10Evocation.AutoSize = true;
-            this.checkBoxEnable2T10Evocation.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Enable2T10Evocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxEnable2T10Evocation.Location = new System.Drawing.Point(141, 328);
-            this.checkBoxEnable2T10Evocation.Name = "checkBoxEnable2T10Evocation";
-            this.checkBoxEnable2T10Evocation.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxEnable2T10Evocation.TabIndex = 205;
-            this.checkBoxEnable2T10Evocation.UseVisualStyleBackColor = true;
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -3863,7 +3861,6 @@
             this.tabControlFight2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -3894,6 +3891,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}

@@ -151,6 +151,7 @@ namespace Rawr.Mage
             costPerSecond = 0;
             manaRegenPerSecond = 0;
             DpsPerSpellPower = 0;
+            Absorbed = 0;
 
             AffectedByFlameCap = false;
             ProvidesSnare = false;
@@ -226,6 +227,7 @@ namespace Rawr.Mage
             }
         }
 
+        public float Absorbed;
         public float DpsPerSpellPower;
 
         public bool AffectedByFlameCap;
@@ -330,6 +332,18 @@ namespace Rawr.Mage
                     }
                 }
                 if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            }
+            if (CastingState.MageTalents.IncantersAbsorption > 0)
+            {
+                //float incanterSpellPower = Math.Min((float)Math.Min(calculationOptions.AbsorptionPerSecond, calculationResult.IncomingDamageDps) * 0.05f * talents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
+                if (CastingState.CalculationOptions.Mode333)
+                {
+                    spellPower += Absorbed / CastTime * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10;
+                }
+                else
+                {
+                    spellPower += Math.Min((float)Math.Min(CastingState.CalculationOptions.AbsorptionPerSecond + Absorbed / CastTime, CastingState.Calculations.IncomingDamageDps) * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
+                }
             }
             effectSpellPower = spellPower;
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
@@ -905,135 +919,6 @@ namespace Rawr.Mage
                 AddSpell(needsDisplayCalculations, castingState.GetSpell(spellWeight.Spell), spellWeight.Weight);
             }
             Calculate();
-        }
-    }
-
-    public class StaticCycle : Cycle
-    {
-        public bool recalc5SR;
-
-        private List<Spell> spellList;
-        private FSRCalc fsr;
-
-        public StaticCycle()
-            : base(null)
-        {
-            spellList = new List<Spell>();
-        }
-
-        public StaticCycle(int capacity)
-            : base(null)
-        {
-            spellList = new List<Spell>(capacity);
-        }
-
-        public StaticCycle(int capacity, bool recalcFiveSecondRule)
-            : base(null)
-        {
-            spellList = new List<Spell>(capacity);
-            recalc5SR = recalcFiveSecondRule;
-            if (recalc5SR)
-            {
-                fsr = new FSRCalc(capacity);
-            }
-        }
-
-        public void AddSpell(Spell spell, CastingState castingState)
-        {
-            if (recalc5SR)
-            {
-                fsr.AddSpell(spell.CastTime - spell.Latency, spell.Latency, spell.Channeled);
-            }
-            Ticks += spell.Ticks;
-            CastTime += spell.CastTime;
-            NukeProcs += spell.NukeProcs;
-            HitProcs += spell.HitProcs;
-            CastProcs += spell.CastProcs;
-            CastProcs2 += spell.CastProcs2;
-            CritProcs += spell.CritProcs;
-            IgniteProcs += spell.IgniteProcs;
-            DotProcs += spell.DotProcs;
-            TargetProcs += spell.TargetProcs;
-            DamageProcs += spell.HitProcs + spell.DotProcs;
-            damagePerSecond += spell.AverageDamage;
-            threatPerSecond += spell.AverageThreat;
-            costPerSecond += spell.AverageCost;
-            DpsPerSpellPower += spell.DamagePerSpellPower;
-            AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
-            spellList.Add(spell);
-        }
-
-        public void AddSpell(DotSpell spell, CastingState castingState, float dotUptime)
-        {
-            if (recalc5SR)
-            {
-                fsr.AddSpell(spell.CastTime - spell.Latency, spell.Latency, spell.Channeled);
-            }
-            Ticks += spell.Ticks;
-            CastTime += spell.CastTime;
-            NukeProcs += spell.NukeProcs;
-            HitProcs += spell.HitProcs;
-            CastProcs += spell.CastProcs;
-            CastProcs2 += spell.CastProcs2;
-            CritProcs += spell.CritProcs;
-            IgniteProcs += spell.IgniteProcs;
-            DotProcs += dotUptime * spell.DotProcs;
-            TargetProcs += spell.TargetProcs;
-            DamageProcs += spell.HitProcs + dotUptime * spell.DotProcs;
-            damagePerSecond += (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
-            threatPerSecond += (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
-            costPerSecond += spell.AverageCost;
-            DpsPerSpellPower += (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
-            AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
-            spellList.Add(spell);
-        }
-
-        public void AddPause(float duration)
-        {
-            if (recalc5SR)
-            {
-                fsr.AddPause(duration);
-            }
-            CastTime += duration;
-            spellList.Add(null);
-        }
-
-        public void Calculate(CastingState castingState)
-        {
-            //CastTime = fsr.Duration;
-
-            costPerSecond /= CastTime;
-            damagePerSecond /= CastTime;
-            threatPerSecond /= CastTime;
-            DpsPerSpellPower /= CastTime;
-            this.CastingState = castingState;
-
-            if (recalc5SR)
-            {
-                OO5SR = fsr.CalculateOO5SR(0.02f * castingState.MageTalents.ArcaneConcentration);
-            }
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
-        {
-            foreach (Spell spell in spellList)
-            {
-                if (spell != null)
-                {
-                    spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime, effectSpellPower);
-                }
-            }
-        }
-
-        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
-        {
-            foreach (Spell spell in spellList)
-            {
-                if (spell != null)
-                {
-                    spell.AddManaUsageContribution(dict, spell.CastTime * duration / CastTime);
-                }
-            }
         }
     }
 

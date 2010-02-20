@@ -509,7 +509,6 @@ namespace Rawr.Mage
                             }
                             if (procs == 0.0f) continue;
                             // until they put in some good trinkets with such effects just do a quick dirty calculation
-                            float effectHasteRating;
                             if (procs > baseCycle.Ticks)
                             {
                                 // some 100% on cast procs, happens because AM has 6 cast procs and only 5 ticks
@@ -676,9 +675,9 @@ namespace Rawr.Mage
                 case CycleId.ABarAM:
                     c = new ABarAM(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.ABP:
+                /*case CycleId.ABP:
                     c = new ABP(this);
-                    break;
+                    break;*/
                 case CycleId.ABAM:
                     c = ABAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -724,30 +723,30 @@ namespace Rawr.Mage
                 case CycleId.ABABar0MBAM:
                     c = new ABABar0MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.ABABar:
+                /*case CycleId.ABABar:
                     c = new ABABar(this);
-                    break;
+                    break;*/
                 case CycleId.ABSpam3MBAM:
                     c = new ABSpam3MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam03MBAM:
                     c = new ABSpam03MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.ABAMABar:
+                /*case CycleId.ABAMABar:
                     c = new ABAMABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2AMABar:
                     c = new AB2AMABar(Calculations.NeedsDisplayCalculations, this);
-                    break;
+                    break;*/
                 case CycleId.AB3AMABar:
                     c = AB3AMABar.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AMABar2C:
                     c = new AB3AMABar2C(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.AB32AMABar:
+                /*case CycleId.AB32AMABar:
                     c = new AB32AMABar(Calculations.NeedsDisplayCalculations, this);
-                    break;
+                    break;*/
                 case CycleId.AB3ABar3C:
                     c = new AB3ABar3C(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -757,19 +756,19 @@ namespace Rawr.Mage
                 case CycleId.ABABar1C:
                     c = new ABABar1C(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.ABABarY:
+                /*case CycleId.ABABarY:
                     c = new ABABarY(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABar:
                     c = new AB2ABar(Calculations.NeedsDisplayCalculations, this);
-                    break;
+                    break;*/
                 case CycleId.AB2ABar2C:
                     c = new AB2ABar2C(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABarMBAM:
                     c = new AB2ABarMBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.AB3ABar:
+                /*case CycleId.AB3ABar:
                     c = new AB3ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3ABarX:
@@ -786,7 +785,7 @@ namespace Rawr.Mage
                     break;
                 case CycleId.FFBABar:
                     c = new FFBABar(Calculations.NeedsDisplayCalculations, this);
-                    break;
+                    break;*/
                 /*case CycleId.ABAMP:
                     c = new ABAMP(this);
                     break;
@@ -826,12 +825,12 @@ namespace Rawr.Mage
                 case CycleId.AB3Sc:
                     c = new AB3Sc(this);
                     break;*/
-                case CycleId.FBSc:
+                /*case CycleId.FBSc:
                     c = new FBSc(this);
                     break;
                 case CycleId.FBFBlast:
                     c = new FBFBlast(this);
-                    break;
+                    break;*/
                 case CycleId.FrBFBIL:
                     c = FrBFBIL.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -850,24 +849,24 @@ namespace Rawr.Mage
                 case CycleId.FBScLBPyro:
                     c = FBScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.FB2ABar:
+                /*case CycleId.FB2ABar:
                     c = new FB2ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrB2ABar:
                     c = new FrB2ABar(Calculations.NeedsDisplayCalculations, this);
-                    break;
+                    break;*/
                 case CycleId.ScLBPyro:
                     c = ScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABarSlow:
                     c = new ABABarSlow(Calculations.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.FBABarSlow:
+                /*case CycleId.FBABarSlow:
                     c = new FBABarSlow(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBABarSlow:
                     c = new FrBABarSlow(Calculations.NeedsDisplayCalculations, this);
-                    break;
+                    break;*/
                 case CycleId.CustomSpellMix:
                     c = new SpellCustomMix(Calculations.NeedsDisplayCalculations, this);
                     break;
