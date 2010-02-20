@@ -861,6 +861,9 @@ namespace Rawr.Mage
                 case CycleId.FrBFB:
                     c = FrBFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.FrBFFB:
+                    c = FrBFFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.FBScLBPyro:
                     c = FBScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -957,6 +960,9 @@ namespace Rawr.Mage
                     case SpellId.FrostfireBoltFOF:
                         s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true, false);
                         break;
+                    case SpellId.FrostfireBoltBFFOF:
+                        s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true, true);
+                        break;
                     case SpellId.ArcaneMissiles:
                         s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 0);
                         break;
@@ -1008,7 +1014,7 @@ namespace Rawr.Mage
                     case SpellId.FrostfireBolt:
                         s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, false);
                         break;
-                    case SpellId.FrostfireBoltFC:
+                    case SpellId.FrostfireBoltBF:
                         s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, true);
                         break;
                     case SpellId.Pyroblast:

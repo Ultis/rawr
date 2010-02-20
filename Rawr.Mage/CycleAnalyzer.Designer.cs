@@ -166,6 +166,17 @@
                 "sec Deep Freeze cooldown)",
             "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 " +
                 "sec Deep Freeze cooldown, no latency combos)",
+            "Frost+Deep Freeze",
+            "FrostFFB+Deep Freeze (no latency combos)",
+            "FrostFFB+Deep Freeze (2T10 duration collapsed)",
+            "FrostFFB+Deep Freeze (2T10 duration collapsed, no latency combos)",
+            "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed)",
+            "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, " +
+                "no latency combos)",
+            "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, " +
+                "10 sec Deep Freeze cooldown)",
+            "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, " +
+                "10 sec Deep Freeze cooldown, no latency combos)",
             "Fire"});
             this.comboBoxCycleGenerator.Location = new System.Drawing.Point(12, 7);
             this.comboBoxCycleGenerator.Name = "comboBoxCycleGenerator";

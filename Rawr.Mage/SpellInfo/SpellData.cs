@@ -52,6 +52,8 @@ namespace Rawr.Mage
         [Description("POM+Fireball")]
         FireballPOM,
         FireballBF,
+        FrostfireBoltBF,
+        FrostfireBoltBFFOF,
         [Description("Frostfire Bolt")]
         FrostfireBoltFOF,
         FrostfireBolt,
@@ -573,15 +575,11 @@ namespace Rawr.Mage
         float fingersOfFrostCritRate;
         float tormentTheWeak;
 
-        public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost, bool frozenCore)
+        public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
         {
             Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            if (frozenCore && castingState.MageTalents.FrozenCore > 0)
-            {
-                spell.BaseCastTime -= 0.1f + 0.3f * castingState.MageTalents.FrozenCore;
-            }
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
@@ -592,7 +590,7 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            return GetSpell(castingState, false, false);
+            return GetSpell(castingState, false);
         }
 
         public FrostboltTemplate(CharacterCalculationsMage calculations)
@@ -767,7 +765,7 @@ namespace Rawr.Mage
         private float tormentFactor;
         private float fingersOfFrostCritRate;
 
-        public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost, bool frozenCore)
+        public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost, bool brainFreeze)
         {
             Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
@@ -776,11 +774,11 @@ namespace Rawr.Mage
             {
                 spell.CritRate += fingersOfFrostCritRate;
             }
-            if (frozenCore && castingState.MageTalents.FrozenCore > 0)
+            if (brainFreeze)
             {
-                spell.BaseCastTime -= 0.1f + 0.3f * castingState.MageTalents.FrozenCore;
+                spell.CostAmplifier = 0;
             }
-            spell.CalculateDerivedStats(castingState, false, pom, true);
+            spell.CalculateDerivedStats(castingState, false, pom || brainFreeze, true);
             return spell;
         }
 
