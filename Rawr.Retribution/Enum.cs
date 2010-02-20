@@ -21,7 +21,10 @@ namespace Rawr.Retribution
         DivineStorm,
         Consecration,
         HammerOfWrath,
-        Exorcism
+        Exorcism,
+
+        // Abilities are mapped to integer numbers from 0 to (int)Ability.Last inclusive
+        Last = Exorcism
     }
 
     public enum AbilityType

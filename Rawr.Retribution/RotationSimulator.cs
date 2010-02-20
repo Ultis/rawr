@@ -32,7 +32,7 @@ namespace Rawr.Retribution
             SimulatorAbility.Delay = (int)(rot.Delay * timeUnitsPerSecond);
             SimulatorAbility.Wait = (int)(rot.Wait * timeUnitsPerSecond);
 
-            SimulatorAbility[] abilities = new SimulatorAbility[6];
+            SimulatorAbility[] abilities = new SimulatorAbility[(int)Ability.Last + 1];
 
             abilities[(int)Ability.Judgement] = new SimulatorAbility(
                 (10 - rot.ImpJudgements - (rot.T7_4pc ? 1 : 0)) * timeUnitsPerSecond,
@@ -121,29 +121,19 @@ namespace Rawr.Retribution
                 currentTime = nextTime;
             }
 
-            RotationSolution sol = new RotationSolution();
-            sol.FightLength = ((float)fightLength) / timeUnitsPerSecond;
-            sol.Judgement = abilities[(int)Ability.Judgement].Uses;
-            sol.JudgementCD = abilities[(int)Ability.Judgement].EffectiveCooldown() / timeUnitsPerSecond;
+            float fightLengthInSeconds = ((float)fightLength) / timeUnitsPerSecond;
+            RotationSolution solution = new RotationSolution();
+            foreach (Ability ability in rot.Priorities)
+            {
+                solution.SetAbilityUsagePerSecond(
+                    ability,
+                    abilities[(int)ability].Uses / fightLengthInSeconds);
+                solution.SetAbilityEffectiveCooldown(
+                    ability,
+                    abilities[(int)ability].EffectiveCooldown() / timeUnitsPerSecond);
+            }
 
-            sol.CrusaderStrike = abilities[(int)Ability.CrusaderStrike].Uses;
-            sol.CrusaderStrikeCD =
-                abilities[(int)Ability.CrusaderStrike].EffectiveCooldown() / timeUnitsPerSecond;
-
-            sol.DivineStorm = abilities[(int)Ability.DivineStorm].Uses;
-            sol.DivineStormCD = abilities[(int)Ability.DivineStorm].EffectiveCooldown() / timeUnitsPerSecond;
-
-            sol.Consecration = abilities[(int)Ability.Consecration].Uses;
-            sol.ConsecrationCD = abilities[(int)Ability.Consecration].EffectiveCooldown() / timeUnitsPerSecond;
-
-            sol.Exorcism = abilities[(int)Ability.Exorcism].Uses;
-            sol.ExorcismCD = abilities[(int)Ability.Exorcism].EffectiveCooldown() / timeUnitsPerSecond;
-
-            sol.HammerOfWrath = abilities[(int)Ability.HammerOfWrath].Uses;
-            sol.HammerOfWrathCD =
-                abilities[(int)Ability.HammerOfWrath].EffectiveCooldown() / timeUnitsPerSecond;
-
-            return sol;
+            return solution;
         }
 
     }

@@ -86,15 +86,23 @@ namespace Rawr.Retribution
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
-            dictValues["Chosen Rotation"] = Rotation == null ? "n/a" : RotationParameters.ShortRotationString(Rotation);
+            dictValues["Chosen Rotation"] = Rotation == null ? 
+                "n/a" : 
+                RotationParameters.ShortRotationString(Rotation);
             dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
             dictValues["SoV Overtake"] = string.Format("{0} sec", SoVOvertake.ToString("N2"));
-            dictValues["Crusader Strike CD"] = Solution.CrusaderStrikeCD.ToString("N2");
-            dictValues["Judgement CD"] = Solution.JudgementCD.ToString("N2");
-            dictValues["Consecration CD"] = Solution.ConsecrationCD.ToString("N2");
-            dictValues["Exorcism CD"] = Solution.ExorcismCD.ToString("N2");
-            dictValues["Divine Storm CD"] = Solution.DivineStormCD.ToString("N2");
-            dictValues["Hammer of Wrath CD"] = Solution.HammerOfWrathCD.ToString("N2");
+            dictValues["Crusader Strike CD"] = 
+                Solution.GetAbilityEffectiveCooldown(Ability.CrusaderStrike).ToString("N2");
+            dictValues["Judgement CD"] = 
+                Solution.GetAbilityEffectiveCooldown(Ability.Judgement).ToString("N2");
+            dictValues["Consecration CD"] = 
+                Solution.GetAbilityEffectiveCooldown(Ability.Consecration).ToString("N2");
+            dictValues["Exorcism CD"] = 
+                Solution.GetAbilityEffectiveCooldown(Ability.Exorcism).ToString("N2");
+            dictValues["Divine Storm CD"] = 
+                Solution.GetAbilityEffectiveCooldown(Ability.DivineStorm).ToString("N2");
+            dictValues["Hammer of Wrath CD"] = 
+                Solution.GetAbilityEffectiveCooldown(Ability.HammerOfWrath).ToString("N2");
 
             return dictValues;
         }

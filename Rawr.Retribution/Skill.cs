@@ -34,6 +34,17 @@ namespace Rawr.Retribution
         public bool UsesWeapon { get; set; }
         public bool RighteousVengeance { get; set; }
 
+        public virtual bool UsableBefore20PercentHealth
+        {
+            get { return true; }
+        }
+
+        public virtual Ability? RotationAbility
+        {
+            get { return null; }
+        }
+
+
         public Skill(CombatStats combats, AbilityType abilityType, DamageType damageType, bool usesWeapon, bool righteousVengeance)
         {
             Combats = combats;
@@ -149,7 +160,15 @@ namespace Rawr.Retribution
     public class JudgementOfCommand : Skill
     {
 
-        public JudgementOfCommand(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
+        public JudgementOfCommand(CombatStats combats) 
+            : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Judgement; }
+        }
+
 
         public override float AbilityDamage()
         {
@@ -167,7 +186,15 @@ namespace Rawr.Retribution
     public class JudgementOfRighteousness : Skill
     {
 
-        public JudgementOfRighteousness(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
+        public JudgementOfRighteousness(CombatStats combats) 
+            : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Judgement; }
+        }
+
 
         public override float AbilityDamage()
         {
@@ -192,7 +219,14 @@ namespace Rawr.Retribution
             AverageStackSize = averageStack;
         }
 
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Judgement; }
+        }
+
         public float AverageStackSize { get; private set; }
+
 
         public override float AbilityDamage()
         {
@@ -211,7 +245,15 @@ namespace Rawr.Retribution
     public class CrusaderStrike : Skill
     {
 
-        public CrusaderStrike(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+        public CrusaderStrike(CombatStats combats) 
+            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.CrusaderStrike; }
+        }
+
 
         public override float AbilityDamage()
         {
@@ -229,7 +271,15 @@ namespace Rawr.Retribution
     public class DivineStorm : Skill
     {
 
-        public DivineStorm(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+        public DivineStorm(CombatStats combats) 
+            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.DivineStorm; }
+        }
+
 
         public override float AbilityDamage()
         {
@@ -252,7 +302,20 @@ namespace Rawr.Retribution
     public class HammerOfWrath : Skill
     {
 
-        public HammerOfWrath(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy, false, false) { }
+        public HammerOfWrath(CombatStats combats) 
+            : base(combats, AbilityType.Range, DamageType.Holy, false, false) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.HammerOfWrath; }
+        }
+
+        public override bool UsableBefore20PercentHealth
+        {
+            get { return false; }
+        }
+
 
         public override float AbilityDamage()
         {
@@ -270,7 +333,15 @@ namespace Rawr.Retribution
     public class Exorcism : Skill
     {
 
-        public Exorcism(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+        public Exorcism(CombatStats combats) 
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Exorcism; }
+        }
+
 
         public override float AbilityDamage()
         {
@@ -288,7 +359,15 @@ namespace Rawr.Retribution
     public class Consecration : Skill
     {
 
-        public Consecration(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+        public Consecration(CombatStats combats) 
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Consecration; }
+        }
+
 
         public override float AbilityDamage()
         {

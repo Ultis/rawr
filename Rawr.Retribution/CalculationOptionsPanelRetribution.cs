@@ -446,7 +446,7 @@ namespace Rawr.Retribution
         private void showRotation(int number)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            List<string> abilityList = new List<string>(6);
+            List<string> abilityList = new List<string>(calcOpts.Rotations[number].Length);
             foreach (Ability ability in calcOpts.Rotations[number])
             {
                 abilityList.Add(RotationParameters.AbilityString(ability));
@@ -459,7 +459,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             int selected = listRotation.SelectedIndex;
-            if (selected > 0 && selected < 6)
+            if ((selected > 0) && (selected < (int)Ability.Last + 1))
             {
                 Ability[] rotation = calcOpts.Rotations[cmbRotations.SelectedIndex];
 

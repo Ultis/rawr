@@ -11,6 +11,7 @@ namespace Rawr.Retribution
         INotifyPropertyChanged,
         ICharacterCalculationOptions
     {
+
         public string GetXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsRetribution));
@@ -43,18 +44,18 @@ namespace Rawr.Retribution
             delay = .05f;
             wait = .05f;
             // Tab - Rotation - Effective CD's
-            judgeCD = 7.1f;
-            cSCD = 7.1f;
-            dSCD = 10.5f;
-            consCD = 10.5f;
-            exoCD = 18f;
+            SetEffectiveAbilityCooldown(Ability.Judgement, 7.1f);
+            SetEffectiveAbilityCooldown(Ability.CrusaderStrike, 7.1f);
+            SetEffectiveAbilityCooldown(Ability.DivineStorm, 10.5f);
+            SetEffectiveAbilityCooldown(Ability.Consecration, 10.5f);
+            SetEffectiveAbilityCooldown(Ability.Exorcism, 18f);
 
-            judgeCD20 = 7.1f;
-            cSCD20 = 7.1f;
-            dSCD20 = 12.5f;
-            consCD20 = 12.5f;
-            exoCD20 = 25f;
-            hoWCD20 = 6.4f;
+            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Judgement, 7.1f);
+            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.CrusaderStrike, 7.1f);
+            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.DivineStorm, 12.5f);
+            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration, 12.5f);
+            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism, 25f);
+            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath, 6.4f);
 
             // Tab - Misc
             experimental = "";
@@ -235,81 +236,117 @@ namespace Rawr.Retribution
             set { SimulateRotation = !value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
         }
 
-        private float judgeCD;
+        private float[] effectiveAbilityCooldowns = new float[(int)Ability.Last + 1];
+        private float[] effectiveAbilityCooldownsAfter20PercentHealth = new float[(int)Ability.Last + 1];
+
         public float JudgeCD
         {
-            get { return judgeCD; }
-            set { judgeCD = value; OnPropertyChanged("JudgeCD"); }
+            get { return GetEffectiveAbilityCooldown(Ability.Judgement); }
+            set 
+            { 
+                SetEffectiveAbilityCooldown(Ability.Judgement, value); 
+                OnPropertyChanged("JudgeCD"); 
+            }
         }
 
-        private float cSCD;
         public float CSCD
         {
-            get { return cSCD; }
-            set { cSCD = value; OnPropertyChanged("CSCD"); }
+            get { return GetEffectiveAbilityCooldown(Ability.CrusaderStrike); }
+            set 
+            {
+                SetEffectiveAbilityCooldown(Ability.CrusaderStrike, value);
+                OnPropertyChanged("CSCD"); 
+            }
         }
 
-        private float dSCD;
         public float DSCD
         {
-            get { return dSCD; }
-            set { dSCD = value; OnPropertyChanged("DSCD"); }
+            get { return GetEffectiveAbilityCooldown(Ability.DivineStorm); }
+            set 
+            {
+                SetEffectiveAbilityCooldown(Ability.DivineStorm, value);
+                OnPropertyChanged("DSCD"); 
+            }
         }
 
-        private float consCD;
         public float ConsCD
         {
-            get { return consCD; }
-            set { consCD = value; OnPropertyChanged("ConsCD"); }
+            get { return GetEffectiveAbilityCooldown(Ability.Consecration); }
+            set 
+            { 
+                SetEffectiveAbilityCooldown(Ability.Consecration, value);
+                OnPropertyChanged("ConsCD"); 
+            }
         }
 
-        private float exoCD;
         public float ExoCD
         {
-            get { return exoCD; }
-            set { exoCD = value; OnPropertyChanged("ExoCD"); }
+            get { return GetEffectiveAbilityCooldown(Ability.Exorcism); }
+            set 
+            { 
+                SetEffectiveAbilityCooldown(Ability.Exorcism, value); 
+                OnPropertyChanged("ExoCD"); 
+            }
         }
 
-        private float judgeCD20;
         public float JudgeCD20
         {
-            get { return judgeCD20; }
-            set { judgeCD20 = value; OnPropertyChanged("JudgeCD20"); }
+            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Judgement); }
+            set 
+            { 
+                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Judgement, value); 
+                OnPropertyChanged("JudgeCD20"); 
+            }
         }
 
-        private float cSCD20;
         public float CSCD20
         {
-            get { return cSCD20; }
-            set { cSCD20 = value; OnPropertyChanged("CSCD20"); }
+            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.CrusaderStrike); }
+            set 
+            { 
+                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.CrusaderStrike, value); 
+                OnPropertyChanged("CSCD20"); 
+            }
         }
 
-        private float dSCD20;
         public float DSCD20
         {
-            get { return dSCD20; }
-            set { dSCD20 = value; OnPropertyChanged("DSCD20"); }
+            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.DivineStorm); }
+            set 
+            { 
+                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.DivineStorm, value); 
+                OnPropertyChanged("DSCD20"); 
+            }
         }
 
-        private float consCD20;
         public float ConsCD20
         {
-            get { return consCD20; }
-            set { consCD20 = value; OnPropertyChanged("ConsCD20"); }
+            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration); }
+            set 
+            { 
+                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration, value); 
+                OnPropertyChanged("ConsCD20"); 
+            }
         }
 
-        private float exoCD20;
         public float ExoCD20
         {
-            get { return exoCD20; }
-            set { exoCD20 = value; OnPropertyChanged("ExoCD20"); }
+            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism); }
+            set 
+            { 
+                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism, value); 
+                OnPropertyChanged("ExoCD20"); 
+            }
         }
 
-        private float hoWCD20;
         public float HoWCD20
         {
-            get { return hoWCD20; }
-            set { hoWCD20 = value; OnPropertyChanged("HoWCD20"); }
+            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath); }
+            set 
+            { 
+                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath, value); 
+                OnPropertyChanged("HoWCD20"); 
+            }
         }
 
         // Tab - Misc
@@ -351,6 +388,29 @@ namespace Rawr.Retribution
                 _character = value;
             }
         }
+
+
+        public float GetEffectiveAbilityCooldown(Ability ability)
+        {
+            return effectiveAbilityCooldowns[(int)ability];
+        }
+
+        public float GetEffectiveAbilityCooldownAfter20PercentHealth(Ability ability)
+        {
+            return effectiveAbilityCooldownsAfter20PercentHealth[(int)ability];
+        }
+
+
+        private void SetEffectiveAbilityCooldown(Ability ability, float effectiveCooldown)
+        {
+            effectiveAbilityCooldowns[(int)ability] = effectiveCooldown;
+        }
+
+        private void SetEffectiveAbilityCooldownAfter20PercentHealth(Ability ability, float effectiveCooldown)
+        {
+            effectiveAbilityCooldownsAfter20PercentHealth[(int)ability] = effectiveCooldown;
+        }
+
 
         #region INotifyPropertyChanged Members
 

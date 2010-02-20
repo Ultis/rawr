@@ -6,20 +6,30 @@ namespace Rawr.Retribution
 {
     public class RotationSolution
     {
-        public int Judgement { get; set; }
-        public int CrusaderStrike { get; set; }
-        public int DivineStorm { get; set; }
-        public int Consecration { get; set; }
-        public int Exorcism { get; set; }
-        public int HammerOfWrath { get; set; }
+        
+        private float[] abilityUsagesPerSecond = new float[(int)Ability.Last + 1];
+        private float[] abilityEffectiveCooldowns = new float[(int)Ability.Last + 1];
 
-        public float FightLength { get; set; }
 
-        public float JudgementCD { get; set; }
-        public float CrusaderStrikeCD { get; set; }
-        public float DivineStormCD { get; set; }
-        public float ConsecrationCD { get; set; }
-        public float ExorcismCD { get; set; }
-        public float HammerOfWrathCD { get; set; }
+        public float GetAbilityUsagePerSecond(Ability ability)
+        {
+            return abilityUsagesPerSecond[(int)ability];
+        }
+
+        public void SetAbilityUsagePerSecond(Ability ability, float usagePerSecond)
+        {
+            abilityUsagesPerSecond[(int)ability] = usagePerSecond;
+        }
+
+        public float GetAbilityEffectiveCooldown(Ability ability)
+        {
+            return abilityEffectiveCooldowns[(int)ability];
+        }
+
+        public void SetAbilityEffectiveCooldown(Ability ability, float effectiveCooldown)
+        {
+            abilityEffectiveCooldowns[(int)ability] = effectiveCooldown;
+        }
+
     }
 }
