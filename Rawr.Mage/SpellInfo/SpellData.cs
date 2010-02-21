@@ -596,6 +596,10 @@ namespace Rawr.Mage
         public FrostboltTemplate(CharacterCalculationsMage calculations)
             : base("Frostbolt", false, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
+            if (calculations.CalculationOptions.Mode333)
+            {
+                SpellDamageCoefficient = 3.0f / 3.5f;
+            }
             Calculate(calculations);
             if (calculations.MageTalents.GlyphOfFrostbolt)
             {
