@@ -59,9 +59,6 @@ namespace Rawr.Retribution
 
             // Tab - Misc
             experimental = "";
-
-            // Extra, no UI available
-            forceRotation = -1;
         }
 
         public CalculationOptionsRetribution Clone()
@@ -84,8 +81,12 @@ namespace Rawr.Retribution
 
             // Tab - Rotation
             clone.SimulateRotation = SimulateRotation;
+
             // Tab - Rotation - FCFS
-            clone.Rotations = new List<Ability[]>(Rotations);
+            clone.Rotations = new List<Ability[]>();
+            foreach (Ability[] rotation in Rotations)
+                clone.Rotations.Add((Ability[])rotation.Clone());
+
             clone.Delay = Delay;
             clone.Wait = Wait;
             // Tab - Rotation - Effective CD's
@@ -103,10 +104,10 @@ namespace Rawr.Retribution
             clone.HoWCD20 = HoWCD20;
 
             // Tab - Misc
-            experimental = "";
+            clone.Experimental = experimental;
 
-            // Extra, no UI available
-            forceRotation = -1;
+            // No UI
+            clone.ForceRotation = ForceRotation;
 
             return clone;
         }
@@ -359,19 +360,13 @@ namespace Rawr.Retribution
 
         // No UI
         /// <summary>
-        /// forceRotation has no UI, it is enabled from source only. when set to -1, all 
+        /// ForceRotation has no UI, it is enabled from source only. when set to null, all 
         /// defined rotations will be tested and the best one applied.
-        /// When set to a value >=0, forceRotation is an index into the Rotations<> list.
-        /// Only that rotation is tried and applied.
+        /// When set to a non-null value, only that rotation is tried and applied.
         /// This is used during the creation of the 'Rotations' custom chart.
         /// </summary>
-        private int forceRotation;  
         [XmlIgnore]
-        public int ForceRotation
-        {
-            get { return forceRotation; }
-            set { forceRotation = value; }
-        }
+        public Ability[] ForceRotation { get; set; }
 
         #endregion
 

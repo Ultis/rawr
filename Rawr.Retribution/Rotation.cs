@@ -18,6 +18,16 @@ namespace Rawr.Retribution
             return new EffectiveCooldown(combats);
         }
 
+        public static IEnumerable<Ability[]> GetAllRotations()
+        {
+            Ability[] abilities = new Ability[(int)Ability.Last + 1];
+
+            for (int ability = 0; ability <= (int)Ability.Last; ability++)
+                abilities[ability] = (Ability)ability;
+
+            return Utilities.GetDifferentElementPermutations(abilities);
+        }
+
 
         protected Rotation(CombatStats combats)
         {
@@ -36,11 +46,13 @@ namespace Rawr.Retribution
             if (combats.CalcOpts.Seal == SealOf.Righteousness)
             {
                 Seal = new SealOfRighteousness(combats);
+                SealDot = new NullSealDoT(combats);
                 Judge = new JudgementOfRighteousness(combats);
             }
             else if (combats.CalcOpts.Seal == SealOf.Command)
             {
                 Seal = new SealOfCommand(combats);
+                SealDot = new NullSealDoT(combats);
                 Judge = new JudgementOfCommand(combats);
             }
             else if (combats.CalcOpts.Seal == SealOf.Vengeance)
@@ -52,8 +64,9 @@ namespace Rawr.Retribution
             }
             else
             {
-                Seal = new None(combats);
-                Judge = new None(combats);
+                Seal = new NullSeal(combats);
+                SealDot = new NullSealDoT(combats);
+                Judge = new NullJudgement(combats);
             }
         }
 
@@ -143,7 +156,7 @@ namespace Rawr.Retribution
             float sov5dps = GetAbilityDps(new JudgementOfVengeance(Combats, 5))
                 + SealDPS(new SealOfVengeance(Combats, 5), new SealOfVengeanceDoT(Combats, 5));
             float sordps = GetAbilityDps(new JudgementOfRighteousness(Combats))
-                + SealDPS(new SealOfRighteousness(Combats), null);
+                + SealDPS(new SealOfRighteousness(Combats), new NullSealDoT(Combats));
 
             if (sordps > sov0dps)
             {
@@ -170,8 +183,7 @@ namespace Rawr.Retribution
 
         public virtual float SealDPS(Skill seal, Skill sealdot)
         {
-            if (sealdot == null) return seal.AverageDamage() * SealProcsPerSec(seal);
-            else return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
+            return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
         }
 
         public virtual float HandOfReckoningDPS(Skill hor) 
@@ -318,18 +330,25 @@ namespace Rawr.Retribution
         public static Simulator CreateSimulator(CombatStats combats)
         {
             const decimal specificRotationListSimulationTime = 2000000m;
-            const decimal allRotationsSimulationTime = 2000m;
+            const decimal allRotationsSimulationTime = 100000m;
+            const decimal quickSimulationTime = 300m;
 
-            if (combats.CalcOpts.ForceRotation >= 0)
+            bool allRotationsMode = combats.CalcOpts.Experimental.IndexOf(
+                "<AllRotations>",
+                StringComparison.OrdinalIgnoreCase) != -1;
+
+            if (combats.CalcOpts.ForceRotation != null)
                 return new Simulator(
                     combats,
-                    combats.CalcOpts.Rotations[combats.CalcOpts.ForceRotation], 
-                    specificRotationListSimulationTime);
+                    combats.CalcOpts.ForceRotation, 
+                    allRotationsMode ? allRotationsSimulationTime : specificRotationListSimulationTime);
 
-            if (combats.CalcOpts.Experimental.IndexOf(
-                "<AllRotations>", 
-                StringComparison.OrdinalIgnoreCase) != -1)
-                return FindBestRotation(combats, GetAllRotations(), allRotationsSimulationTime);
+            if (allRotationsMode)
+                return FindBestRotationQuickly(
+                    combats, 
+                    GetAllRotations(), 
+                    allRotationsSimulationTime,
+                    quickSimulationTime);
 
             if (combats.CalcOpts.Rotations.Count == 0)
                 return new Simulator(
@@ -340,16 +359,6 @@ namespace Rawr.Retribution
             return FindBestRotation(combats, combats.CalcOpts.Rotations, specificRotationListSimulationTime);
         }
 
-
-        private static IEnumerable<Ability[]> GetAllRotations()
-        {
-            Ability[] abilities = new Ability[(int)Ability.Last + 1];
-
-            for (int ability = 0; ability <= (int)Ability.Last; ability++)
-                abilities[ability] = (Ability)ability;
-
-            return Utilities.GetDifferentElementPermutations(abilities);
-        }
 
         private static RotationParameters Parameters(
             CombatStats combats,
@@ -397,6 +406,37 @@ namespace Rawr.Retribution
             return bestSimulator;
         }
 
+        private static Simulator FindBestRotationQuickly(
+            CombatStats combats,
+            IEnumerable<Ability[]> rotations,
+            decimal simulationTime,
+            decimal quickSimulationTime)
+        {
+            const float goodRotationTreshold = 0.995f;
+
+            List<RotationDps> rotationDpsValues = new List<RotationDps>();
+
+            foreach (Ability[] rotation in rotations)
+                rotationDpsValues.Add(
+                    new RotationDps 
+                    { 
+                        Rotation = rotation, 
+                        Dps = new Simulator(combats, rotation, quickSimulationTime).DPS() 
+                    });
+
+            float maxDps = 0;
+            foreach (RotationDps rotationDps in rotationDpsValues)
+                if (rotationDps.Dps > maxDps)
+                    maxDps = rotationDps.Dps;
+
+            List<Ability[]> goodRotations = new List<Ability[]>();
+            foreach (RotationDps rotationDps in rotationDpsValues)
+                if (rotationDps.Dps > maxDps * goodRotationTreshold)
+                    goodRotations.Add(rotationDps.Rotation);
+
+            return FindBestRotation(combats, goodRotations, simulationTime);
+        }
+
 
         public RotationSolution Solution { get; set; }
         public Ability[] Rotation { get; set; }
@@ -422,6 +462,15 @@ namespace Rawr.Retribution
         public override float GetAbilityUsagePerSecond(Skill skill)
         {
             return Solution.GetAbilityUsagePerSecond(skill.RotationAbility.Value);
+        }
+
+
+        private class RotationDps
+        {
+
+            public Ability[] Rotation { get; set; }
+            public float Dps { get; set; }
+
         }
 
     }

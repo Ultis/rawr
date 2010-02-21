@@ -906,17 +906,22 @@ namespace Rawr.Retribution
                     ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character))
                         .Rotation;
 
-                for (int i = 0; i < baseOpts.Rotations.Count; i++)
+                IEnumerable<Ability[]> rotations =
+                    baseOpts.Experimental.IndexOf("<AllRotations>") == -1 ?
+                    baseOpts.Rotations :
+                    Rotation.GetAllRotations();
+
+                foreach (Ability[] rotation in rotations)
                 {
                     // Force this rotation rather than having the calculations try all and use the best one.
                     // We don't need to set this back to off, 
                     // since we're working in a cloned CalculationOptionsRetribution
-                    baseOpts.ForceRotation = i; 
+                    baseOpts.ForceRotation = rotation; 
                                                 
                     ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
                         Calculations.GetCharacterCalculations(baseChar),
-                        RotationParameters.RotationString(baseOpts.Rotations[i]), 
-                        Utilities.AreArraysEqual(baseOpts.Rotations[i], selectedRotation));
+                        RotationParameters.RotationString(rotation), 
+                        Utilities.AreArraysEqual(rotation, selectedRotation));
                     compare.Item = null;
                     comparisons.Add(compare);
                 }

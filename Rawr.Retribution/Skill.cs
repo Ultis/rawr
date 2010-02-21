@@ -514,10 +514,41 @@ namespace Rawr.Retribution
 
     }
 
-    public class None : Skill
+    public class NullSeal : Skill
     {
 
-        public None(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+        public NullSeal(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+
+        public override float AbilityDamage()
+        {
+            return 0;
+        }
+
+    }
+
+    public class NullSealDoT : Skill
+    {
+
+        public NullSealDoT(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+
+        public override float AbilityDamage()
+        {
+            return 0;
+        }
+
+    }
+
+    public class NullJudgement : Skill
+    {
+
+        public NullJudgement(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Judgement; }
+        }
+
 
         public override float AbilityDamage()
         {
