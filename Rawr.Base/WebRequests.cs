@@ -42,6 +42,7 @@ namespace Rawr
         
 		
 		private static Exception _fatalError = null;
+        private static Exception _error = null;
 		private Dictionary<CharacterRegion, string> _domains = new Dictionary<CharacterRegion,string>();
 
         public interface INetworkSettingsProvider
@@ -558,10 +559,18 @@ namespace Rawr
             get { return _fatalError; }
         }
 
+        public static Exception Error
+        {
+            get { return _error; }
+        }
+
+
 		public static void ResetFatalErrorIndicator()
 		{
 			_fatalError = null;
+            _error = null;
 		}
+
 		/// <summary>
 		/// Downloads an Icon Asyncronously
 		/// </summary>
@@ -705,6 +714,7 @@ namespace Rawr
 			{
 				_fatalError = ex;
 			}
+            _error = ex;
 		}
 
 		public string DownloadText(string URI)

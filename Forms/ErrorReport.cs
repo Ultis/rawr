@@ -30,6 +30,10 @@ namespace Rawr.Forms
             {
                 WebClientExceptionMessage.Text = WebRequestWrapper.FatalError.Message;
             }
+            else if (WebRequestWrapper.Error != null)
+            {
+                WebClientExceptionMessage.Text = WebRequestWrapper.Error.Message;
+            }
         }
 
         private void CopyToClipboard_Click(object sender, EventArgs e)
