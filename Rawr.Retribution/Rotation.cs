@@ -6,21 +6,24 @@ namespace Rawr.Retribution
 {
     public abstract class Rotation
     {
-        public Skill CS;
-        public Skill Judge;
-        public Skill DS;
-        public Skill Exo;
-        public Skill HoW;
-        public Skill Cons;
-        public Skill Seal;
-        public Skill SealDot;
-        public Skill HoR;
-        public White White;
 
-        protected CombatStats Combats;
-
-        public Rotation(CombatStats combats)
+        public static Rotation Create(CombatStats combats)
         {
+            if (combats == null)
+                throw new ArgumentNullException("combats");
+
+            if (combats.CalcOpts.SimulateRotation)
+                return Simulator.CreateSimulator(combats);
+
+            return new EffectiveCooldown(combats);
+        }
+
+
+        protected Rotation(CombatStats combats)
+        {
+            if (combats == null)
+                throw new ArgumentNullException("combats");
+
             Combats = combats;
             CS = new CrusaderStrike(combats);
             DS = new DivineStorm(combats);
@@ -53,6 +56,22 @@ namespace Rawr.Retribution
                 Judge = new None(combats);
             }
         }
+
+
+        public Skill CS { get; private set; }
+        public Skill Judge { get; private set; }
+        public Skill DS { get; private set; }
+        public Skill Exo { get; private set; }
+        public Skill HoW { get; private set; }
+        public Skill Cons { get; private set; }
+        public Skill Seal { get; private set; }
+        public Skill SealDot { get; private set; }
+        public Skill HoR { get; private set; }
+        public White White { get; private set; }
+
+
+        protected CombatStats Combats { get; private set; }
+
 
         public abstract void SetCharacterCalculations(CharacterCalculationsRetribution calc);
 
@@ -295,76 +314,109 @@ namespace Rawr.Retribution
 
     public class Simulator : Rotation
     {
-        public RotationSolution Solution { get; set; }
-        public Ability[] Rotation { get; set; }
-        public int RotationIndex { get; set; }
 
-        public Simulator(CombatStats combats, int rotation) : base(combats)
+        public static Simulator CreateSimulator(CombatStats combats)
         {
-            Solution = RotationSimulator.SimulateRotation(Parameters(combats.CalcOpts.Rotations[rotation]));
-        }
-
-        public Simulator(CombatStats combats)
-            : base(combats)
-        {
-            Rotation = null;
-            RotationIndex = -1;
-
-            RotationSolution maxSolution = null;
-            float maxDPS = 0, currentDPS;
+            const decimal specificRotationListSimulationTime = 2000000m;
+            const decimal allRotationsSimulationTime = 2000m;
 
             if (combats.CalcOpts.ForceRotation >= 0)
-            {
-                Solution = RotationSimulator.SimulateRotation(Parameters(combats.CalcOpts.Rotations[combats.CalcOpts.ForceRotation]));
-            }
-            else if (combats.CalcOpts.Rotations.Count > 0)
-            {
-                for (int i = 0; i < combats.CalcOpts.Rotations.Count; i++)
-                {
-                    Solution = RotationSimulator.SimulateRotation(Parameters(combats.CalcOpts.Rotations[i]));
-                    currentDPS = DPS();
-                    if (currentDPS > maxDPS)
-                    {
-                        maxDPS = currentDPS;
-                        maxSolution = Solution;
-                        Rotation = combats.CalcOpts.Rotations[i];
-                        RotationIndex = i;
-                    }
-                }
-                Solution = maxSolution;
-            }
-            else
-            {
-                Solution = RotationSimulator.SimulateRotation(Parameters(RotationParameters.DefaultRotation()));
-            }
+                return new Simulator(
+                    combats,
+                    combats.CalcOpts.Rotations[combats.CalcOpts.ForceRotation], 
+                    specificRotationListSimulationTime);
+
+            if (combats.CalcOpts.Experimental.IndexOf(
+                "<AllRotations>", 
+                StringComparison.OrdinalIgnoreCase) != -1)
+                return FindBestRotation(combats, GetAllRotations(), allRotationsSimulationTime);
+
+            if (combats.CalcOpts.Rotations.Count == 0)
+                return new Simulator(
+                    combats, 
+                    RotationParameters.DefaultRotation(), 
+                    specificRotationListSimulationTime);
+
+            return FindBestRotation(combats, combats.CalcOpts.Rotations, specificRotationListSimulationTime);
         }
 
-        private RotationParameters Parameters(Ability[] rotation)
+
+        private static IEnumerable<Ability[]> GetAllRotations()
+        {
+            Ability[] abilities = new Ability[(int)Ability.Last + 1];
+
+            for (int ability = 0; ability <= (int)Ability.Last; ability++)
+                abilities[ability] = (Ability)ability;
+
+            return Utilities.GetDifferentElementPermutations(abilities);
+        }
+
+        private static RotationParameters Parameters(
+            CombatStats combats,
+            Ability[] rotation,
+            decimal simulationTime)
         {
             const float bloodlustDuration = 40f;
 
             return new RotationParameters(
                 rotation,
-                Combats.CalcOpts.TimeUnder20,
-                Combats.CalcOpts.Wait,
-                Combats.CalcOpts.Delay,
-                Combats.Stats.JudgementCDReduction > 0,
-                Combats.Talents.ImprovedJudgements,
-                Combats.Talents.GlyphOfConsecration,
-                Combats.Stats.DivineStormRefresh > 0 ? 
-                    Combats.BaseWeaponSpeed / (1 + Combats.Stats.PhysicalHaste) : 
+                combats.CalcOpts.TimeUnder20,
+                combats.CalcOpts.Wait,
+                combats.CalcOpts.Delay,
+                combats.Stats.JudgementCDReduction > 0,
+                combats.Talents.ImprovedJudgements,
+                combats.Talents.GlyphOfConsecration,
+                combats.Stats.DivineStormRefresh > 0 ?
+                    combats.BaseWeaponSpeed / (1 + combats.Stats.PhysicalHaste) :
                     0f,
-                Combats.Stats.SpellHaste,
-                Combats.CalcOpts.Bloodlust && (Combats.Stats.Bloodlust == 0) ?
-                    Math.Min(1f, Combats.CalcOpts.FightLength / bloodlustDuration) : 
-                    0);
+                combats.Stats.SpellHaste,
+                combats.CalcOpts.Bloodlust && (combats.Stats.Bloodlust == 0) ?
+                    Math.Min(1f, combats.CalcOpts.FightLength / bloodlustDuration) :
+                    0,
+                simulationTime);
         }
+
+        private static Simulator FindBestRotation(
+            CombatStats combats,
+            IEnumerable<Ability[]> rotations, 
+            decimal simulationTime)
+        {
+            float maxDPS = 0;
+            Simulator bestSimulator = null;
+            foreach (Ability[] rotation in rotations)
+            {
+                Simulator simulator = new Simulator(combats, rotation, simulationTime);
+                float currentDPS = simulator.DPS();
+                if (currentDPS > maxDPS)
+                {
+                    maxDPS = currentDPS;
+                    bestSimulator = simulator;
+                }
+            }
+
+            return bestSimulator;
+        }
+
+
+        public RotationSolution Solution { get; set; }
+        public Ability[] Rotation { get; set; }
+
+
+        public Simulator(CombatStats combats, Ability[] rotation, decimal simulationTime)
+            : base(combats)
+        {
+            if (rotation == null)
+                throw new ArgumentNullException("rotation");
+
+            Rotation = rotation;
+            Solution = RotationSimulator.SimulateRotation(Parameters(combats, rotation, simulationTime));
+        }
+
 
         public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
         {
             calc.Solution = Solution;
             calc.Rotation = Rotation;
-            calc.RotationIndex = RotationIndex;
         }
 
         public override float GetAbilityUsagePerSecond(Skill skill)
@@ -376,9 +428,12 @@ namespace Rawr.Retribution
 
     public class EffectiveCooldown : Rotation
     {
-        private readonly CalculationOptionsRetribution _calcOpts;
 
-        public EffectiveCooldown(CombatStats combats) : base(combats) { _calcOpts = combats.CalcOpts; }
+        public EffectiveCooldown(CombatStats combats) 
+            : base(combats) 
+        { 
+        }
+
 
         public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
         {
@@ -388,25 +443,25 @@ namespace Rawr.Retribution
                 calc.Solution.SetAbilityEffectiveCooldown(
                     skill.RotationAbility.Value,
                     skill.UsableBefore20PercentHealth ? 
-                        _calcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) * 
-                                (1f - _calcOpts.TimeUnder20) +
-                            _calcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
+                       Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) *
+                                (1f - Combats.CalcOpts.TimeUnder20) +
+                            Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
                                     skill.RotationAbility.Value) *
-                                _calcOpts.TimeUnder20 :
-                        _calcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(skill.RotationAbility.Value));
+                                Combats.CalcOpts.TimeUnder20 :
+                        Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
+                            skill.RotationAbility.Value));
 
             calc.Rotation = null;
-            calc.RotationIndex = -1;
         }
 
         public override float GetAbilityUsagePerSecond(Skill skill)
         {
             return (skill.UsableBefore20PercentHealth ?
-                (1 - _calcOpts.TimeUnder20)
-                    / _calcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) :
+                (1 - Combats.CalcOpts.TimeUnder20)
+                    / Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) :
                 0) +
-            _calcOpts.TimeUnder20
-                / _calcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(skill.RotationAbility.Value);
+            Combats.CalcOpts.TimeUnder20
+                / Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(skill.RotationAbility.Value);
         }
 
     }

@@ -22,9 +22,9 @@ namespace Rawr.Retribution
         {
             const float t10ProcChance = 0.4f;
             const int timeUnitsPerSecond = 100;
-            const int fightLength = 2000000 * timeUnitsPerSecond;
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
 
+            int fightLength = (int)(rot.SimulationTime * timeUnitsPerSecond);
             int bloodlustSpellGcd = (int)(rot.BloodlustSpellGCD * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
             int bloodlustT10Speed = (int)(rot.BloodlustT10Speed * timeUnitsPerSecond);

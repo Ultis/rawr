@@ -12,6 +12,9 @@ namespace Rawr
         private const int BitsPerUInt32 = 32;
 
 
+        public delegate bool EqualityComparison<T>(T x, T y);
+
+
         /// <summary>
         /// Make a deep clone of the object
         /// </summary>
@@ -106,6 +109,122 @@ namespace Rawr
             Array.Copy(array, values, array.Length);
 
             return GetCombinedHashCode(values);
+        }
+
+        public static bool AreArraysEqual<TElement>(TElement[] array1, TElement[] array2)
+        {
+            return AreArraysEqual(array1, array2, EqualityComparer<TElement>.Default);
+        }
+
+        public static bool AreArraysEqual<TElement>(
+            TElement[] array1,
+            TElement[] array2,
+            IEqualityComparer<TElement> comparer)
+        {
+            if (comparer == null)
+                throw new ArgumentNullException("comparer");
+
+            return AreArraysEqual(array1, array2, comparer.Equals);
+        }
+
+        public static bool AreArraysEqual<TElement>(
+            TElement[] array1,
+            TElement[] array2,
+            EqualityComparison<TElement> comparison)
+        {
+            if (comparison == null)
+                throw new ArgumentNullException("comparison");
+
+            if (array1 == array2)
+                return true;
+
+            if ((array1 == null) || (array2 == null) || (array1.Length != array2.Length))
+                return false;
+
+            for (int elementIndex = 0; elementIndex < array1.Length; elementIndex++)
+                if (!comparison(array1[elementIndex], array2[elementIndex]))
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets all permutations of a list of elements where all elements are considered different.
+        /// </summary>
+        /// <typeparam name="TElement">Element type</typeparam>
+        /// <param name="elements">The list of elemnents to get permutations of. 
+        /// All elements are considered different.</param>
+        /// <returns></returns>
+        public static IEnumerable<TElement[]> GetDifferentElementPermutations<TElement>(
+            IList<TElement> elements)
+        {
+            if (elements == null)
+                throw new ArgumentNullException("elements");
+
+            int[] elementIndices = new int[elements.Count];
+            for (int elementIndex = 0; elementIndex < elements.Count; elementIndex++)
+                elementIndices[elementIndex] = elementIndex;
+
+            do yield return GetElementsByIndices(elements, elementIndices);
+                while (TryMakeNextElementIndexPermutation(elementIndices));
+        }
+
+
+        private static TElement[] GetElementsByIndices<TElement>(
+            IList<TElement> elements, 
+            int[] elementIndices)
+        {
+            TElement[] result = new TElement[elements.Count];
+
+            for (int elementIndex = 0; elementIndex < elements.Count; elementIndex++)
+                result[elementIndex] = elements[elementIndices[elementIndex]];
+
+            return result;
+        }
+
+        private static bool TryMakeNextElementIndexPermutation(int[] elementIndices)
+        {
+            // Dijkstra lexicographical algorithm
+
+            if (elementIndices.Length < 2)
+                return false;
+
+            // Find last index which precede a greater index
+            int lastNotReversedIndexIndex = elementIndices.Length - 2;
+            while (elementIndices[lastNotReversedIndexIndex] > elementIndices[lastNotReversedIndexIndex + 1])
+            {
+                lastNotReversedIndexIndex--;
+
+                if (lastNotReversedIndexIndex < 0)
+                    return false;
+            }
+
+            // Find last index which is greater than index at lastNotReversedIndexIndex.
+            // It will be minimal index of all indices past lastNotReversedIndexIndex
+            // which is greater than index at lastNotReversedIndexIndex.
+            // Such index always exists.
+            int lastGreaterIndexIndex = elementIndices.Length - 1;
+            while (elementIndices[lastGreaterIndexIndex] < elementIndices[lastNotReversedIndexIndex])
+                lastGreaterIndexIndex--;
+
+            // Swap the two elements
+            SwapElements(elementIndices, lastNotReversedIndexIndex, lastGreaterIndexIndex);
+
+            // Reverse all elements at indices greater than lastNotReversedIndexIndex.
+            // They become sorted.
+            Array.Reverse(
+                elementIndices,
+                lastNotReversedIndexIndex + 1,
+                elementIndices.Length - lastNotReversedIndexIndex - 1);
+
+            return true;
+        }
+
+        private static void SwapElements<TElement>(TElement[] elements, int index1, int index2)
+        {
+            TElement element1 = elements[index1];
+            elements[index1] = elements[index2];
+            elements[index2] = element1;
         }
 
     }

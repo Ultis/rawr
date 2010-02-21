@@ -14,7 +14,6 @@ namespace Rawr.Retribution
 
         public RotationSolution Solution { get; set; }
         public Ability[] Rotation { get; set; }
-        public int RotationIndex { get; set; }
 
         public float WhiteDPS { get; set; }
         public float SealDPS { get; set; }

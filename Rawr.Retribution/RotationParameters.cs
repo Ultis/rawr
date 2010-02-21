@@ -19,6 +19,7 @@ namespace Rawr.Retribution
         public decimal BloodlustSpellGCD;
         public decimal BloodlustT10Speed;
         public float BloodlustUptime;
+        public decimal SimulationTime;
 
         public RotationParameters(
             Ability[] Priorities, 
@@ -30,7 +31,8 @@ namespace Rawr.Retribution
             bool GlyphConsecrate, 
             float T10_Speed,
             float spellHaste,
-            float bloodlustUptime)
+            float bloodlustUptime,
+            decimal simulationTime)
         {
             const float bloodlustHaste = 0.3f;
 
@@ -49,6 +51,7 @@ namespace Rawr.Retribution
             BloodlustT10Speed = BloodlustUptime == 0 ? 
                 this.T10_Speed : 
                 (decimal)Math.Round(T10_Speed / (1 + bloodlustHaste), 2);
+            SimulationTime = simulationTime;
         }
 
         public override bool Equals(Object obj)
@@ -61,12 +64,9 @@ namespace Rawr.Retribution
             if (other == null) 
                 return false;
 
-            if (Priorities.Length != other.Priorities.Length) 
+            // Default comparer is slow for enums
+            if (!Utilities.AreArraysEqual(Priorities, other.Priorities, (x, y) => x == y))
                 return false;
-
-            for (int priorityIndex = 0; priorityIndex < Priorities.Length; priorityIndex++)
-                if (Priorities[priorityIndex] != other.Priorities[priorityIndex])
-                    return false;
 
             return (T7_4pc == other.T7_4pc) &&
                 (T10_Speed == other.T10_Speed) &&
@@ -78,7 +78,8 @@ namespace Rawr.Retribution
                 (SpellGCD == other.SpellGCD) &&
                 (BloodlustSpellGCD == other.BloodlustSpellGCD) &&
                 (BloodlustT10Speed == other.BloodlustT10Speed) &&
-                (BloodlustUptime == other.BloodlustUptime);
+                (BloodlustUptime == other.BloodlustUptime) &&
+                (SimulationTime == other.SimulationTime);
         }
 
         public override int GetHashCode()
@@ -95,7 +96,8 @@ namespace Rawr.Retribution
                 BloodlustSpellGCD,
                 BloodlustT10Speed,
                 BloodlustUptime,
-                Utilities.GetArrayHashCode(Priorities));
+                Utilities.GetArrayHashCode(Priorities),
+                SimulationTime);
         }
 
         public static string ShortAbilityString(Ability ability)

@@ -361,15 +361,8 @@ namespace Rawr.Retribution
             calc.ToDodge = CombatStats.GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
             calc.ToResist = CombatStats.GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
 
-            Rotation rot;
-            if (calcOpts.SimulateRotation)
-            {
-                rot = new Simulator(combats);
-            }
-            else
-            {
-                rot = new EffectiveCooldown(combats);
-            }
+            Rotation rot = Rotation.Create(combats);
+
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                 + new MagicDamage(combats, stats.FireDamage).AverageDamage()
                 + new MagicDamage(combats, stats.ShadowDamage).AverageDamage();
@@ -417,13 +410,8 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 float fightLength = calcOpts.FightLength * 60f;
-                Rotation rot;
-
                 CombatStats combats = new CombatStats(character, stats);
-                if (calcOpts.SimulateRotation) 
-                    rot = new Simulator(combats);
-                else 
-                    rot = new EffectiveCooldown(combats);
+                Rotation rot = Rotation.Create(combats);
 
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
@@ -914,15 +902,21 @@ namespace Rawr.Retribution
                 CalculationOptionsRetribution baseOpts = ((CalculationOptionsRetribution)character.CalculationOptions).Clone();
                 baseChar.CalculationOptions = baseOpts;
 
-                int selected = ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character)).RotationIndex;
+                Ability[] selectedRotation = 
+                    ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character))
+                        .Rotation;
 
                 for (int i = 0; i < baseOpts.Rotations.Count; i++)
                 {
-                    baseOpts.ForceRotation = i; // Force this rotation rather than having the calculations try all and use the best one.
-                                                // We don't need to set this back to off, since we're working in a cloned CalculationOptionsRetribution
+                    // Force this rotation rather than having the calculations try all and use the best one.
+                    // We don't need to set this back to off, 
+                    // since we're working in a cloned CalculationOptionsRetribution
+                    baseOpts.ForceRotation = i; 
+                                                
                     ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
                         Calculations.GetCharacterCalculations(baseChar),
-                        RotationParameters.RotationString(baseOpts.Rotations[i]), i == selected);
+                        RotationParameters.RotationString(baseOpts.Rotations[i]), 
+                        Utilities.AreArraysEqual(baseOpts.Rotations[i], selectedRotation));
                     compare.Item = null;
                     comparisons.Add(compare);
                 }
