@@ -17,32 +17,6 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-    //        private const int INTRO_VERSION = 21;
-    //        private const string INTRO_TEXT =
-    //@"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which 
-    //should greatly  ease the pains we've all had with gems in Rawr up til now.
-    //   
-    //Recent Changes:
-    //v2.2.0b5
-    // - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same 
-    //level of testing that we normally put into releases, but we're releasing 
-    //it in its current form, due to the large number of changes. If you do run 
-    //into bugs, please post them on our Issue Tracker. Please use the current 
-    //release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 
-    //2.2.0b5. Thanks!
-    // - Fixed a bug where relevant items and gemmings wouldn't be updated 
-    //immediately upon switching models.
-    // - Fix for the Direct Upgrades chart being broken in some models.
-    // - More performance improvements to the Optimizer
-    // - Added 'Load Possible Upgrades from Wowhead' feature. Check the 'Use 
-    //PTR Data' item inside of it to load upgrades from the PTR Wowhead, as 
-    //they're discovered on the PTR.
-    // - Models: Tons of model updates; see ReadMe.txt for details on the 
-    //changes and status of each model.
-    //
-    //If you are an experienced C# dev, a knowledgable theorycrafter, and 
-    //would like to help out, especially with the models which aren't fully 
-    //complete, please contact me at cnervig@hotmail.com. Thanks!";
 
         private string _storedCharacterPath;
         private bool _storedUnsavedChanged;
@@ -736,7 +710,7 @@ namespace Rawr
             ItemRefinement.updateBoxes();
             if (ItemRefinement.ShowDialog(this) == DialogResult.OK)
             {
-                ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+                ItemFilter.Save(GetItemFilterFilePath());
             }
         }
 
@@ -2047,17 +2021,17 @@ namespace Rawr
         private void toolStripMenuItemItemFilterEditor_Click(object sender, EventArgs e)
         {
             // in order to preserve which filters are enabled we have to save the filters before initiating the edit
-            ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+            ItemFilter.Save(GetItemFilterFilePath());
             FormItemFilter.itemFilterTreeView.GenerateNodes();
             if (FormItemFilter.ShowDialog(this) == DialogResult.OK)
             {
-				ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+				ItemFilter.Save(GetItemFilterFilePath());
                 itemFilterTreeView.GenerateNodes();
                 ItemCache.OnItemsChanged();
             }
             else
             {
-				ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+				ItemFilter.Load(GetItemFilterFilePath());
                 itemFilterTreeView.GenerateNodes(); // you have to rebuild dropdown, because reloading item filters from file makes Tags on drop down menu invalid
             }
         }
@@ -2742,5 +2716,11 @@ namespace Rawr
             toolStripItemComparison.Focus();
             //txtFilterBox.Focus();
         }
+
+        private string GetItemFilterFilePath()
+        {
+            return Path.Combine("Data", "ItemFilter.xml");
+        }
+
     }
 }

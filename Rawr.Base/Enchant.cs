@@ -89,7 +89,12 @@ namespace Rawr
 #if !RAWR3
         static Enchant()
         {
-            _SaveFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
+            _SaveFilePath = 
+                Path.Combine(
+                    Path.Combine(
+                        Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), 
+                        "Data"),
+                    "EnchantCache.xml");
             LoadEnchants();
             SaveEnchants();
         }

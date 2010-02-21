@@ -274,7 +274,12 @@ namespace Rawr
         private static readonly string _savedFilePath;
         static GemmingTemplate()
         {
-            _savedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "GemmingTemplates.xml");
+            _savedFilePath = 
+                Path.Combine(
+                    Path.Combine(
+                        Path.GetDirectoryName(Application.ExecutablePath), 
+                        "Data"),
+                    "GemmingTemplates.xml");
             LoadTemplates();
         }
 

@@ -12,7 +12,12 @@ namespace Rawr
 	public static class ItemCache
 	{
 #if !RAWR3
-		public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "ItemCache.xml");
+		public static readonly string SavedFilePath = 
+            Path.Combine(
+                Path.Combine(
+                    Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), 
+                    "Data"),
+                "ItemCache.xml");
 #endif
 
 		private static ItemCacheInstance _instance = new ItemCacheInstance();
@@ -458,8 +463,8 @@ namespace Rawr
                 writer.Close();
             }
 
-			LocationFactory.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemSource.xml");
-			ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+			LocationFactory.Save(Path.Combine("Data", "ItemSource.xml"));
+			ItemFilter.Save(Path.Combine("Data", "ItemFilter.xml"));
 #else
             //this is handy for debugging
             foreach (Item item in AllItems)
@@ -505,8 +510,8 @@ namespace Rawr
 				AddItem(item, false);
 			}
 
-			LocationFactory.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemSource.xml");
-			ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+			LocationFactory.Load(Path.Combine("Data", "ItemSource.xml"));
+			ItemFilter.Load(Path.Combine("Data", "ItemFilter.xml"));
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 #endif

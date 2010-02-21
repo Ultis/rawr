@@ -105,7 +105,12 @@ namespace Rawr
         private static readonly string _savedFilePath;
         static Buff() 
         {
-            _savedFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "BuffCache.xml");
+            _savedFilePath = 
+                Path.Combine(
+                    Path.Combine(
+                        Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), 
+                        "Data"),
+                    "BuffCache.xml");
             LoadBuffs();
             SaveBuffs();
         }

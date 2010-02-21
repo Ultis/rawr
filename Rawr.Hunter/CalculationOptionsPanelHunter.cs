@@ -251,8 +251,12 @@ namespace Rawr.Hunter
 
         private static readonly string _SavedFilePath;
         static CalculationOptionsPanelHunter() {
-			_SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
-                "Data" + Path.DirectorySeparatorChar + "PetTalents.xml");
+			_SavedFilePath = 
+                Path.Combine(
+                    Path.Combine(
+                        Path.GetDirectoryName(Application.ExecutablePath),
+                        "Data"),
+                    "PetTalents.xml");
         }
 
         private SavedPetTalentSpecList _savedPetTalents;

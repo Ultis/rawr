@@ -60,9 +60,10 @@ namespace Rawr
 					_modelClasses = new Dictionary<string, CharacterClass>();
 
 #if !RAWR3
-                    string dir = AppDomain.CurrentDomain.BaseDirectory + "Data";
+                    string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
                     // when running in service the dlls are in relative search path
-                    if (AppDomain.CurrentDomain.RelativeSearchPath != null) dir = AppDomain.CurrentDomain.RelativeSearchPath;
+                    if (AppDomain.CurrentDomain.RelativeSearchPath != null) 
+                        dir = AppDomain.CurrentDomain.RelativeSearchPath;
 					DirectoryInfo info = new DirectoryInfo(dir);
 					foreach (FileInfo file in info.GetFiles("*.dll"))
 					{
