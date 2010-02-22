@@ -4017,6 +4017,10 @@ namespace Rawr.Mage
                             if (talents.DeepFreeze > 0)
                             {
                                 list.Add(CycleId.FrBDFFBIL);
+                                if (calculationOptions.Mode333)
+                                {
+                                    list.Add(CycleId.FrBDFFFB);
+                                }
                             }
                             list.Add(CycleId.FrBIL);
                             list.Add(CycleId.FrostboltFOF);
@@ -4076,6 +4080,10 @@ namespace Rawr.Mage
                             if (talents.DeepFreeze > 0)
                             {
                                 list.Add(CycleId.FrBDFFBIL);
+                                if (calculationOptions.Mode333)
+                                {
+                                    list.Add(CycleId.FrBDFFFB);
+                                }
                             }
                         }
                         list.Add(CycleId.AB2AM);
