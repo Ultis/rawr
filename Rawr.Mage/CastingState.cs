@@ -852,6 +852,9 @@ namespace Rawr.Mage
                 case CycleId.FrBDFFBIL:
                     c = FrBDFFBIL.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.FrBDFFFB:
+                    c = FrBDFFFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.FrBILFB:
                     c = FrBILFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -860,9 +863,6 @@ namespace Rawr.Mage
                     break;
                 case CycleId.FrBFB:
                     c = FrBFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.FrBFFB:
-                    c = FrBFFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBScLBPyro:
                     c = FBScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);

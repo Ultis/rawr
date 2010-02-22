@@ -30,32 +30,6 @@ namespace Rawr.Mage
         }
     }
 
-    public static class FrBFFB
-    {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
-        {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
-            Spell FrB;
-            float K;
-            cycle.Name = "FrBFFB";
-
-            FrB = castingState.GetSpell(SpellId.FrostboltFOF);
-            Spell FFB = castingState.GetSpell(SpellId.FrostfireBoltBFFOF);
-
-            // FrB      1 - brainFreeze
-            // FrB-FFB   brainFreeze
-
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-
-            K = 0.05f * castingState.MageTalents.BrainFreeze / (1 - T8);
-
-            cycle.AddSpell(needsDisplayCalculations, FrB, 1);
-            cycle.AddSpell(needsDisplayCalculations, FFB, K);
-            cycle.Calculate();
-            return cycle;
-        }
-    }
-
     public static class FrBFBIL
     {
         public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
@@ -330,6 +304,187 @@ namespace Rawr.Mage
             cycle.AddSpell(needsDisplayCalculations, FrBS, KFrBS);
             cycle.AddSpell(needsDisplayCalculations, FBS, KFBS);
             cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
+            cycle.CastTime /= hasteFactor; // ignores latency effects, but it'll have to do for now
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    public static class FrBDFFFB
+    {
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Spell FrB, FrBS, FFB, FFBS, DFS;
+            float KFrB, KFrBS, KFFB, KFFBS, KDFS;
+            cycle.Name = "FrBDFFFB";
+
+            //float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+
+            // S00: FOF0, BF0
+            // FrB => S21    fof * bf
+            //        S20    fof * (1-bf)
+            //        S01    (1-fof) * bf
+            //        S00    (1-fof)*(1-bf)
+
+            // S01: FOF0, BF1
+            // FrB => S22    fof
+            //        S02    (1-fof)
+
+            // S02: FOF0, BF2
+            // FFB => S20    fof
+            //        S00    (1-fof)
+
+            // S10: FOF1, BF0
+            // FrBS => S21    X*fof * bf
+            //         S20    X*fof * (1-bf)
+            //         S01    X*(1-fof) * bf
+            //         S00    X*(1-fof)*(1-bf)
+            // FrBS-DFS => S12    (1-X)*fof*bf
+            //             S10    (1-X)*fof * (1-bf)
+            //             S02    (1-X)*(1-fof) * bf
+            //             S00    (1-X)*(1-fof)*(1-bf)
+
+            // S11: FOF1, BF1
+            // FrBS-FFBS => S10    X*fof*(1-fof)
+            //              S00    X*(1-fof)*(1-fof)
+            //              S20    X*fof
+            // FrBS-DFS => S12    (1-X)*fof
+            //             S02    (1-X)*(1-fof)
+
+            // S12 = S11
+
+            // S20: FOF0, BF0
+            // FrBS => S21    fof * bf
+            //         S20    fof * (1-bf)
+            //         S11    (1-fof) * bf
+            //         S10    (1-fof)*(1-bf)
+
+            // S21: FOF0, BF1
+            // FrBS => S22    fof
+            //         S12    (1-fof)
+
+            // S22 = S21
+
+            // S00 = (1-fof)*(1-bf) * S00 + (1-fof) * S02 + (1-fof)*(1-bf) * S10 + X*(1-fof)*(1-fof) * S11
+            // S01 = (1-fof) * bf * S00 + X*(1-fof) * bf * S10
+            // S02 = (1-fof) * S01 + (1-X)*(1-fof) * bf * S10 + (1-X)*(1-fof) * S11
+            // S10 = (1-X)*fof * (1-bf) * S10 + X*fof*(1-fof) * S11 + (1-fof)*(1-bf) * S20
+            // S11 = (1-X)*fof*bf * S10 + (1-X)*fof * S11 + (1-fof) * bf * S20 + (1-fof) * S21
+            // S20 = fof * (1-bf) * S00 + fof * S02 + X*fof * (1-bf) * S10 + X*fof * S11 + fof * (1-bf) * S20
+            // S21 = fof * bf * S00 + fof * S01 + X*fof * bf * S10 + fof * bf * S20 + fof * S21
+            // S00 + S01 + S02 + S10 + S11 + S20 + S21 = 1
+
+            // solved symbolically
+
+            // S20:((bf^2*fof^4+(bf-3*bf^2)*fof^3+(2*bf^2-1)*fof^2)*X^2+(-bf^2*fof^4+(3*bf^2-bf)*fof^3+(-2*bf^2-bf+2)*fof^2+(bf-2)*fof)*X+(bf-1)*fof^2+(2-bf)*fof-1)
+            // S11: ((bf^3-bf)*fof^3+(-3*bf^3+bf^2+2*bf)*fof^2+(2*bf^3-2*bf)*fof)*X+(bf-bf^3)*fof^3+(3*bf^3-bf^2-3*bf)*fof^2+(5*bf-2*bf^3)*fof-3*bf
+            // S10: ((fof^2-fof)*S11*X+((1-bf)*fof+bf-1)*S20)/((bf-1)*fof*X+(1-bf)*fof-1)
+            // S00: (-(bf*fof^3-2*bf*fof^2+bf*fof)*S10*X-(-fof^2+2*fof-1)*S11-(-bf*fof^2+(bf+1)*fof-1)*S10)/(bf*fof^3-3*bf*fof^2+(2*bf+1)*fof)
+            // S21: ((bf*fof^2-2*bf*fof)*S10*X-bf*fof*S20+(bf*fof^2-2*bf*fof)*S00)/(fof-1)
+            // S02: (1-fof)*(bf*(1-fof)*S10*X+bf*(1-fof)*S00)+(1-fof)*S11*(1-X)+bf*(1-fof)*S10*(1-X)
+            // S01: (1-fof) * bf * S00 + X*(1-fof) * bf * S10
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltBF);
+            FFBS = castingState.FrozenState.GetSpell(SpellId.FrostfireBoltBF);
+            DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+
+            float bf = 0.05f * castingState.MageTalents.BrainFreeze;
+            float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
+            float fof2 = fof * fof;
+            float fof3 = fof2 * fof;
+            float fof4 = fof3 * fof;
+            float bf2 = bf * bf;
+            float bf3 = bf2 * bf;
+
+            // shatters until deep freeze ~ Poisson
+            // share of shatters that are deep freeze = sum_i=0..inf Pi / sum_i=0..inf (i+1)*Pi = 1 / (1 + mean)
+
+            // crude initial guess
+            float X = 1.0f - 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (FrB.CastTime * (1 / fof + 1) + FFBS.CastTime));
+
+            float S20=((bf2*fof4+(bf-3*bf2)*fof3+(2*bf2-1)*fof2)*X*X+(-bf2*fof4+(3*bf2-bf)*fof3+(-2*bf2-bf+2)*fof2+(bf-2)*fof)*X+(bf-1)*fof2+(2-bf)*fof-1);
+            float S11= ((bf3-bf)*fof3+(-3*bf3+bf2+2*bf)*fof2+(2*bf3-2*bf)*fof)*X+(bf-bf3)*fof3+(3*bf3-bf2-3*bf)*fof2+(5*bf-2*bf3)*fof-3*bf;
+            float S10= ((fof2-fof)*S11*X+((1-bf)*fof+bf-1)*S20)/((bf-1)*fof*X+(1-bf)*fof-1);
+            float S00= (-(bf*fof3-2*bf*fof2+bf*fof)*S10*X-(-fof2+2*fof-1)*S11-(-bf*fof2+(bf+1)*fof-1)*S10)/(bf*fof3-3*bf*fof2+(2*bf+1)*fof);
+            float S21= ((bf*fof2-2*bf*fof)*S10*X-bf*fof*S20+(bf*fof2-2*bf*fof)*S00)/(fof-1);
+            float S02= (1-fof)*(bf*(1-fof)*S10*X+bf*(1-fof)*S00)+(1-fof)*S11*(1-X)+bf*(1-fof)*S10*(1-X);
+            float S01 = (1 - fof) * bf * S00 + X * (1 - fof) * bf * S10;
+
+            float div = S00 + S01 + S02 + S10 + S11 + S20 + S21;
+
+            KFrB = (S00 + S01) / div;
+            KFFB = S02 / div;
+            KFrBS = (S10 + S11 + S20 + S21) / div;
+            KFFBS = X * S11 / div;
+            KDFS = (1 - X) * (S10 + S11) / div;
+
+            float hasteFactor = 1.0f;
+
+            float T = KFrB * FrB.CastTime + KFFB * FFB.CastTime + KFrBS * FrBS.CastTime + KFFBS * FFBS.CastTime + KDFS * DFS.CastTime;
+            float T0 = KFrBS * FrBS.CastTime / 2.0f;
+            float T1 = KFFBS * FFBS.CastTime + KFFB * FFB.CastTime;
+
+            if (castingState.BaseStats.Mage2T10 > 0)
+            {
+                // we'll make a lot of assumptions here and just assume that 2T10 haste is uniformly distributed over all
+                // spells and doesn't have an impact on state space
+                // also ignore the possible refresh of 2T10
+                // each proc gives 12% haste for 5 sec
+                // we have on average one proc every T/T1 * FFB.CastTime
+                // we have some feedback loop here, speeding up the cycle increases the rate of procs
+                // hastedShare = (5-FFB.CastTimeAverage) / (T/T1 * FFB.CastTimeAverage)
+                // hastedCastShare = (5-FFB.CastTimeAverage) / (T/T1 * FFB.CastTime) * 1.12
+                // average haste = 1 / (1-hastedCastShare*0.12/1.12)
+                // TODO this is all a bunch of voodoo, redo the math when you're thinking straight
+                hasteFactor = 1.0f / (1.0f - (5 - FFB.CastTime) / (T / T1 * FFB.CastTime) * 0.12f);
+
+                // alternative model based on reduction to single state space and expanding for haste
+                // probability of being hasted = 1 - (1-p)^(N-1)
+                // where
+                // K := (KFrB + KFB + KFrBS + KFBS + KILS + KDFS)
+                // p = probability of haste generating spell = (KFBS + KFB) / K
+                // N = average number of spells affected by haste = (haste duration - average cast time of haste generating spell) / (average cast time of hasted spells)
+                //   = (5 - T1 / 1.12 / K) / (T / 1.12 / K)
+                //   = (5 * 1.12 * K - T1) / T
+                // hasteFactor = 1 / (((1-p)^(N-1)) * 1 + (1 - (1-p)^(N-1)) * 1/1.12)
+                //             = 1.12 / (((1-p)^(N-1)) * 0.12 + 1)
+                //             = 1.12 / (1 + 0.12 * (1 - (KFBS + KFB) / K)^((5 * 1.12 * K - T1) / T - 1))
+                //float K = KFrB + KFB + KFrBS + KFBS + KILS + KDFS;
+                //hasteFactor = 1.12f / (1.0f + 0.12f * (float)Math.Pow(1.0f - ((KFBS + KFB) / K), ((5.0f * 1.12f * K - T1) / T - 1.0f)));
+            }
+
+            if (fof > 0) // nothing new here if we don't have fof
+            {
+                // better estimate for percentage of shatter combos that are deep freeze
+                // TODO better probabilistic model for DF percentage
+                X = 1.0f - 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime / hasteFactor) / (FrBS.CastTime / hasteFactor * T / T0));
+
+                // recalculate shares based on revised estimate
+                S20 = ((bf2 * fof4 + (bf - 3 * bf2) * fof3 + (2 * bf2 - 1) * fof2) * X * X + (-bf2 * fof4 + (3 * bf2 - bf) * fof3 + (-2 * bf2 - bf + 2) * fof2 + (bf - 2) * fof) * X + (bf - 1) * fof2 + (2 - bf) * fof - 1);
+                S11 = ((bf3 - bf) * fof3 + (-3 * bf3 + bf2 + 2 * bf) * fof2 + (2 * bf3 - 2 * bf) * fof) * X + (bf - bf3) * fof3 + (3 * bf3 - bf2 - 3 * bf) * fof2 + (5 * bf - 2 * bf3) * fof - 3 * bf;
+                S10 = ((fof2 - fof) * S11 * X + ((1 - bf) * fof + bf - 1) * S20) / ((bf - 1) * fof * X + (1 - bf) * fof - 1);
+                S00 = (-(bf * fof3 - 2 * bf * fof2 + bf * fof) * S10 * X - (-fof2 + 2 * fof - 1) * S11 - (-bf * fof2 + (bf + 1) * fof - 1) * S10) / (bf * fof3 - 3 * bf * fof2 + (2 * bf + 1) * fof);
+                S21 = ((bf * fof2 - 2 * bf * fof) * S10 * X - bf * fof * S20 + (bf * fof2 - 2 * bf * fof) * S00) / (fof - 1);
+                S02 = (1 - fof) * (bf * (1 - fof) * S10 * X + bf * (1 - fof) * S00) + (1 - fof) * S11 * (1 - X) + bf * (1 - fof) * S10 * (1 - X);
+                S01 = (1 - fof) * bf * S00 + X * (1 - fof) * bf * S10;
+
+                div = S00 + S01 + S02 + S10 + S11 + S20 + S21;
+
+                KFrB = (S00 + S01) / div;
+                KFFB = S02 / div;
+                KFrBS = (S10 + S11 + S20 + S21) / div;
+                KFFBS = X * S11 / div;
+                KDFS = (1 - X) * (S10 + S11) / div;
+            }
+
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FFB, KFFB);
+            cycle.AddSpell(needsDisplayCalculations, FrBS, KFrBS);
+            cycle.AddSpell(needsDisplayCalculations, FFBS, KFFBS);
             cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
             cycle.CastTime /= hasteFactor; // ignores latency effects, but it'll have to do for now
             cycle.Calculate();
@@ -968,23 +1123,20 @@ z = actual count on Fingers of Frost
                                 TransitionProbability = FOF
                             });
                         }
-                        else
+                        list.Add(new CycleControlledStateTransition()
                         {
-                            list.Add(new CycleControlledStateTransition()
-                            {
-                                Spell = FB,
-                                TargetState = GetState(
-                                    false,
-                                    false,
-                                    Math.Max(0, s.FingersOfFrostActual - 1),
-                                    Math.Max(0, s.FingersOfFrostActual - 1),
-                                    s.FingersOfFrostActual > 1,
-                                    Math.Max(0, s.DeepFreezeCooldown - FB.CastTime),
-                                    Math.Max(0, T10 ? 5.0f - FB.CastTime : s.Tier10TwoPieceDuration - FB.CastTime)
-                                ),
-                                TransitionProbability = 1 - FOF
-                            });
-                        }
+                            Spell = FB,
+                            TargetState = GetState(
+                                false,
+                                false,
+                                Math.Max(0, s.FingersOfFrostActual - 1),
+                                Math.Max(0, s.FingersOfFrostActual - 1),
+                                s.FingersOfFrostActual > 1,
+                                Math.Max(0, s.DeepFreezeCooldown - FB.CastTime),
+                                Math.Max(0, T10 ? 5.0f - FB.CastTime : s.Tier10TwoPieceDuration - FB.CastTime)
+                            ),
+                            TransitionProbability = 1 - FOF
+                        });
                     }
                     else
                     {

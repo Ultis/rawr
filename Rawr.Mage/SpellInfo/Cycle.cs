@@ -91,6 +91,7 @@ namespace Rawr.Mage
         FrBIL,
         FrBILFB,
         FrBDFFBIL,
+        FrBDFFFB,
         FrBFBIL,
         FrBFFB,
         FBSc,
