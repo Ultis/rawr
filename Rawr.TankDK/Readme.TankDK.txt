@@ -2,6 +2,10 @@
 
 Currently targeting: 
 * Wow version 3.3.2
+
+2.3.11:
+* No Defect: Adjust the defaults to be more appropriate for T9ish levels rather than Heroics.
+
 2.3.10:
 * No Defect: Actually implement the T10 set bonuses. Some how these didn't get in.
 

@@ -69,7 +69,7 @@ namespace Rawr.TankDK
             set { _MitigationWeight = value; OnPropertyChanged("MitigationWeight"); }
         }
         #region Physical Damage
-        private uint _IncomingDamage = 10000u;
+        private uint _IncomingDamage = 60000u;
         public uint IncomingDamage
         {
             get 
@@ -82,14 +82,14 @@ namespace Rawr.TankDK
             }
             set { _IncomingDamage = value; OnPropertyChanged("IncomingDamage"); }
         }
-        private float _BossAttackSpeed = 2.5f;
+        private float _BossAttackSpeed = 2f;
         public float BossAttackSpeed
         {
             get
             {
-                if (_BossAttackSpeed < 1f)
+                if (_BossAttackSpeed < 0f)
                 {
-                    _BossAttackSpeed = 2.5f;
+                    _BossAttackSpeed = 2f;
                 }
                 return _BossAttackSpeed;
             }
@@ -97,7 +97,7 @@ namespace Rawr.TankDK
         }
         #endregion
         #region Magic Damage
-        private uint _IncomingMagicDamage = 0;
+        private uint _IncomingMagicDamage = 15000;
         public uint IncomingMagicDamage
         {
             get
@@ -110,7 +110,7 @@ namespace Rawr.TankDK
             }
             set { _IncomingMagicDamage = value; OnPropertyChanged("IncomingMagicDamage"); }
         }
-        private float _IncomingFromMagicFrequency = 0;
+        private float _IncomingFromMagicFrequency = 20;
         public float IncomingFromMagicFrequency
         {
             get 
@@ -125,7 +125,7 @@ namespace Rawr.TankDK
         }
         #endregion
         #region Bleed Damage
-        private uint _IncomingBleedDamage = 0;
+        private uint _IncomingBleedDamage = 4000;
         public uint IncomingBleedDamage
         {
             get
@@ -138,7 +138,7 @@ namespace Rawr.TankDK
             }
             set { _IncomingBleedDamage = value; OnPropertyChanged("IncomingMagicDamage"); }
         }
-        private float _IncomingBleedTickFrequency = 0;
+        private float _IncomingBleedTickFrequency = 2;
         public float BleedTickFrequency
         {
             get
@@ -225,10 +225,6 @@ namespace Rawr.TankDK
         {
             get
             {
-                if (_m_AdditiveMitigation == null)
-                {
-                    _m_AdditiveMitigation = false;
-                }
                 return _m_AdditiveMitigation;
             }
             set { _m_AdditiveMitigation = value; OnPropertyChanged("AdditiveMitigation"); }
