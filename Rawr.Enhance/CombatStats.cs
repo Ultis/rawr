@@ -392,21 +392,22 @@ namespace Rawr.Enhance
 
         private void SetCritValues(float chanceCrit)
         {
-            // first set max crit chance 76% - miss chance (ie 100% - 24% glancing - miss chance) 
+            // first set max crit chance after crit depression is 76% - miss chance (ie 100% - 24% glancing - miss chance) 
             // see http://elitistjerks.com/f31/t76785-crit_depression_combat_table/
-            chanceWhiteCritMH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissMH);
-            chanceWhiteCritOH = Math.Min(chanceCrit, 1f - GlancingRate - chanceWhiteMissOH);
-            chanceYellowCritMH = Math.Min(chanceCrit, 1f - chanceYellowMissMH);
-            chanceYellowCritOH = Math.Min(chanceCrit, 1f - chanceYellowMissOH);
-            if (chanceCrit > 1f - GlancingRate - chanceWhiteMissMH)
-                overMeleeCritCap = chanceCrit - (1f - GlancingRate - chanceWhiteMissMH);
+            // miss chance includes dodge & parry
+            chanceWhiteCritMH = Math.Min(chanceCrit - whiteCritDepression, 1f - GlancingRate - chanceWhiteMissMH);
+            chanceWhiteCritOH = Math.Min(chanceCrit - whiteCritDepression, 1f - GlancingRate - chanceWhiteMissOH);
+            chanceYellowCritMH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissMH);
+            chanceYellowCritOH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissOH);
+            if (chanceCrit - whiteCritDepression > 1f - GlancingRate - chanceWhiteMissMH)
+                overMeleeCritCap = chanceCrit - whiteCritDepression - (1f - GlancingRate - chanceWhiteMissMH);
             else
                 overMeleeCritCap = 0f;
-            // now apply crit depression
-            chanceWhiteCritMH = Math.Max(0.01f, chanceWhiteCritMH - whiteCritDepression);
-            chanceWhiteCritOH = Math.Max(0.01f, chanceWhiteCritOH - whiteCritDepression);
-            chanceYellowCritMH = Math.Max(0.01f, chanceYellowCritMH - yellowCritDepression);
-            chanceYellowCritOH = Math.Max(0.01f, chanceYellowCritOH - yellowCritDepression);
+            // now apply min 1% crit chance
+            chanceWhiteCritMH = Math.Max(0.01f, chanceWhiteCritMH);
+            chanceWhiteCritOH = Math.Max(0.01f, chanceWhiteCritOH);
+            chanceYellowCritMH = Math.Max(0.01f, chanceYellowCritMH);
+            chanceYellowCritOH = Math.Max(0.01f, chanceYellowCritOH);
         }
 
         private float CalculateFlurryUptime(float c, float h, float m) // c = crit rate, h = hit rate, m = miss rate, assuming hits as noncrits only

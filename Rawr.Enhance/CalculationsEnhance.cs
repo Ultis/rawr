@@ -1035,11 +1035,10 @@ namespace Rawr.Enhance
                         calcCritWhite.OverallPoints = currentCalculationsEnhanceWhite.MeleeCrit - 4.8f;
                         calcCritWhite.DPSPoints = calcCritWhite.OverallPoints - calcCritWhite.SubPoints[1];
                         calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = currentCalculationsEnhanceWhite.GlancingBlows;
-                        calcHitWhite.SubPoints = new float[2];
-                        calcHitWhite.OverallPoints = Math.Max(4.8f,(100f - calcMissWhite.OverallPoints -
-                                                     calcDodgeWhite.OverallPoints - calcCritWhite.DPSPoints - calcGlanceWhite.OverallPoints));
-                        calcHitWhite.DPSPoints = 4.8f;
-                        calcHitWhite.SubPoints[1] = calcHitWhite.OverallPoints - calcHitWhite.DPSPoints;
+                        calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = 100f - calcMissWhite.OverallPoints 
+                                                                                   - calcDodgeWhite.OverallPoints 
+                                                                                   - calcCritWhite.DPSPoints 
+                                                                                   - calcGlanceWhite.OverallPoints;
                     }
                     return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
 
