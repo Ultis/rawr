@@ -559,32 +559,43 @@ namespace Rawr.Retribution
             // Combat ratings
             stats.Expertise += talents.CombatExpertise * 2 + 
                 StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
-            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
+            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(
+                stats.HitRating, 
+                CharacterClass.Paladin);
             stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin);
 
-            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
-            stats.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin)
-                                + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin)
-                                + talentCrit
-                                - StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80];    // Mob crit suppression
-            stats.SpellCrit += stats.SpellCritOnTarget
-                            + StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
-                            + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
-                            + talentCrit
-                            - StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];    // Mob crit suppression
+            float talentCrit = 
+                talents.CombatExpertise * .02f + 
+                talents.Conviction * .01f + 
+                talents.SanctityOfBattle * .01f;
+            stats.PhysicalCrit += 
+                StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
+                StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin) + 
+                talentCrit + 
+                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]; // Mob crit suppression
+            stats.SpellCrit += stats.SpellCritOnTarget + 
+                StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
+                StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin) + 
+                talentCrit +
+                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]; // Mob crit suppression
 
-            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * (1f + stats.Bloodlust) - 1f;
-            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * (1f + stats.Bloodlust) - 1f;
+            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * 
+                (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * 
+                (1f + stats.Bloodlust) 
+                - 1f;
+            stats.SpellHaste = (1f + stats.SpellHaste) * 
+                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * 
+                (1f + stats.Bloodlust) 
+                - 1f;
 
-            stats.SpellPower += stats.Strength * talents.TouchedByTheLight * .2f 
-                              + stats.AttackPower * talents.SheathOfLight * .1f;
+            stats.SpellPower += 
+                stats.Strength * talents.TouchedByTheLight * .2f + 
+                stats.AttackPower * talents.SheathOfLight * .1f;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
 
             #region Racials to Force Enable
             // Draenei should always have this buff activated
