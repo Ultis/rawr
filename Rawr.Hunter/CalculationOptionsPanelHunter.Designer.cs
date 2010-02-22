@@ -341,7 +341,7 @@
             this.BT_PetTalentsSaveDel.TabIndex = 5;
             this.BT_PetTalentsSaveDel.Text = "Save";
             this.BT_PetTalentsSaveDel.UseVisualStyleBackColor = true;
-            this.BT_PetTalentsSaveDel.Click += new System.EventHandler(this.talentSpecButton_Click);
+            this.BT_PetTalentsSaveDel.Click += new System.EventHandler(this.BT_PetTalentSpecButton_Click);
             // 
             // CB_PetTalentsSpecSwitcher
             // 
@@ -356,7 +356,7 @@
             this.CB_PetTalentsSpecSwitcher.Name = "CB_PetTalentsSpecSwitcher";
             this.CB_PetTalentsSpecSwitcher.Size = new System.Drawing.Size(214, 21);
             this.CB_PetTalentsSpecSwitcher.TabIndex = 4;
-            this.CB_PetTalentsSpecSwitcher.SelectedIndexChanged += new System.EventHandler(this.comboBoxTalentSpec_SelectedIndexChanged);
+            this.CB_PetTalentsSpecSwitcher.SelectedIndexChanged += new System.EventHandler(this.CB_PetTalentSpec_SelectedIndexChanged);
             // 
             // FLP_PetFamilies
             // 
@@ -518,7 +518,7 @@
             this.CB_TenacityThunderstomp.Name = "CB_TenacityThunderstomp";
             this.CB_TenacityThunderstomp.Size = new System.Drawing.Size(67, 21);
             this.CB_TenacityThunderstomp.TabIndex = 23;
-            this.CB_TenacityThunderstomp.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityThunderstomp.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_TenacityNaturalArmor
             // 
@@ -530,7 +530,7 @@
             this.CB_TenacityNaturalArmor.Name = "CB_TenacityNaturalArmor";
             this.CB_TenacityNaturalArmor.Size = new System.Drawing.Size(67, 21);
             this.CB_TenacityNaturalArmor.TabIndex = 7;
-            this.CB_TenacityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacitySpikedCollar
             // 
@@ -572,7 +572,7 @@
             this.CB_TenacityBoarsSpeed.Name = "CB_TenacityBoarsSpeed";
             this.CB_TenacityBoarsSpeed.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityBoarsSpeed.TabIndex = 11;
-            this.CB_TenacityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_TenacityPetBarding
             // 
@@ -584,7 +584,7 @@
             this.CB_TenacityPetBarding.Name = "CB_TenacityPetBarding";
             this.CB_TenacityPetBarding.Size = new System.Drawing.Size(67, 21);
             this.CB_TenacityPetBarding.TabIndex = 15;
-            this.CB_TenacityPetBarding.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityPetBarding.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityLionHearted
             // 
@@ -611,7 +611,7 @@
             this.CB_TenacityGuardDog.Name = "CB_TenacityGuardDog";
             this.CB_TenacityGuardDog.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityGuardDog.TabIndex = 19;
-            this.CB_TenacityGuardDog.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityGuardDog.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_TenacityTaunt
             // 
@@ -623,7 +623,7 @@
             this.CB_TenacityTaunt.Name = "CB_TenacityTaunt";
             this.CB_TenacityTaunt.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityTaunt.TabIndex = 33;
-            this.CB_TenacityTaunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityTaunt.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityLastStand
             // 
@@ -650,7 +650,7 @@
             this.CB_TenacityIntervene.Name = "CB_TenacityIntervene";
             this.CB_TenacityIntervene.Size = new System.Drawing.Size(67, 21);
             this.CB_TenacityIntervene.TabIndex = 37;
-            this.CB_TenacityIntervene.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityIntervene.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityRoarOfSacrifice
             // 
@@ -692,7 +692,7 @@
             this.CB_TenacityCobraReflexes.Name = "CB_TenacityCobraReflexes";
             this.CB_TenacityCobraReflexes.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityCobraReflexes.TabIndex = 1;
-            this.CB_TenacityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_TenacityCharge
             // 
@@ -704,7 +704,7 @@
             this.CB_TenacityCharge.Name = "CB_TenacityCharge";
             this.CB_TenacityCharge.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityCharge.TabIndex = 3;
-            this.CB_TenacityCharge.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityCharge.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityNaturalArmor
             // 
@@ -731,7 +731,7 @@
             this.CB_TenacityGreatStamina.Name = "CB_TenacityGreatStamina";
             this.CB_TenacityGreatStamina.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityGreatStamina.TabIndex = 5;
-            this.CB_TenacityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityPetBarding
             // 
@@ -758,7 +758,7 @@
             this.CB_TenacityBloodOfTheRhino.Name = "CB_TenacityBloodOfTheRhino";
             this.CB_TenacityBloodOfTheRhino.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityBloodOfTheRhino.TabIndex = 13;
-            this.CB_TenacityBloodOfTheRhino.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityBloodOfTheRhino.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_TenacitySpikedCollar
             // 
@@ -770,7 +770,7 @@
             this.CB_TenacitySpikedCollar.Name = "CB_TenacitySpikedCollar";
             this.CB_TenacitySpikedCollar.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacitySpikedCollar.TabIndex = 9;
-            this.CB_TenacitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityBoarsSpeed
             // 
@@ -797,7 +797,7 @@
             this.CB_TenacityLionhearted.Name = "CB_TenacityLionhearted";
             this.CB_TenacityLionhearted.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityLionhearted.TabIndex = 21;
-            this.CB_TenacityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityLionhearted.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityThunderstomp
             // 
@@ -839,7 +839,7 @@
             this.CB_TenacityRoarOfSacrifice.Name = "CB_TenacityRoarOfSacrifice";
             this.CB_TenacityRoarOfSacrifice.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityRoarOfSacrifice.TabIndex = 35;
-            this.CB_TenacityRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityIntervene
             // 
@@ -866,7 +866,7 @@
             this.CB_TenacityLastStand.Name = "CB_TenacityLastStand";
             this.CB_TenacityLastStand.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityLastStand.TabIndex = 31;
-            this.CB_TenacityLastStand.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityLastStand.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityTaunt
             // 
@@ -893,7 +893,7 @@
             this.CB_TenacitySilverback.Name = "CB_TenacitySilverback";
             this.CB_TenacitySilverback.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacitySilverback.TabIndex = 39;
-            this.CB_TenacitySilverback.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacitySilverback.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacitySilverback
             // 
@@ -920,7 +920,7 @@
             this.CB_TenacityWildHunt.Name = "CB_TenacityWildHunt";
             this.CB_TenacityWildHunt.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityWildHunt.TabIndex = 41;
-            this.CB_TenacityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityWildHunt.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_TenacityGreatResistance
             // 
@@ -932,7 +932,7 @@
             this.CB_TenacityGreatResistance.Name = "CB_TenacityGreatResistance";
             this.CB_TenacityGreatResistance.Size = new System.Drawing.Size(67, 21);
             this.CB_TenacityGreatResistance.TabIndex = 29;
-            this.CB_TenacityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityGreatResistance
             // 
@@ -959,7 +959,7 @@
             this.CB_TenacityGraceOfTheMantis.Name = "CB_TenacityGraceOfTheMantis";
             this.CB_TenacityGraceOfTheMantis.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityGraceOfTheMantis.TabIndex = 27;
-            this.CB_TenacityGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_TenacityGraceOfTheMantis
             // 
@@ -1006,7 +1006,7 @@
             this.CB_TenacityCullingTheHerd.Name = "CB_TenacityCullingTheHerd";
             this.CB_TenacityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
             this.CB_TenacityCullingTheHerd.TabIndex = 25;
-            this.CB_TenacityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_TenacityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // GB_PetTalents_Cunning
             // 
@@ -1169,7 +1169,7 @@
             this.CB_CunningRoarOfRecovery.Name = "CB_CunningRoarOfRecovery";
             this.CB_CunningRoarOfRecovery.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningRoarOfRecovery.TabIndex = 33;
-            this.CB_CunningRoarOfRecovery.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningRoarOfRecovery.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningRoarOfRecovery
             // 
@@ -1197,7 +1197,7 @@
             this.CB_CunningWolverineBite.Name = "CB_CunningWolverineBite";
             this.CB_CunningWolverineBite.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningWolverineBite.TabIndex = 31;
-            this.CB_CunningWolverineBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningWolverineBite.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningGraceOfTheMantis
             // 
@@ -1225,7 +1225,7 @@
             this.CB_CunningGraceOfTheMantis.Name = "CB_CunningGraceOfTheMantis";
             this.CB_CunningGraceOfTheMantis.Size = new System.Drawing.Size(67, 21);
             this.CB_CunningGraceOfTheMantis.TabIndex = 35;
-            this.CB_CunningGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_CunningBullheaded
             // 
@@ -1237,7 +1237,7 @@
             this.CB_CunningBullheaded.Name = "CB_CunningBullheaded";
             this.CB_CunningBullheaded.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningBullheaded.TabIndex = 37;
-            this.CB_CunningBullheaded.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningBullheaded.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_CunningDiveDash
             // 
@@ -1249,7 +1249,7 @@
             this.CB_CunningDiveDash.Name = "CB_CunningDiveDash";
             this.CB_CunningDiveDash.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningDiveDash.TabIndex = 3;
-            this.CB_CunningDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningDiveDash.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningDiveDash
             // 
@@ -1277,7 +1277,7 @@
             this.CB_CunningCobraReflexes.Name = "CB_CunningCobraReflexes";
             this.CB_CunningCobraReflexes.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningCobraReflexes.TabIndex = 1;
-            this.CB_CunningCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_CunningBoarsSpeed
             // 
@@ -1289,7 +1289,7 @@
             this.CB_CunningBoarsSpeed.Name = "CB_CunningBoarsSpeed";
             this.CB_CunningBoarsSpeed.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningBoarsSpeed.TabIndex = 9;
-            this.CB_CunningBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_CunningGreatStamina
             // 
@@ -1301,7 +1301,7 @@
             this.CB_CunningGreatStamina.Name = "CB_CunningGreatStamina";
             this.CB_CunningGreatStamina.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningGreatStamina.TabIndex = 5;
-            this.CB_CunningGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningGreatStamina.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningNaturalArmor
             // 
@@ -1345,7 +1345,7 @@
             this.CB_CunningNaturalArmor.Name = "CB_CunningNaturalArmor";
             this.CB_CunningNaturalArmor.Size = new System.Drawing.Size(67, 21);
             this.CB_CunningNaturalArmor.TabIndex = 7;
-            this.CB_CunningNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningMobility
             // 
@@ -1373,7 +1373,7 @@
             this.CB_CunningMobility.Name = "CB_CunningMobility";
             this.CB_CunningMobility.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningMobility.TabIndex = 11;
-            this.CB_CunningMobility.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningMobility.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningSpikedCollar
             // 
@@ -1401,7 +1401,7 @@
             this.CB_CunningSpikedCollar.Name = "CB_CunningSpikedCollar";
             this.CB_CunningSpikedCollar.Size = new System.Drawing.Size(67, 21);
             this.CB_CunningSpikedCollar.TabIndex = 15;
-            this.CB_CunningSpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningSpikedCollar.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningOwlsFocus
             // 
@@ -1429,7 +1429,7 @@
             this.CB_CunningOwlsFocus.Name = "CB_CunningOwlsFocus";
             this.CB_CunningOwlsFocus.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningOwlsFocus.TabIndex = 13;
-            this.CB_CunningOwlsFocus.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningOwlsFocus.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningCullingTheHerd
             // 
@@ -1462,7 +1462,7 @@
             this.CB_CunningCullingTheHerd.Name = "CB_CunningCullingTheHerd";
             this.CB_CunningCullingTheHerd.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningCullingTheHerd.TabIndex = 23;
-            this.CB_CunningCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningLionHearted
             // 
@@ -1490,7 +1490,7 @@
             this.CB_CunningLionhearted.Name = "CB_CunningLionhearted";
             this.CB_CunningLionhearted.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningLionhearted.TabIndex = 19;
-            this.CB_CunningLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningLionhearted.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningCarrionFeeder
             // 
@@ -1518,7 +1518,7 @@
             this.CB_CunningCarrionFeeder.Name = "CB_CunningCarrionFeeder";
             this.CB_CunningCarrionFeeder.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningCarrionFeeder.TabIndex = 21;
-            this.CB_CunningCarrionFeeder.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningCarrionFeeder.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningGreatResistance
             // 
@@ -1546,7 +1546,7 @@
             this.CB_CunningGreatResistance.Name = "CB_CunningGreatResistance";
             this.CB_CunningGreatResistance.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningGreatResistance.TabIndex = 25;
-            this.CB_CunningGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningGreatResistance.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningCornered
             // 
@@ -1574,7 +1574,7 @@
             this.CB_CunningCornered.Name = "CB_CunningCornered";
             this.CB_CunningCornered.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningCornered.TabIndex = 27;
-            this.CB_CunningCornered.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningCornered.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningFeedingFrenzy
             // 
@@ -1602,7 +1602,7 @@
             this.CB_CunningFeedingFrenzy.Name = "CB_CunningFeedingFrenzy";
             this.CB_CunningFeedingFrenzy.Size = new System.Drawing.Size(67, 21);
             this.CB_CunningFeedingFrenzy.TabIndex = 29;
-            this.CB_CunningFeedingFrenzy.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningFeedingFrenzy.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningWildHunt
             // 
@@ -1630,7 +1630,7 @@
             this.CB_CunningWildHunt.Name = "CB_CunningWildHunt";
             this.CB_CunningWildHunt.Size = new System.Drawing.Size(65, 21);
             this.CB_CunningWildHunt.TabIndex = 39;
-            this.CB_CunningWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningWildHunt.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_CunningRoarofSacrifice
             // 
@@ -1658,7 +1658,7 @@
             this.CB_CunningRoarOfSacrifice.Name = "CB_CunningRoarOfSacrifice";
             this.CB_CunningRoarOfSacrifice.Size = new System.Drawing.Size(67, 21);
             this.CB_CunningRoarOfSacrifice.TabIndex = 41;
-            this.CB_CunningRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_CunningRoarOfSacrifice.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // GB_PetTalents_Ferocity
             // 
@@ -1803,7 +1803,7 @@
             this.CB_FerocityDiveDash.Name = "CB_FerocityDiveDash";
             this.CB_FerocityDiveDash.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityDiveDash.TabIndex = 3;
-            this.CB_FerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityNaturalArmor
             // 
@@ -1815,7 +1815,7 @@
             this.CB_FerocityNaturalArmor.Name = "CB_FerocityNaturalArmor";
             this.CB_FerocityNaturalArmor.Size = new System.Drawing.Size(67, 21);
             this.CB_FerocityNaturalArmor.TabIndex = 7;
-            this.CB_FerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityImprovedCower
             // 
@@ -1859,7 +1859,7 @@
             this.CB_FerocityBloodthirsty.Name = "CB_FerocityBloodthirsty";
             this.CB_FerocityBloodthirsty.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityBloodthirsty.TabIndex = 11;
-            this.CB_FerocityBloodthirsty.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityBloodthirsty.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityBoarsSpeed
             // 
@@ -1871,7 +1871,7 @@
             this.CB_FerocityBoarsSpeed.Name = "CB_FerocityBoarsSpeed";
             this.CB_FerocityBoarsSpeed.Size = new System.Drawing.Size(67, 21);
             this.CB_FerocityBoarsSpeed.TabIndex = 15;
-            this.CB_FerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityCobraReflexes
             // 
@@ -1883,7 +1883,7 @@
             this.CB_FerocityCobraReflexes.Name = "CB_FerocityCobraReflexes";
             this.CB_FerocityCobraReflexes.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityCobraReflexes.TabIndex = 1;
-            this.CB_FerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityDiveDash
             // 
@@ -1911,7 +1911,7 @@
             this.CB_FerocityGreatStamina.Name = "CB_FerocityGreatStamina";
             this.CB_FerocityGreatStamina.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityGreatStamina.TabIndex = 5;
-            this.CB_FerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityNaturalArmor
             // 
@@ -1955,7 +1955,7 @@
             this.CB_FerocitySpikedCollar.Name = "CB_FerocitySpikedCollar";
             this.CB_FerocitySpikedCollar.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocitySpikedCollar.TabIndex = 13;
-            this.CB_FerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityBloodthirsty
             // 
@@ -1983,7 +1983,7 @@
             this.CB_FerocityImprovedCower.Name = "CB_FerocityImprovedCower";
             this.CB_FerocityImprovedCower.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityImprovedCower.TabIndex = 9;
-            this.CB_FerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityGreatResistance
             // 
@@ -1995,7 +1995,7 @@
             this.CB_FerocityGreatResistance.Name = "CB_FerocityGreatResistance";
             this.CB_FerocityGreatResistance.Size = new System.Drawing.Size(67, 21);
             this.CB_FerocityGreatResistance.TabIndex = 29;
-            this.CB_FerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityGreatResistance
             // 
@@ -2023,7 +2023,7 @@
             this.CB_FerocityChargeSwoop.Name = "CB_FerocityChargeSwoop";
             this.CB_FerocityChargeSwoop.Size = new System.Drawing.Size(67, 21);
             this.CB_FerocityChargeSwoop.TabIndex = 21;
-            this.CB_FerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityChargeSwoop
             // 
@@ -2056,7 +2056,7 @@
             this.CB_FerocityCullingTheHerd.Name = "CB_FerocityCullingTheHerd";
             this.CB_FerocityCullingTheHerd.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityCullingTheHerd.TabIndex = 23;
-            this.CB_FerocityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityCullingTheHerd.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityCullingTheHerd
             // 
@@ -2100,7 +2100,7 @@
             this.CB_FerocityRabid.Name = "CB_FerocityRabid";
             this.CB_FerocityRabid.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityRabid.TabIndex = 31;
-            this.CB_FerocityRabid.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityRabid.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityRabid
             // 
@@ -2128,7 +2128,7 @@
             this.CB_FerocityCallOfTheWild.Name = "CB_FerocityCallOfTheWild";
             this.CB_FerocityCallOfTheWild.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityCallOfTheWild.TabIndex = 35;
-            this.CB_FerocityCallOfTheWild.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityCallOfTheWild.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityCalloftheWild
             // 
@@ -2172,7 +2172,7 @@
             this.CB_FerocityLickYourWounds.Name = "CB_FerocityLickYourWounds";
             this.CB_FerocityLickYourWounds.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityLickYourWounds.TabIndex = 33;
-            this.CB_FerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityHeartOfThePhoenix
             // 
@@ -2184,7 +2184,7 @@
             this.CB_FerocityHeartOfThePhoenix.Name = "CB_FerocityHeartOfThePhoenix";
             this.CB_FerocityHeartOfThePhoenix.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityHeartOfThePhoenix.TabIndex = 25;
-            this.CB_FerocityHeartOfThePhoenix.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityHeartOfThePhoenix.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityHeartOfThePheonix
             // 
@@ -2228,7 +2228,7 @@
             this.CB_FerocitySpidersBite.Name = "CB_FerocitySpidersBite";
             this.CB_FerocitySpidersBite.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocitySpidersBite.TabIndex = 27;
-            this.CB_FerocitySpidersBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocitySpidersBite.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityLionhearted
             // 
@@ -2240,7 +2240,7 @@
             this.CB_FerocityLionhearted.Name = "CB_FerocityLionhearted";
             this.CB_FerocityLionhearted.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityLionhearted.TabIndex = 19;
-            this.CB_FerocityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityLionhearted.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_FerocityLionHearted
             // 
@@ -2268,7 +2268,7 @@
             this.CB_FerocitySharkAttack.Name = "CB_FerocitySharkAttack";
             this.CB_FerocitySharkAttack.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocitySharkAttack.TabIndex = 37;
-            this.CB_FerocitySharkAttack.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocitySharkAttack.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // CB_FerocityWildHunt
             // 
@@ -2280,7 +2280,7 @@
             this.CB_FerocityWildHunt.Name = "CB_FerocityWildHunt";
             this.CB_FerocityWildHunt.Size = new System.Drawing.Size(65, 21);
             this.CB_FerocityWildHunt.TabIndex = 39;
-            this.CB_FerocityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.CB_FerocityWildHunt.SelectedIndexChanged += new System.EventHandler(this.petTalentCombo_Changed);
             // 
             // LB_PetFamilies
             // 
@@ -2301,7 +2301,7 @@
             this.CB_PetFamily.Name = "CB_PetFamily";
             this.CB_PetFamily.Size = new System.Drawing.Size(208, 21);
             this.CB_PetFamily.TabIndex = 3;
-            this.CB_PetFamily.SelectedIndexChanged += new System.EventHandler(this.comboPetFamily_SelectedIndexChanged);
+            this.CB_PetFamily.SelectedIndexChanged += new System.EventHandler(this.CB_PetFamily_SelectedIndexChanged);
             // 
             // Page_01_Options
             // 
@@ -2410,7 +2410,7 @@
             0,
             0,
             0});
-            this.NUD_CDCutOff.ValueChanged += new System.EventHandler(this.numericUpDownCDCutOff_ValueChanged);
+            this.NUD_CDCutOff.ValueChanged += new System.EventHandler(this.NUD_CDCutOff_ValueChanged);
             // 
             // LB_CDCutoff
             // 
@@ -2442,7 +2442,7 @@
             0,
             0,
             0});
-            this.NUD_BossHP.ValueChanged += new System.EventHandler(this.numericBossHP_ValueChanged);
+            this.NUD_BossHP.ValueChanged += new System.EventHandler(this.NUD_BossHP_ValueChanged);
             // 
             // LB_BossStartHPPerc
             // 
@@ -2474,7 +2474,7 @@
             0,
             0,
             0});
-            this.NUD_35.ValueChanged += new System.EventHandler(this.numericTime35_ValueChanged);
+            this.NUD_35.ValueChanged += new System.EventHandler(this.NUD_Time35_ValueChanged);
             // 
             // LB_Sub35
             // 
@@ -2506,7 +2506,7 @@
             0,
             0,
             0});
-            this.NUD_Time20.ValueChanged += new System.EventHandler(this.numericTime20_ValueChanged);
+            this.NUD_Time20.ValueChanged += new System.EventHandler(this.NUD_Time20_ValueChanged);
             // 
             // LB_Sub20
             // 
@@ -2538,7 +2538,7 @@
             0,
             0,
             0});
-            this.CB_Duration.ValueChanged += new System.EventHandler(this.duration_ValueChanged);
+            this.CB_Duration.ValueChanged += new System.EventHandler(this.NUD_Duration_ValueChanged);
             // 
             // LB_Duration
             // 
@@ -2570,7 +2570,7 @@
             0,
             0,
             0});
-            this.NUD_Latency.ValueChanged += new System.EventHandler(this.numericUpDownLatency_ValueChanged);
+            this.NUD_Latency.ValueChanged += new System.EventHandler(this.NUD_Latency_ValueChanged);
             // 
             // LB_Latency
             // 
@@ -2603,7 +2603,7 @@
             this.CB_TargetLevel.Name = "CB_TargetLevel";
             this.CB_TargetLevel.Size = new System.Drawing.Size(131, 21);
             this.CB_TargetLevel.TabIndex = 1;
-            this.CB_TargetLevel.SelectedIndexChanged += new System.EventHandler(this.cmbTargetLevel_SelectedIndexChanged);
+            this.CB_TargetLevel.SelectedIndexChanged += new System.EventHandler(this.CB_TargetLevel_SelectedIndexChanged);
             // 
             // LB_TargArmor
             // 
@@ -2640,7 +2640,7 @@
             this.CK_RandomProcs.TabIndex = 6;
             this.CK_RandomProcs.Text = "Randomize Procs on Shot Rotation Test";
             this.CK_RandomProcs.UseVisualStyleBackColor = true;
-            this.CK_RandomProcs.CheckedChanged += new System.EventHandler(this.chkRandomProcs_CheckedChanged);
+            this.CK_RandomProcs.CheckedChanged += new System.EventHandler(this.CK_RandomProcs_CheckedChanged);
             // 
             // CK_UseRotation
             // 
@@ -2651,7 +2651,7 @@
             this.CK_UseRotation.TabIndex = 5;
             this.CK_UseRotation.Text = "Use Shot Rotation Test instead of Frequencies";
             this.CK_UseRotation.UseVisualStyleBackColor = true;
-            this.CK_UseRotation.CheckedChanged += new System.EventHandler(this.chkUseRotation_CheckedChanged);
+            this.CK_UseRotation.CheckedChanged += new System.EventHandler(this.CK_UseRotation_CheckedChanged);
             // 
             // CK_UseBeastDuringBW
             // 
@@ -2662,7 +2662,7 @@
             this.CK_UseBeastDuringBW.TabIndex = 4;
             this.CK_UseBeastDuringBW.Text = "Use Aspect of the Beast during Beastial Wrath";
             this.CK_UseBeastDuringBW.UseVisualStyleBackColor = true;
-            this.CK_UseBeastDuringBW.CheckedChanged += new System.EventHandler(this.chkUseBeastDuringBW_CheckedChanged);
+            this.CK_UseBeastDuringBW.CheckedChanged += new System.EventHandler(this.CK_UseBeastDuringBW_CheckedChanged);
             // 
             // LB_ViperUsage
             // 
@@ -2685,7 +2685,7 @@
             this.CB_AspectUsage.Name = "CB_AspectUsage";
             this.CB_AspectUsage.Size = new System.Drawing.Size(131, 21);
             this.CB_AspectUsage.TabIndex = 3;
-            this.CB_AspectUsage.SelectedIndexChanged += new System.EventHandler(this.cmbAspectUsage_SelectedIndexChanged);
+            this.CB_AspectUsage.SelectedIndexChanged += new System.EventHandler(this.CB_AspectUsage_SelectedIndexChanged);
             // 
             // LB_Aspect
             // 
@@ -2711,7 +2711,7 @@
             this.CB_Aspect.Name = "CB_Aspect";
             this.CB_Aspect.Size = new System.Drawing.Size(131, 21);
             this.CB_Aspect.TabIndex = 1;
-            this.CB_Aspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
+            this.CB_Aspect.SelectedIndexChanged += new System.EventHandler(this.CB_Aspect_SelectedIndexChanged);
             // 
             // GB_Misc
             // 
@@ -2868,7 +2868,7 @@
             this.BT_StatsGraph.TabIndex = 61;
             this.BT_StatsGraph.Text = "Display Stats Graph";
             this.BT_StatsGraph.UseVisualStyleBackColor = true;
-            this.BT_StatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click);
+            this.BT_StatsGraph.Click += new System.EventHandler(this.BT_StatsGraph_Click);
             // 
             // CB_CalculationToGraph
             // 
@@ -2878,7 +2878,7 @@
             this.CB_CalculationToGraph.Name = "CB_CalculationToGraph";
             this.CB_CalculationToGraph.Size = new System.Drawing.Size(185, 21);
             this.CB_CalculationToGraph.TabIndex = 60;
-            this.CB_CalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.comboBoxCalculationToGraph_SelectedIndexChanged);
+            this.CB_CalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.CB_CalculationToGraph_SelectedIndexChanged);
             // 
             // CK_StatsArP
             // 
@@ -2889,7 +2889,7 @@
             this.CK_StatsArP.TabIndex = 7;
             this.CK_StatsArP.Text = "Armor Pen Rating";
             this.CK_StatsArP.UseVisualStyleBackColor = true;
-            this.CK_StatsArP.CheckedChanged += new System.EventHandler(this.chkStatsArP_CheckedChanged);
+            this.CK_StatsArP.CheckedChanged += new System.EventHandler(this.CK_StatsArP_CheckedChanged);
             // 
             // CK_StatsHaste
             // 
@@ -2900,7 +2900,7 @@
             this.CK_StatsHaste.TabIndex = 6;
             this.CK_StatsHaste.Text = "Haste Rating";
             this.CK_StatsHaste.UseVisualStyleBackColor = true;
-            this.CK_StatsHaste.CheckedChanged += new System.EventHandler(this.chkStatsHaste_CheckedChanged);
+            this.CK_StatsHaste.CheckedChanged += new System.EventHandler(this.CK_StatsHaste_CheckedChanged);
             // 
             // CK_StatsHit
             // 
@@ -2911,7 +2911,7 @@
             this.CK_StatsHit.TabIndex = 4;
             this.CK_StatsHit.Text = "Hit Rating";
             this.CK_StatsHit.UseVisualStyleBackColor = true;
-            this.CK_StatsHit.CheckedChanged += new System.EventHandler(this.chkStatsHit_CheckedChanged);
+            this.CK_StatsHit.CheckedChanged += new System.EventHandler(this.CK_StatsHit_CheckedChanged);
             // 
             // CK_StatsCrit
             // 
@@ -2922,7 +2922,7 @@
             this.CK_StatsCrit.TabIndex = 3;
             this.CK_StatsCrit.Text = "Crit Rating";
             this.CK_StatsCrit.UseVisualStyleBackColor = true;
-            this.CK_StatsCrit.CheckedChanged += new System.EventHandler(this.chkStatsCrit_CheckedChanged);
+            this.CK_StatsCrit.CheckedChanged += new System.EventHandler(this.CK_StatsCrit_CheckedChanged);
             // 
             // CK_StatsAP
             // 
@@ -2933,7 +2933,7 @@
             this.CK_StatsAP.TabIndex = 2;
             this.CK_StatsAP.Text = "Attack Power";
             this.CK_StatsAP.UseVisualStyleBackColor = true;
-            this.CK_StatsAP.CheckedChanged += new System.EventHandler(this.chkStatsAP_CheckedChanged);
+            this.CK_StatsAP.CheckedChanged += new System.EventHandler(this.CK_StatsAP_CheckedChanged);
             // 
             // CK_StatsAgility
             // 
@@ -2944,7 +2944,7 @@
             this.CK_StatsAgility.TabIndex = 1;
             this.CK_StatsAgility.Text = "Agility";
             this.CK_StatsAgility.UseVisualStyleBackColor = true;
-            this.CK_StatsAgility.CheckedChanged += new System.EventHandler(this.chkStatsAgility_CheckedChanged);
+            this.CK_StatsAgility.CheckedChanged += new System.EventHandler(this.CK_StatsAgility_CheckedChanged);
             // 
             // Tabs
             // 
@@ -3032,7 +3032,7 @@
             this.CB_PriorityDefaults.Name = "CB_PriorityDefaults";
             this.CB_PriorityDefaults.Size = new System.Drawing.Size(265, 21);
             this.CB_PriorityDefaults.TabIndex = 0;
-            this.CB_PriorityDefaults.SelectedIndexChanged += new System.EventHandler(this.cmbPriorityDefaults_SelectedIndexChanged);
+            this.CB_PriorityDefaults.SelectedIndexChanged += new System.EventHandler(this.CB_PriorityDefaults_SelectedIndexChanged);
             // 
             // LB_ShotPrio_10
             // 
@@ -3295,7 +3295,7 @@
             this.CB_PetPrio_07.Name = "CB_PetPrio_07";
             this.CB_PetPrio_07.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_07.TabIndex = 13;
-            this.CB_PetPrio_07.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_07.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // CB_PetPrio_06
             // 
@@ -3307,7 +3307,7 @@
             this.CB_PetPrio_06.Name = "CB_PetPrio_06";
             this.CB_PetPrio_06.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_06.TabIndex = 11;
-            this.CB_PetPrio_06.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_06.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // LB_ShotPriority_05
             // 
@@ -3328,7 +3328,7 @@
             this.CB_PetPrio_05.Name = "CB_PetPrio_05";
             this.CB_PetPrio_05.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_05.TabIndex = 9;
-            this.CB_PetPrio_05.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_05.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // LB_ShotPriority_04
             // 
@@ -3349,7 +3349,7 @@
             this.CB_PetPrio_04.Name = "CB_PetPrio_04";
             this.CB_PetPrio_04.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_04.TabIndex = 7;
-            this.CB_PetPrio_04.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_04.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // LB_ShotPriority_03
             // 
@@ -3388,7 +3388,7 @@
             this.CB_PetPrio_03.Name = "CB_PetPrio_03";
             this.CB_PetPrio_03.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_03.TabIndex = 5;
-            this.CB_PetPrio_03.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_03.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // CB_PetPrio_02
             // 
@@ -3400,7 +3400,7 @@
             this.CB_PetPrio_02.Name = "CB_PetPrio_02";
             this.CB_PetPrio_02.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_02.TabIndex = 3;
-            this.CB_PetPrio_02.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_02.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // CB_PetPrio_01
             // 
@@ -3412,7 +3412,7 @@
             this.CB_PetPrio_01.Name = "CB_PetPrio_01";
             this.CB_PetPrio_01.Size = new System.Drawing.Size(203, 21);
             this.CB_PetPrio_01.TabIndex = 1;
-            this.CB_PetPrio_01.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            this.CB_PetPrio_01.SelectedIndexChanged += new System.EventHandler(this.CB_Pets_SelectedIndexChanged);
             // 
             // Page_04_PetBuffs
             // 

@@ -19,6 +19,7 @@ namespace Rawr.Hunter
         private bool isLoading = false;
 		private CalculationOptionsHunter CalcOpts = null;
         private PetAttacks[] familyList = null;
+        private List<ComboBox> ShotPriorityBoxes = new List<ComboBox>();
         #endregion
 
         #region Constructors
@@ -98,16 +99,19 @@ namespace Rawr.Hunter
 
             PetBuffs.character = Character;
 
-            InitializeShotList(CB_ShotPriority_01);
-            InitializeShotList(CB_ShotPriority_02);
-            InitializeShotList(CB_ShotPriority_03);
-            InitializeShotList(CB_ShotPriority_04);
-            InitializeShotList(CB_ShotPriority_05);
-            InitializeShotList(CB_ShotPriority_06);
-            InitializeShotList(CB_ShotPriority_07);
-            InitializeShotList(CB_ShotPriority_08);
-            InitializeShotList(CB_ShotPriority_09);
-            InitializeShotList(CB_ShotPriority_10);
+            // This should now be the only group of 10 lines, the rest are loop-capable
+            ShotPriorityBoxes.Add(CB_ShotPriority_01);
+            ShotPriorityBoxes.Add(CB_ShotPriority_02);
+            ShotPriorityBoxes.Add(CB_ShotPriority_03);
+            ShotPriorityBoxes.Add(CB_ShotPriority_04);
+            ShotPriorityBoxes.Add(CB_ShotPriority_05);
+            ShotPriorityBoxes.Add(CB_ShotPriority_06);
+            ShotPriorityBoxes.Add(CB_ShotPriority_07);
+            ShotPriorityBoxes.Add(CB_ShotPriority_08);
+            ShotPriorityBoxes.Add(CB_ShotPriority_09);
+            ShotPriorityBoxes.Add(CB_ShotPriority_10);
+
+            foreach (ComboBox cb in ShotPriorityBoxes) { InitializeShotList(cb); }
 
             CB_CalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
 
@@ -215,16 +219,8 @@ namespace Rawr.Hunter
                 populatePetTalentCombos();
                 isLoading = true;
                 // set up shot priorities
-                CB_ShotPriority_01.SelectedIndex = CalcOpts.PriorityIndex1;
-                CB_ShotPriority_02.SelectedIndex = CalcOpts.PriorityIndex2;
-                CB_ShotPriority_03.SelectedIndex = CalcOpts.PriorityIndex3;
-                CB_ShotPriority_04.SelectedIndex = CalcOpts.PriorityIndex4;
-                CB_ShotPriority_05.SelectedIndex = CalcOpts.PriorityIndex5;
-                CB_ShotPriority_06.SelectedIndex = CalcOpts.PriorityIndex6;
-                CB_ShotPriority_07.SelectedIndex = CalcOpts.PriorityIndex7;
-                CB_ShotPriority_08.SelectedIndex = CalcOpts.PriorityIndex8;
-                CB_ShotPriority_09.SelectedIndex = CalcOpts.PriorityIndex9;
-                CB_ShotPriority_10.SelectedIndex = CalcOpts.PriorityIndex10;
+                int k = 0;
+                foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalcOpts.PriorityIndexes[k]; k++; }
                 CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
                 if (ShotRotationIsntSet) {
                     isLoading = false;
@@ -349,7 +345,7 @@ namespace Rawr.Hunter
         #endregion
 
         #region Basics
-        private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CB_TargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.TargetLevel = int.Parse(CB_TargetLevel.SelectedItem.ToString());
             Character.OnCalculationsInvalidated();
@@ -359,39 +355,39 @@ namespace Rawr.Hunter
             CalcOpts.TargetArmor = int.Parse(CB_TargArmor.SelectedItem.ToString());
             Character.OnCalculationsInvalidated();
         }
-        private void numericUpDownLatency_ValueChanged(object sender, EventArgs e) {
+        private void NUD_Latency_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.Lag = (float)NUD_Latency.Value;
             Character.OnCalculationsInvalidated();
         }
-        private void numericUpDownCDCutOff_ValueChanged(object sender, EventArgs e) {
+        private void NUD_CDCutOff_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.cooldownCutoff = (int)NUD_CDCutOff.Value;
             Character.OnCalculationsInvalidated();
         }
-        private void duration_ValueChanged(object sender, EventArgs e) {
+        private void NUD_Duration_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.Duration = (int)CB_Duration.Value;
             NUD_Time20.Maximum = CB_Duration.Value; // don't allow these two to be 
             NUD_35.Maximum = CB_Duration.Value; // longer than than the fight!
             Character.OnCalculationsInvalidated();
         }
-        private void numericTime20_ValueChanged(object sender, EventArgs e) {
+        private void NUD_Time20_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.timeSpentSub20 = (int)NUD_Time20.Value;
             Character.OnCalculationsInvalidated();
         }
-        private void numericTime35_ValueChanged(object sender, EventArgs e) {
+        private void NUD_Time35_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.timeSpent35To20 = (int)NUD_35.Value;
             Character.OnCalculationsInvalidated();
         }
-        private void numericBossHP_ValueChanged(object sender, EventArgs e) {
+        private void NUD_BossHP_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.bossHPPercentage = (float)(NUD_BossHP.Value / 100);
             Character.OnCalculationsInvalidated();
         }
-        private void cmbAspect_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CB_Aspect_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
             if (CB_Aspect.SelectedIndex == 0) CalcOpts.selectedAspect = Aspect.None;
             if (CB_Aspect.SelectedIndex == 1) CalcOpts.selectedAspect = Aspect.Beast;
@@ -401,25 +397,25 @@ namespace Rawr.Hunter
             if (CB_Aspect.SelectedIndex == 5) CalcOpts.selectedAspect = Aspect.Dragonhawk;
             Character.OnCalculationsInvalidated();
         }
-        private void cmbAspectUsage_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CB_AspectUsage_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
             if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.aspectUsage = AspectUsage.None;
             if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.aspectUsage = AspectUsage.ViperToOOM;
             if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.aspectUsage = AspectUsage.ViperRegen;
             Character.OnCalculationsInvalidated();
         }
-        private void chkUseBeastDuringBW_CheckedChanged(object sender, EventArgs e) {
+        private void CK_UseBeastDuringBW_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.useBeastDuringBeastialWrath = CK_UseBeastDuringBW.Checked;
             Character.OnCalculationsInvalidated();
         }
-        private void chkUseRotation_CheckedChanged(object sender, EventArgs e) {
+        private void CK_UseRotation_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.useRotationTest = CK_UseRotation.Checked;
             CK_RandomProcs.Enabled = CK_UseRotation.Checked;
             Character.OnCalculationsInvalidated();
         }
-        private void chkRandomProcs_CheckedChanged(object sender, EventArgs e) {
+        private void CK_RandomProcs_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
             CalcOpts.randomizeProcs = CK_RandomProcs.Checked;
             Character.OnCalculationsInvalidated();
@@ -459,62 +455,40 @@ namespace Rawr.Hunter
             CalcOpts.SurvScale = (float)NUD_SurvScale.Value;
             Character.OnCalculationsInvalidated();
         }
+        // Special Effects Modifier, not in use yet
+        private void CK_SE_UseDur_CheckedChanged(object sender, EventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.SE_UseDur = CK_SE_UseDur.Checked;
+            Character.OnCalculationsInvalidated();
+        }
         #endregion
         #region Rotations
-        private void cmbPriorityDefaults_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CB_PriorityDefaults_SelectedIndexChanged(object sender, EventArgs e) {
             // only do anything if we weren't set to 0
             if (isLoading || CB_PriorityDefaults.SelectedIndex == 0) return;
 
             isLoading = true;
 
-            if (CB_PriorityDefaults.SelectedIndex == 1) { // beast master
-                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 20; // Bestial Wrath
-                CB_ShotPriority_03.SelectedIndex = 9; // Kill Shot
-                CB_ShotPriority_04.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_05.SelectedIndex = 2; // Arcane Shot
-                CB_ShotPriority_06.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_07.SelectedIndex = 8; // Steady Shot
-                CB_ShotPriority_08.SelectedIndex = 0;
-                CB_ShotPriority_09.SelectedIndex = 0;
-                CB_ShotPriority_10.SelectedIndex = 0;
-            } else if (CB_PriorityDefaults.SelectedIndex == 2) { // marksman
-                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 19; // Readiness
-                CB_ShotPriority_03.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_04.SelectedIndex = 17; // Chimeara Shot
-                CB_ShotPriority_05.SelectedIndex = 9; // Kill Shot
-                CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_07.SelectedIndex = 7; // Silencing Shot
-                CB_ShotPriority_08.SelectedIndex = 8; // Steady Shot
-                CB_ShotPriority_09.SelectedIndex = 0;
-                CB_ShotPriority_10.SelectedIndex = 0;
-            } else if (CB_PriorityDefaults.SelectedIndex == 3) { // survival
-                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 9; // Kill Shot
-                CB_ShotPriority_03.SelectedIndex = 10; // Explosive Shot
-                CB_ShotPriority_04.SelectedIndex = 11; // Black Arrow
-                CB_ShotPriority_05.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_07.SelectedIndex = 8; // Steady Shot
-                CB_ShotPriority_08.SelectedIndex = 0;
-                CB_ShotPriority_09.SelectedIndex = 0;
-                CB_ShotPriority_10.SelectedIndex = 0;
-            }
+            int i = 0;
+            if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.BeastMaster.ShotList[i].Index; i++; } }
+            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Marksman) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.Marksman.ShotList[i].Index; i++; } }
+            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Survival) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.Survival.ShotList[i].Index; i++; } }
 
             /* I want to do a conglomerate one:
-                CB_ShotPriority_01.SelectedIndex = 18; // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex = 20; // Bestial Wrath
-                CB_ShotPriority_03.SelectedIndex = 19; // Readiness
-                CB_ShotPriority_04.SelectedIndex = 4; // Serpent Sting
-                CB_ShotPriority_05.SelectedIndex = 17; // Chimeara Shot
-                CB_ShotPriority_06.SelectedIndex = 9; // Kill Shot
-                CB_ShotPriority_07.SelectedIndex = 10; // Explosive Shot
-                CB_ShotPriority_08.SelectedIndex = 11; // Black Arrow
-                CB_ShotPriority_09.SelectedIndex = 1; // Aimed Shot
-                CB_ShotPriority_10.SelectedIndex = 7; // Silencing Shot
-                CB_ShotPriority_11.SelectedIndex = 2; // Arcane Shot
-                CB_ShotPriority_12.SelectedIndex = 8; // Steady Shot
+                CB_ShotPriority_01.SelectedIndex = CalculationOptionsHunter.RapidFire.Index;
+                CB_ShotPriority_02.SelectedIndex = CalculationOptionsHunter.BeastialWrath.Index;
+                CB_ShotPriority_03.SelectedIndex = CalculationOptionsHunter.Readiness.Index;
+                CB_ShotPriority_04.SelectedIndex = CalculationOptionsHunter.SerpentSting.Index;
+                CB_ShotPriority_05.SelectedIndex = CalculationOptionsHunter.ChimeraShot.Index;
+                CB_ShotPriority_06.SelectedIndex = CalculationOptionsHunter.KillShot.Index;
+                CB_ShotPriority_07.SelectedIndex = CalculationOptionsHunter.ExplosiveShot.Index;
+                CB_ShotPriority_08.SelectedIndex = CalculationOptionsHunter.BlackArrow.Index;
+                CB_ShotPriority_09.SelectedIndex = CalculationOptionsHunter.AimedShot.Index;
+                CB_ShotPriority_10.SelectedIndex = CalculationOptionsHunter.SilencingShot.Index;
+                CB_ShotPriority_11.SelectedIndex = CalculationOptionsHunter.ArcaneShot.Index;
+                CB_ShotPriority_12.SelectedIndex = CalculationOptionsHunter.SteadyShot.Index;
              * But this requires 2 extra slots minimum
              * Gotta add even more for volley and traps, etc.
              * So frack it, I'll just forget it until we have the
@@ -522,16 +496,8 @@ namespace Rawr.Hunter
              */
             isLoading = false;
 
-            CalcOpts.PriorityIndex1 = CB_ShotPriority_01.SelectedIndex;
-            CalcOpts.PriorityIndex2 = CB_ShotPriority_02.SelectedIndex;
-            CalcOpts.PriorityIndex3 = CB_ShotPriority_03.SelectedIndex;
-            CalcOpts.PriorityIndex4 = CB_ShotPriority_04.SelectedIndex;
-            CalcOpts.PriorityIndex5 = CB_ShotPriority_05.SelectedIndex;
-            CalcOpts.PriorityIndex6 = CB_ShotPriority_06.SelectedIndex;
-            CalcOpts.PriorityIndex7 = CB_ShotPriority_07.SelectedIndex;
-            CalcOpts.PriorityIndex8 = CB_ShotPriority_08.SelectedIndex;
-            CalcOpts.PriorityIndex9 = CB_ShotPriority_09.SelectedIndex;
-            CalcOpts.PriorityIndex10 = CB_ShotPriority_10.SelectedIndex;
+            int j = 0;
+            foreach (ComboBox cb in ShotPriorityBoxes) { CalcOpts.PriorityIndexes[j] = cb.SelectedIndex; j++; }
 
             Character.OnCalculationsInvalidated();
         }
@@ -539,55 +505,14 @@ namespace Rawr.Hunter
             // this is called whenever any of the priority dropdowns are modified
             if (isLoading) return;
 
-            CalcOpts.PriorityIndex1 = CB_ShotPriority_01.SelectedIndex;
-            CalcOpts.PriorityIndex2 = CB_ShotPriority_02.SelectedIndex;
-            CalcOpts.PriorityIndex3 = CB_ShotPriority_03.SelectedIndex;
-            CalcOpts.PriorityIndex4 = CB_ShotPriority_04.SelectedIndex;
-            CalcOpts.PriorityIndex5 = CB_ShotPriority_05.SelectedIndex;
-            CalcOpts.PriorityIndex6 = CB_ShotPriority_06.SelectedIndex;
-            CalcOpts.PriorityIndex7 = CB_ShotPriority_07.SelectedIndex;
-            CalcOpts.PriorityIndex8 = CB_ShotPriority_08.SelectedIndex;
-            CalcOpts.PriorityIndex9 = CB_ShotPriority_09.SelectedIndex;
-            CalcOpts.PriorityIndex10 = CB_ShotPriority_10.SelectedIndex;
+            int j = 0;
+            foreach (ComboBox cb in ShotPriorityBoxes) { CalcOpts.PriorityIndexes[j] = cb.SelectedIndex; j++; }
 
             CB_PriorityDefaults.SelectedIndex = 0;
 
             Character.OnCalculationsInvalidated();
         }
-        private void comboBoxPets_SelectedIndexChanged(object sender, EventArgs e) {
-            if (isLoading) return;
-            CalcOpts.PetPriority1 = CB_PetPrio_01.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_01.SelectedItem;
-            CalcOpts.PetPriority2 = CB_PetPrio_02.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_02.SelectedItem;
-            CalcOpts.PetPriority3 = CB_PetPrio_03.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_03.SelectedItem;
-            CalcOpts.PetPriority4 = CB_PetPrio_04.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_04.SelectedItem;
-            CalcOpts.PetPriority5 = CB_PetPrio_05.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_05.SelectedItem;
-            CalcOpts.PetPriority6 = CB_PetPrio_06.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_06.SelectedItem;
-            CalcOpts.PetPriority7 = CB_PetPrio_07.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_07.SelectedItem;
-            Character.OnCalculationsInvalidated();
-        }
-        private void InitializeShotList(ComboBox cb) {
-            cb.Items.Add("None");
-            cb.Items.Add("Aimed Shot");
-            cb.Items.Add("Arcane Shot");
-            cb.Items.Add("Multi-Shot");
-            cb.Items.Add("Serpent Sting");
-            cb.Items.Add("Scorpid Sting");
-            cb.Items.Add("Viper Sting");
-            cb.Items.Add("Silencing Shot");
-            cb.Items.Add("Steady Shot");
-            cb.Items.Add("Kill Shot");
-            cb.Items.Add("Explosive Shot");
-            cb.Items.Add("Black Arrow");
-            cb.Items.Add("Immolation Trap");
-            cb.Items.Add("Explosive Trap");
-            cb.Items.Add("Freezing Trap");
-            cb.Items.Add("Frost Trap");
-            cb.Items.Add("Volley");
-            cb.Items.Add("Chimera Shot");
-            cb.Items.Add("Rapid Fire");
-            cb.Items.Add("Readiness");
-            cb.Items.Add("Beastial Wrath");
-        }
+        private void InitializeShotList(ComboBox cb) { foreach (Shot s in CalculationOptionsHunter.ShotList) { cb.Items.Add(s); } }
         private void PopulateAbilities() {
             // the abilities should be in this order:
             //
@@ -709,8 +634,82 @@ namespace Rawr.Hunter
             CB_PetPrio_06.SelectedIndex = 0; // none
             CB_PetPrio_07.SelectedIndex = 0; // none
         }
+        private bool ShotRotationIsntSet {
+            get {
+                return ((CalcOpts.PriorityIndex1 + CalcOpts.PriorityIndex2 +
+                         CalcOpts.PriorityIndex3 + CalcOpts.PriorityIndex4 +
+                         CalcOpts.PriorityIndex5 + CalcOpts.PriorityIndex6 +
+                         CalcOpts.PriorityIndex7 + CalcOpts.PriorityIndex8 +
+                         CalcOpts.PriorityIndex9 + CalcOpts.PriorityIndex10)
+                        == 0);
+            }
+        }
+        private int ShotRotationGetRightSpec {
+            get {
+                int specIndex = 0;
+                int Iter = 0;
+                int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += Character.HunterTalents.Data[Iter]; }
+                int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += Character.HunterTalents.Data[Iter]; }
+                int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += Character.HunterTalents.Data[Iter]; }
+                // No Shot Priority set up, use a default based on talent spec
+                if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)Specs.BeastMaster; }
+                if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)Specs.Marksman; }
+                if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)Specs.Survival; }
+                return specIndex;
+            }
+        }
+        /// <summary>
+        /// This is to figure out which of the default rotations (if any) are in use
+        /// </summary>
+        /// <returns>The combobox index to use</returns>
+        private int ShotRotationIndexCheck() {
+            int specIndex = 0;
+
+            List<Shot> list = new List<Shot>() { };
+            foreach (ComboBox cb in ShotPriorityBoxes) { list.Add(CalculationOptionsHunter.ShotList[cb.SelectedIndex]); }
+            ShotGroup current = new ShotGroup("Custom", list);
+
+            if (current == CalculationOptionsHunter.BeastMaster) { specIndex = (int)Specs.BeastMaster; }
+            else if (current == CalculationOptionsHunter.Marksman) { specIndex = (int)Specs.Marksman; }
+            else if (current == CalculationOptionsHunter.Survival) { specIndex = (int)Specs.Survival; }
+            
+            return specIndex;
+        }
+
+        private int _CurrentSpec;
+        private int CurrentSpec {
+            get { return _CurrentSpec; }
+            set { _CurrentSpec = value; }
+        }
+        private enum Specs { BeastMaster=1, Marksman, Survival }
+
+        private void CharTalents_Changed(object sender, EventArgs e) {
+            if (isLoading) return;
+            //CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            //ErrorBox eb = new ErrorBox("Event fired", "yay!", "CharTalents_Changed");
+            int rightSpec = ShotRotationGetRightSpec;
+            if (ShotRotationIsntSet) {
+                 // No Shot Priority set up, use a default based on talent spec
+                CB_PriorityDefaults.SelectedIndex = ShotRotationGetRightSpec;
+            } else if (rightSpec != 0 && CurrentSpec != rightSpec) {
+                // The rotation setup needs to change, user has changed to a totally different spec
+                CB_PriorityDefaults.SelectedIndex = rightSpec;
+            }
+            CurrentSpec = CB_PriorityDefaults.SelectedIndex;
+        }
         #endregion
         #region Pet
+        private void CB_Pets_SelectedIndexChanged(object sender, EventArgs e) {
+            if (isLoading) return;
+            CalcOpts.PetPriority1 = CB_PetPrio_01.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_01.SelectedItem;
+            CalcOpts.PetPriority2 = CB_PetPrio_02.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_02.SelectedItem;
+            CalcOpts.PetPriority3 = CB_PetPrio_03.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_03.SelectedItem;
+            CalcOpts.PetPriority4 = CB_PetPrio_04.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_04.SelectedItem;
+            CalcOpts.PetPriority5 = CB_PetPrio_05.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_05.SelectedItem;
+            CalcOpts.PetPriority6 = CB_PetPrio_06.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_06.SelectedItem;
+            CalcOpts.PetPriority7 = CB_PetPrio_07.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_07.SelectedItem;
+            Character.OnCalculationsInvalidated();
+        }
         private void initTalentImages() {
             /*PetTalentTree pt = (CalcOpts == null ? new PetTalentTree() : CalcOpts.PetTalents);
             int currentId = 0;
@@ -793,7 +792,7 @@ namespace Rawr.Hunter
                 eb.Show();
             }*/
         }
-        private void comboPetFamily_SelectedIndexChanged(object sender, EventArgs e)
+        private void CB_PetFamily_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (isLoading) updateTalentDisplay();
 
@@ -872,7 +871,7 @@ namespace Rawr.Hunter
             CalcOpts.PetTalents.Reset();
             populatePetTalentCombos();
         }
-        private void talentSpecButton_Click(object sender, EventArgs e) {
+        private void BT_PetTalentSpecButton_Click(object sender, EventArgs e) {
             if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
                 List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
                 foreach (SavedPetTalentSpec spec in _savedPetTalents) {
@@ -900,7 +899,7 @@ namespace Rawr.Hunter
             }
         }
 
-        private void comboBoxTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
+        private void CB_PetTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
                 BT_PetTalentsSaveDel.Text = "Save";
@@ -912,7 +911,7 @@ namespace Rawr.Hunter
             if(Character != null) Character.OnCalculationsInvalidated();
         }
 
-        private void talentComboChanged(object sender, EventArgs e)
+        private void petTalentCombo_Changed(object sender, EventArgs e)
         {
             if (isLoading) { return; }
             // one of the (many) talent combo boxes has been updated
@@ -1093,67 +1092,6 @@ namespace Rawr.Hunter
             }
             isLoading = false;
         }
-        #endregion
-        #region Details Tab
-        private void BT_Calculate_Click(object sender, EventArgs e)
-        {
-            RotationShotInfo[] myShotsTable;
-            CalculationsHunter calcs = Character.CurrentCalculations as CalculationsHunter;
-            CharacterCalculationsHunter charCalcs = calcs.GetCharacterCalculations(Character) as CharacterCalculationsHunter;
-            charCalcs.collectSequence = true;
-            RotationTest rTest = new RotationTest(Character, charCalcs, CalcOpts);
-            rTest.RunTest();
-            myShotsTable = rTest.getRotationTable();
-            TB_Rotation.Text = charCalcs.sequence;
-            TB_Shots.Text = "";
-            for (int i = 0; i < myShotsTable.Length; i++)
-            {
-                if (myShotsTable[i] != null)
-                    TB_Shots.Text += String.Format("{0,-13} : {1,4}", myShotsTable[i].type, myShotsTable[i].countUsed) + Environment.NewLine;
-            }
-        }
-        private void TB_Rotation_TextChanged(object sender, EventArgs e) { }
-        private void TB_Shots_TextChanged(object sender, EventArgs e) { }
-        #endregion
-
-        #region Stat Graph
-        private Stats[] BuildStatsList()
-        {
-            List<Stats> statsList = new List<Stats>();
-            if (CK_StatsAgility.Checked) { statsList.Add(new Stats() { Agility = 1f }); }
-            if (CK_StatsAP.Checked) { statsList.Add(new Stats() { AttackPower = 1f }); }
-            if (CK_StatsCrit.Checked) { statsList.Add(new Stats() { CritRating = 1f }); }
-            if (CK_StatsHit.Checked) { statsList.Add(new Stats() { HitRating = 1f }); }
-            if (CK_StatsHaste.Checked) { statsList.Add(new Stats() { HasteRating = 1f }); }
-            if (CK_StatsArP.Checked) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
-            return statsList.ToArray();
-        }
-        private void btnStatsGraph_Click(object sender, EventArgs e)
-        {
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            Stats[] statsList = BuildStatsList();
-            Graph graph = new Graph();
-            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
-                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
-                         "The vertical axis shows the amount of dps added or lost";
-            graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
-            graph.Show();
-        }
-        private void chkStatsAgility_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[0] = CK_StatsAgility.Checked; }
-        private void chkStatsAP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[1] = CK_StatsAP.Checked; }
-        private void chkStatsCrit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[2] = CK_StatsCrit.Checked; }
-        private void chkStatsHit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[3] = CK_StatsHit.Checked; }
-        private void chkStatsHaste_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[4] = CK_StatsHaste.Checked; }
-        private void chkStatsArP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[5] = CK_StatsArP.Checked; }
-        private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
-        }
-        private void NUD_StatsIncrement_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
-        }
-        #endregion
 
         private void CB_ArmoryPets_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1178,110 +1116,67 @@ namespace Rawr.Hunter
                 UpdateSavedTalents();
                 SavePetTalentSpecs();
             }
-            comboBoxTalentSpec_SelectedIndexChanged(null, null);
+            CB_PetTalentSpec_SelectedIndexChanged(null, null);
         }
-
-        private bool ShotRotationIsntSet {
-            get {
-                return ((CalcOpts.PriorityIndex1 + CalcOpts.PriorityIndex2 +
-                         CalcOpts.PriorityIndex3 + CalcOpts.PriorityIndex4 +
-                         CalcOpts.PriorityIndex5 + CalcOpts.PriorityIndex6 +
-                         CalcOpts.PriorityIndex7 + CalcOpts.PriorityIndex8 +
-                         CalcOpts.PriorityIndex9 + CalcOpts.PriorityIndex10)
-                        == 0);
-            }
-        }
-        private int ShotRotationGetRightSpec {
-            get {
-                int specIndex = 0;
-                int Iter = 0;
-                int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += Character.HunterTalents.Data[Iter]; }
-                int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += Character.HunterTalents.Data[Iter]; }
-                int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += Character.HunterTalents.Data[Iter]; }
-                // No Shot Priority set up, use a default based on talent spec
-                if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)Specs.BeastMaster; }
-                if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)Specs.Marksman; }
-                if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)Specs.Survival; }
-                return specIndex;
-            }
-        }
-        /// <summary>
-        /// This is to figure out which of the default rotations (if any) are in use
-        /// </summary>
-        /// <returns>The combobox index to use</returns>
-        private int ShotRotationIndexCheck() {
-            int specIndex = 0;
-
-            if // Beast Master
-               (CB_ShotPriority_01.SelectedIndex == 18 && // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex == 20 && // Bestial Wrath
-                CB_ShotPriority_03.SelectedIndex ==  9 && // Kill Shot
-                CB_ShotPriority_04.SelectedIndex ==  1 && // Aimed Shot
-                CB_ShotPriority_05.SelectedIndex ==  2 && // Arcane Shot
-                CB_ShotPriority_06.SelectedIndex ==  4 && // Serpent Sting
-                CB_ShotPriority_07.SelectedIndex ==  8 && // Steady Shot
-                CB_ShotPriority_08.SelectedIndex ==  0 &&
-                CB_ShotPriority_09.SelectedIndex ==  0 &&
-                CB_ShotPriority_10.SelectedIndex ==  0) {
-                    specIndex = (int)Specs.BeastMaster;
-            } else if // Marksman
-               (CB_ShotPriority_01.SelectedIndex == 18 && // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex == 19 && // Readiness
-                CB_ShotPriority_03.SelectedIndex ==  4 && // Serpent Sting
-                CB_ShotPriority_04.SelectedIndex == 17 && // Chimeara Shot
-                CB_ShotPriority_05.SelectedIndex ==  9 && // Kill Shot
-                CB_ShotPriority_06.SelectedIndex ==  1 && // Aimed Shot
-                CB_ShotPriority_07.SelectedIndex ==  7 && // Silencing Shot
-                CB_ShotPriority_08.SelectedIndex ==  8 && // Steady Shot
-                CB_ShotPriority_09.SelectedIndex ==  0 &&
-                CB_ShotPriority_10.SelectedIndex ==  0) {
-                    specIndex = (int)Specs.Marksman;
-            } else if // Survival
-               (CB_ShotPriority_01.SelectedIndex == 18 && // Rapid Fire
-                CB_ShotPriority_02.SelectedIndex ==  9 && // Kill Shot
-                CB_ShotPriority_03.SelectedIndex == 10 && // Explosive Shot
-                CB_ShotPriority_04.SelectedIndex == 11 && // Black Arrow
-                CB_ShotPriority_05.SelectedIndex ==  4 && // Serpent Sting
-                CB_ShotPriority_06.SelectedIndex ==  1 && // Aimed Shot
-                CB_ShotPriority_07.SelectedIndex ==  8 && // Steady Shot
-                CB_ShotPriority_08.SelectedIndex ==  0 &&
-                CB_ShotPriority_09.SelectedIndex ==  0 &&
-                CB_ShotPriority_10.SelectedIndex ==  0) {
-                    specIndex = (int)Specs.Survival;
-            }
-            
-            return specIndex;
-        }
-
-        private int _CurrentSpec;
-        private int CurrentSpec {
-            get { return _CurrentSpec; }
-            set { _CurrentSpec = value; }
-        }
-        private enum Specs { BeastMaster=1, Marksman, Survival }
-
-        private void CharTalents_Changed(object sender, EventArgs e) {
-            if (isLoading) return;
-            //CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            //ErrorBox eb = new ErrorBox("Event fired", "yay!", "CharTalents_Changed");
-            int rightSpec = ShotRotationGetRightSpec;
-            if (ShotRotationIsntSet) {
-                 // No Shot Priority set up, use a default based on talent spec
-                CB_PriorityDefaults.SelectedIndex = ShotRotationGetRightSpec;
-            } else if (rightSpec != 0 && CurrentSpec != rightSpec) {
-                // The rotation setup needs to change, user has changed to a totally different spec
-                CB_PriorityDefaults.SelectedIndex = rightSpec;
-            }
-            CurrentSpec = CB_PriorityDefaults.SelectedIndex;
-        }
-
-        // Special Effects Modifier
-        private void CK_SE_UseDur_CheckedChanged(object sender, EventArgs e)
+        #endregion
+        #region Details Tab
+        private void BT_Calculate_Click(object sender, EventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            calcOpts.SE_UseDur = CK_SE_UseDur.Checked;
-            Character.OnCalculationsInvalidated();
+            RotationShotInfo[] myShotsTable;
+            CalculationsHunter calcs = Character.CurrentCalculations as CalculationsHunter;
+            CharacterCalculationsHunter charCalcs = calcs.GetCharacterCalculations(Character) as CharacterCalculationsHunter;
+            charCalcs.collectSequence = true;
+            RotationTest rTest = new RotationTest(Character, charCalcs, CalcOpts);
+            rTest.RunTest();
+            myShotsTable = rTest.getRotationTable();
+            TB_Rotation.Text = charCalcs.sequence;
+            TB_Shots.Text = "";
+            for (int i = 0; i < myShotsTable.Length; i++)
+            {
+                if (myShotsTable[i] != null)
+                    TB_Shots.Text += String.Format("{0,-13} : {1,4}", myShotsTable[i].type, myShotsTable[i].countUsed) + Environment.NewLine;
+            }
         }
+        private void TB_Rotation_TextChanged(object sender, EventArgs e) { }
+        private void TB_Shots_TextChanged(object sender, EventArgs e) { }
+        #endregion
+        #region Stat Graph
+        private Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            if (CK_StatsAgility.Checked) { statsList.Add(new Stats() { Agility = 1f }); }
+            if (CK_StatsAP.Checked) { statsList.Add(new Stats() { AttackPower = 1f }); }
+            if (CK_StatsCrit.Checked) { statsList.Add(new Stats() { CritRating = 1f }); }
+            if (CK_StatsHit.Checked) { statsList.Add(new Stats() { HitRating = 1f }); }
+            if (CK_StatsHaste.Checked) { statsList.Add(new Stats() { HasteRating = 1f }); }
+            if (CK_StatsArP.Checked) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
+            return statsList.ToArray();
+        }
+        private void BT_StatsGraph_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            Stats[] statsList = BuildStatsList();
+            Graph graph = new Graph();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of dps added or lost";
+            graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            graph.Show();
+        }
+        private void CK_StatsAgility_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[0] = CK_StatsAgility.Checked; }
+        private void CK_StatsAP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[1] = CK_StatsAP.Checked; }
+        private void CK_StatsCrit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[2] = CK_StatsCrit.Checked; }
+        private void CK_StatsHit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[3] = CK_StatsHit.Checked; }
+        private void CK_StatsHaste_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[4] = CK_StatsHaste.Checked; }
+        private void CK_StatsArP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[5] = CK_StatsArP.Checked; }
+        private void CB_CalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+        }
+        private void NUD_StatsIncrement_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
+        }
+        #endregion
     }
 }

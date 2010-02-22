@@ -286,6 +286,15 @@ namespace Rawr.Hunter
         public int PriorityIndex8 = 0;
         public int PriorityIndex9 = 0;
         public int PriorityIndex10 = 0;
+        [XmlIgnore]
+        public int[] PriorityIndexes {
+            get {
+                int[] _PriorityIndexes = { PriorityIndex1, PriorityIndex2, PriorityIndex3, PriorityIndex4, PriorityIndex5, 
+                                           PriorityIndex6, PriorityIndex7, PriorityIndex8, PriorityIndex9, PriorityIndex10 };
+                return _PriorityIndexes;
+            }
+            //set { _PriorityIndexes = value; }
+        }
 
         public int TargetLevel
 		{
@@ -336,6 +345,122 @@ namespace Rawr.Hunter
             get { return _SE_UseDur; }
             set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); }
         }
+
+        #region Shots
+        [XmlIgnore]
+        public static Shot None = new Shot(0, "None");
+        [XmlIgnore]
+        public static Shot AimedShot = new Shot(1, "Aimed Shot");
+        [XmlIgnore]
+        public static Shot ArcaneShot = new Shot(2, "Arcane Shot");
+        [XmlIgnore]
+        public static Shot MultiShot = new Shot(3, "Multi-Shot");
+        [XmlIgnore]
+        public static Shot SerpentSting = new Shot(4, "Serpent Sting");
+        [XmlIgnore]
+        public static Shot ScorpidSting = new Shot(5, "Scorpid Sting");
+        [XmlIgnore]
+        public static Shot ViperSting = new Shot(6, "Viper Sting");
+        [XmlIgnore]
+        public static Shot SilencingShot = new Shot(7, "Silencing Shot");
+        [XmlIgnore]
+        public static Shot SteadyShot = new Shot(8, "Steady Shot");
+        [XmlIgnore]
+        public static Shot KillShot = new Shot(9, "Kill Shot");
+        [XmlIgnore]
+        public static Shot ExplosiveShot = new Shot(10, "Explosive Shot");
+        [XmlIgnore]
+        public static Shot BlackArrow = new Shot(11, "Black Arrow");
+        [XmlIgnore]
+        public static Shot ImmolationTrap = new Shot(12, "Immolation Trap");
+        [XmlIgnore]
+        public static Shot ExplosiveTrap = new Shot(13, "Explosive Trap");
+        [XmlIgnore]
+        public static Shot FreezingTrap = new Shot(14, "Freezing Trap");
+        [XmlIgnore]
+        public static Shot FrostTrap = new Shot(15, "Frost Trap");
+        [XmlIgnore]
+        public static Shot Volley = new Shot(16, "Volley");
+        [XmlIgnore]
+        public static Shot ChimeraShot = new Shot(17, "Chimera Shot");
+        [XmlIgnore]
+        public static Shot RapidFire = new Shot(18, "Rapid Fire");
+        [XmlIgnore]
+        public static Shot Readiness = new Shot(19, "Readiness");
+        [XmlIgnore]
+        public static Shot BeastialWrath = new Shot(20, "Beastial Wrath");
+        [XmlIgnore]
+        private static List<Shot> _ShotList = null;
+        [XmlIgnore]
+        public static List<Shot> ShotList
+        {
+            get
+            {
+                return _ShotList ?? (new List<Shot>() {
+                        None,
+                        AimedShot,
+                        ArcaneShot,
+                        MultiShot,
+                        SerpentSting,
+                        ScorpidSting,
+                        ViperSting,
+                        SilencingShot,
+                        SteadyShot,
+                        KillShot,
+                        ExplosiveShot,
+                        BlackArrow,
+                        ImmolationTrap,
+                        ExplosiveTrap,
+                        FreezingTrap,
+                        FrostTrap,
+                        Volley,
+                        ChimeraShot,
+                        RapidFire,
+                        Readiness,
+                        BeastialWrath,
+                    });
+            }
+        }
+        [XmlIgnore]
+        public static readonly ShotGroup Marksman = new ShotGroup("Marksman", new List<Shot>() {
+                RapidFire,
+                Readiness,
+                SerpentSting,
+                ChimeraShot,
+                KillShot,
+                AimedShot,
+                SilencingShot,
+                SteadyShot,
+                None,
+                None,
+        });
+        [XmlIgnore]
+        public static readonly ShotGroup BeastMaster = new ShotGroup("Beast Master", new List<Shot>() {
+                RapidFire,
+                BeastialWrath,
+                KillShot,
+                AimedShot,
+                ArcaneShot,
+                SerpentSting,
+                SteadyShot,
+                None,
+                None,
+                None,
+        });
+        [XmlIgnore]
+        public static readonly ShotGroup Survival = new ShotGroup("Survival", new List<Shot>() {
+                RapidFire,
+                KillShot,
+                ExplosiveShot,
+                SerpentSting,
+                BlackArrow,
+                AimedShot,
+                SteadyShot,
+                None,
+                None,
+                None,
+        });
+        #endregion
 
         private bool[] _Maintenance;
         public enum Maintenances
@@ -440,5 +565,28 @@ namespace Rawr.Hunter
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
+    }
+    public class Shot
+    {
+        public Shot(int index, string name) { Index = index; Name = name; }
+
+        public int Index = -1;
+        public string Name = "Invalid";
+
+        public override string ToString() { return Name; }
+        public int ToInt() { return Index; }
+    }
+    public class ShotGroup
+    {
+        public ShotGroup(string name) { Name = name; }
+        public ShotGroup(string name, ShotGroup sg) { Name = name; ShotList = sg.ShotList; }
+        public ShotGroup(string name, List<Shot> shotList) { Name = name; ShotList = shotList; }
+        public string Name = "Invalid";
+        private List<Shot> _ShotList = null;
+        public List<Shot> ShotList {
+            get { return _ShotList ?? new List<Shot>() { }; }
+            set { _ShotList = value; }
+        }
+        public bool Equals(List<Shot> shots2Compare) { return (ShotList == shots2Compare); }
     }
 }
