@@ -2103,15 +2103,7 @@ applied and result is scaled down by 100)",
             if (slot == ItemSlot.OffHand) { return false; }
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
-        public override bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            string name = enchant.Name;
-            if (name.Contains("Rune of"))
-            {
-                return false; // Bad DK Enchant, Bad!
-            }
-            return base.IsEnchantRelevant(enchant, character);
-        }
+
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTree));

@@ -901,16 +901,6 @@ namespace Rawr.Cat
 			}
 		}
 
-        public override bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            string name = enchant.Name;
-            if (name.Contains("Rune of"))
-            {
-                return false; // Bad DK Enchant, Bad!
-            }
-            return base.IsEnchantRelevant(enchant, character);
-        }
-
         public override bool IsItemRelevant(Item item)
 		{
 			if (item.Slot == ItemSlot.OffHand || 

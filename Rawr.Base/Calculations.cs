@@ -1197,6 +1197,14 @@ namespace Rawr
 			}
 		}
 
+        public bool IsEnchantAllowedForClass(Enchant enchant, CharacterClass characterClass)
+        {
+            if (enchant.Name.StartsWith("Rune of ") && (characterClass != CharacterClass.DeathKnight))
+                return false;
+
+            return true;    
+        }
+
         /// <summary>
         /// Hide an enchant that is tie to a profession when:
         /// <para>- You have the Option active in the General Settings</para>
@@ -1270,9 +1278,15 @@ namespace Rawr
         /// <returns>Whether the Enchant should be hidden, based on Stats. If the option is set, also Professions.</returns>
         public virtual bool IsEnchantRelevant(Enchant enchant, Character character)
 		{
-			try {
-                return IsProfEnchantRelevant(enchant, character) && HasRelevantStats(enchant.Stats);
-			} catch (Exception) {
+			try 
+            {
+                return 
+                    IsEnchantAllowedForClass(enchant, character.Class) && 
+                    IsProfEnchantRelevant(enchant, character) && 
+                    HasRelevantStats(enchant.Stats);
+			} 
+            catch
+            {
 				return false;
 			}
 		}

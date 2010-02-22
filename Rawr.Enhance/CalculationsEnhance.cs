@@ -854,14 +854,6 @@ namespace Rawr.Enhance
 			return base.IsItemRelevant(item);
 		}
 
-        public override bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            string name = enchant.Name;
-            if (name.Contains("Rune of the Fallen Crusader"))
-                return false; // Bad DK Enchant, Bad!
-            return IsProfEnchantRelevant(enchant, character) && HasRelevantStats(enchant.Stats);
-        }
-
 		public override Stats GetRelevantStats(Stats stats)
 		{
 			Stats s = new Stats()

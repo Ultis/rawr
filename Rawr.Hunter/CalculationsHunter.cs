@@ -563,13 +563,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 ) > 0;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
-            string name = enchant.Name;
-            if (name.Contains("Rune")) {
-                return false; // Bad DK Enchant, Bad!
-            }
-            return IsProfEnchantRelevant(enchant, character) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
-            //return base.IsEnchantRelevant(enchant);
+        public override bool IsEnchantRelevant(Enchant enchant, Character character) 
+        {
+            return 
+                IsEnchantAllowedForClass(enchant, character.Class) &&
+                IsProfEnchantRelevant(enchant, character) && 
+                (HasWantedStats(enchant.Stats) || 
+                    (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character)

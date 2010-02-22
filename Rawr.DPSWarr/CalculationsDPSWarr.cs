@@ -833,11 +833,11 @@ These numbers to do not include racial bonuses.",
         }
 
         public override bool IsEnchantRelevant(Enchant enchant, Character character) {
-            string name = enchant.Name;
-            if (name.Contains("Rune of")) {
-                return false; // Bad DK Enchant, Bad!
-            }
-            return IsProfEnchantRelevant(enchant, character) && (HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
+            return 
+                IsEnchantAllowedForClass(enchant, character.Class) && 
+                IsProfEnchantRelevant(enchant, character) && 
+                (HasWantedStats(enchant.Stats) || 
+                    (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {

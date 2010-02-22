@@ -1384,17 +1384,6 @@ focus on Survival Points.",
             return relevant;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
-            // Remove Death Knight runes
-            if (enchant.Name.StartsWith("Rune of")) { return false; }
-
-            Stats stats = enchant.Stats;
-
-            bool relevant = IsProfEnchantRelevant(enchant, character) && (HasRelevantStats(stats));
-
-            return relevant;
-        }
-
         public Stats GetBuffsStats(Character character, CalculationOptionsProtPaladin calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();

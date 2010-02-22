@@ -635,11 +635,15 @@ namespace Rawr.Healadin
 
         public override bool IsEnchantRelevant(Enchant enchant, Character character)
         {
+            if (!IsEnchantAllowedForClass(enchant, character.Class) || 
+                    !IsProfEnchantRelevant(enchant, character))
+                return false;
+
             foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
-            {
-                if (IsProfEnchantRelevant(enchant, character) && HasRelevantSpecialEffect(effect)) { return true; }
-            }
-            return IsProfEnchantRelevant(enchant, character) && (HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats));
+                if (HasRelevantSpecialEffect(effect)) 
+                    return true;
+
+            return HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats);
         }
 
         public override bool HasRelevantStats(Stats stats)

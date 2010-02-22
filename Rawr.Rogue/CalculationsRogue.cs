@@ -1013,16 +1013,6 @@ namespace Rawr.Rogue
             }
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            string name = enchant.Name;
-            if (name.Contains("Rune of"))
-            {
-                return false; // Bad DK Enchant, Bad!
-            }
-            return base.IsEnchantRelevant(enchant, character);
-        }
-
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats {
                Agility = stats.Agility,
