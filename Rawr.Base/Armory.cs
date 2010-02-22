@@ -19,6 +19,7 @@ namespace Rawr
 
 		public static Character GetCharacter(CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
 		{
+            string AddInfoMsg = "No Additional Info";
 			XmlDocument docCharacter = null;
             //XmlDocument docTalents = null;
             try
@@ -31,9 +32,12 @@ namespace Rawr
                     itemsOnCharacter = null;
                     return null;
                 }
+                AddInfoMsg = "Character found and XML Downloaded. Processing Race and Class";
                 CharacterRace race = (CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
                 CharacterClass charClass = (CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
 
+                #region Process Professions
+                AddInfoMsg = "Processing Professions";
                 XmlNodeList nodes = docCharacter.SelectNodes("page/characterInfo/characterTab/professions/skill");
                 Profession prof1 = Profession.None, prof2 = Profession.None;
                 if(nodes.Count > 0){
@@ -42,7 +46,10 @@ namespace Rawr
                         prof2 = (Profession)Int32.Parse(nodes[1].Attributes["id"].Value);
                     }
                 }
+                #endregion
 
+                #region Process Equipped Items
+                AddInfoMsg = "Processing Equipped Items";
 				Dictionary<CharacterSlot, string> items = new Dictionary<CharacterSlot, string>();
 				//Dictionary<CharacterSlot, int> enchants = new Dictionary<CharacterSlot, int>();
 
@@ -53,9 +60,11 @@ namespace Rawr
 					items[cslot] = string.Format("{0}.{1}.{2}.{3}.{4}", itemNode.Attributes["id"].Value,
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value, itemNode.Attributes["permanentenchant"].Value);
 					//enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
-				}
+                }
+                #endregion
 
-				/*if (items.ContainsKey(CharacterSlot.Wrist))
+                #region Some slot fixes (currently unused)
+                /*if (items.ContainsKey(CharacterSlot.Wrist))
 				{
 					string[] wristIds = items[CharacterSlot.Wrist].Split('.');
 					Item wristItemRaw = ItemCache.FindItemById(int.Parse(wristIds[0]));
@@ -132,7 +141,10 @@ namespace Rawr
 						items[CharacterSlot.ExtraWaistSocket] = waistIds[3] + ".0.0.0";
 					}
 				}*/
+                #endregion
 
+                #region Create a Rawr.Character
+                AddInfoMsg = "Generating a Rawr Character";
                 itemsOnCharacter = new string[items.Values.Count];
                 items.Values.CopyTo(itemsOnCharacter, 0);
 				Character character = new Character(name, realm, region, race, new BossHandler(),
@@ -157,31 +169,24 @@ namespace Rawr
 					items.ContainsKey(CharacterSlot.Ranged) ? items[CharacterSlot.Ranged] : null,
 					items.ContainsKey(CharacterSlot.Projectile) ? items[CharacterSlot.Projectile] : null,
 					null
-                    //items.ContainsKey(CharacterSlot.ExtraWristSocket) ? items[CharacterSlot.ExtraWristSocket] : null,
-                    //items.ContainsKey(CharacterSlot.ExtraHandsSocket) ? items[CharacterSlot.ExtraHandsSocket] : null,
-                    //items.ContainsKey(CharacterSlot.ExtraWaistSocket) ? items[CharacterSlot.ExtraWaistSocket] : null,
-                    //enchants.ContainsKey(CharacterSlot.Head) ? enchants[CharacterSlot.Head] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Shoulders) ? enchants[CharacterSlot.Shoulders] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Back) ? enchants[CharacterSlot.Back] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Chest) ? enchants[CharacterSlot.Chest] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Wrist) ? enchants[CharacterSlot.Wrist] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Hands) ? enchants[CharacterSlot.Hands] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Legs) ? enchants[CharacterSlot.Legs] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Feet) ? enchants[CharacterSlot.Feet] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Finger1) ? enchants[CharacterSlot.Finger1] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Finger2) ? enchants[CharacterSlot.Finger2] : 0,
-                    //enchants.ContainsKey(CharacterSlot.MainHand) ? enchants[CharacterSlot.MainHand] : 0,
-                    //enchants.ContainsKey(CharacterSlot.OffHand) ? enchants[CharacterSlot.OffHand] : 0,
-                    //enchants.ContainsKey(CharacterSlot.Ranged) ? enchants[CharacterSlot.Ranged] : 0
 					);
                 
                 character.Class = charClass;
 
                 character.PrimaryProfession = prof1;
                 character.SecondaryProfession = prof2;
+                #endregion
 
+                #region Process Talents and Glyphs
+                AddInfoMsg = "Processing Talents & Glyphs";
 				XmlNode activeTalentGroup = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
 					.SelectSingleNode("page/characterInfo/talents/talentGroup[@active='1']");
+                if (activeTalentGroup == null)
+                {
+                    StatusMessaging.ReportError("Get Character", null, "Your Character's Talent Sheet could not be downloaded. Is the Armory down?");
+                    itemsOnCharacter = null;
+                    return null;
+                }
                 string talentCode = activeTalentGroup.SelectSingleNode("talentSpec").Attributes["value"].Value;
 				switch (charClass)
 				{
@@ -258,40 +263,34 @@ namespace Rawr
                         pi.SetValue(talents, true, null);
                     }
                 }
+                #endregion
 
+                #region Set the Avilable Items
+                AddInfoMsg = "Processing Available Items List for the Optimizer";
 				InitializeAvailableItemList(character);
-                ApplyRacialandProfessionBuffs(docCharacter, character);
+                #endregion
 
+                #region Apply Forced Buffs
+                AddInfoMsg = "Processing Forced Buffs (from Racials and Professions)";
+                ApplyRacialandProfessionBuffs(docCharacter, character);
+                #endregion
+
+                #region Hunter Pets if a Hunter
                 if (character.Class == CharacterClass.Hunter) {
+                    AddInfoMsg = "Processing Hunter Pets";
                     // Pull Pet(s) Info if you are a Hunter
                     List<ArmoryPet> pets = GetPet(region, realm, name);
                     if (pets != null) { character.ArmoryPets = pets; }
                 }
+                #endregion
 
+                AddInfoMsg = "Get Armory Completed, Returning Results to the main screen";
                 //I will tell you how he lived.
 				return character;
 			}
 			catch (Exception ex)
 			{
-                StatusMessaging.ReportError("Get Character", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory");
-                //if (docCharacter == null || docCharacter.InnerXml.Length == 0)
-                //{
-                //    System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
-                //    "from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" +
-                //    " exactly right, and chosen the correct Region. Rawr recieved no response to its query for character" +
-                //    " data, so if the character name/region/realm are correct, please check to make sure that no firewall " +
-                //    "or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
-                //    " paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
-                //    name, region.ToString(), realm, "null", ex.Message, ex.StackTrace));
-                //}
-                //else
-                //{
-                //    System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
-                //    "from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" + 
-                //    " exactly right, and chosen the correct Region. If you still encounter this error, please copy and" +
-                //    " paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
-                //    name, region.ToString(), realm, docCharacter.OuterXml, ex.Message, ex.StackTrace));
-                //}
+                StatusMessaging.ReportError("Get Character", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory" + (AddInfoMsg != "" && AddInfoMsg != "No Additional Info" ? ".\r\nAdd'l Info: " + AddInfoMsg : ""));
                 itemsOnCharacter = null;
 				return null;
 			}
