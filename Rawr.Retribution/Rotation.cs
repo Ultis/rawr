@@ -329,9 +329,9 @@ namespace Rawr.Retribution
 
         public static Simulator CreateSimulator(CombatStats combats)
         {
-            const decimal specificRotationListSimulationTime = 2000000m;
-            const decimal allRotationsSimulationTime = 100000m;
-            const decimal quickSimulationTime = 300m;
+            const decimal specificRotationListSimulationTime = 500000m;
+            const decimal allRotationsSimulationTime = 20000m;
+            const decimal quickSimulationTime = 100m;
 
             bool allRotationsMode = combats.CalcOpts.Experimental.IndexOf(
                 "<AllRotations>",
@@ -363,25 +363,35 @@ namespace Rawr.Retribution
         private static RotationParameters Parameters(
             CombatStats combats,
             Ability[] rotation,
-            decimal simulationTime)
+            decimal simulationTime,
+            bool under20PercentHealth,
+            bool bloodlust)
         {
-            const float bloodlustDuration = 40f;
+            const float bloodlustHaste = 0.3f;
+
+            // Remove Hammer of Wrath from rotation if the target is not under 20% health
+            if (!under20PercentHealth)
+            {
+                List<Ability> abilities = new List<Ability>(rotation);
+                abilities.Remove(Ability.HammerOfWrath);
+                rotation = abilities.ToArray();
+            }
 
             return new RotationParameters(
                 rotation,
-                combats.CalcOpts.TimeUnder20,
                 combats.CalcOpts.Wait,
                 combats.CalcOpts.Delay,
                 combats.Stats.JudgementCDReduction > 0,
                 combats.Talents.ImprovedJudgements,
                 combats.Talents.GlyphOfConsecration,
                 combats.Stats.DivineStormRefresh > 0 ?
-                    combats.BaseWeaponSpeed / (1 + combats.Stats.PhysicalHaste) :
+                    bloodlust ? 
+                        combats.BaseWeaponSpeed / (1 + combats.Stats.PhysicalHaste) / (1 + bloodlustHaste) :
+                        combats.BaseWeaponSpeed / (1 + combats.Stats.PhysicalHaste) :
                     0f,
-                combats.Stats.SpellHaste,
-                combats.CalcOpts.Bloodlust && (combats.Stats.Bloodlust == 0) ?
-                    Math.Min(1f, combats.CalcOpts.FightLength / bloodlustDuration) :
-                    0,
+                bloodlust ?
+                    (1 + combats.Stats.SpellHaste) * (1 + bloodlustHaste) - 1 :
+                    combats.Stats.SpellHaste,
                 simulationTime);
         }
 
@@ -445,11 +455,40 @@ namespace Rawr.Retribution
         public Simulator(CombatStats combats, Ability[] rotation, decimal simulationTime)
             : base(combats)
         {
+            const float bloodlustDuration = 40f;
+            const float secondsPerMinute = 60f;
+
             if (rotation == null)
                 throw new ArgumentNullException("rotation");
 
             Rotation = rotation;
-            Solution = RotationSimulator.SimulateRotation(Parameters(combats, rotation, simulationTime));
+
+            bool bloodlust = combats.CalcOpts.Bloodlust && (combats.Stats.Bloodlust == 0);
+            // in seconds
+            float fightLengthWithBloodlust = bloodlust ?
+                Math.Min(combats.CalcOpts.FightLength * secondsPerMinute, bloodlustDuration) :
+                0;
+            // in seconds
+            float fightLengthWithoutBloodlust =
+                Math.Max(0, combats.CalcOpts.FightLength * secondsPerMinute - fightLengthWithBloodlust);
+
+            Solution = RotationSolution.Combine(
+                () => RotationSolution.Combine(
+                    () => RotationSimulator.SimulateRotation(
+                        Parameters(combats, rotation, simulationTime, false, false)),
+                    fightLengthWithoutBloodlust,
+                    () => RotationSimulator.SimulateRotation(
+                        Parameters(combats, rotation, simulationTime, false, true)),
+                    fightLengthWithBloodlust),
+                1 - combats.CalcOpts.TimeUnder20,
+                () => RotationSolution.Combine(
+                    () => RotationSimulator.SimulateRotation(
+                        Parameters(combats, rotation, simulationTime, true, false)),
+                    fightLengthWithoutBloodlust,
+                    () => RotationSimulator.SimulateRotation(
+                        Parameters(combats, rotation, simulationTime, true, true)),
+                    fightLengthWithBloodlust),
+                combats.CalcOpts.TimeUnder20);
         }
 
 

@@ -25,10 +25,8 @@ namespace Rawr.Retribution
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
 
             int fightLength = (int)(rot.SimulationTime * timeUnitsPerSecond);
-            int bloodlustSpellGcd = (int)(rot.BloodlustSpellGCD * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
-            int bloodlustT10Speed = (int)(rot.BloodlustT10Speed * timeUnitsPerSecond);
-            int t10Speed = (int)(rot.T10_Speed * timeUnitsPerSecond);
+            int t10Speed = (int)(rot.T10Speed * timeUnitsPerSecond);
             SimulatorAbility.Delay = (int)(rot.Delay * timeUnitsPerSecond);
             SimulatorAbility.Wait = (int)(rot.Wait * timeUnitsPerSecond);
 
@@ -45,33 +43,21 @@ namespace Rawr.Retribution
                 meleeAbilityGcd);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(
                 (rot.GlyphConsecrate ? 10 : 8) * timeUnitsPerSecond,
-                bloodlustSpellGcd);
+                spellGcd);
             abilities[(int)Ability.Exorcism] = new SimulatorAbility(
                 15 * timeUnitsPerSecond,
-                bloodlustSpellGcd);
+                spellGcd);
             abilities[(int)Ability.HammerOfWrath] = new SimulatorAbility(
                 6 * timeUnitsPerSecond,
                 meleeAbilityGcd);
 
-            abilities[(int)Ability.HammerOfWrath].NextUse =
-                (int)Math.Round((double)fightLength * (1d - rot.TimeUnder20));
-
             int gcdFinishTime = 0;
             Random rand = new Random(6021987);
-            bool isBloodlustActive = true;
-            int bloodlustFinishTime = (int)Math.Round((double)fightLength * rot.BloodlustUptime);
-            int nextSwingTime = bloodlustFinishTime > 0 ? bloodlustT10Speed : t10Speed;
+            int nextSwingTime = t10Speed;
 
             int currentTime = 0;
             while (currentTime < fightLength)
             {
-                if (isBloodlustActive && (currentTime >= bloodlustFinishTime))
-                {
-                    isBloodlustActive = false;
-                    abilities[(int)Ability.Consecration].GlobalCooldown = spellGcd;
-                    abilities[(int)Ability.Exorcism].GlobalCooldown = spellGcd;
-                }
-
                 if (currentTime >= gcdFinishTime)
                 {
                     foreach (Ability ability in rot.Priorities)
@@ -89,9 +75,9 @@ namespace Rawr.Retribution
                 int nextTime = fightLength;
                 if (currentTime >= gcdFinishTime)
                 {
-                    foreach (SimulatorAbility ability in abilities)
+                    foreach (Ability ability in rot.Priorities)
                     {
-                        int nextUseTime = ability.GetNextUseTime(currentTime);
+                        int nextUseTime = abilities[(int)ability].GetNextUseTime(currentTime);
                         if (nextUseTime > currentTime)
                             nextTime = Math.Min(nextTime, nextUseTime);
                     }
@@ -103,9 +89,6 @@ namespace Rawr.Retribution
 
                 if (t10Speed > 0)
                 {
-                    if (isBloodlustActive)
-                        nextTime = Math.Min(nextTime, bloodlustFinishTime);
-
                     while (nextTime > nextSwingTime)
                     {
                         if (rand.NextDouble() < t10ProcChance)
@@ -114,7 +97,7 @@ namespace Rawr.Retribution
                             nextTime = nextSwingTime;
                         }
 
-                        nextSwingTime += isBloodlustActive ? bloodlustT10Speed : t10Speed;
+                        nextSwingTime += t10Speed;
                     }
                 }
 

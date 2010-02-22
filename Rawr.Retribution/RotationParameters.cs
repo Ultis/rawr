@@ -11,46 +11,31 @@ namespace Rawr.Retribution
         public int ImpJudgements;
         public bool GlyphConsecrate;
         public Ability[] Priorities;
-        public float TimeUnder20;
         public decimal Wait;
         public decimal Delay;
-        public decimal T10_Speed;
+        public decimal T10Speed;
         public decimal SpellGCD;
-        public decimal BloodlustSpellGCD;
-        public decimal BloodlustT10Speed;
-        public float BloodlustUptime;
         public decimal SimulationTime;
 
         public RotationParameters(
-            Ability[] Priorities, 
-            float TimeUnder20, 
-            float Wait, 
-            float Delay, 
-            bool T7_4pc, 
-            int ImpJudgements, 
-            bool GlyphConsecrate, 
-            float T10_Speed,
+            Ability[] priorities, 
+            float wait, 
+            float delay, 
+            bool t7_4pc, 
+            int impJudgements, 
+            bool glyphConsecrate, 
+            float t10Speed,
             float spellHaste,
-            float bloodlustUptime,
             decimal simulationTime)
         {
-            const float bloodlustHaste = 0.3f;
-
-            this.Priorities = (Ability[])Priorities.Clone();
-            this.T7_4pc = T7_4pc;
-            this.GlyphConsecrate = GlyphConsecrate;
-            this.TimeUnder20 = TimeUnder20;
-            this.Wait = (decimal)Math.Round(Wait, 2);
-            this.Delay = (decimal)Math.Round(Delay, 2);
-            this.ImpJudgements = ImpJudgements;
-            this.T10_Speed = (decimal)Math.Round(T10_Speed, 2);
-            BloodlustUptime = bloodlustUptime;
+            Priorities = (Ability[])priorities.Clone();
+            T7_4pc = t7_4pc;
+            GlyphConsecrate = glyphConsecrate;
+            Wait = (decimal)Math.Round(wait, 2);
+            Delay = (decimal)Math.Round(delay, 2);
+            ImpJudgements = impJudgements;
+            T10Speed = (decimal)Math.Round(t10Speed, 2);
             SpellGCD = GetSpellGCD(spellHaste);
-            BloodlustSpellGCD = 
-                BloodlustUptime == 0 ? SpellGCD : GetSpellGCD((1 + spellHaste) * (1 + bloodlustHaste) - 1);
-            BloodlustT10Speed = BloodlustUptime == 0 ? 
-                this.T10_Speed : 
-                (decimal)Math.Round(T10_Speed / (1 + bloodlustHaste), 2);
             SimulationTime = simulationTime;
         }
 
@@ -69,16 +54,12 @@ namespace Rawr.Retribution
                 return false;
 
             return (T7_4pc == other.T7_4pc) &&
-                (T10_Speed == other.T10_Speed) &&
+                (T10Speed == other.T10Speed) &&
                 (GlyphConsecrate == other.GlyphConsecrate) &&
-                (TimeUnder20 == other.TimeUnder20) &&
                 (Delay == other.Delay) &&
                 (Wait == other.Wait) &&
                 (ImpJudgements == other.ImpJudgements) &&
                 (SpellGCD == other.SpellGCD) &&
-                (BloodlustSpellGCD == other.BloodlustSpellGCD) &&
-                (BloodlustT10Speed == other.BloodlustT10Speed) &&
-                (BloodlustUptime == other.BloodlustUptime) &&
                 (SimulationTime == other.SimulationTime);
         }
 
@@ -88,14 +69,10 @@ namespace Rawr.Retribution
                 T7_4pc,
                 ImpJudgements,
                 GlyphConsecrate,
-                TimeUnder20,
                 Wait,
                 Delay,
-                T10_Speed,
+                T10Speed,
                 SpellGCD,
-                BloodlustSpellGCD,
-                BloodlustT10Speed,
-                BloodlustUptime,
                 Utilities.GetArrayHashCode(Priorities),
                 SimulationTime);
         }

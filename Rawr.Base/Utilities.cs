@@ -14,6 +14,8 @@ namespace Rawr
 
         public delegate bool EqualityComparison<T>(T x, T y);
 
+        public delegate float FloatValueSource();
+
 
         /// <summary>
         /// Make a deep clone of the object
@@ -167,6 +169,53 @@ namespace Rawr
 
             do yield return GetElementsByIndices(elements, elementIndices);
                 while (TryMakeNextElementIndexPermutation(elementIndices));
+        }
+
+        /// <summary>
+        /// Calculates weighted sum of two values.
+        /// </summary>
+        /// <param name="x">The first value.</param>
+        /// <param name="xWeight">The weight of the first value.</param>
+        /// <param name="y">The second value.</param>
+        /// <param name="yWeight">The weight of the second value.</param>
+        /// <returns>The weighted sum.</returns>
+        public static float GetWeightedSum(float x, float xWeight, float y, float yWeight)
+        {
+            if ((xWeight == 0) && (yWeight == 0))
+                return 0;
+
+            return (x * xWeight + y * yWeight) / (Math.Abs(xWeight) + Math.Abs(yWeight));
+        }
+
+        /// <summary>
+        /// Calculates weighted sum of two values.
+        /// The values are not directly provided.
+        /// Delegates that calculate the values are provided instead.
+        /// The values are not calculated if they have zero weight.
+        /// </summary>
+        /// <param name="x">The delegate that calculates the first value.</param>
+        /// <param name="xWeight">The weight of the first value.</param>
+        /// <param name="y">The delegate that calculates the second value.</param>
+        /// <param name="yWeight">The weight of the second value.</param>
+        /// <returns>The weighted sum.</returns>
+        public static float GetWeightedSum(
+            FloatValueSource x, 
+            float xWeight, 
+            FloatValueSource y, 
+            float yWeight)
+        {
+            if (xWeight == 0)
+            {
+                if (yWeight == 0)
+                    return 0;
+
+                return y();
+            }
+
+            if (yWeight == 0)
+                return x();
+
+            return GetWeightedSum(x(), xWeight, y(), yWeight);
         }
 
 

@@ -411,6 +411,9 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 float fightLength = calcOpts.FightLength * 60f;
+                // BUG: We select optimal rotation here to calculate proc averages 
+                // that may be different from the rotation we select later
+                // when averages have been added to stats
                 CombatStats combats = new CombatStats(character, stats);
                 Rotation rot = Rotation.Create(combats);
 
