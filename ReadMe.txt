@@ -1,31 +1,18 @@
-Rawr v2.3.9.0
+Rawr v2.3.10.0
 ------------
-Welcome to Rawr v2.3.9.0.
+Welcome to Rawr v2.3.10.0.
    
 Recent Changes:
- - More improvements to the default item filters.
- - Improved proc calculation of Bryntoll and Shadowstrike.
- - Improved parsing of source data from Wowhead.
- - Improvements to batch optimizations.
- - Fix for Cost optimization ignoring class restrictions.
- - Improvement for optimizer postprocessing gem swapping.
- - Rawr.Rogue: Significant rewrite to be much more up to date (this model had been untouched for quite a while and had grown quite out of date). Please report any issues you discover, and we'll do our best to get them resolved asap.
- - Rawr.Cat: Expanded the default gemming templates. Fix for white crit cap.
- - Rawr.Bear: Added support for target attack speed debuffs (remember to drop your target attack speed on the options panel back down to undebuffed values!).
- - Rawr.Hunter: Updated Zod Bow proc to show its effect in its tooltip. Implemented crit caps and floors. Several tooltip improvements for calculations. Now loads all pet data from the Armory. Automatically selects a Shot Priority for you based on your spec, when loading from the Armory. Swapping specs will also automatically swap your Shot Priority.
- - Rawr.Enhance: Export of calcs now forces "simulate_mana" to on.
- - Rawr.DPSWarr: Improved flurry calculations. Significantly improved many calculation tooltips. Fix for Deep Wounds tick rate at very high crit rates. Fix for white crit cap.
- - Rawr.Mage: Added support for ABSpam034MBAM rotation. Support for Evocation being hasted by 2T10. Improved modeling of Nibelung.
- - Rawr.TankDK: Fixed a bug with expertise calculations. Updated to model the hotfixed changes to Frost Presence and Icebound Fortitude.
- - Rawr.RestoSham: Fixed healing style charts to correctly display burst styles. Many significant calculation fixes and improvements.
- - Rawr.Retribution: Improved 2T10 calculations. Fix for Exorcism and Consecration being hasted by spell haste.
- - Rawr.ProtPaladin: Updated to model the hotfixed reduction in Sacred Duty effect.
- - Rawr.DPSDK: Fix for Target Dodge % and Target Miss % optimizable values not behaving as expected.
- - Rawr.ProtWarr: Updated Shield Slam, Devastate, and Concussion Blow for their correct 3.3.2 damage and threat values. Changed optimal rotation detection to be more robust. Added non-Revenge rotations if no points are spent in Improved Revenge. Made some minor fixes to the way average ability damage takes into account avoidance, crits, and glancing blows.
- - Rawr.Moonkin: Fix for Idol of the Lunar Eclipse modeling.
- - Rawr.Elemental: Fix for Bizuri's Totem of Shattered Ice modeling.
- - Rawr.ShadowPriest: Added better handling of Nevermelting Ice Crystal trinket.
- 
+ - More improvements to the default filters
+ - Further improvement on avoiding useless gem swaps from the Optimizer.
+ - Normal/Heroic ICC items should now share uniqueness.
+ - Rawr.Retribution: Improvements to rotation calculations.
+ - Rawr.Mage: Support for 3.3.3 chanages. Added support for the DoTTick special effect trigger. Added additional spell cycle information in tooltips.
+ - Rawr.Healadin: Fix for Divine Intellect calculations.
+ - Rawr.Rogue: Implemented weapon speed normalization. Fixed offhand damage calculations. Fixed avoided attacks display. Crit procs now work on SS and Hemo. Implemented DP dropping on Envenoms, this fixes the Envenom usage in Combat builds which now also use SnD on higher CP. Fix for white crit chance being able to go over 100%. Fix for Black Magic. Fix for DP tick counts.
+ - Rawr.Hunter: Improvements to the rotation system.
+ - Rawr.DPSWarr: Fix for some abilities using the wrong MH/OH dodge chance, when they are different.
+
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -132,6 +119,30 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.9.0
+ - More improvements to the default item filters.
+ - Improved proc calculation of Bryntoll and Shadowstrike.
+ - Improved parsing of source data from Wowhead.
+ - Improvements to batch optimizations.
+ - Fix for Cost optimization ignoring class restrictions.
+ - Improvement for optimizer postprocessing gem swapping.
+ - Rawr.Rogue: Significant rewrite to be much more up to date (this model had been untouched for quite a while and had grown quite out of date). Please report any issues you discover, and we'll do our best to get them resolved asap.
+ - Rawr.Cat: Expanded the default gemming templates. Fix for white crit cap.
+ - Rawr.Bear: Added support for target attack speed debuffs (remember to drop your target attack speed on the options panel back down to undebuffed values!).
+ - Rawr.Hunter: Updated Zod Bow proc to show its effect in its tooltip. Implemented crit caps and floors. Several tooltip improvements for calculations. Now loads all pet data from the Armory. Automatically selects a Shot Priority for you based on your spec, when loading from the Armory. Swapping specs will also automatically swap your Shot Priority.
+ - Rawr.Enhance: Export of calcs now forces "simulate_mana" to on.
+ - Rawr.DPSWarr: Improved flurry calculations. Significantly improved many calculation tooltips. Fix for Deep Wounds tick rate at very high crit rates. Fix for white crit cap.
+ - Rawr.Mage: Added support for ABSpam034MBAM rotation. Support for Evocation being hasted by 2T10. Improved modeling of Nibelung.
+ - Rawr.TankDK: Fixed a bug with expertise calculations. Updated to model the hotfixed changes to Frost Presence and Icebound Fortitude.
+ - Rawr.RestoSham: Fixed healing style charts to correctly display burst styles. Many significant calculation fixes and improvements.
+ - Rawr.Retribution: Improved 2T10 calculations. Fix for Exorcism and Consecration being hasted by spell haste.
+ - Rawr.ProtPaladin: Updated to model the hotfixed reduction in Sacred Duty effect.
+ - Rawr.DPSDK: Fix for Target Dodge % and Target Miss % optimizable values not behaving as expected.
+ - Rawr.ProtWarr: Updated Shield Slam, Devastate, and Concussion Blow for their correct 3.3.2 damage and threat values. Changed optimal rotation detection to be more robust. Added non-Revenge rotations if no points are spent in Improved Revenge. Made some minor fixes to the way average ability damage takes into account avoidance, crits, and glancing blows.
+ - Rawr.Moonkin: Fix for Idol of the Lunar Eclipse modeling.
+ - Rawr.Elemental: Fix for Bizuri's Totem of Shattered Ice modeling.
+ - Rawr.ShadowPriest: Added better handling of Nevermelting Ice Crystal trinket.
+
 v2.3.8.0
  - Rawr.Hunter: Fixed a crashing bug.
  - Rawr.Rogue: Fix for cycles that used less than 3 finishers.

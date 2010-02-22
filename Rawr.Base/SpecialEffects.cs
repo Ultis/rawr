@@ -1361,7 +1361,7 @@ namespace Rawr {
                 // Apparently confirmed as 3% chance to proc -> http://maintankadin.failsafedesign.com/forum/index.php?f=21&t=27115&rb_v=viewtopic
                 float armor = (float)int.Parse(match.Groups["armor"].Value);
                 float time = (float)int.Parse(match.Groups["time"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Armor = armor }, time, 60f, 0.03f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { BonusArmor = armor }, time, 60f, 0.03f));
             }
 
 

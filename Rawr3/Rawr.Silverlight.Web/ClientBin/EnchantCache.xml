@@ -1714,7 +1714,7 @@
           </Stats>
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>-1.2</Chance>
+          <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -1734,7 +1734,7 @@
           </Stats>
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>-1.25</Chance>
+          <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -2358,7 +2358,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <BonusStrengthMultiplier>0.15</BonusStrengthMultiplier>
           </Stats>
@@ -2399,13 +2399,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <CinderglacierProc>2</CinderglacierProc>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>-1</Chance>
+          <Chance>-1.5</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -2470,6 +2470,19 @@
     <Name>Nitro Boosts</Name>
     <Slot>Feet</Slot>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <MovementSpeed>1.5</MovementSpeed>
+          </Stats>
+          <Duration>5</Duration>
+          <Cooldown>180</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <CritRating>24</CritRating>
     </Stats>
   </Enchant>
@@ -2664,6 +2677,35 @@
     <Stats>
       <Defense>13</Defense>
       <BonusStaminaMultiplier>0.01</BonusStaminaMultiplier>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3873</Id>
+    <Name>Master's Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>30</Stamina>
+      <SpellPower>50</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3239</Id>
+    <Name>Icebreaker</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <FireDamage>200</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-3</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
   </Enchant>
 </ArrayOfEnchant>

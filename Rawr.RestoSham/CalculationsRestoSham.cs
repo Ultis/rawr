@@ -246,12 +246,20 @@ namespace Rawr.RestoSham
         {
             get
             {
+#if !RAWR3
                 return CustomCharts.CustomChartNames;
+#else
+				return new string[0];
+#endif
             }
         }
         public override string[] CustomRenderedChartNames
         {
+#if !RAWR3
             get { return CustomCharts.CustomRenderedChartNames; }
+#else
+			get { return new string[0]; }
+#endif
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
@@ -1168,6 +1176,7 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
         //
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
+#if !RAWR3
             ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
             if (chartCalc == null)
                 return new ComparisonCalculationBase[0];
@@ -1177,6 +1186,9 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
             if (list.Count > 0)
                 list.CopyTo(retVal, 0);
             return retVal;
+#else
+			return new ComparisonCalculationBase[0];
+#endif
         }
 #if !RAWR3
         public override void RenderCustomChart(Character character, string chartName, Graphics g, int width, int height)
