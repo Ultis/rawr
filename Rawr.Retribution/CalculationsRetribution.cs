@@ -717,19 +717,61 @@ namespace Rawr.Retribution
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
             Stats stats = buff.Stats;
-            bool wantedStats = (stats.Strength + stats.Agility + stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
-                stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit +
-                stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust + stats.MoteOfAnger +
-                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
-                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.Paragon +
-                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
-                stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
-                stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier + stats.DeathbringerProc +
-                stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier +  stats.BonusSealOfVengeanceDamageMultiplier +
-                stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
-                stats.SealMultiplier + stats.JudgementMultiplier + stats.DivineStormRefresh +
-                stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
+            bool wantedStats = 
+                (stats.Strength > 0) ||
+                (stats.Agility > 0) ||
+                (stats.AttackPower > 0) || 
+                (stats.DivineStormMultiplier > 0) ||
+                (stats.ArmorPenetration > 0) ||
+                (stats.ArmorPenetrationRating > 0) || 
+                (stats.ExpertiseRating > 0) || 
+                (stats.PhysicalHaste > 0) ||
+                (stats.PhysicalCrit > 0) ||
+                (stats.PhysicalHit > 0) ||
+                (stats.BonusStrengthMultiplier > 0) ||
+                (stats.BonusAgilityMultiplier > 0) || 
+                (stats.BonusDamageMultiplier > 0) ||
+                (stats.BonusAttackPowerMultiplier > 0) ||
+                (stats.BonusPhysicalDamageMultiplier > 0) ||
+                (stats.BonusHolyDamageMultiplier > 0) || 
+                (stats.Bloodlust > 0) ||
+                (stats.MoteOfAnger > 0) ||
+                (stats.CrusaderStrikeDamage > 0) ||
+                (stats.ConsecrationSpellPower > 0) ||
+                (stats.JudgementCrit > 0) ||
+                (stats.RighteousVengeanceCanCrit > 0) ||
+                (stats.JudgementCDReduction > 0) ||
+                (stats.DivineStormDamage > 0) || 
+                (stats.DivineStormCrit > 0) ||
+                (stats.Paragon > 0) ||
+                (stats.CrusaderStrikeCrit > 0) ||
+                (stats.ExorcismMultiplier > 0) || 
+                (stats.CrusaderStrikeMultiplier > 0) ||
+                (stats.SpellCrit > 0) ||
+                (stats.SpellCritOnTarget > 0) ||
+                (stats.HammerOfWrathMultiplier > 0) ||
+                (stats.SpellPower > 0) ||
+                (stats.BonusIntellectMultiplier > 0) ||
+                (stats.Intellect > 0) ||
+                (stats.Health > 0) || 
+                (stats.Stamina > 0) ||
+                (stats.SpellCrit > 0) ||
+                (stats.BonusCritMultiplier > 0) ||
+                (stats.DeathbringerProc > 0) ||
+                (stats.BonusSealOfCorruptionDamageMultiplier > 0) ||
+                (stats.BonusSealOfRighteousnessDamageMultiplier > 0) ||
+                (stats.BonusSealOfVengeanceDamageMultiplier > 0) ||
+                (stats.HitRating > 0) ||
+                (stats.CritRating > 0) ||
+                (stats.HasteRating > 0) ||
+                (stats.SpellHit > 0) ||
+                (stats.SpellPower > 0) ||
+                (stats.SealMultiplier > 0) ||
+                (stats.JudgementMultiplier > 0) ||
+                (stats.DivineStormRefresh > 0) ||
+                (stats.BonusStaminaMultiplier > 0) ||
+                (stats.BonusSpellCritMultiplier > 0) ||
+                (stats.SpellHaste > 0);
             return wantedStats;
         }
 
