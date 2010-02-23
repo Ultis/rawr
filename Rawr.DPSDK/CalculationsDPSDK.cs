@@ -1336,7 +1336,6 @@ namespace Rawr.DPSDK
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
                 CritMeleeRating = stats.CritMeleeRating,
-                Bloodlust = stats.Bloodlust,
 
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
@@ -1455,7 +1454,7 @@ namespace Rawr.DPSDK
         }
         private bool relevantStats(Stats stats)
         {
-            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower + stats.Bloodlust +
+            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration +
                 stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +

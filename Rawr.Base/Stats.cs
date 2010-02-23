@@ -32,8 +32,6 @@ namespace Rawr {
         BlockRating,
         BlockValue,
 
-        Bloodlust,
-        BloodlustProc,
         BonusBackstabCrit,
         BonusDaggerFistCrit,
         BonusBlockValueMultiplier,
@@ -1971,14 +1969,6 @@ namespace Rawr {
         #region Feral Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
-        public float BloodlustProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BloodlustProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BloodlustProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
         public float TerrorProc
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TerrorProc]; }
@@ -2106,13 +2096,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AverageArmor]; }
             set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float Bloodlust
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Bloodlust]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Bloodlust] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

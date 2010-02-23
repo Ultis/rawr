@@ -365,9 +365,8 @@ namespace Rawr.Retribution
 
             Rotation = rotation;
 
-            bool bloodlust = combats.CalcOpts.Bloodlust && (combats.Stats.Bloodlust == 0);
             // in seconds
-            float fightLengthWithBloodlust = bloodlust ?
+            float fightLengthWithBloodlust = combats.CalcOpts.Bloodlust ?
                 Math.Min(combats.CalcOpts.FightLength * secondsPerMinute, bloodlustDuration) :
                 0;
             // in seconds

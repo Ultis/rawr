@@ -691,12 +691,10 @@ namespace Rawr.Retribution
                 StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]; // Mob crit suppression
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * 
-                (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * 
-                (1f + stats.Bloodlust) 
+                (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
                 - 1f;
             stats.SpellHaste = (1f + stats.SpellHaste) * 
-                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) * 
-                (1f + stats.Bloodlust) 
+                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
                 - 1f;
 
             stats.SpellPower += 
@@ -845,7 +843,6 @@ namespace Rawr.Retribution
                 (stats.BonusAttackPowerMultiplier > 0) ||
                 (stats.BonusPhysicalDamageMultiplier > 0) ||
                 (stats.BonusHolyDamageMultiplier > 0) || 
-                (stats.Bloodlust > 0) ||
                 (stats.MoteOfAnger > 0) ||
                 (stats.CrusaderStrikeDamage > 0) ||
                 (stats.ConsecrationSpellPower > 0) ||
@@ -908,7 +905,6 @@ namespace Rawr.Retribution
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
                 SpellHit = stats.SpellHit,
-                Bloodlust = stats.Bloodlust,
                 Expertise = stats.Expertise,
                 Paragon = stats.Paragon,
                 SpellPower = stats.SpellPower,
@@ -978,7 +974,7 @@ namespace Rawr.Retribution
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier + 
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
-                stats.HammerOfWrathMultiplier + stats.Bloodlust + stats.SealMultiplier + stats.JudgementMultiplier) > 0;
+                stats.HammerOfWrathMultiplier + stats.SealMultiplier + stats.JudgementMultiplier) > 0;
             bool maybeStats = (stats.Agility + stats.Strength + stats.ExpertiseRating + stats.PhysicalHit +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;

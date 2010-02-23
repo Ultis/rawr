@@ -1922,7 +1922,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
                 CritMeleeRating = stats.CritMeleeRating,
-                Bloodlust = stats.Bloodlust,
 
                 // Bringing in some of the relavent stats from DPSDK.
                 // General Damage Mods.
@@ -2108,7 +2107,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.ThreatReductionMultiplier != 0);
 
             bResults |= (stats.CritMeleeRating != 0);
-            bResults |= (stats.Bloodlust != 0);
 
             // Bringing in the damage stuff from DPSDK for better threat data
             // Damage Multipliers:

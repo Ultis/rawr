@@ -1361,7 +1361,6 @@ the Threat Scale defined on the Options tab.",
 				BonusLacerateDamageMultiplier = stats.BonusLacerateDamageMultiplier,
 				BonusBearSwipeDamageMultiplier = stats.BonusBearSwipeDamageMultiplier,
                 BonusSwipeDamageMultiplier = stats.BonusSwipeDamageMultiplier,
-                BloodlustProc = stats.BloodlustProc,
                 BonusMangleBearDamage = stats.BonusMangleBearDamage,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
@@ -1399,7 +1398,7 @@ the Threat Scale defined on the Options tab.",
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
-                 + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
+                 + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier) != 0;
 
 			foreach (SpecialEffect effect in stats.SpecialEffects())

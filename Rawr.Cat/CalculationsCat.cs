@@ -357,7 +357,6 @@ namespace Rawr.Cat
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
-			hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
@@ -687,7 +686,7 @@ namespace Rawr.Cat
 			statsTotal.WeaponDamage += 16f; //Tiger's Fury
 
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
-			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
+			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
 			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / 3.5f);
 			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
@@ -924,7 +923,6 @@ namespace Rawr.Cat
 					ExpertiseRating = stats.ExpertiseRating,
 					ArmorPenetration = stats.ArmorPenetration,
 					ArmorPenetrationRating = stats.ArmorPenetrationRating,
-					BloodlustProc = stats.BloodlustProc,
 					BonusMangleCatDamage = stats.BonusMangleCatDamage,
 					BonusShredDamage = stats.BonusShredDamage,
 					BonusRipDamagePerCPPerTick = stats.BonusRipDamagePerCPPerTick,
@@ -939,7 +937,6 @@ namespace Rawr.Cat
 					Health = stats.Health,
 					MangleCatCostReduction = stats.MangleCatCostReduction,
 					TigersFuryCooldownReduction = stats.TigersFuryCooldownReduction,
-					Bloodlust = stats.Bloodlust,
 					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 					PhysicalHaste = stats.PhysicalHaste,
 					PhysicalHit = stats.PhysicalHit,
@@ -989,13 +986,13 @@ namespace Rawr.Cat
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			bool relevant = (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc + stats.PhysicalCrit +
+			bool relevant = (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.PhysicalCrit +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
 				stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration + stats.BonusRakeCrit + stats.RipCostReduction +
 				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
-				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.Bloodlust + stats.DeathbringerProc +
+				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.TerrorProc + stats.BonusRipCrit +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneDamage + stats.ShadowDamage +

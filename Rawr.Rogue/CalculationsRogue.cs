@@ -263,8 +263,7 @@ namespace Rawr.Rogue
             float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
             float critMultiplierPoison = 2f * (1f + stats.BonusCritMultiplier);
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) *
-                         (1f + stats.BonusFlurryHaste * 15f / 120f) - 1f;
+            hasteBonus = (1f + hasteBonus) * (1f + stats.BonusFlurryHaste * 15f / 120f) - 1f;
             float speedModifier = 1f / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
             float mainHandSpeed = mainHand == null ? 0f : mainHand._speed * speedModifier;
             float offHandSpeed = offHand == null ? 0f : offHand._speed * speedModifier;
@@ -776,7 +775,7 @@ namespace Rawr.Rogue
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
+            hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
             float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed + hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed + hasteBonus));
 
             //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand
@@ -1025,7 +1024,6 @@ namespace Rawr.Rogue
                ExpertiseRating = stats.ExpertiseRating,
                ArmorPenetration = stats.ArmorPenetration,
                ArmorPenetrationRating = stats.ArmorPenetrationRating,
-               BloodlustProc = stats.BloodlustProc,
                WeaponDamage = stats.WeaponDamage,
                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -1034,7 +1032,6 @@ namespace Rawr.Rogue
                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                Health = stats.Health,
-               Bloodlust = stats.Bloodlust,
                ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                PhysicalHaste = stats.PhysicalHaste,
                PhysicalHit = stats.PhysicalHit,
@@ -1116,7 +1113,6 @@ namespace Rawr.Rogue
                     stats.ExpertiseRating +
                     stats.ArmorPenetration +
                     stats.ArmorPenetrationRating +
-                    stats.BloodlustProc +
                     stats.WeaponDamage +
                     stats.BonusAgilityMultiplier +
                     stats.BonusAttackPowerMultiplier +
@@ -1125,7 +1121,6 @@ namespace Rawr.Rogue
                     stats.BonusStaminaMultiplier +
                     stats.BonusStrengthMultiplier +
                     //stats.Health +
-                    stats.Bloodlust +
                     stats.ThreatReductionMultiplier +
                     stats.PhysicalHaste +
                     stats.PhysicalHit +
