@@ -87,6 +87,7 @@ namespace Rawr.Rogue
                                          (Stats.BonusFlurryHaste > 0 ? (25f - Stats.FlurryCostReduction) * Duration / 120f : 0f);
             float totalCPAvailable = 0f;
             float averageGCD = 1f / (1f - AvoidedAttacks);
+            float ruptDurationAverage = RuptStats.DurationAverage;
             float averageFinisherCP = 5f + _chanceExtraCP[4] - Stats.CPOnFinisher;
 			
 			#region Melee
@@ -109,13 +110,11 @@ namespace Rawr.Rogue
             float averageSnDCP = ((float)snDCP + 1f) * _chanceExtraCP[snDCP - 1]
                 + ((float)snDCP) * (1f - _chanceExtraCP[snDCP - 1]);
 
-            //Lose some time due to Roar/Rake, Roar/Mangle, and Roar/Rip conflicts
-            //float roarRakeConflict = (1f / RakeStats.DurationAverage) * 0.5f * averageGCD;
-            //float roarMangleConflict = (1f / MangleStats.DurationAverage) * 0.5f * averageGCD;
-            //float roarRipConflict = (1f / ripDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
+            //Lose some time due to SnD/Rupt conflicts
+            float snDRuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
 
-            float snDDuration = SnDStats.DurationAverage + 3f * Math.Min(5f, averageSnDCP);
-            //    - roarRakeConflict - roarMangleConflict - roarRipConflict;
+            float snDDuration = SnDStats.DurationAverage + 3f * Math.Min(5f, averageSnDCP)
+                                - snDRuptConflict;
             float snDCount = Duration / snDDuration;
             snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - Stats.ChanceOnSnDResetOnEnvenom): snDCount));
             float snDTotalEnergy = snDCount * SnDStats.EnergyCost;
@@ -139,9 +138,8 @@ namespace Rawr.Rogue
             if (useRupt)
             {
                 #region Rupture
-                //Lose GCDs at the start of the fight to Mangle/Rake, Roar, and enough CPGs to get 5CPG.
-                //float durationRipable = Duration - 2f * averageGCD - (averageGCD * (averageFinisherCP / CPPerCPG));
-                float durationRuptable = Duration;
+                //Lose GCDs at the start of the fight to get SnD up and enough CPGs to get 5CPG.
+                float durationRuptable = Duration - 2f * averageGCD - (averageGCD * (averageFinisherCP / CPPerCPG));
 
                 float ruptCountMax = durationRuptable / RuptStats.DurationAverage;
                 float ruptsFromAvailableCP = Math.Min(ruptCountMax, totalCPAvailable / averageFinisherCP);

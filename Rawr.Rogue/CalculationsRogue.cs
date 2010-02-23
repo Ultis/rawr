@@ -117,6 +117,7 @@ namespace Rawr.Rogue
 					"Abilities:Sinister Strike",
 					"Abilities:Mutilate",
 					"Abilities:Slice and Dice",
+					"Abilities:Rupture",
 					"Abilities:Eviscerate",
 					"Abilities:Envenom",
                     "Abilities:Instant Poison",
@@ -395,11 +396,7 @@ namespace Rawr.Rogue
 
             float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
             float lagVariance = (float)calcOpts.LagVariance / 1000f;
-            //float mangleDurationUptime = (character.DruidTalents.GlyphOfMangle ? 18f : 12f);
-            //float mangleDurationAverage = mangleDurationUptime - timeToReapplyDebuffs - lagVariance;
-            //float rakeDurationUptime = 9f + stats.BonusRakeDuration;
-            //float rakeDurationAverage = rakeDurationUptime + timeToReapplyDebuffs + lagVariance;
-            float ruptDurationUptime = 8f + stats.BonusRuptDuration;
+            float ruptDurationUptime = 16f + stats.BonusRuptDuration;
             float ruptDurationAverage = ruptDurationUptime + timeToReapplyDebuffs + lagVariance;
             float snDBonusDuration = stats.BonusSnDDuration - lagVariance;
             #endregion
@@ -409,8 +406,8 @@ namespace Rawr.Rogue
             float baseDamageNorm = mainHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
             float baseOffDamage = (offHandSpeed * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f * (1f + stats.BonusOffHandDamageMultiplier));
             float baseOffDamageNorm = (offHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f * (1f + stats.BonusOffHandDamageMultiplier));
-            float meleeDamageRaw = (baseDamageNorm) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
-            float meleeOffDamageRaw = (baseOffDamageNorm) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+            float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+            float meleeOffDamageRaw = baseOffDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
             float backstabDamageRaw = (baseDamageNorm * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBackstabDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
             backstabDamageRaw *= (mainHand._type == ItemType.Dagger ? 1f : 0f);
             float hemoDamageRaw = (baseDamageNorm * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusHemoDamageMultiplier + stats.BonusYellowDamageMultiplier) * modArmor;
@@ -617,11 +614,6 @@ namespace Rawr.Rogue
             {
                 ruptStats.DurationUptime += 6f;
                 ruptStats.DurationAverage += 6f;
-            }
-            if (character.RogueTalents.GlyphOfRupture)
-            {
-                ruptStats.DurationUptime += 4f;
-                ruptStats.DurationAverage += 4f;
             }
             ruptStats.DamagePerHit *= (ruptStats.DurationUptime + 5 * ruptStats.DurationPerCP) / 12f;
             ruptStats.DamagePerSwing *= (ruptStats.DurationUptime + 5 * ruptStats.DurationPerCP) / 12f;
