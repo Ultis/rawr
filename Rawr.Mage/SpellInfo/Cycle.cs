@@ -333,7 +333,6 @@ namespace Rawr.Mage
                             break;
                     }
                 }
-                if (baseStats.ShatteredSunAcumenProc > 0 && CastingState.CalculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
             }
             if (CastingState.MageTalents.IncantersAbsorption > 0)
             {
@@ -481,12 +480,6 @@ namespace Rawr.Mage
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
             }*/
-            if (baseStats.ShatteredSunAcumenProc > 0 && !CastingState.CalculationOptions.Aldor)
-            {
-                float boltDps = CastingState.ArcaneBoltAverageDamage / (45f + CastTime / HitProcs / 0.1f);
-                effectDamagePerSecond += boltDps;
-                effectThreatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
-            }
             /*if (baseStats.PendulumOfTelluricCurrentsProc > 0)
             {
                 float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
@@ -875,17 +868,6 @@ namespace Rawr.Mage
                 contrib.Hits += duration / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Damage += boltDps * duration;
             }*/
-            if (CastingState.BaseStats.ShatteredSunAcumenProc > 0 && !CastingState.CalculationOptions.Aldor)
-            {
-                if (!dict.TryGetValue("Arcane Bolt", out contrib))
-                {
-                    contrib = new SpellContribution() { Name = "Arcane Bolt" };
-                    dict["Arcane Bolt"] = contrib;
-                }
-                float boltDps = CastingState.ArcaneBoltAverageDamage / (45f + CastTime / HitProcs / 0.1f);
-                contrib.Hits += duration / (45f + CastTime / HitProcs / 0.1f);
-                contrib.Damage += boltDps * duration;
-            }
             /*if (CastingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
             {
                 if (!dict.TryGetValue("Pendulum of Telluric Currents", out contrib))

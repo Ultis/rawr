@@ -124,6 +124,7 @@ namespace Rawr
         CrusaderStrikeHit,
         SealOfVengeanceTick,
         HolyLightCast,
+        HolyShockCast,
         #endregion
         #region Added by Shaman
         ShamanLightningBolt,
