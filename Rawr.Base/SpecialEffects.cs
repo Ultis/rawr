@@ -817,7 +817,7 @@ namespace Rawr {
                     0f, 0f, 0.09f));
             }
 
-            else if ((match = new Regex(@"Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage.*").Match(line)).Success)
+            else if ((match = new Regex(@"Your harmful spells have a chance to strike your enemy, dealing (?<min>\d\d*) to (?<max>\d\d*) shadow damage.*").Match(line)).Success)
             {   // Pendulum of Telluric Currents
                 int min = int.Parse(match.Groups["min"].Value);
                 int max = int.Parse(match.Groups["max"].Value);
@@ -825,7 +825,7 @@ namespace Rawr {
                     new Stats() { ShadowDamage = (float)(min + max) / 2f, },
                     0f, 45f, 0.10f));
             }
-            else if ((match = new Regex(@"Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt.*").Match(line)).Success)
+            else if ((match = new Regex(@"Each time one of your spells deals periodic damage, there is a chance (?<min>\d\d*) to (?<max>\d\d*) additional damage will be dealt.*").Match(line)).Success)
             {   // Extract of Necromantic Power
                 stats.ExtractOfNecromanticPowerProc += 1;
                 int min = int.Parse(match.Groups["min"].Value);
@@ -834,7 +834,7 @@ namespace Rawr {
                     new Stats() { ShadowDamage = (float)(min + max) / 2f,},
                     0f, 45f, 0.10f));
             }
-            else if ((match = new Regex(@"Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage.*").Match(line)).Success)
+            else if ((match = new Regex(@"Each time you deal damage, you have a chance to do an additional (?<min>\d\d*) to (?<max>\d\d*) Shadow damage.*").Match(line)).Success)
             {   // Darkmoon Card: Death
                 stats.DarkmoonCardDeathProc += 1;
                 int min = int.Parse(match.Groups["min"].Value);
