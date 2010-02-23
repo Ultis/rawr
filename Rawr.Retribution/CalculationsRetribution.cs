@@ -714,25 +714,36 @@ namespace Rawr.Retribution
                     buffs.Add(heroicPresence);
             }
 
+            var buffStats = GetBuffsStats(buffs);
+
             // If the character itself has any rank of Swift Retribution.
             // Improved Moonkin Form and different ranks of Swift Retribution don't stack.
             // Only the strongest one must be in ActiveBuffs
-            if (character.PaladinTalents.SwiftRetribution != 0)
-                Character.AddRankedBuff(
-                    buffs,
-                    character.PaladinTalents.SwiftRetribution,
-                    new[]
-                    {
-                        "Swift Retribution (Rank 1)",
-                        "Swift Retribution (Rank 2)",
-                        "Swift Retribution"
-                    },
-                    new Dictionary<string, float>
-                    {
-                        { "Improved Moonkin Form", 3 }
-                    });
+            if ((character.PaladinTalents.SwiftRetribution != 0) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Swift Retribution")) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Moonkin Form")))
+            {
+                Stats additionalStats = new Stats();
+                additionalStats.PhysicalHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
+                additionalStats.RangedHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
+                additionalStats.SpellHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
 
-            return GetBuffsStats(buffs);
+                buffStats += additionalStats;
+            }
+
+            if ((character.PaladinTalents.HeartOfTheCrusader != 0) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heart of the Crusader")) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath")))
+            {
+                Stats additionalStats = new Stats();
+                additionalStats.PhysicalCrit = character.PaladinTalents.HeartOfTheCrusader * 0.01f;
+                additionalStats.SpellCritOnTarget = character.PaladinTalents.HeartOfTheCrusader * 0.01f;
+
+                buffStats += additionalStats;
+            }
+
+            return buffStats;
         }
 
 

@@ -444,60 +444,6 @@ namespace Rawr //O O . .
 			return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
         }
 
-        /// <summary>
-        /// Adds a rank of a buff to a collection of buffs, 
-        /// if there is no stronger buff there already that don't stack.
-        /// Removes all lesser buffs that don't stack.
-        /// </summary>
-        /// <param name="rank">Rank of the buff (starting from 1).</param>
-        /// <param name="buffRankNames">Names of different ranks of the buff 
-        /// (rank 1 at index 0, rank 2 at index 1, ...)</param>
-        /// <param name="conflictingBuffEquivalentRanks">Names of the conflicting buffs (keys) 
-        /// with their equivalent ranks (values). 
-        /// If another buff is as strong as rank 2 of the given buff,
-        /// the dictionary should contain (another buff name, 2) pair.
-        /// If another buff is not exactly mapped to the buff rank, a fractionary value may be used.
-        /// The value may also be less than 1 or greater than the highest rank.</param>
-        public static void AddRankedBuff(
-            ICollection<Buff> buffs,
-            int rank,
-            IList<string> buffRankNames,
-            IDictionary<string, float> conflictingBuffEquivalentRanks)
-        {
-            if (buffs == null)
-                throw new ArgumentNullException("buffs");
-            if (buffRankNames == null)
-                throw new ArgumentNullException("buffRankNames");
-            if (conflictingBuffEquivalentRanks == null)
-                throw new ArgumentNullException("conflictingBuffEquivalentRanks");
-
-            // If stronger or equal rank of the buff is already added, do nothing
-            for (int currentRank = rank; currentRank <= buffRankNames.Count; currentRank++)
-                if (buffs.Contains(Buff.GetBuffByName(buffRankNames[currentRank - 1])))
-                    return;
-            
-            // If lesser rank of the buff is already added, remove it
-            for (int currentRank = 1; currentRank < rank; currentRank++)
-                buffs.Remove(Buff.GetBuffByName(buffRankNames[currentRank - 1]));
-
-            foreach (KeyValuePair<string, float> conflictingBuff in conflictingBuffEquivalentRanks)
-            {
-                Buff buff = Buff.GetBuffByName(conflictingBuff.Key);
-                if (buffs.Contains(buff))
-                {
-                    // If stronger or equal conflicting buff is already added, do nothing
-                    if (conflictingBuff.Value >= rank)
-                        return;
-
-                    // If lesser conflicting buff is already added, remove it and continue
-                    buffs.Remove(buff);
-                }
-            }
-
-            // If no higher or equal conflicting buff is added yet, add the buff rank
-            buffs.Add(Buff.GetBuffByName(buffRankNames[rank - 1]));
-        }
-
         #region Items in Slots
         [XmlIgnore]
         public ItemInstance Head { get { return this[CharacterSlot.Head]; } set { this[CharacterSlot.Head] = value; } }
