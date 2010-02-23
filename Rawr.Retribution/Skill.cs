@@ -39,6 +39,11 @@ namespace Rawr.Retribution
             get { return true; }
         }
 
+        public virtual bool UsableAfter20PercentHealth
+        {
+            get { return true; }
+        }
+
         public virtual Ability? RotationAbility
         {
             get { return null; }
@@ -268,6 +273,36 @@ namespace Rawr.Retribution
 
     }
 
+    public class NullCrusaderStrike : Skill
+    {
+
+        public NullCrusaderStrike(CombatStats combats)
+            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.CrusaderStrike; }
+        }
+
+        public override bool UsableAfter20PercentHealth
+        {
+            get { return false; }
+        }
+
+        public override bool UsableBefore20PercentHealth
+        {
+            get { return false; }
+        }
+
+
+        public override float AbilityDamage()
+        {
+            return 0;
+        }
+
+    }
+
     public class DivineStorm : Skill
     {
 
@@ -295,6 +330,36 @@ namespace Rawr.Retribution
         public override float Targets()
         {
             return (float)Math.Min(Combats.CalcOpts.Targets, 3f);
+        }
+
+    }
+
+    public class NullDivineStorm : Skill
+    {
+
+        public NullDivineStorm(CombatStats combats)
+            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.DivineStorm; }
+        }
+
+        public override bool UsableAfter20PercentHealth
+        {
+            get { return false; }
+        }
+
+        public override bool UsableBefore20PercentHealth
+        {
+            get { return false; }
+        }
+
+
+        public override float AbilityDamage()
+        {
+            return 0;
         }
 
     }
@@ -547,6 +612,16 @@ namespace Rawr.Retribution
         public override Ability? RotationAbility
         {
             get { return Ability.Judgement; }
+        }
+
+        public override bool UsableBefore20PercentHealth
+        {
+            get { return false; }
+        }
+
+        public override bool UsableAfter20PercentHealth
+        {
+            get { return false; }
         }
 
 

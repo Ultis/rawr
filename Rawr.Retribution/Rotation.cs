@@ -24,38 +24,44 @@ namespace Rawr.Retribution
                 throw new ArgumentNullException("combats");
 
             Combats = combats;
-            CS = new CrusaderStrike(combats);
-            DS = new DivineStorm(combats);
+            CS = combats.Talents.CrusaderStrike == 0 ? 
+                (Skill)new NullCrusaderStrike(combats) : 
+                (Skill)new CrusaderStrike(combats);
+            DS = combats.Talents.DivineStorm == 0 ?
+                (Skill)new NullCrusaderStrike(combats) :
+                (Skill)new DivineStorm(combats);
             Exo = new Exorcism(combats);
             HoW = new HammerOfWrath(combats);
             Cons = new Consecration(combats);
             White = new White(combats);
             HoR = new HandOfReckoning(combats);
 
-            if (combats.CalcOpts.Seal == SealOf.Righteousness)
+            switch (combats.CalcOpts.Seal)
             {
-                Seal = new SealOfRighteousness(combats);
-                SealDot = new NullSealDoT(combats);
-                Judge = new JudgementOfRighteousness(combats);
-            }
-            else if (combats.CalcOpts.Seal == SealOf.Command)
-            {
-                Seal = new SealOfCommand(combats);
-                SealDot = new NullSealDoT(combats);
-                Judge = new JudgementOfCommand(combats);
-            }
-            else if (combats.CalcOpts.Seal == SealOf.Vengeance)
-            {
-                float stack = AverageSoVStackSize();
-                Seal = new SealOfVengeance(combats, stack);
-                SealDot = new SealOfVengeanceDoT(combats, stack);
-                Judge = new JudgementOfVengeance(combats, stack);
-            }
-            else
-            {
-                Seal = new NullSeal(combats);
-                SealDot = new NullSealDoT(combats);
-                Judge = new NullJudgement(combats);
+                case SealOf.Righteousness:
+                    Seal = new SealOfRighteousness(combats);
+                    SealDot = new NullSealDoT(combats);
+                    Judge = new JudgementOfRighteousness(combats);
+                    break;
+
+                case SealOf.Command:
+                    Seal = new SealOfCommand(combats);
+                    SealDot = new NullSealDoT(combats);
+                    Judge = new JudgementOfCommand(combats);
+                    break;
+
+                case SealOf.Vengeance:
+                    float stack = AverageSoVStackSize();
+                    Seal = new SealOfVengeance(combats, stack);
+                    SealDot = new SealOfVengeanceDoT(combats, stack);
+                    Judge = new JudgementOfVengeance(combats, stack);
+                    break;
+
+                default:
+                    Seal = new NullSeal(combats);
+                    SealDot = new NullSealDoT(combats);
+                    Judge = new NullJudgement(combats);
+                    break;
             }
         }
 
@@ -363,6 +369,20 @@ namespace Rawr.Retribution
             if (rotation == null)
                 throw new ArgumentNullException("rotation");
 
+            if (combats.Talents.CrusaderStrike == 0)
+            {
+                List<Ability> abilities = new List<Ability>(rotation);
+                abilities.Remove(Ability.CrusaderStrike);
+                rotation = abilities.ToArray();
+            }
+
+            if (combats.Talents.DivineStorm == 0)
+            {
+                List<Ability> abilities = new List<Ability>(rotation);
+                abilities.Remove(Ability.DivineStorm);
+                rotation = abilities.ToArray();
+            }
+
             Rotation = rotation;
 
             // in seconds
@@ -436,12 +456,16 @@ namespace Rawr.Retribution
 
         public override float GetAbilityUsagePerSecond(Skill skill)
         {
-            return (skill.UsableBefore20PercentHealth ?
-                (1 - Combats.CalcOpts.TimeUnder20)
-                    / Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) :
-                0) +
-            Combats.CalcOpts.TimeUnder20
-                / Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(skill.RotationAbility.Value);
+            return 
+                (skill.UsableBefore20PercentHealth ?
+                    (1 - Combats.CalcOpts.TimeUnder20)
+                        / Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) :
+                    0) +
+                (skill.UsableAfter20PercentHealth ?
+                    Combats.CalcOpts.TimeUnder20
+                        / Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
+                            skill.RotationAbility.Value) :
+                    0);
         }
 
     }
