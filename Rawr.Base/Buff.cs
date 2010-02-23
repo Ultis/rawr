@@ -496,6 +496,20 @@ namespace Rawr
                 Group = "Haste (%)",
                 Stats = { PhysicalHaste = 0.03f, RangedHaste = 0.03f, SpellHaste = 0.03f }
             });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Swift Retribution (Rank 2)",
+                Source = "Ret Paladin",
+                Group = "Haste (%)",
+                Stats = { PhysicalHaste = 0.02f, RangedHaste = 0.02f, SpellHaste = 0.02f }
+            });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Swift Retribution (Rank 1)",
+                Source = "Ret Paladin",
+                Group = "Haste (%)",
+                Stats = { PhysicalHaste = 0.01f, RangedHaste = 0.01f, SpellHaste = 0.01f }
+            });
             #endregion
 
             #region Healing Received (%)
