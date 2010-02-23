@@ -8,6 +8,12 @@ namespace Rawr.Retribution
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin)]
     public class CalculationsRetribution : CalculationsBase
     {
+
+        private const decimal specificRotationListSimulationTime = 500000m;
+        private const decimal allRotationsSimulationTime = 20000m;
+
+
+
         #region Model Properties
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -345,24 +351,39 @@ namespace Rawr.Retribution
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        public override CharacterCalculationsBase GetCharacterCalculations(
+            Character character, 
+            Item additionalItem, 
+            bool referenceCalculation, 
+            bool significantChange, 
+            bool needsDisplayCalculations)
         {
-            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            return GetCharacterCalculations(
+                character,
+                additionalItem,
+                GetCharacterRotation(character, additionalItem));
+        }
+
+        public CharacterCalculationsBase GetCharacterCalculations(
+            Character character,
+            Item additionalItem,
+            Rotation rot)
+        {
+            CalculationOptionsRetribution calcOpts =
+                character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
             PaladinTalents talents = character.PaladinTalents;
-            Stats stats = GetCharacterStats(character, additionalItem);
+            CombatStats combats = rot.Combats;
+            Stats stats = combats.Stats;
 
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
-            calc.BasicStats = GetCharacterStats(character, additionalItem, false);
-            CombatStats combats = new CombatStats(character, stats);
+            calc.BasicStats = GetCharacterStats(character, additionalItem, false, null, 0);
 
             calc.AttackSpeed = combats.AttackSpeed;
             calc.WeaponDamage = combats.WeaponDamage;
             calc.ToMiss = CombatStats.GetMissChance(stats.PhysicalHit, calcOpts.TargetLevel);
             calc.ToDodge = CombatStats.GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
             calc.ToResist = CombatStats.GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
-
-            Rotation rot = Rotation.Create(combats);
 
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                 + new MagicDamage(combats, stats.FireDamage).AverageDamage()
@@ -371,6 +392,76 @@ namespace Rawr.Retribution
             calc.OverallPoints = calc.DPSPoints;
 
             return calc;
+        }
+
+        public Rotation GetCharacterRotation(Character character, Item additionalItem)
+        {
+            CalculationOptionsRetribution options = 
+                (CalculationOptionsRetribution)character.CalculationOptions;
+
+            if (!options.SimulateRotation)
+                return GetCharacterRotation(character, additionalItem, null, 0);
+
+            bool allRotationsMode = options.Experimental.IndexOf(
+                "<AllRotations>",
+                StringComparison.OrdinalIgnoreCase) != -1;
+
+            if (allRotationsMode)
+                return FindBestRotation(
+                    character,
+                    additionalItem,
+                    Rotation.GetAllRotations(),
+                    allRotationsSimulationTime);
+
+            if (options.Rotations.Count == 0)
+                return GetCharacterRotation(
+                    character, 
+                    additionalItem, 
+                    RotationParameters.DefaultRotation(),
+                    specificRotationListSimulationTime);
+
+            return FindBestRotation(
+                character,
+                additionalItem,
+                options.Rotations, 
+                specificRotationListSimulationTime);
+        }
+
+        private Rotation FindBestRotation(
+            Character character,
+            Item additionalItem,
+            IEnumerable<Ability[]> rotations,
+            decimal simulationTime)
+        {
+            float maxDPS = 0;
+            Rotation bestRotation = null;
+            foreach (Ability[] rotation in rotations)
+            {
+                Rotation currentRotation = 
+                    GetCharacterRotation(character, additionalItem, rotation, simulationTime);
+                float currentDPS = currentRotation.DPS();
+                if (currentDPS > maxDPS)
+                {
+                    maxDPS = currentDPS;
+                    bestRotation = currentRotation;
+                }
+            }
+
+            return bestRotation;
+        }
+
+        public Rotation GetCharacterRotation(
+            Character character,
+            Item additionalItem,
+            Ability[] rotation,
+            decimal simulationTime)
+        {
+            return CreateRotation(
+                new CombatStats(
+                    character, 
+                    GetCharacterStats(character, additionalItem, true, rotation, simulationTime)),
+                rotation,
+                simulationTime);
         }
 
         /// <summary>
@@ -387,13 +478,27 @@ namespace Rawr.Retribution
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            return GetCharacterStats(character, additionalItem, true);
+            return GetCharacterRotation(character, additionalItem).Combats.Stats;
         }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
+        public Rotation CreateRotation(CombatStats combats, Ability[] rotation, decimal simulationTime)
+        {
+            return combats.CalcOpts.SimulateRotation ?
+                (Rotation)new Simulator(combats, rotation, simulationTime) :
+                (Rotation)new EffectiveCooldown(combats);
+        }
+
+        // rotation and simulationTime are only required when computeAverageStats == true
+        public Stats GetCharacterStats(
+            Character character, 
+            Item additionalItem, 
+            bool computeAverageStats,
+            Ability[] rotation,
+            decimal simulationTime)
         {
             PaladinTalents talents = character.PaladinTalents;
-            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution calcOpts = 
+                character.CalculationOptions as CalculationOptionsRetribution;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -411,18 +516,20 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 float fightLength = calcOpts.FightLength * 60f;
-                // BUG: We select optimal rotation here to calculate proc averages 
-                // that may be different from the rotation we select later
-                // when averages have been added to stats
                 CombatStats combats = new CombatStats(character, stats);
-                Rotation rot = Rotation.Create(combats);
+                Rotation rot = CreateRotation(combats, rotation, simulationTime);
 
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
-                {
-                    statsAverage.Accumulate(ProcessSpecialEffect(effect, rot, calcOpts.Seal, combats.BaseWeaponSpeed, fightLength, calcOpts.StackTrinketReset));
-                }
+                    statsAverage.Accumulate(
+                        ProcessSpecialEffect(
+                            effect, 
+                            rot, 
+                            calcOpts.Seal, 
+                            combats.BaseWeaponSpeed, 
+                            fightLength, 
+                            calcOpts.StackTrinketReset));
                 stats += statsAverage;
 
                 // Death's Verdict/Vengeance (TOTC)
@@ -433,7 +540,8 @@ namespace Rawr.Retribution
                     stats.Agility += stats.HighestStat + stats.Paragon;
 
                 // Deathbringer's Will (ICC, Saurfang)
-                // Paladins get str, hasterating and crit procs.  They're all equally likely so we'll divide the proc by 3
+                // Paladins get str, hasterating and crit procs.
+                // They're all equally likely so we'll divide the proc by 3
                 stats.Strength += stats.DeathbringerProc / 3f;
                 stats.HasteRating += stats.DeathbringerProc / 3f;
                 stats.CritRating += stats.DeathbringerProc / 3f;
@@ -946,27 +1054,30 @@ namespace Rawr.Retribution
             {
                 List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                 Character baseChar = character.Clone();
-                CalculationOptionsRetribution baseOpts = ((CalculationOptionsRetribution)character.CalculationOptions).Clone();
-                baseChar.CalculationOptions = baseOpts;
+                CalculationOptionsRetribution options = 
+                    (CalculationOptionsRetribution)character.CalculationOptions;
 
                 Ability[] selectedRotation = 
                     ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character))
                         .Rotation;
 
-                IEnumerable<Ability[]> rotations =
-                    baseOpts.Experimental.IndexOf("<AllRotations>") == -1 ?
-                    baseOpts.Rotations :
-                    Rotation.GetAllRotations();
+                bool allRotations = options.Experimental.IndexOf("<AllRotations>") != -1;
+                IEnumerable<Ability[]> rotations = 
+                    allRotations ? Rotation.GetAllRotations() : options.Rotations;
 
                 foreach (Ability[] rotation in rotations)
                 {
-                    // Force this rotation rather than having the calculations try all and use the best one.
-                    // We don't need to set this back to off, 
-                    // since we're working in a cloned CalculationOptionsRetribution
-                    baseOpts.ForceRotation = rotation; 
-                                                
                     ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
-                        Calculations.GetCharacterCalculations(baseChar),
+                        GetCharacterCalculations(
+                            baseChar, 
+                            null, 
+                            GetCharacterRotation(
+                                baseChar, 
+                                null,
+                                rotation, 
+                                allRotations ? 
+                                    allRotationsSimulationTime : 
+                                    specificRotationListSimulationTime)),
                         RotationParameters.RotationString(rotation), 
                         Utilities.AreArraysEqual(rotation, selectedRotation));
                     compare.Item = null;
@@ -1032,5 +1143,15 @@ namespace Rawr.Retribution
         }
 
         #endregion
+
+
+        private class RotationDps
+        {
+
+            public Ability[] Rotation { get; set; }
+            public float Dps { get; set; }
+
+        }
+
     }
 }

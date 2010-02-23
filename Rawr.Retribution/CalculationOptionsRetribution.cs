@@ -106,9 +106,6 @@ namespace Rawr.Retribution
             // Tab - Misc
             clone.Experimental = experimental;
 
-            // No UI
-            clone.ForceRotation = ForceRotation;
-
             return clone;
         }
 
@@ -357,16 +354,6 @@ namespace Rawr.Retribution
             get { return experimental; }
             set { experimental = value; OnPropertyChanged("Experimental"); }
         }
-
-        // No UI
-        /// <summary>
-        /// ForceRotation has no UI, it is enabled from source only. when set to null, all 
-        /// defined rotations will be tested and the best one applied.
-        /// When set to a non-null value, only that rotation is tried and applied.
-        /// This is used during the creation of the 'Rotations' custom chart.
-        /// </summary>
-        [XmlIgnore]
-        public Ability[] ForceRotation { get; set; }
 
         #endregion
 

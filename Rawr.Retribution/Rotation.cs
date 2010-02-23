@@ -7,17 +7,6 @@ namespace Rawr.Retribution
     public abstract class Rotation
     {
 
-        public static Rotation Create(CombatStats combats)
-        {
-            if (combats == null)
-                throw new ArgumentNullException("combats");
-
-            if (combats.CalcOpts.SimulateRotation)
-                return Simulator.CreateSimulator(combats);
-
-            return new EffectiveCooldown(combats);
-        }
-
         public static IEnumerable<Ability[]> GetAllRotations()
         {
             Ability[] abilities = new Ability[(int)Ability.Last + 1];
@@ -81,9 +70,7 @@ namespace Rawr.Retribution
         public Skill SealDot { get; private set; }
         public Skill HoR { get; private set; }
         public White White { get; private set; }
-
-
-        protected CombatStats Combats { get; private set; }
+        public CombatStats Combats { get; private set; }
 
 
         public abstract void SetCharacterCalculations(CharacterCalculationsRetribution calc);
@@ -327,39 +314,6 @@ namespace Rawr.Retribution
     public class Simulator : Rotation
     {
 
-        public static Simulator CreateSimulator(CombatStats combats)
-        {
-            const decimal specificRotationListSimulationTime = 500000m;
-            const decimal allRotationsSimulationTime = 20000m;
-            const decimal quickSimulationTime = 100m;
-
-            bool allRotationsMode = combats.CalcOpts.Experimental.IndexOf(
-                "<AllRotations>",
-                StringComparison.OrdinalIgnoreCase) != -1;
-
-            if (combats.CalcOpts.ForceRotation != null)
-                return new Simulator(
-                    combats,
-                    combats.CalcOpts.ForceRotation, 
-                    allRotationsMode ? allRotationsSimulationTime : specificRotationListSimulationTime);
-
-            if (allRotationsMode)
-                return FindBestRotationQuickly(
-                    combats, 
-                    GetAllRotations(), 
-                    allRotationsSimulationTime,
-                    quickSimulationTime);
-
-            if (combats.CalcOpts.Rotations.Count == 0)
-                return new Simulator(
-                    combats, 
-                    RotationParameters.DefaultRotation(), 
-                    specificRotationListSimulationTime);
-
-            return FindBestRotation(combats, combats.CalcOpts.Rotations, specificRotationListSimulationTime);
-        }
-
-
         private static RotationParameters Parameters(
             CombatStats combats,
             Ability[] rotation,
@@ -393,58 +347,6 @@ namespace Rawr.Retribution
                     (1 + combats.Stats.SpellHaste) * (1 + bloodlustHaste) - 1 :
                     combats.Stats.SpellHaste,
                 simulationTime);
-        }
-
-        private static Simulator FindBestRotation(
-            CombatStats combats,
-            IEnumerable<Ability[]> rotations, 
-            decimal simulationTime)
-        {
-            float maxDPS = 0;
-            Simulator bestSimulator = null;
-            foreach (Ability[] rotation in rotations)
-            {
-                Simulator simulator = new Simulator(combats, rotation, simulationTime);
-                float currentDPS = simulator.DPS();
-                if (currentDPS > maxDPS)
-                {
-                    maxDPS = currentDPS;
-                    bestSimulator = simulator;
-                }
-            }
-
-            return bestSimulator;
-        }
-
-        private static Simulator FindBestRotationQuickly(
-            CombatStats combats,
-            IEnumerable<Ability[]> rotations,
-            decimal simulationTime,
-            decimal quickSimulationTime)
-        {
-            const float goodRotationTreshold = 0.995f;
-
-            List<RotationDps> rotationDpsValues = new List<RotationDps>();
-
-            foreach (Ability[] rotation in rotations)
-                rotationDpsValues.Add(
-                    new RotationDps 
-                    { 
-                        Rotation = rotation, 
-                        Dps = new Simulator(combats, rotation, quickSimulationTime).DPS() 
-                    });
-
-            float maxDps = 0;
-            foreach (RotationDps rotationDps in rotationDpsValues)
-                if (rotationDps.Dps > maxDps)
-                    maxDps = rotationDps.Dps;
-
-            List<Ability[]> goodRotations = new List<Ability[]>();
-            foreach (RotationDps rotationDps in rotationDpsValues)
-                if (rotationDps.Dps > maxDps * goodRotationTreshold)
-                    goodRotations.Add(rotationDps.Rotation);
-
-            return FindBestRotation(combats, goodRotations, simulationTime);
         }
 
 
@@ -501,15 +403,6 @@ namespace Rawr.Retribution
         public override float GetAbilityUsagePerSecond(Skill skill)
         {
             return Solution.GetAbilityUsagePerSecond(skill.RotationAbility.Value);
-        }
-
-
-        private class RotationDps
-        {
-
-            public Ability[] Rotation { get; set; }
-            public float Dps { get; set; }
-
         }
 
     }
