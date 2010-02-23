@@ -440,16 +440,32 @@ namespace Rawr.Retribution
             calc.Solution = new RotationSolution();
 
             foreach (Skill skill in new[] { Judge, CS, DS, Cons, Exo, HoW })
-                calc.Solution.SetAbilityEffectiveCooldown(
-                    skill.RotationAbility.Value,
-                    skill.UsableBefore20PercentHealth ? 
-                       Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) *
+            {
+                float effectiveCooldown;
+                if (skill.UsableAfter20PercentHealth)
+                {
+                    if (skill.UsableBefore20PercentHealth)
+                        effectiveCooldown =
+                            Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) *
                                 (1f - Combats.CalcOpts.TimeUnder20) +
                             Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
                                     skill.RotationAbility.Value) *
-                                Combats.CalcOpts.TimeUnder20 :
-                        Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
-                            skill.RotationAbility.Value));
+                                Combats.CalcOpts.TimeUnder20;
+                    else
+                        effectiveCooldown = Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
+                            skill.RotationAbility.Value);
+                }
+                else
+                {
+                    if (skill.UsableBefore20PercentHealth)
+                        effectiveCooldown = Combats.CalcOpts.GetEffectiveAbilityCooldown(
+                            skill.RotationAbility.Value);
+                    else
+                        effectiveCooldown = 0;
+                }
+
+                calc.Solution.SetAbilityEffectiveCooldown(skill.RotationAbility.Value, effectiveCooldown);
+            }
 
             calc.Rotation = null;
         }

@@ -743,6 +743,17 @@ namespace Rawr.Retribution
                 buffStats += additionalStats;
             }
 
+            if ((character.PaladinTalents.SanctifiedRetribution != 0) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sanctified Retribution")) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Arcane Empowerment")) &&
+                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
+            {
+                Stats additionalStats = new Stats();
+                additionalStats.BonusDamageMultiplier = character.PaladinTalents.SanctifiedRetribution * 0.03f;
+
+                buffStats += additionalStats;
+            }
+
             return buffStats;
         }
 
