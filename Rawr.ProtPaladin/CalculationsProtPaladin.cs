@@ -547,8 +547,6 @@ focus on Survival Points.",
             statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1.0f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina, CharacterClass.Paladin);
 
-            if (character.ActiveBuffsContains("Commanding Shout"))
-                statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
             statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect, CharacterClass.Paladin) * (1f + statsTotal.BonusManaMultiplier);
             
@@ -1169,7 +1167,6 @@ focus on Survival Points.",
             Stats s = new Stats() {
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
-                AverageArmor = stats.AverageArmor,
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
                 DodgeRating = stats.DodgeRating,

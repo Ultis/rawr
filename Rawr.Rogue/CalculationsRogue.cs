@@ -1052,10 +1052,6 @@ namespace Rawr.Rogue
                
                BonusSnDDuration = stats.BonusSnDDuration,
                CPOnFinisher = stats.CPOnFinisher,
-               BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
-               BonusFreeFinisher = stats.BonusFreeFinisher,
-               BonusCPGDamage = stats.BonusCPGDamage,
-               BonusSnDHaste = stats.BonusSnDHaste,
                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                RogueT7TwoPieceBonus = stats.RogueT7TwoPieceBonus,
                RogueT7FourPieceBonus = stats.RogueT7FourPieceBonus,
@@ -1141,10 +1137,6 @@ namespace Rawr.Rogue
 
                     stats.BonusSnDDuration +
                     stats.CPOnFinisher +
-                    stats.BonusEvisEnvenomDamage +
-                    stats.BonusFreeFinisher +
-                    stats.BonusCPGDamage +
-                    stats.BonusSnDHaste +
                     stats.BonusBleedDamageMultiplier +
                     stats.RogueT7TwoPieceBonus +
                     stats.RogueT7FourPieceBonus +

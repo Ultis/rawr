@@ -1335,8 +1335,6 @@ namespace Rawr.DPSDK
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
-                CritMeleeRating = stats.CritMeleeRating,
-
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
@@ -1459,7 +1457,7 @@ namespace Rawr.DPSDK
                 stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.ShadowDamage +
-                stats.CritMeleeRating + stats.BonusShadowDamageMultiplier + stats.SpellHaste
+                stats.BonusShadowDamageMultiplier + stats.SpellHaste
                 + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
                 + stats.PhysicalHit + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
                 + stats.BonusBloodStrikeDamage + stats.BonusDeathCoilDamage + stats.BonusDeathStrikeDamage + stats.BonusFrostStrikeDamage

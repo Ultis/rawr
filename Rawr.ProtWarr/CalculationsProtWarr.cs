@@ -1014,7 +1014,6 @@ threat and limited threat scaled by the threat scale.",
             {
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
-                AverageArmor = stats.AverageArmor,
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
                 Dodge = stats.Dodge,
@@ -1114,7 +1113,7 @@ threat and limited threat scaled by the threat scale.",
 
             // Stats which are potentially relevant
             bool relevant =
-                (stats.Agility + stats.Armor + stats.AverageArmor +
+                (stats.Agility + stats.Armor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
                     stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience + stats.AllResist + stats.BlockValue +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +

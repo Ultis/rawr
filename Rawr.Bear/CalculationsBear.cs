@@ -1319,7 +1319,6 @@ the Threat Scale defined on the Options tab.",
 				DodgeRating = stats.DodgeRating,
 				DefenseRating = stats.DefenseRating,
 				Resilience = stats.Resilience,
-				TerrorProc = stats.TerrorProc,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 				BaseArmorMultiplier = stats.BaseArmorMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
@@ -1388,7 +1387,7 @@ the Threat Scale defined on the Options tab.",
 		{
 			bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
-				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
+				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.Dodge +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
@@ -1397,7 +1396,7 @@ the Threat Scale defined on the Options tab.",
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
-                 + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
+                 + stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
                  + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier) != 0;
 

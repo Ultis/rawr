@@ -579,7 +579,6 @@ These numbers to do not include racial bonuses.",
                 // Ratings
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
-                SpellHitRating = stats.SpellHitRating,
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,

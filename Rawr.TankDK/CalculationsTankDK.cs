@@ -542,7 +542,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             statSE.AttackPower += StatConversion.ApplyMultiplier((statSE.Strength * 2), stats.BonusAttackPowerMultiplier);
             statSE.ParryRating += statSE.Strength * 0.25f;
-            statSE.CritRating += statSE.CritMeleeRating;
 
             // Any Modifiers from statSE need to be applied to stats
             stats.Strength = StatConversion.ApplyMultiplier(stats.Strength, statSE.BonusStrengthMultiplier);
@@ -1129,7 +1128,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             // AP, crit, etc.  already being factored in w/ multiplier.
             statsTotal.AttackPower += StatConversion.ApplyMultiplier((statsTotal.Strength * 2), statsTotal.BonusAttackPowerMultiplier);
-            statsTotal.CritRating += statsTotal.CritMeleeRating;
 
             // Parry from str. is only available to DKs.
             statsTotal.ParryRating += statsTotal.Strength * 0.25f;
@@ -1896,7 +1894,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
-                SpellHitRating = stats.SpellHitRating,
                 SpellHit = stats.SpellHit,
 
                 Healed = stats.Healed,
@@ -1920,8 +1917,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-
-                CritMeleeRating = stats.CritMeleeRating,
 
                 // Bringing in some of the relavent stats from DPSDK.
                 // General Damage Mods.
@@ -2082,7 +2077,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.PhysicalCrit != 0);
             bResults |= (stats.PhysicalHaste != 0);
             bResults |= (stats.PhysicalHit != 0);
-            bResults |= (stats.SpellHitRating != 0);
             bResults |= (stats.SpellHit != 0);
 
             bResults |= (stats.Healed != 0);
@@ -2105,8 +2099,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.DamageTakenMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
-
-            bResults |= (stats.CritMeleeRating != 0);
 
             // Bringing in the damage stuff from DPSDK for better threat data
             // Damage Multipliers:

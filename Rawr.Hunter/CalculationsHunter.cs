@@ -2581,7 +2581,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #endregion
                 #region Hit
                 statsTotal.PhysicalHit += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating + statsTotal.RangedHitRating));
-                statsTotal.SpellHit    += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating + statsTotal.SpellHitRating));
+                statsTotal.SpellHit    += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating));
                 #endregion
                 #region Mana
                 // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana

@@ -890,7 +890,6 @@ namespace Rawr.Enhance
                     Health = stats.Health,
                     Mana = stats.Mana,
 					SpellPower = stats.SpellPower,
-                    CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
                     BonusSSDamage = stats.BonusSSDamage,
                     BonusWFAttackPower = stats.BonusWFAttackPower,
@@ -991,7 +990,7 @@ namespace Rawr.Enhance
         {
             return (stats.Agility + stats.Intellect + stats.Stamina + stats.Strength + stats.Spirit +
                 stats.AttackPower + stats.SpellPower + stats.Mana + stats.WeaponDamage + stats.Health +
-                stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.CritMeleeRating + 
+                stats.ArmorPenetration + stats.ArmorPenetrationRating +
                 stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating + 
                 stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + 
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 

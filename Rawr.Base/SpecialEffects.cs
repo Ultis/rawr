@@ -935,7 +935,6 @@ namespace Rawr {
             else if ((match = new Regex("Each time you cast a spell, there is a chance you will gain up to (?<amount>\\d\\d*) mana per 5 for 15 sec").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, .10f));
-                stats.ManaRestoreOnCast_10_45 += int.Parse(match.Groups["amount"].Value) * 3f;
             }
             else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec, stacking up to 10 times"))
             {
@@ -961,12 +960,10 @@ namespace Rawr {
             {
                 // Soul of the Dead
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaRestore = 900f }, 0f, 45f, .25f));
-                stats.ManaRestoreOnCrit_25_45 += 900f;
             }
             else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
             {
                 // Pendulum of Telluric Currents
-                stats.PendulumOfTelluricCurrentsProc += 1;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats()
                 {
                     ShadowDamage = 1460,
@@ -1000,9 +997,7 @@ namespace Rawr {
                     float dur = int.Parse(m.Groups["dur"].Value);
                     // internal cooldown: 45 seconds
                     // 20% chance, so on average procs after 5 casts
-                    // lets say 60 seconds
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = hot }, 0f, 45f, .2f));
-                    stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
             }
             else if ((match = Regex.Match(line, @"Grants the wielder (?<defenseRating>\d+) defense rating and (?<bonusArmor>\d+) armor for 10 sec")).Success)

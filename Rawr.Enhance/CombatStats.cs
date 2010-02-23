@@ -235,7 +235,7 @@ namespace Rawr.Enhance
             }
 
             float meleeCritModifier = _stats.PhysicalCrit;
-            float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
+            float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
             chanceDodgeMH      = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
             chanceDodgeOH      = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);

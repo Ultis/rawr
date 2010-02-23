@@ -444,14 +444,14 @@ namespace Rawr.Enhance
             if (OverMeleeCritCap > 0.21f) // only warn if more than .21% over cap (equivalent to 10 crit rating)
                 dictValues.Add("Melee Crit", String.Format("{0} (Over Cap)*Crit Rating {1} (+{2}% crit chance)\r\nOver Soft Cap by {3}%",
                     MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
-                    (BasicStats.CritMeleeRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
-                    (StatConversion.GetCritFromRating(BasicStats.CritMeleeRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                    BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
+                    (StatConversion.GetCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                     OverMeleeCritCap.ToString("F2", CultureInfo.InvariantCulture)));
             else
                 dictValues.Add("Melee Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
                     MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
-                    (BasicStats.CritMeleeRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
-                    (StatConversion.GetCritFromRating(BasicStats.CritMeleeRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                    BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
+                    (StatConversion.GetCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Spell Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
                 SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",

@@ -609,7 +609,6 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFrostbolt;
             BaseCastTime -= 0.1f * calculations.MageTalents.EmpoweredFrostbolt;
             BaseCritRate += 0.05f * calculations.BaseStats.Mage4T9;
-            BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFrostbolt;
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier) * (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
             float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
@@ -734,7 +733,6 @@ namespace Rawr.Mage
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch + 0.05f * calculations.BaseStats.Mage4T9;
             DotDuration = 8;
             DotTickInterval = 2;
-            BaseInterruptProtection += calculations.BaseStats.AldorRegaliaInterruptProtection;
             BaseCastTime -= 0.1f * calculations.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier);

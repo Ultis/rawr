@@ -946,7 +946,6 @@ namespace Rawr.Cat
 					ClearcastOnBleedChance = stats.ClearcastOnBleedChance,
 					ArcaneDamage = stats.ArcaneDamage,
 					ShadowDamage = stats.ShadowDamage,
-					TerrorProc = stats.TerrorProc,
 					HighestStat = stats.HighestStat,
 					Paragon = stats.Paragon,
 					DeathbringerProc = stats.DeathbringerProc,
@@ -993,7 +992,7 @@ namespace Rawr.Cat
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
-				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.TerrorProc + stats.BonusRipCrit +
+				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneDamage + stats.ShadowDamage +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
