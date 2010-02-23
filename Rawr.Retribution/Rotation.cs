@@ -45,6 +45,9 @@ namespace Rawr.Retribution
                     break;
 
                 case SealOf.Command:
+                    if (combats.Talents.SealOfCommand == 0)
+                        goto default;
+
                     Seal = new SealOfCommand(combats);
                     SealDot = new NullSealDoT(combats);
                     Judge = new JudgementOfCommand(combats);
