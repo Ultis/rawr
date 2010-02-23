@@ -1637,15 +1637,6 @@ namespace Rawr.ShadowPriest
             }
 
             DPS = OverallDamage / timer;
-            if (simStats.TimbalsProc > 0.0f)
-            {
-                int dots = (PE != null) ? 3 : 0;
-                foreach (Spell spell in SpellPriority)
-                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                Spell Timbal = new TimbalProc(simStats, character, CalculationOptions.PTR);
-
-                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
-            }
 
             SustainDPS = DPS;
             float MPS = OverallMana / timer;

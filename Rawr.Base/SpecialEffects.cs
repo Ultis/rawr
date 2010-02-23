@@ -716,120 +716,174 @@ namespace Rawr {
                     (float)int.Parse(match.Groups["dur"].Value), 60f, 0.10f));
             }
             #endregion
+            #region Spell Power
+            else if ((match = new Regex(@"Each time one of your spells deals periodic damage, you have a chance to gain (?<amount>\d\d*) spell power for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Phylactery of the Nameless Lich
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 90f, 0.30f));
+            }
+            else if ((match = new Regex(@"Each time you deal spell damage to an opponent, you gain (?<amount>\d\d*) spell power for the next (?<dur>\d\d*) sec, stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
+            {   // Muradin's Spyglass
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
+            else if ((match = new Regex(@"Each time you cast a damaging or healing spell you gain (?<amount>\d\d*) spell power for the next (?<dur>\d\d*) sec, stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
+            {   // Illustration of the Dragon Soul | Eye of the Broodmother
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
+            else if ((match = new Regex(@"Your spells have a chance to increase your spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Pandora's Plea
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45f, 0.10f));
+            }
+            else if ((match = new Regex(@"Each time you cast a harmful spell, you have a chance to gain (?<amount>\d\d*) spell power for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Abyssal Rune
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45f, 0.25f));
+            }
+            else if ((match = new Regex(@"Your spell casts have a chance to increase your spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Flow of Knowledge
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45, 0.10f));
+            }
+            else if ((match = new Regex(@"Your spell critical strikes have a chance to increase your spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45, 0.20f));
+            }
+            else if ((match = new Regex(@"Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45, 0.10f));
+            }
+            else if ((match = new Regex(@"Your offensive spells have a chance on hit to increase your spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Ashen Band of Destruction - seems to be 60 sec iCD (wowhead)
+                float internalCooldown = 45.0f;
+                if (id == 50397 || id == 50398) { internalCooldown = 60.0f; }
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
+                    new Stats() { SpellPower = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), internalCooldown, 0.10f));
+            }
+            else if ((match = new Regex(@"Your damaging and healing spells have a chance to increase your spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Forge Ember
+                // This is a nasty trick for compatibility = when designing a healer, please use this version:
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45, 0.10f));
+            }
+            else if ((match = new Regex(@"Your harmful spells have a chance to increase your spell power by (?<amount>\d+) for (?<dur>\d+) sec").Match(line)).Success)
+            {   // Sundial of the Exiled (NOT FOR HEALERS) | Flare of the Heavens
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45, 0.10f));
+            }
             #endregion
-
-            else if (line.StartsWith("Your harmful spells have a chance to cause you to summon a Val'kyr to fight by your side for 30 sec"))
-            {
-                // Nibelung
-                // source http://elitistjerks.com/f75/t37825-rawr_mage/p42/#post1517923
-                // 5% crit rate, 1.5 crit multiplier, not affected by talents, affected only by target debuffs
-                float damage = 27008;
-                if (id == 50648)
-                {
-                    damage = 30000; // enter value for heroic when it becomes known
-                }
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
+            #region Mp5
+            else if ((match = new Regex(@"Each time you cast a helpful spell, you gain (?<amount>\d\d*) mana per 5 sec for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
+            {   // Solace of the Defeated
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast,
+                    new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140."))
-			{   // Essence of Gossamer - probably not quite right?!
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -0.01f }, 10, 1, 0.05f));
-			}
-            else if (line.StartsWith("Protected from the cold.  Your Frost resistance is increased by 20."))
-			{   // Mechanized Snow Goggles of the...
-				stats.FrostResistance = 20;
-			}
-			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
-			{ // Darkmoon Card: Greatness
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
-			}
-            else if ((match = new Regex(@"Each time one of your spells deals periodic damage, you have a chance to gain (?<spellPower>\d\d*) spell power for (?<duration>\d\d*) sec").Match(line)).Success)
+            else if ((match = new Regex(@"Each time you cast a (damaging or healing |)spell, there is a chance you will gain up to (?<amount>\d\d*) mana per 5 for (?<dur>\d\d*) sec").Match(line)).Success)
             {
-                // Phylactery of the Nameless Lich
-                float procRate = 0.3f;
-                float internalCooldown = 90.0f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), internalCooldown, procRate));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), 45f, 0.10f));
             }
-            else if ((match = Regex.Match(line, @"Each time you deal spell damage to an opponent, you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times\.")).Success)
-            {
-                // Muradin's Spyglass and similar
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["maxStack"].Value)));
+            else if ((match = new Regex(@"Your spell casts have a chance to grant (?<amount>\d\d*) mana per 5 sec for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Purified Lunar Dust
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), 45f, 0.10f));
             }
-            else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell you gain (?<spellPower>\d+) spell power for the next (?<duration>\d+) sec, stacking up to (?<maxStack>\d+) times.")).Success)
-            {
-                // Illustration of the Dragon Soul and similar
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["maxStack"].Value)));
-            }
+            #endregion
+            #region Damaging Procs
             else if ((match = new Regex(@"Sends a shadowy bolt at the enemy causing (?<min>\d\d*) to (?<max>\d\d*) Shadow damage.*").Match(line)).Success)
-            {
+            {   // Shadowmourne
                 int min = int.Parse(match.Groups["min"].Value);
                 int max = int.Parse(match.Groups["max"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
-                { 
-                    ShadowDamage = (float)(min+max)/2f,
-                }, 1f, 0f, 0.09f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
+                    new Stats() { ShadowDamage = (float)(min + max) / 2f, },
+                    0f, 0f, 0.09f));
             }
-            else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 25 spell power for the next 10 sec, stacking up to 5 times."))
-            {
-                // Eye of the Broodmother
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 25f }, 10f, 0f, 1f, 5));
+
+            else if ((match = new Regex(@"Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage.*").Match(line)).Success)
+            {   // Pendulum of Telluric Currents
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit,
+                    new Stats() { ShadowDamage = (float)(min + max) / 2f, },
+                    0f, 45f, 0.10f));
             }
-            else if (line.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec"))
-                stats.Strength += 32f; //LivingRoot = 32str
-            /*            else if (line.StartsWith("Chance on critical hit to increase your attack power by "))
-                        {
-                            line = line.Substring("Chance on critical hit to increase your attack power by ".Length);
-                            if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                            if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { AttackPower = ((float)int.Parse(line))
-                            stats.AttackPower += ((float)int.Parse(line)) / 6f;
-                        }
-            */
-            else if (line.StartsWith("Your spells have a chance to increase your spell power by 850 for 10 sec")
-                  || line.StartsWith("Your spells have a chance to increase your spell power by 751 for 10 sec"))
-            {
-                // Pandora's Plea
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 751f }, 10f, 45f, .1f));
+            else if ((match = new Regex(@"Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt.*").Match(line)).Success)
+            {   // Extract of Necromantic Power
+                stats.ExtractOfNecromanticPowerProc += 1;
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
+                    new Stats() { ShadowDamage = (float)(min + max) / 2f,},
+                    0f, 45f, 0.10f));
             }
-            else if (line.StartsWith("Each time you cast a harmful spell, you have a chance to gain 590 spell power for 10 sec"))
-            {
-                // Abyssal Rune
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590f }, 10f, 45f, 0.25f));
+            else if ((match = new Regex(@"Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage.*").Match(line)).Success)
+            {   // Darkmoon Card: Death
+                stats.DarkmoonCardDeathProc += 1;
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone,
+                    new Stats() { ShadowDamage = (float)(min + max) / 2f, },
+                    0f, 45f, 0.35f));
             }
-            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<mp5>\d+) mana per 5 sec for (?<duration>\d+) sec Stacks up to (?<stacks>\d+) times.")).Success)
-            {   // Solace of the Defeated
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["mp5"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1.00f, int.Parse(match.Groups["stacks"].Value)));
+
+            else if ((match = new Regex(@"Your melee and ranged attacks have a chance to strike your enemy, dealing (?<min>\d\d*) to (?<max>\d\d*) arcane damage.*").Match(line)).Success)
+            {   // Bandit's Insignia
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit,
+                    new Stats() { ArcaneDamage = (float)(min + max) / 2f, },
+                    0f, 45f, 0.15f));
             }
-            // Idol of the Raven Goddess (already added)
-            else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
-            {
-                string moonkinline = line;
-                string treeline = line;
-                // Bear/Cat form
-                line = line.Substring(0, line.IndexOf(" critical strike rating to the Leader of the Pack aura"));
-                line = line.Substring(line.LastIndexOf(' ') + 1);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.CritRating += (float)int.Parse(line);
-                // Moonkin Form
-                moonkinline = moonkinline.Substring(0, moonkinline.IndexOf(" spell critical strike rating to the Moonkin form aura."));
-                moonkinline = moonkinline.Substring(moonkinline.LastIndexOf(' ') + 1);
-                if (moonkinline.Contains(".")) moonkinline = moonkinline.Substring(0, moonkinline.IndexOf("."));
-                if (moonkinline.Contains(" ")) moonkinline = moonkinline.Substring(0, moonkinline.IndexOf(" "));
-                stats.IdolCritRating += (float)int.Parse(moonkinline);
-                // Tree of Life form
+            #endregion
+            #region Specialty Stat Procs
+            else if ((match = new Regex(@"When you heal or deal damage you have a chance to gain Greatness").Match(line)).Success)
+            {   // Darkmoon Card: Greatness
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
             }
-            else if (line.EndsWith("Weapon Damage."))
-            {
-                line = line.Trim('+').Substring(0, line.IndexOf(" "));
-                stats.WeaponDamage += int.Parse(line);
+            else if (line.StartsWith("Your harmful spells have a chance to cause you to summon a Val'kyr to fight by your side for 30 sec"))
+            {   // Nibelung
+                // source http://elitistjerks.com/f75/t37825-rawr_mage/p42/#post1517923
+                // 5% crit rate, 1.5 crit multiplier, not affected by talents, affected only by target debuffs
+                float damage = (id == 50648) ? 30000 : 27008; // enter value for heroic when it becomes known
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
             }
-            else if (line.StartsWith("Each time a melee attack strikes you, you have a chance to gain "))
-            {
-                line = line.Substring("Each time a melee attack strikes you, you have a chance to gain ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { BonusArmor = int.Parse(line) }, 10f, 45f, 0.25f));
+            else if ((match = new Regex(@"Each time a melee attack strikes you, you have a chance to gain (?<amount>\d\d*) armor for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // The Black Heart
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken,
+                    new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45f, 0.25f));
             }
+            #endregion
+            #region Misc
+            else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140."))
+            {   // Essence of Gossamer - probably not quite right?!
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -0.01f }, 10, 1, 0.05f));
+            }
+            else if (line.StartsWith("Protected from the cold.  Your Frost resistance is increased by 20."))
+            {   // Mechanized Snow Goggles of the...
+                stats.FrostResistance = 20;
+            }
+            #endregion
+            #endregion
+
             else if ((match = Regex.Match(line, @"You gain (?:a|an) (?<buffName>[\w\s]+) each time you cause a (?<trigger>non-periodic|damaging)+ spell critical strike\.(?:\s|nbsp;)+When you reach (?<stackSize>\d+) [\w\s]+, they will release, firing (?<projectile>[\w\s]+) for (?<mindmg>\d+) to (?<maxdmg>\d+) damage\.(?:\s|nbsp;)+[\w\s]+ cannot be gained more often than once every (?<icd>\d+(?:\.\d+)?) sec")).Success)
             {
                 // Capacitor like procs
@@ -851,96 +905,12 @@ namespace Rawr {
                     projectileStats.FireDamage = avgdmgperstack;
                 stats.AddSpecialEffect(new SpecialEffect(trigger, projectileStats, 0f, icd));
             }
-            else if (line.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec"))
-            {
-                // Serpent-Coil Braid
-                stats.BonusManaGem += 0.25f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.ManaGem, new Stats() { SpellPower = 225 }, 15f, 0f));
-            }
-            else if (line.StartsWith("Grants 170 increased spell power for 10 sec when one of your spells is resisted."))
-            {
-                // Eye of Magtheridon
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellMiss, new Stats() { SpellPower = 170 }, 10, 0));
-            }
-            else if (line.StartsWith("Your spell casts have a chance to increase your spell power by 590 for 10 sec"))
-            {
-                // Flow of Knowledge
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
-            }
-            else if (line.StartsWith("Chance on spell critical hit to increase your spell power by 225 for 10 sec"))
-            {
-                // Shiffar's Nexus-Horn
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = 225 }, 10, 45, 0.2f));
-            }
             else if (line.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
             {
                 line = line.Substring("Increases the effect that healing and mana potions have on the wearer by ".Length);
                 line = line.Substring(0, line.IndexOf('%'));
                 stats.BonusManaPotion += int.Parse(line) / 100f;
                 // TODO health potion effect
-            }
-            //Your spell critical strikes have a chance to increase your spell power by 190 for 15 sec
-            else if (line.StartsWith("Your spell critical strikes have a chance to increase your spell power by "))
-            {
-                line = line.Substring("Your spell critical strikes have a chance to increase your spell power by ".Length);
-                float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
-                line = line.Substring(line.IndexOf(" for") + " for ".Length);
-                int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
-
-                //switch (duration)
-                //{
-                //    case 15:
-                //        if (name == "Sextant of Unstable Currents")
-                //        {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = value }, duration, 45, 0.2f));
-                //        }
-                //        break;
-                //}
-            }
-            // Timbal's Focusing Crystal
-            else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 285 to 475 additional damage will be dealt."))
-            {
-                stats.TimbalsProc = 1.0f;
-            }
-            // Wrath of Cenarius
-            else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 132 for 10 sec"))
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 132 }, 10, 0, 0.05f));
-            }
-            else if (line == "Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.")
-            {   //Bandit's Insignia
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { ArcaneDamage = 1880 }, 0f, 45f, 0.15f));
-            }
-            else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
-            {
-                // Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to 130 for 10 sec
-                line = line.Substring("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to ".Length);
-                float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
-                line = line.Substring(line.IndexOf(" for") + " for ".Length);
-                int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
-
-                //switch (duration)
-                //{
-                //    case 10:
-                //        if (name == "Robe of the Elder Scribes")
-                //        {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = value }, duration, 45, 0.1f));
-                //        }
-                //        break;
-                //}
-            }
-            else if ((match = new Regex(@"Your offensive spells have a chance on hit to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
-            {
-                float spellpower = (float)int.Parse(match.Groups["power"].Value);
-                float time = (float)int.Parse(match.Groups["time"].Value);
-                float procRate = 0.1f;
-                float internalCooldown = 45.0f;
-                if (id == 50397 || id == 50398)
-                {
-                    // Ashen Band of Destruction - seems to be 60 sec iCD (wowhead)
-                    internalCooldown = 60.0f;
-                }
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellpower }, time, internalCooldown, procRate));
             }
             else if (line.StartsWith("Increases the periodic healing of Rejuvenation by "))
             {
@@ -991,37 +961,6 @@ namespace Rawr {
                 // And that is how Tree does it:
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HealingOmenProc = 800 }, 0, 0, 0.02f));
             }
-            else if ((match = Regex.Match(line, @"Your damaging and healing spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec")).Success)
-            {
-                int spellPower = int.Parse(match.Groups["spellPower"].Value);
-                // Forge Ember
-                // This is a nasty trick for compatibility = when designing a healer, please use this version:
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
-            }
-            else if ((match = Regex.Match(line, @"Your harmful spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec")).Success)
-            {
-                int spellPower = int.Parse(match.Groups["spellPower"].Value);
-                // Sundial of the Exiled (NOT FOR HEALERS) / Flare of the Heavens
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
-            }
-            else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec"))
-            {
-                // Dying Curse
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 765 }, 10, 45, 0.15f));
-            }
-            else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell, there is chance you will gain up to (?<amount>\d+) mana per 5 for 15 sec")).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = int.Parse(match.Groups["amount"].Value) }, 15f, 45f, .10f));
-            }
-            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain 290 spell power."))
-            {
-                // Tome of Fiery Redemption, T5 Paladin Class Tinket
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 290 }, 15f, 45f, .15f));
-            }
-            else if ((match = new Regex("Each time you cast a spell, there is a chance you will gain up to (?<amount>\\d\\d*) mana per 5 for 15 sec").Match(line)).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, .10f));
-            }
             else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec, stacking up to 10 times"))
             {
                 // Majestic Dragon Figurine
@@ -1036,32 +975,6 @@ namespace Rawr {
                 // Soul of the Dead
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { ManaRestore = 900f }, 0f, 45f, .25f));
             }
-            else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
-            {
-                // Pendulum of Telluric Currents
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats()
-                {
-                    ShadowDamage = 1460,
-                }, 0f, 45f, .1f));
-            }
-            else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
-            {
-                // Extract of Necromantic Power
-                stats.ExtractOfNecromanticPowerProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick, new Stats()
-                { 
-                    ShadowDamage = 1050f,
-                }, 0f, 45f, .1f));
-            }
-            else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 1750 to 2250 Shadow damage."))
-            {
-                // Darkmoon Card: Death
-                stats.DarkmoonCardDeathProc += 1;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats()
-                {
-                    ShadowDamage = 2000f,
-                }, 0f, 45f, .35f));
-            }
             else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
             {
                 Regex r = new Regex("Your direct healing spells have a chance to place a heal over time on your target, healing (?<hot>\\d*) over (?<dur>\\d*) sec");
@@ -1075,12 +988,14 @@ namespace Rawr {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = hot }, 0f, 45f, .2f));
                 }
             }
-            else if ((match = Regex.Match(line, @"Grants the wielder (?<defenseRating>\d+) defense rating and (?<bonusArmor>\d+) armor for 10 sec")).Success)
+            else if ((match = Regex.Match(line, @"Grants the wielder (?<amount1>\d\d*) defense rating and (?<amount2>\d\d*) armor for (?<dur>\d\d*) sec")).Success)
             {
                 // Quel'Serrar Sanctuary proc (all versions)
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DefenseRating = int.Parse(match.Groups["defenseRating"].Value), BonusArmor = int.Parse(match.Groups["bonusArmor"].Value) }, 10f, 0f, -2f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
+                    new Stats() { DefenseRating = int.Parse(match.Groups["amount1"].Value), BonusArmor = int.Parse(match.Groups["amount2"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 0f, -2f));
             }
-            else if ((match = new Regex("Steals (?<amount1>\\d\\d*) to (?<amount2>\\d\\d*) life from target enemy\\.").Match(line)).Success)
+            else if ((match = new Regex(@"Steals (?<amount1>\d\d*) to (?<amount2>\d\d*) life from target enemy.*").Match(line)).Success)
             {
 
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
@@ -1097,6 +1012,11 @@ namespace Rawr {
             {
                 // Val'anyr, Hammer of Ancient Kings effect
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ShieldFromHealed = .15f }, 15f, 45f, .1f));
+            }
+            else if (line.EndsWith("Weapon Damage."))
+            {
+                line = line.Trim('+').Substring(0, line.IndexOf(" "));
+                stats.WeaponDamage += int.Parse(line);
             }
             #region Special Armory Tags
             else if (isArmory && line.StartsWith("Increases spell power by"))
@@ -1283,11 +1203,6 @@ namespace Rawr {
             {
                 // Epheremal Snowflake - assume iCD of 0.33 sec (wowhead)
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ManaRestore = int.Parse(match.Groups["mana"].Value) }, 0f, 0.33f, 1f));
-            }
-            else if ((match = new Regex(@"Your spell casts have a chance to grant (?<amount>\d\d*) mana per 5 sec for 15 sec").Match(line)).Success)
-            {
-                // Purified Lunar Dust
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) }, 15f, 45f, 0.1f));
             }
             else if ((match = new Regex(@"Each time your spells heal a target you have a chance to cause another nearby friendly target to be instantly healed for (?<min>\d\d*) to (?<max>\d\d*).").Match(line)).Success)
             {
