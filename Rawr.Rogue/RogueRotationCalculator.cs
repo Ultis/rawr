@@ -292,7 +292,7 @@ namespace Rawr.Rogue
             float kSDmgBonus = 1.2f;
             if (Char.RogueTalents.KillingSpree > 0)
             {
-                float kSCount = Duration / 120f;
+                float kSCount = Duration / (120f - (Char.RogueTalents.GlyphOfKillingSpree ? 45f : 0f));
                 kSDuration = kSCount * 2.5f;
                 kSAttacks = 5f * kSCount;
             }
