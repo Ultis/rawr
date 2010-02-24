@@ -6,6 +6,7 @@ namespace Rawr.Rogue
 {
     public class RogueRotationCalculator
     {
+        public Character Char { get; set; }
 		public Stats Stats { get; set; }
 		public float Duration { get; set; }
 		public float TempCPPerCPG { get; set; }
@@ -34,13 +35,14 @@ namespace Rawr.Rogue
 
 		private float[] _chanceExtraCP = new float[5];
 
-        public RogueRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainBleed,
+        public RogueRotationCalculator(Character character, Stats stats, float duration, float cpPerCPG, bool maintainBleed,
 			float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, 
             RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats aPStats)
 		{
+            Char = character;
 			Stats = stats;
 			Duration = duration;
 			TempCPPerCPG = cpPerCPG;
@@ -284,11 +286,29 @@ namespace Rawr.Rogue
             aPCount *= (1f - AvoidedPoisonAttacks);
             #endregion
 
+            #region Killing Spree
+            float kSAttacks = 0;
+            float kSDuration = 0;
+            float kSDmgBonus = 1.2f;
+            if (Char.RogueTalents.KillingSpree > 0)
+            {
+                float kSCount = Duration / 120f;
+                kSDuration = kSCount * 2.5f;
+                kSAttacks = 5f * kSCount;
+            }
+            #endregion
+
             #region Damage Totals
             float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + Stats.BonusDamageMultiplierHFB: 1f;
 
-            float mainHandDamageTotal = mainHandCount * MainHandStats.DamagePerSwing * HFBMultiplier;
-            float offHandDamageTotal = offHandCount * OffHandStats.DamagePerSwing * HFBMultiplier;
+            float mainHandDamageTotal = ((Duration - kSDuration) / Duration * mainHandCount +
+                                        kSDmgBonus * kSDuration / Duration * mainHandCount +
+                                        kSDmgBonus * kSAttacks) *
+                                        MainHandStats.DamagePerSwing * HFBMultiplier;
+            float offHandDamageTotal = ((Duration - kSDuration) / Duration * offHandCount +
+                                       kSDmgBonus * kSDuration / Duration * offHandCount +
+                                       kSDmgBonus * kSAttacks) *
+                                       OffHandStats.DamagePerSwing * HFBMultiplier;
             float backstabDamageTotal = backstabCount * BackstabStats.DamagePerSwing * HFBMultiplier;
             float hemoDamageTotal = hemoCount * HemoStats.DamagePerSwing * HFBMultiplier;
             float sStrikeDamageTotal = sStrikeCount * SStrikeStats.DamagePerSwing * HFBMultiplier;

@@ -84,7 +84,7 @@ namespace Rawr.Rogue
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Summary:Overall Points*Sum of your DPS Points and Survivability Points",
+					"Summary:Overall Points*Sum of your DPS Points and Survivability Points.",
 					"Summary:DPS Points*DPS Points is your theoretical DPS.",
 					"Summary:Survivability Points*One hundreth of your health.",
 
@@ -581,7 +581,7 @@ namespace Rawr.Rogue
             #endregion
 
             #region Rotations
-            RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
+            RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, stats, calcOpts.Duration, cpPerCPG,
                 maintainBleed, /*berserkDuration,*/ mainHandSpeed, offHandSpeed, 
                 chanceWhiteAvoided, chanceAvoided, chancePoisonAvoided, chanceCritYellow * stats.BonusCPOnCrit, chanceCritMuti * stats.BonusCPOnCrit,
                 mainHandStats, offHandStats, backstabStats, hemoStats, sStrikeStats, mutiStats,
