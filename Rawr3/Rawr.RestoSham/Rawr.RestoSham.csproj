@@ -58,8 +58,8 @@
     <Compile Include="..\..\Rawr.RestoSham\Charting.cs">
       <Link>Charting.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.RestoSham\RelevantStats.cs">
-      <Link>RelevantStats.cs</Link>
+    <Compile Include="..\..\Rawr.RestoSham\RestoSham.Base.cs">
+      <Link>RestoSham.Base.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.RestoSham\CalculationOptionsRestoSham.cs">
       <Link>CalculationOptionsRestoSham.cs</Link>
