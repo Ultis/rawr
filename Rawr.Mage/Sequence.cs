@@ -1013,7 +1013,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Combustion) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, 0, 180.0 + 15.0, true, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, 0, SequenceItem.Calculations.CombustionCooldown + 15.0, true, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
         }
 
         public void GroupArcanePower()
@@ -4009,7 +4009,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Combustion (" + Math.Round(manabefore).ToString() + " mana)");
                             combustionLeft = 1;
-                            combustionCooldown = 180 + (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
+                            combustionCooldown = SequenceItem.Calculations.CombustionCooldown + (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                             combustionTime = time;
                             combustionWarning = false;
                             combustionLeft -= duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);

@@ -832,6 +832,7 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, pom, spammedDot);
             return spell;
         }
@@ -840,9 +841,12 @@ namespace Rawr.Mage
         {
             DotSpell spell = new DotSpell(this);
             spell.Calculate(castingState);
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, pom);
             return spell;
         }
+
+        float tormentTheWeak;
 
         public PyroblastTemplate(CharacterCalculationsMage calculations)
             : base("Pyroblast", false, false, false, 35, 5f, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
@@ -851,6 +855,11 @@ namespace Rawr.Mage
             DotDuration = 12;
             DotTickInterval = 3;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
+            if (calculations.CalculationOptions.Mode333)
+            {
+                tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
+                SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
+            }
         }
     }
 

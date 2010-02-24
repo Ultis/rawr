@@ -125,6 +125,7 @@ namespace Rawr.Mage
         public double ManaPotionValue;
         public double MaxManaPotionValue;
 
+        public double CombustionCooldown;
         public double PowerInfusionDuration;
         public double PowerInfusionCooldown;
         public double MirrorImageDuration;

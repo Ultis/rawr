@@ -984,6 +984,14 @@ namespace Rawr.Mage
             calculationResult.PowerInfusionCooldown = 120.0;
             calculationResult.MirrorImageDuration = 30.0;
             calculationResult.MirrorImageCooldown = 180.0;
+            if (calculationOptions.Mode333)
+            {
+                calculationResult.CombustionCooldown = 120.0;
+            }
+            else
+            {
+                calculationResult.CombustionCooldown = 180.0;
+            }
 
             if (evocationAvailable)
             {
@@ -1050,7 +1058,7 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = 180.0f,
+                    Cooldown = (float)calculationResult.CombustionCooldown,
                     Mask = (int)StandardEffect.Combustion,
                     Name = "Combustion",
                     StandardEffect = StandardEffect.Combustion,
@@ -2506,7 +2514,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowManaGemEffect, column, manaGemEffectDuration / 120f);
                     lp.SetElementUnsafe(rowDpsTime, column, -(1 - dpsTime));
                     lp.SetElementUnsafe(rowAoe, column, calculationOptions.AoeDuration);
-                    lp.SetElementUnsafe(rowCombustion, column, 1.0 / 180.0);
+                    lp.SetElementUnsafe(rowCombustion, column, 1.0 / calculationResult.CombustionCooldown);
                     lp.SetElementUnsafe(rowBerserking, column, 10.0 / 180.0);
                 }
                 #endregion
@@ -3068,7 +3076,7 @@ namespace Rawr.Mage
             if (manaGemEffectAvailable) lp.SetRHSUnsafe(rowManaGemEffect, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * manaGemEffectDuration / 120f : MaximizeEffectDuration(calculationOptions.FightDuration, manaGemEffectDuration, 120.0));
             lp.SetRHSUnsafe(rowDpsTime, -(1 - dpsTime) * calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowAoe, calculationOptions.AoeDuration * calculationOptions.FightDuration);
-            lp.SetRHSUnsafe(rowCombustion, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 180.0 : combustionCount);
+            lp.SetRHSUnsafe(rowCombustion, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / calculationResult.CombustionCooldown : combustionCount);
             lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
             lp.SetRHSUnsafe(rowHeroismCombustion, 1);
             //lp.SetRHSUnsafe(rowMoltenFuryBerserking, 10);
@@ -3454,7 +3462,7 @@ namespace Rawr.Mage
                 if (combustionAvailable)
                 {
                     List<SegmentConstraint> list = rowSegmentCombustion;
-                    double cool = 180 + 15;
+                    double cool = calculationResult.CombustionCooldown + 15;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
                         int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
