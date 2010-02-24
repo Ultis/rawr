@@ -607,12 +607,28 @@ namespace Rawr
 			}
 		}
 
+        private class CookieWebClient : WebClient
+        {
+            private CookieContainer cookieContainer = new CookieContainer();
+
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                WebRequest request = base.GetWebRequest(address);
+                HttpWebRequest httpRequest = request as HttpWebRequest;
+                if (httpRequest != null)
+                {
+                    httpRequest.CookieContainer = cookieContainer;
+                }
+                return request;
+            }
+        }
+
 		/// <summary>
 		/// Used to create a web client with all of the appropriote proxy/useragent/etc settings
 		/// </summary>
 		private WebClient CreateWebClient()
 		{
-			WebClient client = new WebClient() { Encoding = Encoding.UTF8 };
+			WebClient client = new CookieWebClient() { Encoding = Encoding.UTF8 };
 			client.Headers.Add("user-agent", NetworkSettingsProvider.UserAgent);
             if (NetworkSettingsProvider.ProxyType == "Http")
 			{
@@ -715,7 +731,7 @@ namespace Rawr
 				_fatalError = ex;
 			}
             _error = ex;
-		}
+		}        
 
 		public string DownloadText(string URI)
 		{
