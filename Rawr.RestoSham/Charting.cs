@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 #if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
-using System.Text;
 
 namespace Rawr.RestoSham
 {
@@ -57,11 +55,16 @@ namespace Rawr.RestoSham
             new CustomChart() { ChartName = "Healing Sequences", ChartCalculatorMethod = ChartCalculators.CalculateSequencesChart }
         };
 
+#if !RAWR3
         public static string[] CustomRenderedChartNames = { 
             "Burst Stats Graph",
             "Sustained Stats Graph",
             "Overall Rating Stats Graph"
         };
+#else
+        public static string[] CustomRenderedChartNames = new string[0];
+#endif
+
         public static Stats[] StatsGraphStatsList = new Stats[] {
             new Stats() { SpellPower = 1 },
             new Stats() { Mp5 = 1 },
@@ -81,6 +84,10 @@ namespace Rawr.RestoSham
         {
             get
             {
+#if RAWR3
+                return new string[0];
+#endif
+
                 if (Charts == null || Charts.Length == 0)
                     return null;
 
@@ -148,7 +155,7 @@ namespace Rawr.RestoSham
             CalculationOptionsRestoSham originalOptions = character.CalculationOptions as CalculationOptionsRestoSham;
             if (originalOptions == null)
                 originalOptions = new CalculationOptionsRestoSham();
-            
+
             CalculationOptionsRestoSham opts = originalOptions;
             string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
             string[] descs = new string[] {

@@ -5,7 +5,6 @@ using System.Windows.Media;
 using System.Drawing;
 #endif
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Rawr.RestoSham
 {
@@ -13,9 +12,44 @@ namespace Rawr.RestoSham
     public class CalculationsRestoSham : CalculationsBase
     {
         //  Base mana at level 80
-        public const float BaseMana = 4396;
+        const float BaseMana = 4396f;
 
-        #region Gemming Template Area
+        // Carry over calculations
+        public float HealPerSec { get; set; }
+        public float HealHitPerSec { get; set; }
+        public float CritPerSec { get; set; }
+        public float FightSeconds { get; set; }
+        public float castingActivity { get; set; }
+
+        #region Setup Character Defaults
+        /// <summary>
+        /// Sets the defaults for a RestoShaman character
+        /// </summary>
+        /// <param name="character">The character object to set the defaults for</param>
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd(("Improved Moonkin Form"));
+            character.ActiveBuffsAdd(("Tree of Life Aura"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Vampiric Touch"));
+            character.ActiveBuffsAdd(("Mana Spring Totem"));
+            character.ActiveBuffsAdd(("Restorative Totems"));
+            character.ActiveBuffsAdd(("Moonkin Form"));
+            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            character.ActiveBuffsAdd(("Spell Power Food"));
+            character.ActiveBuffsAdd(("Earthliving Weapon"));
+        }
+        public override List<string> GetRelevantGlyphs()
+        {
+            return Relevants.RelevantGlyphs;
+        }
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -119,164 +153,41 @@ namespace Rawr.RestoSham
 				};
             }
         }
-        #endregion
-        #region Labels and Charts info
-        /// <summary>
-        /// Sets the defaults for a RestoShaman character
-        /// </summary>
-        /// <param name="character">The character object to set the defaults for</param>
-        public override void SetDefaults(Character character)
+        public override List<ItemType> RelevantItemTypes
         {
-            character.ActiveBuffsAdd(("Improved Moonkin Form"));
-            character.ActiveBuffsAdd(("Tree of Life Aura"));
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Vampiric Touch"));
-            character.ActiveBuffsAdd(("Mana Spring Totem"));
-            character.ActiveBuffsAdd(("Restorative Totems"));
-            character.ActiveBuffsAdd(("Moonkin Form"));
-            character.ActiveBuffsAdd(("Wrath of Air Totem"));
-            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
-            character.ActiveBuffsAdd(("Spell Power Food"));
-            character.ActiveBuffsAdd(("Earthliving Weapon"));
+            get { return Relevants.RelevantItemTypes; }
         }
+        #endregion
 
-        private Dictionary<string, Color> _subpointColors = null;
+        #region Labels and Charts Overrides
         public override Dictionary<string, Color> SubPointNameColors
         {
-            get
-            {
-                if (_subpointColors == null)
-                {
-                    _subpointColors = new Dictionary<string, Color>();
-                    _subpointColors.Add("Burst", Color.FromArgb(255, 255, 0, 0));
-					_subpointColors.Add("Sustained", Color.FromArgb(255, 0, 0, 255));
-					_subpointColors.Add("Survival", Color.FromArgb(255, 0, 128, 0));
-                }
-                return _subpointColors;
-            }
+            get { return RestoShamConfiguration.SubPointNameColors; }
         }
-
-        private string[] _characterDisplayCalcLabels = null;
         public override string[] CharacterDisplayCalculationLabels
         {
-            get
-            {
-                if (_characterDisplayCalcLabels == null)
-                {
-                    _characterDisplayCalcLabels = new string[] {
-                          "Totals:HPS - Burst",
-                          "Totals:HPS - Sustained",
-                          "Totals:Survival",
-                          "Basic Stats:Health",
-                          "Basic Stats:Mana",
-                          "Basic Stats:Stamina",
-                          "Basic Stats:Intellect",
-                          "Basic Stats:Spell Power",
-                          "Basic Stats:MP5*Mana regeneration while casting",
-                          "Basic Stats:Mana Available*This is your total mana from all sources throughout the entire fight.",
-                          "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
-                          "Basic Stats:Spell Haste",
-                          "Healing Style Breakdowns:Burst Sequence",
-                          "Healing Style Breakdowns:Sustained Sequence",
-                          "Healing Style Breakdowns:Mana Available per Second",
-                          "Healing Style Breakdowns:Mana Used per Second*This is the mana used per second by your chosen sustained sequence",
-                          "Healing Style Breakdowns:Healing Stream HPS",
-                          "Healing Style Breakdowns:Earth Shield HPS",
-                          "Healing Style Breakdowns:RT+HW HPS",
-                          "Healing Style Breakdowns:RT+LHW HPS",
-                          "Healing Style Breakdowns:RT+CH HPS",
-                          "Healing Style Breakdowns:HW Spam HPS",
-                          "Healing Style Breakdowns:LHW Spam HPS",
-                          "Healing Style Breakdowns:CH Spam HPS",
-						  "Average Cast Times:Global Cooldown",
-						  "Average Cast Times:Healing Wave*Normal / Tidal Waves",
-						  "Average Cast Times:Lesser Healing Wave",
-						  "Average Cast Times:Chain Heal",
-						  "Average Cast Times:Lightning Bolt*Aren't you busy healing people? ;)",
-					};
-                }
-                return _characterDisplayCalcLabels;
-            }
+            get { return RestoShamConfiguration.CharacterDisplayCalculationLabels; }
         }
-
-        private static List<string> _relevantGlyphs;
-        public override List<string> GetRelevantGlyphs()
-        {
-            if (_relevantGlyphs == null)
-            {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Healing Wave");
-                _relevantGlyphs.Add("Glyph of Water Shield");
-                _relevantGlyphs.Add("Glyph of Water Mastery");
-                _relevantGlyphs.Add("Glyph of Chain Heal");
-                _relevantGlyphs.Add("Glyph of Earth Shield");
-                _relevantGlyphs.Add("Glyph of Lesser Healing Wave");
-                _relevantGlyphs.Add("Glyph of Earthliving Weapon");
-                _relevantGlyphs.Add("Glyph of Mana Tide Totem");
-                _relevantGlyphs.Add("Glyph of Healing Stream Totem");
-                _relevantGlyphs.Add("Glyph of Riptide");
-
-            }
-            return _relevantGlyphs;
-        }
-        private string[] _optimizableCalculationLabels = null;
         public override string[] OptimizableCalculationLabels
         {
-            get
-            {
-                if (_optimizableCalculationLabels == null)
-                    _optimizableCalculationLabels = new string[] {
-                    "Haste %",
-                    "Crit %",
-                    "Mana Usable per Second",
-					};
-                return _optimizableCalculationLabels;
-            }
+            get { return RestoShamConfiguration.OptimizableCalculationLabels; }
         }
-        //
-        // Custom chart names:
-        //
         public override string[] CustomChartNames
         {
-            get
-            {
-#if !RAWR3
-                return CustomCharts.CustomChartNames;
-#else
-				return new string[0];
-#endif
-            }
+            get { return CustomCharts.CustomChartNames; }
         }
         public override string[] CustomRenderedChartNames
         {
-#if !RAWR3
             get { return CustomCharts.CustomRenderedChartNames; }
-#else
-			get { return new string[0]; }
-#endif
         }
-
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
-        {
-            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
-            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
-        }
-
-        //
-        // Calculations options panel:
-        //
+        #endregion
+        
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		public override CalculationOptionsPanelBase CalculationOptionsPanel
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
         {
             get
@@ -286,33 +197,12 @@ namespace Rawr.RestoSham
                 return _calculationOptionsPanel;
             }
         }
-
-        #endregion
-        #region Item types we're interested in
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[] {
-                         ItemType.None,
-                         ItemType.Cloth,
-                         ItemType.Leather,
-                         ItemType.Mail,
-                         ItemType.Totem,
-                         ItemType.OneHandMace,
-                         ItemType.OneHandAxe,
-                         ItemType.Shield,
-                         ItemType.Staff,
-                         ItemType.FistWeapon,
-                         ItemType.Dagger });
-                }
-                return _relevantItemTypes;
-            }
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
-        #endregion
+        
         #region Model Verification and prepare Calculations
         //
         // This model is for shammies!
@@ -341,13 +231,6 @@ namespace Rawr.RestoSham
         {
             return GetCharacterCalculations(character, additionalItem, null);
         }
-        #region Calculations Variables to be Carried Over
-        public float HealPerSec { get; set; }
-        public float HealHitPerSec { get; set; }
-        public float CritPerSec { get; set; }
-        public float FightSeconds { get; set; }
-        public float castingActivity { get; set; }
-        #endregion
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
         {
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
@@ -407,7 +290,7 @@ namespace Rawr.RestoSham
             bool SelfHeal = RaidHeal || options.Targets == "Self";
             float ELWOverwriteScale = RaidHeal ? 0.875f : TankHeal ? 0.5f : 0.6f;
             float CHRTConsumption = RaidHeal ? 0.07f : TankHeal ? 0.5f : 0.19f;
-            float CHJumps = character.ShamanTalents.GlyphofChainHeal ? 
+            float CHJumps = character.ShamanTalents.GlyphofChainHeal ?
                 (RaidHeal ? 4 : SelfHeal ? 1.73f : TankHeal ? 1.86f : 2.5f) :
                 (RaidHeal ? 3 : SelfHeal ? 1.3f : TankHeal ? 1.41f : 1.8f);
             float HSTTargets = RaidHeal ? 5f : 1f;
@@ -445,7 +328,7 @@ namespace Rawr.RestoSham
                 stats.Mp5 += (character.ShamanTalents.GlyphofWaterMastery ? 130 : 100) +
                     stats.TotemThunderhead * 2 +
                     100f * stats.WaterShieldIncrease;
-                Orb = (428 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease) + 
+                Orb = (428 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease) +
                     stats.TotemThunderhead * 27;
                 Orb = Orb * character.ShamanTalents.ImprovedWaterShield / 3;
             }
@@ -849,7 +732,7 @@ namespace Rawr.RestoSham
                     calcStats.BurstHPS = calcStats.RTCHHPS;
                     break;
             }
-            
+
             // Sustained
             calcStats.SustainedSequence = options.SustStyle;
             float SustHPS = 0;
@@ -880,7 +763,7 @@ namespace Rawr.RestoSham
                     calcStats.MUPS = calcStats.RTCHMPS;
                     break;
             }
-            
+
             calcStats.BurstHPS += calcStats.HSTHeals;
             SustHPS += calcStats.HSTHeals;
             calcStats.MUPS += (DecurseCost * options.Decurse) / FightSeconds;
@@ -926,17 +809,16 @@ namespace Rawr.RestoSham
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace = GetRaceStats(character.Race);
             #region Other Final Stats
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsBuffs = GetBuffsStats(character);
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
             if (statModifier != null)
                 statsTotal += statModifier;
-            statsTotal += GetProcStats(statsTotal);
+            statsTotal += GetProcStats(statsTotal.SpecialEffects());
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            
+
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
             if (IntMultiplier > 1)
             {
@@ -945,7 +827,7 @@ namespace Rawr.RestoSham
                 if (statModifier != null && statModifier.Intellect > 0)
                     statsTotal.Intellect += (float)Math.Floor((statModifier.Intellect) * IntMultiplier);
             }
-            
+
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
@@ -958,7 +840,7 @@ namespace Rawr.RestoSham
             Stats relevantStats = new Stats();
             Type statsType = typeof(Stats);
 
-            foreach (string relevantStat in RelevantStats.StatList)
+            foreach (string relevantStat in Relevants.RelevantStats)
             {
                 float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
                 if (v > 0)
@@ -990,7 +872,7 @@ namespace Rawr.RestoSham
 
             // Loop over each relevant stat and get its value
             Type statsType = typeof(Stats);
-            foreach (string relevantStat in RelevantStats.StatList)
+            foreach (string relevantStat in Relevants.RelevantStats)
             {
                 float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
                 if (v > 0)
@@ -1000,14 +882,14 @@ namespace Rawr.RestoSham
             // if statTotal > 0 then we have relevant stats
             return statTotal > 0;
         }
-        public Stats GetBuffsStats(Character character/*, CalculationOptionsRestoSham calcOpts*/)
+        
+        /// <summary>
+        /// Gets the stats of the buffs currently active on a character
+        /// </summary>
+        /// <param name="character">The character to evaluate</param>
+        /// <returns>Stats object containing the stats of all the active buffs on the character</returns>
+        private Stats GetBuffsStats(Character character)
         {
-            //List<Buff> removedBuffs = new List<Buff>();
-            //List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
-
-            #region Racials to Force Enable
             // Draenei should always have this buff activated
             // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
             if (character.Race == CharacterRace.Draenei
@@ -1015,94 +897,19 @@ namespace Rawr.RestoSham
             {
                 character.ActiveBuffsAdd(("Heroic Presence"));
             }
-            #endregion
 
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }
-            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*/
-            /* }
-// If we have an enhanced Hunter's Mark, kill the Buff
-if (hasRelevantBuff > 0) {
-if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*/
-            /* }
-if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*/
-            /* }
-if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*/
-            /* }
-}
-}
-/* [More Buffs to Come to this method]
-* Ferocious Inspiration | Sanctified Retribution
-* Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-* Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-*/
-            #endregion
-
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }*/
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            /*foreach (Buff b in removedBuffs)
-            {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs)
-            {
-                character.ActiveBuffs.Remove(b);
-            }*/
-
-            return statsBuffs;
+            return GetBuffsStats(character.ActiveBuffs);
         }
-        private Stats GetProcStats(Stats statsTotal)
+        
+        /// <summary>
+        /// Gets the stats of procs or special effects
+        /// </summary>
+        /// <param name="specialEffects">List of special effects to aggregate</param>
+        /// <returns>Stats object containing the accumulated stats from the provided special effects</returns>
+        private Stats GetProcStats(Stats.SpecialEffectEnumerator specialEffects)
         {
             Stats statsProcs = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            foreach (SpecialEffect effect in specialEffects)
             {
                 switch (effect.Trigger)
                 {
@@ -1137,11 +944,17 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
             }
             return statsProcs;
         }
-        private static Stats GetRaceStats(Character character)
+        
+        /// <summary>
+        /// Create the base stats for a given character based on their race.
+        /// </summary>
+        /// <param name="race">The race of the character</param>
+        /// <returns>Stats object containing the base race stats</returns>
+        private static Stats GetRaceStats(CharacterRace race)
         {
             #region Create the statistics for a given character
             Stats statsRace;
-            switch (character.Race)
+            switch (race)
             {
                 case CharacterRace.Draenei:
                     statsRace = new Stats() { Health = 6485, Mana = BaseMana, Stamina = 135, Intellect = 141, Spirit = 145 };
@@ -1169,11 +982,8 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
         }
         #endregion
         #endregion
-        
+
         #region Chart data area
-        //
-        // Data for custom charts:
-        //
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
 #if !RAWR3
@@ -1201,9 +1011,8 @@ if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*remo
 #endif
 
         #endregion
-        
+
         #region Retrieve our options from XML:
-        //
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             System.Xml.Serialization.XmlSerializer serializer =

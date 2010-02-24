@@ -12,7 +12,6 @@ namespace Rawr.RestoSham
             set { _overallPoints = value; }
         }
 
-
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
@@ -20,15 +19,9 @@ namespace Rawr.RestoSham
             set { _subPoints = value; }
         }
 
+        public Stats BasicStats { get; set; }
 
-        private Stats _basicStats = null;
-        public Stats BasicStats
-        {
-            get { return _basicStats; }
-            set { _basicStats = value; }
-        }
-
-
+        #region Displayed Calculations
         public float SpellCrit { get; set; }
         public float SpellHaste { get; set; }
         public float TotalManaPool { get; set; }
@@ -59,11 +52,12 @@ namespace Rawr.RestoSham
         public float SustainedHPS { get; set; }
         public float MUPS { get; set; }
         public float Survival { get; set; }
+        #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
-            
+
             values.Add("HPS - Burst", Math.Round(BurstHPS, 0).ToString());
             values.Add("HPS - Sustained", Math.Round(SustainedHPS, 0).ToString());
             values.Add("Survival", Math.Round(Survival, 0).ToString());
@@ -78,8 +72,8 @@ namespace Rawr.RestoSham
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
                        Math.Round(SpellHaste * 100, 2), BasicStats.HasteRating.ToString()));
-            values.Add("Burst Sequence", BurstSequence.ToString());
-            values.Add("Sustained Sequence", SustainedSequence.ToString());
+            values.Add("Burst Sequence", BurstSequence);
+            values.Add("Sustained Sequence", SustainedSequence);
             values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
             values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
@@ -95,6 +89,7 @@ namespace Rawr.RestoSham
 			           // FIXME: I'm not entirely certain if this is accurate. Please double-check.
 			           Math.Ceiling(((1.5f / (1f + SpellHaste)) - 1f) * StatConversion.RATING_PER_SPELLHASTE).ToString()
 			));
+
 			// These all use string.Format() so they always have 2 digits after the decimal
             values.Add("Healing Wave", string.Format("{0:0.00}s / {1:0.00}s",RealHWCast,RealHWCast*0.7));
             values.Add("Lesser Healing Wave", string.Format("{0:0.00}s",RealLHWCast));
