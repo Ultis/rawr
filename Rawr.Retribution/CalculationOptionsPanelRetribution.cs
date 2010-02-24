@@ -78,6 +78,7 @@ namespace Rawr.Retribution
             SetSimulateRotation(calcOpts.SimulateRotation);
 
             textExperimental.Text = calcOpts.Experimental;
+            CalculationsRetribution.Experimental = calcOpts.Experimental;
 
             loading = false;
         }
@@ -518,10 +519,9 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.Experimental = textExperimental.Text;
+                CalculationsRetribution.Experimental = textExperimental.Text;
                 Character.OnCalculationsInvalidated();
             }
         }
-
     }
-
 }

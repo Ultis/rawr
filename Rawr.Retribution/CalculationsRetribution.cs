@@ -337,6 +337,49 @@ namespace Rawr.Retribution
         }
 
         /// <summary>
+        /// Processing of the Experimental flags. Experimental string is being set from 
+        /// CalculationOptionPanelRetribution.cs. And is being parsed and split into relevant
+        /// flags here.
+        /// </summary>
+        private static bool Experimental_OldRelevancy = false;
+        private static bool Experimental_AllRotations = false;
+        internal static string Experimental
+        {
+            set
+            {
+                // Revert all settings to default
+                Experimental_OldRelevancy = false;
+                Experimental_AllRotations = false;
+
+                // And apply parameters
+                string[] Experiments = value.Split(';');
+                foreach (string Experiment in Experiments)
+                {
+                    int iOpen = Experiment.IndexOf('(');
+                    int iClose = Experiment.IndexOf(')');
+                    if (iOpen >= 0 && iClose > iOpen)
+                    {
+                        string Command = Experiment.Substring(0, iOpen).Trim();
+                        string[] Parms = Experiment.Substring(iOpen + 1, iClose - 1 - iOpen).Split(',');
+                        string Rest = Experiment.Substring(iClose + 1).Trim();
+
+                        if (Command.Length > 0 && Rest.Length == 0)
+                        {
+                            if (Command == "SetOldRelevancy" && Parms.Length == 1 && Parms[0].Trim().Length == 0)
+                            {
+                                Experimental_OldRelevancy = true;
+                            }
+                            else if (Command == "SetAllRotations" && Parms.Length == 1 && Parms[0].Trim().Length == 0)
+                            {
+                                Experimental_AllRotations = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
         /// those total stats for the character, and any calculationoptions on the character, perform all the 
@@ -402,11 +445,7 @@ namespace Rawr.Retribution
             if (!options.SimulateRotation)
                 return GetCharacterRotation(character, additionalItem, null, 0);
 
-            bool allRotationsMode = options.Experimental.IndexOf(
-                "<AllRotations>",
-                StringComparison.OrdinalIgnoreCase) != -1;
-
-            if (allRotationsMode)
+            if (Experimental_AllRotations)
                 return FindBestRotation(
                     character,
                     additionalItem,
@@ -587,6 +626,12 @@ namespace Rawr.Retribution
                     trigger = 1f / rot.GetAttacksPerSec();
                     break;
 
+                case Trigger.SpellHit:
+                    // Used by black magic...  need to get actual stats.
+                    //trigger = 1f / rot.GetJudgementsPerSec()
+                    trigger = 6.63f; // TODO: Calculate actual spell hit ratio
+                    break;
+
                 case Trigger.DamageOrHealingDone:
                     // Need to add Self-heals
                     trigger = 1f / rot.GetAttacksPerSec();
@@ -759,6 +804,10 @@ namespace Rawr.Retribution
 
 
         #region Relevancy Methods
+
+        /// <summary>
+        /// List of itemtypes that are relevant for retribution
+        /// </summary>
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
         {
@@ -779,79 +828,169 @@ namespace Rawr.Retribution
             }
         }
 
+        /// <summary>
+        /// List of SpecialEffect Triggers that are relevant for retribution model
+        /// Ever trigger listed here needs an implementation in ProcessSpecialEffects()
+        /// A trigger not listed here should not appear in ProcessSpecialEffects()
+        /// </summary>
+        internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> RelevantTriggers
+        {
+            get
+            {
+                return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                            Trigger.Use,
+                            //Trigger.SpellCrit,        
+                            Trigger.SpellHit,             // Black magic enchant ?
+                            //Trigger.DamageSpellCrit,
+                            //Trigger.DamageSpellHit,
+                            Trigger.PhysicalCrit,
+                            Trigger.PhysicalHit,
+                            Trigger.MeleeCrit,
+                            Trigger.MeleeHit,
+                            Trigger.DamageDone,
+                            Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
+                            //Trigger.DoTTick,              // Retribution has no dotticks, RV has it's own trigger -> SealOfVengeanceTick
+                            //Trigger.DamageTaken,
+                            //Trigger.DamageAvoided,
+                            Trigger.JudgementHit,
+                            Trigger.CrusaderStrikeHit,
+                            Trigger.SealOfVengeanceTick,
+                        });
+            }
+            //set { _RelevantTriggers = value; }
+        }
+
+
         public override bool IsItemRelevant(Item item)
         {
-            if (item.Slot == ItemSlot.OffHand ||
-            (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Libram))
-                return false;
-            return base.IsItemRelevant(item);
+            if (Experimental_OldRelevancy)
+            {
+                if (item.Slot == ItemSlot.OffHand ||
+                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Libram))
+                    return false;
+                return base.IsItemRelevant(item);
+            }
+            else // NewRelevancy
+            {
+                // First we let normal rules (profession, class, relevant stats) decide
+                bool relevant = base.IsItemRelevant(item);
+
+                // Next we use our special stat relevancy filtering.
+                if (relevant)
+                    relevant = HasPrimaryStats(item.Stats) || (HasSecondaryStats(item.Stats) && !HasUnwantedStats(item.Stats));
+
+                return relevant;
+            }
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
-            Stats stats = buff.Stats;
-            bool wantedStats = 
-                (stats.Strength > 0) ||
-                (stats.Agility > 0) ||
-                (stats.AttackPower > 0) || 
-                (stats.DivineStormMultiplier > 0) ||
-                (stats.ArmorPenetration > 0) ||
-                (stats.ArmorPenetrationRating > 0) || 
-                (stats.ExpertiseRating > 0) || 
-                (stats.PhysicalHaste > 0) ||
-                (stats.PhysicalCrit > 0) ||
-                (stats.PhysicalHit > 0) ||
-                (stats.BonusStrengthMultiplier > 0) ||
-                (stats.BonusAgilityMultiplier > 0) || 
-                (stats.BonusDamageMultiplier > 0) ||
-                (stats.BonusAttackPowerMultiplier > 0) ||
-                (stats.BonusPhysicalDamageMultiplier > 0) ||
-                (stats.BonusHolyDamageMultiplier > 0) || 
-                (stats.MoteOfAnger > 0) ||
-                (stats.CrusaderStrikeDamage > 0) ||
-                (stats.ConsecrationSpellPower > 0) ||
-                (stats.JudgementCrit > 0) ||
-                (stats.RighteousVengeanceCanCrit > 0) ||
-                (stats.JudgementCDReduction > 0) ||
-                (stats.DivineStormDamage > 0) || 
-                (stats.DivineStormCrit > 0) ||
-                (stats.Paragon > 0) ||
-                (stats.CrusaderStrikeCrit > 0) ||
-                (stats.ExorcismMultiplier > 0) || 
-                (stats.CrusaderStrikeMultiplier > 0) ||
-                (stats.SpellCrit > 0) ||
-                (stats.SpellCritOnTarget > 0) ||
-                (stats.HammerOfWrathMultiplier > 0) ||
-                (stats.SpellPower > 0) ||
-                (stats.BonusIntellectMultiplier > 0) ||
-                (stats.Intellect > 0) ||
-                (stats.Health > 0) || 
-                (stats.Stamina > 0) ||
-                (stats.SpellCrit > 0) ||
-                (stats.BonusCritMultiplier > 0) ||
-                (stats.DeathbringerProc > 0) ||
-                (stats.BonusSealOfCorruptionDamageMultiplier > 0) ||
-                (stats.BonusSealOfRighteousnessDamageMultiplier > 0) ||
-                (stats.BonusSealOfVengeanceDamageMultiplier > 0) ||
-                (stats.HitRating > 0) ||
-                (stats.CritRating > 0) ||
-                (stats.HasteRating > 0) ||
-                (stats.SpellHit > 0) ||
-                (stats.SpellPower > 0) ||
-                (stats.SealMultiplier > 0) ||
-                (stats.JudgementMultiplier > 0) ||
-                (stats.DivineStormRefresh > 0) ||
-                (stats.BonusStaminaMultiplier > 0) ||
-                (stats.BonusSpellCritMultiplier > 0) ||
-                (stats.SpellHaste > 0);
-            return wantedStats;
+            if (Experimental_OldRelevancy)
+            {
+                Stats stats = buff.Stats;
+                bool wantedStats = 
+                    (stats.Strength > 0) ||
+                    (stats.Agility > 0) ||
+                    (stats.AttackPower > 0) || 
+                    (stats.DivineStormMultiplier > 0) ||
+                    (stats.ArmorPenetration > 0) ||
+                    (stats.ArmorPenetrationRating > 0) || 
+                    (stats.ExpertiseRating > 0) || 
+                    (stats.PhysicalHaste > 0) ||
+                    (stats.PhysicalCrit > 0) ||
+                    (stats.PhysicalHit > 0) ||
+                    (stats.BonusStrengthMultiplier > 0) ||
+                    (stats.BonusAgilityMultiplier > 0) || 
+                    (stats.BonusDamageMultiplier > 0) ||
+                    (stats.BonusAttackPowerMultiplier > 0) ||
+                    (stats.BonusPhysicalDamageMultiplier > 0) ||
+                    (stats.BonusHolyDamageMultiplier > 0) || 
+                    (stats.MoteOfAnger > 0) ||
+                    (stats.CrusaderStrikeDamage > 0) ||
+                    (stats.ConsecrationSpellPower > 0) ||
+                    (stats.JudgementCrit > 0) ||
+                    (stats.RighteousVengeanceCanCrit > 0) ||
+                    (stats.JudgementCDReduction > 0) ||
+                    (stats.DivineStormDamage > 0) || 
+                    (stats.DivineStormCrit > 0) ||
+                    (stats.Paragon > 0) ||
+                    (stats.CrusaderStrikeCrit > 0) ||
+                    (stats.ExorcismMultiplier > 0) || 
+                    (stats.CrusaderStrikeMultiplier > 0) ||
+                    (stats.SpellCrit > 0) ||
+                    (stats.SpellCritOnTarget > 0) ||
+                    (stats.HammerOfWrathMultiplier > 0) ||
+                    (stats.SpellPower > 0) ||
+                    (stats.BonusIntellectMultiplier > 0) ||
+                    (stats.Intellect > 0) ||
+                    (stats.Health > 0) || 
+                    (stats.Stamina > 0) ||
+                    (stats.SpellCrit > 0) ||
+                    (stats.BonusCritMultiplier > 0) ||
+                    (stats.DeathbringerProc > 0) ||
+                    (stats.BonusSealOfCorruptionDamageMultiplier > 0) ||
+                    (stats.BonusSealOfRighteousnessDamageMultiplier > 0) ||
+                    (stats.BonusSealOfVengeanceDamageMultiplier > 0) ||
+                    (stats.HitRating > 0) ||
+                    (stats.CritRating > 0) ||
+                    (stats.HasteRating > 0) ||
+                    (stats.SpellHit > 0) ||
+                    (stats.SpellPower > 0) ||
+                    (stats.SealMultiplier > 0) ||
+                    (stats.JudgementMultiplier > 0) ||
+                    (stats.DivineStormRefresh > 0) ||
+                    (stats.BonusStaminaMultiplier > 0) ||
+                    (stats.BonusSpellCritMultiplier > 0) ||
+                    (stats.SpellHaste > 0);
+                return wantedStats;
+            }
+            else // NewRelevancy
+            {
+                // First we let normal rules (profession, class, relevant stats) decide
+                bool relevant = base.IsBuffRelevant(buff, character);
+
+                // Temporary FIX (?): buf.AllowedClasses is not currently being tested as part of base.IsBuffRelevant(). So we'll do it ourselves.
+                if (relevant && !buff.AllowedClasses.Contains(CharacterClass.Paladin))
+                    relevant = false;
+
+                // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
+                if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
+                    relevant = HasPrimaryStats(buff.Stats) || (HasSecondaryStats(buff.Stats) && !HasUnwantedStats(buff.Stats));
+
+                // Remove bloodlust, we have our own processing for it.
+                if (relevant && buff.Name == "Heroism/Bloodlust")
+                    relevant = false;
+
+                return relevant;
+            }
         }
 
-        public override Stats GetRelevantStats(Stats stats)
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
+        {
+            if (Experimental_OldRelevancy)
+            {
+                return base.IsEnchantRelevant(enchant, character);
+            }
+            else // NewRelevancy
+            {
+                // First we let the normal rules (profession, class, relevant stats) decide
+                bool relevant = base.IsEnchantRelevant(enchant, character);
+
+                // Next we use our special stat relevancy filtering.
+                if (relevant)
+                    relevant = HasPrimaryStats(enchant.Stats) || (HasSecondaryStats(enchant.Stats) && !HasUnwantedStats(enchant.Stats));
+
+                return relevant;
+            }
+        }
+
+       public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
             {
                 Health = stats.Health,
+                Mana = stats.Mana,
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Intellect = stats.Intellect,
@@ -901,15 +1040,32 @@ namespace Rawr.Retribution
                 JudgementMultiplier = stats.JudgementMultiplier,
                 DivineStormRefresh = stats.DivineStormRefresh,
                 DeathbringerProc = stats.DeathbringerProc,
-                MoteOfAnger = stats.MoteOfAnger
+                MoteOfAnger = stats.MoteOfAnger,
+                FireDamage = stats.FireDamage,
+                FrostDamage = stats.FrostDamage,
+                ArcaneDamage = stats.ArcaneDamage,
+                ShadowDamage = stats.ShadowDamage,
+                NatureDamage = stats.NatureDamage,
             };
-            foreach (SpecialEffect effect in stats.SpecialEffects())
+            if (Experimental_OldRelevancy)
             {
-                if (HasRelevantSpecialEffect(effect)) s.AddSpecialEffect(effect);
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (HasRelevantSpecialEffect(effect)) s.AddSpecialEffect(effect);
+                }
+            }
+            else // NewRelevancy
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger))
+                        s.AddSpecialEffect(effect);
+                }
             }
             return s;
         }
 
+        // This function is for OldRelevancy modeling only
         public bool HasRelevantSpecialEffect(SpecialEffect effect)
         {
             if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit|| effect.Trigger == Trigger.MeleeHit
@@ -930,34 +1086,218 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration + stats.MoteOfAnger +
-                stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.DivineStormRefresh +
-                stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon + stats.DeathbringerProc +
-                stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
-                stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
-                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier + 
-                stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
-                stats.HammerOfWrathMultiplier + stats.SealMultiplier + stats.JudgementMultiplier) > 0;
-            bool maybeStats = (stats.Agility + stats.Strength + stats.ExpertiseRating + stats.PhysicalHit +
-                stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
-                stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
-            bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +
-                stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.BlockValue) > 0;
-            bool specialEffect = false;
-            bool hasSpecialEffect = false;
-            foreach (SpecialEffect effect in stats.SpecialEffects())
+            if (Experimental_OldRelevancy)
             {
-                hasSpecialEffect = true;
-                specialEffect = false;
-                if (HasRelevantSpecialEffect(effect))
+                bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration + stats.MoteOfAnger +
+                    stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.DivineStormRefresh +
+                    stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
+                    stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon + stats.DeathbringerProc +
+                    stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
+                    stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
+                    stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier + 
+                    stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit + stats.SpellCritOnTarget +
+                    stats.HammerOfWrathMultiplier + stats.SealMultiplier + stats.JudgementMultiplier) > 0;
+                bool maybeStats = (stats.Agility + stats.Strength + stats.ExpertiseRating + stats.PhysicalHit +
+                    stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
+                    stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
+                bool ignoreStats = (stats.Mp5 + stats.SpellPower + stats.DefenseRating +
+                    stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.BlockValue) > 0;
+                bool specialEffect = false;
+                bool hasSpecialEffect = false;
+                foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    specialEffect = true;
-                    break;
+                    hasSpecialEffect = true;
+                    specialEffect = false;
+                    if (HasRelevantSpecialEffect(effect))
+                    {
+                        specialEffect = true;
+                        break;
+                    }
+                }
+                return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));
+            }
+            else // NewRelevancy
+            {
+                // These 3 calls should amount to the same list of stats as used in GetRelevantStats()
+                return HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
+            }
+        }
+
+        /// <summary>
+        /// HasPrimaryStats() should return true if the Stats object has any stats that define the item
+        /// as being 'for your class/spec'. For melee classes this is typical melee stats like Strength, 
+        /// Agility, AP, Expertise... For casters it would be spellpower, intellect, ...
+        /// As soon as an item/enchant/buff has any of the stats listed here, it will be assumed to be 
+        /// relevant unless explicitely filtered out.
+        /// Stats that could be usefull for both casters and melee such as HitRating, CritRating and Haste
+        /// don't belong here, but are SecondaryStats. Specific melee versions of these do belong here 
+        /// for melee, spell versions would fit here for casters.
+        /// </summary>
+        public bool HasPrimaryStats(Stats stats)
+        {
+            bool PrimaryStats = // Base stats
+                                stats.Strength > 0 ||
+                                stats.Agility > 0 ||
+                                stats.AttackPower > 0 ||
+                                stats.ArmorPenetration > 0 ||
+                                stats.Expertise > 0 ||//?
+                                // Combat ratings
+                                stats.ArmorPenetrationRating > 0 ||
+                                stats.ExpertiseRating > 0 ||
+                                stats.PhysicalHit > 0 ||
+                                stats.PhysicalCrit > 0 ||
+                                stats.PhysicalHaste > 0 ||
+                                // Stat and damage multipliers
+                                stats.BonusStrengthMultiplier > 0 ||
+                                stats.BonusAgilityMultiplier > 0 ||
+                                stats.BonusAttackPowerMultiplier > 0 ||
+                                stats.BonusPhysicalDamageMultiplier > 0 ||
+                                stats.BonusHolyDamageMultiplier > 0 ||
+                                stats.BonusDamageMultiplier > 0 ||
+                                // Paladin specific stats (set bonusses)
+                                stats.DivineStormMultiplier > 0 ||
+                                stats.BonusSealOfCorruptionDamageMultiplier > 0 ||
+                                stats.BonusSealOfRighteousnessDamageMultiplier > 0 ||
+                                stats.BonusSealOfVengeanceDamageMultiplier > 0 ||
+                                stats.CrusaderStrikeDamage > 0 ||
+                                stats.ConsecrationSpellPower > 0 ||
+                                stats.JudgementCDReduction > 0 ||
+                                stats.DivineStormDamage > 0 ||
+                                stats.DivineStormCrit > 0 ||
+                                stats.CrusaderStrikeCrit > 0 ||
+                                stats.ExorcismMultiplier > 0 ||
+                                stats.HammerOfWrathMultiplier > 0 ||
+                                stats.CrusaderStrikeMultiplier > 0 ||
+                                stats.JudgementCrit > 0 ||
+                                stats.RighteousVengeanceCanCrit > 0 ||
+                                stats.SealMultiplier > 0 ||
+                                stats.JudgementMultiplier > 0 ||
+                                stats.DivineStormRefresh > 0 ||
+                                // Item proc effects
+                                stats.Paragon > 0 ||            // Highest of Str or Agi. (Death's Verdict, TotC25/TotGC25)
+                                stats.DeathbringerProc > 0 ||   // Chance to proc one of several subeffects. Paladins can get Str/Haste/Crit. (Deathbringer's Will, ICC25)
+                                stats.MoteOfAnger > 0;           // Stacking buf, causes a weapon swing when full. (Tiny Abomination in a Jar, ICC25)
+
+            if (!PrimaryStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasPrimaryStats(effect.Stats))
+                    {
+                        PrimaryStats = true;
+                        break;
+                    }
                 }
             }
-            return wantedStats || (specialEffect && !ignoreStats) || (maybeStats && !ignoreStats && (!hasSpecialEffect || specialEffect));
+
+            return PrimaryStats;
         }
+
+        /// <summary>
+        /// HasSecondaryStats() should return true if the Stats object has any stats that are relevant for the 
+        /// model but only to a smaller degree, so small that you wouldn't typically consider the item.
+        /// Stats that are usefull to both melee and casters (HitRating, CritRating & Haste) fit in here also.
+        /// An item/enchant/buff having these stats would be considered only if it doesn't have any of the 
+        /// unwanted stats.  Group/Party buffs are slighly different, they would be considered regardless if 
+        /// they have unwanted stats.
+        /// Note that a stat may be listed here since it impacts the model, but may also be listed as an unwanted stat.
+        /// </summary>
+        public bool HasSecondaryStats(Stats stats)
+        {
+            bool SecondaryStats = // Caster stats
+                                  stats.Intellect > 0 ||                // Intellect increases spellcrit, so it contributes to DPS.
+                                  stats.SpellCrit > 0 ||                // Exorcism can crit
+                                  stats.SpellCritOnTarget > 0 ||        // Exorcism
+                                  stats.SpellHit > 0 ||                 // Exorcism & Consecration (1st tick)
+                                  stats.SpellPower > 0 ||               // All holy damage effects benefit from spellpower
+                                  stats.BonusIntellectMultiplier > 0 || // See intellect
+                                  stats.BonusSpellCritMultiplier > 0 || // See spellcrit
+                                  // Generic DPS stats, useful for casters and melee.
+                                  stats.HitRating > 0 ||
+                                  stats.CritRating > 0 ||
+                                  stats.HasteRating > 0 ||
+                                  stats.BonusCritMultiplier > 0 ||
+                                  // Damage procs
+                                  stats.FireDamage > 0 ||
+                                  stats.FrostDamage > 0 ||
+                                  stats.ArcaneDamage > 0 ||
+                                  stats.ShadowDamage > 0 ||
+                                  stats.NatureDamage > 0;
+
+
+            if (!SecondaryStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasSecondaryStats(effect.Stats))
+                    {
+                        SecondaryStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return SecondaryStats;
+        }
+
+        /// <summary>
+        /// Return true if the Stats object has any stats that don't influence the model but that you do want 
+        /// to display in tooltips and in calculated summary values.
+        /// </summary>
+        public bool HasExtraStats(Stats stats)
+        {
+            bool ExtraStats = stats.Health > 0 ||
+                                stats.Mana > 0 ||
+                                stats.Stamina > 0 ||
+                                stats.BonusStaminaMultiplier > 0;
+
+            if (!ExtraStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasExtraStats(effect.Stats))
+                    {
+                        ExtraStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return ExtraStats;
+        }
+
+        /// <summary>
+        /// Return true if the Stats object contains any stats that are making the item undesired.
+        /// Any item having only Secondary stats would be removed if it also has one of these.
+        /// </summary>
+        public bool HasUnwantedStats(Stats stats)
+        {
+            /// List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
+            bool UnwantedStats = stats.SpellPower > 0 ||
+                                 stats.Intellect > 0 ||
+                                 stats.Spirit > 0 ||
+                                 stats.Mp5 > 0 ||
+                                 stats.DefenseRating > 0 ||
+                                 stats.ParryRating > 0 ||
+                                 stats.DodgeRating > 0 ||
+                                 stats.BlockRating > 0 ||
+                                 stats.BlockValue > 0;
+
+            if (!UnwantedStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasUnwantedStats(effect.Stats))
+                    {
+                        UnwantedStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return UnwantedStats;
+        }
+
         #endregion
 
         #region Custom Charts
