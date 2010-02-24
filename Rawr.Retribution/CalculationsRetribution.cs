@@ -1444,14 +1444,5 @@ namespace Rawr.Retribution
 
         #endregion
 
-
-        private class RotationDps
-        {
-
-            public Ability[] Rotation { get; set; }
-            public float Dps { get; set; }
-
-        }
-
     }
 }
