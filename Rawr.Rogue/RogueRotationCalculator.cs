@@ -161,7 +161,7 @@ namespace Rawr.Rogue
             {
                 #region Eviscerate
                 float averageEvisCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
-                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]);
+                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - Stats.CPOnFinisher;
                 float evisDamageMultiplier = Math.Min(1f,
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * averageEvisCP) /
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * 5f));
@@ -182,7 +182,7 @@ namespace Rawr.Rogue
             {
                 #region Envenom
                 float averageEnvenomCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
-                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]);
+                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - Stats.CPOnFinisher;
                 float envenomDamageMultiplier = Math.Min(1f,
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * averageEnvenomCP) /
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * 5f));
