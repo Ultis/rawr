@@ -26,11 +26,29 @@ namespace Rawr.Base.Algorithms
 
     public abstract class StateSpaceGenerator<TAbility>
     {
+        private class ObjectComparer : IEqualityComparer<State<TAbility>>
+        {
+            bool IEqualityComparer<State<TAbility>>.Equals(State<TAbility> x, State<TAbility> y)
+            {
+                return (object)x == (object)y;
+            }
+
+            int IEqualityComparer<State<TAbility>>.GetHashCode(State<TAbility> obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
         public List<State<TAbility>> GenerateStateSpace()
         {
             List<State<TAbility>> remainingStates = new List<State<TAbility>>();
             List<State<TAbility>> processedStates = new List<State<TAbility>>();
-            remainingStates.Add(GetInitialState());
+            // we want to do object comparisons, we rely on getting unique state instances and we want to use fast comparisons
+            // in case derived class implements IEquatable interface or similar
+            Dictionary<State<TAbility>, bool> seenStates = new Dictionary<State<TAbility>, bool>(new ObjectComparer());
+            State<TAbility> initState = GetInitialState();
+            remainingStates.Add(initState);
+            seenStates[initState] = true;
 
             while (remainingStates.Count > 0)
             {
@@ -41,9 +59,10 @@ namespace Rawr.Base.Algorithms
                 state.Transitions = transitions;
                 foreach (StateTransition<TAbility> transition in transitions)
                 {
-                    if (transition.TargetState != state && !processedStates.Contains(transition.TargetState) && !remainingStates.Contains(transition.TargetState))
+                    if (transition.TargetState != state && !seenStates.ContainsKey(transition.TargetState))
                     {
                         remainingStates.Add(transition.TargetState);
+                        seenStates[transition.TargetState] = true;
                     }
                 }
 
