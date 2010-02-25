@@ -230,6 +230,7 @@ namespace Rawr.Rogue
             float wPCount = 0f;
             float aPCount = 0f;
             float iPPPS = 8.53f * (1f + Stats.BonusIPFrequencyMultiplier) / 60f;
+            float dPApplyChance = 0.3f + 0.04f * Char.RogueTalents.ImprovedPoisons;
             float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
@@ -237,10 +238,10 @@ namespace Rawr.Rogue
                                                                  1.75f * envenomBuffTime / Duration);
             else if (mHPoison == 2 && oHPoison != 2)
             {
-                float dPCountTemp = mHHitCount * 0.3f * (1f - AvoidedPoisonAttacks) *
+                float dPCountTemp = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
                 dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
-                float dPStackTime = 5f / (0.3f * (1f - AvoidedPoisonAttacks)) * MainHandSpeed;
+                float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * MainHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10;
                 dPCount = Math.Min(dPCount, dPCountTemp);
@@ -262,10 +263,10 @@ namespace Rawr.Rogue
                                                                 1.75f * envenomBuffTime / Duration);
             else if (oHPoison == 2 && mHPoison != 2)
             {
-                float dPCountTemp = oHHitCount * 0.3f * (1f - AvoidedPoisonAttacks) *
+                float dPCountTemp = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
                 dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
-                float dPStackTime = 5f / (0.3f * (1f - AvoidedPoisonAttacks)) * OffHandSpeed;
+                float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * OffHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10;
                 dPCount = Math.Min(dPCount, dPCountTemp);

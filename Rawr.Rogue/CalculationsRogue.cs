@@ -685,7 +685,6 @@ namespace Rawr.Rogue
                 BonusMainHandCrit = (character.MainHand != null) ? ((character.MainHand.Type == ItemType.Dagger || character.MainHand.Type == ItemType.FistWeapon) ? 0.02f * talents.CloseQuartersCombat : 0f) : 0f,
                 BonusDamageMultiplier = 0.02f * talents.Murder,
                 BonusDamageMultiplierHFB = (0.05f + (talents.GlyphOfHungerforBlood ? 0.03f : 0f)) * talents.HungerForBlood,
-                //BonusDPApplyChance = 0.04f * talents.ImprovedPoisons,
                 BonusEnergyRegen = (15 + (talents.GlyphOfAdrenalineRush ? 5f : 0f)) * talents.AdrenalineRush,
                 BonusEnergyRegenMultiplier = 0.08f * talents.Vitality,
                 BonusEnvenomDamageMultiplier = 0.07f * talents.VilePoisons,
