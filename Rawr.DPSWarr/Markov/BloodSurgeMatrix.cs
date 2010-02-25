@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Text;
 using System.Xml.Serialization;
 using Rawr.DPSWarr.Markov;
 using Rawr.Base;
@@ -13,33 +12,60 @@ namespace Rawr.DPSWarr.Markov
     class BloodSurgeMatrix
     {
         private double[] _procChances;
+        private double _proc1;
+        private double _proc2;
+
         public double ProcChances(int index)
         {
             if (index < 0 || index > 2) return 0;
             return _procChances[index];
         }
         
-        public BloodSurgeMatrix()
+        /// <summary>
+        /// Constructor for the Matrix
+        /// </summary>
+        /// <param name="proc1">The chance that Bloodsurge procs (ie 20%)</param>
+        /// <param name="proc2">The percentage of Bloodsurge procs that are hasted (ie 20%)</param>
+        public BloodSurgeMatrix(double proc1, double proc2)
         {
+            _proc1 = proc1;
+            _proc2 = proc2;
+
             _procChances = new double[] {1, 0, 0};
         }
 
-        public void AddAbility(double chance1, double chance2, double numActivates)
+        public void SetBaseChance(double procChance)
         {
-            double[] newChances = new double[3];
-            if (numActivates != 1)
-            {
-                newChances[2] = 1 - Math.Pow(1 - chance2, numActivates);
-                newChances[1] = 1 - Math.Pow(1 - chance1, numActivates);
-                newChances[0] = 1 - newChances[2] - newChances[1];
-            }
-            ResetMatrix(newChances);
+            _procChances[0] = 1 - procChance;
+            _procChances[1] = procChance - procChance * _proc2;
+            _procChances[2] = procChance * _proc2;
         }
 
-        public void AddAbility(double chance1, double chance2)
+        /// <summary>
+        /// Adds an ability to the matrix
+        /// </summary>
+        /// <param name="chance1">The chance that the attack lands</param>
+        /// <param name="numActivates">The number of attacks made</param>
+        public void AddAbility(double chanceLand, double numActivates)
         {
-            double[] newChances = new double[] { 1 - chance2 - chance1, chance1, chance2 };
-            ResetMatrix(newChances);
+            double oldProcChance = _procChances[1] + _procChances[2];
+            double newProcChance = _proc1 * chanceLand;
+            double finalProc_any = 1 - (1 - oldProcChance) * Math.Pow(1 - newProcChance, numActivates);
+
+            _procChances[0] = 1 - finalProc_any;
+            _procChances[1] = finalProc_any - finalProc_any * _proc2;
+            _procChances[2] = finalProc_any * _proc2;
+        }
+
+        /// <summary>
+        /// Adds an ability to the matrix
+        /// </summary>
+        /// <param name="chance">The chance that the attack lands</param>
+        public void AddAbility(double chance)
+        {
+            AddAbility(chance, 1);
+            //double[] newChances = new double[] { 1 - chance2 - chance1, chance1, chance2 };
+            //ResetMatrix(newChances);
         }
 
         private void ResetMatrix(double[] chances)
@@ -48,10 +74,8 @@ namespace Rawr.DPSWarr.Markov
             
             ret[0] = _procChances[0] * chances[0];
 
-            ret[1] = _procChances[1] * chances[0] +
-                     _procChances[0] * chances[1] +
-                     _procChances[1] * chances[1];
-
+            ret[1] = _procChances[1] * (chances[0] + chances[1]) + _procChances[0] * chances[1];
+                        
             ret[2] = 1 - ret[1] - ret[0];
 
             _procChances = ret;

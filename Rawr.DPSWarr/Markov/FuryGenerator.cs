@@ -1,8 +1,13 @@
-﻿using System;
+﻿//#define TRANSTYPE
+
+using System;
 using System.Collections.Generic;
 using Rawr.Base.Algorithms;
 using System.Text;
 using Rawr.Base;
+using System.IO;
+
+
 
 namespace Rawr.DPSWarr.Markov
 {
@@ -12,90 +17,67 @@ namespace Rawr.DPSWarr.Markov
         const string FORMAT = "0.000";
         public FuryGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co)
         {
-            Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; WhiteAtks = wa; CalcOpts = co;
+            WarriorTalents Talents = c.WarriorTalents; 
             //
             Rot = new FuryRotation(c, s, cf, wa, co);
             Rot.Initialize();
             LatentGCD = Math.Round(1.5 + co.FullLatency, NUM_DEC);
             HastedGCD = Math.Round(1.0 + co.FullLatency, NUM_DEC);
-            HSPerc = 1f;
-            has4T10 = (s.BonusWarrior_T10_4P_BSSDProcChange > 0);
-            BS1Proc = Talents.Bloodsurge / 15f; // 7/13/20%
+            
+            HSPerc = .8;
+            
+            BS1Proc = c.WarriorTalents.Bloodsurge / 15f; // 7/13/20%
             BS2Proc = 0f;
-            if (has4T10)
+            
+            if (s.BonusWarrior_T10_4P_BSSDProcChange > 0)
             {
-                BS2Proc = 0.2f * BS1Proc;
-                BS1Proc = BS1Proc - BS2Proc;
+                BS2Proc = 0.2;
             }
 
-            SetChances();
+            BT = Rot.GetWrapper<Skills.BloodThirst>().ability;
+            WW = Rot.GetWrapper<Skills.WhirlWind>().ability;
+            BS = Rot.GetWrapper<Skills.BloodSurge>().ability;
+            HS = Rot.GetWrapper<Skills.HeroicStrike>().ability;
+            WhiteInterval = wa.MhEffectiveSpeed;
 
-            WhiteInterval = WhiteAtks.MhEffectiveSpeed;
+            SetChances();
         }
 
         #region Variables
         protected double LatentGCD;
         protected double HastedGCD;
-        protected double HSPerc;
-        protected bool has4T10;
+        public double HSPerc;
+        
         public FuryRotation Rot = null;
-        Character Char;
-        WarriorTalents Talents;
-        Stats StatS;
-        CombatFactors combatFactors;
-        Skills.WhiteAttacks WhiteAtks;
-        CalculationOptionsDPSWarr CalcOpts;
+
+        protected Skills.Ability BT, WW, BS, HS;
+
         protected double BS1Proc;
         protected double BS2Proc;
 
-        protected BloodSurgeMatrix HSMatrix, WWMatrix, BTMatrix;
+        protected double HSProcChance;
 
-        /*protected double chanceHSProcs0, chanceHSProcs1, chanceHSProcs2;
-        protected double chanceWWProcs0, chanceWWProcs1, chanceWWProcs2;
-        protected double chanceBTProcs0, chanceBTProcs1, chanceBTProcs2;*/
+        protected BloodSurgeMatrix HSMatrix, WWMatrix, BTMatrix;
 
         protected double WhiteInterval;
         #endregion
 
         private void SetChances()
         {
-            Rawr.DPSWarr.Rotation.AbilWrapper BT = Rot.GetWrapper<Skills.BloodThirst>();
-            Rawr.DPSWarr.Rotation.AbilWrapper WW = Rot.GetWrapper<Skills.WhirlWind>();
-            Rawr.DPSWarr.Rotation.AbilWrapper BS = Rot.GetWrapper<Skills.BloodSurge>();
-            Rawr.DPSWarr.Rotation.AbilWrapper HS = Rot.GetWrapper<Skills.HeroicStrike>();
-
             // HS
-            HSMatrix = new BloodSurgeMatrix();
-            HSMatrix.AddAbility(BS1Proc, BS2Proc, HS.ability.MHAtkTable.AnyLand);
-            //chanceHSProcs1 = HS.ability.MHAtkTable.AnyLand * BS1Proc;
-            //chanceHSProcs2 = HS.ability.MHAtkTable.AnyLand * BS2Proc;
-            //chanceHSProcs0 = 1f - chanceHSProcs1 - chanceHSProcs2;
+            //HSMatrix = new BloodSurgeMatrix(BS1Proc, BS2Proc);
+            //HSMatrix.AddAbility(HS.MHAtkTable.AnyLand);
 
             // WW
-            WWMatrix = new BloodSurgeMatrix();
-            WWMatrix.AddAbility(BS1Proc, BS2Proc, WW.ability.MHAtkTable.AnyLand);
-            WWMatrix.AddAbility(BS1Proc, BS2Proc, WW.ability.OHAtkTable.AnyLand);
-            /*double chanceMHProcs1 = WW.ability.MHAtkTable.AnyLand * BS1Proc;
-            double chanceMHProcs2 = WW.ability.MHAtkTable.AnyLand * BS2Proc;
-            double chanceMHProcs0 = 1f - chanceMHProcs1 - chanceMHProcs2;
-
-            double chanceOHProcs1 = WW.ability.OHAtkTable.AnyLand * BS1Proc;
-            double chanceOHProcs2 = WW.ability.OHAtkTable.AnyLand * BS2Proc;
-            double chanceOHProcs0 = 1f - chanceOHProcs1 - chanceOHProcs2;
-
-            BloodSurgeMatrix wwMatrix = new BloodSurgeMatrix();
-            wwMatrix.AddAbility(new double[] { chanceMHProcs0, chanceMHProcs1, chanceMHProcs2 });
-            wwMatrix.AddAbility(new double[] { chanceOHProcs0, chanceOHProcs1, chanceOHProcs2 });
-            chanceWWProcs0 = wwMatrix.ProcChances(0);
-            chanceWWProcs1 = wwMatrix.ProcChances(1);
-            chanceWWProcs2 = wwMatrix.ProcChances(2);*/
-
+            WWMatrix = new BloodSurgeMatrix(BS1Proc, BS2Proc);
+            WWMatrix.AddAbility(WW.MHAtkTable.AnyLand);
+            WWMatrix.AddAbility(WW.OHAtkTable.AnyLand);
+            
             // BT
-            BTMatrix = new BloodSurgeMatrix();
-            BTMatrix.AddAbility(BS1Proc, BS2Proc, BT.ability.MHAtkTable.AnyLand);
-            //chanceBTProcs2 = BT.ability.MHAtkTable.AnyLand * BS2Proc;
-            //chanceBTProcs1 = BT.ability.MHAtkTable.AnyLand * BS1Proc;
-            //chanceBTProcs0 = 1 - chanceBTProcs1 - chanceBTProcs2;
+            BTMatrix = new BloodSurgeMatrix(BS1Proc, BS2Proc);
+            BTMatrix.AddAbility(BT.MHAtkTable.AnyLand);
+
+            HSProcChance = HS.MHAtkTable.AnyLand * BS1Proc;
         }
 
         public class StateFury : State<Skills.Ability>
@@ -104,13 +86,28 @@ namespace Rawr.DPSWarr.Markov
             public double WWCooldown;
             public int BSProcced;
             public bool BSHasted;
-            //public double WhiteCooldown;
+#if TRANSTYPE
+            public int transitionType;
+#endif
+        }
+
+        public class DelegateStateTransition : StateTransition<Skills.Ability>
+        {
+            public delegate double newTransitionChance();
+            
+            public newTransitionChance myDel { get; set; }
+            public override double TransitionProbability
+            {
+                get
+                {
+                    return myDel();
+                }
+            }
         }
 
         protected override State<Skills.Ability> GetInitialState()
         {
-            return GetState(0, false, 0, 0);
-            //return GetState(0, false, 0, 0, WhiteInterval);
+            return GetState(0, false, 0, 0, 0);
         }
 
         protected override List<StateTransition<Skills.Ability>> GetStateTransitions(State<Skills.Ability> state)
@@ -154,43 +151,63 @@ namespace Rawr.DPSWarr.Markov
                 double newBTCD = Math.Max(0, s.BTCooldown - transDuration);
                 double newWWCD = WW.ability.Cd - transDuration;
                 
-                double numHSes = transDuration / WhiteInterval * HSPerc;
-                BloodSurgeMatrix mat = new BloodSurgeMatrix();
-                mat.AddAbility(WWMatrix.ProcChances(1), WWMatrix.ProcChances(2));
-                mat.AddAbility(HSMatrix.ProcChances(1), HSMatrix.ProcChances(2), numHSes);
+                double numHSes = transDuration / WhiteInterval;
 
-                //double chance2Proc = chanceWWProcs2 + (1 - chanceWWProcs2) * (chanceHSProcs2 * numHSes);
-                //double chance1Proc = chanceWWProcs0 * (chanceHSProcs1 * numHSes) +
-                //                     chanceWWProcs1 * ((1 - chanceHSProcs2) * numHSes);
-                //double chance0Proc = 1 - chance2Proc - chance1Proc;
+                BloodSurgeMatrix _mat = new BloodSurgeMatrix(this.BS1Proc, this.BS2Proc);
+                _mat.SetBaseChance(WWMatrix.ProcChances(1) + WWMatrix.ProcChances(2));
+                _mat.AddAbility(HS.ability.MHAtkTable.AnyLand * this.HSPerc, numHSes);
 
-                // if WW is up, use it
-                if (mat.ProcChances(2) > 0)
+                double[] actual = { _mat.ProcChances(0), _mat.ProcChances(1), _mat.ProcChances(2) };
+                double chanceProc = (1 - WW.ability.MHAtkTable.AnyLand * BS1Proc) * (1 - WW.ability.OHAtkTable.AnyLand * BS1Proc);
+
+                double[] test = { chanceProc * Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc * HSPerc, numHSes),
+                                 (1 - chanceProc * Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc * HSPerc, numHSes)) * (1 - BS2Proc),
+                                 (1 - chanceProc * Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc * HSPerc, numHSes)) * BS2Proc,
+                                };
+
+                DelegateStateTransition.newTransitionChance del0 = () =>
                 {
-                    list.Add(new StateTransition<Skills.Ability>()
-                    {
-                        Ability = WW.ability,
-                        TransitionDuration = transDuration,
-                        TargetState = GetState(2, true, newBTCD, newWWCD),
-                        TransitionProbability = mat.ProcChances(2)
-                    });
-                }
-                // if BS procs 1
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                    return chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes);
+                };
+                DelegateStateTransition.newTransitionChance del1 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * (1 - BS2Proc);
+                };
+                DelegateStateTransition.newTransitionChance del2 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * BS2Proc;
+                };
+                
+                //double WWProc = (1 - BS1Proc * WW.ability.MHAtkTable.AnyLand) * (1 - BS1Proc * WW.ability.OHAtkTable.AnyLand);
+                //double HSProc = BS1Proc * HS.ability.MHAtkTable.AnyLand;
+                //double both = WWProc * Math.Pow(1 - HSProc, numHSes);
+                            
+                // if WW is up, use it
+
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = WW.ability,
                     TransitionDuration = transDuration,
-                    TargetState = GetState((s.BSHasted ? 2 : 1), s.BSHasted, newBTCD, newWWCD),
-                    TransitionProbability = mat.ProcChances(1)
+                    TargetState = GetState(2, true, newBTCD, newWWCD, 2),
+                    myDel = del2,
+                });
+                
+                // if BS procs 1
+                list.Add(new DelegateStateTransition()
+                {
+                    Ability = WW.ability,
+                    TransitionDuration = transDuration,
+                    TargetState = GetState((s.BSHasted ? 2 : 1), s.BSHasted, newBTCD, newWWCD, 1),
+                    myDel = del1,
                 });
 
                 // if BS doesn't proc
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = WW.ability,
                     TransitionDuration = transDuration,
-                    TargetState = GetState(s.BSProcced, s.BSHasted, newBTCD, newWWCD),
-                    TransitionProbability = mat.ProcChances(0)
+                    TargetState = GetState(s.BSProcced, s.BSHasted, newBTCD, newWWCD, 0),
+                    myDel = del0
                 });
                 #endregion
             }
@@ -201,41 +218,52 @@ namespace Rawr.DPSWarr.Markov
                 double newBTCD = BT.ability.Cd - transDuration;
                 double newWWCD = Math.Max(0, s.WWCooldown - transDuration);
 
-                double numHSes = transDuration / WhiteInterval * HSPerc;
-                
-                BloodSurgeMatrix mat = new BloodSurgeMatrix();
-                mat.AddAbility(BTMatrix.ProcChances(1), BTMatrix.ProcChances(2));
-                mat.AddAbility(HSMatrix.ProcChances(1), HSMatrix.ProcChances(2), numHSes);
-                //double chance2Proc = chanceBTProcs2 + (1 - chanceBTProcs2) * (chanceHSProcs2 * numHSes);
-                //double chance1Proc = chanceBTProcs0 * (chanceHSProcs1 * numHSes) +
-                //                     chanceBTProcs1 * ((1 - chanceHSProcs2) * numHSes);
-                //double chance0Proc = 1 - chance2Proc - chance1Proc;
-                // if BS procs 2
-                if (mat.ProcChances(2) > 0)
+                double numHSes = transDuration / WhiteInterval;
+
+                double chanceProc = (1 - BT.ability.MHAtkTable.AnyLand * BS1Proc);
+                double[] test = { chanceProc * Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc),
+                                  chanceProc * Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc) * (1 - BS2Proc),
+                                  chanceProc * Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc) * BS2Proc
+                                };
+                DelegateStateTransition.newTransitionChance del0 = () =>
                 {
-                    list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
-                    {
-                        Ability = BT.ability,
-                        TransitionDuration = transDuration,
-                        TargetState = GetState(2, true, newBTCD, newWWCD),
-                        TransitionProbability = mat.ProcChances(2)
-                    });
-                }
-                // if BS procs 1
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                    return chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes);
+                };
+                DelegateStateTransition.newTransitionChance del1 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * (1 - BS2Proc);
+                };
+                DelegateStateTransition.newTransitionChance del2 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * BS2Proc;
+                };
+
+                
+                // if BS procs 2
+                
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = BT.ability,
                     TransitionDuration = transDuration,
-                    TargetState = GetState((s.BSHasted ? 2 : 1), s.BSHasted, newBTCD, newWWCD),
-                    TransitionProbability = mat.ProcChances(1)
+                    TargetState = GetState(2, true, newBTCD, newWWCD, 2),
+                    myDel = del2
+                });
+                
+                // if BS procs 1
+                list.Add(new DelegateStateTransition()
+                {
+                    Ability = BT.ability,
+                    TransitionDuration = transDuration,
+                    TargetState = GetState((s.BSHasted ? 2 : 1), s.BSHasted, newBTCD, newWWCD, 1),
+                    myDel = del1
                 });
                 // if BS doesn't proc
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = BT.ability,
                     TransitionDuration = transDuration,
-                    TargetState = GetState(s.BSProcced, s.BSHasted, newBTCD, newWWCD),
-                    TransitionProbability = mat.ProcChances(0)
+                    TargetState = GetState(s.BSProcced, s.BSHasted, newBTCD, newWWCD, 0),
+                    myDel = del0
                 });
                 #endregion
             }
@@ -248,45 +276,56 @@ namespace Rawr.DPSWarr.Markov
                 double newBTCD = Math.Max(0, s.BTCooldown - transDuration);
                 double newWWCD = Math.Max(0, s.WWCooldown - transDuration);
 
-                double numHSes = transDuration / WhiteInterval * HSPerc;
-                
-                BloodSurgeMatrix mat = new BloodSurgeMatrix();
-                mat.AddAbility(HSMatrix.ProcChances(1), HSMatrix.ProcChances(2), numHSes);
-                
-                //double chance2Proc = chanceHSProcs2 * numHSes;
-                //double chance1Proc = chanceHSProcs1 * numHSes;
-                //double chance0Proc = 1 - chance2Proc - chance1Proc;
+                double numHSes = transDuration / WhiteInterval;
 
-                if (mat.ProcChances(2) > 0)
+                double chanceProc = 1;
+                double[] test = { Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc),
+                                  Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc) * (1 - BS2Proc),
+                                  Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc) * BS2Proc
+                                };
+                DelegateStateTransition.newTransitionChance del0 = () =>
                 {
-                    list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
-                    {
-                        Ability = BS.ability,
-                        TransitionDuration = transDuration,
-                        TargetState = GetState(2, true, newBTCD, newWWCD),
-                        TransitionProbability = mat.ProcChances(2)
-                    });
-                }
+                    return chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes);
+                };
+                DelegateStateTransition.newTransitionChance del1 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * (1 - BS2Proc);
+                };
+                DelegateStateTransition.newTransitionChance del2 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * BS2Proc;
+                };
 
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                // if HS procs 2
+                list.Add(new DelegateStateTransition()
+                  {
+                      Ability = BS.ability,
+                      TransitionDuration = transDuration,
+                      TargetState = GetState(2, true, newBTCD, newWWCD, 2),
+                      myDel = del2
+                  });
+                
+
+                // if HS procs 1
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = BS.ability,
                     TransitionDuration = transDuration,
                     TargetState = GetState(s.BSProcced, // if we had 2 and then procced, we're at 2.  If we had 1 and then procced, we're at 1
                                            (s.BSProcced == 2), // if we're at 2 before, we're still hasted.  If we're at 1 before, we lost the haste before we procced
-                                           newBTCD, newWWCD),
-                    TransitionProbability = mat.ProcChances(1)
+                                           newBTCD, newWWCD, 1),
+                    myDel = del1
                 });
 
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                // if HS doesn't proc
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = BS.ability,
                     TransitionDuration = transDuration,
-                    TargetState = GetState(s.BSProcced - 1, // num procs decreases
-                                           s.BSHasted && s.BSProcced != 1, // if this is the last charge, haste falls off
-                                           newBTCD, // BT CD
-                                           newWWCD), // WW CD
-                    TransitionProbability = mat.ProcChances(0)
+                    TargetState = GetState(s.BSProcced - 1,    // num procs decreases
+                                           (s.BSProcced == 2), // haste falls off if we were at 1
+                                           newBTCD, newWWCD, 0),
+                    myDel = del0
                 });
                 #endregion
             }
@@ -294,37 +333,49 @@ namespace Rawr.DPSWarr.Markov
             {
                 double transDuration = Math.Min(s.BTCooldown, s.WWCooldown);
 
-                double numHSes = transDuration / WhiteInterval * HSPerc;
-                
-                BloodSurgeMatrix mat = new BloodSurgeMatrix();
-                mat.AddAbility(HSMatrix.ProcChances(1), HSMatrix.ProcChances(2), numHSes);
-                //double chance2Proc = chanceHSProcs2 * numHSes;
-                //double chance1Proc = chanceHSProcs1 * numHSes;
-                //double chance0Proc = 1 - chance2Proc - chance1Proc;
-                
-                if (mat.ProcChances(2) > 0)
+                double numHSes = transDuration / WhiteInterval;
+                double chanceProc = 1;
+                double[] test = { Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc),
+                                  Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc) * (1 - BS2Proc),
+                                  Math.Pow(1 - HS.ability.MHAtkTable.AnyLand * BS1Proc, HSPerc) * BS2Proc
+                                };
+                DelegateStateTransition.newTransitionChance del0 = () =>
                 {
-                    list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+                    return chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes);
+                };
+                DelegateStateTransition.newTransitionChance del1 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * (1 - BS2Proc);
+                };
+                DelegateStateTransition.newTransitionChance del2 = () =>
+                {
+                    return (1 - chanceProc * Math.Pow(1 - HSProcChance * HSPerc, numHSes)) * BS2Proc;
+                };
+
+                list.Add(new DelegateStateTransition()
                     {
                         Ability = null,
                         TransitionDuration = transDuration,
-                        TargetState = GetState(2, true, s.BTCooldown - transDuration, s.WWCooldown - transDuration),
-                        TransitionProbability = mat.ProcChances(2)
+                        TargetState = GetState(2, true, s.BTCooldown - transDuration, s.WWCooldown - transDuration, 2),
+                        myDel = del2
                     });
-                }
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+
+                // if HS procs 1
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = null,
                     TransitionDuration = transDuration,
-                    TargetState = GetState((s.BSHasted ? 2 : 1), s.BSHasted, s.BTCooldown - transDuration, s.WWCooldown - transDuration),
-                    TransitionProbability = mat.ProcChances(1)
+                    TargetState = GetState((s.BSHasted ? 2 : 1), s.BSHasted, s.BTCooldown - transDuration, s.WWCooldown - transDuration, 1),
+                    myDel = del1
                 });
-                list.Add(new StateTransition<Rawr.DPSWarr.Skills.Ability>()
+
+                // if HS doesn't proc
+                list.Add(new DelegateStateTransition()
                 {
                     Ability = null,
                     TransitionDuration = transDuration,
-                    TargetState = GetState(s.BSProcced, s.BSHasted, s.BTCooldown - transDuration, s.WWCooldown - transDuration),
-                    TransitionProbability = mat.ProcChances(0)
+                    TargetState = GetState(s.BSProcced, s.BSHasted, s.BTCooldown - transDuration, s.WWCooldown - transDuration, 0),
+                    myDel = del0
                 });
             }
 
@@ -351,15 +402,23 @@ namespace Rawr.DPSWarr.Markov
             return list;
         }
         private Dictionary<string, StateFury> stateDictionary = new Dictionary<string, StateFury>();
-        public StateFury GetState(int BSProc, bool BSHasted, double BTCD, double WWCD/*, double WhiteCD*/)
+        public StateFury GetState(int BSProc, bool BSHasted, double BTCD, double WWCD, int transition)
         {
             string name = string.Format(
-                "BSProc {0}{1},BTCD {2:"+FORMAT+"},WWCD {3:"+FORMAT+"}, WhiteCD{4:"+FORMAT+"}",
+#if TRANSTYPE
+                "BSProc {0}{1},BTCD {2:"+FORMAT+"},WWCD {3:"+FORMAT+"}, TransitionType{4}",
+#else
+                "BSProc {0}{1},BTCD {2:"+FORMAT+"},WWCD {3:"+FORMAT+"}",
+#endif
                 BSProc,
                 BSHasted ? "+" : "-",
                 BTCD,
+#if TRANSTYPE
                 WWCD,
-                0);//WhiteCD);
+                transition);
+#else
+                WWCD);
+#endif
             StateFury state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
@@ -370,53 +429,158 @@ namespace Rawr.DPSWarr.Markov
                     WWCooldown = WWCD,
                     BSHasted = BSHasted,
                     BSProcced = BSProc,
-                    //WhiteCooldown = WhiteCD
+#if TRANSTYPE
+                    transitionType = transition
+#endif
                 };
                 stateDictionary[name] = state;
             }
             return state;
         }
-        public StateFury GetState(int BSProc, bool BSHasted, float BTCD, float WWCD/*, float WhiteCD*/)
+        public StateFury GetState(int BSProc, bool BSHasted, float BTCD, float WWCD, int transition)
         {
-            return GetState(BSProc, BSHasted, (double)BTCD, (double)WWCD/*, (double)WhiteCD*/);
+            return GetState(BSProc, BSHasted, (double)BTCD, (double)WWCD, transition);
+        }
+
+        internal void WalkStateSpace(List<State<Rawr.DPSWarr.Skills.Ability>> stateSpace)
+        {
+            double WWProc = (1 - BS1Proc * WW.MHAtkTable.AnyLand) * (1 - BS1Proc * WW.OHAtkTable.AnyLand);
+            double BTProc = (1 - BS1Proc * BT.MHAtkTable.AnyLand);
+            double HSconst = BS1Proc * HS.MHAtkTable.AnyLand;
+
+            double transChanceBoth, innerParenth;
+
+            bool caughtYet = false;
+            foreach (State<Skills.Ability> s in stateSpace)
+            {
+                foreach (StateTransition<Skills.Ability> t in s.Transitions)
+                {
+                    if (t.TargetState.Name.EndsWith("2") && t.Ability == WW && !caughtYet)
+                    {
+                        caughtYet = true;
+                        System.Console.WriteLine(t.TransitionProbability);
+                    }
+
+                    if (t.TargetState.Name.EndsWith("2"))
+                    {
+                        transChanceBoth = t.TransitionProbability / BS2Proc;
+
+                    }
+                    else if (t.TargetState.Name.EndsWith("1"))
+                    {
+                        transChanceBoth = t.TransitionProbability / (1 - BS2Proc);
+                    }
+                    else
+                    {
+                        transChanceBoth = 1 - t.TransitionProbability;
+                    }
+
+                    if (t.Ability == WW)
+                    {
+                        innerParenth = (1 - transChanceBoth) / WWProc;
+                    }
+                    else if (t.Ability == BT)
+                    {
+                        innerParenth = (1 - transChanceBoth) / BTProc;
+                    }
+                    else if (t.Ability == BS)
+                    {
+                        innerParenth = 1 - transChanceBoth;
+                    }
+                    else
+                    {
+                        innerParenth = 1 - transChanceBoth;
+                    }
+                    double perc = (1 - Math.Pow(innerParenth, WhiteInterval / t.TransitionDuration)) / HSconst;
+                    //Console.WriteLine(perc);
+                }
+            }
         }
     }
 
     public class StateSpaceGeneratorFuryTest
     {
-        public void StateSpaceGeneratorFuryTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public void StateSpaceGeneratorFuryTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, bool showOutput)
         {
             FuryGenerator gen = new FuryGenerator(c, s, cf, wa, co);
-            var stateSpace = gen.GenerateStateSpace();
-            string output = "";
-            foreach (State<Rawr.DPSWarr.Skills.Ability> a in stateSpace)
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+            List<State<Skills.Ability>> stateSpace = gen.GenerateStateSpace();
+            sw.Stop();
+            Console.WriteLine("GenStateSpace: " + sw.ElapsedTicks);
+            if (showOutput)
             {
-                output += a.ToString() + "\n";
-            }
-            output += "\ndone";
-            try
-            {
-                MarkovProcess<Skills.Ability> mp = new MarkovProcess<Skills.Ability>(stateSpace);
-
-                double averageDamage = 0.0;
-                foreach (KeyValuePair<Skills.Ability, double> kvp in mp.AbilityWeight)
+                try
                 {
-                    System.Console.WriteLine("{0} - {1}", kvp.Key.Name, kvp.Key.DamageOnUse * kvp.Value / mp.AverageTransitionDuration);
-                    averageDamage += kvp.Key.DamageOnUse * kvp.Value;
+                    int numIterations = 0;
+                    gen.HSPerc = 1;
+                    double oldDPS = 0;
+                    while (numIterations < 2)
+                    {
+                        double averageDamage = 0;
+                        double rageNeededNoHS = 0f;
+
+                        sw = System.Diagnostics.Stopwatch.StartNew();
+                        MarkovProcess<Skills.Ability> mp2 = new MarkovProcess<Rawr.DPSWarr.Skills.Ability>(stateSpace);
+                        sw.Stop();
+                        Console.WriteLine("MarkovProcess._ctor: " + sw.ElapsedTicks);
+                        foreach (KeyValuePair<Skills.Ability, double> kvp in mp2.AbilityWeight)
+                        {
+                            rageNeededNoHS += kvp.Key.RageCost * (kvp.Value * co.Duration / mp2.AverageTransitionDuration);
+                            averageDamage += kvp.Key.DamageOnUse * kvp.Value;
+                        }
+
+                        double hsdps = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability.DamageOnUse / wa.MhEffectiveSpeed * gen.HSPerc;
+                        double mhdps = wa.MhDamageOnUse / wa.MhEffectiveSpeed * (1 - gen.HSPerc);
+                        double ohdps = gen.Rot.WhiteAtks.OhDPS;
+
+                        double dps = averageDamage / mp2.AverageTransitionDuration;
+                        dps += hsdps + mhdps + ohdps;
+                        System.Console.WriteLine(String.Format("DPS: {0} || HSPerc: {1}", dps, gen.HSPerc));
+
+                        double rageNeeded = rageNeededNoHS;
+                        Skills.HeroicStrike HS = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability as Skills.HeroicStrike;
+                        rageNeeded += HS.FullRageCost * (co.Duration / wa.MhEffectiveSpeed * gen.HSPerc);
+                        double rageGenerated = wa.MHSwingRage * (co.Duration / wa.MhEffectiveSpeed) +
+                                               wa.OHSwingRage * (co.Duration / wa.OhEffectiveSpeed);
+
+
+                        double HsRage = rageNeeded - rageNeededNoHS;
+                        double hsRageNeeded = rageGenerated - rageNeededNoHS;
+                        gen.HSPerc = Math.Min((hsRageNeeded / HS.FullRageCost) /
+                                     (co.Duration / wa.MhEffectiveSpeed), 1); // Needed HS Activates / White activates
+
+                        oldDPS = dps;
+                        numIterations++;
+                    }
+
+
+                    /*MarkovProcess<Skills.Ability> mp = new MarkovProcess<Skills.Ability>(stateSpace);
+
+                    double averageDamage2 = 0.0;
+                    foreach (KeyValuePair<Skills.Ability, double> kvp in mp.AbilityWeight)
+                    {
+                        if (showOutput) System.Console.WriteLine("{0} - {1}", kvp.Key.Name, kvp.Key.DamageOnUse * kvp.Value / mp.AverageTransitionDuration);
+                        averageDamage2 += kvp.Key.DamageOnUse * kvp.Value;
+                    }
+                    double hsdps2 = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability.DamageOnUse / wa.MhEffectiveSpeed * gen.HSPerc;
+                    double mhdps2 = wa.MhDamageOnUse / wa.MhEffectiveSpeed * (1 - gen.HSPerc);
+                    double ohdps2 = gen.Rot.WhiteAtks.OhDPS;
+                    if (showOutput)
+                    {
+                        System.Console.WriteLine("HS - {0}", hsdps2);
+                        System.Console.WriteLine("MH - {0}", mhdps2);
+                        System.Console.WriteLine("OH - {0}", ohdps2);
+                    }
+                    double dps2 = averageDamage2 / mp.AverageTransitionDuration;
+                    dps2 += hsdps2 + mhdps2 + ohdps2;*/
                 }
-                double hsdps = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability.DamageOnUse / wa.MhEffectiveSpeed;
-                double ohdps = gen.Rot.WhiteAtks.OhDPS;
-                System.Console.WriteLine("HS - {0}", hsdps);
-                System.Console.WriteLine("OH - {0}", ohdps);
-                double dps = averageDamage / mp.AverageTransitionDuration;
-                dps += hsdps + ohdps;
-            }
-            catch (Exception ex)
-            {
-                new ErrorBox("Error in creating Arms Markov Calculations",
-                    ex.Message, "StateSpaceGeneratorArmsTest1()",
-                    "StateSpace Count: " + stateSpace.Count.ToString(),
-                    ex.StackTrace);
+                catch (Exception ex)
+                {
+                    new ErrorBox("Error in creating Arms Markov Calculations",
+                        ex.Message, "StateSpaceGeneratorArmsTest1()",
+                        "StateSpace Count: " + stateSpace.Count.ToString(),
+                        ex.StackTrace);
+                }
             }
         }
     }
