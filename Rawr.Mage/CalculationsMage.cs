@@ -1522,6 +1522,7 @@ namespace Rawr.Mage
                     "Frost Resistance",
                     "Shadow Resistance",
                     "Arcane Resistance",
+                    "Resilience",
                     "Chance to Live",
                     "Hit Rating",
                     "Haste Rating",

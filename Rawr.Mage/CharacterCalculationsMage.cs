@@ -1525,6 +1525,7 @@ namespace Rawr.Mage
                 case "Frost Resistance": return BaseStats.FrostResistance;
                 case "Shadow Resistance": return BaseStats.ShadowResistance;
                 case "Arcane Resistance": return BaseStats.ArcaneResistance;
+                case "Resilience": return BaseStats.Resilience;
                 case "Chance to Live": return 100 * (1 - ChanceToDie);
                 case "Hit Rating": return BaseStats.HitRating;
                 case "Haste Rating": return BaseStats.HasteRating;
