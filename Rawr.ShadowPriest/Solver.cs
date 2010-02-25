@@ -1213,47 +1213,6 @@ namespace Rawr.ShadowPriest
                    DPS += dpr * (1f + simStats.BonusDamageMultiplier) * (1f + simStats.BonusShadowDamageMultiplier);
                }
             }
-            #region old
-                /*
-            if (simStats.TimbalsProc > 0.0f)
-            {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
-                //int dots = (MF != null)?3:0; // Apparently Flay no longer procs this
-                int dots = 0;
-                foreach (Spell spell in SpellPriority)
-                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                Spell Timbal = new TimbalProc(simStats, character);
-                float ProcChance = 0.1f;
-                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
-                float EffCooldown = 16.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (dots / 3) / ProcActual;
-
-                DPS += Timbal.AvgDamage / EffCooldown * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
-                //DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
-            }
-            if (simStats.ExtractOfNecromanticPowerProc > 0.0f)
-            {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
-                // Although, All dots tick about every 3s, so in avg cooldown gains another 1.5s, putting it at 16.5
-                int dots = 0;
-                foreach (Spell spell in SpellPriority)
-                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                Spell Extract = new ExtractProc(simStats, character);
-                float ProcChance = 0.1f;
-                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
-                float EffCooldown = 16.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (dots / 3) / ProcActual;
-
-                DPS += (Extract.AvgDamage / EffCooldown) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
-                //DPS += Extract.AvgDamage / (16.5f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
-            }
-            if (simStats.PendulumOfTelluricCurrentsProc > 0.0f)
-            {   // 15% proc chance, 45s internal cd, shoots a Shadow bolt
-                float ProcChance = 0.15f;
-                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
-                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / HitsPerSecond / ProcActual;
-                simStats.SpellPower += simStats.SpellPowerFor10SecOnHit_10_45 * 10f / EffCooldown;
-                Spell Pendulum = new PendulumProc(simStats, character);
-                DPS += Pendulum.AvgDamage / EffCooldown * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
-            }
-                 */
-            #endregion
 
             if (bVerbal)
                 Rotation += "\r\n\r\nMana Buffs:";
@@ -1367,7 +1326,7 @@ namespace Rawr.ShadowPriest
 
             if (MPS > regen && character.PriestTalents.Dispersion > 0)
             {   // Not enough mana, so eat a Dispersion, remove DPS worth of 6 seconds of mindflay.
-                float disp_rat = 6f / (60f * 3f);
+                float disp_rat = 6f / (60f * 3f - (character.PriestTalents.GlyphofDispersion ? 45 : 0));
                 tmpregen = simStats.Mana * 0.06f * disp_rat;
                 ManaSources.Add(new ManaSource("Dispersion", tmpregen));
                 regen += tmpregen;

@@ -171,7 +171,7 @@ namespace Rawr.ShadowPriest {
                           Math.Floor(AvgHit / DebuffDuration * 3).ToString("0"),
                           Math.Ceiling(AvgHit / DebuffDuration * 3).ToString("0"),
                           (CritCoef > 1f ? String.Format("\r\nTick Crit: {0}-{1}\r\nCrit Chance: {2}%", Math.Floor(AvgCrit / DebuffDuration * 3).ToString("0"), Math.Floor(AvgCrit / DebuffDuration * 3).ToString("0"), (CritChance * 100f).ToString("0.00")) : String.Empty),
-                          DebuffDuration.ToString("0"),
+                          DebuffDuration.ToString("0.00"),
                           ManaCost.ToString("0"),
                           Name);
             }
@@ -624,7 +624,7 @@ namespace Rawr.ShadowPriest {
                 Math.Floor(AvgHit / DebuffDuration * 3).ToString("0"),
                 Math.Ceiling(AvgHit / DebuffDuration * 3).ToString("0"),
                 (CritCoef > 1f ? String.Format("\r\nTick Crit: {0}-{1}\r\nCrit Chance: {2}%", Math.Floor(AvgCrit / DebuffDuration * 3).ToString("0"), Math.Floor(AvgCrit / DebuffDuration * 3).ToString("0"), (CritChance * 100f).ToString("0.00")) : String.Empty),
-                DebuffDuration.ToString("0"),
+                DebuffDuration.ToString("0.00"),
                 ManaCost.ToString("0"),
                 Name);
         }
