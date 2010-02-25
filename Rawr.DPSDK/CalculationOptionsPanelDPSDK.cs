@@ -186,11 +186,10 @@ namespace Rawr.DPSDK
                 }
                 Brush statBrush = new SolidBrush(colors[index]);
                 g.DrawLines(new Pen(statBrush, 3), points);
-                graph.Invalidate();
-                graph.Update();
             }
 
-            
+            graph.Invalidate();
+            graph.Update();
         }
 
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
