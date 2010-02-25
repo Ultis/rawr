@@ -7,8 +7,9 @@ namespace Rawr.Rogue
     public class RogueRotationCalculator
     {
         public Character Char { get; set; }
-		public Stats Stats { get; set; }
-		public float Duration { get; set; }
+        public Stats Stats { get; set; }
+        public CalculationOptionsRogue CalcOpts { get; set; }
+        public float Duration { get; set; }
 		public float TempCPPerCPG { get; set; }
 		public bool MaintainBleed { get; set; }
         public float MainHandSpeed { get; set; }
@@ -33,9 +34,29 @@ namespace Rawr.Rogue
         public RogueAbilityStats WPStats { get; set; }
         public RogueAbilityStats APStats { get; set; }
 
-		private float[] _chanceExtraCP = new float[5];
+        public float BonusDamageMultiplierHFB { get; set; }
+        public float BonusEnergyRegen { get; set; }
+        public float BonusEnergyRegenMultiplier { get; set; }
+        public float BonusFlurryHaste { get; set; }
+        public float BonusHemoDamageMultiplier { get; set; }
+        public float BonusIPFrequencyMultiplier { get; set; }
+        public float BonusMaxEnergy { get; set; }
+        public float BonusStealthEnergyRegen { get; set; }
+        public float ChanceOnCPOnSSCrit { get; set; }
+        public float ChanceOnEnergyOnCrit { get; set; }
+        public float ChanceOnEnergyOnOHAttack { get; set; }
+        public float ChanceOnEnergyPerCPFinisher { get; set; }
+        public float ChanceOnMHAttackOnSwordAxeHit { get; set; }
+        public float ChanceOnNoDPConsumeOnEnvenom { get; set; }
+        public float ChanceOnSnDResetOnEnvenom { get; set; }
+        public float CPOnFinisher { get; set; }
+        public float FlurryCostReduction { get; set; }
+        public float ToTTCDReduction { get; set; }
+        public float VanishCDReduction { get; set; }
 
-        public RogueRotationCalculator(Character character, Stats stats, float duration, float cpPerCPG, bool maintainBleed,
+        private float[] _chanceExtraCP = new float[5];
+
+        public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float cpPerCPG, bool maintainBleed,
 			float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
@@ -44,7 +65,9 @@ namespace Rawr.Rogue
 		{
             Char = character;
 			Stats = stats;
-			Duration = duration;
+            CalcOpts = calcOpts;
+			Duration = CalcOpts.Duration;
+
 			TempCPPerCPG = cpPerCPG;
 			MaintainBleed = maintainBleed;
             MainHandSpeed = mainHandSpeed;
@@ -75,29 +98,103 @@ namespace Rawr.Rogue
 			_chanceExtraCP[2] = c*c+c*h*h;
 			_chanceExtraCP[3] = 2*c*c*h+c*h*h*h;
 			_chanceExtraCP[4] = c*c*c+3*c*c*h*h+c*h*h*h*h;
-		}
+
+//            AmbushBackstabCostReduction = 3 * Char.RogueTalents.SlaughterFromTheShadows;
+//            ArmorReduction = Char.RogueTalents.SerratedBlades > 2 ? 8f * Char.Level : Char.RogueTalents.SerratedBlades > 1 ? 5.34f * Char.Level : Char.RogueTalents.SerratedBlades > 0 ? 2.67f * Char.Level : 0;
+//            BonusAgilityMultiplier = 0.03f * Char.RogueTalents.SinisterCalling;
+            //BonusAmbushCrit = 0.25f * Char.RogueTalents.ImprovedAmbush;
+            //BonusAmbushDamageMultiplier = 0.1f * Char.RogueTalents.Opportunity;
+//            BonusAttackPowerMultiplier = (1f + 0.02f * Char.RogueTalents.SavageCombat) * (1f + 0.02f * Char.RogueTalents.Deadliness) - 1f;
+//            BonusBackstabCrit = 0.1f * Char.RogueTalents.PuncturingWounds;
+//            BonusBackstabDamageMultiplier = 0.03f * Char.RogueTalents.Aggression + 0.05f * Char.RogueTalents.BladeTwisting + 0.1f * Char.RogueTalents.SurpriseAttacks + 0.1f * Char.RogueTalents.Opportunity + 0.02f * Char.RogueTalents.SinisterCalling;
+//            BonusCPGCritDamageMultiplier = 0.06f * Char.RogueTalents.Lethality;
+//            BonusCPOnCrit = 0.2f * Char.RogueTalents.SealFate;
+            //BonusCPOnGroupCrit = Char.RogueTalents.HonorAmongThieves > 2 ? 1 : 0.33f * Char.RogueTalents.HonorAmongThieves;
+//            BonusCritMultiplier = 0.04f * Char.RogueTalents.PreyOnTheWeak;
+            BonusFlurryHaste = 0.2f * Char.RogueTalents.BladeFlurry;
+//            BonusMainHandCrit = (Char.MainHand != null) ? ((Char.MainHand.Type == ItemType.Dagger || Char.MainHand.Type == ItemType.FistWeapon) ? 0.02f * Char.RogueTalents.CloseQuartersCombat : 0f) : 0f;
+//            BonusDamageMultiplier = 0.02f * Char.RogueTalents.Murder;
+            BonusDamageMultiplierHFB = (0.05f + (Char.RogueTalents.GlyphOfHungerforBlood ? 0.03f : 0f)) * Char.RogueTalents.HungerForBlood;
+            BonusEnergyRegen = (15 + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * Char.RogueTalents.AdrenalineRush;
+            BonusEnergyRegenMultiplier = 0.08f * Char.RogueTalents.Vitality;
+//            BonusEnvenomDamageMultiplier = 0.07f * Char.RogueTalents.VilePoisons;
+//            BonusEvisCrit = Char.RogueTalents.GlyphOfEviscerate ? 0.1f : 0f;
+//            BonusEvisDamageMultiplier = 0.07f * Char.RogueTalents.ImprovedEviscerate + 0.03f * Char.RogueTalents.Aggression;
+            //BonusGarrDamageMultiplier = 0.15f * Char.RogueTalents.BloodSpatter + 0.1f * Char.RogueTalents.Opportunity;
+            //BonusGougeDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks;
+            BonusHemoDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks + 0.02f * Char.RogueTalents.SinisterCalling;
+            BonusIPFrequencyMultiplier = 0.1f * Char.RogueTalents.ImprovedPoisons;
+//            BonusMaceArP = 0.03f * Char.RogueTalents.MaceSpecialization;
+            BonusMaxEnergy = (10 + (Char.RogueTalents.GlyphOfVigor ? 10 : 0)) * Char.RogueTalents.Vigor;
+//            BonusMutiCrit = 0.05f * Char.RogueTalents.PuncturingWounds;
+//            BonusMutiDamageMultiplier = 0.1f * Char.RogueTalents.Opportunity;
+//            BonusOffHandCrit = (Char.OffHand != null) ? ((Char.OffHand.Type == ItemType.Dagger || Char.OffHand.Type == ItemType.FistWeapon) ? 0.02f * Char.RogueTalents.CloseQuartersCombat : 0f) : 0f;
+//            BonusOffHandDamageMultiplier = 0.1f * Char.RogueTalents.DualWieldSpecialization;
+            //BonusParryMultiplier = 0.02f * Char.RogueTalents.Deflection;
+//            BonusPoisonDamageMultiplier = 0.07f * Char.RogueTalents.VilePoisons;
+//            BonusRuptDamageMultiplier = 0.15f * Char.RogueTalents.BloodSpatter + 0.1f * Char.RogueTalents.SerratedBlades;
+//            BonusRuptDuration = Char.RogueTalents.GlyphOfRupture ? 4 : 0;
+            //BonusShivDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks;
+//            BonusSnDDuration = Char.RogueTalents.GlyphOfSliceandDice ? 3 : 0;
+//            BonusSnDDurationMultiplier = 0.25f * Char.RogueTalents.ImprovedSliceAndDice;
+//            BonusSStrikeDamageMultiplier = 0.03f * Char.RogueTalents.Aggression + 0.05f * Char.RogueTalents.BladeTwisting + 0.1f * Char.RogueTalents.SurpriseAttacks;
+//            BonusStaminaMultiplier = 0.02f * Char.RogueTalents.Endurance;
+            //BonusStealthDamageMultiplier = 0.04f * Char.RogueTalents.MasterOfSubtlety;
+            BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
+            //BonusYellowDamageBelow35 = 0.1f * Char.RogueTalents.DirtyDeeds;
+//            BonusYellowDamageMultiplier = 0.02f * Char.RogueTalents.FindWeakness + 0.35f * 0.2f * Char.RogueTalents.DirtyDeeds;
+            //ChanceFinisherDodgedMultiplier = Char.RogueTalents.SurpriseAttacks >0 ? 0 : 1;
+            //ChanceOnCPOnAmbushGarrCS = Char.RogueTalents.Initiative > 2 ? 1 : 0.33f * Char.RogueTalents.Initiative;
+            ChanceOnCPOnSSCrit = Char.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f;
+            ChanceOnEnergyOnCrit = 2f * (Char.RogueTalents.FocusedAttacks > 2 ? 1f : (0.33f * Char.RogueTalents.FocusedAttacks));
+            ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
+            ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
+            ChanceOnMHAttackOnSwordAxeHit = 0.01f * Char.RogueTalents.HackAndSlash;
+            ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner == 3 ? 1f : (0.33f * Char.RogueTalents.MasterPoisoner);
+            ChanceOnSnDResetOnEnvenom = 0.2f * Char.RogueTalents.CutToTheChase;
+            //CDOnExtraVanish = 8 * Char.RogueTalents.Preparation;
+            //CPGCritIncreaseOnRaidAvoid = 0.02f * Char.RogueTalents.TurnTheTables;
+            CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
+//            Dodge = 0.02f * Char.RogueTalents.LightningReflexes;
+//            Expertise = 5 * Char.RogueTalents.WeaponExpertise;
+            //ExposeCostReduction = 5 * Char.RogueTalents.ImprovedExposeArmor;
+//            FinisherEnergyOnAvoid = 0.4f * Char.RogueTalents.QuickRecovery;
+            FlurryCostReduction = Char.RogueTalents.GlyphOfBladeFlurry ? 25 : 0;
+//            GarrCostReduction = 10 * Char.RogueTalents.DirtyDeeds;
+//            HemoCostReduction = 1 * Char.RogueTalents.SlaughterFromTheShadows;
+//            MutiCostReduction = Char.RogueTalents.GlyphOfMutilate ? 5 : 0;
+//            PhysicalCrit = 0.01f * Char.RogueTalents.Malice + ( CalcOpts.TargetPoisonable ? 0.03f * Char.RogueTalents.MasterPoisoner : 0);
+//            PhysicalHit = 0.01f * Char.RogueTalents.Precision;
+//            PhysicalHaste = 0.04f * Char.RogueTalents.LightningReflexes;
+            //PrepCDReduction = 90 * Char.RogueTalents.FilthyTricks;
+//            SpellCrit = 0.01f * Char.RogueTalents.Malice + (CalcOpts.TargetPoisonable ? 0.03f * Char.RogueTalents.MasterPoisoner : 0);
+//            SpellHit = 0.01f * Char.RogueTalents.Precision;
+//            SStrikeCostReduction = 3 * Char.RogueTalents.ImprovedSinisterStrike;
+            ToTTCDReduction = 5 * Char.RogueTalents.FilthyTricks;
+            VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
+        }
 
         public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT)
 		{
-            float energyRegen = 10f * (1f + Stats.BonusEnergyRegenMultiplier);
-            float totalEnergyAvailable = 100f + Stats.BonusMaxEnergy +
+            float energyRegen = 10f * (1f + BonusEnergyRegenMultiplier);
+            float totalEnergyAvailable = 100f + BonusMaxEnergy +
                                          energyRegen * Duration +
-                                         (Duration / (180 - Stats.VanishCDReduction)) * 20f * energyRegen * Stats.BonusStealthEnergyRegen +
-                                         (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + Stats.ToTTCDReduction)) * (Duration - 5f) / (30f - Stats.ToTTCDReduction) : 0f) +
+                                         ((Duration - 20f) / (180f - VanishCDReduction)) * 20f * energyRegen * BonusStealthEnergyRegen +
+                                         (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + ToTTCDReduction)) * (Duration - 5f) / (30f - ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
-                                         energyRegen * 2f * Stats.BonusEnergyRegen * (Duration / 180) -
-                                         (Stats.BonusFlurryHaste > 0 ? (25f - Stats.FlurryCostReduction) * Duration / 120f : 0f);
+                                         energyRegen * 2f * BonusEnergyRegen * (Duration / 180f) -
+                                         (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * Duration / 120f : 0f);
             float totalCPAvailable = 0f;
             float averageGCD = 1f / (1f - AvoidedAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
-            float averageFinisherCP = 5f + _chanceExtraCP[4] - Stats.CPOnFinisher;
+            float averageFinisherCP = 5f + _chanceExtraCP[4] - CPOnFinisher;
 			
 			#region Melee
 			float mainHandCount = Duration / MainHandSpeed;
             float offHandCount = Duration / OffHandSpeed;
-            totalEnergyAvailable += offHandCount * Stats.ChanceOnEnergyOnOHAttack * AvoidedWhiteAttacks +
-                                    Stats.ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
-                                    Stats.ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
+            totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack * AvoidedWhiteAttacks +
+                                    ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
+                                    ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
 			#endregion
 
             #region Combo Point Generator
@@ -105,7 +202,7 @@ namespace Rawr.Rogue
             float cpgEnergy = CPG == 2 ? BackstabStats.EnergyCost : CPG == 3 ? HemoStats.EnergyCost : CPG == 1 ? SStrikeStats.EnergyCost : MutiStats.EnergyCost;
             float CPPerCPG = TempCPPerCPG +
                              (CPG == 0 ? 1f : 0f) +
-                             (CPG == 1 ? Stats.ChanceOnCPOnSSCrit * SStrikeStats.CritChance: 0f);
+                             (CPG == 1 ? ChanceOnCPOnSSCrit * SStrikeStats.CritChance : 0f);
             #endregion
 
             #region Slice and Dice
@@ -118,9 +215,9 @@ namespace Rawr.Rogue
             float snDDuration = SnDStats.DurationAverage + 3f * Math.Min(5f, averageSnDCP)
                                 - snDRuptConflict;
             float snDCount = Duration / snDDuration;
-            snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - Stats.ChanceOnSnDResetOnEnvenom): snDCount));
+            snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - ChanceOnSnDResetOnEnvenom): snDCount));
             float snDTotalEnergy = snDCount * SnDStats.EnergyCost;
-            float snDCPRequired = snDCount * averageSnDCP - (snDCount - 1) * Stats.CPOnFinisher;
+            float snDCPRequired = snDCount * averageSnDCP - (snDCount - 1) * CPOnFinisher;
             if (totalCPAvailable < snDCPRequired)
             {
                 float cpToGenerate = snDCPRequired - totalCPAvailable;
@@ -130,7 +227,7 @@ namespace Rawr.Rogue
                 totalCPAvailable += cpToGenerate;
             }
             totalCPAvailable -= snDCPRequired;
-            totalEnergyAvailable -= snDTotalEnergy - 25 * Stats.ChanceOnEnergyPerCPFinisher * snDCount * averageSnDCP;
+            totalEnergyAvailable -= snDTotalEnergy - 25 * ChanceOnEnergyPerCPFinisher * snDCount * averageSnDCP;
             #endregion
 
             #region Damage Finishers
@@ -154,14 +251,14 @@ namespace Rawr.Rogue
 
                 ruptCount += ruptsFromNewCP;
                 cpgCount += (averageFinisherCP / CPPerCPG) * ruptsFromNewCP;
-                totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP + 25 * Stats.ChanceOnEnergyPerCPFinisher * ruptCount * averageFinisherCP;
+                totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP + 25 * ChanceOnEnergyPerCPFinisher * ruptCount * averageFinisherCP;
                 #endregion
             }
             if (finisher == 1 && finisherCP > 0)
             {
                 #region Eviscerate
                 float averageEvisCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
-                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - Stats.CPOnFinisher;
+                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - CPOnFinisher;
                 float evisDamageMultiplier = Math.Min(1f,
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * averageEvisCP) /
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * 5f));
@@ -175,14 +272,14 @@ namespace Rawr.Rogue
 
                 evisCount += evisFromNewCP * evisDamageMultiplier;
                 cpgCount += evisFromNewCP * (averageEvisCP / CPPerCPG);
-                totalEnergyAvailable = 0f + 25 * Stats.ChanceOnEnergyPerCPFinisher * evisCount * averageEvisCP;
+                totalEnergyAvailable = 0f + 25 * ChanceOnEnergyPerCPFinisher * evisCount * averageEvisCP;
                 #endregion
             }
             else if (finisher == 2 && finisherCP > 0)
             {
                 #region Envenom
                 float averageEnvenomCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
-                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - Stats.CPOnFinisher;
+                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - CPOnFinisher;
                 float envenomDamageMultiplier = Math.Min(1f,
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * averageEnvenomCP) /
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * 5f));
@@ -196,7 +293,7 @@ namespace Rawr.Rogue
 
                 envenomCount += envenomFromNewCP * envenomDamageMultiplier;
                 cpgCount += envenomFromNewCP * (averageEnvenomCP / CPPerCPG);
-                totalEnergyAvailable = 0f + 25 * Stats.ChanceOnEnergyPerCPFinisher * envenomCount * averageEnvenomCP;
+                totalEnergyAvailable = 0f + 25 * ChanceOnEnergyPerCPFinisher * envenomCount * averageEnvenomCP;
                 #endregion
             }
             #endregion
@@ -218,8 +315,8 @@ namespace Rawr.Rogue
             #endregion
 
             #region Extra Mainhand attacks from Hack and Slash
-            if (MainHandStats.Weapon == ItemType.OneHandAxe || MainHandStats.Weapon == ItemType.OneHandSword) mainHandCount += Stats.ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
-            if (MainHandStats.Weapon == ItemType.OneHandAxe || MainHandStats.Weapon == ItemType.OneHandSword) mainHandCount += Stats.ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
+            if (MainHandStats.Weapon == ItemType.OneHandAxe || MainHandStats.Weapon == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
+            if (OffHandStats.Weapon == ItemType.OneHandAxe || OffHandStats.Weapon == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
             #endregion
 
             #region Poisons
@@ -229,7 +326,7 @@ namespace Rawr.Rogue
             float dPCount = 0f;
             float wPCount = 0f;
             float aPCount = 0f;
-            float iPPPS = 8.53f * (1f + Stats.BonusIPFrequencyMultiplier) / 60f;
+            float iPPPS = 8.53f * (1f + BonusIPFrequencyMultiplier) / 60f;
             float dPApplyChance = 0.3f + 0.04f * Char.RogueTalents.ImprovedPoisons;
             float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
@@ -240,10 +337,10 @@ namespace Rawr.Rogue
             {
                 float dPCountTemp = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
-                dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
+                dPCountTemp -= (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 5 + 5;
                 float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * MainHandSpeed;
-                dPCount = (Duration - dPStackTime - (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * dPStackTime) / 3 * 5 +
-                          10 + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10;
+                dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
+                          10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
                 dPCount = Math.Min(dPCount, dPCountTemp);
                 if (oHPoison == 1)
                     iPCount += dPCountTemp;
@@ -265,10 +362,10 @@ namespace Rawr.Rogue
             {
                 float dPCountTemp = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
-                dPCountTemp -= (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 5 + 5;
+                dPCountTemp -= (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 5 + 5;
                 float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * OffHandSpeed;
-                dPCount = (Duration - dPStackTime - (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * dPStackTime) / 3 * 5 +
-                          10 + (1f - Stats.ChanceOnNoDPConsumeOnEvenom) * envenomCount * 10;
+                dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
+                          10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
                 dPCount = Math.Min(dPCount, dPCountTemp);
                 if (mHPoison == 1)
                     iPCount += dPCountTemp;
@@ -300,7 +397,7 @@ namespace Rawr.Rogue
             #endregion
 
             #region Damage Totals
-            float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + Stats.BonusDamageMultiplierHFB: 1f;
+            float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + BonusDamageMultiplierHFB: 1f;
 
             float mainHandDamageTotal = ((Duration - kSDuration) / Duration * mainHandCount +
                                         kSDmgBonus * kSDuration / Duration * mainHandCount +
@@ -355,7 +452,7 @@ namespace Rawr.Rogue
                 OHPoison = oHPoison,
 
                 UseTotT = useTotT,
-                CutToTheChase = Stats.ChanceOnSnDResetOnEnvenom,
+                CutToTheChase = ChanceOnSnDResetOnEnvenom,
             };
         }
 
