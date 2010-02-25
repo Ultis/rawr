@@ -1172,10 +1172,10 @@ namespace Rawr {
             }
             #endregion
             #region Icecrown Weapon Procs
-            else if (line == "Your weapon swings have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional 9% damage as shadow damage.")
+            else if ((match = Regex.Match(line, @"Your weapon swings have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional (?<amount>\d+)% damage as shadow damage.")).Success)
             {
                 // Black Bruise
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = .09f }, 10f, 0f, 0.033f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = int.Parse(match.Groups["amount"].Value) / 100f }, 10f, 0f, 0.033f));
             }
             else if ((match = new Regex("Your ranged attacks have a (?<amount1>\\d\\d*)% chance to cause you to instantly attack with this weapon for 50% weapon damage.").Match(line)).Success)
             {
