@@ -66,10 +66,10 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbSeal = new System.Windows.Forms.ComboBox();
             this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
             this.nudStackTrinket = new System.Windows.Forms.NumericUpDown();
             this.nudTimeUnder20 = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -179,6 +179,7 @@
             this.label1.Size = new System.Drawing.Size(54, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Mob type:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label2
             // 
@@ -188,6 +189,7 @@
             this.label2.Size = new System.Drawing.Size(66, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Target level:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblWait
             // 
@@ -697,6 +699,7 @@
             this.label12.Size = new System.Drawing.Size(65, 13);
             this.label12.TabIndex = 0;
             this.label12.Text = "Fight length:";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmbLength
             // 
@@ -730,13 +733,13 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 219);
+            this.label13.Location = new System.Drawing.Point(-2, 219);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(134, 13);
+            this.label13.Size = new System.Drawing.Size(142, 13);
             this.label13.TabIndex = 19;
-            this.label13.Text = "Consecrate effectiveness*:";
+            this.label13.Text = "Consecration effectiveness*:";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelsTooltip.SetToolTip(this.label13, "The percent of time that mobs are standing in your consecrate.");
+            this.labelsTooltip.SetToolTip(this.label13, "The percent of time that mobs are standing in your consecration.");
             // 
             // label19
             // 
@@ -760,6 +763,17 @@
             this.labelsTooltip.SetToolTip(this.label32, "Experimental development settings\r\nKeep this field blank unless explicitely instr" +
                     "ucted by a Rawr.Retribution developer to do otherwise.");
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(23, 141);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(117, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Stacked trinkets reset*:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelsTooltip.SetToolTip(this.label4, "Controls how trinkets with a stacking effect work.\r\n0: The trinket is assumed to be at full stack for the entire fight.\r\n1: The trinket is stacked up once, and remains at full stack for the remainder of the fight.\r\nN: The buff is lost (N-1) times. So the stack will need to be rebuilt N times.");
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -768,6 +782,7 @@
             this.label3.Size = new System.Drawing.Size(31, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "Seal:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmbSeal
             // 
@@ -807,15 +822,6 @@
             0,
             0});
             this.nudTargetLevel.ValueChanged += new System.EventHandler(this.nudTargetLevel_ValueChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(27, 141);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(113, 13);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "Stacked trinkets reset:";
             // 
             // nudStackTrinket
             // 
@@ -900,6 +906,7 @@
             this.label7.Size = new System.Drawing.Size(46, 13);
             this.label7.TabIndex = 14;
             this.label7.Text = "Targets:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label8
             // 
@@ -1010,11 +1017,12 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(51, 291);
+            this.label31.Location = new System.Drawing.Point(55, 291);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(85, 13);
             this.label31.TabIndex = 27;
             this.label31.Text = "Target switches:";
+            this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // nudTargetSwitch
             // 
@@ -1061,12 +1069,13 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(38, 265);
+            this.label30.Location = new System.Drawing.Point(41, 265);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(98, 13);
+            this.label30.Size = new System.Drawing.Size(102, 13);
             this.label30.TabIndex = 24;
-            this.label30.Text = "HoR effectiveness:";
+            this.label30.Text = "HoR effectiveness*:";
             this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelsTooltip.SetToolTip(this.label30, "The percent of time that you can use Hand of Reckoning on a mob.");
             // 
             // chkBloodlust
             // 
@@ -1081,11 +1090,12 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(87, 243);
+            this.label14.Location = new System.Drawing.Point(86, 243);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(53, 13);
             this.label14.TabIndex = 22;
             this.label14.Text = "Bloodlust:";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabRotation
             // 
