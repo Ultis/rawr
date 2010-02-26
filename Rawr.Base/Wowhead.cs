@@ -212,6 +212,7 @@ namespace Rawr
                     _vendorTokenMap["45624"] = "Emblem of Conquest";
                     _vendorTokenMap["47241"] = "Emblem of Triumph";
                     _vendorTokenMap["47242"] = "Trophy of the Crusade";
+                    _vendorTokenMap["49426"] = "Emblem of Frost";
                     break;
             }
         }
