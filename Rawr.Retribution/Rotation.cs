@@ -258,6 +258,17 @@ namespace Rawr.Retribution
                 GetAbilityHitsPerSecond(HoW);
         }
 
+        public float GetSpellAttacksPerSec()
+        {
+            // Spell hit procs can be triggered by:
+            // - Exorcism hits
+            // - Consecration hits (first tick)
+            return
+                GetAbilityHitsPerSecond(Exo) +
+                GetAbilityHitsPerSecond(Cons) / Cons.TickCount();
+                //GetAbilityHitsPerSecond(Judge); There was some talk about Judgement also triggering this, but that would make Judgement be both spell and melee hit?
+        }
+
         public float GetMeleeCritsPerSec()
         {
             // Melee crit procs can be triggered by:

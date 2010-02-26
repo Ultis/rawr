@@ -627,9 +627,7 @@ namespace Rawr.Retribution
                     break;
 
                 case Trigger.SpellHit:
-                    // Used by black magic...  need to get actual stats.
-                    //trigger = 1f / rot.GetJudgementsPerSec()
-                    trigger = 6.63f; // TODO: Calculate actual spell hit ratio
+                    trigger = 1f / rot.GetSpellAttacksPerSec();
                     break;
 
                 case Trigger.DamageOrHealingDone:
