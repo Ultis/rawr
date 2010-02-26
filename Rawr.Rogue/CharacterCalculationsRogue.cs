@@ -37,6 +37,7 @@ namespace Rawr.Rogue
 
         public float AvoidedWhiteAttacks { get; set; }
         public float AvoidedAttacks { get; set; }
+        public float AvoidedFinisherAttacks { get; set; }
         public float AvoidedPoisonAttacks { get; set; }
         public float DodgedAttacks { get; set; }
         public float ParriedAttacks { get; set; }

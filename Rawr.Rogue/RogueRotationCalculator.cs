@@ -17,6 +17,7 @@ namespace Rawr.Rogue
         public float ChanceExtraCPPerHit { get; set; }
         public float AvoidedWhiteAttacks { get; set; }
         public float AvoidedAttacks { get; set; }
+        public float AvoidedFinisherAttacks { get; set; }
         public float AvoidedPoisonAttacks { get; set; }
 
         public RogueAbilityStats MainHandStats { get; set; }
@@ -57,7 +58,7 @@ namespace Rawr.Rogue
         private float[] _chanceExtraCP = new float[5];
 
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float cpPerCPG, bool maintainBleed,
-			float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedPoisonAttacks,
+			float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, 
@@ -74,6 +75,7 @@ namespace Rawr.Rogue
             OffHandSpeed = offHandSpeed;
             AvoidedWhiteAttacks = avoidedWhiteAttacks;
             AvoidedAttacks = avoidedAttacks;
+            AvoidedFinisherAttacks = avoidedFinisherAttacks;
             AvoidedPoisonAttacks = avoidedPoisonAttacks;
             ChanceExtraCPPerHit = chanceExtraCPPerHit;
 
@@ -99,52 +101,14 @@ namespace Rawr.Rogue
 			_chanceExtraCP[3] = 2*c*c*h+c*h*h*h;
 			_chanceExtraCP[4] = c*c*c+3*c*c*h*h+c*h*h*h*h;
 
-//            AmbushBackstabCostReduction = 3 * Char.RogueTalents.SlaughterFromTheShadows;
-//            ArmorReduction = Char.RogueTalents.SerratedBlades > 2 ? 8f * Char.Level : Char.RogueTalents.SerratedBlades > 1 ? 5.34f * Char.Level : Char.RogueTalents.SerratedBlades > 0 ? 2.67f * Char.Level : 0;
-//            BonusAgilityMultiplier = 0.03f * Char.RogueTalents.SinisterCalling;
-            //BonusAmbushCrit = 0.25f * Char.RogueTalents.ImprovedAmbush;
-            //BonusAmbushDamageMultiplier = 0.1f * Char.RogueTalents.Opportunity;
-//            BonusAttackPowerMultiplier = (1f + 0.02f * Char.RogueTalents.SavageCombat) * (1f + 0.02f * Char.RogueTalents.Deadliness) - 1f;
-//            BonusBackstabCrit = 0.1f * Char.RogueTalents.PuncturingWounds;
-//            BonusBackstabDamageMultiplier = 0.03f * Char.RogueTalents.Aggression + 0.05f * Char.RogueTalents.BladeTwisting + 0.1f * Char.RogueTalents.SurpriseAttacks + 0.1f * Char.RogueTalents.Opportunity + 0.02f * Char.RogueTalents.SinisterCalling;
-//            BonusCPGCritDamageMultiplier = 0.06f * Char.RogueTalents.Lethality;
-//            BonusCPOnCrit = 0.2f * Char.RogueTalents.SealFate;
-            //BonusCPOnGroupCrit = Char.RogueTalents.HonorAmongThieves > 2 ? 1 : 0.33f * Char.RogueTalents.HonorAmongThieves;
-//            BonusCritMultiplier = 0.04f * Char.RogueTalents.PreyOnTheWeak;
             BonusFlurryHaste = 0.2f * Char.RogueTalents.BladeFlurry;
-//            BonusMainHandCrit = (Char.MainHand != null) ? ((Char.MainHand.Type == ItemType.Dagger || Char.MainHand.Type == ItemType.FistWeapon) ? 0.02f * Char.RogueTalents.CloseQuartersCombat : 0f) : 0f;
-//            BonusDamageMultiplier = 0.02f * Char.RogueTalents.Murder;
             BonusDamageMultiplierHFB = (0.05f + (Char.RogueTalents.GlyphOfHungerforBlood ? 0.03f : 0f)) * Char.RogueTalents.HungerForBlood;
             BonusEnergyRegen = (15 + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * Char.RogueTalents.AdrenalineRush;
             BonusEnergyRegenMultiplier = 0.08f * Char.RogueTalents.Vitality;
-//            BonusEnvenomDamageMultiplier = 0.07f * Char.RogueTalents.VilePoisons;
-//            BonusEvisCrit = Char.RogueTalents.GlyphOfEviscerate ? 0.1f : 0f;
-//            BonusEvisDamageMultiplier = 0.07f * Char.RogueTalents.ImprovedEviscerate + 0.03f * Char.RogueTalents.Aggression;
-            //BonusGarrDamageMultiplier = 0.15f * Char.RogueTalents.BloodSpatter + 0.1f * Char.RogueTalents.Opportunity;
-            //BonusGougeDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks;
             BonusHemoDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks + 0.02f * Char.RogueTalents.SinisterCalling;
             BonusIPFrequencyMultiplier = 0.1f * Char.RogueTalents.ImprovedPoisons;
-//            BonusMaceArP = 0.03f * Char.RogueTalents.MaceSpecialization;
             BonusMaxEnergy = (10 + (Char.RogueTalents.GlyphOfVigor ? 10 : 0)) * Char.RogueTalents.Vigor;
-//            BonusMutiCrit = 0.05f * Char.RogueTalents.PuncturingWounds;
-//            BonusMutiDamageMultiplier = 0.1f * Char.RogueTalents.Opportunity;
-//            BonusOffHandCrit = (Char.OffHand != null) ? ((Char.OffHand.Type == ItemType.Dagger || Char.OffHand.Type == ItemType.FistWeapon) ? 0.02f * Char.RogueTalents.CloseQuartersCombat : 0f) : 0f;
-//            BonusOffHandDamageMultiplier = 0.1f * Char.RogueTalents.DualWieldSpecialization;
-            //BonusParryMultiplier = 0.02f * Char.RogueTalents.Deflection;
-//            BonusPoisonDamageMultiplier = 0.07f * Char.RogueTalents.VilePoisons;
-//            BonusRuptDamageMultiplier = 0.15f * Char.RogueTalents.BloodSpatter + 0.1f * Char.RogueTalents.SerratedBlades;
-//            BonusRuptDuration = Char.RogueTalents.GlyphOfRupture ? 4 : 0;
-            //BonusShivDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks;
-//            BonusSnDDuration = Char.RogueTalents.GlyphOfSliceandDice ? 3 : 0;
-//            BonusSnDDurationMultiplier = 0.25f * Char.RogueTalents.ImprovedSliceAndDice;
-//            BonusSStrikeDamageMultiplier = 0.03f * Char.RogueTalents.Aggression + 0.05f * Char.RogueTalents.BladeTwisting + 0.1f * Char.RogueTalents.SurpriseAttacks;
-//            BonusStaminaMultiplier = 0.02f * Char.RogueTalents.Endurance;
-            //BonusStealthDamageMultiplier = 0.04f * Char.RogueTalents.MasterOfSubtlety;
             BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
-            //BonusYellowDamageBelow35 = 0.1f * Char.RogueTalents.DirtyDeeds;
-//            BonusYellowDamageMultiplier = 0.02f * Char.RogueTalents.FindWeakness + 0.35f * 0.2f * Char.RogueTalents.DirtyDeeds;
-            //ChanceFinisherDodgedMultiplier = Char.RogueTalents.SurpriseAttacks >0 ? 0 : 1;
-            //ChanceOnCPOnAmbushGarrCS = Char.RogueTalents.Initiative > 2 ? 1 : 0.33f * Char.RogueTalents.Initiative;
             ChanceOnCPOnSSCrit = Char.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f;
             ChanceOnEnergyOnCrit = 2f * (Char.RogueTalents.FocusedAttacks > 2 ? 1f : (0.33f * Char.RogueTalents.FocusedAttacks));
             ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
@@ -152,24 +116,8 @@ namespace Rawr.Rogue
             ChanceOnMHAttackOnSwordAxeHit = 0.01f * Char.RogueTalents.HackAndSlash;
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner == 3 ? 1f : (0.33f * Char.RogueTalents.MasterPoisoner);
             ChanceOnSnDResetOnEnvenom = 0.2f * Char.RogueTalents.CutToTheChase;
-            //CDOnExtraVanish = 8 * Char.RogueTalents.Preparation;
-            //CPGCritIncreaseOnRaidAvoid = 0.02f * Char.RogueTalents.TurnTheTables;
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
-//            Dodge = 0.02f * Char.RogueTalents.LightningReflexes;
-//            Expertise = 5 * Char.RogueTalents.WeaponExpertise;
-            //ExposeCostReduction = 5 * Char.RogueTalents.ImprovedExposeArmor;
-//            FinisherEnergyOnAvoid = 0.4f * Char.RogueTalents.QuickRecovery;
             FlurryCostReduction = Char.RogueTalents.GlyphOfBladeFlurry ? 25 : 0;
-//            GarrCostReduction = 10 * Char.RogueTalents.DirtyDeeds;
-//            HemoCostReduction = 1 * Char.RogueTalents.SlaughterFromTheShadows;
-//            MutiCostReduction = Char.RogueTalents.GlyphOfMutilate ? 5 : 0;
-//            PhysicalCrit = 0.01f * Char.RogueTalents.Malice + ( CalcOpts.TargetPoisonable ? 0.03f * Char.RogueTalents.MasterPoisoner : 0);
-//            PhysicalHit = 0.01f * Char.RogueTalents.Precision;
-//            PhysicalHaste = 0.04f * Char.RogueTalents.LightningReflexes;
-            //PrepCDReduction = 90 * Char.RogueTalents.FilthyTricks;
-//            SpellCrit = 0.01f * Char.RogueTalents.Malice + (CalcOpts.TargetPoisonable ? 0.03f * Char.RogueTalents.MasterPoisoner : 0);
-//            SpellHit = 0.01f * Char.RogueTalents.Precision;
-//            SStrikeCostReduction = 3 * Char.RogueTalents.ImprovedSinisterStrike;
             ToTTCDReduction = 5 * Char.RogueTalents.FilthyTricks;
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
         }
@@ -186,6 +134,7 @@ namespace Rawr.Rogue
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * Duration / 120f : 0f);
             float totalCPAvailable = 0f;
             float averageGCD = 1f / (1f - AvoidedAttacks);
+            float averageFinisherGCD = 1f / (1f - AvoidedFinisherAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
             float averageFinisherCP = 5f + _chanceExtraCP[4] - CPOnFinisher;
 			
