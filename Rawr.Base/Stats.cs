@@ -3500,6 +3500,9 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.ProtPaladin
 
+        /// <summary>
+        /// Venture Co. Libram of Protection bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus ShoR Damage")]
         [Category("ProtPaladin")]
@@ -3508,6 +3511,9 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusShieldOfRighteousnessDamage] = value; }
         }
 
+        /// <summary>
+        /// Tier 7 4-piece bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Divine Protection Duration Bonus")]
         [Category("ProtPaladin")]
@@ -3516,6 +3522,9 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
         }
 
+        /// <summary>
+        /// Libram of the Sacred Shield bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Holy Shield Block Value")]
         [Category("ProtPaladin")]
@@ -3524,6 +3533,9 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.HolyShieldBlockValue] = value; }
         }
 
+        /// <summary>
+        /// Libram of Obstruction bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Judgement Block Value")]
         [Category("ProtPaladin")]
@@ -3533,6 +3545,9 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue] = value; }
         }
         
+        /// <summary>
+        /// Tier 8 4-piece bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("ShoR Block Value")]
         [Category("ProtPaladin")]
@@ -4683,6 +4698,9 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.ProtPaladin
 
+        /// <summary>
+        /// Tier 7, 9, and 10 2-piece bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("ProtPaladin")]
@@ -4693,6 +4711,9 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier] = value; }
         }
         
+        /// <summary>
+        /// Tier 8 2-piece bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("ProtPaladin")]
@@ -4703,6 +4724,9 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfCorruptionDamageMultiplier] = value; }
         }
 
+        /// <summary>
+        /// Tier 8 2-piece bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("ProtPaladin")]
@@ -4713,6 +4737,9 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfRighteousnessDamageMultiplier] = value; }
         }
 
+        /// <summary>
+        /// Tier 8 2-piece bonus
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("ProtPaladin")]
