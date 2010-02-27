@@ -2164,9 +2164,20 @@ namespace Rawr.Optimizer
 				}
 
 				if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
-				else if (haveGreaterThan) return ArrayUtils.CompareResult.GreaterThan;
-				else if (haveLessThan) return ArrayUtils.CompareResult.LessThan;
-				else return ArrayUtils.CompareResult.Equal;
+                else if (haveGreaterThan)
+                {
+                    if (Item != null && Item.IsGem && Item.Unique) return ArrayUtils.CompareResult.Unequal;
+                    return ArrayUtils.CompareResult.GreaterThan;
+                }
+                else if (haveLessThan)
+                {
+                    if (other.Item != null && other.Item.IsGem && other.Item.Unique) return ArrayUtils.CompareResult.Unequal;
+                    return ArrayUtils.CompareResult.LessThan;
+                }
+                else
+                {
+                    return ArrayUtils.CompareResult.Equal;
+                }
 			}
 			public static bool operator ==(StatsColors x, StatsColors y)
 			{
