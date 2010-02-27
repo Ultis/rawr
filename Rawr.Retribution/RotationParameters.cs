@@ -32,11 +32,11 @@ namespace Rawr.Retribution
             Priorities = (Ability[])priorities.Clone();
             T7_4pc = t7_4pc;
             GlyphConsecrate = glyphConsecrate;
-            Wait = (decimal)Math.Round(wait, 2);
-            Delay = (decimal)Math.Round(delay, 2);
+            Wait = (decimal)Math.Round(wait, 5);
+            Delay = (decimal)Math.Round(delay, 5);
             ImpJudgements = impJudgements;
-            DivineStormCooldown = (decimal)Math.Round(divineStormCooldown, 2);
-            SpellGCD = GetSpellGCD(spellHaste);
+            DivineStormCooldown = (decimal)Math.Round(divineStormCooldown, 5);
+            SpellGCD = (decimal)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 5);
             SimulationTime = simulationTime;
         }
 
@@ -136,12 +136,6 @@ namespace Rawr.Retribution
                 ret += ShortAbilityString(a) + ", ";
             }
             return ret;
-        }
-
-
-        private static decimal GetSpellGCD(float spellHaste)
-        {
-            return (decimal)Math.Round(Math.Max(1f, 1.5f / (1 + spellHaste)), 2);
         }
 
     }
