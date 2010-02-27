@@ -319,9 +319,6 @@ namespace Rawr {
         PetSpirit,
         PetAttackPower,
         #endregion
-        #region Added by Rawr.Rogue
-        AmbushBackstabCostReduction,    // Improper use: used as a talent intermediate, please cleanup
-        #endregion
         #region Added by Rawr.Warlock
         AttackPowerDemons,
         #endregion

@@ -257,7 +257,7 @@ namespace Rawr.Rogue
             float bonusCPGCritDamageMultiplier = 0.06f * character.RogueTalents.Lethality;
             float bonusEnvenomDamageMultiplier = 0.07f * character.RogueTalents.VilePoisons;
             float bonusEvisCrit = character.RogueTalents.GlyphOfEviscerate ? 0.1f : 0f;
-            float bonusEvisDamageMultiplier = 0.07f * character.RogueTalents.ImprovedEviscerate + 0.03f * character.RogueTalents.Aggression;
+            float bonusEvisDamageMultiplier = (character.RogueTalents.ImprovedEviscerate == 3 ? 0.2f : 0.07f * character.RogueTalents.ImprovedEviscerate) + 0.03f * character.RogueTalents.Aggression;
             float bonusFlurryHaste = 0.2f * character.RogueTalents.BladeFlurry;
             float bonusHemoDamageMultiplier = 0.1f * character.RogueTalents.SurpriseAttacks + 0.02f * character.RogueTalents.SinisterCalling;
             float bonusMaceArP = 0.03f * character.RogueTalents.MaceSpecialization;
