@@ -3309,7 +3309,7 @@ namespace Rawr
             #endregion
             #region WotLK
             #region Tier  7 | Redemption
-            #region Regalia
+            #region Regalia (Holy)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Regalia 2 Piece Bonus",
@@ -3331,7 +3331,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
             #endregion
-            #region Plate
+            #region Plate (Protection)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Plate 2 Piece Bonus",
@@ -3353,7 +3353,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
             #endregion
-            #region Battlegear
+            #region Battlegear (Retribution)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Battlegear 2 Piece Bonus",
@@ -3377,7 +3377,7 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier  8 | Aegis
-            #region Regalia
+            #region Regalia (Holy)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Aegis Regalia 2 Piece Bonus",
@@ -3399,7 +3399,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
             #endregion
-            #region Plate
+            #region Plate (Protection)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Aegis Plate 2 Piece Bonus",
@@ -3427,7 +3427,7 @@ namespace Rawr
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ShieldofRighteousness, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 6.0f, 0.0f, 1.0f));
             #endregion
-            #region Battlegear
+            #region Battlegear (Retribution)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Aegis Battlegear 2 Piece Bonus",
@@ -3448,30 +3448,34 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
+            #endregion
+            #endregion
+            #region Tier  9 | Turalyon's
+            #region Garb (Holy)
+            /* T9 set bonusses are unmodelled
             defaultBuffs.Add(new Buff()
             {
-                Name = "Aegis Regalia 2 Piece Bonus",
+                Name = "Turalyon's Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HolyShockHoTOnCrit = .15f },
-                SetName = "Aegis Regalia",
+                Stats = { JudgementDuration = 10f },    // Unmodelled
+                SetName = "Turalyon's Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Aegis Regalia 4 Piece Bonus",
+                Name = "Turalyon's Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SacredShieldICDReduction = 2f },
-                SetName = "Aegis Regalia",
+                Stats = { FlashOfLightHoTMultiplier = 1.00f },  // Unmodelled
+                SetName = "Turalyon's Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
+            */
             #endregion
-            #endregion
-            #region Tier  9 | Turalyon's
-            #region Plate
+            #region Plate (Protection)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Turalyon's Plate 2 Piece Bonus",
@@ -3502,7 +3506,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });*/
             #endregion
-            #region Battlegear
+            #region Battlegear (Retribution)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Turalyon's Battlegear 2 Piece Bonus",
@@ -3526,7 +3530,59 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 10 | Lightsworn
-            #region Battlegear
+            #region Garb (Holy)
+            /* Neither of the 2 set buffs are currently modelled.
+            defaultBuffs.Add(buf = new Buff()
+            {
+                Name = "Lightsworn Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Lightsworn Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivineIlluminationActive, new Stats() { HealingDoneMultiplier = .35f }, 15.0f, 0.0f, 1.0f));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Lightsworn Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Lightsworn Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShockCast, new Stats() { HolyLightCastTimeReduction = .3f }, 0.0f, 0.0f, 1.0f));
+            */
+            #endregion
+            #region Plate (Protection)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lightsworn Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHammerOfTheRighteousMultiplier = .2f
+                },
+                SetName = "Lightsworn Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Lightsworn Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Lightsworn Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
+            #endregion
+            #region Battlegear (Retribution)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Lightsworn Battlegear 2 Piece Bonus",
@@ -3554,32 +3610,6 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
-            #endregion
-            #region Plate
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Lightsworn Plate 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusHammerOfTheRighteousMultiplier = .2f
-                },
-                SetName = "Lightsworn Plate",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Lightsworn Plate 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
-                SetName = "Lightsworn Plate",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
             #endregion
             #endregion
             #endregion
