@@ -1166,9 +1166,11 @@ namespace Rawr.ShadowPriest
                        || se.Stats.FrostDamage > 0
                        || se.Stats.HolyDamage > 0
                        || se.Stats.NatureDamage > 0
-                       || se.Stats.ShadowDamage > 0)
+                       || se.Stats.ShadowDamage > 0
+                       || se.Stats.ValkyrDamage > 0)
                        dpr += (se.Stats.ArcaneDamage + se.Stats.FireDamage + se.Stats.FrostDamage
-                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage)
+                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage
+                           + se.Stats.ValkyrDamage)
                            * se.GetAverageProcsPerSecond(dots / 3, 1f, 0f, CalculationOptions.FightLength * 60f);
                }
                else if (se.Trigger == Trigger.DamageSpellHit
@@ -1179,9 +1181,11 @@ namespace Rawr.ShadowPriest
                        || se.Stats.FrostDamage > 0
                        || se.Stats.HolyDamage > 0
                        || se.Stats.NatureDamage > 0
-                       || se.Stats.ShadowDamage > 0)
+                       || se.Stats.ShadowDamage > 0
+                       || se.Stats.ValkyrDamage > 0)
                        dpr += (se.Stats.ArcaneDamage + se.Stats.FireDamage + se.Stats.FrostDamage
-                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage)
+                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage
+                           + se.Stats.ValkyrDamage)
                            * se.GetAverageProcsPerSecond(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60f);
                }
                else if (se.Trigger == Trigger.DamageSpellCrit
@@ -1192,9 +1196,11 @@ namespace Rawr.ShadowPriest
                        || se.Stats.FrostDamage > 0
                        || se.Stats.HolyDamage > 0
                        || se.Stats.NatureDamage > 0
-                       || se.Stats.ShadowDamage > 0)
+                       || se.Stats.ShadowDamage > 0
+                       || se.Stats.ValkyrDamage > 0)
                        dpr += (se.Stats.ArcaneDamage + se.Stats.FireDamage + se.Stats.FrostDamage
-                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage)
+                           + se.Stats.HolyDamage + se.Stats.NatureDamage + se.Stats.ShadowDamage
+                           + se.Stats.ValkyrDamage)
                            * se.GetAverageProcsPerSecond(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60f);
                }
                if (dpr > 0)
@@ -1207,6 +1213,7 @@ namespace Rawr.ShadowPriest
                            * (1f + character.PriestTalents.Shadowform * 0.15f)
                            * (ShadowHitChance / 100f);
                    }
+                   else if (se.Stats.ValkyrDamage > 0) { }
                    else
                        dpr *= (HitChance / 100f);
                    // Should technically be one BonusXDamageMultiplier pr effect but REALLY REALLY REALLY!

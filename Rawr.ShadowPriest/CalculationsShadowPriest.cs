@@ -682,6 +682,7 @@ namespace Rawr.ShadowPriest
                 HolyDamage = stats.HolyDamage,
                 NatureDamage = stats.NatureDamage,
                 ShadowDamage = stats.ShadowDamage,
+                ValkyrDamage = stats.ValkyrDamage,
 
                 /*ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
@@ -762,6 +763,7 @@ namespace Rawr.ShadowPriest
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
                 + stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage
                 + stats.HolyDamage + stats.NatureDamage + stats.ShadowDamage
+                + stats.ValkyrDamage
 
                 /*+ stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
