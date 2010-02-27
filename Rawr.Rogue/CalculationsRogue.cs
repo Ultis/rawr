@@ -715,8 +715,6 @@ namespace Rawr.Rogue
             };
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
-
             Stats statsTotal = statsRace + statsItems;
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
@@ -729,11 +727,11 @@ namespace Rawr.Rogue
             statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
             statsTotal.Armor += 2f * statsTotal.Agility;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-            statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
-            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
-            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
+            statsTotal.FireResistance += statsTotal.FireResistanceBuff;
+            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
+            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
+            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
@@ -999,7 +997,7 @@ namespace Rawr.Rogue
                PhysicalCrit = stats.PhysicalCrit,
                HighestStat = stats.HighestStat,
                
-               /*AllResist = stats.AllResist,
+               /*
                ArcaneResistance = stats.ArcaneResistance,
                NatureResistance = stats.NatureResistance,
                FireResistance = stats.FireResistance,
@@ -1081,7 +1079,7 @@ namespace Rawr.Rogue
                     stats.PhysicalCrit +
                     stats.HighestStat +
 
-                    /*stats.AllResist +
+                    /*
                     stats.ArcaneResistance +
                     stats.NatureResistance +
                     stats.FireResistance +

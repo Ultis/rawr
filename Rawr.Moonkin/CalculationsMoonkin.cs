@@ -573,7 +573,7 @@ namespace Rawr.Moonkin
             // Add the crit bonus from the idol, if present
             if (character.DruidTalents.MoonkinForm > 0)
             {
-                statsTotal.CritRating += statsTotal.IdolCritRating;
+                //statsTotal.CritRating += statsTotal.IdolCritRating; // No items/buffs currently use IdolCritRating, stat got removed.
                 statsTotal.SpellDamageFromSpiritPercentage += (0.1f * character.DruidTalents.ImprovedMoonkinForm);
             }
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
@@ -911,7 +911,7 @@ namespace Rawr.Moonkin
                 StarfireDmg = stats.StarfireDmg,
                 MoonfireDmg = stats.MoonfireDmg,
                 WrathDmg = stats.WrathDmg,
-                IdolCritRating = stats.IdolCritRating,
+                //IdolCritRating = stats.IdolCritRating,
                 UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
                 InnervateCooldownReduction = stats.InnervateCooldownReduction,
                 StarfireBonusWithDot = stats.StarfireBonusWithDot,
@@ -1032,7 +1032,7 @@ namespace Rawr.Moonkin
                 + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier
                 + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM
                 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.StarfireDmg
-                + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus
+                + stats.MoonfireDmg + stats.WrathDmg + /*stats.IdolCritRating +*/ stats.UnseenMoonDamageBonus
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
                 + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg

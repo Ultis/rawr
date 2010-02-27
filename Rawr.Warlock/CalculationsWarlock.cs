@@ -856,7 +856,7 @@ namespace Rawr.Warlock
                 + stats.Armor + stats.BonusArmor + stats.Agility
                 + stats.ArmorPenetration + stats.ArmorPenetrationRating
                 + stats.Strength + stats.AttackPower
-                + stats.Expertise + stats.ExpertiseRating
+                + stats.ExpertiseRating
                 + stats.Dodge + stats.DodgeRating
                 + stats.Parry + stats.ParryRating
                 + stats.Defense + stats.DefenseRating

@@ -596,7 +596,7 @@ namespace Rawr.Healadin
         {
             return (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                 + stats.ArmorPenetrationRating + stats.DodgeRating + stats.ParryRating
-                + stats.ExpertiseRating + stats.Expertise + stats.BlockRating + stats.Block) > 0
+                + stats.ExpertiseRating + stats.BlockRating + stats.Block) > 0
                 || (stats.HitRating > 0 && isHitIrrelevant)
                 || (stats.Spirit > 0 && isSpiritIrrelevant);
         }

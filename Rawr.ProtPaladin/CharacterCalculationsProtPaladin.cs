@@ -174,11 +174,11 @@ namespace Rawr.ProtPaladin
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
 
-            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.NatureResistance + BasicStats.AllResist, NatureReduction));
-            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ArcaneResistance + BasicStats.AllResist, ArcaneReduction));
-            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.FrostResistance + BasicStats.AllResist, FrostReduction));
-            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.FireResistance + BasicStats.AllResist, FireReduction));
-            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ShadowResistance + BasicStats.AllResist, ShadowReduction));
+            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.NatureResistance, NatureReduction));
+            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ArcaneResistance, ArcaneReduction));
+            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.FrostResistance, FrostReduction));
+            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.FireResistance, FireReduction));
+            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ShadowResistance, ShadowReduction));
             dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();
             dictValues["Frost Survival"] = FrostSurvivalPoints.ToString();
             dictValues["Fire Survival"] = FireSurvivalPoints.ToString();

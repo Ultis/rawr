@@ -69,7 +69,7 @@ namespace Rawr.ProtPaladin
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
             // Partial Resists don't belong in the combat table
-            Resist = 1.0f - StatConversion.GetResistanceTable(Options.TargetLevel, Character.Level, Stats.AllResist + Stats.FrostResistance, 0.0f)[0];
+            Resist = 1.0f - StatConversion.GetResistanceTable(Options.TargetLevel, Character.Level, Stats.FrostResistance, 0.0f)[0];
         }
 
         public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin options)

@@ -144,11 +144,11 @@ namespace Rawr.ProtWarr
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
 
-            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.NatureResistance + BasicStats.AllResist, NatureReduction));
-            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ArcaneResistance + BasicStats.AllResist, ArcaneReduction));
-            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FrostResistance + BasicStats.AllResist, FrostReduction));
-            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FireResistance + BasicStats.AllResist, FireReduction));
-            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ShadowResistance + BasicStats.AllResist, ShadowReduction));
+            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.NatureResistance, NatureReduction));
+            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ArcaneResistance, ArcaneReduction));
+            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FrostResistance, FrostReduction));
+            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FireResistance, FireReduction));
+            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ShadowResistance, ShadowReduction));
             dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();
             dictValues["Frost Survival"] = FrostSurvivalPoints.ToString();
             dictValues["Fire Survival"] = FireSurvivalPoints.ToString();

@@ -851,11 +851,11 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
 			statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
 			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
-			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
-			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
+			statsTotal.FireResistance += statsTotal.FireResistanceBuff;
+			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
+			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
+			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
             // Haste trinket (Meteorite Whetstone)
             //statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10f / 45f;
 
@@ -1329,7 +1329,6 @@ the Threat Scale defined on the Options tab.",
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
 				Miss = stats.Miss,
 				CritChanceReduction = stats.CritChanceReduction,
-				AllResist = stats.AllResist,
 				ArcaneResistance = stats.ArcaneResistance,
 				NatureResistance = stats.NatureResistance,
 				FireResistance = stats.FireResistance,
@@ -1360,7 +1359,6 @@ the Threat Scale defined on the Options tab.",
 				BonusLacerateDamageMultiplier = stats.BonusLacerateDamageMultiplier,
 				BonusBearSwipeDamageMultiplier = stats.BonusBearSwipeDamageMultiplier,
                 BonusSwipeDamageMultiplier = stats.BonusSwipeDamageMultiplier,
-                BonusMangleBearDamage = stats.BonusMangleBearDamage,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
@@ -1387,7 +1385,7 @@ the Threat Scale defined on the Options tab.",
 		{
 			bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
-				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
+				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + 
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.Dodge +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
@@ -1397,7 +1395,7 @@ the Threat Scale defined on the Options tab.",
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
                  + stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
-                 + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
+                 + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier) != 0;
 
 			foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1717,15 +1715,15 @@ the Threat Scale defined on the Options tab.",
             // Changed to not just give a resist rating, but a breakdown of the resulting resist values in the tooltip
             string tipResist = string.Empty;
             tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.NatureResistance, 0);
-            dictValues.Add("Nature Resist", (BasicStats.NatureResistance + BasicStats.AllResist).ToString() + "*" + tipResist);
+            dictValues.Add("Nature Resist", BasicStats.NatureResistance.ToString() + "*" + tipResist);
             tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.ArcaneResistance, 0);
-            dictValues.Add("Arcane Resist", (BasicStats.ArcaneResistance + BasicStats.AllResist).ToString() + "*" + tipResist);
+            dictValues.Add("Arcane Resist", BasicStats.ArcaneResistance.ToString() + "*" + tipResist);
             tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.FrostResistance, 0);
-            dictValues.Add("Frost Resist", (BasicStats.FrostResistance + BasicStats.AllResist).ToString() + "*" + tipResist);
+            dictValues.Add("Frost Resist", BasicStats.FrostResistance.ToString() + "*" + tipResist);
             tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.FireResistance, 0);
-            dictValues.Add("Fire Resist", (BasicStats.FireResistance + BasicStats.AllResist).ToString() + "*" + tipResist);
+            dictValues.Add("Fire Resist", BasicStats.FireResistance.ToString() + "*" + tipResist);
             tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.ShadowResistance, 0);
-            dictValues.Add("Shadow Resist", (BasicStats.ShadowResistance + BasicStats.AllResist).ToString() + "*" + tipResist);
+            dictValues.Add("Shadow Resist", BasicStats.ShadowResistance.ToString() + "*" + tipResist);
 
 			dictValues.Add("Health", BasicStats.Health.ToString());
 			dictValues.Add("Agility", BasicStats.Agility.ToString());

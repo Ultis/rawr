@@ -563,11 +563,11 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength, CharacterClass.Warrior) - 10.0f);
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
 
-            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-            statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
-            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
-            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
+            statsTotal.FireResistance += statsTotal.FireResistanceBuff;
+            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
+            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
+            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 
             // Highest Stat Effects
             if(statsTotal.Strength > statsTotal.Agility)
@@ -1035,8 +1035,6 @@ threat and limited threat scaled by the threat scale.",
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 PhysicalDamageTakenMultiplier = stats.PhysicalDamageTakenMultiplier,
                 Miss = stats.Miss,
-                CritChanceReduction = stats.CritChanceReduction,
-                AllResist = stats.AllResist,
                 ArcaneResistance = stats.ArcaneResistance,
                 NatureResistance = stats.NatureResistance,
                 FireResistance = stats.FireResistance,
@@ -1115,11 +1113,11 @@ threat and limited threat scaled by the threat scale.",
             bool relevant =
                 (stats.Agility + stats.Armor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
-                    stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience + stats.AllResist + stats.BlockValue +
+                    stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience + stats.BlockValue +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +
-                    stats.BonusCritMultiplier + stats.CritChanceReduction +
+                    stats.BonusCritMultiplier + 
                     stats.BonusDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 
                     stats.HighestStat + stats.Paragon + stats.DeathbringerProc +

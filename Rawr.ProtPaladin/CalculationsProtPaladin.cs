@@ -355,7 +355,7 @@ focus on Survival Points.",
             calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
-            calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calcOpts.TargetLevel, character.Level, stats.AllResist + stats.FrostResistance, 0.0f);
+            calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calcOpts.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
             calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, calcOpts.TargetLevel));
             calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, calcOpts.TargetLevel));
             calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, calcOpts.TargetLevel));
@@ -559,11 +559,11 @@ focus on Survival Points.",
             statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.SpellPower += (float)Math.Floor(statsTotal.Strength * talents.TouchedByTheLight * 0.2f);
-            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-            statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
-            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
-            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
+            statsTotal.FireResistance += statsTotal.FireResistanceBuff;
+            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
+            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
+            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
             statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength,CharacterClass.Paladin) - 10f);
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
             statsTotal.ArmorPenetration = statsBase.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
@@ -1186,8 +1186,6 @@ focus on Survival Points.",
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 Miss = stats.Miss,
-                CritChanceReduction = stats.CritChanceReduction,
-                AllResist = stats.AllResist,
                 ArcaneResistance = stats.ArcaneResistance,
                 NatureResistance = stats.NatureResistance,
                 FireResistance = stats.FireResistance,
@@ -1340,7 +1338,6 @@ focus on Survival Points.",
                 stats.DamageTakenMultiplier +
 
                 // Resistances
-                stats.AllResist +
                 stats.ArcaneResistance + 
                 stats.NatureResistance + 
                 stats.FireResistance +

@@ -258,7 +258,7 @@ namespace Rawr.ProtPaladin
         public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)
         {
             float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
-            float totalResist = stats.AllResist;
+            float totalResist = 0.0f;
             float resistScale = 0.0f;
 
             switch (school)

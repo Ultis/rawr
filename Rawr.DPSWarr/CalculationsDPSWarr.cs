@@ -2156,8 +2156,7 @@ These numbers to do not include racial bonuses.",
             #region Attack Power
             // stats to add
             statsToAdd.AttackPower += (statsToAdd.Strength * 2f) +
-                                  (statsToAdd.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth) +
-                                  statsToAdd.BonusAttackPower;
+                                  (statsToAdd.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth);
             statsToAdd.AttackPower *= newAtkMult;
             // reset retval
             if (retVal != null)

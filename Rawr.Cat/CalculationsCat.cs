@@ -433,7 +433,7 @@ namespace Rawr.Cat
 			#region Attack Damages
 			float baseDamage = 55f + (stats.AttackPower / 14f) + stats.WeaponDamage;
 			float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
-			float mangleDamageRaw = (baseDamage * 2f + 566f + stats.BonusMangleCatDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
+			float mangleDamageRaw = (baseDamage * 2f + 566f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
 			float shredDamageRaw = (baseDamage * 2.25f + 666f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
 			float rakeDamageRaw = (176f + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
 			float rakeDamageDot = (1074f + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((9f + stats.BonusRakeDuration) / 9f);
@@ -643,7 +643,6 @@ namespace Rawr.Cat
 			};
 
 			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 			statsGearEnchantsBuffs.Strength += statsGearEnchantsBuffs.CatFormStrength;
 
 			Stats statsTotal = statsRace + statsItems;
@@ -670,11 +669,11 @@ namespace Rawr.Cat
 			statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
 			statsTotal.Armor += 2f * statsTotal.Agility;
 			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
-			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
-			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
+			statsTotal.FireResistance += statsTotal.FireResistanceBuff;
+			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
+			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
+			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 			statsTotal.WeaponDamage += 16f; //Tiger's Fury
 
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
@@ -915,7 +914,6 @@ namespace Rawr.Cat
 					ExpertiseRating = stats.ExpertiseRating,
 					ArmorPenetration = stats.ArmorPenetration,
 					ArmorPenetrationRating = stats.ArmorPenetrationRating,
-					BonusMangleCatDamage = stats.BonusMangleCatDamage,
 					BonusShredDamage = stats.BonusShredDamage,
 					BonusRipDamagePerCPPerTick = stats.BonusRipDamagePerCPPerTick,
 					WeaponDamage = stats.WeaponDamage,
@@ -946,7 +944,6 @@ namespace Rawr.Cat
                     BonusRakeCrit = stats.BonusRakeCrit,
                     RipCostReduction = stats.RipCostReduction,
 
-					AllResist = stats.AllResist,
 					ArcaneResistance = stats.ArcaneResistance,
 					NatureResistance = stats.NatureResistance,
 					FireResistance = stats.FireResistance,
@@ -980,13 +977,13 @@ namespace Rawr.Cat
 			bool relevant = (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.PhysicalCrit +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
 				stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration + stats.BonusRakeCrit + stats.RipCostReduction +
-				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
+				stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
-				stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneDamage + stats.ShadowDamage +
+				stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.HighestStat +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +

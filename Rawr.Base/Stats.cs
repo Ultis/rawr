@@ -12,67 +12,36 @@ using System.Xml.Serialization;
 namespace Rawr {
     public enum AdditiveStat : int {
         Agility,
-        AllResist,
-        AmbushBackstabCostReduction,
         ArcaneResistance,
         Armor,
         BonusArmor,
         ArmorPenetrationRating,
-        ArmorReduction,
-        AshtongueTrinketProc,
         AttackPower,
-        BonusAttackPower,
-        PetAttackPower,
-        AttackPowerDemons,
-        AverageAgility,
-        AverageArmor,
-        BaseAgility,
+        BaseAgility,    // Improper use: Not a stat, used as a helper variable in StatConversion.GetDRAvoidanceChance(), needs fixing.
 
         Block,
         BlockRating,
         BlockValue,
 
-        Bloodlust,
-        BloodlustProc,
-        BonusBackstabCrit,
-        BonusDaggerFistCrit,
-        BonusBlockValueMultiplier,
-        BonusCommandingShoutHP,
-        BonusLacerateDamageMultiplier,
-        BonusMangleBearDamage,
-        BonusMangleCatDamage,
-        BonusMaxRunicPower,
-        BonusRakeDuration,
-        BonusRipDamagePerCPPerTick,
-        BonusRipDuration,
-        BonusSavageRoarDuration,
-        BonusShredDamage,
-        BonusStreadyShotCrit,
         BossAttackPower,
-        CatFormStrength,
-        ClearcastOnBleedChance,
         PhysicalCrit,
         CritRating,
-        CritMeleeRating,
         CritBonusDamage,
-        CritChanceReduction,
         Defense,
         DefenseRating,
         Dodge,
         DodgeRating,
-        Expertise,
+        Expertise,     // Improper use: Not a stat, used as a helper variable in most Melee-based models, needs fixing. There is no Expertise on a naked character nor is there on any item/enchant/buff.
         ExpertiseRating,
         FireResistance,
         FrostResistance,
         HasteRating,
-        Healing,
         Health,
         PhysicalHit,
         HitRating,
         Hp5,
         HealthRestore,
         HealthRestoreFromMaxHealth,
-        IdolCritRating,
         InnervateCooldownReduction,
         InsectSwarmDmg,
         Intellect,
@@ -166,6 +135,16 @@ namespace Rawr {
         TigersFuryCooldownReduction,
         SpellReflectChance,
         MoteOfAnger,
+        #region Added by Rawr.Feral
+        BonusRakeDuration,
+        BonusRipDamagePerCPPerTick,
+        BonusRipDuration,
+        BonusSavageRoarDuration,
+        BonusShredDamage,
+        CatFormStrength,
+        ClearcastOnBleedChance,
+        CritChanceReduction,    // Improper use: used as a talent intermediate, please cleanup
+        #endregion
         #region Added by Rawr.HolyPriest
         PriestInnerFire,
         RenewDurationIncrease,
@@ -196,7 +175,6 @@ namespace Rawr {
         ArcaneBlastBonus,
         BonusManaGem,
         EvocationExtension,
-        MageAllResist,
         MageIceArmor,
         MageMageArmor,
         MageMoltenArmor,
@@ -339,6 +317,16 @@ namespace Rawr {
         PetStamina,
         PetStrength,
         PetSpirit,
+        PetAttackPower,
+        #endregion
+        #region Added by Rawr.Rogue
+        AmbushBackstabCostReduction,    // Improper use: used as a talent intermediate, please cleanup
+        #endregion
+        #region Added by Rawr.Warlock
+        AttackPowerDemons,
+        #endregion
+        #region Added by Rawr.TankDK
+        BonusMaxRunicPower,    // Improper use: used as a talent intermediate, please cleanup
         #endregion
         #region Set Bonuses: Warlock
         Warlock4T7,
@@ -456,8 +444,11 @@ namespace Rawr {
         StunDurReduc,
         SnareRootDurReduc,
         FearDurReduc,
-        #region Added by Some Model or Another
-        BonusMageNukeMultiplier,
+        #region Added by Rawr.Mage
+        BonusMageNukeMultiplier,    // T6 setbonus. set parsing no longer applies this. Consider cleanup.
+        #endregion
+        #region Added by Rawr.Feral
+        BonusLacerateDamageMultiplier,
         BonusSwipeDamageMultiplier,
         BonusMangleDamageMultiplier,
         BonusShredDamageMultiplier,
@@ -761,22 +752,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        public float BonusAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusAttackPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        public float PetAttackPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PetAttackPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PetAttackPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
         public float AttackPowerDemons
         {
@@ -1030,23 +1005,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ArcaneResistance]; }
             set { _rawAdditiveData[(int)AdditiveStat.ArcaneResistance] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Resistances")]
-        [DisplayName("Resist")]
-        public float AllResist
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AllResist]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AllResist] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Resist")]
-        public float MageAllResist
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MageAllResist]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MageAllResist] = value; }
         }
         #endregion
 
@@ -1401,16 +1359,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Melee Crit")]
-        [CommonStat]
-        public float CritMeleeRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CritMeleeRating] = value; }
         }
 
         #endregion
@@ -1863,26 +1811,7 @@ namespace Rawr {
         }
         #endregion
 
-        #region Warrior Bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warrior")]
-        [DisplayName("Bonus Commanding Shout HP")]
-        public float BonusCommandingShoutHP
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP] = value; }
-        }
-        #endregion
-
         #region Feral Bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float BloodlustProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BloodlustProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BloodlustProc] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
         public float TerrorProc
@@ -1929,21 +1858,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusShredDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusShredDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float BonusMangleCatDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusMangleCatDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusMangleCatDamage] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float BonusMangleBearDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusMangleBearDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusMangleBearDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2005,22 +1919,6 @@ namespace Rawr {
         #endregion
 
         #region Misc
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        [DisplayName("Average Armor")]
-        public float AverageArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AverageArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float Bloodlust
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Bloodlust]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Bloodlust] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
         public float SpellDamageFromIntellectPercentage
@@ -2320,7 +2218,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
+        [Category("Deathknight")]
         [CommonStat]
         public float BonusMaxRunicPower
         {
@@ -2548,14 +2446,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.CatFormStrength] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("Time average Agility")]
-        public float AverageAgility
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AverageAgility]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AverageAgility] = value; }
-        }
         #endregion
         #region Added by Rawr.Retribution
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2997,6 +2887,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.PetStrength]; }
             set { _rawAdditiveData[(int)AdditiveStat.PetStrength] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Pet Attack Power")]
+        [Category("Hunter")]
+        public float PetAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PetAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PetAttackPower] = value; }
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Pet Spirit")]
@@ -3608,16 +3506,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.WrathDmg] = value; }
         }
 
-        // Moonkin Aura idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Moonkin Aura bonus")]
-        [Category("Moonkin")]
-        public float IdolCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.IdolCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.IdolCritRating] = value; }
-        }
-
         // Moonkin 4-piece T4 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Innervate CD Reduction")]
@@ -4154,8 +4042,8 @@ namespace Rawr {
 		[Category("Feral")]
 		public float BonusLacerateDamageMultiplier
 		{
-			get { return _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier]; }
-			set { _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLacerateDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLacerateDamageMultiplier] = value; }
 		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

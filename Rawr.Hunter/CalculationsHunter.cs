@@ -2519,8 +2519,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float totalBAGIM = statsTotal.BonusAgilityMultiplier;
                 float agiBase    = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsRace.Agility/*)*/;
                 float agiBonus   = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsGearEnchantsBuffs.Agility/*)*/;
-                float agiFromAvg = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsTotal.AverageAgility/*)*/;
-                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus + agiFromAvg);
+                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus);
 
                 if (talents.ExposeWeakness > 0) {
                     SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.RangedCrit,
