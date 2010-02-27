@@ -18,29 +18,16 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.9.0
- - More improvements to the default item filters.
- - Improved proc calculation of Bryntoll and Shadowstrike.
- - Improved parsing of source data from Wowhead.
- - Improvements to batch optimizations.
- - Fix for Cost optimization ignoring class restrictions.
- - Improvement for optimizer postprocessing gem swapping.
- - Rawr.Rogue: Significant rewrite to be much more up to date (this model had been untouched for quite a while and had grown quite out of date). Please report any issues you discover, and we'll do our best to get them resolved asap.
- - Rawr.Cat: Expanded the default gemming templates. Fix for white crit cap.
- - Rawr.Bear: Added support for target attack speed debuffs (remember to drop your target attack speed on the options panel back down to undebuffed values!).
- - Rawr.Hunter: Updated Zod Bow proc to show its effect in its tooltip. Implemented crit caps and floors. Several tooltip improvements for calculations. Now loads all pet data from the Armory. Automatically selects a Shot Priority for you based on your spec, when loading from the Armory. Swapping specs will also automatically swap your Shot Priority.
- - Rawr.Enhance: Export of calcs now forces ""simulate_mana"" to on.
- - Rawr.DPSWarr: Improved flurry calculations. Significantly improved many calculation tooltips. Fix for Deep Wounds tick rate at very high crit rates. Fix for white crit cap.
- - Rawr.Mage: Added support for ABSpam034MBAM rotation. Support for Evocation being hasted by 2T10. Improved modeling of Nibelung.
- - Rawr.TankDK: Fixed a bug with expertise calculations. Updated to model the hotfixed changes to Frost Presence and Icebound Fortitude.
- - Rawr.RestoSham: Fixed healing style charts to correctly display burst styles. Many significant calculation fixes and improvements.
- - Rawr.Retribution: Improved 2T10 calculations. Fix for Exorcism and Consecration being hasted by spell haste.
- - Rawr.ProtPaladin: Updated to model the hotfixed reduction in Sacred Duty effect.
- - Rawr.DPSDK: Fix for Target Dodge % and Target Miss % optimizable values not behaving as expected.
- - Rawr.ProtWarr: Updated Shield Slam, Devastate, and Concussion Blow for their correct 3.3.2 damage and threat values. Changed optimal rotation detection to be more robust. Added non-Revenge rotations if no points are spent in Improved Revenge. Made some minor fixes to the way average ability damage takes into account avoidance, crits, and glancing blows.
- - Rawr.Moonkin: Fix for Idol of the Lunar Eclipse modeling.
- - Rawr.Elemental: Fix for Bizuri's Totem of Shattered Ice modeling.
- - Rawr.ShadowPriest: Added better handling of Nevermelting Ice Crystal trinket.";
+			labelVersionHistory.Text = @"v2.3.11.0
+ - Load from Armory code cleaned up. 
+ - Tiny Abomination in a Jar's proc how now been more accurately modeled. 
+ - You should now be able to reload (or load) a character from the EU armory without trouble.
+ - Rawr.Mage: Frost DPS Cycles with Frostfire Bolt on Brain Freeze DPS in 3.3.3 implemented. Fire Mage changes for 3.3.3 implemented.
+ - Rawr.Retribution: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits) Wrath of Air Totem is now a relevant buff. Corrections to calculations for rotational changes under 20% hp and during heroism made. Swift Retribution and Heart of the Crusader talents will automatically turn this buff on for you.
+ - Rawr.Enhance: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits)
+ - Rawr.Hunter: Shot rotations cleaned up.
+ - Rawr.Rogue: White attacks are no longer normalized, rupture should now have the correct duration. Model will now prioritize between rupture and SnD. Killing Spree (and Glyph of Killing Spree) now modeled. Deadly Poison application chance is now increased by Improved Poisons. Multiple other talents modeled or fixed.
+ - Rawr.ShadowPriest: Glyph of Dispersion is now modeled correctly. DoT effects which are subject to haste now have a decimal duration displayed. Nibelung should now be modeled correctly.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;

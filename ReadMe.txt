@@ -1,20 +1,19 @@
 Rawr v2.3.10.0
 ------------
-Welcome to Rawr v2.3.10.0.
+Welcome to Rawr v2.3.11.0.
    
 Recent Changes:
- - More improvements to the default filters
- - Further improvement on avoiding useless gem swaps from the Optimizer.
- - Normal/Heroic ICC items should now share uniqueness.
- - Rawr.Retribution: Improvements to rotation calculations.
- - Rawr.Mage: Support for 3.3.3 chanages. Added support for the DoTTick special effect trigger. Added additional spell cycle information in tooltips.
- - Rawr.Healadin: Fix for Divine Intellect calculations.
- - Rawr.Rogue: Implemented weapon speed normalization. Fixed offhand damage calculations. Fixed avoided attacks display. Crit procs now work on SS and Hemo. Implemented DP dropping on Envenoms, this fixes the Envenom usage in Combat builds which now also use SnD on higher CP. Fix for white crit chance being able to go over 100%. Fix for Black Magic. Fix for DP tick counts.
- - Rawr.Hunter: Improvements to the rotation system.
- - Rawr.DPSWarr: Fix for some abilities using the wrong MH/OH dodge chance, when they are different.
-
+ - Load from Armory code cleaned up. 
+ - Tiny Abomination in a Jar's proc how now been more accurately modeled. 
+ - You should now be able to reload (or load) a character from the EU armory without trouble.
+ - Rawr.Mage: Frost DPS Cycles with Frostfire Bolt on Brain Freeze DPS in 3.3.3 implemented. Fire Mage changes for 3.3.3 implemented.
+ - Rawr.Retribution: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits) Wrath of Air Totem is now a relevant buff. Corrections to calculations for rotational changes under 20% hp and during heroism made. Swift Retribution and Heart of the Crusader talents will automatically turn this buff on for you.
+ - Rawr.Enhance: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits)
+ - Rawr.Hunter: Shot rotations cleaned up.
+ - Rawr.Rogue: White attacks are no longer normalized, rupture should now have the correct duration. Model will now prioritize between rupture and SnD. Killing Spree (and Glyph of Killing Spree) now modeled. Deadly Poison application chance is now increased by Improved Poisons. Multiple other talents modeled or fixed.
+ - Rawr.ShadowPriest: Glyph of Dispersion is now modeled correctly. DoT effects which are subject to haste now have a decimal duration displayed. Nibelung should now be modeled correctly.
  
-TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
+TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. It's available to beta-test for all Elitist Jerks Benefactors.
  
 Instructions
 ------------
@@ -119,6 +118,17 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.10.0
+ - More improvements to the default filters
+ - Further improvement on avoiding useless gem swaps from the Optimizer.
+ - Normal/Heroic ICC items should now share uniqueness.
+ - Rawr.Retribution: Improvements to rotation calculations.
+ - Rawr.Mage: Support for 3.3.3 chanages. Added support for the DoTTick special effect trigger. Added additional spell cycle information in tooltips.
+ - Rawr.Healadin: Fix for Divine Intellect calculations.
+ - Rawr.Rogue: Implemented weapon speed normalization. Fixed offhand damage calculations. Fixed avoided attacks display. Crit procs now work on SS and Hemo. Implemented DP dropping on Envenoms, this fixes the Envenom usage in Combat builds which now also use SnD on higher CP. Fix for white crit chance being able to go over 100%. Fix for Black Magic. Fix for DP tick counts.
+ - Rawr.Hunter: Improvements to the rotation system.
+ - Rawr.DPSWarr: Fix for some abilities using the wrong MH/OH dodge chance, when they are different.
+
 v2.3.9.0
  - More improvements to the default item filters.
  - Improved proc calculation of Bryntoll and Shadowstrike.
