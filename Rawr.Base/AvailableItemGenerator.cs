@@ -2123,6 +2123,7 @@ namespace Rawr.Optimizer
 				if (ItemIsJewelersGem != other.ItemIsJewelersGem) return ArrayUtils.CompareResult.Unequal;
 				if (ItemIsStormjewel != other.ItemIsStormjewel) return ArrayUtils.CompareResult.Unequal;
 				if (Jeweler != other.Jeweler) return ArrayUtils.CompareResult.Unequal;
+                if (Item != null && other.Item != null && Item.AvailabilityInformation != null && other.Item.AvailabilityInformation != null && Item.AvailabilityInformation.PositiveCostItem != other.Item.AvailabilityInformation.PositiveCostItem) return ArrayUtils.CompareResult.Unequal;
 
 				if (this.SetName != other.SetName) return ArrayUtils.CompareResult.Unequal;
 
