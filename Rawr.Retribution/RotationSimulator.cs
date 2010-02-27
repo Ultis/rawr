@@ -20,13 +20,11 @@ namespace Rawr.Retribution
 
         private static RotationSolution SimulateRotationCore(RotationParameters rot)
         {
-            const float t10ProcChance = 0.4f;
-            const int timeUnitsPerSecond = 100;
+            const int timeUnitsPerSecond = 100000;
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
 
             int fightLength = (int)(rot.SimulationTime * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
-            int t10Speed = (int)(rot.T10Speed * timeUnitsPerSecond);
             SimulatorAbility.Delay = (int)(rot.Delay * timeUnitsPerSecond);
             SimulatorAbility.Wait = (int)(rot.Wait * timeUnitsPerSecond);
 
@@ -39,7 +37,7 @@ namespace Rawr.Retribution
                 4 * timeUnitsPerSecond,
                 meleeAbilityGcd);
             abilities[(int)Ability.DivineStorm] = new SimulatorAbility(
-                10 * timeUnitsPerSecond,
+                (int)(rot.DivineStormCooldown * timeUnitsPerSecond),
                 meleeAbilityGcd);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(
                 (rot.GlyphConsecrate ? 10 : 8) * timeUnitsPerSecond,
@@ -52,9 +50,6 @@ namespace Rawr.Retribution
                 meleeAbilityGcd);
 
             int gcdFinishTime = 0;
-            Random rand = new Random(6021987);
-            int nextSwingTime = t10Speed;
-
             int currentTime = 0;
             while (currentTime < fightLength)
             {
@@ -85,20 +80,6 @@ namespace Rawr.Retribution
                 else
                 {
                     nextTime = Math.Min(nextTime, gcdFinishTime);
-                }
-
-                if (t10Speed > 0)
-                {
-                    while (nextTime > nextSwingTime)
-                    {
-                        if (rand.NextDouble() < t10ProcChance)
-                        {
-                            abilities[(int)Ability.DivineStorm].ResetCooldown(nextSwingTime);
-                            nextTime = nextSwingTime;
-                        }
-
-                        nextSwingTime += t10Speed;
-                    }
                 }
 
                 currentTime = nextTime;

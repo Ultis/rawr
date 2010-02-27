@@ -9,9 +9,10 @@ namespace Rawr.Retribution
     public class CalculationsRetribution : CalculationsBase
     {
 
-        private const decimal specificRotationListSimulationTime = 500000m;
-        private const decimal allRotationsSimulationTime = 20000m;
-
+        private const decimal simulationTime = 20000m;
+        private const decimal allRotationsSimulationTime = 1000m;
+        private const string rotationsChartName = "Rotations";
+        private const string allRotationsChartName = "All Rotations (less precise)";
 
 
         #region Model Properties
@@ -342,14 +343,12 @@ namespace Rawr.Retribution
         /// flags here.
         /// </summary>
         private static bool Experimental_OldRelevancy = false;
-        private static bool Experimental_AllRotations = false;
         internal static string Experimental
         {
             set
             {
                 // Revert all settings to default
                 Experimental_OldRelevancy = false;
-                Experimental_AllRotations = false;
 
                 // And apply parameters
                 string[] Experiments = value.Split(';');
@@ -368,10 +367,6 @@ namespace Rawr.Retribution
                             if (Command == "SetOldRelevancy" && Parms.Length == 1 && Parms[0].Trim().Length == 0)
                             {
                                 Experimental_OldRelevancy = true;
-                            }
-                            else if (Command == "SetAllRotations" && Parms.Length == 1 && Parms[0].Trim().Length == 0)
-                            {
-                                Experimental_AllRotations = true;
                             }
                         }
                     }
@@ -445,25 +440,18 @@ namespace Rawr.Retribution
             if (!options.SimulateRotation)
                 return GetCharacterRotation(character, additionalItem, null, 0);
 
-            if (Experimental_AllRotations)
-                return FindBestRotation(
-                    character,
-                    additionalItem,
-                    Rotation.GetAllRotations(),
-                    allRotationsSimulationTime);
-
             if (options.Rotations.Count == 0)
                 return GetCharacterRotation(
                     character, 
                     additionalItem, 
                     RotationParameters.DefaultRotation(),
-                    specificRotationListSimulationTime);
+                    simulationTime);
 
             return FindBestRotation(
                 character,
                 additionalItem,
                 options.Rotations, 
-                specificRotationListSimulationTime);
+                simulationTime);
         }
 
         private Rotation FindBestRotation(
@@ -1309,7 +1297,13 @@ namespace Rawr.Retribution
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] { "Seals", "Weapon Speed", "Rotations" };
+                    _customChartNames = new string[] 
+                    { 
+                        "Seals", 
+                        "Weapon Speed", 
+                        rotationsChartName, 
+                        allRotationsChartName 
+                    };
                 }
                 return _customChartNames;
             }
@@ -1348,7 +1342,9 @@ namespace Rawr.Retribution
 
                 return new ComparisonCalculationBase[] { Command, Righteousness, Vengeance };
             }
-            if (chartName == "Rotations")
+            bool isRotationsChart = chartName == rotationsChartName;
+            bool isAllRotationsChart = chartName == allRotationsChartName;
+            if (isRotationsChart || isAllRotationsChart)
             {
                 List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                 Character baseChar = character.Clone();
@@ -1359,11 +1355,8 @@ namespace Rawr.Retribution
                     ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character))
                         .Rotation;
 
-                bool allRotations = options.Experimental.IndexOf("<AllRotations>") != -1;
-                IEnumerable<Ability[]> rotations = 
-                    allRotations ? Rotation.GetAllRotations() : options.Rotations;
-
-                foreach (Ability[] rotation in rotations)
+                foreach (Ability[] rotation in 
+                    isAllRotationsChart ? Rotation.GetAllRotations() : options.Rotations)
                 {
                     ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
                         GetCharacterCalculations(
@@ -1373,9 +1366,7 @@ namespace Rawr.Retribution
                                 baseChar, 
                                 null,
                                 rotation, 
-                                allRotations ? 
-                                    allRotationsSimulationTime : 
-                                    specificRotationListSimulationTime)),
+                                isAllRotationsChart ? allRotationsSimulationTime : simulationTime)),
                         RotationParameters.RotationString(rotation), 
                         Utilities.AreArraysEqual(rotation, selectedRotation));
                     compare.Item = null;

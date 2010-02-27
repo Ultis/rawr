@@ -7,15 +7,16 @@ namespace Rawr.Retribution
     public class RotationParameters : IEquatable<RotationParameters>
     {
 
-        public bool T7_4pc;
-        public int ImpJudgements;
-        public bool GlyphConsecrate;
-        public Ability[] Priorities;
-        public decimal Wait;
-        public decimal Delay;
-        public decimal T10Speed;
-        public decimal SpellGCD;
-        public decimal SimulationTime;
+        public bool T7_4pc { get; private set; }
+        public int ImpJudgements { get; private set; }
+        public bool GlyphConsecrate { get; private set; }
+        public Ability[] Priorities { get; private set; }
+        public decimal Wait { get; private set; }
+        public decimal Delay { get; private set; }
+        public decimal DivineStormCooldown { get; private set; }
+        public decimal SpellGCD { get; private set; }
+        public decimal SimulationTime { get; private set; }
+
 
         public RotationParameters(
             Ability[] priorities, 
@@ -24,7 +25,7 @@ namespace Rawr.Retribution
             bool t7_4pc, 
             int impJudgements, 
             bool glyphConsecrate, 
-            float t10Speed,
+            float divineStormCooldown,
             float spellHaste,
             decimal simulationTime)
         {
@@ -34,7 +35,7 @@ namespace Rawr.Retribution
             Wait = (decimal)Math.Round(wait, 2);
             Delay = (decimal)Math.Round(delay, 2);
             ImpJudgements = impJudgements;
-            T10Speed = (decimal)Math.Round(t10Speed, 2);
+            DivineStormCooldown = (decimal)Math.Round(divineStormCooldown, 2);
             SpellGCD = GetSpellGCD(spellHaste);
             SimulationTime = simulationTime;
         }
@@ -54,7 +55,7 @@ namespace Rawr.Retribution
                 return false;
 
             return (T7_4pc == other.T7_4pc) &&
-                (T10Speed == other.T10Speed) &&
+                (DivineStormCooldown == other.DivineStormCooldown) &&
                 (GlyphConsecrate == other.GlyphConsecrate) &&
                 (Delay == other.Delay) &&
                 (Wait == other.Wait) &&
@@ -71,7 +72,7 @@ namespace Rawr.Retribution
                 GlyphConsecrate,
                 Wait,
                 Delay,
-                T10Speed,
+                DivineStormCooldown,
                 SpellGCD,
                 Utilities.GetArrayHashCode(Priorities),
                 SimulationTime);

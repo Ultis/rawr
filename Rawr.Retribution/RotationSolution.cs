@@ -31,10 +31,10 @@ namespace Rawr.Retribution
                 else if (solution2.abilityEffectiveCooldowns[ability] == 0)
                     result.abilityEffectiveCooldowns[ability] = solution1.abilityEffectiveCooldowns[ability];
                 else
-                    result.abilityEffectiveCooldowns[ability] = Utilities.GetWeightedSum(
-                        solution1.abilityEffectiveCooldowns[ability],
+                    result.abilityEffectiveCooldowns[ability] = 1 / Utilities.GetWeightedSum(
+                        1 / solution1.abilityEffectiveCooldowns[ability],
                         solution1Weight,
-                        solution2.abilityEffectiveCooldowns[ability],
+                        1 / solution2.abilityEffectiveCooldowns[ability],
                         solution2Weight);
             }
 
