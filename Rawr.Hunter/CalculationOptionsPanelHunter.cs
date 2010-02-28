@@ -506,7 +506,14 @@ namespace Rawr.Hunter
             if (isLoading) return;
 
             int j = 0;
-            foreach (ComboBox cb in ShotPriorityBoxes) { CalcOpts.PriorityIndexes[j] = cb.SelectedIndex; j++; }
+            int[] k = new int[10];
+            foreach (ComboBox cb in ShotPriorityBoxes) {
+                k[j] = cb.SelectedIndex;
+                //CalcOpts.PriorityIndexes[j] = cb.SelectedIndex;
+                j++;
+            }
+
+            CalcOpts.PriorityIndexes = k;
 
             CB_PriorityDefaults.SelectedIndex = 0;
 

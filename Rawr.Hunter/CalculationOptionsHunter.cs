@@ -293,7 +293,19 @@ namespace Rawr.Hunter
                                            PriorityIndex6, PriorityIndex7, PriorityIndex8, PriorityIndex9, PriorityIndex10 };
                 return _PriorityIndexes;
             }
-            //set { _PriorityIndexes = value; }
+            set {
+                int[] _PriorityIndexes = value;
+                PriorityIndex1 = _PriorityIndexes[0];
+                PriorityIndex2 = _PriorityIndexes[1];
+                PriorityIndex3 = _PriorityIndexes[2];
+                PriorityIndex4 = _PriorityIndexes[3];
+                PriorityIndex5 = _PriorityIndexes[4]; 
+                PriorityIndex6 = _PriorityIndexes[5];
+                PriorityIndex7 = _PriorityIndexes[6];
+                PriorityIndex8 = _PriorityIndexes[7];
+                PriorityIndex9 = _PriorityIndexes[8];
+                PriorityIndex10 = _PriorityIndexes[9];
+            }
         }
 
         public int TargetLevel
