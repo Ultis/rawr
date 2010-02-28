@@ -296,7 +296,7 @@ namespace Rawr.DPSDK
 
 
             {
-                float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.05f);	//an OH multiplier that is useful sometimes
+                float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.083333333f);	//an OH multiplier that is useful sometimes
                 //Boolean PTR = false; // enable and disable PTR things here
 
                 #region Impurity Application
@@ -378,40 +378,48 @@ namespace Rawr.DPSDK
 
                 AbilityHandler abilities = new AbilityHandler(stats, combatTable, character, calcOpts);
 
-                
-                if (talents.HeartStrike > 0)
+                if ((calcOpts.GetRefreshForReferenceCalcs ? referenceCalculation : false)
+                    || (calcOpts.GetRefreshForDisplayCalcs ? needsDisplayCalculations : false) || 
+                    (calcOpts.GetRefreshForSignificantChange ? significantChange : false))
                 {
-                    BloodCycle cycle = new BloodCycle(character, combatTable, stats, calcOpts, abilities);
-                    Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
-                    rot.AvgDiseaseMult = 2;
-                    rot.NumDisease = 2;
-                    rot.CurRotationDuration = calcOpts.FightLength * 60;
-                    calcOpts.rotation.copyRotation(rot);
-                    r.copyRotation(rot);
-                }
-                else if (talents.ScourgeStrike > 0)
-                {
-                    UnholyCycle cycle = new UnholyCycle(character, combatTable, stats, calcOpts, abilities);
-                    Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
-                    rot.AvgDiseaseMult = 3;
-                    rot.NumDisease = 3;
-                    rot.CurRotationDuration = calcOpts.FightLength * 60;
-                    calcOpts.rotation.copyRotation(rot);
-                    r.copyRotation(rot);
-                }
-                else if (talents.FrostStrike > 0)
-                {
-                    FrostCycle primaryCycle = new FrostCycle(character, combatTable, stats, calcOpts, abilities);
-                    Rotation rot = primaryCycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
-                    rot.AvgDiseaseMult = 2;
-                    rot.NumDisease = 2;
-                    rot.CurRotationDuration = calcOpts.FightLength * 60;
-                    calcOpts.rotation.copyRotation(rot);
-                    r.copyRotation(rot);
+                    if (talents.HeartStrike > 0)
+                    {
+                        BloodCycle cycle = new BloodCycle(character, combatTable, stats, calcOpts, abilities);
+                        Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
+                        rot.AvgDiseaseMult = 2;
+                        rot.NumDisease = 2;
+                        rot.CurRotationDuration = calcOpts.FightLength * 60;
+                        calcOpts.rotation.copyRotation(rot);
+                        r.copyRotation(rot);
+                    }
+                    else if (talents.ScourgeStrike > 0)
+                    {
+                        UnholyCycle cycle = new UnholyCycle(character, combatTable, stats, calcOpts, abilities);
+                        Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
+                        rot.AvgDiseaseMult = 3;
+                        rot.NumDisease = 3;
+                        rot.CurRotationDuration = calcOpts.FightLength * 60;
+                        calcOpts.rotation.copyRotation(rot);
+                        r.copyRotation(rot);
+                    }
+                    else if (talents.FrostStrike > 0)
+                    {
+                        FrostCycle primaryCycle = new FrostCycle(character, combatTable, stats, calcOpts, abilities);
+                        Rotation rot = primaryCycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
+                        rot.AvgDiseaseMult = 2;
+                        rot.NumDisease = 2;
+                        rot.CurRotationDuration = calcOpts.FightLength * 60;
+                        calcOpts.rotation.copyRotation(rot);
+                        r.copyRotation(rot);
+                    }
+                    else
+                    {
+                        // add something to handle stupid rotations here, that or tell people to go fist themselves.
+                        r.copyRotation(calcOpts.rotation);
+                    }
                 }
                 else
                 {
-                    // add something to handle stupid rotations here, that or tell people to go fist themselves.
                     r.copyRotation(calcOpts.rotation);
                 }
                 #region Blood Caked Blade
@@ -855,15 +863,16 @@ namespace Rawr.DPSDK
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsTalents = new Stats()
             {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar + talents.EndlessWinter),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
-                ArmorPenetration = talents.BloodGorged * .02f
+                ArmorPenetration = talents.BloodGorged * .02f,
+                PhysicalHaste = 0.04f * talents.IcyTalons + .05f * talents.ImprovedIcyTalons
             };
             if (talents.UnbreakableArmor > 0)
             {
-                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){ BonusStrengthMultiplier = 0.1f}, 20f, 60f));
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){ BonusStrengthMultiplier = 0.2f}, 20f, 60f));
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
@@ -960,7 +969,7 @@ namespace Rawr.DPSDK
             };
             if (talents.UnbreakableArmor > 0)
             {
-                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.1f }, 20f, 60f));
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.2f }, 20f, 60f));
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();

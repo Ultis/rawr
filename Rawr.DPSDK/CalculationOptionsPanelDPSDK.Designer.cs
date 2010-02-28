@@ -30,7 +30,6 @@
         {
             this.lblTargetLevel = new System.Windows.Forms.Label();
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
-            this.tbFightLength = new System.Windows.Forms.TrackBar();
             this.gbFightInfo = new System.Windows.Forms.GroupBox();
             this.lbKMProcUsage = new System.Windows.Forms.Label();
             this.KMProcUsage = new System.Windows.Forms.TrackBar();
@@ -42,20 +41,23 @@
             this.label1 = new System.Windows.Forms.Label();
             this.BloodwormUptime = new System.Windows.Forms.TrackBar();
             this.nudTargetArmor = new System.Windows.Forms.NumericUpDown();
-            this.lblFightLengthNum = new System.Windows.Forms.Label();
             this.lblTargetArmor = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
-            this.btnGraph = new System.Windows.Forms.Button();
-            this.cbGhoul = new System.Windows.Forms.CheckBox();
             this.rbBloodPresence = new System.Windows.Forms.RadioButton();
             this.rbUnholyPresence = new System.Windows.Forms.RadioButton();
+            this.btnGraph = new System.Windows.Forms.Button();
+            this.cbGhoul = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
+            this.cbSignificantChange = new System.Windows.Forms.CheckBox();
+            this.cbRefCalcs = new System.Windows.Forms.CheckBox();
+            this.cbDisplayCalcs = new System.Windows.Forms.CheckBox();
+            this.nudFightLength = new System.Windows.Forms.NumericUpDown();
             this.gbFightInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudFightLength)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -84,18 +86,9 @@
             this.cbTargetLevel.TabIndex = 1;
             this.cbTargetLevel.SelectedIndexChanged += new System.EventHandler(this.cbTargetLevel_SelectedIndexChanged);
             // 
-            // tbFightLength
-            // 
-            this.tbFightLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbFightLength.Location = new System.Drawing.Point(135, 73);
-            this.tbFightLength.Name = "tbFightLength";
-            this.tbFightLength.Size = new System.Drawing.Size(86, 45);
-            this.tbFightLength.TabIndex = 2;
-            this.tbFightLength.Value = 10;
-            this.tbFightLength.Scroll += new System.EventHandler(this.tbFightLength_Scroll);
-            // 
             // gbFightInfo
             // 
+            this.gbFightInfo.Controls.Add(this.nudFightLength);
             this.gbFightInfo.Controls.Add(this.lbKMProcUsage);
             this.gbFightInfo.Controls.Add(this.KMProcUsage);
             this.gbFightInfo.Controls.Add(this.label2);
@@ -106,14 +99,10 @@
             this.gbFightInfo.Controls.Add(this.label1);
             this.gbFightInfo.Controls.Add(this.BloodwormUptime);
             this.gbFightInfo.Controls.Add(this.nudTargetArmor);
-            this.gbFightInfo.Controls.Add(this.lblFightLengthNum);
             this.gbFightInfo.Controls.Add(this.lblTargetArmor);
-            this.gbFightInfo.Controls.Add(this.tbFightLength);
             this.gbFightInfo.Controls.Add(this.lblTargetLevel);
             this.gbFightInfo.Controls.Add(this.cbTargetLevel);
             this.gbFightInfo.Controls.Add(this.lblFightLength);
-            this.gbFightInfo.Controls.Add(this.rbBloodPresence);
-            this.gbFightInfo.Controls.Add(this.rbUnholyPresence);
             this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbFightInfo.Location = new System.Drawing.Point(13, 3);
             this.gbFightInfo.Name = "gbFightInfo";
@@ -233,15 +222,6 @@
             this.nudTargetArmor.TabIndex = 28;
             this.nudTargetArmor.ValueChanged += new System.EventHandler(this.nudTargetArmor_ValueChanged);
             // 
-            // lblFightLengthNum
-            // 
-            this.lblFightLengthNum.AutoSize = true;
-            this.lblFightLengthNum.Location = new System.Drawing.Point(202, 105);
-            this.lblFightLengthNum.Name = "lblFightLengthNum";
-            this.lblFightLengthNum.Size = new System.Drawing.Size(19, 13);
-            this.lblFightLengthNum.TabIndex = 2;
-            this.lblFightLengthNum.Text = "10";
-            // 
             // lblTargetArmor
             // 
             this.lblTargetArmor.AutoSize = true;
@@ -257,9 +237,35 @@
             this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFightLength.Location = new System.Drawing.Point(6, 73);
             this.lblFightLength.Name = "lblFightLength";
-            this.lblFightLength.Size = new System.Drawing.Size(114, 13);
+            this.lblFightLength.Size = new System.Drawing.Size(115, 13);
             this.lblFightLength.TabIndex = 0;
-            this.lblFightLength.Text = "Fight Length (minutes):";
+            this.lblFightLength.Text = "Fight Length (seconds)";
+            // 
+            // rbBloodPresence
+            // 
+            this.rbBloodPresence.AutoSize = true;
+            this.rbBloodPresence.Checked = true;
+            this.rbBloodPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbBloodPresence.Location = new System.Drawing.Point(67, 392);
+            this.rbBloodPresence.Name = "rbBloodPresence";
+            this.rbBloodPresence.Size = new System.Drawing.Size(57, 19);
+            this.rbBloodPresence.TabIndex = 71;
+            this.rbBloodPresence.TabStop = true;
+            this.rbBloodPresence.Text = "Blood";
+            this.rbBloodPresence.UseVisualStyleBackColor = true;
+            this.rbBloodPresence.CheckedChanged += new System.EventHandler(this.rbBloodPresence_CheckedChanged);
+            // 
+            // rbUnholyPresence
+            // 
+            this.rbUnholyPresence.AutoSize = true;
+            this.rbUnholyPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbUnholyPresence.Location = new System.Drawing.Point(130, 392);
+            this.rbUnholyPresence.Name = "rbUnholyPresence";
+            this.rbUnholyPresence.Size = new System.Drawing.Size(63, 19);
+            this.rbUnholyPresence.TabIndex = 73;
+            this.rbUnholyPresence.Text = "Unholy";
+            this.rbUnholyPresence.UseVisualStyleBackColor = true;
+            this.rbUnholyPresence.CheckedChanged += new System.EventHandler(this.rbUnholyPresence_CheckedChanged);
             // 
             // btnGraph
             // 
@@ -275,6 +281,8 @@
             // cbGhoul
             // 
             this.cbGhoul.AutoSize = true;
+            this.cbGhoul.Checked = true;
+            this.cbGhoul.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbGhoul.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbGhoul.Location = new System.Drawing.Point(13, 322);
             this.cbGhoul.Name = "cbGhoul";
@@ -283,32 +291,6 @@
             this.cbGhoul.Text = "Ghoul (on CD)";
             this.cbGhoul.UseVisualStyleBackColor = true;
             this.cbGhoul.CheckedChanged += new System.EventHandler(this.cbGhoul_CheckedChanged);
-            // 
-            // rbBloodPresence
-            // 
-            this.rbBloodPresence.AutoSize = true;
-            this.rbBloodPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbBloodPresence.Location = new System.Drawing.Point(67, 392);
-            this.rbBloodPresence.Name = "rbBloodPresence";
-            this.rbBloodPresence.Size = new System.Drawing.Size(57, 19);
-            this.rbBloodPresence.TabIndex = 71;
-            this.rbBloodPresence.TabStop = true;
-            this.rbBloodPresence.Text = "Blood";
-            this.rbBloodPresence.UseVisualStyleBackColor = true;
-            this.rbBloodPresence.CheckedChanged += new System.EventHandler(rbBloodPresence_CheckedChanged);
-            // 
-            // rbUnholyPresence
-            // 
-            this.rbUnholyPresence.AutoSize = true;
-            this.rbUnholyPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbUnholyPresence.Location = new System.Drawing.Point(130, 392);
-            this.rbUnholyPresence.Name = "rbUnholyPresence";
-            this.rbUnholyPresence.Size = new System.Drawing.Size(63, 19);
-            this.rbUnholyPresence.TabIndex = 73;
-            this.rbUnholyPresence.TabStop = true;
-            this.rbUnholyPresence.Text = "Unholy";
-            this.rbUnholyPresence.UseVisualStyleBackColor = true;
-            this.rbUnholyPresence.CheckedChanged += new System.EventHandler(rbUnholyPresence_CheckedChanged);
             // 
             // label18
             // 
@@ -320,11 +302,77 @@
             this.label18.Text = "Presence:";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // cbSignificantChange
+            // 
+            this.cbSignificantChange.AutoSize = true;
+            this.cbSignificantChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbSignificantChange.Location = new System.Drawing.Point(13, 473);
+            this.cbSignificantChange.Name = "cbSignificantChange";
+            this.cbSignificantChange.Size = new System.Drawing.Size(170, 17);
+            this.cbSignificantChange.TabIndex = 74;
+            this.cbSignificantChange.Text = "Refresh for Significant Change";
+            this.cbSignificantChange.UseVisualStyleBackColor = true;
+            this.cbSignificantChange.CheckedChanged += new System.EventHandler(this.cbSignificantChange_CheckedChanged);
+            // 
+            // cbRefCalcs
+            // 
+            this.cbRefCalcs.AutoSize = true;
+            this.cbRefCalcs.Checked = true;
+            this.cbRefCalcs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbRefCalcs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbRefCalcs.Location = new System.Drawing.Point(13, 450);
+            this.cbRefCalcs.Name = "cbRefCalcs";
+            this.cbRefCalcs.Size = new System.Drawing.Size(159, 17);
+            this.cbRefCalcs.TabIndex = 75;
+            this.cbRefCalcs.Text = "Refresh for Reference calcs";
+            this.cbRefCalcs.UseVisualStyleBackColor = true;
+            this.cbRefCalcs.CheckedChanged += new System.EventHandler(this.cbRefCalcs_CheckedChanged);
+            // 
+            // cbDisplayCalcs
+            // 
+            this.cbDisplayCalcs.AutoSize = true;
+            this.cbDisplayCalcs.Checked = true;
+            this.cbDisplayCalcs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDisplayCalcs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbDisplayCalcs.Location = new System.Drawing.Point(13, 427);
+            this.cbDisplayCalcs.Name = "cbDisplayCalcs";
+            this.cbDisplayCalcs.Size = new System.Drawing.Size(143, 17);
+            this.cbDisplayCalcs.TabIndex = 76;
+            this.cbDisplayCalcs.Text = "Refresh for Display calcs";
+            this.cbDisplayCalcs.UseVisualStyleBackColor = true;
+            this.cbDisplayCalcs.CheckedChanged += new System.EventHandler(this.cbDisplayCalcs_CheckedChanged);
+            // 
+            // nudFightLength
+            // 
+            this.nudFightLength.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudFightLength.Location = new System.Drawing.Point(135, 69);
+            this.nudFightLength.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.nudFightLength.Name = "nudFightLength";
+            this.nudFightLength.Size = new System.Drawing.Size(64, 20);
+            this.nudFightLength.TabIndex = 38;
+            this.nudFightLength.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.nudFightLength.ValueChanged += new System.EventHandler(this.nudFightLength_ValueChanged);
+            // 
             // CalculationOptionsPanelDPSDK
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.cbDisplayCalcs);
+            this.Controls.Add(this.cbRefCalcs);
+            this.Controls.Add(this.cbSignificantChange);
             this.Controls.Add(this.rbBloodPresence);
             this.Controls.Add(this.rbUnholyPresence);
             this.Controls.Add(this.label18);
@@ -332,14 +380,14 @@
             this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.gbFightInfo);
             this.Name = "CalculationOptionsPanelDPSDK";
-            this.Size = new System.Drawing.Size(243, 463);
-            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
+            this.Size = new System.Drawing.Size(243, 523);
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudFightLength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -350,10 +398,8 @@
         private System.Windows.Forms.Label lblTargetLevel;
         private System.Windows.Forms.ComboBox cbTargetLevel;
         private System.Windows.Forms.GroupBox gbFightInfo;
-        private System.Windows.Forms.TrackBar tbFightLength;
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.Button btnGraph;
-		private System.Windows.Forms.Label lblFightLengthNum;
         private System.Windows.Forms.Label lblTargetArmor;
         private System.Windows.Forms.NumericUpDown nudTargetArmor;
         private System.Windows.Forms.CheckBox cbGhoul;
@@ -369,5 +415,9 @@
         private System.Windows.Forms.RadioButton rbBloodPresence;
         private System.Windows.Forms.RadioButton rbUnholyPresence;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.CheckBox cbSignificantChange;
+        private System.Windows.Forms.CheckBox cbRefCalcs;
+        private System.Windows.Forms.CheckBox cbDisplayCalcs;
+        private System.Windows.Forms.NumericUpDown nudFightLength;
     }
 }

@@ -167,7 +167,7 @@ namespace Rawr.DPSDK
                             combatTable.normalizationFactor) + 764d) * 0.4d);
                     BSDmgOH *= 0.5d;
                     BSDmgOH += stats.BonusBloodStrikeDamage;
-                    BSDmgOH *= 1d + 0.05d * (double)talents.NervesOfColdSteel;
+                    BSDmgOH *= 1d + 0.08333333333d * (double)talents.NervesOfColdSteel;
                     BSDmgOH *= (talents.ThreatOfThassarian * (1d / 3d));
                     BSDmg += BSDmgOH;
                 }
@@ -249,7 +249,7 @@ namespace Rawr.DPSDK
                                         combatTable.normalizationFactor) + 378f) * 0.5f;
                 _damage += ((combatTable.DW ? ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
                                         combatTable.normalizationFactor) + 378f) * 0.5f) : 0d) * talents.ThreatOfThassarian / 3d) *
-                    (0.5d * 1d + talents.NervesOfColdSteel * .05d);
+                    (0.5d * 1d + talents.NervesOfColdSteel * .0833333333d);
                 double PSCritDmgMult = 1d + (.15d * talents.ViciousStrikes) + stats.BonusCritMultiplier;
                 PSCritDmgMult = 1d + ((combatTable.physCrits + (.03d * talents.ViciousStrikes) + stats.BonusPlagueStrikeCrit) * PSCritDmgMult);
                 _damage *= PSCritDmgMult;
@@ -350,7 +350,7 @@ namespace Rawr.DPSDK
                 _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
                                 combatTable.normalizationFactor)) +
                                 250d) * 0.55d * 0.5d) + stats.BonusFrostStrikeDamage) 
-                                        * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
+                                        * (1d + (talents.NervesOfColdSteel * .083333333333d))) * talents.ThreatOfThassarian / 3d;
                 double FSCritDmgMult = 1d + .15d * talents.GuileOfGorefiend + stats.BonusCritMultiplier;
                 FSCritDmgMult = 1d + (Math.Min((combatTable.physCrits + stats.BonusFrostStrikeCrit), 1d) * FSCritDmgMult);
                 _damage *= FSCritDmgMult;
@@ -370,7 +370,7 @@ namespace Rawr.DPSDK
                 _secondaryDamage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) *
                                 combatTable.normalizationFactor)) +
                                 250d) * 0.55d * 0.5d) + stats.BonusFrostStrikeDamage)
-                                        * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
+                                        * (1d + (talents.NervesOfColdSteel * .08333333333333d))) * talents.ThreatOfThassarian / 3d;
                 double FSCritDmgMult = 1d + .15d * talents.GuileOfGorefiend + stats.BonusCritMultiplier;
                 FSCritDmgMult = 1d + FSCritDmgMult;
                 _secondaryDamage *= FSCritDmgMult;
@@ -396,7 +396,7 @@ namespace Rawr.DPSDK
                     (talents.GlyphofObliterate ? 1 : 0.8d)) + stats.BonusObliterateDamage;
                 _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 584f) *
                     (talents.GlyphofObliterate ? 1 : 0.8d)) * 0.5d) + stats.BonusObliterateDamage)
-                                        * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
+                                        * (1d + (talents.NervesOfColdSteel * .08333333333d))) * talents.ThreatOfThassarian / 3d;
                 _damage *= 1f + (talents.GlyphofObliterate ? 0.1d : 0.125d) * calcOpts.rotation.AvgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                 double OblitCritDmgMult = 1d + (.15d * talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
                 OblitCritDmgMult = 1d + (combatTable.physCrits + 
@@ -427,7 +427,7 @@ namespace Rawr.DPSDK
             {
                 _damage = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 297) * 0.75d) + stats.BonusDeathStrikeDamage;
                 _damage += ((!combatTable.DW ? 0 : (((combatTable.OH.baseDamage + ((stats.AttackPower / 14d) * combatTable.normalizationFactor) + 297) * 0.75d) * 0.5d) + stats.BonusDeathStrikeDamage)
-                                        * (1d + (talents.NervesOfColdSteel * .05d))) * talents.ThreatOfThassarian / 3d;
+                                        * (1d + (talents.NervesOfColdSteel * .0833333333333d))) * talents.ThreatOfThassarian / 3d;
                 double DSCritDmgMult = 1d + (.15d * talents.MightOfMograine) + stats.BonusCritMultiplier;
                 DSCritDmgMult = 1d + (combatTable.physCrits +
                      .03d * talents.ImprovedDeathStrike +

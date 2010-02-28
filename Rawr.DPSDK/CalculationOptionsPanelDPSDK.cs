@@ -27,24 +27,19 @@ namespace Rawr.DPSDK
            
 
             cbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-			tbFightLength.Value = (int)calcOpts.FightLength;
-			lblFightLengthNum.Text = tbFightLength.Value.ToString();
+            nudFightLength.Value = (int)(calcOpts.FightLength * 60);
+            cbDisplayCalcs.Checked = calcOpts.GetRefreshForDisplayCalcs;
+            cbGhoul.Checked = calcOpts.Ghoul;
+            cbRefCalcs.Checked = calcOpts.GetRefreshForReferenceCalcs;
+            cbSignificantChange.Checked = calcOpts.GetRefreshForSignificantChange;
 
             nudTargetArmor.Value = calcOpts.BossArmor;
         }
-        
+
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-			calcOpts.TargetLevel = int.Parse(cbTargetLevel.SelectedItem.ToString());
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void tbFightLength_Scroll(object sender, EventArgs e)
-        {
-			CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-			calcOpts.FightLength = tbFightLength.Value;
-            lblFightLengthNum.Text = tbFightLength.Value.ToString();
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.TargetLevel = int.Parse(cbTargetLevel.SelectedItem.ToString());
             Character.OnCalculationsInvalidated();
         }
 
@@ -198,6 +193,12 @@ namespace Rawr.DPSDK
             calcOpts.BossArmor = (int)nudTargetArmor.Value;
             Character.OnCalculationsInvalidated();
         }
+        private void nudFightLength_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.FightLength = (float)(nudFightLength.Value) / 60f;
+            Character.OnCalculationsInvalidated();
+        }
 
         private void cbGhoul_CheckedChanged(object sender, EventArgs e)
         {
@@ -237,6 +238,29 @@ namespace Rawr.DPSDK
             lbKMProcUsage.Text = (KMProcUsage.Value / 100f).ToString("P");
             Character.OnCalculationsInvalidated();
         }
+
+        private void cbDisplayCalcs_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.GetRefreshForDisplayCalcs = cbDisplayCalcs.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbRefCalcs_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.GetRefreshForReferenceCalcs = cbRefCalcs.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbSignificantChange_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.GetRefreshForSignificantChange = cbSignificantChange.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+       
 
 
 

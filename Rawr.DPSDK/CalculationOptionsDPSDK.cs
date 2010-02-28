@@ -97,6 +97,27 @@ namespace Rawr.DPSDK
 			set { _talents = value; OnPropertyChanged("talents"); }
 		}
 
+        private bool _getRefreshForReferenceCalcs = true;
+        public bool GetRefreshForReferenceCalcs
+        {
+            get { return _getRefreshForReferenceCalcs; }
+            set { _getRefreshForReferenceCalcs = value; }
+        }
+
+        private bool _getRefreshForDisplayCalcs = true;
+        public bool GetRefreshForDisplayCalcs
+        {
+            get { return _getRefreshForDisplayCalcs; }
+            set { _getRefreshForDisplayCalcs = value; }
+        }
+
+        private bool _getRefreshForSignificantChange = false;
+        public bool GetRefreshForSignificantChange
+        {
+            get { return _getRefreshForSignificantChange; }
+            set { _getRefreshForSignificantChange = value; }
+        }
+
 		private Rotation _rotation = null;
 		public Rotation rotation
 		{
