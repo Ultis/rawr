@@ -117,13 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="labelsTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="label4.ToolTip" xml:space="preserve">
-    <value>Controls how trinkets with a stacking effect work.
-0: The trinket is assumed to be at full stack for the entire fight.
-1: The trinket is stacked up once, and remains at full stack for the remainder of the fight.
-N: The buff is lost (N-1) times. So the stack will need to be rebuilt N times.</value>
-  </data>
 </root>

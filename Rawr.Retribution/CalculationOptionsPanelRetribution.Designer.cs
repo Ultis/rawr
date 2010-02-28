@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelRetribution));
             this.cmbMobType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,6 +68,7 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbSeal = new System.Windows.Forms.ComboBox();
             this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
@@ -87,7 +89,6 @@
             this.nudTargetSwitch = new System.Windows.Forms.NumericUpDown();
             this.label29 = new System.Windows.Forms.Label();
             this.nudHoR = new System.Windows.Forms.NumericUpDown();
-            this.label30 = new System.Windows.Forms.Label();
             this.chkBloodlust = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
             this.tabRotation = new System.Windows.Forms.TabPage();
@@ -120,6 +121,7 @@
             this.label28 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
+            this.buttonStatGraph = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
@@ -772,7 +774,18 @@
             this.label4.TabIndex = 11;
             this.label4.Text = "Stacked trinkets reset*:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelsTooltip.SetToolTip(this.label4, "Controls how trinkets with a stacking effect work.\r\n0: The trinket is assumed to be at full stack for the entire fight.\r\n1: The trinket is stacked up once, and remains at full stack for the remainder of the fight.\r\nN: The buff is lost (N-1) times. So the stack will need to be rebuilt N times.");
+            this.labelsTooltip.SetToolTip(this.label4, resources.GetString("label4.ToolTip"));
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(41, 265);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(102, 13);
+            this.label30.TabIndex = 24;
+            this.label30.Text = "HoR effectiveness*:";
+            this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelsTooltip.SetToolTip(this.label30, "The percent of time that you can use Hand of Reckoning on a mob.");
             // 
             // label3
             // 
@@ -1066,17 +1079,6 @@
             0});
             this.nudHoR.ValueChanged += new System.EventHandler(this.nudHoR_ValueChanged);
             // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(41, 265);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(102, 13);
-            this.label30.TabIndex = 24;
-            this.label30.Text = "HoR effectiveness*:";
-            this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelsTooltip.SetToolTip(this.label30, "The percent of time that you can use Hand of Reckoning on a mob.");
-            // 
             // chkBloodlust
             // 
             this.chkBloodlust.AutoSize = true;
@@ -1187,6 +1189,7 @@
             // 
             this.tabMisc.Controls.Add(this.textExperimental);
             this.tabMisc.Controls.Add(this.label32);
+            this.tabMisc.Controls.Add(this.buttonStatGraph);
             this.tabMisc.Location = new System.Drawing.Point(4, 22);
             this.tabMisc.Name = "tabMisc";
             this.tabMisc.Padding = new System.Windows.Forms.Padding(3);
@@ -1491,6 +1494,17 @@
             0,
             0});
             // 
+            // buttonStatGraph
+            // 
+            this.buttonStatGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonStatGraph.Location = new System.Drawing.Point(9, 32);
+            this.buttonStatGraph.Name = "buttonStatGraph";
+            this.buttonStatGraph.Size = new System.Drawing.Size(75, 23);
+            this.buttonStatGraph.TabIndex = 5;
+            this.buttonStatGraph.Text = "Stat Graph";
+            this.buttonStatGraph.UseVisualStyleBackColor = true;
+            this.buttonStatGraph.Click += new System.EventHandler(this.btnGraph_Click);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1632,6 +1646,7 @@
         private System.Windows.Forms.TabPage tabMisc;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox textExperimental;
+        private System.Windows.Forms.Button buttonStatGraph;
 
     }
 }

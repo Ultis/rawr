@@ -80,6 +80,10 @@ namespace Rawr.Retribution
             textExperimental.Text = calcOpts.Experimental;
             CalculationsRetribution.Experimental = calcOpts.Experimental;
 
+#if DEBUG
+#else
+            buttonStatGraph.Visible = false;            
+#endif
             loading = false;
         }
 
@@ -522,6 +526,12 @@ namespace Rawr.Retribution
                 CalculationsRetribution.Experimental = textExperimental.Text;
                 Character.OnCalculationsInvalidated();
             }
+        }
+
+        private void btnGraph_Click(object sender, EventArgs e)
+        {
+            GraphForm graphForm = new GraphForm(Character);
+            graphForm.Show();
         }
     }
 }
