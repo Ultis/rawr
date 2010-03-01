@@ -3349,16 +3349,18 @@ namespace Rawr.Mage
             List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>();
             for (int i = 0; i < cooldownList.Count; i++)
             {
-                if (cooldownList[i].AutomaticStackingConstraints)
+                EffectCooldown cooli = cooldownList[i];
+                if (cooli.AutomaticStackingConstraints)
                 {
                     for (int j = i + 1; j < cooldownList.Count; j++)
                     {
-                        if (cooldownList[j].AutomaticStackingConstraints)
+                        EffectCooldown coolj = cooldownList[j];
+                        if (coolj.AutomaticStackingConstraints)
                         {
                             bool valid = true;
                             foreach (int exclusionMask in effectExclusionList)
                             {
-                                if (BitCount2((cooldownList[i].Mask | cooldownList[j].Mask) & exclusionMask))
+                                if (BitCount2((cooli.Mask | coolj.Mask) & exclusionMask))
                                 {
                                     valid = false;
                                     break;
@@ -3366,14 +3368,14 @@ namespace Rawr.Mage
                             }
                             if (valid)
                             {
-                                double maxDuration = MaximizeStackingDuration(calculationOptions.FightDuration, cooldownList[i].Duration, cooldownList[i].Cooldown, cooldownList[j].Duration, cooldownList[j].Cooldown);
-                                if (maxDuration < cooldownList[i].MaximumDuration && maxDuration < cooldownList[j].MaximumDuration)
+                                double maxDuration = MaximizeStackingDuration(calculationOptions.FightDuration, cooli.Duration, cooli.Cooldown, coolj.Duration, coolj.Cooldown);
+                                if (maxDuration < cooli.MaximumDuration && maxDuration < coolj.MaximumDuration)
                                 {
                                     rowStackingConstraintList.Add(new StackingConstraint()
                                     {
                                         Row = rowCount++,
-                                        Effect1 = cooldownList[i],
-                                        Effect2 = cooldownList[j],
+                                        Effect1 = cooli,
+                                        Effect2 = coolj,
                                         MaximumStackingDuration = maxDuration,
                                     });
                                 }

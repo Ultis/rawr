@@ -207,13 +207,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        maintainSnareState = (CastingState)MemberwiseClone();
-                        //maintainSnareState.Spells = new Spell[SpellIdCount];
-                        //maintainSnareState.Cycles = new Cycle[CycleIdCount];
-                        //maintainSnareState.Spells = new Dictionary<int, Spell>();
-                        //maintainSnareState.Cycles = new Dictionary<int, Cycle>();
-                        maintainSnareState.Spells = new Spell[8];
-                        maintainSnareState.Cycles = new Cycle[8];
+                        maintainSnareState = Clone();
                         maintainSnareState.SnaredTime = 1.0f;
                     }
                 }
@@ -234,7 +228,13 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = CastingState.New(Calculations, Effects, true, ProcHasteRating);
+                        frozenState = Clone();
+                        frozenState.Frozen = true;
+                        frozenState.StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
+                        if (Combustion)
+                        {
+                            frozenState.CombustionDuration = ComputeCombustion(Calculations.BaseFireCritRate + frozenState.StateCritRate);
+                        }
                     }
                 }
                 return frozenState;
@@ -248,7 +248,7 @@ namespace Rawr.Mage
             {
                 if (tier10TwoPieceState == null)
                 {
-                    tier10TwoPieceState = CastingState.New(Calculations, Effects, Frozen, ProcHasteRating);
+                    tier10TwoPieceState = Clone();
                     tier10TwoPieceState.CastingSpeed *= 1.12f;
                     tier10TwoPieceState.ReferenceCastingState = this;
                 }
@@ -296,6 +296,51 @@ namespace Rawr.Mage
             state.ProcHasteRating = 0;
             return state;
         }
+
+        public CastingState Clone()
+        {
+            CastingState state;
+            if (Calculations.NeedsDisplayCalculations || Calculations.ArraySet == null)
+            {
+                state = new CastingState();
+            }
+            else
+            {
+                state = Calculations.ArraySet.NewCastingState();
+            }
+            state.frozenState = null;
+            state.UseFireWard = UseFireWard;
+            state.UseFrostWard = UseFrostWard;
+            state.maintainSnareState = null;
+            state.tier10TwoPieceState = null;
+            state.ReferenceCastingState = null;
+
+            state.buffLabel = null;
+
+            state.Calculations = Calculations;
+            state.CalculationOptions = CalculationOptions;
+            state.MageTalents = MageTalents;
+            state.BaseStats = BaseStats;
+            state.HasteProcs = null;
+
+            state.SnaredTime = SnaredTime;
+            state.ProcHasteRating = ProcHasteRating;
+            state.Effects = Effects;
+            state.StateSpellPower = StateSpellPower;
+            state.SpellHasteRating = SpellHasteRating;
+            state.StateCritRate = StateCritRate;
+            state.CombustionDuration = CombustionDuration;
+            state.Frozen = Frozen;
+            state.CastingSpeed = CastingSpeed;
+            state.StateAdditiveSpellModifier = StateAdditiveSpellModifier;
+            state.StateSpellModifier = StateSpellModifier;
+
+            state.SpellsCount = 0;
+            state.CyclesCount = 0;
+
+            return state;
+        }
+
 
         public void Initialize(CharacterCalculationsMage calculations, int effects, bool frozen, float procHasteRating)
         {

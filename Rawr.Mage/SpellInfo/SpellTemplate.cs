@@ -254,12 +254,14 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
             float castingSpeed = castingState.CastingSpeed;
             float spellHasteRating = castingState.SpellHasteRating;
+            float levelScalingFactor = calculationOptions.LevelScalingFactor;
+            float hasteFactor = levelScalingFactor / 1000f;
+            float rootCastingSpeed = castingSpeed / (1 + spellHasteRating * hasteFactor);
 
             if (castingState.IcyVeins) interruptProtection = 1;
             // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
             float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
 
-            float levelScalingFactor = calculationOptions.LevelScalingFactor;
             if (pom) baseCastTime = 0.0f;
 
             float maxPushback = 0.5f * Math.Max(0, 1 - interruptProtection);
@@ -279,8 +281,12 @@ namespace Rawr.Mage
                 latency = calculationOptions.LatencyCast;
             }
             float castTime = baseCastTime / castingSpeed + latency;
-            castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
-            if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
+            if (InterruptFactor > 0)
+            {
+                castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+            }
+            float gcdcap = globalCooldown + calculationOptions.LatencyGCD;
+            if (castTime < gcdcap) castTime = gcdcap;
             channelReduction = 0.0f;
 
             if (!calculationOptions.AdvancedHasteProcs)
@@ -288,49 +294,75 @@ namespace Rawr.Mage
                 foreach (SpecialEffect effect in hasteEffects)
                 {
                     float procs = 0.0f;
+                    int triggers = 0;
                     switch (effect.Trigger)
                     {
                         case Trigger.DamageSpellCast:
                         case Trigger.SpellCast:
                             procs = CastProcs;
+                            triggers = (int)procs;
                             break;
                         case Trigger.DamageSpellCrit:
                         case Trigger.SpellCrit:
                             procs = critRate * Ticks;
+                            triggers = (int)Ticks;
                             break;
                         case Trigger.DamageSpellHit:
                         case Trigger.SpellHit:
                             procs = HitRate * Ticks;
+                            triggers = (int)Ticks;
                             break;
                     }
                     if (procs == 0.0f) continue;
+                    float procHaste = effect.Stats.HasteRating;
                     if (effect.Cooldown >= effect.Duration)
                     {
                         // hasted casttime
-                        float speed = castingSpeed / (1 + spellHasteRating / 1000f * levelScalingFactor) * (1 + (spellHasteRating + effect.Stats.HasteRating) / 1000f * levelScalingFactor);
+                        float speed = rootCastingSpeed * (1 + (spellHasteRating + procHaste) * hasteFactor);
                         float gcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / speed);
                         float cast = baseCastTime / speed + latency;
-                        cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
-                        if (cast < gcd + calculationOptions.LatencyGCD) cast = gcd + calculationOptions.LatencyGCD;
+                        if (InterruptFactor > 0)
+                        {
+                            cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        }
+                        gcdcap = gcd + calculationOptions.LatencyGCD;
+                        if (cast < gcdcap) cast = gcdcap;
 
-                        castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         float castsAffected = 0;
-                        for (int c = 0; c < procs; c++) castsAffected += (float)Math.Ceiling((effect.Duration - c * castTime / procs) / cast) / procs;
-                        spellHasteRating += effect.Stats.HasteRating * castsAffected * cast / (effect.Cooldown + castTime / procs / effect.Chance);
+                        if (triggers > 1)
+                        {
+                            // multi tick spell (i.e. AM)
+                            for (int c = 0; c < triggers; c++) castsAffected += (float)Math.Ceiling((effect.Duration - c * castTime / triggers) / cast);
+                            castsAffected /= triggers;
+                        }
+                        else
+                        {
+                            // single tick spell
+                            castsAffected = (float)Math.Ceiling(effect.Duration / cast); // should the first proc be already hasted?
+                        }
+                        float effectiveDuration = castsAffected * cast;
+                        // this isn't completely accurate, we should have made a separate SpecialEffect and change the actual duration
+                        // but performance would hurt so this'll have to do
+                        spellHasteRating += procHaste * (effectiveDuration / effect.Duration) * effect.GetAverageUptime(castTime / triggers, procs / triggers, 3.0f, calculationOptions.FightDuration);
+                        //spellHasteRating += procHaste * castsAffected * cast / (effect.Cooldown + castTime / procs / effect.Chance);
                         //Haste += castingState.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
-                        castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
+                        castingSpeed = rootCastingSpeed * (1 + spellHasteRating * hasteFactor);
 
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                         castTime = baseCastTime / castingSpeed + latency;
-                        castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
-                        if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
+                        if (InterruptFactor > 0)
+                        {
+                            castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        }
+                        gcdcap = globalCooldown + calculationOptions.LatencyGCD;
+                        if (castTime < gcdcap) castTime = gcdcap;
                     }
                     else if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
                     {
                         float rawHaste = spellHasteRating;
 
                         castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
-                        float proccedSpeed = castingSpeed * (1 + (rawHaste + effect.Stats.HasteRating) / 1000f * levelScalingFactor);
+                        float proccedSpeed = castingSpeed * (1 + (rawHaste + procHaste) / 1000f * levelScalingFactor);
                         float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / proccedSpeed);
                         float proccedCastTime = baseCastTime / proccedSpeed + latency;
                         proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
@@ -338,7 +370,7 @@ namespace Rawr.Mage
                         int chancesToProc = (int)(((int)Math.Floor(effect.Duration / proccedCastTime) + 1) * Ticks);
                         if (!(Instant || pom)) chancesToProc -= 1;
                         if (AreaEffect) chancesToProc *= calculationOptions.AoeTargets;
-                        spellHasteRating = rawHaste + effect.Stats.HasteRating * (1 - (float)Math.Pow(1 - effect.Chance * critRate, chancesToProc));
+                        spellHasteRating = rawHaste + procHaste * (1 - (float)Math.Pow(1 - effect.Chance * critRate, chancesToProc));
                         //Haste = rawHaste + castingState.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                         castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
@@ -354,7 +386,8 @@ namespace Rawr.Mage
                     {
                         foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
                         {
-                            if (effect.Stats.HasteRating > 0)
+                            float procHaste = effect.Stats.HasteRating;
+                            if (procHaste > 0)
                             {
                                 float procs = 0.0f;
                                 switch (effect.Trigger)
@@ -378,11 +411,11 @@ namespace Rawr.Mage
                                 if (procs > Ticks)
                                 {
                                     // some 100% on cast procs, happens because AM has 6 cast procs and only 5 ticks
-                                    effectHasteRating = effect.GetAverageStackSize(castTime / procs, 1.0f, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                                    effectHasteRating = effect.GetAverageStackSize(castTime / procs, 1.0f, 3.0f, effectCooldown.SpecialEffect.Duration) * procHaste;
                                 }
                                 else
                                 {
-                                    effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                                    effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * procHaste;
                                 }
 
                                 castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
