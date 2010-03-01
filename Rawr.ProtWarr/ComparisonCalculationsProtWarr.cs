@@ -24,32 +24,32 @@ namespace Rawr.ProtWarr
         public override float[] SubPoints
         {
             get { return _subPoints; }
-            set { _subPoints = value; OverallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            set { _subPoints = value; }
         }
 
         private float _overallPoints;
         public override float OverallPoints
         {
             get { return _overallPoints; }
-            set { _overallPoints = value; }
+            set { _overallPoints = Math.Min(value, float.MaxValue); }
         }
 
         public float SurvivalPoints
         {
             get { return _subPoints[0]; }
-            set { _subPoints[0] = value; _overallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            set { _subPoints[0] = Math.Min(value, float.MaxValue); OverallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
         }
 
         public float MitigationPoints
         {
             get { return _subPoints[1]; }
-            set { _subPoints[1] = value; _overallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            set { _subPoints[1] = Math.Min(value, float.MaxValue); OverallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
         }
 
         public float ThreatPoints
         {
             get { return _subPoints[2]; }
-            set { _subPoints[2] = value; _overallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            set { _subPoints[2] = Math.Min(value, float.MaxValue); OverallPoints = _subPoints[0] + _subPoints[1] + _subPoints[2]; }
         }
 
         private Item _item = null;
