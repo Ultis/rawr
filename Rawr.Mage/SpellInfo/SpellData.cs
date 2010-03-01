@@ -450,7 +450,15 @@ namespace Rawr.Mage
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FireSpellPower;
             spell.Absorb = absorb;
-            spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
+            // in 3.3.3 warding doesn't count as absorb for IA, assume that we'll get to normal absorb at least once in 30 sec (i.e. we're not lucky enough to continue proccing warding for the whole 30 sec)
+            if (castingState.CalculationOptions.Mode333)
+            {
+                spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
+            }
+            else
+            {
+                spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
+            }
             spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             return spell;
         }
@@ -494,7 +502,14 @@ namespace Rawr.Mage
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FrostSpellPower;
             spell.Absorb = absorb;
-            spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
+            if (castingState.CalculationOptions.Mode333)
+            {
+                spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
+            }
+            else
+            {
+                spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
+            }
             spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
             return spell;
         }
