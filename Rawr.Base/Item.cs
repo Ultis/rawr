@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.ComponentModel;
-using System.Net;
 #if RAWR3
 using System.Linq;
 #else
 using System.Windows.Forms;
 #endif
+using System.Net;
+
 namespace Rawr
 {
 	#region Item
@@ -1156,7 +1157,7 @@ namespace Rawr
         {
             get
             {
-                if (Id == 0) return null;
+                if (Id <= 0) return null;
                 if (_itemCached == null || _itemCached.Id != Id || _itemCached.Invalid)
                 {
                     _itemCached = Item.LoadFromId(Id);
