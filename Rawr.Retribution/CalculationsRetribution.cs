@@ -538,7 +538,6 @@ namespace Rawr.Retribution
 
             // Combine stats
             Stats stats = statsBaseGear + statsBuffs + statsRace;
-         
             // If wanted, Average out any Proc and OnUse effects into the stats
             if (computeAverageStats)
             {
@@ -574,6 +573,26 @@ namespace Rawr.Retribution
                 stats.CritRating += stats.DeathbringerProc / 3f;
             }
 
+            // No negative values (from possible charts)
+            if (stats.Strength < 0)
+                stats.Strength = 0;
+            if (stats.Agility < 0)
+                stats.Agility = 0;
+            if (stats.AttackPower < 0)
+                stats.AttackPower = 0;
+            if (stats.ArmorPenetrationRating < 0)
+                stats.ArmorPenetrationRating = 0;
+            if (stats.ExpertiseRating < 0)
+                stats.ExpertiseRating = 0;
+            if (stats.HitRating < 0)
+                stats.HitRating = 0;
+            if (stats.CritRating < 0)
+                stats.CritRating = 0;
+            if (stats.HasteRating < 0)
+                stats.HasteRating = 0;
+            if (stats.SpellPower < 0)
+                stats.SpellPower = 0;
+        
             // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
             // should affect the averaged stats also.
             ConvertRatings(stats, talents, calcOpts.TargetLevel);
