@@ -1236,7 +1236,7 @@ focus on Survival Points.",
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
                     effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.HammeroftheRighteous || effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
+                    effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DivinePlea)
                 {
                     if (HasRelevantStats(effect.Stats)) {
                         s.AddSpecialEffect(effect);
@@ -1359,7 +1359,7 @@ focus on Survival Points.",
                     effect.Trigger == Trigger.SpellHit     || effect.Trigger == Trigger.DamageSpellHit ||
                     effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield     ||
                     effect.Trigger == Trigger.ShieldofRighteousness ||
-                    effect.Trigger == Trigger.HammeroftheRighteous)
+                    effect.Trigger == Trigger.HammeroftheRighteous || effect.Trigger == Trigger.DivinePlea)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                 }
@@ -1372,7 +1372,7 @@ focus on Survival Points.",
             Stats stats = buff.Stats;
             bool hasRelevantBuffStats = HasRelevantStats(stats);
             
-            bool NotClassSetBonus = ((buff.Group == "Set Bonuses") && !(buff.Name.Contains("Aegis") || buff.Name.Contains("Redemption")));
+            bool NotClassSetBonus = buff.Group == "Set Bonuses" && (buff.AllowedClasses.Count != 1 || (buff.AllowedClasses.Count == 1 && !buff.AllowedClasses.Contains(CharacterClass.Paladin)));
 
             bool relevant = hasRelevantBuffStats && !NotClassSetBonus;
             return relevant;
