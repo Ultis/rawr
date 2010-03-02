@@ -1710,10 +1710,10 @@ namespace Rawr.Optimizer
                 foreach (Item gem2 in possibleGem2s)
                 {
                     // prevent combinations that break unique constraints
-                    if (gem1 != null && gem1.Unique && gem2 != null && gem1.Id == gem2.Id) continue;
+                    if (gem1 != null && !gem1.IsJewelersGem && gem1.Unique && gem2 != null && gem1.Id == gem2.Id) continue;
                     foreach (Item gem3 in possibleGem3s)
                     {
-                        if (gem3 != null && gem3.Unique)
+                        if (gem3 != null && !gem3.IsJewelersGem && gem3.Unique)
                         {
                             if (gem1 != null && gem1.Id == gem3.Id) continue;
                             if (gem2 != null && gem2.Id == gem3.Id) continue;
@@ -1978,7 +1978,7 @@ namespace Rawr.Optimizer
 					Item = item,
 					ItemIsJewelersGem = item.IsJewelersGem,
 					ItemIsStormjewel = item.IsStormjewel,
-                    Ignore = item.IsGem && item.Unique,
+                    Ignore = item.IsGem && !item.IsJewelersGem && item.Unique,
 					SetName = item.SetName,
 					Stats = item.Stats,
 				};
@@ -2039,7 +2039,7 @@ namespace Rawr.Optimizer
 						{
 							jeweler++;
 						}
-						if (gem.IsStormjewel || gem.Unique)
+						else if (gem.IsStormjewel || gem.Unique)
 						{
 							ignore = true;
 						}
@@ -2167,12 +2167,12 @@ namespace Rawr.Optimizer
 				if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
                 else if (haveGreaterThan)
                 {
-                    if (Item != null && Item.IsGem && Item.Unique) return ArrayUtils.CompareResult.Unequal;
+                    if (Item != null && Item.IsGem && !Item.IsJewelersGem && Item.Unique) return ArrayUtils.CompareResult.Unequal;
                     return ArrayUtils.CompareResult.GreaterThan;
                 }
                 else if (haveLessThan)
                 {
-                    if (other.Item != null && other.Item.IsGem && other.Item.Unique) return ArrayUtils.CompareResult.Unequal;
+                    if (other.Item != null && other.Item.IsGem && !other.Item.IsJewelersGem && other.Item.Unique) return ArrayUtils.CompareResult.Unequal;
                     return ArrayUtils.CompareResult.LessThan;
                 }
                 else
