@@ -11,7 +11,7 @@ namespace Rawr.WarlockTmp {
         : CalculationOptionsPanelBase {
 
         #region constants
-        private static String[] ALL_SPELLS = { "Shadow Bolt" };
+        private static String[] ALL_SPELLS = { "Metamorphosis", "Shadow Bolt" };
         #endregion
 
 
@@ -44,10 +44,25 @@ namespace Rawr.WarlockTmp {
 
         private void RefreshRotationButtons() {
 
+            int itemCount = rotationList.Items.Count;
+            int curIndex = rotationList.SelectedIndex;
+
             rotationAddButton.Enabled
                 = rotationSpellCombo.Items.Contains(
                     rotationSpellCombo.Text);
-            rotationClearButton.Enabled = rotationList.Items.Count > 0;
+            rotationUpButton.Enabled = curIndex > 0;
+            rotationDownButton.Enabled
+                = curIndex >= 0 && curIndex < itemCount - 1;
+            rotationClearButton.Enabled = itemCount > 0;
+        }
+
+        private void RotationSwap(int swapWith) {
+
+            int oldIndex = rotationList.SelectedIndex;
+            int newIndex = oldIndex + swapWith;
+            Utilities.SwapElements(_options.SpellPriority, oldIndex, newIndex);
+            RefreshRotationPanel();
+            rotationList.SelectedIndex = newIndex;
         }
 
         #endregion
@@ -213,8 +228,13 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-
-
+            int index = rotationList.SelectedIndex;
+            _options.SpellPriority.RemoveAt(index);
+            RefreshRotationPanel();
+            int itemCount = rotationList.Items.Count;
+            if (itemCount > 0) {
+                rotationList.SelectedIndex = Math.Min(index, itemCount - 1);
+            }
             Character.OnCalculationsInvalidated();
         }
 
@@ -224,8 +244,7 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-
-
+            RotationSwap(-1);
             Character.OnCalculationsInvalidated();
         }
 
@@ -235,8 +254,7 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-
-
+            RotationSwap(1);
             Character.OnCalculationsInvalidated();
         }
 
@@ -247,7 +265,8 @@ namespace Rawr.WarlockTmp {
             Character.OnCalculationsInvalidated();
         }
 
-        private void rotationSpellCombo_SelectedIndexChanged(object sender, EventArgs e) {
+        private void rotationSpellCombo_SelectedIndexChanged(
+            object sender, EventArgs e) {
 
             if (_ignoreEvents) {
                 return;
@@ -255,6 +274,16 @@ namespace Rawr.WarlockTmp {
 
             RefreshRotationButtons();
             Character.OnCalculationsInvalidated();
+        }
+
+        private void rotationList_SelectedIndexChanged(
+            object sender, EventArgs e) {
+
+            if (_ignoreEvents) {
+                return;
+            }
+
+            RefreshRotationButtons();
         }
 
         #endregion

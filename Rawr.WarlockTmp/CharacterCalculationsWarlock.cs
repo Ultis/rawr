@@ -41,15 +41,20 @@ namespace Rawr.WarlockTmp {
 
         #region subclass specific properties
 
-        private Character Character { get; set; }
-        public Stats TotalStats { get; private set; }
+        public Stats Stats { get; private set; }
         public CalculationOptionsWarlock Options { get; private set; }
+        private WarlockTalents Talents;
 
-        private float BaseMana;
         private float PersonalDps = -1f;
         private float PetDps = -1f;
 
-        private WarlockSpell ShadowboltStats;
+        private float BaseMana;
+        private float BaseHitChance;
+        private float BaseDirectDamageMultiplier;
+        private float BaseCritChance;
+
+        private MetamorphosisSpell MetamorphosisStats;
+        private ShadowBoltSpell ShadowBoltStats;
 
         #endregion
 
@@ -60,14 +65,32 @@ namespace Rawr.WarlockTmp {
 
         public CharacterCalculationsWarlock(Character character, Stats stats) {
 
-            Character = character;
-            TotalStats = stats;
+            Stats = stats;
             Options = (CalculationOptionsWarlock) character.CalculationOptions;
             if (Options == null) {
                 Options = new CalculationOptionsWarlock();
             }
 
-            BaseMana = BaseStats.GetBaseStats(Character).Mana;
+            Talents = character.WarlockTalents;
+            BaseMana = BaseStats.GetBaseStats(character).Mana;
+            BaseHitChance 
+                = Math.Min(
+                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
+            BaseDirectDamageMultiplier 
+                = 1f + Stats.WarlockFirestoneDirectDamageMultiplier;
+            BaseCritChance = Stats.SpellCrit;
+            float bonus = Stats.CritBonusDamage;
+
+            // If the 5% crit debuff is not already being maintained by somebody
+            // else (i.e. it's not selected in the buffs tab), we may supply it
+            // via Improved Shadow Bolt.
+            if (Talents.ImprovedShadowBolt > 0
+                && Stats.SpellCritOnTarget == 0
+                && Options.SpellPriority.Contains("Shadow Bolt")) {
+
+                // TODO calculate uptime when less than 5 points are invested.
+                BaseCritChance += .05f;
+            }
         }
 
         #endregion
@@ -98,7 +121,7 @@ namespace Rawr.WarlockTmp {
             const float petInheritedAttackPowerPercentage = 0.57f;
             const float petInheritedSpellPowerPercentage = 0.15f;
             float firePower
-                = TotalStats.SpellPower + TotalStats.SpellFireDamageRating;
+                = Stats.SpellPower + Stats.SpellFireDamageRating;
             dictValues.Add(
                 "Bonus Damage",
                 String.Format(
@@ -107,9 +130,9 @@ namespace Rawr.WarlockTmp {
                         + "{2}\tFire Damage\r\n"
                         + "\r\n"
                         + "Your Fire Damage increases your pet's Attack Power by {3} and Spell Damage by {4}.",
-                    TotalStats.SpellPower,
-                    TotalStats.SpellPower + TotalStats.SpellShadowDamageRating,
-                    TotalStats.SpellPower + TotalStats.SpellFireDamageRating,
+                    Stats.SpellPower,
+                    Stats.SpellPower + Stats.SpellShadowDamageRating,
+                    Stats.SpellPower + Stats.SpellFireDamageRating,
                     Math.Round(
                         firePower * petInheritedAttackPowerPercentage, 0),
                     Math.Round(
@@ -120,13 +143,12 @@ namespace Rawr.WarlockTmp {
             float onePercentOfHitRating
                 = (1 / StatConversion.GetSpellHitFromRating(1));
             float hitFromRating
-                = StatConversion.GetSpellHitFromRating(TotalStats.HitRating);
-            float hitFromTalents
-                = (Character.WarlockTalents.Suppression * 0.01f);
+                = StatConversion.GetSpellHitFromRating(Stats.HitRating);
+            float hitFromTalents = Talents.Suppression * 0.01f;
             float hitFromBuffs
-                = (TotalStats.SpellHit - hitFromRating - hitFromTalents);
+                = (Stats.SpellHit - hitFromRating - hitFromTalents);
             float targetHit = Options.GetBaseHitRate() / 100f;
-            float totalHit = targetHit + TotalStats.SpellHit;
+            float totalHit = targetHit + Stats.SpellHit;
             float missChance = totalHit > 1 ? 0 : (1 - totalHit);
             dictValues.Add(
                 "Hit Rating",
@@ -143,13 +165,13 @@ namespace Rawr.WarlockTmp {
                         + "342 - Suppression and Heroic Presence\r\n"
                         + "289 - Suppression, Improved Faerie Fire / Misery\r\n"
                         + "263 - Suppression, Improved Faerie Fire / Misery and  Heroic Presence",
-                    TotalStats.HitRating,
+                    Stats.HitRating,
                     totalHit,
                     missChance,
                     targetHit,
                     Options.TargetLevel,
                     hitFromRating,
-                    TotalStats.HitRating,
+                    Stats.HitRating,
                     hitFromTalents,
                     hitFromBuffs,
                     Math.Ceiling(
@@ -170,16 +192,39 @@ namespace Rawr.WarlockTmp {
                 return PersonalDps;
             }
 
-            float damageDone = 0f;
+            // first run through the priorities and calculate how many times
+            // each spell will be cast
             float timeRemaining = Options.Duration;
+            Dictionary<String, WarlockSpell> castSpells
+                = new Dictionary<String, WarlockSpell>();
             foreach (String spellName in Options.SpellPriority) {
                 WarlockSpell spell = GetSpell(spellName);
+                if (!spell.IsCastable(Talents)) {
+                    continue;
+                }
                 spell.SetNumCasts(
-                    timeRemaining, Options.Duration, Options.Latency);
-                damageDone += spell.NumCasts * spell.GetAvgDamagePerCast();
-                timeRemaining -= spell.CastTime * spell.NumCasts;
+                    timeRemaining,
+                    Options.Duration,
+                    1f + Stats.SpellHaste,
+                    Options.Latency,
+                    castSpells);
+                castSpells.Add(spellName, spell);
+                timeRemaining
+                    -= (spell.AvgCastTime + Options.Latency) * spell.NumCasts;
+                if (timeRemaining <= .0001) {
+                    break;
+                }
             }
 
+            // then for each spell that is cast calculate its damage, and our
+            // overall damage
+            float damageDone = 0f;
+            foreach (KeyValuePair<String, WarlockSpell> pair in castSpells) {
+                WarlockSpell spell = pair.Value;
+                spell.SetDamageStats(
+                    Stats.SpellPower, BaseHitChance, castSpells);
+                damageDone += spell.NumCasts * spell.AvgDamagePerCast;
+            }
             PersonalDps = damageDone / Options.Duration;
             return PersonalDps;
         }
@@ -197,6 +242,8 @@ namespace Rawr.WarlockTmp {
         private WarlockSpell GetSpell(String spellName) {
 
             switch (spellName) {
+                case "Metamorphosis":
+                    return GetMetamorphosisStats();
                 case "Shadow Bolt":
                     return GetShadowboltStats();
                 default:
@@ -204,29 +251,27 @@ namespace Rawr.WarlockTmp {
             }
         }
 
-        private WarlockSpell GetShadowboltStats() {
+        private MetamorphosisSpell GetMetamorphosisStats() {
 
-            if (ShadowboltStats != null) {
-                return ShadowboltStats;
+            if (MetamorphosisStats == null) {
+                MetamorphosisStats
+                    = new MetamorphosisSpell(
+                        Talents, Stats.SpellHaste, Options.Duration);
             }
+            return MetamorphosisStats;
+        }
 
-            ShadowboltStats = new WarlockSpell(
-                this,
-                "Shadowbolt", // name
-                .17f, // percent base mana
-                BaseMana, // base mana
-                1f, // cost multiplier
-                3f, // cast time
-                1f, // haste divisor
-                0f); // crit chance
-            ShadowboltStats.SetAverageDamageOnHit(
-                TotalStats.SpellPower, // spell power
-                690f, // low base
-                770f, // high base
-                .8571f, // coefficient
-                1f, // multiplier
-                1.5f); // bonus crit multiplier
-            return ShadowboltStats;
+        private ShadowBoltSpell GetShadowboltStats() {
+
+            if (ShadowBoltStats == null) {
+                ShadowBoltStats = new ShadowBoltSpell(
+                    Talents,
+                    Stats,
+                    BaseMana,
+                    BaseDirectDamageMultiplier,
+                    BaseCritChance);
+            }
+            return ShadowBoltStats;
         }
 
         #endregion

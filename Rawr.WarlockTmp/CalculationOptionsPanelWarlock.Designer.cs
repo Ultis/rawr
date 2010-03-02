@@ -184,7 +184,6 @@
             // 
             // rotationRemoveButton
             // 
-            this.rotationRemoveButton.Enabled = false;
             this.rotationRemoveButton.Location = new System.Drawing.Point(231, 111);
             this.rotationRemoveButton.Name = "rotationRemoveButton";
             this.rotationRemoveButton.Size = new System.Drawing.Size(57, 23);
@@ -195,7 +194,6 @@
             // 
             // rotationDownButton
             // 
-            this.rotationDownButton.Enabled = false;
             this.rotationDownButton.Location = new System.Drawing.Point(231, 169);
             this.rotationDownButton.Name = "rotationDownButton";
             this.rotationDownButton.Size = new System.Drawing.Size(57, 23);
@@ -206,7 +204,6 @@
             // 
             // rotationUpButton
             // 
-            this.rotationUpButton.Enabled = false;
             this.rotationUpButton.Location = new System.Drawing.Point(231, 140);
             this.rotationUpButton.Name = "rotationUpButton";
             this.rotationUpButton.Size = new System.Drawing.Size(57, 23);
@@ -222,6 +219,7 @@
             this.rotationList.Name = "rotationList";
             this.rotationList.Size = new System.Drawing.Size(219, 108);
             this.rotationList.TabIndex = 14;
+            this.rotationList.SelectedIndexChanged += new System.EventHandler(this.rotationList_SelectedIndexChanged);
             // 
             // petLabel
             // 

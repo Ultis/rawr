@@ -218,6 +218,16 @@ namespace Rawr
             return GetWeightedSum(x(), xWeight, y(), yWeight);
         }
 
+        public static void SwapElements<T>(
+            List<T> list,
+            int index1,
+            int index2) 
+        {
+
+            T tmp = list[index1];
+            list[index1] = list[index2];
+            list[index2] = tmp;
+        }
 
         private static TElement[] GetElementsByIndices<TElement>(
             IList<TElement> elements, 
