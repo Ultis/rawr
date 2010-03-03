@@ -77,8 +77,16 @@ namespace Rawr.WarlockTmp {
             get {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
+                        "Simulation:Personal DPS",
+                        "Simulation:Pet DPS",
+                        "Simulation:Total DPS",
+                        "HP/Mana Stats:Health",
+                        "HP/Mana Stats:Mana",
                         "Spell:Bonus Damage",
-                        "Spell:Hit Rating"};
+                        "Spell:Hit Rating",
+                        "Spell:Crit Chance",
+                        "Spell:Haste Rating",
+                        "Shadow School:Shadow Bolt" };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -252,35 +260,38 @@ namespace Rawr.WarlockTmp {
                 //2/4/6/8/10%
                 //Backlash: increases your spell crit chance by 1/2/3%
                 BonusCritChance
-                    = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
+                    = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f,
+
+                //Demonic Pact: increases spell damage by 1/2/3/4/5%
+                BonusSpellPowerMultiplier = talents.DemonicPact * .01f
             };
 
-            Stats statsTotal 
+            Stats statsTotal
                 = statsBase + statsItem + statsBuffs + statsTalents;
 
             //make sure that the bonus multipliers have been applied to each
             //stat
-            statsTotal.Stamina 
+            statsTotal.Stamina
                 = (float) Math.Floor(
-                    statsTotal.Stamina 
+                    statsTotal.Stamina
                     * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect 
+            statsTotal.Intellect
                 = (float) Math.Floor(
-                    statsTotal.Intellect 
+                    statsTotal.Intellect
                     * (1f + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit 
+            statsTotal.Spirit
                 = (float) Math.Floor(
-                    statsTotal.Spirit 
+                    statsTotal.Spirit
                     * (1f + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Strength 
+            statsTotal.Strength
                 = (float) Math.Floor(
-                    statsTotal.Strength 
+                    statsTotal.Strength
                     * (1f + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility 
+            statsTotal.Agility
                 = (float) Math.Floor(
-                    statsTotal.Agility 
+                    statsTotal.Agility
                     * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Armor 
+            statsTotal.Armor
                 = (float) Math.Floor(
                     statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 
@@ -291,63 +302,68 @@ namespace Rawr.WarlockTmp {
 
             //Health is calculated from stamina rating first, then its bonus
             //multiplier (in this case, "Fel Vitality" talent) gets applied
-            statsTotal.Health 
+            statsTotal.Health
                 += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.Health *= (1 + statsTotal.BonusHealthMultiplier);
 
             //Mana is calculated from intellect rating first, then its bonus
             //multiplier (in this case, "Expansive Mind" - Gnome racial) is
             //applied
-            statsTotal.Mana 
+            statsTotal.Mana
                 += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1 + statsTotal.BonusManaMultiplier);
 
             //Crit rating - the MasterConjuror talent improves the firestone
-            statsTotal.CritRating 
-                += statsTotal.WarlockFirestoneSpellCritRating 
+            statsTotal.CritRating
+                += statsTotal.WarlockFirestoneSpellCritRating
                     * (1f + (talents.MasterConjuror * 1.5f));
-            statsTotal.SpellCrit 
+            statsTotal.SpellCrit
                 += StatConversion.GetSpellCritFromIntellect(
                     statsTotal.Intellect);
-            statsTotal.SpellCrit 
+            statsTotal.SpellCrit
                 += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellCrit += statsTotal.BonusCritChance;
             statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
 
             //Haste rating - the MasterConjuror talent improves the spellstone
-            statsTotal.HasteRating 
-                += statsTotal.WarlockSpellstoneHasteRating 
+            statsTotal.HasteRating
+                += statsTotal.WarlockSpellstoneHasteRating
                     * (1f + (talents.MasterConjuror * 1.5f));
-            statsTotal.SpellHaste 
+            statsTotal.SpellHaste
                 += StatConversion.GetSpellHasteFromRating(
                     statsTotal.HasteRating);
 
             //Hit rating 
-            statsTotal.SpellHit 
+            statsTotal.SpellHit
                 += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
             if (statsTotal.WarlockFelArmor > 0) {
-                statsTotal.SpellPower 
-                    += statsTotal.WarlockFelArmor 
+                statsTotal.SpellPower
+                    += statsTotal.WarlockFelArmor
                         * (1 + talents.DemonicAegis * 0.10f);
-                statsTotal.SpellDamageFromSpiritPercentage 
+                statsTotal.SpellDamageFromSpiritPercentage
                     += 0.30f * (1 + talents.DemonicAegis * 0.10f);
-                statsTotal.Hp5 
-                    += statsTotal.Health 
-                        * 0.02f 
+                statsTotal.Hp5
+                    += statsTotal.Health
+                        * 0.02f
                         * (1 + talents.DemonicAegis * 0.10f);
             } else if (statsTotal.WarlockDemonArmor > 0) {
-                statsTotal.Armor 
-                    += statsTotal.WarlockDemonArmor 
+                statsTotal.Armor
+                    += statsTotal.WarlockDemonArmor
                         * (1 + talents.DemonicAegis * 0.10f);
-                statsTotal.HealingReceivedMultiplier 
+                statsTotal.HealingReceivedMultiplier
                     += 0.2f * (1 + talents.DemonicAegis * 0.10f);
             }
 
-            statsTotal.SpellPower 
+            statsTotal.SpellPower
                 += (float) Math.Round(
-                    statsTotal.SpellDamageFromSpiritPercentage 
+                    statsTotal.SpellDamageFromSpiritPercentage
                     * statsTotal.Spirit);
+
+            statsTotal.SpellPower
+                = (float) Math.Floor(
+                    statsTotal.SpellPower
+                        * (1f + statsTotal.BonusSpellPowerMultiplier));
 
             if (talents.DemonicKnowledge > 0) {
                 //PetCalculations pet = new PetCalculations(statsTotal, character);
@@ -722,7 +738,9 @@ namespace Rawr.WarlockTmp {
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs() {
             if (_relevantGlyphs == null) {
-                _relevantGlyphs = new List<string>();
+                _relevantGlyphs
+                    = new List<string>{
+                        "Glyph of Metamorphosis"};
             }
             return _relevantGlyphs;
         }

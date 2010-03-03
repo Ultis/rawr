@@ -6,6 +6,8 @@ namespace Rawr.WarlockTmp {
 
     public class WarlockSpell {
 
+        public enum SpellTree { Affliction, Demonology, Destruction }
+
         // set via constructor (all numbers that vary between spell, but not
         // between casts of each spell)
         private String Name;
@@ -28,7 +30,10 @@ namespace Rawr.WarlockTmp {
         public float AvgDamagePerCast { get; private set; }
 
         public WarlockSpell(
+            WarlockTalents talents,
             String name,
+            MagicSchool magicSchool,
+            SpellTree spellTree,
             float percentBaseMana,
             float baseMana,
             float costMultiplier,
@@ -52,6 +57,15 @@ namespace Rawr.WarlockTmp {
             BaseDamageMultiplier = spellDamageMultiplier;
             BaseBonusCritMultiplier = spellBonusCritMultiplier;
             WaitTimeBetweenCasts = waitTimeBetweenCasts;
+
+            // apply talents that affect entire magic schools or spell trees
+            if (magicSchool == MagicSchool.Shadow) {
+                BaseDamageMultiplier += talents.ShadowMastery * .03f;
+            }
+            if (spellTree == SpellTree.Destruction) {
+                BaseBonusCritMultiplier += talents.Ruin * .2f;
+                CritChance += talents.Devastation * .05f;
+            }
         }
 
         public virtual bool IsCastable(WarlockTalents talents) {
@@ -59,18 +73,35 @@ namespace Rawr.WarlockTmp {
             return true;
         }
 
-        public void SetNumCasts(
+        public void SetCastingStats(
             float fightLength,
             float timeRemaining,
             float baseHasteDivisor,
             float delayPerSpell,
             Dictionary<String, WarlockSpell> alreadyCastSpells) {
 
-            // TODO factor in estimated collisions
             AvgCastTime = BaseCastTime / baseHasteDivisor;
-            float waitTime 
-                = Math.Max(AvgCastTime + delayPerSpell, WaitTimeBetweenCasts);
-            NumCasts = timeRemaining / waitTime;
+            if (WaitTimeBetweenCasts > AvgCastTime) {
+                float sumCastTimes = 0f;
+                foreach (
+                    KeyValuePair<String, WarlockSpell> pair
+                    in alreadyCastSpells) {
+
+                    sumCastTimes += pair.Value.AvgCastTime;
+                }
+                if (sumCastTimes > 0) {
+                    float avgCastOfPrevSpells
+                        = sumCastTimes / alreadyCastSpells.Count;
+                    float chanceOfCollision
+                        = (fightLength - timeRemaining) / timeRemaining;
+                    float collisionDelay
+                        = avgCastOfPrevSpells / 2f * chanceOfCollision;
+                    WaitTimeBetweenCasts += collisionDelay;
+                }
+                NumCasts = timeRemaining / WaitTimeBetweenCasts;
+            } else {
+                NumCasts = timeRemaining / (AvgCastTime + delayPerSpell);
+            }
         }
 
         public void SetDamageStats(
@@ -87,7 +118,8 @@ namespace Rawr.WarlockTmp {
 
             AvgDirectDamage
                 = (BaseDamage + Coefficient * baseSpellPower) * multiplier;
-            AvgDirectCritDamage = AvgDirectDamage * BaseBonusCritMultiplier;
+            AvgDirectCritDamage
+                = AvgDirectDamage * (1.5f + .5f * BaseBonusCritMultiplier);
             AvgDamagePerCast
                 = hitChance
                     * Utilities.GetWeightedSum(
@@ -95,6 +127,21 @@ namespace Rawr.WarlockTmp {
                         CritChance,
                         AvgDirectDamage, 
                         1 - CritChance);
+        }
+
+        public String GetToolTip() {
+
+            return String.Format(
+                "{0:0}*"
+                    + "{1:0.00}s\tAverage Cast Time\r\n"
+                    + "{2:0}\tAverage Hit\r\n"
+                    + "{3:0}\tAverage Crit\r\n"
+                    + "{4:0.0}\tCasts",
+                AvgDamagePerCast,
+                AvgCastTime,
+                AvgDirectDamage,
+                AvgDirectCritDamage,
+                NumCasts);
         }
     }
 
@@ -106,7 +153,10 @@ namespace Rawr.WarlockTmp {
         public MetamorphosisSpell(
             WarlockTalents talents, float hasteDivisor, float fightDuration)
             : base(
+                talents, // talents
                 "Metamorphosis", // name
+                0, // magic school
+                SpellTree.Demonology, // spell tree
                 0f, // percent base mana
                 0f, // base mana
                 1f, // cost multiplier
@@ -120,6 +170,9 @@ namespace Rawr.WarlockTmp {
                 180f * (1f - talents.Nemesis * .1f)) { // time between casts
 
             SpellDuration = 30f;
+            if (talents.GlyphMetamorphosis) {
+                SpellDuration += 6f;
+            }
             FightDuration = fightDuration;
         }
 
@@ -144,7 +197,10 @@ namespace Rawr.WarlockTmp {
             float baseDamageMultiplier,
             float baseCritChance)
             : base(
+                talents, // talents
                 "Shadow Bolt", // name
+                MagicSchool.Shadow, // magic school
+                SpellTree.Destruction, // spell tree
                 .17f, // percent base mana
                 baseMana, // base mana
                 1f, // cost multiplier
@@ -153,13 +209,11 @@ namespace Rawr.WarlockTmp {
                 770f, // high base
                 .8571f + talents.ShadowAndFlame * .04f, // coefficient
                 baseDamageMultiplier 
-                    + talents.ShadowMastery * .03f
                     + talents.ImprovedShadowBolt * .01f, // damage multiplier
                 baseCritChance
-                    + talents.Devastation * .05f
                     + stats.Warlock4T8
                     + stats.Warlock2T10, // crit chance
-                stats.BonusCritMultiplier + talents.Ruin * .1f, // bonus crit
+                stats.BonusCritMultiplier, // bonus crit
                 0f) { } // time between casts
     }
 }

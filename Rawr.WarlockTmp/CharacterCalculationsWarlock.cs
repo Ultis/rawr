@@ -41,15 +41,15 @@ namespace Rawr.WarlockTmp {
 
         #region subclass specific properties
 
-        public Stats Stats { get; private set; }
-        public CalculationOptionsWarlock Options { get; private set; }
+        private Character Character;
+        private Stats Stats;
+        private CalculationOptionsWarlock Options;
         private WarlockTalents Talents;
 
         private float PersonalDps = -1f;
         private float PetDps = -1f;
 
         private float BaseMana;
-        private float BaseHitChance;
         private float BaseDirectDamageMultiplier;
         private float BaseCritChance;
 
@@ -65,6 +65,7 @@ namespace Rawr.WarlockTmp {
 
         public CharacterCalculationsWarlock(Character character, Stats stats) {
 
+            Character = character;
             Stats = stats;
             Options = (CalculationOptionsWarlock) character.CalculationOptions;
             if (Options == null) {
@@ -73,9 +74,6 @@ namespace Rawr.WarlockTmp {
 
             Talents = character.WarlockTalents;
             BaseMana = BaseStats.GetBaseStats(character).Mana;
-            BaseHitChance 
-                = Math.Min(
-                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
             BaseDirectDamageMultiplier 
                 = 1f + Stats.WarlockFirestoneDirectDamageMultiplier;
             BaseCritChance = Stats.SpellCrit;
@@ -115,6 +113,13 @@ namespace Rawr.WarlockTmp {
 
             Dictionary<string, string> dictValues
                 = new Dictionary<string, string>();
+
+            dictValues.Add("Personal DPS", String.Format("{0:0}", PersonalDps));
+            dictValues.Add("Pet DPS", String.Format("{0:0}", PetDps));
+            dictValues.Add("Total DPS", String.Format("{0:0}", OverallPoints));
+
+            dictValues.Add("Health", String.Format("{0:0}", Stats.Health));
+            dictValues.Add("Mana", String.Format("{0:0}", Stats.Mana));
 
             #region Bonus Damage
             //pet scaling consts: http://www.wowwiki.com/Warlock_minions
@@ -179,6 +184,62 @@ namespace Rawr.WarlockTmp {
                     (totalHit > 1) ? "above" : "below"));
             #endregion
 
+            #region Crit %
+            Stats statsBase = BaseStats.GetBaseStats(Character);
+            float critFromRating
+                = StatConversion.GetSpellCritFromRating(Stats.CritRating);
+            float critFromIntellect
+                = StatConversion.GetSpellCritFromIntellect(Stats.Intellect);
+            float critFromBuffs
+                = Stats.SpellCrit
+                    - statsBase.SpellCrit
+                    - critFromRating
+                    - critFromIntellect
+                    - (Talents.DemonicTactics * 0.02f)
+                    - (Talents.Backlash * 0.01f);
+            dictValues.Add(
+                "Crit Chance",
+                String.Format(
+                    "{0:0.00%}*"
+                        + "{1:0.00%}\tfrom {2:0} Spell Crit rating\r\n"
+                        + "{3:0.00%}\tfrom {4:0} Intellect\r\n"
+                        + "{5:0.000%}\tfrom Warlock Class Bonus\r\n"
+                        + "{6:0%}\tfrom Talent: Demonic Tactics\r\n"
+                        + "{7:0%}\tfrom Talent: Backlash\r\n"
+                        + "{8:0%}\tfrom Buffs",
+                    Stats.SpellCrit,
+                    critFromRating,
+                    Stats.CritRating,
+                    critFromIntellect,
+                    Stats.Intellect,
+                    statsBase.SpellCrit,
+                    Talents.DemonicTactics * 0.02f,
+                    Talents.Backlash * 0.01f,
+                    critFromBuffs
+                ));
+            #endregion
+
+            #region Haste
+            dictValues.Add(
+                "Haste Rating",
+                String.Format(
+                    "{0:0.00}%"
+                        + "*{1:0.00}%\tfrom {2} Haste rating\r\n"
+                        + "{3:0.00}%\tfrom Buffs\r\n"
+                        + "{4:0.00}s\tGlobal Cooldown",
+                    Stats.SpellHaste * 100f,
+                    StatConversion.GetSpellHasteFromRating(Stats.HasteRating)
+                        * 100f,
+                    Stats.HasteRating,
+                    (Stats.SpellHaste
+                            - StatConversion.GetSpellHasteFromRating(
+                                Stats.HasteRating))
+                        * 100f,
+                    Math.Max(1.0f, 1.5f / (1 + Stats.SpellHaste))));
+            #endregion Haste
+
+            dictValues.Add("Shadow Bolt", GetShadowboltStats().GetToolTip());
+
             return dictValues;
         }
         #endregion
@@ -202,7 +263,7 @@ namespace Rawr.WarlockTmp {
                 if (!spell.IsCastable(Talents)) {
                     continue;
                 }
-                spell.SetNumCasts(
+                spell.SetCastingStats(
                     timeRemaining,
                     Options.Duration,
                     1f + Stats.SpellHaste,
@@ -216,13 +277,17 @@ namespace Rawr.WarlockTmp {
                 }
             }
 
+            float hitChance
+                = Math.Min(
+                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
+            float spellPower = Stats.SpellPower;
+
             // then for each spell that is cast calculate its damage, and our
             // overall damage
             float damageDone = 0f;
             foreach (KeyValuePair<String, WarlockSpell> pair in castSpells) {
                 WarlockSpell spell = pair.Value;
-                spell.SetDamageStats(
-                    Stats.SpellPower, BaseHitChance, castSpells);
+                spell.SetDamageStats(spellPower, hitChance, castSpells);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
             PersonalDps = damageDone / Options.Duration;
