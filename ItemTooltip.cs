@@ -272,7 +272,7 @@ namespace Rawr
                                 if (Stats.IsPercentage(info)) value *= 100;
                                 value = (float)Math.Round(value * 100f) / 100f;
                                 string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
-                                statsList.Add(text);
+                                statsList.Add(text.Replace("Armor Penetration Rating","ArP Rating"));
                                 float width = _dummyBitmap.MeasureString(text, _fontStats).Width;
                                 if (xPos + width > xGrid.end && xPos != xGrid.initial)
                                 {

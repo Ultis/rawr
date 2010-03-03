@@ -202,15 +202,13 @@
       </key>
       <value>
         <ArrayOfItemType>
-          <ItemType>None</ItemType>
-          <ItemType>Leather</ItemType>
-          <ItemType>Mail</ItemType>
           <ItemType>Plate</ItemType>
-          <ItemType>Libram</ItemType>
           <ItemType>Polearm</ItemType>
           <ItemType>TwoHandAxe</ItemType>
           <ItemType>TwoHandMace</ItemType>
           <ItemType>TwoHandSword</ItemType>
+          <ItemType>Libram</ItemType>
+          <ItemType>None</ItemType>
         </ArrayOfItemType>
       </value>
     </item>
@@ -348,6 +346,25 @@
           <ItemType>Staff</ItemType>
           <ItemType>FistWeapon</ItemType>
           <ItemType>Dagger</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>TankDK</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Plate</ItemType>
+          <ItemType>Sigil</ItemType>
+          <ItemType>Polearm</ItemType>
+          <ItemType>TwoHandAxe</ItemType>
+          <ItemType>TwoHandMace</ItemType>
+          <ItemType>TwoHandSword</ItemType>
+          <ItemType>OneHandAxe</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>OneHandSword</ItemType>
         </ArrayOfItemType>
       </value>
     </item>
@@ -1467,83 +1484,6 @@
               <AppliesToGems>true</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList>
-                <ItemFilterRegex>
-                  <RegexList />
-                  <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Archavon the Stone Watcher</Name>
-                  <Pattern>Archavon the Stone Watcher</Pattern>
-                  <BoA>true</BoA>
-                  <BoE>true</BoE>
-                  <BoP>true</BoP>
-                  <BoU>true</BoU>
-                  <BoN>true</BoN>
-                  <MinItemLevel>0</MinItemLevel>
-                  <MaxItemLevel>1000</MaxItemLevel>
-                  <MinItemQuality>Temp</MinItemQuality>
-                  <MaxItemQuality>Heirloom</MaxItemQuality>
-                  <AdditiveFilter>true</AdditiveFilter>
-                  <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
-                  <Enabled>true</Enabled>
-                </ItemFilterRegex>
-                <ItemFilterRegex>
-                  <RegexList />
-                  <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Emalon the Storm Watcher</Name>
-                  <Pattern>Emalon the Storm Watcher</Pattern>
-                  <BoA>true</BoA>
-                  <BoE>true</BoE>
-                  <BoP>true</BoP>
-                  <BoU>true</BoU>
-                  <BoN>true</BoN>
-                  <MinItemLevel>0</MinItemLevel>
-                  <MaxItemLevel>1000</MaxItemLevel>
-                  <MinItemQuality>Temp</MinItemQuality>
-                  <MaxItemQuality>Heirloom</MaxItemQuality>
-                  <AdditiveFilter>true</AdditiveFilter>
-                  <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
-                  <Enabled>true</Enabled>
-                </ItemFilterRegex>
-                <ItemFilterRegex>
-                  <RegexList />
-                  <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Koralon the Flame Watcher</Name>
-                  <Pattern>Koralon the Flame Watcher</Pattern>
-                  <BoA>true</BoA>
-                  <BoE>true</BoE>
-                  <BoP>true</BoP>
-                  <BoU>true</BoU>
-                  <BoN>true</BoN>
-                  <MinItemLevel>0</MinItemLevel>
-                  <MaxItemLevel>1000</MaxItemLevel>
-                  <MinItemQuality>Temp</MinItemQuality>
-                  <MaxItemQuality>Heirloom</MaxItemQuality>
-                  <AdditiveFilter>true</AdditiveFilter>
-                  <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
-                  <Enabled>true</Enabled>
-                </ItemFilterRegex>
-              </RegexList>
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Vault of Archavon</Name>
-              <Pattern>Archavon</Pattern>
-              <BoA>true</BoA>
-              <BoE>true</BoE>
-              <BoP>true</BoP>
-              <BoU>true</BoU>
-              <BoN>true</BoN>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>10 Man Raids</Name>
@@ -2026,83 +1966,6 @@
               <AppliesToGems>true</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList>
-                <ItemFilterRegex>
-                  <RegexList />
-                  <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Archavon the Stone Watcher</Name>
-                  <Pattern>Archavon the Stone Watcher</Pattern>
-                  <BoA>true</BoA>
-                  <BoE>true</BoE>
-                  <BoP>true</BoP>
-                  <BoU>true</BoU>
-                  <BoN>true</BoN>
-                  <MinItemLevel>0</MinItemLevel>
-                  <MaxItemLevel>1000</MaxItemLevel>
-                  <MinItemQuality>Temp</MinItemQuality>
-                  <MaxItemQuality>Heirloom</MaxItemQuality>
-                  <AdditiveFilter>true</AdditiveFilter>
-                  <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
-                  <Enabled>true</Enabled>
-                </ItemFilterRegex>
-                <ItemFilterRegex>
-                  <RegexList />
-                  <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Emalon the Storm Watcher</Name>
-                  <Pattern>Emalon the Storm Watcher</Pattern>
-                  <BoA>true</BoA>
-                  <BoE>true</BoE>
-                  <BoP>true</BoP>
-                  <BoU>true</BoU>
-                  <BoN>true</BoN>
-                  <MinItemLevel>0</MinItemLevel>
-                  <MaxItemLevel>1000</MaxItemLevel>
-                  <MinItemQuality>Temp</MinItemQuality>
-                  <MaxItemQuality>Heirloom</MaxItemQuality>
-                  <AdditiveFilter>true</AdditiveFilter>
-                  <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
-                  <Enabled>true</Enabled>
-                </ItemFilterRegex>
-                <ItemFilterRegex>
-                  <RegexList />
-                  <OtherRegexEnabled>true</OtherRegexEnabled>
-                  <Name>Koralon the Flame Watcher</Name>
-                  <Pattern>Koralon the Flame Watcher</Pattern>
-                  <BoA>true</BoA>
-                  <BoE>true</BoE>
-                  <BoP>true</BoP>
-                  <BoU>true</BoU>
-                  <BoN>true</BoN>
-                  <MinItemLevel>0</MinItemLevel>
-                  <MaxItemLevel>1000</MaxItemLevel>
-                  <MinItemQuality>Temp</MinItemQuality>
-                  <MaxItemQuality>Heirloom</MaxItemQuality>
-                  <AdditiveFilter>true</AdditiveFilter>
-                  <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
-                  <Enabled>true</Enabled>
-                </ItemFilterRegex>
-              </RegexList>
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Vault of Archavon</Name>
-              <Pattern>Archavon</Pattern>
-              <BoA>true</BoA>
-              <BoE>true</BoE>
-              <BoP>true</BoP>
-              <BoU>true</BoU>
-              <BoN>true</BoN>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>25 Man Raids</Name>
@@ -2124,7 +1987,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 7 Raids (10/25)</Name>
-      <Pattern>Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon</Pattern>
+      <Pattern>Naxxramas|Eye of Eternity|Obsidian Sanctum</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -4841,6 +4704,218 @@
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 10 Raids (10/25)</Name>
       <Pattern>Icecrown Citadel</Pattern>
+      <BoA>true</BoA>
+      <BoE>true</BoE>
+      <BoP>true</BoP>
+      <BoU>true</BoU>
+      <BoN>true</BoN>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList>
+        <ItemFilterRegex>
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Archavon the Stone Watcher</Name>
+              <Pattern>Archavon the Stone Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Emalon the Storm Watcher</Name>
+              <Pattern>Emalon the Storm Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Koralon the Flame Watcher</Name>
+              <Pattern>Koralon the Flame Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Toravon the Ice Watcher</Name>
+              <Pattern>Toravon the Ice Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>10 Man Raids</Name>
+          <Pattern>(?&lt;! Heroic.*)(Archavon)$| \(10</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Archavon the Stone Watcher</Name>
+              <Pattern>Archavon the Stone Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Emalon the Storm Watcher</Name>
+              <Pattern>Emalon the Storm Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Koralon the Flame Watcher</Name>
+              <Pattern>Koralon the Flame Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Toravon the Ice Watcher</Name>
+              <Pattern>Toravon the Ice Watcher</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>25 Man Raids</Name>
+          <Pattern>Heroic.*(Archavon)$|\(25</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+      </RegexList>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Vault of Archavon (10/25)</Name>
+      <Pattern>Archavon</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
