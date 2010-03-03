@@ -10,15 +10,19 @@ namespace Rawr.WarlockTmp {
 
         // set via constructor (all numbers that vary between spell, but not
         // between casts of each spell)
-        private String Name;
+        private string Name;
         private float ManaCost;
         private float BaseCastTime;
         private float CritChance;
         private float BaseDamage;
-        private float Coefficient;
-        private float BaseDamageMultiplier;
+        private float DirectCoefficient;
+        private float DirectDamageMultiplier;
+        private float BaseTickDamage;
+        private float NumTicks;
+        private float TickCoefficient;
         private float BaseBonusCritMultiplier;
-        public float WaitTimeBetweenCasts { get; private set; }
+        private float TickDamageMultiplier;
+        public float WaitTimeBetweenCasts { get; protected set; }
 
         // set via SetNumCasts()
         public float AvgCastTime { get; private set; }
@@ -27,11 +31,14 @@ namespace Rawr.WarlockTmp {
         // set via SetDamageStats()
         private float AvgDirectDamage;
         private float AvgDirectCritDamage;
+        private float AvgTickDamage;
+        private float AvgTickCritDamage;
         public float AvgDamagePerCast { get; private set; }
 
+        #region Constructor
         public WarlockSpell(
             WarlockTalents talents,
-            String name,
+            string name,
             MagicSchool magicSchool,
             SpellTree spellTree,
             float percentBaseMana,
@@ -40,8 +47,12 @@ namespace Rawr.WarlockTmp {
             float spellCastTime,
             float spellLowDamage,
             float spellHighDamage,
-            float coefficient,
-            float spellDamageMultiplier,
+            float directCoefficient,
+            float directMultiplier,
+            float baseTickDamage,
+            float numTicks,
+            float tickCoefficient,
+            float tickMultiplier,
             float spellCritChance,
             float spellBonusCritMultiplier,
             float waitTimeBetweenCasts) {
@@ -53,32 +64,38 @@ namespace Rawr.WarlockTmp {
             BaseCastTime = spellCastTime;
             CritChance = spellCritChance;
             BaseDamage = (spellLowDamage + spellHighDamage) / 2f;
-            Coefficient = coefficient;
-            BaseDamageMultiplier = spellDamageMultiplier;
+            DirectCoefficient = directCoefficient;
+            DirectDamageMultiplier = directMultiplier;
+            BaseTickDamage = baseTickDamage;
+            NumTicks = numTicks;
+            TickCoefficient = tickCoefficient;
+            TickDamageMultiplier = tickMultiplier;
             BaseBonusCritMultiplier = spellBonusCritMultiplier;
             WaitTimeBetweenCasts = waitTimeBetweenCasts;
 
             // apply talents that affect entire magic schools or spell trees
             if (magicSchool == MagicSchool.Shadow) {
-                BaseDamageMultiplier += talents.ShadowMastery * .03f;
+                DirectDamageMultiplier += talents.ShadowMastery * .03f;
+                TickDamageMultiplier += talents.ShadowMastery * .03f;
             }
             if (spellTree == SpellTree.Destruction) {
                 BaseBonusCritMultiplier += talents.Ruin * .2f;
                 CritChance += talents.Devastation * .05f;
             }
         }
+        #endregion
 
         public virtual bool IsCastable(WarlockTalents talents) {
 
             return true;
         }
 
-        public void SetCastingStats(
+        public virtual void SetCastingStats(
             float fightLength,
             float timeRemaining,
             float baseHasteDivisor,
             float delayPerSpell,
-            Dictionary<String, WarlockSpell> alreadyCastSpells) {
+            Dictionary<string, WarlockSpell> alreadyCastSpells) {
 
             AvgCastTime = BaseCastTime / baseHasteDivisor;
             if (WaitTimeBetweenCasts > AvgCastTime) {
@@ -107,41 +124,131 @@ namespace Rawr.WarlockTmp {
         public void SetDamageStats(
             float baseSpellPower,
             float hitChance,
-            Dictionary<String, WarlockSpell> castSpells) {
+            Dictionary<string, WarlockSpell> castSpells) {
 
-            float multiplier = BaseDamageMultiplier;
+            float directMultiplier = DirectDamageMultiplier;
+            float tickMultiplier = TickDamageMultiplier;
             if (castSpells.ContainsKey("Metamorphosis")) {
-                multiplier
-                    += ((MetamorphosisSpell) castSpells["Metamorphosis"])
+                float morphBonus
+                    = ((MetamorphosisSpell) castSpells["Metamorphosis"])
                         .GetAvgBonusDamageMultiplier();
+                directMultiplier += morphBonus;
+                tickMultiplier += morphBonus;
             }
 
             AvgDirectDamage
-                = (BaseDamage + Coefficient * baseSpellPower) * multiplier;
+                = (BaseDamage + DirectCoefficient * baseSpellPower)
+                    * directMultiplier;
             AvgDirectCritDamage
                 = AvgDirectDamage * (1.5f + .5f * BaseBonusCritMultiplier);
+
+            AvgTickDamage
+                = (BaseTickDamage + TickCoefficient * baseSpellPower)
+                    * tickMultiplier;
+            AvgTickCritDamage
+                = AvgTickDamage * (1.5f + .5f * BaseBonusCritMultiplier);
+
+            float directDamage
+                = Utilities.GetWeightedSum(
+                    AvgDirectCritDamage,
+                    CritChance,
+                    AvgDirectDamage,
+                    1 - CritChance);
+            float tickDamage
+                = Utilities.GetWeightedSum(
+                    AvgTickCritDamage,
+                    CritChance,
+                    AvgTickDamage,
+                    1 - CritChance);
             AvgDamagePerCast
-                = hitChance
-                    * Utilities.GetWeightedSum(
-                        AvgDirectCritDamage, 
-                        CritChance,
-                        AvgDirectDamage, 
-                        1 - CritChance);
+                = hitChance * (directDamage + NumTicks * tickDamage);
         }
 
         public String GetToolTip() {
 
-            return String.Format(
-                "{0:0}*"
-                    + "{1:0.00}s\tAverage Cast Time\r\n"
-                    + "{2:0}\tAverage Hit\r\n"
-                    + "{3:0}\tAverage Crit\r\n"
-                    + "{4:0.0}\tCasts",
-                AvgDamagePerCast,
-                AvgCastTime,
-                AvgDirectDamage,
-                AvgDirectCritDamage,
-                NumCasts);
+            string toolTip
+                = String.Format(
+                    "{0:0}*{1:0.00}s\tAverage Cast Time\r\n",
+                    AvgDamagePerCast,
+                    AvgCastTime);
+            if (AvgDirectDamage > 0) {
+                toolTip
+                    += String.Format(
+                        "{0:0}\tAverage Hit\r\n"
+                            + "{1:0}\tAverage Crit\r\n",
+                        AvgDirectDamage,
+                        AvgDirectCritDamage);
+            }
+            if (AvgTickDamage > 0) {
+                toolTip
+                    += String.Format(
+                        "{0:0}\tAverage Tick\r\n"
+                            + "{1:0}\tAverage Tick Crit\r\n",
+                        AvgTickDamage,
+                        AvgTickCritDamage);
+            }
+            toolTip += String.Format("{0:0.0}\tCasts", NumCasts);
+            return toolTip;
+        }
+    }
+
+    public class CorruptionSpell : WarlockSpell {
+
+        private bool Hasted;
+
+        public CorruptionSpell(
+            WarlockTalents talents,
+            Stats stats,
+            float baseMana,
+            float tickMultiplier,
+            float baseCritChance)
+            : base(
+                talents, // talents
+                "Corruption", // name
+                MagicSchool.Shadow, // magic school
+                SpellTree.Affliction, // spell tree
+                .14f, // percent base mana
+                baseMana, // base mana
+                1f, // cost multiplier
+                1.5f, // cast time
+                0f, // low damage
+                0f, // high damage
+                0f, // direct coefficient
+                0f, // direct multiplier
+                1080f / 6f, // damage per tick
+                6f, // num ticks
+                (1.2f
+                        + talents.EmpoweredCorruption * .12f
+                        + talents.EverlastingAffliction * .01f)
+                    / 6f, // tick coefficient
+                tickMultiplier
+                    + talents.ImprovedCorruption * .02f
+                    + talents.Contagion * .01f, // tick multiplier
+                (baseCritChance + talents.Malediction * .03f)
+                    * talents.Pandemic, // crit chance
+                stats.BonusCritMultiplier
+                    + talents.Pandemic * .5f, // crit multiplier
+                18f) { // time between casts
+
+            Hasted = talents.GlyphQuickDecay;
+        }
+
+        public override void SetCastingStats(
+            float fightLength,
+            float timeRemaining,
+            float baseHasteDivisor,
+            float delayPerSpell,
+            Dictionary<string, WarlockSpell> alreadyCastSpells) {
+
+            if (Hasted) {
+                WaitTimeBetweenCasts /= baseHasteDivisor;
+            }
+            base.SetCastingStats(
+                fightLength,
+                timeRemaining,
+                baseHasteDivisor,
+                delayPerSpell,
+                alreadyCastSpells);
         }
     }
 
@@ -163,8 +270,12 @@ namespace Rawr.WarlockTmp {
                 1.5f, // cast time
                 0f, // low damage
                 0f, // high damage
-                0f, // coefficient
-                0f, // damage multiplier
+                0f, // direct coefficient
+                0f, // direct multiplier
+                0f, // damage per tick
+                0f, // num ticks
+                0f, // tick coefficient
+                0f, // tick multiplier
                 0f, // crit chance
                 0f, // bonus crit
                 180f * (1f - talents.Nemesis * .1f)) { // time between casts
@@ -194,7 +305,7 @@ namespace Rawr.WarlockTmp {
             WarlockTalents talents,
             Stats stats,
             float baseMana,
-            float baseDamageMultiplier,
+            float directMultiplier,
             float baseCritChance)
             : base(
                 talents, // talents
@@ -207,9 +318,13 @@ namespace Rawr.WarlockTmp {
                 3f - talents.Bane * .1f, // cast time
                 690f, // low base
                 770f, // high base
-                .8571f + talents.ShadowAndFlame * .04f, // coefficient
-                baseDamageMultiplier 
+                .8571f + talents.ShadowAndFlame * .04f, // direct coefficient
+                directMultiplier
                     + talents.ImprovedShadowBolt * .01f, // damage multiplier
+                0f, // damage per tick
+                0f, // num ticks
+                0f, // tick coefficient
+                0f, // tick multiplier
                 baseCritChance
                     + stats.Warlock4T8
                     + stats.Warlock2T10, // crit chance

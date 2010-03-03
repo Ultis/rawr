@@ -27,7 +27,7 @@ namespace Rawr.WarlockTmp {
         public float Latency { get; set; }
         public float ManaPotSize { get; set; }
         public float Replenishment { get; set; }
-        public List<String> SpellPriority { get; set; }
+        public List<string> SpellPriority { get; set; }
 
         #endregion
 

@@ -11,7 +11,8 @@ namespace Rawr.WarlockTmp {
         : CalculationOptionsPanelBase {
 
         #region constants
-        private static String[] ALL_SPELLS = { "Metamorphosis", "Shadow Bolt" };
+        private static string[] ALL_SPELLS = { 
+            "Corruption", "Metamorphosis", "Shadow Bolt" };
         #endregion
 
 

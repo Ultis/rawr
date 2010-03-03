@@ -51,8 +51,10 @@ namespace Rawr.WarlockTmp {
 
         private float BaseMana;
         private float BaseDirectDamageMultiplier;
+        private float BaseTickDamageMultiplier;
         private float BaseCritChance;
 
+        private CorruptionSpell CorruptionStats;
         private MetamorphosisSpell MetamorphosisStats;
         private ShadowBoltSpell ShadowBoltStats;
 
@@ -74,8 +76,14 @@ namespace Rawr.WarlockTmp {
 
             Talents = character.WarlockTalents;
             BaseMana = BaseStats.GetBaseStats(character).Mana;
-            BaseDirectDamageMultiplier 
-                = 1f + Stats.WarlockFirestoneDirectDamageMultiplier;
+            float multiplier
+                = 1f
+                    + Talents.DemonicPact * .01f
+                    + Talents.Malediction * .01f;
+            BaseTickDamageMultiplier
+                = multiplier + Stats.WarlockSpellstoneDotDamageMultiplier;
+            BaseDirectDamageMultiplier
+                = multiplier + Stats.WarlockFirestoneDirectDamageMultiplier;
             BaseCritChance = Stats.SpellCrit;
             float bonus = Stats.CritBonusDamage;
 
@@ -238,6 +246,7 @@ namespace Rawr.WarlockTmp {
                     Math.Max(1.0f, 1.5f / (1 + Stats.SpellHaste))));
             #endregion Haste
 
+            dictValues.Add("Corruption", GetCorruptionStats().GetToolTip());
             dictValues.Add("Shadow Bolt", GetShadowboltStats().GetToolTip());
 
             return dictValues;
@@ -256,16 +265,16 @@ namespace Rawr.WarlockTmp {
             // first run through the priorities and calculate how many times
             // each spell will be cast
             float timeRemaining = Options.Duration;
-            Dictionary<String, WarlockSpell> castSpells
-                = new Dictionary<String, WarlockSpell>();
-            foreach (String spellName in Options.SpellPriority) {
+            Dictionary<string, WarlockSpell> castSpells
+                = new Dictionary<string, WarlockSpell>();
+            foreach (string spellName in Options.SpellPriority) {
                 WarlockSpell spell = GetSpell(spellName);
                 if (!spell.IsCastable(Talents)) {
                     continue;
                 }
                 spell.SetCastingStats(
-                    timeRemaining,
                     Options.Duration,
+                    timeRemaining,
                     1f + Stats.SpellHaste,
                     Options.Latency,
                     castSpells);
@@ -285,7 +294,7 @@ namespace Rawr.WarlockTmp {
             // then for each spell that is cast calculate its damage, and our
             // overall damage
             float damageDone = 0f;
-            foreach (KeyValuePair<String, WarlockSpell> pair in castSpells) {
+            foreach (KeyValuePair<string, WarlockSpell> pair in castSpells) {
                 WarlockSpell spell = pair.Value;
                 spell.SetDamageStats(spellPower, hitChance, castSpells);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
@@ -307,6 +316,8 @@ namespace Rawr.WarlockTmp {
         private WarlockSpell GetSpell(String spellName) {
 
             switch (spellName) {
+                case "Corruption":
+                    return GetCorruptionStats();
                 case "Metamorphosis":
                     return GetMetamorphosisStats();
                 case "Shadow Bolt":
@@ -314,6 +325,19 @@ namespace Rawr.WarlockTmp {
                 default:
                     return null;
             }
+        }
+
+        private CorruptionSpell GetCorruptionStats() {
+
+            if (CorruptionStats == null) {
+                CorruptionStats = new CorruptionSpell(
+                    Talents,
+                    Stats,
+                    BaseMana,
+                    BaseTickDamageMultiplier,
+                    BaseCritChance);
+            }
+            return CorruptionStats;
         }
 
         private MetamorphosisSpell GetMetamorphosisStats() {

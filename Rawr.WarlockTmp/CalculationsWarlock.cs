@@ -86,6 +86,7 @@ namespace Rawr.WarlockTmp {
                         "Spell:Hit Rating",
                         "Spell:Crit Chance",
                         "Spell:Haste Rating",
+                        "Shadow School:Corruption",
                         "Shadow School:Shadow Bolt" };
                 return _characterDisplayCalculationLabels;
             }
@@ -260,10 +261,7 @@ namespace Rawr.WarlockTmp {
                 //2/4/6/8/10%
                 //Backlash: increases your spell crit chance by 1/2/3%
                 BonusCritChance
-                    = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f,
-
-                //Demonic Pact: increases spell damage by 1/2/3/4/5%
-                BonusSpellPowerMultiplier = talents.DemonicPact * .01f
+                    = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
             };
 
             Stats statsTotal
@@ -740,7 +738,8 @@ namespace Rawr.WarlockTmp {
             if (_relevantGlyphs == null) {
                 _relevantGlyphs
                     = new List<string>{
-                        "Glyph of Metamorphosis"};
+                        "Glyph of Metamorphosis",
+                        "Glyph of Quick Decay"};
             }
             return _relevantGlyphs;
         }
