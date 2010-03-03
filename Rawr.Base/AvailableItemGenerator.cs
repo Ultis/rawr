@@ -2065,7 +2065,15 @@ namespace Rawr.Optimizer
 					if (!itemsFilteredHint || statsColorsA.Item.Id != statsColorsB.Item.Id)
 					{
 						ArrayUtils.CompareResult compare = statsColorsA.CompareTo(statsColorsB);
-						if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
+                        if (compare == ArrayUtils.CompareResult.Equal && statsColorsA.Item.MinDamage > 0) // A==B, used for Weapons with no stats, but damage values
+                        {
+                            if (statsColorsA.Item.MinDamage <= statsColorsB.Item.MinDamage)
+                            {
+                                addItem = false;
+                                break;
+                            }
+                        }
+                        else if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
 						{
 							removeItems.Add(statsColorsB);
 						}
