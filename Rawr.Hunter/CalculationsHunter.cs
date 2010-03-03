@@ -2617,27 +2617,29 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Base Stats
                 statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
                 statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
-                statsProcs.Agility  = /*(float)Math.Floor(*/statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier)/*)*/;
-                statsProcs.Agility += /*(float)Math.Floor(*/statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier)/*)*/;
-                statsProcs.Agility += /*(float)Math.Floor(*/statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier)/*)*/;
+                statsProcs.Agility  = statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
+                statsProcs.Agility += statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
+                statsProcs.Agility += statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
                 statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
                 statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
 
                 // Armor
-                statsProcs.Armor = /*(float)Math.Floor(*/statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier)/*)*/;
+                statsProcs.Armor = statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier);
                 statsProcs.BonusArmor += statsProcs.Agility * 2f;
-                statsProcs.BonusArmor = /*(float)Math.Floor(*/statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier)/*)*/;
+                statsProcs.BonusArmor = statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier);
                 statsProcs.Armor += statsProcs.BonusArmor;
                 statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
 
                 // Attack Power
                 statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
+                statsProcs.BonusRangedAttackPowerMultiplier = 0; //it's been added to Armor so kill it
                 float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
                 float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility);
                 float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
                 float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
                 statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
                 statsProcs.RangedAttackPower = statsProcs.AttackPower;
+                statsTotal.AttackPower *= (1f + statsProcs.BonusAttackPowerMultiplier); // Make sure the originals get your AP% procs
 
                 // Crit
                 statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
