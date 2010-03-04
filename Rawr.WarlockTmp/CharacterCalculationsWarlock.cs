@@ -57,6 +57,7 @@ namespace Rawr.WarlockTmp {
         public Dictionary<string, Spell> CastSpells
             { get; private set; }
         public CorruptionSpell CorruptionStats { get; private set; }
+        public LifeTapSpell LifeTapStats { get; private set; }
         public MetamorphosisSpell MetamorphosisStats { get; private set; }
         public ShadowBoltSpell ShadowBoltStats { get; private set; }
         public InstantShadowBoltSpell InstantShadowBoltSpell {
@@ -269,6 +270,7 @@ namespace Rawr.WarlockTmp {
             // first run through the priorities and calculate how many times
             // each spell will be cast
             float timeRemaining = Options.Duration;
+            float manaRemaining = Stats.Mana;
             Dictionary<string, Spell> castSpells
                 = new Dictionary<string, Spell>();
             foreach (string spellName in Options.SpellPriority) {
@@ -277,10 +279,14 @@ namespace Rawr.WarlockTmp {
                     continue;
                 }
                 spell.SetCastingStats(
-                    timeRemaining, 1f + Stats.SpellHaste, castSpells);
+                    manaRemaining,
+                    timeRemaining,
+                    1f + Stats.SpellHaste,
+                    castSpells);
                 castSpells.Add(spellName, spell);
                 timeRemaining
                     -= (spell.AvgCastTime + Options.Latency) * spell.NumCasts;
+                manaRemaining -= spell.ManaCost * spell.NumCasts;
                 if (timeRemaining <= .0001) {
                     break;
                 }
@@ -313,13 +319,15 @@ namespace Rawr.WarlockTmp {
 
         #region spell stats
 
-        private Spell GetSpell(String spellName) {
+        public Spell GetSpell(String spellName) {
 
             switch (spellName) {
                 case "Corruption":
                     return GetCorruptionStats();
                 case "Instant Shadow Bolt":
                     return GetInstantShadowBoltStats();
+                case "Life Tap":
+                    return GetLifeTapStats();
                 case "Metamorphosis":
                     return GetMetamorphosisStats();
                 case "Shadow Bolt":
@@ -329,7 +337,7 @@ namespace Rawr.WarlockTmp {
             }
         }
 
-        private CorruptionSpell GetCorruptionStats() {
+        public CorruptionSpell GetCorruptionStats() {
 
             if (CorruptionStats == null) {
                 CorruptionStats
@@ -339,7 +347,16 @@ namespace Rawr.WarlockTmp {
             return CorruptionStats;
         }
 
-        private MetamorphosisSpell GetMetamorphosisStats() {
+        public LifeTapSpell GetLifeTapStats() {
+
+            if (LifeTapStats == null) {
+                LifeTapStats
+                    = new LifeTapSpell(this);
+            }
+            return LifeTapStats;
+        }
+
+        public MetamorphosisSpell GetMetamorphosisStats() {
 
             if (MetamorphosisStats == null) {
                 MetamorphosisStats = new MetamorphosisSpell(this);
@@ -347,7 +364,7 @@ namespace Rawr.WarlockTmp {
             return MetamorphosisStats;
         }
 
-        private ShadowBoltSpell GetShadowboltStats() {
+        public ShadowBoltSpell GetShadowboltStats() {
 
             if (ShadowBoltStats == null) {
                 ShadowBoltStats = new ShadowBoltSpell(
@@ -356,7 +373,7 @@ namespace Rawr.WarlockTmp {
             return ShadowBoltStats;
         }
 
-        private InstantShadowBoltSpell GetInstantShadowBoltStats() {
+        public InstantShadowBoltSpell GetInstantShadowBoltStats() {
 
             if (InstantShadowBoltSpell == null) {
                 InstantShadowBoltSpell
