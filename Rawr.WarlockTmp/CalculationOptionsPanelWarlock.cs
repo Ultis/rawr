@@ -12,7 +12,10 @@ namespace Rawr.WarlockTmp {
 
         #region constants
         private static string[] ALL_SPELLS = { 
-            "Corruption", "Metamorphosis", "Shadow Bolt" };
+            "Corruption",
+            "Instant Shadow Bolt",
+            "Metamorphosis",
+            "Shadow Bolt" };
         #endregion
 
 
@@ -85,6 +88,7 @@ namespace Rawr.WarlockTmp {
             _ignoreEvents = true;
 
             targetLevelCombo.Text = _options.TargetLevel.ToString();
+            fightLengthSpinner.Value = (decimal) _options.Duration;
             RefreshRotationPanel();
 
             _ignoreEvents = false;
@@ -136,8 +140,7 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-            
-
+            _options.Duration = (float) fightLengthSpinner.Value;
             Character.OnCalculationsInvalidated();
         }
 

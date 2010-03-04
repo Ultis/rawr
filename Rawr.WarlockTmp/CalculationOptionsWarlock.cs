@@ -23,7 +23,7 @@ namespace Rawr.WarlockTmp {
         public String Pet { get; set; }
         public bool UseInfernal { get; set; }
         public int TargetLevel { get; set; }
-        public int Duration { get; set; }
+        public float Duration { get; set; }
         public float Latency { get; set; }
         public float ManaPotSize { get; set; }
         public float Replenishment { get; set; }

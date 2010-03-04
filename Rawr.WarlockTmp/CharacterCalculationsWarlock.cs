@@ -41,22 +41,26 @@ namespace Rawr.WarlockTmp {
 
         #region subclass specific properties
 
-        private Character Character;
-        private Stats Stats;
-        private CalculationOptionsWarlock Options;
-        private WarlockTalents Talents;
+        public Character Character { get; private set; }
+        public Stats Stats { get; private set; }
+        public CalculationOptionsWarlock Options { get; private set; }
+        public WarlockTalents Talents { get; private set; }
 
         private float PersonalDps = -1f;
         private float PetDps = -1f;
 
-        private float BaseMana;
-        private float BaseDirectDamageMultiplier;
-        private float BaseTickDamageMultiplier;
-        private float BaseCritChance;
+        public float BaseMana { get; private set; }
+        public float BaseDirectDamageMultiplier { get; private set; }
+        public float BaseTickDamageMultiplier { get; private set; }
+        public float BaseCritChance { get; private set; }
 
-        private CorruptionSpell CorruptionStats;
-        private MetamorphosisSpell MetamorphosisStats;
-        private ShadowBoltSpell ShadowBoltStats;
+        public Dictionary<string, Spell> CastSpells
+            { get; private set; }
+        public CorruptionSpell CorruptionStats { get; private set; }
+        public MetamorphosisSpell MetamorphosisStats { get; private set; }
+        public ShadowBoltSpell ShadowBoltStats { get; private set; }
+        public InstantShadowBoltSpell InstantShadowBoltSpell {
+            get; private set; }
 
         #endregion
 
@@ -265,19 +269,15 @@ namespace Rawr.WarlockTmp {
             // first run through the priorities and calculate how many times
             // each spell will be cast
             float timeRemaining = Options.Duration;
-            Dictionary<string, WarlockSpell> castSpells
-                = new Dictionary<string, WarlockSpell>();
+            Dictionary<string, Spell> castSpells
+                = new Dictionary<string, Spell>();
             foreach (string spellName in Options.SpellPriority) {
-                WarlockSpell spell = GetSpell(spellName);
-                if (!spell.IsCastable(Talents)) {
+                Spell spell = GetSpell(spellName);
+                if (!spell.IsCastable(Talents, castSpells)) {
                     continue;
                 }
                 spell.SetCastingStats(
-                    Options.Duration,
-                    timeRemaining,
-                    1f + Stats.SpellHaste,
-                    Options.Latency,
-                    castSpells);
+                    timeRemaining, 1f + Stats.SpellHaste, castSpells);
                 castSpells.Add(spellName, spell);
                 timeRemaining
                     -= (spell.AvgCastTime + Options.Latency) * spell.NumCasts;
@@ -294,8 +294,8 @@ namespace Rawr.WarlockTmp {
             // then for each spell that is cast calculate its damage, and our
             // overall damage
             float damageDone = 0f;
-            foreach (KeyValuePair<string, WarlockSpell> pair in castSpells) {
-                WarlockSpell spell = pair.Value;
+            foreach (KeyValuePair<string, Spell> pair in castSpells) {
+                Spell spell = pair.Value;
                 spell.SetDamageStats(spellPower, hitChance, castSpells);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
@@ -313,11 +313,13 @@ namespace Rawr.WarlockTmp {
 
         #region spell stats
 
-        private WarlockSpell GetSpell(String spellName) {
+        private Spell GetSpell(String spellName) {
 
             switch (spellName) {
                 case "Corruption":
                     return GetCorruptionStats();
+                case "Instant Shadow Bolt":
+                    return GetInstantShadowBoltStats();
                 case "Metamorphosis":
                     return GetMetamorphosisStats();
                 case "Shadow Bolt":
@@ -330,12 +332,9 @@ namespace Rawr.WarlockTmp {
         private CorruptionSpell GetCorruptionStats() {
 
             if (CorruptionStats == null) {
-                CorruptionStats = new CorruptionSpell(
-                    Talents,
-                    Stats,
-                    BaseMana,
-                    BaseTickDamageMultiplier,
-                    BaseCritChance);
+                CorruptionStats
+                    = new CorruptionSpell(
+                        this, BaseTickDamageMultiplier, BaseCritChance);
             }
             return CorruptionStats;
         }
@@ -343,9 +342,7 @@ namespace Rawr.WarlockTmp {
         private MetamorphosisSpell GetMetamorphosisStats() {
 
             if (MetamorphosisStats == null) {
-                MetamorphosisStats
-                    = new MetamorphosisSpell(
-                        Talents, Stats.SpellHaste, Options.Duration);
+                MetamorphosisStats = new MetamorphosisSpell(this);
             }
             return MetamorphosisStats;
         }
@@ -354,13 +351,19 @@ namespace Rawr.WarlockTmp {
 
             if (ShadowBoltStats == null) {
                 ShadowBoltStats = new ShadowBoltSpell(
-                    Talents,
-                    Stats,
-                    BaseMana,
-                    BaseDirectDamageMultiplier,
-                    BaseCritChance);
+                    this, BaseDirectDamageMultiplier, BaseCritChance);
             }
             return ShadowBoltStats;
+        }
+
+        private InstantShadowBoltSpell GetInstantShadowBoltStats() {
+
+            if (InstantShadowBoltSpell == null) {
+                InstantShadowBoltSpell
+                    = new InstantShadowBoltSpell(
+                        this, BaseDirectDamageMultiplier, BaseCritChance);
+            }
+            return InstantShadowBoltSpell;
         }
 
         #endregion

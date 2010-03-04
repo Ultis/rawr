@@ -739,7 +739,8 @@ namespace Rawr.WarlockTmp {
                 _relevantGlyphs
                     = new List<string>{
                         "Glyph of Metamorphosis",
-                        "Glyph of Quick Decay"};
+                        "Glyph of Quick Decay",
+                        "Glyph of Corruption" };
             }
             return _relevantGlyphs;
         }

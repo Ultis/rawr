@@ -285,7 +285,6 @@
             // 
             // fightLengthSpinner
             // 
-            this.fightLengthSpinner.Enabled = false;
             this.fightLengthSpinner.Increment = new decimal(new int[] {
             15,
             0,
