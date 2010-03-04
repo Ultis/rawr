@@ -23,14 +23,47 @@ namespace Rawr {
         public string Name;
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
         public ItemDamageType DamageType;
-        /// <summary>The Unmitigated Damage per Hit for this attack</summary>
+        /// <summary>The Unmitigated Damage per Hit for this attack, 5000f is 5,000 Raw Unmitigated Damage. When DamageIsPerc is true DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
         public virtual float DamagePerHit { get; set; }
+        /// <summary>When set to True, DamagePerHit will be seen as a Percentage. DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
+        public bool DamageIsPerc = false;
         /// <summary>The maximum number of party/raid members this attack can hit</summary>
         public float MaxNumTargets;
         /// <summary>The frequency of this attack (in seconds)</summary>
         public float AttackSpeed;
         /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
         public ATTACK_TYPES AttackType;
+        #region Player Avoidance
+        /// <summary>Returns True if any of the Avoidance types are true</summary>
+        public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
+        /// <summary>Can this attack Miss the player</summary>
+        public bool Missable = true;
+        /// <summary>Can this attack be Dodged by the player</summary>
+        public bool Dodgable = true;
+        /// <summary>Can this attack be Parried by the player</summary>
+        public bool Parryable = true;
+        /// <summary>Can this attack be Blocked by the player</summary>
+        public bool Blockable = true;
+        #endregion
+        #region Player Targeting
+        public bool IgnoresSomeone { get { return IgnoresAllTanks || IgnoresHealers || IgnoresAllDPS; } }
+
+        public bool IgnoresAllTanks { get { return IgnoresMTank && IgnoresOTank && IgnoresTTank; } }
+        public bool IgnoresSomeTanks { get { return IgnoresMTank || IgnoresOTank || IgnoresTTank; } }
+        public bool IgnoresMTank = false;
+        public bool IgnoresOTank = false;
+        public bool IgnoresTTank = false;
+
+        public bool IgnoresHealers = false;
+
+        public bool IgnoresAllDPS { get { return IgnoresMeleeDPS && IgnoresRangedDPS; } }
+        public bool IgnoresSomeDPS { get { return IgnoresMeleeDPS || IgnoresRangedDPS; } }
+        public bool IgnoresMeleeDPS = false;
+        public bool IgnoresRangedDPS = false;
+        #endregion
+        #region Player Negation
+        public bool Interruptable = false;
+        #endregion
     }
     public partial class DoT : Attack {
         /// <summary>The initial damage of the dot, separate from the over time portion</summary>
