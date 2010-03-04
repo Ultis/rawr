@@ -46,16 +46,17 @@ namespace Rawr {
         public bool Blockable = true;
         #endregion
         #region Player Targeting
-        public bool IgnoresSomeone { get { return IgnoresAllTanks || IgnoresHealers || IgnoresAllDPS; } }
-
+        /// <summary>Returns True if anyone gets ignored, serves as a primary flag to run the ignorance system in your model</summary>
+        public bool IgnoresSomeone { get { return IgnoresSomeTanks || IgnoresSomeDPS || IgnoresHealers; } }
+        // Tanks
         public bool IgnoresAllTanks { get { return IgnoresMTank && IgnoresOTank && IgnoresTTank; } }
         public bool IgnoresSomeTanks { get { return IgnoresMTank || IgnoresOTank || IgnoresTTank; } }
         public bool IgnoresMTank = false;
         public bool IgnoresOTank = false;
         public bool IgnoresTTank = false;
-
+        // Heals
         public bool IgnoresHealers = false;
-
+        // DPS
         public bool IgnoresAllDPS { get { return IgnoresMeleeDPS && IgnoresRangedDPS; } }
         public bool IgnoresSomeDPS { get { return IgnoresMeleeDPS || IgnoresRangedDPS; } }
         public bool IgnoresMeleeDPS = false;
@@ -116,6 +117,11 @@ namespace Rawr {
         }
         #endregion
     }
+    /// <summary>
+    /// The role of the player, will allow certain lists to return filtered to
+    /// things that affect said role
+    /// </summary>
+    public enum PLAYER_ROLES { ROLE_MainTank=0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
     #endregion
 #if !RAWR3 && !SILVERLIGHT
     [Serializable]
