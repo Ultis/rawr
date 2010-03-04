@@ -190,6 +190,16 @@ namespace Rawr
             return talentSpecs;
         }
 
+        /// <summary>
+        /// Re-enables the requirements list, function separated for convenience
+        /// </summary>
+        private void EnableAllReqs() {
+            foreach (Control ctrl in groupBoxRequirements.Controls)
+            {
+                ctrl.Enabled = true;
+            }
+        }
+
 		private void buttonOptimize_Click(object sender, EventArgs e)
 		{
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
@@ -225,16 +235,16 @@ namespace Rawr
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
                 if (prompt != null)
                 {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) { EnableAllReqs(); return; }
                 }
                 prompt = _optimizer.CheckOneHandedWeaponUniqueness();
                 if (prompt != null)
                 {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) { EnableAllReqs(); return; }
                 }
                 if (!_optimizer.ItemGenerator.IsCharacterValid(_character, out prompt, true))
                 {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) { EnableAllReqs(); return; }
                 }
             }
 
@@ -560,7 +570,7 @@ namespace Rawr
             {
                 if (MessageBox.Show("The upgrade evaluations perform an optimization for each relevant item. With your settings this might take a long time. Consider using lower thoroughness and no overriding of regem and reenchant options." + Environment.NewLine + Environment.NewLine + "Do you want to continue with upgrade evaluations?", "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
-                    return;
+                    EnableAllReqs(); return;
                 }
             }
 
@@ -573,7 +583,7 @@ namespace Rawr
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
                 if (prompt != null)
                 {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) { EnableAllReqs(); return; }
                 }
             }
 
