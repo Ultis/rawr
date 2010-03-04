@@ -19,7 +19,7 @@ namespace Rawr.DPSWarr {
 		    Filter = "All";
 		    BossName = "Custom";
 		    TargetLevel = 83;
-		    TargetArmor = StatConversion.NPC_ARMOR[83 - 80];
+            TargetArmor = StatConversion.NPC_ARMOR[TargetLevel - 80];
             TargetHP = 1000000f;
 		    Duration = 300f;
 		    FuryStance = true;
@@ -590,7 +590,6 @@ namespace Rawr.DPSWarr {
         {
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }

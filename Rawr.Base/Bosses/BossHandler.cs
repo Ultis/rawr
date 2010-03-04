@@ -18,19 +18,31 @@ namespace Rawr {
     /// </summary>
     public enum ATTACK_TYPES { AT_MELEE, AT_RANGED, AT_AOE, }
     /// <summary>A single Attack of various types</summary>
-    public struct Attack {
+    public partial class Attack {
         /// <summary>The Name of the Attack</summary>
         public string Name;
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
         public ItemDamageType DamageType;
         /// <summary>The Unmitigated Damage per Hit for this attack</summary>
-        public float DamagePerHit;
+        public virtual float DamagePerHit { get; set; }
         /// <summary>The maximum number of party/raid members this attack can hit</summary>
         public float MaxNumTargets;
         /// <summary>The frequency of this attack (in seconds)</summary>
         public float AttackSpeed;
         /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
         public ATTACK_TYPES AttackType;
+    }
+    public partial class DoT : Attack {
+        /// <summary>The initial damage of the dot, separate from the over time portion</summary>
+        public override float DamagePerHit { get; set; }
+        /// <summary>The over time damage of the dot, separate from the initial portion</summary>
+        public float DamagePerTick;
+        /// <summary>The total number of Ticks</summary>
+        public float NumTicks;
+        /// <summary>Interval of the ticks, 1 = 1 sec</summary>
+        public float TickInterval;
+        /// <summary>The full duration of the DoT, 2 sec Interval * 5 Ticks = 10 sec duration</summary>
+        public float Duration { get { return TickInterval * NumTicks; } }
     }
     public class Impedence {
         #region Constructors
@@ -71,16 +83,6 @@ namespace Rawr {
         }
         #endregion
     }
-    /*/// <summary>Stores a Impedence that the Boss Performs</summary>
-    public class Impedence   : Impedence { public Impedence()   { } }
-    /// <summary>Stores a Fear that the Boss Performs</summary>
-    public class Fear   : Impedence { public Fear()   { } }
-    /// <summary>Stores a Root that the Boss Performs</summary>
-    public class Root   : Impedence { public Root()   { } }
-    /// <summary>Stores a Impedence that the Boss Performs</summary>
-    public class Impedence   : Impedence { public Impedence()   { } }
-    /// <summary>Stores a Disarm that the Boss Performs</summary>
-    public class Disarm : Impedence { public Disarm() { } }*/
     #endregion
 #if !RAWR3 && !SILVERLIGHT
     [Serializable]
@@ -109,17 +111,17 @@ namespace Rawr {
             InBackPerc_Melee   = 0.00f; // Default to never in back
             InBackPerc_Ranged  = 0.00f; // Default to never in back
             MultiTargsPerc     = 0.00f; // Default to 0% multiple targets
-            MaxNumTargets      =    1f; // Default to max 1 targets (though at 0%, this means nothing)
-            StunningTargsFreq  =    0f; // Default to never stunning
-            StunningTargsDur   = 5000f; // Default to stun durations of 5 seconds but since it's 0 stuns over dur, this means nothing
-            MovingTargsFreq    =    0f; // Default to never moving
-            MovingTargsDur     = 5000f; // Default to move durations of 5 seconds but since it's 0 moves over dur, this means nothing
-            DisarmingTargsFreq =    0f; // Default to never disarming
+            MaxNumTargets      =    1f; // Default to max 1 targets (though at 0%, this means nothing as 0% automatically means 1 target)
+            StunningTargsFreq  =    0f; // Default to never  stunning
+            StunningTargsDur   = 5000f; // Default to stun   durations of 5 seconds but since it's 0 stuns over dur, this means nothing
+            MovingTargsFreq    =    0f; // Default to never  moving
+            MovingTargsDur     = 5000f; // Default to move   durations of 5 seconds but since it's 0 moves over dur, this means nothing
+            DisarmingTargsFreq =    0f; // Default to never  disarming
             DisarmingTargsDur  = 5000f; // Default to disarm durations of 5 seconds but since it's 0 disarms over dur, this means nothing
-            FearingTargsFreq   =    0f; // Default to never fearing
-            FearingTargsDur    = 5000f; // Default to fear durations of 5 seconds but since it's 0 fears over dur, this means nothing
-            RootingTargsFreq   =    0f; // Default to never rooting
-            RootingTargsDur    = 5000f; // Default to root durations of 5 seconds but since it's 0 roots over dur, this means nothing
+            FearingTargsFreq   =    0f; // Default to never  fearing
+            FearingTargsDur    = 5000f; // Default to fear   durations of 5 seconds but since it's 0 fears over dur, this means nothing
+            RootingTargsFreq   =    0f; // Default to never  rooting
+            RootingTargsDur    = 5000f; // Default to root   durations of 5 seconds but since it's 0 roots over dur, this means nothing
             TimeBossIsInvuln   =    0f; // Default to never invulnerable (Invuln. like KT in Phase 1)
             // Fight Requirements
             Max_Players = 10;

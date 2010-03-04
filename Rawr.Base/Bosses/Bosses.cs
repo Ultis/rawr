@@ -103,12 +103,24 @@ namespace Rawr.Bosses {
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
             });
-            Attacks.Add(new Attack {
+            /*Attacks.Add(new Attack {
                 Name = "Poison Bolt Volley",
                 DamageType = ItemDamageType.Nature,
-                DamagePerHit = (/*Initial*/(2625f + 3375f) / 2.0f) + (/*Dot*/((1480f+1720f)/2.0f)*8f/2f),
+                DamagePerHit = (/*Initial*//*(2625f + 3375f) / 2.0f) + (/*Dot*//*((1480f+1720f)/2.0f)*8f/2f),
                 MaxNumTargets = 3,
                 AttackSpeed = (7.0f+15.0f)/2.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
+            });*/
+            Attacks.Add(new DoT
+            {
+                Name = "Poison Bolt Volley",
+                DamageType = ItemDamageType.Nature,
+                DamagePerHit  = ((2625f + 3375f) / 2.0f),
+                DamagePerTick = ((1480f + 1720f) / 2.0f),
+                TickInterval = 2f,
+                NumTicks = 4,
+                MaxNumTargets = 3,
+                AttackSpeed = (7.0f + 15.0f) / 2.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
             });
             {

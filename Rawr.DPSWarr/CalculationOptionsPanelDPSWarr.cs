@@ -26,6 +26,7 @@ namespace Rawr.DPSWarr {
         private BossHandler CustomBoss = new BossHandler();
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
+        // Constructors
         public CalculationOptionsPanelDPSWarr() {
             isLoading = true;
             try {
@@ -252,6 +253,7 @@ Turn all three of these options off for normal behavior based solely on Item Typ
             ItemCache.OnItemsChanged();
             isLoading = false;
         }
+        // Instructions Tab
         private void SetUpFAQ() {
 FAQStuff.Add(
 "Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.",
@@ -1564,6 +1566,62 @@ CB_Version.Items.Add("All");
                 Character.OnCalculationsInvalidated();
             }
         }
+        // Customize Impedence
+        private void BT_Stun_Click(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Stuns, DG_BossSitChanges.Flags.Stun);
+            Box.ShowDialog(this);
+            if (Box.DialogResult != DialogResult.Cancel) {
+                CustomBoss.Stuns = Box.TheList;
+                calcOpts.Stuns = CustomBoss.Stuns;
+                BT_Stun.Text = CustomBoss.Stuns.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Stun.ToString();
+                CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
+        private void BT_Move_Click(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Moves, DG_BossSitChanges.Flags.Move);
+            Box.ShowDialog(this);
+            if (Box.DialogResult != DialogResult.Cancel) {
+                CustomBoss.Moves = Box.TheList;
+                calcOpts.Moves = CustomBoss.Moves;
+                BT_Move.Text = CustomBoss.Moves.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Move.ToString();
+                CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
+        private void BT_Fear_Click(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Fears, DG_BossSitChanges.Flags.Fear);
+            Box.ShowDialog(this);
+            if (Box.DialogResult != DialogResult.Cancel) {
+                CustomBoss.Fears = Box.TheList;
+                calcOpts.Fears = CustomBoss.Fears;
+                BT_Fear.Text = CustomBoss.Fears.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Fear.ToString();
+                CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
+        private void BT_Root_Click(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Roots, DG_BossSitChanges.Flags.Root);
+            Box.ShowDialog(this);
+            if (Box.DialogResult != DialogResult.Cancel) {
+                CustomBoss.Roots = Box.TheList;
+                calcOpts.Roots = CustomBoss.Roots;
+                BT_Root.Text = CustomBoss.Roots.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Root.ToString();
+                CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
+        private void BT_Disarm_Click(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Disarms, DG_BossSitChanges.Flags.Disarm);
+            Box.ShowDialog(this);
+            if (Box.DialogResult != DialogResult.Cancel) {
+                CustomBoss.Disarms = Box.TheList;
+                calcOpts.Disarms = CustomBoss.Disarms;
+                BT_Disarm.Text = CustomBoss.Disarms.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Disarm.ToString();
+                CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
         // Abilities to Maintain Changes
         private void CK_Flooring_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
@@ -1762,62 +1820,6 @@ CB_Version.Items.Add("All");
                 Character.OnCalculationsInvalidated();
             }
         }
-        // test work
-        private void BT_Stun_Click(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Stuns, DG_BossSitChanges.Flags.Stun);
-            Box.ShowDialog(this);
-            if (Box.DialogResult != DialogResult.Cancel) {
-                CustomBoss.Stuns = Box.TheList;
-                calcOpts.Stuns = CustomBoss.Stuns;
-                BT_Stun.Text = CustomBoss.Stuns.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Stun.ToString();
-                CB_BossList_SelectedIndexChanged(null, null);
-            }
-        }
-        private void BT_Move_Click(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Moves, DG_BossSitChanges.Flags.Move);
-            Box.ShowDialog(this);
-            if (Box.DialogResult != DialogResult.Cancel) {
-                CustomBoss.Moves = Box.TheList;
-                calcOpts.Moves = CustomBoss.Moves;
-                BT_Move.Text = CustomBoss.Moves.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Move.ToString();
-                CB_BossList_SelectedIndexChanged(null, null);
-            }
-        }
-        private void BT_Fear_Click(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Fears, DG_BossSitChanges.Flags.Fear);
-            Box.ShowDialog(this);
-            if (Box.DialogResult != DialogResult.Cancel) {
-                CustomBoss.Fears = Box.TheList;
-                calcOpts.Fears = CustomBoss.Fears;
-                BT_Fear.Text = CustomBoss.Fears.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Fear.ToString();
-                CB_BossList_SelectedIndexChanged(null, null);
-            }
-        }
-        private void BT_Root_Click(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Roots, DG_BossSitChanges.Flags.Root);
-            Box.ShowDialog(this);
-            if (Box.DialogResult != DialogResult.Cancel) {
-                CustomBoss.Roots = Box.TheList;
-                calcOpts.Roots = CustomBoss.Roots;
-                BT_Root.Text = CustomBoss.Roots.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Root.ToString();
-                CB_BossList_SelectedIndexChanged(null, null);
-            }
-        }
-        private void BT_Disarm_Click(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            DG_BossSitChanges Box = new DG_BossSitChanges(CustomBoss.Disarms, DG_BossSitChanges.Flags.Disarm);
-            Box.ShowDialog(this);
-            if (Box.DialogResult != DialogResult.Cancel) {
-                CustomBoss.Disarms = Box.TheList;
-                calcOpts.Disarms = CustomBoss.Disarms;
-                BT_Disarm.Text = CustomBoss.Disarms.Count == 0 ? "None" : CustomBoss.DynamicCompiler_Disarm.ToString();
-                CB_BossList_SelectedIndexChanged(null, null);
-            }
-        }
         // Markov
         private void CK_Markov_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
@@ -1840,7 +1842,7 @@ CB_Version.Items.Add("All");
             if (CK_StatsArP.Checked     ) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
             return statsList.ToArray();
         }
-        private void btnStatsGraph_Click(object sender, EventArgs e) {
+        private void BT_StatsGraph_Click(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             Stats[] statsList = BuildStatsList();
             Graph graph = new Graph();
@@ -1850,15 +1852,15 @@ CB_Version.Items.Add("All");
             graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
             graph.Show();
         }
-        private void chkStatsStrength_CheckedChanged(object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[0] = CK_StatsStrength.Checked; }
-        private void chkStatsAgility_CheckedChanged( object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[1] = CK_StatsAgility.Checked; }
-        private void chkStatsAP_CheckedChanged(      object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[2] = CK_StatsAP.Checked; }
-        private void chkStatsCrit_CheckedChanged(    object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[3] = CK_StatsCrit.Checked; }
-        private void chkStatsHit_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[4] = CK_StatsHit.Checked; }
-        private void chkStatsExp_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[5] = CK_StatsExp.Checked; }
-        private void chkStatsHaste_CheckedChanged(   object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[6] = CK_StatsHaste.Checked; }
-        private void chkStatsArP_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[7] = CK_StatsArP.Checked; }
-        private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CK_StatsStrength_CheckedChanged(object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[0] = CK_StatsStrength.Checked; }
+        private void CK_StatsAgility_CheckedChanged( object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[1] = CK_StatsAgility.Checked; }
+        private void CK_StatsAP_CheckedChanged(      object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[2] = CK_StatsAP.Checked; }
+        private void CK_StatsCrit_CheckedChanged(    object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[3] = CK_StatsCrit.Checked; }
+        private void CK_StatsHit_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[4] = CK_StatsHit.Checked; }
+        private void CK_StatsExp_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[5] = CK_StatsExp.Checked; }
+        private void CK_StatsHaste_CheckedChanged(   object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[6] = CK_StatsHaste.Checked; }
+        private void CK_StatsArP_CheckedChanged(     object sender, EventArgs e) { CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; calcOpts.StatsList[7] = CK_StatsArP.Checked; }
+        private void CB_CalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
         }

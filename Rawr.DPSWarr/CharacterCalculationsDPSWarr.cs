@@ -543,12 +543,13 @@ namespace Rawr.DPSWarr {
                 case "Agility": return AverageStats.Agility;
                 case "Crit %": return combatFactors._c_mhycrit * 100f;
                 case "Haste %": return combatFactors.TotalHaste * 100f;
-                case "Armor Penetration %": return AverageStats.ArmorPenetration * 100f;
+                case "ArP %": return AverageStats.ArmorPenetration * 100f;
                 case "% Chance to Miss (White)": return combatFactors._c_wmiss * 100f;
                 case "% Chance to Miss (Yellow)": return combatFactors._c_ymiss * 100f;
                 case "% Chance to be Dodged": return combatFactors._c_mhdodge * 100f;
                 case "% Chance to be Parried": return combatFactors._c_mhparry * 100f;
-                case "% Chance to be Avoided (Yellow/Dodge)": return combatFactors._c_ymiss * 100f + combatFactors._c_mhdodge * 100f;
+                case "% Chance to be Avoided (Yellow/Dodge)":
+                    return combatFactors._c_ymiss * 100f + combatFactors._c_mhdodge * 100f;
             }
             return 0.0f;
         }

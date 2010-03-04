@@ -439,7 +439,7 @@ namespace Rawr
 			comboBoxRequirementCalculation.Name = "comboBoxRequirementCalculation";
 			comboBoxRequirementCalculation.Size = new System.Drawing.Size(133, 21);
 			comboBoxRequirementCalculation.TabIndex = 3;
-            comboBoxRequirementCalculation.DropDownWidth = 133;
+            comboBoxRequirementCalculation.DropDownWidth = 233;
             comboBoxRequirementCalculation.SelectedIndexChanged += new EventHandler(comboBoxRequirementCalculation_SelectedIndexChanged);
             // 
             // comboBoxRequirementTalent
@@ -452,7 +452,7 @@ namespace Rawr
             comboBoxRequirementTalent.Size = new System.Drawing.Size(78, 21);
             comboBoxRequirementTalent.Visible = false;
             comboBoxRequirementTalent.TabIndex = 3;
-            comboBoxRequirementTalent.DropDownWidth = 133;
+            comboBoxRequirementTalent.DropDownWidth = 233;
             // 
 			// comboBoxRequirementGreaterLessThan
 			// 
