@@ -512,27 +512,17 @@ namespace Rawr
 			}
 		}
 
-        private bool _isStormjewel;
-		public bool IsStormjewel
-		{
-			get
-			{
-                return _isStormjewel;
-			}
-		}
-
         public bool IsLimitedGem
         {
             get
             {
-                return _isGem && (_isStormjewel || _isJewelersGem || Unique);
+                return _isGem && (_isJewelersGem || Unique);
             }
         }
 
         private void UpdateGemInformation()
         {
             _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
-            _isStormjewel = _isGem && _name.EndsWith("Stormjewel");
             _isJewelersGem = (Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157);
             _isRedGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Red);
             _isYellowGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Yellow);
@@ -883,12 +873,6 @@ namespace Rawr
 					volatileRequirements = true;
 					if (character == null) return true;
 					meetsRequirements = character.JewelersGemCount <= 3;
-				}
-				else if (IsStormjewel)
-				{
-					volatileRequirements = true;
-					if (character == null || !character.EnforceGemRequirements) return true;
-					meetsRequirements = character.StormjewelCount <= 1;
 				}
 				else if (Unique)
 				{

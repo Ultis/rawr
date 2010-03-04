@@ -1308,7 +1308,6 @@ namespace Rawr //O O . .
         private int yellowGemCount;
         private int blueGemCount;
 		private int jewelersGemCount;
-		private int stormjewelCount;
         private int gemRequirementsInvalid;
         private int nonjewelerGemRequirementsInvalid;
 
@@ -1346,15 +1345,6 @@ namespace Rawr //O O . .
                 ComputeGemCount();
                 return jewelersGemCount;
             }
-		}
-
-		public int StormjewelCount
-		{
-			get
-			{
-				ComputeGemCount();
-				return stormjewelCount;
-			}
 		}
 
         public int GemRequirementsInvalid
@@ -1396,7 +1386,6 @@ namespace Rawr //O O . .
                 yellowGemCount = 0;
                 blueGemCount = 0;
                 jewelersGemCount = 0;
-                stormjewelCount = 0;
                 Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
                 gemRequirementsInvalid = 0;
                 nonjewelerGemRequirementsInvalid = 0;
@@ -1415,7 +1404,6 @@ namespace Rawr //O O . .
                                 if (gem.IsYellowGem) yellowGemCount++;
                                 if (gem.IsBlueGem) blueGemCount++;
                                 if (gem.IsJewelersGem) jewelersGemCount++;
-                                else if (gem.IsStormjewel) stormjewelCount++;
                                 else if (gem.Unique) // needs else, it seems jewelers gems are marked as unique
                                 {
                                     if (uniqueMap.ContainsKey(gem.Id))
@@ -1436,11 +1424,6 @@ namespace Rawr //O O . .
                 {
                     gemRequirementsInvalid += jewelersGemCount - 3;
                 }
-                if (stormjewelCount > 1)
-                {
-                    gemRequirementsInvalid += stormjewelCount - 1;
-                    nonjewelerGemRequirementsInvalid += stormjewelCount - 1;
-                }
 
                 gemCountValid = true;
             }
@@ -1459,8 +1442,6 @@ namespace Rawr //O O . .
                         Item gem = item.GetGem(gemIndex);
                         if (gem != null && !gem.IsJewelersGem)
                         {
-                            if (gem.IsStormjewel && gem == testGem) 
-                                return true;
                             if (gem.Unique && gem == testGem) 
                                 return true;
                         }

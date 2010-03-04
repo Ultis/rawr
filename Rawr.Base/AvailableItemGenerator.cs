@@ -1977,7 +1977,6 @@ namespace Rawr.Optimizer
 				{
 					Item = item,
 					ItemIsJewelersGem = item.IsJewelersGem,
-					ItemIsStormjewel = item.IsStormjewel,
                     Ignore = item.IsGem && !item.IsJewelersGem && item.Unique,
 					SetName = item.SetName,
 					Stats = item.Stats,
@@ -2039,7 +2038,7 @@ namespace Rawr.Optimizer
 						{
 							jeweler++;
 						}
-						else if (gem.IsStormjewel || gem.Unique)
+						else if (gem.Unique)
 						{
 							ignore = true;
 						}
@@ -2065,23 +2064,15 @@ namespace Rawr.Optimizer
 					if (!itemsFilteredHint || statsColorsA.Item.Id != statsColorsB.Item.Id)
 					{
 						ArrayUtils.CompareResult compare = statsColorsA.CompareTo(statsColorsB);
-                        if (compare == ArrayUtils.CompareResult.Equal && statsColorsA.Item.MinDamage > 0) // A==B, used for Weapons with no stats, but damage values
+                        if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
                         {
-                            if (statsColorsA.Item.MinDamage <= statsColorsB.Item.MinDamage)
-                            {
-                                addItem = false;
-                                break;
-                            }
+                            removeItems.Add(statsColorsB);
                         }
-                        else if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
-						{
-							removeItems.Add(statsColorsB);
-						}
-						else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
-						{
-							addItem = false;
-							break;
-						}
+                        else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
+                        {
+                            addItem = false;
+                            break;
+                        }
 					}
 				}
 				foreach (StatsColors removeItem in removeItems)
@@ -2123,13 +2114,11 @@ namespace Rawr.Optimizer
 			}
 
 			public bool ItemIsJewelersGem;
-			public bool ItemIsStormjewel;
 
 			public ArrayUtils.CompareResult CompareTo(StatsColors other)
 			{
 				if (Ignore || other.Ignore) return ArrayUtils.CompareResult.Unequal;
 				if (ItemIsJewelersGem != other.ItemIsJewelersGem) return ArrayUtils.CompareResult.Unequal;
-				if (ItemIsStormjewel != other.ItemIsStormjewel) return ArrayUtils.CompareResult.Unequal;
 				if (Jeweler != other.Jeweler) return ArrayUtils.CompareResult.Unequal;
                 if (Item != null && other.Item != null && Item.AvailabilityInformation != null && other.Item.AvailabilityInformation != null && Item.AvailabilityInformation.PositiveCostItem != other.Item.AvailabilityInformation.PositiveCostItem) return ArrayUtils.CompareResult.Unequal;
 
@@ -2159,6 +2148,14 @@ namespace Rawr.Optimizer
 				if (compareResult == ArrayUtils.CompareResult.Unequal) return ArrayUtils.CompareResult.Unequal;
 				haveLessThan |= compareResult == ArrayUtils.CompareResult.LessThan;
 				haveGreaterThan |= compareResult == ArrayUtils.CompareResult.GreaterThan;
+
+                if (Item != null && other.Item != null)
+                {
+                    compare = Item.MinDamage.CompareTo(other.Item.MinDamage);
+                    haveLessThan |= compare < 0;
+                    haveGreaterThan |= compare > 0;
+                    if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
+                }
 
 				if (Item != null && (Item.Slot == ItemSlot.MainHand || Item.Slot == ItemSlot.OneHand || Item.Slot == ItemSlot.TwoHand))
 				{
