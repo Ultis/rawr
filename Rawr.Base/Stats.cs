@@ -435,6 +435,7 @@ namespace Rawr {
         RangedHaste,
         SpellHaste,
         HealingReceivedMultiplier,
+        BonusHealingDoneMultiplier,
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
         PhysicalDamageTakenMultiplier,
@@ -1015,6 +1016,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% Healing Done")]
+        public float BonusHealingDoneMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHealingDoneMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHealingDoneMultiplier] = value; }
         }
 
         /// <summary>From Judgement of Wisdom</summary>

@@ -4920,7 +4920,69 @@ namespace Rawr
 				Stats = { Dodge = -0.20f },
 				ConflictingBuffs = new List<string>(new string[] { })
 			});
-			defaultBuffs.Add(new Buff()
+	        defaultBuffs.Add(new Buff()
+	        {
+		        Name = "Strength of Wrynn/Hellscream's Warsong (1)",
+		        Group = "Temporary Buffs",
+		        Stats = {
+                    BonusHealthMultiplier = .05f,
+			        BonusDamageMultiplier = .05f,
+                    BonusHealingDoneMultiplier = .05f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Strength of Wrynn/Hellscream's Warsong (2)",
+                Group = "Temporary Buffs",
+                Stats = {
+                    BonusHealthMultiplier = .10f,
+	                BonusDamageMultiplier = .10f,
+                    BonusHealingDoneMultiplier = .10f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Strength of Wrynn/Hellscream's Warsong (3)",
+                Group = "Temporary Buffs",
+                Stats = {
+                    BonusHealthMultiplier = .15f,
+                    BonusDamageMultiplier = .15f,
+                    BonusHealingDoneMultiplier = .15f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Strength of Wrynn/Hellscream's Warsong (4)",
+                Group = "Temporary Buffs",
+                Stats = {
+                    BonusHealthMultiplier = .20f,
+                    BonusDamageMultiplier = .20f,
+                    BonusHealingDoneMultiplier = .20f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Strength of Wrynn/Hellscream's Warsong (5)",
+                Group = "Temporary Buffs",
+                Stats = {
+                    BonusHealthMultiplier = .25f,
+                    BonusDamageMultiplier = .25f,
+                    BonusHealingDoneMultiplier = .25f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+	        });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Strength of Wrynn/Hellscream's Warsong (6)",
+                Group = "Temporary Buffs",
+                Stats = {
+                    BonusHealthMultiplier = .30f,
+                    BonusDamageMultiplier = .30f,
+                    BonusHealingDoneMultiplier = .30f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+            });
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Expose Weakness",
                 Group = "Temporary Buffs",
