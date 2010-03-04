@@ -4920,10 +4920,24 @@ namespace Rawr
 				Stats = { Dodge = -0.20f },
 				ConflictingBuffs = new List<string>(new string[] { })
 			});
-	        defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Luck of the Draw",
+                Group = "Temporary Buffs",
+                Source = "Dungeon Finder Groups",
+                Stats =
+                {
+                    BonusHealthMultiplier = .05f,
+                    BonusDamageMultiplier = .05f,
+                    BonusHealingDoneMultiplier = .05f,
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
+            });
+            defaultBuffs.Add(new Buff()
 	        {
 		        Name = "Strength of Wrynn/Hellscream's Warsong (1)",
 		        Group = "Temporary Buffs",
+                Source = "Icecrown Citadel Raid",
 		        Stats = {
                     BonusHealthMultiplier = .05f,
 			        BonusDamageMultiplier = .05f,
@@ -4934,6 +4948,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff() {
                 Name = "Strength of Wrynn/Hellscream's Warsong (2)",
                 Group = "Temporary Buffs",
+                Source = "Icecrown Citadel Raid",
                 Stats = {
                     BonusHealthMultiplier = .10f,
 	                BonusDamageMultiplier = .10f,
@@ -4944,6 +4959,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff() {
                 Name = "Strength of Wrynn/Hellscream's Warsong (3)",
                 Group = "Temporary Buffs",
+                Source = "Icecrown Citadel Raid",
                 Stats = {
                     BonusHealthMultiplier = .15f,
                     BonusDamageMultiplier = .15f,
@@ -4954,6 +4970,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff() {
                 Name = "Strength of Wrynn/Hellscream's Warsong (4)",
                 Group = "Temporary Buffs",
+                Source = "Icecrown Citadel Raid",
                 Stats = {
                     BonusHealthMultiplier = .20f,
                     BonusDamageMultiplier = .20f,
@@ -4964,6 +4981,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff() {
                 Name = "Strength of Wrynn/Hellscream's Warsong (5)",
                 Group = "Temporary Buffs",
+                Source = "Icecrown Citadel Raid",
                 Stats = {
                     BonusHealthMultiplier = .25f,
                     BonusDamageMultiplier = .25f,
@@ -4975,6 +4993,7 @@ namespace Rawr
             {
                 Name = "Strength of Wrynn/Hellscream's Warsong (6)",
                 Group = "Temporary Buffs",
+                Source = "Icecrown Citadel Raid",
                 Stats = {
                     BonusHealthMultiplier = .30f,
                     BonusDamageMultiplier = .30f,
