@@ -252,7 +252,13 @@ namespace Rawr.WarlockTmp {
             #endregion Haste
 
             dictValues.Add("Corruption", GetCorruptionStats().GetToolTip());
-            dictValues.Add("Shadow Bolt", GetShadowboltStats().GetToolTip());
+            dictValues.Add("Life Tap", GetLifeTapStats().GetToolTip());
+            dictValues.Add(
+                "Metamorphosis", GetMetamorphosisStats().GetToolTip());
+            dictValues.Add("Shadow Bolt", GetShadowBoltStats().GetToolTip());
+            dictValues.Add(
+                "Instant Shadow Bolt",
+                GetInstantShadowBoltStats().GetToolTip());
 
             return dictValues;
         }
@@ -328,7 +334,7 @@ namespace Rawr.WarlockTmp {
                 case "Metamorphosis":
                     return GetMetamorphosisStats();
                 case "Shadow Bolt":
-                    return GetShadowboltStats();
+                    return GetShadowBoltStats();
                 default:
                     return null;
             }
@@ -361,7 +367,7 @@ namespace Rawr.WarlockTmp {
             return MetamorphosisStats;
         }
 
-        public ShadowBoltSpell GetShadowboltStats() {
+        public ShadowBoltSpell GetShadowBoltStats() {
 
             if (ShadowBoltStats == null) {
                 ShadowBoltStats = new ShadowBoltSpell(

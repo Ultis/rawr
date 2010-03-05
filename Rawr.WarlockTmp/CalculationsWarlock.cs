@@ -86,8 +86,11 @@ namespace Rawr.WarlockTmp {
                         "Spell:Hit Rating",
                         "Spell:Crit Chance",
                         "Spell:Haste Rating",
-                        "Shadow School:Corruption",
-                        "Shadow School:Shadow Bolt" };
+                        "Affliction:Corruption",
+                        "Affliction:Life Tap",
+                        "Demonology:Metamorphosis",
+                        "Destruction:Shadow Bolt",
+                        "Destruction:Instant Shadow Bolt" };
                 return _characterDisplayCalculationLabels;
             }
         }
