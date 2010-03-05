@@ -78,9 +78,9 @@ namespace Rawr.WarlockTmp {
             if (Options == null) {
                 Options = new CalculationOptionsWarlock();
             }
-
             Talents = character.WarlockTalents;
             BaseMana = BaseStats.GetBaseStats(character).Mana;
+            CastSpells = new Dictionary<string, Spell>();
             float multiplier
                 = 1f
                     + Talents.DemonicPact * .01f
@@ -271,19 +271,16 @@ namespace Rawr.WarlockTmp {
             // each spell will be cast
             float timeRemaining = Options.Duration;
             float manaRemaining = Stats.Mana;
-            Dictionary<string, Spell> castSpells
-                = new Dictionary<string, Spell>();
             foreach (string spellName in Options.SpellPriority) {
                 Spell spell = GetSpell(spellName);
-                if (!spell.IsCastable(Talents, castSpells)) {
+                if (!spell.IsCastable()) {
                     continue;
                 }
                 spell.SetCastingStats(
                     manaRemaining,
                     timeRemaining,
-                    1f + Stats.SpellHaste,
-                    castSpells);
-                castSpells.Add(spellName, spell);
+                    1f + Stats.SpellHaste);
+                CastSpells.Add(spellName, spell);
                 timeRemaining
                     -= (spell.AvgCastTime + Options.Latency) * spell.NumCasts;
                 manaRemaining -= spell.ManaCost * spell.NumCasts;
@@ -300,9 +297,9 @@ namespace Rawr.WarlockTmp {
             // then for each spell that is cast calculate its damage, and our
             // overall damage
             float damageDone = 0f;
-            foreach (KeyValuePair<string, Spell> pair in castSpells) {
+            foreach (KeyValuePair<string, Spell> pair in CastSpells) {
                 Spell spell = pair.Value;
-                spell.SetDamageStats(spellPower, hitChance, castSpells);
+                spell.SetDamageStats(spellPower, hitChance, CastSpells);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
             PersonalDps = damageDone / Options.Duration;

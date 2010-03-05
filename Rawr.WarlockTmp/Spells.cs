@@ -84,8 +84,7 @@ namespace Rawr.WarlockTmp {
         }
         #endregion
 
-        public virtual bool IsCastable(
-            WarlockTalents talents, Dictionary<string, Spell> castSpells) {
+        public virtual bool IsCastable() {
 
             return true;
         }
@@ -93,8 +92,7 @@ namespace Rawr.WarlockTmp {
         public virtual void SetCastingStats(
             float manaRemaining,
             float timeRemaining,
-            float baseHasteDivisor,
-            Dictionary<string, Spell> alreadyCast) {
+            float baseHasteDivisor) {
 
             AvgCastTime = Math.Max(1f, BaseCastTime / baseHasteDivisor);
 
@@ -102,13 +100,12 @@ namespace Rawr.WarlockTmp {
 
                 // This spell is on a cooldown.
                 
-                // There is *LOT* of math, complexity and computation time that
-                // can go into calculating collisionDelay, but I suspect this
-                // is a decent approximation.
+                // Temporarily using this poor estimation of cooldown collision
+                // until GetCooldownCollisionDelay() is tested.
+                float avgSpellCastTime = Math.Max(1f, 2f / baseHasteDivisor);
                 float collisionDelay
                     = (Mommy.Options.Duration - timeRemaining)
                         / Mommy.Options.Duration;
-                float avgSpellCastTime = Math.Max(1f, 2.2f / baseHasteDivisor);
                 float effectiveCooldown
                     = Cooldown
                         + collisionDelay
@@ -173,27 +170,196 @@ namespace Rawr.WarlockTmp {
 
             string toolTip
                 = String.Format(
-                    "{0:0}*{1:0.00}s\tAverage Cast Time\r\n",
-                    AvgDamagePerCast,
-                    AvgCastTime);
+                    "{0:0.0} dps*",
+                    NumCasts * AvgDamagePerCast / Mommy.Options.Duration);
             if (AvgDirectDamage > 0) {
                 toolTip
                     += String.Format(
-                        "{0:0}\tAverage Hit\r\n"
-                            + "{1:0}\tAverage Crit\r\n",
+                        "{0:0.0}\tAverage Hit\r\n"
+                            + "{1:0.0}\tAverage Crit\r\n",
                         AvgDirectDamage,
                         AvgDirectCritDamage);
             }
             if (AvgTickDamage > 0) {
                 toolTip
                     += String.Format(
-                        "{0:0}\tAverage Tick\r\n"
-                            + "{1:0}\tAverage Tick Crit\r\n",
+                        "{0:0.0}\tAverage Tick\r\n"
+                            + "{1:0.0}\tAverage Tick Crit\r\n"
+                            + "{2:0.0}\tTicks Per Cast\r\n",
                         AvgTickDamage,
-                        AvgTickCritDamage);
+                        AvgTickCritDamage,
+                        NumTicks);
             }
-            toolTip += String.Format("{0:0.0}\tCasts", NumCasts);
+            toolTip
+                += String.Format(
+                    "{0:0.0}s\tCast Time\r\n"
+                        + "{1:0.0}\tMana\r\n"
+                        + "{2:0.0}\tDPC\r\n"
+                        + "{3:0.0}\tDPCT\r\n"
+                        + "{4:0.0}\tDPM\r\n"
+                        + "{5:0.0}\tCasts",
+                    AvgCastTime,
+                    ManaCost,
+                    AvgDamagePerCast,
+                    AvgDamagePerCast / AvgCastTime,
+                    AvgDamagePerCast / ManaCost,
+                    NumCasts);
             return toolTip;
+        }
+
+        private float GetCooldownCollisionDelay() {
+
+            List<float> castTimes = new List<float>();
+            List<float> cooldowns = new List<float>();
+            foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
+                castTimes.Add(pair.Value.AvgCastTime + Mommy.Options.Duration);
+                cooldowns.Add(pair.Value.Cooldown);
+            }
+
+            #region create probabilities
+            // Create a map of the probability of randomly choosing a point in
+            // time while key[0] is being cast, and key[1-n] are all queued up
+            // after it.  This assumes 1) spells have an equal chance of coming
+            // off cooldown at any given point in time, and 2) no spell on a
+            // cooldown can show up twice in the same string spellcasts.  (1) is
+            // a simplifying assumption, and I believe (2) holds true for any
+            // real-life warlock.
+            Dictionary<int[], float> probablities
+                = new Dictionary<int[], float>();
+            int[] indicies = new int[castTimes.Count];
+            for (int i = 0; i < indicies.Length; ++i) {
+                indicies[i] = i;
+            }
+            foreach (
+                int[] spellString
+                in GetLongerPermutations(new int[0], indicies)) {
+
+                // first calculate the probability of the given spell string
+                int spell = spellString[0];
+                float stringLength = castTimes[spell];
+                float probability = stringLength / cooldowns[spell];
+                for (int i = 1; i < spellString.Length; ++i) {
+                    spell = spellString[i];
+                    probability *= stringLength / cooldowns[spell];
+                    stringLength += castTimes[spell];
+                }
+
+                // then subtract the probability of it being the start
+                // of a longer string of spellcasts
+                foreach (
+                    int[] longerString
+                    in GetLongerPermutations(spellString, indicies)) {
+
+                    probability -= probablities[longerString];
+                }
+                probablities[spellString] = probability;
+            }
+            #endregion
+
+            // Use the probabilites to calculated a weighted average of how long
+            // THIS spell will have to wait between coming off cooldown and
+            // and being cast.
+            float numerator = 0f;
+            float denominator = 0f;
+            foreach (KeyValuePair<int[], float> pair in probablities) {
+                int[] spellString = pair.Key;
+                float delay = castTimes[spellString[0]] / 2;
+                for (int i = 1; i < spellString.Length; ++i) {
+                    delay += castTimes[spellString[i]];
+                }
+                numerator += pair.Value * delay;
+                denominator += delay;
+            }
+            return numerator / denominator;
+        }
+
+        /// <summary>
+        /// Creates all permutations longer than "stem" that can be made
+        /// by appending values in "values" that are not already included in
+        /// "stem".
+        /// </summary>
+        /// <param name="stem">A subset of "values".</param>
+        /// <param name="values">The universe of values to permute.</param>
+        /// <returns>
+        /// The order of permutations returned will be from longest to shortest.
+        /// </returns>
+        private List<int[]> GetLongerPermutations(int[] stem, int[] values) {
+
+            int[] remainingValues = new int[values.Length - stem.Length];
+            for (int valI = 0, remI = 0; valI < values.Length; ++valI) {
+                if (System.Array.IndexOf(stem, values[valI]) == -1) {
+                    remainingValues[remI] = values[valI];
+                    ++remI;
+                }
+            }
+
+            List<int[]> permutations = new List<int[]>();
+            for (int appendLen = remainingValues.Length; --appendLen >= 0; ) {
+                foreach (
+                    int[] combination
+                    in GetCombinations(remainingValues, appendLen)) {
+
+                    foreach (
+                        int[] appendix
+                        in GetPermutations(combination)) {
+
+                        int[] permutation = new int[stem.Length + appendLen];
+                        System.Array.Copy(stem, 0, permutation, 0, stem.Length);
+                        System.Array.Copy(
+                            appendix, 0, permutation, stem.Length, appendLen);
+                        permutations.Add(permutation);
+                    }
+                }
+            }
+            return permutations;
+        }
+
+        private List<int[]> GetCombinations(int[] values, int length) {
+
+            if (length == values.Length) {
+                return new List<int[]> { values };
+            }
+            
+            int[] subIndicies = new int[values.Length - 1];
+            for (int i = 0; i < subIndicies.Length; ++i) {
+                subIndicies[i] = values[i + 1];
+            }
+            List<int[]> combinations = GetCombinations(subIndicies, length);
+            foreach (
+                int[] subCombination
+                in GetCombinations(subIndicies, length - 1)) {
+
+                int[] combination = new int[length];
+                combination[0] = values[0];
+                for (int i = 1; i < length; ++i) {
+                    combination[i] = subCombination[i - 1];
+                }
+                combinations.Add(combination);
+            }
+            return combinations;
+        }
+
+        private List<int[]> GetPermutations(int[] values) {
+
+            List<int[]> permutations = new List<int[]>();
+            int[] subIndicies = new int[values.Length - 1];
+            for (int choice = 0; choice < values.Length; ++choice) {
+                for (int i = 0, subI = 0; i < values.Length; ++i) {
+                    if (i != choice) {
+                        subIndicies[subI] = values[i];
+                        ++subI;
+                    }
+                }
+                foreach (int[] subPermutation in GetPermutations(subIndicies)) {
+                    int[] permutation = new int[values.Length];
+                    permutation[0] = values[choice];
+                    for (int i = 1; i < permutation.Length; ++i) {
+                        permutation[i] = subPermutation[i - 1];
+                    }
+                    permutations.Add(permutation);
+                }
+            }
+            return permutations;
         }
     }
 
@@ -234,14 +400,13 @@ namespace Rawr.WarlockTmp {
         public override void SetCastingStats(
             float manaRemaining,
             float timeRemaining,
-            float baseHasteDivisor,
-            Dictionary<string, Spell> castSpells) {
+            float baseHasteDivisor) {
 
             if (Mommy.Talents.GlyphQuickDecay) {
                 Cooldown /= baseHasteDivisor;
             }
             base.SetCastingStats(
-                manaRemaining, timeRemaining, baseHasteDivisor, castSpells);
+                manaRemaining, timeRemaining, baseHasteDivisor);
             TicksPerSec = 3f / baseHasteDivisor;
         }
     }
@@ -328,20 +493,16 @@ namespace Rawr.WarlockTmp {
                     * (1f
                         - mommy.Talents.Nemesis * .1f)) { } // cooldown
 
-        public override bool IsCastable(
-            WarlockTalents talents, Dictionary<string, Spell> castSpells) {
+        public override bool IsCastable() {
 
-            return talents.Metamorphosis > 0;
+            return Mommy.Talents.Metamorphosis > 0;
         }
 
         public override void SetCastingStats(
-            float manaRemaining,
-            float timeRemaining,
-            float baseHasteDivisor,
-            Dictionary<string, Spell> castSpells) {
+            float manaRemaining, float timeRemaining, float baseHasteDivisor) {
 
             base.SetCastingStats(
-                manaRemaining, timeRemaining, baseHasteDivisor, castSpells);
+                manaRemaining, timeRemaining, baseHasteDivisor);
 
             // Discretize NumCasts.  This makes sense becasue of this spell's
             // long cooldown, so that it's (correctly) modelled as more
@@ -415,10 +576,9 @@ namespace Rawr.WarlockTmp {
             BaseCastTime = 1.5f;
         }
 
-        public override bool IsCastable(
-            WarlockTalents talents, Dictionary<string, Spell> castSpells) {
+        public override bool IsCastable() {
 
-            return castSpells.ContainsKey("Corruption")
+            return Mommy.CastSpells.ContainsKey("Corruption")
                 && (Mommy.Talents.GlyphCorruption
                     || Mommy.Talents.Nightfall > 0);
         }
@@ -426,8 +586,7 @@ namespace Rawr.WarlockTmp {
         public override void SetCastingStats(
             float manaRemaining,
             float timeRemaining,
-            float baseHasteDivisor,
-            Dictionary<string, Spell> castSpells) {
+            float baseHasteDivisor) {
 
             // Currently modeled as a spell on a cooldown equal to the
             // average time between procs.  This lengthens the time between
@@ -439,12 +598,12 @@ namespace Rawr.WarlockTmp {
             if (Mommy.Talents.GlyphCorruption) {
                 procChance += .04f;
             }
-            Spell corruption = castSpells["Corruption"];
+            Spell corruption = Mommy.CastSpells["Corruption"];
             float numProcs
                 = procChance * corruption.NumCasts * corruption.NumTicks;
             Cooldown = Mommy.Options.Duration / numProcs;
             base.SetCastingStats(
-                manaRemaining, timeRemaining, baseHasteDivisor, castSpells);
+                manaRemaining, timeRemaining, baseHasteDivisor);
         }
     }
 }
