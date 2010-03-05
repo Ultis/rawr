@@ -230,12 +230,14 @@ namespace Rawr.Retribution
             // - Weapon swing hits
             // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
+            // - Judgement hits
 
             return
                 GetAbilityHitsPerSecond(CS) +
                 GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand();
+                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
+                GetAbilityHitsPerSecond(Judge);
         }
 
         public float GetPhysicalAttacksPerSec()
@@ -277,13 +279,15 @@ namespace Rawr.Retribution
             // - Weapon swing crits
             // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
+            // - Judgement crits
 
             return
                 GetAbilityCritsPerSecond(CS) +
                 GetAbilityCritsPerSecond(DS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit();
-        }
+                Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit() +
+                GetAbilityCritsPerSecond(Judge);
+       }
 
         public float GetPhysicalCritsPerSec()
         {
