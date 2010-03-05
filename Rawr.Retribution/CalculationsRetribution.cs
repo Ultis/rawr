@@ -614,11 +614,13 @@ namespace Rawr.Retribution
             switch (effect.Trigger)
             {
                 case Trigger.MeleeCrit:
-                    trigger = 1f / rot.GetMeleeCritsPerSec();
+                    //trigger = 1f / rot.GetMeleeCritsPerSec();
+                    trigger = 1f / rot.GetPhysicalCritsPerSec();  // For Ret, meleeHit and PhysicalHit are the same. Judgements and HoW also trigger MeleeHit effects.
                     break;
 
                 case Trigger.MeleeHit:
-                    trigger = 1f / rot.GetMeleeAttacksPerSec();
+                    //trigger = 1f / rot.GetMeleeAttacksPerSec();
+                    trigger = 1f / rot.GetPhysicalAttacksPerSec();  // For Ret, meleeHit and PhysicalHit are the same. Judgements and HoW also trigger MeleeHit effects.
                     break;
 
                 case Trigger.PhysicalCrit:
