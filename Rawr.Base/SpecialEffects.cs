@@ -1197,7 +1197,7 @@ namespace Rawr {
             else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you a Mote of Anger\. (nbsp;| )?When you reach (?<amount>\d+) Motes of Anger, they will release, causing you to instantly attack for 50% weapon damage with one of your melee weapons\.")).Success)
             {
                 // Tiny Abomination Jar
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { MoteOfAnger = 0.5f }, 0f, 0f, 0.35f, int.Parse(match.Groups["amount"].Value)));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { MoteOfAnger = 0.5f }, 0f, 0f, 0.5f, int.Parse(match.Groups["amount"].Value)));
             }
             else if ((match = Regex.Match(line, @"You gain (?<mana>\d+) mana each time you heal a target with one of your spells.")).Success)
             {
