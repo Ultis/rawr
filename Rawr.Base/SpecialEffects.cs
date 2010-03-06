@@ -297,7 +297,7 @@ namespace Rawr {
                     new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value), },
                     (float)int.Parse(match.Groups["dur"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if ((match = new Regex(@"Each time your Moonfire spell deals periodic damage, you have a chance to gain (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            else if ((match = new Regex(@"Each time your Moonfire spell deals periodic damage, you have a chance to gain (?<amount>\d\d*) critical strike rating for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Idol of Lunar Fury
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MoonfireTick,
                     new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value), },
