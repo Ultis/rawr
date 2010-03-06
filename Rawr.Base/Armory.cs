@@ -24,11 +24,18 @@ namespace Rawr
             //XmlDocument docTalents = null;
             try
 			{
+                XmlNode node = null;
 				WebRequestWrapper wrw = new WebRequestWrapper();
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
                 if (docCharacter == null)
                 {
-                    StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory. Is the Armory down?");
+                    StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory. The Armory may be down.");
+                    itemsOnCharacter = null;
+                    return null;
+                }
+                else if (((node = docCharacter.SelectSingleNode("page/errorhtml")) != null) && node.Attributes["type"].Value == "maintenance")
+                {
+                    StatusMessaging.ReportError("Get Character", null, "The Armory returned a message that it is down for maintenance.");
                     itemsOnCharacter = null;
                     return null;
                 }
