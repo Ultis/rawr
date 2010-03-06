@@ -39,6 +39,7 @@ namespace Rawr.RestoSham
             "TotemThunderhead",
             "ManaRestore",
             "BonusCritHealMultiplier",
+            "BonusHealingDoneMultiplier",
             "BonusManaMultiplier",
             "BonusIntellectMultiplier",
             "RestoSham2T9",
