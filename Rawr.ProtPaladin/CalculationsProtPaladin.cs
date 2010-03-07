@@ -1159,7 +1159,7 @@ focus on Survival Points.",
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
-            if (slot == CharacterSlot.OffHand && (item.Slot == ItemSlot.OneHand || item.Type == ItemType.None)) return false;
+            if (slot == CharacterSlot.OffHand && item.Type != ItemType.Shield) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
@@ -1255,16 +1255,7 @@ focus on Survival Points.",
         }
 
         public override bool IsItemRelevant(Item item) {
-            try {
-                bool relevant = (string.IsNullOrEmpty(item.RequiredClasses)
-                                || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()))
-                                && RelevantItemTypes.Contains(item.Type)
-                                && HasRelevantStats(item.Stats)
-                                || (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Libram);
-                return relevant;
-            } catch (Exception) {
-                return false;
-            }
+            return base.IsItemRelevant(item);
         }
 
         public override bool HasRelevantStats(Stats stats) {
