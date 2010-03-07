@@ -58,7 +58,7 @@ namespace Rawr.Healadin
             heal *= 1f + .01f * Talents.Divinity;
             heal *= AbilityHealedMultiplier();
             heal *= (1f + Talents.HealingLight * .04f);
-            heal *= Stats.BonusHealingDoneMultiplier;
+            heal *= (1f + Stats.BonusHealingDoneMultiplier);
 
             return heal;
         }
