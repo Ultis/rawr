@@ -134,6 +134,12 @@ namespace Rawr.WarlockTmp {
                 bonusMultiplier
                     = talents.ShadowMastery * .03f
                         + Mommy.Stats.BonusShadowDamageMultiplier;
+                if (Mommy.Options.SpellPriority.Contains("Shadow Bolt")
+                    || (Mommy.Options.SpellPriority.Contains("Haunt")
+                        && talents.Haunt > 0)) {
+
+                    TickDamageMultiplier += talents.ShadowEmbrace * .05f * 3f;
+                }
             } else if (magicSchool == MagicSchool.Fire) {
                 bonusMultiplier = Mommy.Stats.BonusFireDamageMultiplier;
             }
@@ -485,6 +491,33 @@ namespace Rawr.WarlockTmp {
                 Cooldown /= 1f + Mommy.Stats.SpellHaste;
             }
             base.SetCastingStats(timeRemaining);
+        }
+    }
+
+    public class CurseOfAgony : Spell {
+
+        public CurseOfAgony(CharacterCalculationsWarlock mommy) 
+            : base(
+                mommy,
+                MagicSchool.Shadow, // magic school
+                SpellTree.Affliction, // spell tree
+                .1f, // percent base mana
+                1f, // cost multiplier
+                1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
+                0f, // low direct damage
+                0f, // high direct damage
+                0f, // direct coefficient
+                0f, // direct multiplier
+                1740f / 8f, // damage per tick
+                8f, // num ticks
+                1.2f / 8f, // tick coefficient
+                mommy.BaseTickDamageMultiplier
+                    + mommy.Talents.ImprovedCurseOfAgony * .05f
+                    + mommy.Talents.Contagion * .01f, // tick multiplier
+                0f, // crit chance
+                0f, // crit multiplier
+                24f) { // "cooldown"
+
         }
     }
 

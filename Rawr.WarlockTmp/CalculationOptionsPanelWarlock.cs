@@ -81,6 +81,7 @@ namespace Rawr.WarlockTmp {
 
             targetLevelCombo.Text = _options.TargetLevel.ToString();
             fightLengthSpinner.Value = (decimal) _options.Duration;
+            latencySpinner.Value = (decimal) _options.Latency * 1000;
             RefreshRotationPanel();
 
             _ignoreEvents = false;
@@ -98,7 +99,6 @@ namespace Rawr.WarlockTmp {
             }
 
 
-
             Character.OnCalculationsInvalidated();
         }
 
@@ -107,7 +107,6 @@ namespace Rawr.WarlockTmp {
             if (_ignoreEvents) {
                 return;
             }
-
             
 
             Character.OnCalculationsInvalidated();
@@ -121,7 +120,6 @@ namespace Rawr.WarlockTmp {
             }
 
             _options.TargetLevel = Convert.ToInt32(targetLevelCombo.Text);
-
             Character.OnCalculationsInvalidated();
         }
 
@@ -142,32 +140,7 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-
-
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void manaPotionCombo_SelectedIndexChanged(
-            object sender, EventArgs e) {
-
-            if (_ignoreEvents) {
-                return;
-            }
-
-
-
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void replenishmentSpinner_ValueChanged(
-            object sender, EventArgs e) {
-
-            if (_ignoreEvents) {
-                return;
-            }
-
-
-
+            _options.Latency = (float) latencySpinner.Value / 1000f;
             Character.OnCalculationsInvalidated();
         }
 

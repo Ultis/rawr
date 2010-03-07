@@ -45,19 +45,14 @@
             this.petLabel = new System.Windows.Forms.Label();
             this.targetLevelCombo = new System.Windows.Forms.ComboBox();
             this.targetLevelLabel = new System.Windows.Forms.Label();
-            this.manaPotionCombo = new System.Windows.Forms.ComboBox();
-            this.manaPotionLabel = new System.Windows.Forms.Label();
             this.fightLengthLabel = new System.Windows.Forms.Label();
             this.fightLengthSpinner = new System.Windows.Forms.NumericUpDown();
             this.latencySpinner = new System.Windows.Forms.NumericUpDown();
             this.latencyLabel = new System.Windows.Forms.Label();
-            this.replenishmentSpinner = new System.Windows.Forms.NumericUpDown();
-            this.replenishmentLabel = new System.Windows.Forms.Label();
             this.infernalCheck = new System.Windows.Forms.CheckBox();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize) (this.replenishmentSpinner)).BeginInit();
             this.SuspendLayout();
             // 
             // petCombo
@@ -123,7 +118,7 @@
             this.rotationBox.Controls.Add(this.rotationCombo);
             this.rotationBox.Controls.Add(this.deleteRotationButton);
             this.rotationBox.Controls.Add(this.newRotationButton);
-            this.rotationBox.Location = new System.Drawing.Point(3, 185);
+            this.rotationBox.Location = new System.Drawing.Point(3, 132);
             this.rotationBox.Name = "rotationBox";
             this.rotationBox.Size = new System.Drawing.Size(294, 229);
             this.rotationBox.TabIndex = 7;
@@ -253,27 +248,6 @@
             this.targetLevelLabel.TabIndex = 9;
             this.targetLevelLabel.Text = "Target Level:";
             // 
-            // manaPotionCombo
-            // 
-            this.manaPotionCombo.Enabled = false;
-            this.manaPotionCombo.FormattingEnabled = true;
-            this.manaPotionCombo.Items.AddRange(new object[] {
-            "None (0)"});
-            this.manaPotionCombo.Location = new System.Drawing.Point(142, 132);
-            this.manaPotionCombo.Name = "manaPotionCombo";
-            this.manaPotionCombo.Size = new System.Drawing.Size(155, 21);
-            this.manaPotionCombo.TabIndex = 6;
-            this.manaPotionCombo.SelectedIndexChanged += new System.EventHandler(this.manaPotionCombo_SelectedIndexChanged);
-            // 
-            // manaPotionLabel
-            // 
-            this.manaPotionLabel.AutoSize = true;
-            this.manaPotionLabel.Location = new System.Drawing.Point(3, 135);
-            this.manaPotionLabel.Name = "manaPotionLabel";
-            this.manaPotionLabel.Size = new System.Drawing.Size(70, 13);
-            this.manaPotionLabel.TabIndex = 11;
-            this.manaPotionLabel.Text = "Mana Potion:";
-            // 
             // fightLengthLabel
             // 
             this.fightLengthLabel.AutoSize = true;
@@ -304,8 +278,17 @@
             // 
             // latencySpinner
             // 
-            this.latencySpinner.Enabled = false;
+            this.latencySpinner.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
             this.latencySpinner.Location = new System.Drawing.Point(142, 106);
+            this.latencySpinner.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.latencySpinner.Name = "latencySpinner";
             this.latencySpinner.Size = new System.Drawing.Size(155, 20);
             this.latencySpinner.TabIndex = 5;
@@ -320,25 +303,6 @@
             this.latencyLabel.Size = new System.Drawing.Size(131, 13);
             this.latencyLabel.TabIndex = 16;
             this.latencyLabel.Text = "Time Between Spells (ms):";
-            // 
-            // replenishmentSpinner
-            // 
-            this.replenishmentSpinner.Enabled = false;
-            this.replenishmentSpinner.Location = new System.Drawing.Point(142, 159);
-            this.replenishmentSpinner.Name = "replenishmentSpinner";
-            this.replenishmentSpinner.Size = new System.Drawing.Size(155, 20);
-            this.replenishmentSpinner.TabIndex = 7;
-            this.replenishmentSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.replenishmentSpinner.ValueChanged += new System.EventHandler(this.replenishmentSpinner_ValueChanged);
-            // 
-            // replenishmentLabel
-            // 
-            this.replenishmentLabel.AutoSize = true;
-            this.replenishmentLabel.Location = new System.Drawing.Point(3, 161);
-            this.replenishmentLabel.Name = "replenishmentLabel";
-            this.replenishmentLabel.Size = new System.Drawing.Size(133, 13);
-            this.replenishmentLabel.TabIndex = 18;
-            this.replenishmentLabel.Text = "Replenishment Uptime (%):";
             // 
             // infernalCheck
             // 
@@ -357,26 +321,21 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.infernalCheck);
-            this.Controls.Add(this.replenishmentLabel);
-            this.Controls.Add(this.replenishmentSpinner);
             this.Controls.Add(this.latencyLabel);
             this.Controls.Add(this.latencySpinner);
             this.Controls.Add(this.fightLengthSpinner);
             this.Controls.Add(this.fightLengthLabel);
-            this.Controls.Add(this.manaPotionLabel);
-            this.Controls.Add(this.manaPotionCombo);
             this.Controls.Add(this.targetLevelLabel);
             this.Controls.Add(this.targetLevelCombo);
             this.Controls.Add(this.petCombo);
             this.Controls.Add(this.petLabel);
             this.Controls.Add(this.rotationBox);
             this.Name = "CalculationOptionsPanelWarlock";
-            this.Size = new System.Drawing.Size(300, 472);
+            this.Size = new System.Drawing.Size(300, 365);
             this.rotationBox.ResumeLayout(false);
             this.rotationBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).EndInit();
-            ((System.ComponentModel.ISupportInitialize) (this.replenishmentSpinner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -399,14 +358,10 @@
         private System.Windows.Forms.Button rotationAddButton;
         private System.Windows.Forms.ComboBox targetLevelCombo;
         private System.Windows.Forms.Label targetLevelLabel;
-        private System.Windows.Forms.ComboBox manaPotionCombo;
-        private System.Windows.Forms.Label manaPotionLabel;
         private System.Windows.Forms.Label fightLengthLabel;
         private System.Windows.Forms.NumericUpDown fightLengthSpinner;
         private System.Windows.Forms.NumericUpDown latencySpinner;
         private System.Windows.Forms.Label latencyLabel;
-        private System.Windows.Forms.NumericUpDown replenishmentSpinner;
-        private System.Windows.Forms.Label replenishmentLabel;
         private System.Windows.Forms.CheckBox infernalCheck;
         private System.Windows.Forms.Panel rotationSeparator;
         private System.Windows.Forms.Button rotationRenameButton;

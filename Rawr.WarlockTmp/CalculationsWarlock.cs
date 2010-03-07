@@ -88,6 +88,7 @@ namespace Rawr.WarlockTmp {
                         "Spell:Crit Chance",
                         "Spell:Haste Rating",
                         "Affliction:Corruption",
+                        "Affliction:Curse Of Agony",
                         "Affliction:Life Tap",
                         "Demonology:Metamorphosis",
                         "Destruction:Shadow Bolt",
