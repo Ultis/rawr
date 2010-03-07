@@ -1199,7 +1199,7 @@ namespace Rawr
 
         public bool IsEnchantAllowedForClass(Enchant enchant, CharacterClass characterClass)
         {
-            if (enchant.Name.StartsWith("Rune of ") && (characterClass != CharacterClass.DeathKnight))
+            if (enchant.Name.StartsWith("Rune of ", StringComparison.Ordinal) && (characterClass != CharacterClass.DeathKnight))
                 return false;
 
             return true;    

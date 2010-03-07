@@ -1363,17 +1363,17 @@ namespace Rawr.Mage
 
             float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
 
-            calculationResult.ArcaneThreatMultiplier = threatFactor * (1 - character.MageTalents.ArcaneSubtlety * 0.2f);
+            calculationResult.ArcaneThreatMultiplier = threatFactor * (1 - talents.ArcaneSubtlety * 0.2f);
             if (calculationOptions.Mode333)
             {
-                calculationResult.FireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.1f);
+                calculationResult.FireThreatMultiplier = threatFactor * (1 - talents.BurningSoul * 0.1f);
             }
             else
             {
-                calculationResult.FireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f);
+                calculationResult.FireThreatMultiplier = threatFactor * (1 - talents.BurningSoul * 0.05f);
             }
-            calculationResult.FrostThreatMultiplier = threatFactor * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
-            calculationResult.FrostFireThreatMultiplier = threatFactor * Math.Min(1 - character.MageTalents.BurningSoul * 0.05f, 1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
+            calculationResult.FrostThreatMultiplier = threatFactor * (1 - ((talents.FrostChanneling > 0) ? (0.01f + 0.03f * talents.FrostChanneling) : 0f));
+            calculationResult.FrostFireThreatMultiplier = threatFactor * Math.Min(1 - talents.BurningSoul * 0.05f, 1 - ((talents.FrostChanneling > 0) ? (0.01f + 0.03f * talents.FrostChanneling) : 0f));
             calculationResult.NatureThreatMultiplier = threatFactor;
             calculationResult.ShadowThreatMultiplier = threatFactor;
             calculationResult.HolyThreatMultiplier = threatFactor;
@@ -1520,7 +1520,7 @@ namespace Rawr.Mage
             calculationResult.CombustionFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + 0.08f * talents.Ignite);
             calculationResult.CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + talents.IceShards / 3.0f + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + 0.08f * talents.Ignite);
 
-            calculationResult.BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * character.MageTalents.NetherwindPresence) * calculationOptions.EffectHasteMultiplier;
+            calculationResult.BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * talents.NetherwindPresence) * calculationOptions.EffectHasteMultiplier;
             calculationResult.BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / calculationResult.BaseCastingSpeed);
 
             calculationResult.IncomingDamageAmpMelee = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.Dodge) * (1 - calculationResult.DamageTakenReduction);

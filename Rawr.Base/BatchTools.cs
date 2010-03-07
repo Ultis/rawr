@@ -586,7 +586,8 @@ namespace Rawr
                             upgradeListPhase = 0;
                             int _thoroughness = Thoroughness;
                             // we have to reinitialize item generator because of the restrictions we made
-                            CreateBatchItemGenerator();
+                            //CreateBatchItemGenerator();
+                            itemGenerator.RestoreAvailabilityInformation();
                             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
                             workingCharacter = CurrentBatchCharacter.Character;
                             optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, _thoroughness, itemList[itemIndex]);
@@ -826,7 +827,8 @@ namespace Rawr
                             upgradeListPhase = 0;
                             int _thoroughness = Thoroughness;
                             // we have to reinitialize item generator because of the restrictions we made
-                            CreateBatchItemGenerator();
+                            //CreateBatchItemGenerator();
+                            itemGenerator.RestoreAvailabilityInformation();
                             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
                             workingCharacter = CurrentBatchCharacter.Character;
                             optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, _thoroughness, itemList[itemIndex]);
@@ -875,13 +877,13 @@ namespace Rawr
                             string anyGem = id + ".*.*.*";
                             string onlyGemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
                             string anyEnchant = string.Format("{0}.{1}.{2}.{3}.*", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
-                            List<string> list = character.Character.AvailableItems.FindAll(x => x.StartsWith(id));
+                            List<string> list = character.Character.AvailableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
                             List<string> sublist;
                             if (list.Contains(onlyGemmedId + ".*"))
                             {
                                 // available
                             }
-                            else if ((sublist = list.FindAll(x => x.StartsWith(onlyGemmedId))).Count > 0)
+                            else if ((sublist = list.FindAll(x => x.StartsWith(onlyGemmedId, StringComparison.Ordinal))).Count > 0)
                             {
                                 if (sublist.Contains(item.GemmedId))
                                 {
@@ -899,7 +901,7 @@ namespace Rawr
                             {
                                 // available
                             }
-                            else if ((sublist = list.FindAll(x => x.StartsWith(anyGem))).Count > 0)
+                            else if ((sublist = list.FindAll(x => x.StartsWith(anyGem, StringComparison.Ordinal))).Count > 0)
                             {
                                 if (sublist.Contains(anyGem + "." + item.EnchantId))
                                 {
@@ -931,7 +933,7 @@ namespace Rawr
                                     ItemInstance newItem = null;
                                     if (s.IndexOf('.') < 0)
                                     {
-                                        if (!s.StartsWith("-"))
+                                        if (!s.StartsWith("-", StringComparison.Ordinal))
                                         {
                                             newItem = item.Clone();
                                             newItem.Id = int.Parse(s);
@@ -1309,6 +1311,7 @@ namespace Rawr
                 itemList = new List<Item>(itemById.Values).ToArray();
             }
             CreateBatchItemGenerator();
+            itemGenerator.SaveAvailabilityInformation();
             optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Model, itemGenerator);
             itemIndex = 0;
             upgradeList = new Dictionary<CharacterSlot, Dictionary<string, UpgradeEntry>>();

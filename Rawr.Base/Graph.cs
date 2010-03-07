@@ -368,7 +368,7 @@ namespace Rawr.Base
                 int index = 0;
                 foreach (string subPoint in Calculations.SubPointNameColors.Keys)
                 {
-                    if (calculation.StartsWith(subPoint))
+                    if (calculation.StartsWith(subPoint, StringComparison.Ordinal))
                         return calcs.SubPoints[index];
                     index++;
                 }
@@ -385,7 +385,7 @@ namespace Rawr.Base
                 int index = 0;
                 foreach (string subPoint in Calculations.SubPointNameColors.Keys)
                 {
-                    if (calculation.StartsWith(subPoint))
+                    if (calculation.StartsWith(subPoint, StringComparison.Ordinal))
                         return calcs.SubPoints[index];
                     index++;
                 }

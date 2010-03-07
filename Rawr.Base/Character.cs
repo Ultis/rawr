@@ -966,12 +966,12 @@ namespace Rawr //O O . .
         private ItemAvailability GetItemAvailability(string id, string gemId, string fullId)
         {
             string anyGem = id + ".*.*.*";
-            List<string> list = _availableItems.FindAll(x => x.StartsWith(id));
+            List<string> list = _availableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
             if (list.Contains(gemId + ".*"))
             {
                 return ItemAvailability.Available;
             }
-            else if (list.FindIndex(x => x.StartsWith(gemId)) >= 0)
+            else if (list.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
             {
                 return ItemAvailability.AvailableWithEnchantRestrictions;
             }
@@ -979,7 +979,7 @@ namespace Rawr //O O . .
             {
                 return ItemAvailability.RegemmingAllowed;
             }
-            else if (list.FindIndex(x => x.StartsWith(anyGem)) >= 0)
+            else if (list.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
             {
                 return ItemAvailability.RegemmingAllowedWithEnchantRestrictions;
             }
@@ -994,13 +994,13 @@ namespace Rawr //O O . .
             string id = item.Id.ToString();
             string anyGem = id + ".*.*.*";
 
-            if (id.StartsWith("-") || regemmingAllowed || item.IsGem)
+            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed || item.IsGem)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem)) >= 0)
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
                 {
                     _availableItems.Remove(id);
-                    _availableItems.RemoveAll(x => x.StartsWith(anyGem));
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
                 }
                 else
                 {
@@ -1016,13 +1016,13 @@ namespace Rawr //O O . .
             string anyGem = id + ".*.*.*";
             string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
 
-            if (id.StartsWith("-") || regemmingAllowed)
+            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem)) >= 0)
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
                 {
                     _availableItems.Remove(id);
-                    _availableItems.RemoveAll(x => x.StartsWith(anyGem));
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
                 }
                 else
                 {
@@ -1032,9 +1032,9 @@ namespace Rawr //O O . .
             else
             {
                 // enabled toggle
-                if (_availableItems.FindIndex(x => x.StartsWith(gemId)) >= 0)
+                if (_availableItems.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
                 {
-                    _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                    _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
                 }
                 else
                 {
@@ -1055,13 +1055,13 @@ namespace Rawr //O O . .
                 case ItemAvailability.Available:
                     if (enchant != null)
                     {
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
                         _availableItems.Add(gemId + "." + enchant.Id.ToString());
                     }
                     else
                     {
                         // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
                         foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
                             _availableItems.Add(gemId + "." + e.Id.ToString());
@@ -1082,20 +1082,20 @@ namespace Rawr //O O . .
                     }
                     else
                     {
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
                         _availableItems.Add(gemId + ".*");
                     }
                     break;
                 case ItemAvailability.RegemmingAllowed:
                     if (enchant != null)
                     {
-                        _availableItems.RemoveAll(x => x.StartsWith(id));
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
                         _availableItems.Add(anyGem + "." + enchant.Id.ToString());
                     }
                     else
                     {
                         // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(id));
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
                         foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
                             _availableItems.Add(anyGem + "." + e.Id.ToString());
@@ -1116,7 +1116,7 @@ namespace Rawr //O O . .
                     }
                     else
                     {
-                        _availableItems.RemoveAll(x => x.StartsWith(id));
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
                         _availableItems.Add(id);
                     }
                     break;
@@ -1624,7 +1624,7 @@ namespace Rawr //O O . .
             if (_wrist != null) _ids[_wrist] = true;
             foreach (string xid in AvailableItems)
             {
-                if (!xid.StartsWith("-"))
+                if (!xid.StartsWith("-", StringComparison.Ordinal))
                 {
                     int dot = xid.LastIndexOf('.');
                     _ids[(dot >= 0) ? xid.Substring(0, dot).Replace(".*.*.*", "") : xid] = true;

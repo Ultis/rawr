@@ -411,9 +411,10 @@ namespace Rawr.Mage
 
             if (!character.DisableBuffAutoActivation)
             {
+                MageTalents talents = character.MageTalents;
                 if (calculationOptions.MaintainScorch)
                 {
-                    if (character.MageTalents.ImprovedScorch > 0)
+                    if (talents.ImprovedScorch > 0)
                     {
                         if (!character.ActiveBuffs.Contains(ImprovedScorchBuff) && !character.ActiveBuffs.Contains(WintersChillBuff))
                         {
@@ -423,7 +424,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (character.MageTalents.WintersChill > 0)
+                if (talents.WintersChill > 0)
                 {
                     if (!character.ActiveBuffs.Contains(WintersChillBuff) && !character.ActiveBuffs.Contains(ImprovedScorchBuff))
                     {
@@ -672,12 +673,14 @@ namespace Rawr.Mage
                     }
                     break;
             }
+            MageTalents talents = character.MageTalents;
+
             float statsRaceBonusIntellectMultiplier = 0.0f;
             if (character.Race == CharacterRace.Gnome)
             {
                 statsRaceBonusIntellectMultiplier = 0.05f;
             }
-            float statsTalentBonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind;
+            float statsTalentBonusIntellectMultiplier = 0.03f * talents.ArcaneMind;
             float statsRaceBonusSpiritMultiplier = 0.0f;
             if (character.Race == CharacterRace.Human)
             {
@@ -691,9 +694,9 @@ namespace Rawr.Mage
             }
 
             float statsTalentBonusSpiritMultiplier = 0.0f;
-            if (character.MageTalents.StudentOfTheMind > 0)
+            if (talents.StudentOfTheMind > 0)
             {
-                statsTalentBonusSpiritMultiplier = 0.01f + 0.03f * character.MageTalents.StudentOfTheMind;
+                statsTalentBonusSpiritMultiplier = 0.01f + 0.03f * talents.StudentOfTheMind;
             }
             if (calculationOptions.EffectSpiritMultiplier != 1.0f)
             {
@@ -707,40 +710,40 @@ namespace Rawr.Mage
 
             statsTotal.Health = (float)Math.Round(((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect);
-            statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
+            statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * talents.ArcaneFortitude);
 
             if (character.Race == CharacterRace.BloodElf)
             {
                 statsTotal.Mp5 += 5 * 0.06f * statsTotal.Mana / 120;
             }
 
-            float magicAbsorption = 0.5f * calculationOptions.PlayerLevel * character.MageTalents.MagicAbsorption;
-            int frostWarding = character.MageTalents.FrostWarding;
+            float magicAbsorption = 0.5f * calculationOptions.PlayerLevel * talents.MagicAbsorption;
+            int frostWarding = talents.FrostWarding;
 
             if (statsTotal.MageIceArmor > 0)
             {
-                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding + (character.MageTalents.GlyphOfIceArmor ? 0.5f : 0.0f) + statsTotal.Mage2T9 * 0.2f));
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.25f * frostWarding + (character.MageTalents.GlyphOfIceArmor ? 0.5f : 0.0f)));
+                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding + (talents.GlyphOfIceArmor ? 0.5f : 0.0f) + statsTotal.Mage2T9 * 0.2f));
+                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.25f * frostWarding + (talents.GlyphOfIceArmor ? 0.5f : 0.0f)));
             }
             if (statsTotal.MageMageArmor > 0)
             {
-                statsTotal.SpellCombatManaRegeneration += 0.5f + (character.MageTalents.GlyphOfMageArmor ? 0.2f : 0.0f) + 0.1f * statsTotal.Mage2T9;
-                magicAbsorption += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + character.MageTalents.ArcaneShielding * 0.25f);
+                statsTotal.SpellCombatManaRegeneration += 0.5f + (talents.GlyphOfMageArmor ? 0.2f : 0.0f) + 0.1f * statsTotal.Mage2T9;
+                magicAbsorption += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + talents.ArcaneShielding * 0.25f);
             }
             if (statsTotal.MageMoltenArmor > 0)
             {
-                statsTotal.CritRating += (0.35f + (character.MageTalents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
+                statsTotal.CritRating += (0.35f + (talents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
                 statsTotal.SpellCrit += calculationOptions.EffectCritBonus;
             }
-            if (character.MageTalents.GlyphOfManaGem)
+            if (talents.GlyphOfManaGem)
             {
                 statsTotal.BonusManaGem += 0.4f;
             }
 
-            switch (character.MageTalents.ArcaneMeditation)
+            switch (talents.ArcaneMeditation)
             {
                 case 1:
                     statsTotal.SpellCombatManaRegeneration += 0.17f;
@@ -752,7 +755,7 @@ namespace Rawr.Mage
                     statsTotal.SpellCombatManaRegeneration += 0.5f;
                     break;
             }
-            switch (character.MageTalents.Pyromaniac)
+            switch (talents.Pyromaniac)
             {
                 case 1:
                     statsTotal.SpellCombatManaRegeneration += 0.17f;
@@ -769,7 +772,7 @@ namespace Rawr.Mage
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
-            statsTotal.SpellDamageFromIntellectPercentage += 0.03f * character.MageTalents.MindMastery;
+            statsTotal.SpellDamageFromIntellectPercentage += 0.03f * talents.MindMastery;
 
             statsTotal.SpellPower += statsTotal.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower;
             statsTotal.SpellPower += statsTotal.SpellDamageFromIntellectPercentage * statsTotal.Intellect;
@@ -802,7 +805,7 @@ namespace Rawr.Mage
             fullResistRate += calculationOptions.EffectHolyOther * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowManaDrainFrequency * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowSilenceFrequency * (1 - bossHitRate * StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.ShadowResistance, 0));
-            statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * character.MageTalents.MagicAbsorption * statsTotal.Mana;
+            statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * talents.MagicAbsorption * statsTotal.Mana;
 
             return statsTotal;
         }

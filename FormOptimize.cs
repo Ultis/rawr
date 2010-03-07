@@ -69,11 +69,11 @@ namespace Rawr
             if (string.IsNullOrEmpty(calculationString)) calculationString = Properties.Optimizer.Default.CalculationToOptimize;
             if (calculationString != null)
             {
-                if (calculationString.StartsWith("[Overall]"))
+                if (calculationString.StartsWith("[Overall]", StringComparison.Ordinal))
                 {
                     comboBoxCalculationToOptimize.SelectedIndex = 0;
                 }
-                else if (calculationString.StartsWith("[SubPoint "))
+                else if (calculationString.StartsWith("[SubPoint ", StringComparison.Ordinal))
                 {
                     calculationString = calculationString.Substring(10).TrimEnd(']');
                     int index = int.Parse(calculationString);
@@ -105,11 +105,11 @@ namespace Rawr
                                 case "comboBoxRequirementCalculation":
                                     ComboBox reqComboBox = (ComboBox)reqCtrl;
                                     calculationString = character.OptimizationRequirements[reqIndex].Calculation;
-                                    if (calculationString.StartsWith("[Overall]"))
+                                    if (calculationString.StartsWith("[Overall]", StringComparison.Ordinal))
                                     {
                                         reqComboBox.SelectedIndex = 0;
                                     }
-                                    else if (calculationString.StartsWith("[SubPoint "))
+                                    else if (calculationString.StartsWith("[SubPoint ", StringComparison.Ordinal))
                                     {
                                         calculationString = calculationString.Substring(10).TrimEnd(']');
                                         int index = int.Parse(calculationString);
@@ -118,11 +118,11 @@ namespace Rawr
                                             reqComboBox.SelectedIndex = index + 1;
                                         }
                                     }
-                                    else if (calculationString.StartsWith("[Talent "))
+                                    else if (calculationString.StartsWith("[Talent ", StringComparison.Ordinal))
                                     {
                                         reqComboBox.SelectedItem = "Talent";
                                     }
-                                    else if (calculationString.StartsWith("[Cost]"))
+                                    else if (calculationString.StartsWith("[Cost]", StringComparison.Ordinal))
                                     {
                                         reqComboBox.SelectedItem = "Cost";
                                     }
@@ -136,7 +136,7 @@ namespace Rawr
                                     break;
                                 case "comboBoxRequirementTalent":
                                     calculationString = character.OptimizationRequirements[reqIndex].Calculation;
-                                    if (calculationString.StartsWith("[Talent "))
+                                    if (calculationString.StartsWith("[Talent ", StringComparison.Ordinal))
                                     {
                                         calculationString = calculationString.Substring(8).TrimEnd(']');
                                         int index = int.Parse(calculationString);

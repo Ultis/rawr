@@ -1588,15 +1588,15 @@ namespace Rawr.Optimizer
             {
                 return GetNonAvailableItemCost(character);
             }
-            else if (calculation.StartsWith("[SubPoint "))
+            else if (calculation.StartsWith("[SubPoint ", StringComparison.Ordinal))
             {
                 return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
             }
-            else if (calculation.StartsWith("[Talent "))
+            else if (calculation.StartsWith("[Talent ", StringComparison.Ordinal))
             {
                 return character.CurrentTalents.Data[int.Parse(calculation.Substring(8).TrimEnd(']'))];
             }
-            else if (calculation.StartsWith("[Glyph "))
+            else if (calculation.StartsWith("[Glyph ", StringComparison.Ordinal))
             {
                 return character.CurrentTalents.GlyphData[int.Parse(calculation.Substring(7).TrimEnd(']'))] ? 1 : 0;
             }
@@ -3656,15 +3656,15 @@ namespace Rawr.Optimizer
             {
                 return calcs.OverallPoints;
             }
-            else if (calculation.StartsWith("[SubPoint "))
+            else if (calculation.StartsWith("[SubPoint ", StringComparison.Ordinal))
             {
                 return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
             }
-            else if (calculation.StartsWith("[Talent "))
+            else if (calculation.StartsWith("[Talent ", StringComparison.Ordinal))
             {
                 return character.CurrentTalents.Data[int.Parse(calculation.Substring(8).TrimEnd(']'))];
             }
-            else if (calculation.StartsWith("[Glyph "))
+            else if (calculation.StartsWith("[Glyph ", StringComparison.Ordinal))
             {
                 return character.CurrentTalents.GlyphData[int.Parse(calculation.Substring(7).TrimEnd(']'))] ? 1 : 0;
             }

@@ -19,6 +19,7 @@ namespace Rawr.Optimizer
         public Dictionary<string, DirectUpgradeEntry> MatchingMap;
         public Dictionary<string, DirectUpgradeEntry> NonMatchingMap;
         public List<Enchant> GenerativeEnchants;
+        public int[] ValidSlots;
         public bool PositiveCostItem;
     }
 
@@ -1116,39 +1117,40 @@ namespace Rawr.Optimizer
 
 		public void AddItemRestriction(ItemInstance item)
 		{
-			if (item == null || item.Item == null || item.Item.AvailabilityInformation == null) return;
-			bool directUpgradeData = item.Item.AvailabilityInformation.MatchingDirectUpgradeList != null;
+			if (item == null || item.Item == null) return;
+            ItemAvailabilityInformation iai = item.Item.AvailabilityInformation;
+            if (iai == null) return;
 			// make all other gemmings/enchantings of this item unavailable
-			item.Item.AvailabilityInformation.ItemAvailable.Clear();
-			item.Item.AvailabilityInformation.ItemAvailable[item.GemmedId] = true;
-			item.Item.AvailabilityInformation.ItemList.Clear();
-			item.Item.AvailabilityInformation.ItemList.Add(item);
+			iai.ItemAvailable.Clear();
+			iai.ItemAvailable[item.GemmedId] = true;
+			iai.ItemList.Clear();
+			iai.ItemList.Add(item);
 			DirectUpgradeEntry singleEntry = null;
-			if (directUpgradeData)
+			if (generateDirectUpgrades)
 			{
-				item.Item.AvailabilityInformation.MatchingDirectUpgradeList.Clear();
-				item.Item.AvailabilityInformation.NonMatchingDirectUpgradeList.Clear();
-				item.Item.AvailabilityInformation.SingleDirectUpgradeList.Clear();
+				iai.MatchingDirectUpgradeList.Clear();
+				iai.NonMatchingDirectUpgradeList.Clear();
+				iai.SingleDirectUpgradeList.Clear();
 				singleEntry = new DirectUpgradeEntry() { ItemInstance = item };
-				item.Item.AvailabilityInformation.SingleDirectUpgradeList.Add(singleEntry);
-				item.Item.AvailabilityInformation.GenerativeEnchants.Clear();
+				iai.SingleDirectUpgradeList.Add(singleEntry);
+				iai.GenerativeEnchants.Clear();
 			}
 			List<string> allKeys = new List<string>(itemAvailable.Keys);
 			string keyRoot = item.Id.ToString() + ".";
 			foreach (string key in allKeys)
 			{
-				if (key.StartsWith(keyRoot) && key != item.GemmedId)
+				if (key.StartsWith(keyRoot, StringComparison.Ordinal) && key != item.GemmedId)
 				{
 					itemAvailable.Remove(key);
 				}
 			}
-			for (int slot = 0; slot < slotItems.Length; slot++)
+			foreach (int slot in iai.ValidSlots)
 			{
 				slotItems[slot].RemoveAll(i => i != null && i.Id == item.Id && i.GemmedId != item.GemmedId);
-				if (directUpgradeData)
+				if (generateDirectUpgrades)
 				{
 					slotDirectUpgrades[slot][0].RemoveAll(i => i.ItemInstance.Id == item.Id);
-					if (slotDirectUpgrades[slot].Contains(item.Item.AvailabilityInformation.MatchingDirectUpgradeList))
+					if (slotDirectUpgrades[slot].Contains(iai.MatchingDirectUpgradeList))
 					{
 						slotDirectUpgrades[slot][0].Add(singleEntry);
 					}
@@ -1156,6 +1158,87 @@ namespace Rawr.Optimizer
 			}
 		}
 
+        // saved availability data
+        List<ItemInstance>[] savedSlotItems;
+        List<DirectUpgradeEntry>[] savedSingleDirectUpgrades;
+        Dictionary<string, bool> savedItemAvailable;
+        Dictionary<Item, ItemAvailabilityInformation> savedAvailabilityInformation;
+
+        public void SaveAvailabilityInformation()
+        {
+            savedSlotItems = new List<ItemInstance>[slotCount];
+            if (generateDirectUpgrades)
+            {
+                savedSingleDirectUpgrades = new List<DirectUpgradeEntry>[slotCount];
+            }
+            for (int slot = 0; slot < slotItems.Length; slot++)
+            {
+                savedSlotItems[slot] = new List<ItemInstance>(slotItems[slot]);
+                if (generateDirectUpgrades)
+                {
+                    savedSingleDirectUpgrades[slot] = new List<DirectUpgradeEntry>(slotDirectUpgrades[slot][0]);
+                }
+            }
+            savedItemAvailable = new Dictionary<string, bool>(itemAvailable);
+            savedAvailabilityInformation = new Dictionary<Item, ItemAvailabilityInformation>();
+            lock (ItemCache.Items)
+            {
+                foreach (Item citem in ItemCache.Items.Values)
+                {
+                    if (citem.AvailabilityInformation != null)
+                    {
+                        ItemAvailabilityInformation iai = new ItemAvailabilityInformation();
+                        savedAvailabilityInformation[citem] = iai;
+                        iai.ItemAvailable = new Dictionary<string,bool>(citem.AvailabilityInformation.ItemAvailable);
+                        iai.ItemList = new List<ItemInstance>(citem.AvailabilityInformation.ItemList);
+                        if (generateDirectUpgrades)
+                        {
+                            iai.MatchingDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation.MatchingDirectUpgradeList);
+                            iai.NonMatchingDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation.NonMatchingDirectUpgradeList);
+                            iai.SingleDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation.SingleDirectUpgradeList);
+                            iai.GenerativeEnchants = new List<Enchant>(citem.AvailabilityInformation.GenerativeEnchants);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Restores availability information that was saved previously. If the generator was used
+        /// in an optimizer it is necessary to reinitialize the optimizer item cache
+        /// </summary>
+        public void RestoreAvailabilityInformation()
+        {
+            for (int slot = 0; slot < slotItems.Length; slot++)
+            {
+                slotItems[slot].Clear();
+                slotItems[slot].AddRange(savedSlotItems[slot]);
+                if (generateDirectUpgrades)
+                {
+                    slotDirectUpgrades[slot][0].Clear();
+                    slotDirectUpgrades[slot][0].AddRange(savedSingleDirectUpgrades[slot]);
+                }
+            }
+            itemAvailable = new Dictionary<string, bool>(savedItemAvailable);
+            foreach (var kvp in savedAvailabilityInformation)
+            {
+                ItemAvailabilityInformation iai = kvp.Key.AvailabilityInformation;
+                iai.ItemAvailable = new Dictionary<string, bool>(kvp.Value.ItemAvailable);
+                iai.ItemList.Clear();
+                iai.ItemList.AddRange(kvp.Value.ItemList);
+                if (generateDirectUpgrades)
+                {
+                    iai.MatchingDirectUpgradeList.Clear();
+                    iai.MatchingDirectUpgradeList.AddRange(kvp.Value.MatchingDirectUpgradeList);
+                    iai.NonMatchingDirectUpgradeList.Clear();
+                    iai.NonMatchingDirectUpgradeList.AddRange(kvp.Value.NonMatchingDirectUpgradeList);
+                    iai.SingleDirectUpgradeList.Clear();
+                    iai.SingleDirectUpgradeList.AddRange(kvp.Value.SingleDirectUpgradeList);
+                    iai.GenerativeEnchants.Clear();
+                    iai.GenerativeEnchants.AddRange(kvp.Value.GenerativeEnchants);
+                }
+            }
+        }
 
         /// <summary>
         /// Replaces unavailable items with available ones
@@ -1359,7 +1442,7 @@ namespace Rawr.Optimizer
 			}
 			if (gemItemList.Count == 0) gemItemList.Add(null);
 			if (metaGemItemList.Count == 0) metaGemItemList.Add(null);
-			itemIds.RemoveAll(x => x.StartsWith("-") || removeIds.Contains(x));
+			itemIds.RemoveAll(x => x.StartsWith("-", StringComparison.Ordinal) || removeIds.Contains(x));
 
 			metaGemItems = metaGemItemList.ToArray();
 			gemItems = FilterList(gemItemList);
@@ -1471,7 +1554,7 @@ namespace Rawr.Optimizer
 					possibleGemmedItems = new List<ItemInstance>();
 					foreach (string gid in gemmedIds)
 					{
-                        if (gid.StartsWith("C"))
+                        if (gid.StartsWith("C", StringComparison.Ordinal))
                         {
                             item.AvailabilityInformation.PositiveCostItem = true;
                         }
@@ -1497,6 +1580,11 @@ namespace Rawr.Optimizer
 					}
 					possibleGemmedItems = FilterList(possibleGemmedItems, false);
 					item.AvailabilityInformation.ItemList = possibleGemmedItems;
+                    List<int> slotList = null;
+                    if (item.AvailabilityInformation.ValidSlots == null)
+                    {
+                        slotList = new List<int>();
+                    }
 					for (int i = 0; i < slotCount; i++)
 					{
 						bool fits = false;
@@ -1510,6 +1598,10 @@ namespace Rawr.Optimizer
 						}
 						if (fits)
 						{
+                            if (slotList != null)
+                            {
+                                slotList.Add(i);
+                            }
 							slotItems[i].AddRange(possibleGemmedItems);
 							slotRawItems[i].Add(item);
 							if (generateDirectUpgrades)
@@ -1520,6 +1612,10 @@ namespace Rawr.Optimizer
 							}
 						}
 					}
+                    if (slotList != null)
+                    {
+                        item.AvailabilityInformation.ValidSlots = slotList.ToArray();
+                    }
 				}
 			}
 
