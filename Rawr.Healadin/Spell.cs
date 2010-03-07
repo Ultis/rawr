@@ -85,13 +85,13 @@ namespace Rawr.Healadin
 
         public override string ToString()
         {
-            return string.Format("Average Heal: {0}\nAverage Cost: {1}\nHPS: {2}\nHPM: {3}\nCast Time: {4} sec\nCrit Chance: {5}%",
-                AverageHealed().ToString("N0"),
-                AverageCost().ToString("N0"),
-                HPS().ToString("N0"),
-                HPM().ToString("N2"),
-                CastTime().ToString("N2"),
-                (ChanceToCrit() * 100).ToString("N2"));
+            return string.Format("Average Heal: {0:N0}\nAverage Cost: {1:N0}\nHPS: {2:N0}\nHPM: {3:N2}\nCast Time: {4:N2} sec\nCrit Chance: {5:N2}%",
+                AverageHealed(),
+                AverageCost(),
+                HPS(),
+                HPM(),
+                CastTime(),
+                ChanceToCrit() * 100);
         }
     }
 
@@ -114,6 +114,8 @@ namespace Rawr.Healadin
             return 1f + Stats.FlashOfLightMultiplier;
         }
 
+        private float ssPercentage = 0f;
+        private float folHoTUptime = 0f;
         protected override float AbilityHealed()
         {
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
@@ -122,11 +124,34 @@ namespace Rawr.Healadin
             // Infusion of Light's Flash of Light HoT for Sacred Shield
             // Max HoT Uptime is 12 seconds.  If user is casting FoL more often than every 12 seconds, the HoT gets overridden
             // so we must calculate how long the HoT will be active.
-            float folHoTUptime = Rotation.FoLCasts == 0f ? 12f : Math.Min(Rotation.FightLength / Rotation.FoLCasts, 12f);
-            float ssHealed = baseHealed * (0.5f * Talents.InfusionOfLight) * (folHoTUptime / 12f) * (1f + Stats.FlashOfLightHoTMultiplier);
+            folHoTUptime = Rotation.FoLCasts == 0f ? 12f : Math.Min(Rotation.FightLength / Rotation.FoLCasts, 12f);
+            float ssHealed = baseHealed * (0.5f * Talents.InfusionOfLight) * (folHoTUptime / 12f) * (1f + Stats.FlashOfLightHoTMultiplier) * Rotation.CalcOpts.SSUptime;
+            ssPercentage = ssHealed / (baseHealed + ssHealed);
             return baseHealed + ssHealed;
         }
 
+        public override string ToString()
+        {
+            if (Talents.InfusionOfLight > 0 && Rotation.CalcOpts.SSUptime > 0)
+            {
+                float averageHealed = AverageHealed();
+                float averageSSHealed = averageHealed * ssPercentage;
+                return string.Format("Average Heal: {0:N0}\nAverage Base Heal: {6:N0}\nAverage Sacred Shield HoT Uptime: {7:N2} sec\nAverage Sacred Shield Total HoT: {8:N0}\nAverage Cost: {1:N0}\nHPS: {2:N0}\nHPM: {3:N2}\nCast Time: {4:N2} sec\nCrit Chance: {5:N2}%",
+                    averageHealed,
+                    AverageCost(),
+                    HPS(),
+                    HPM(),
+                    CastTime(),
+                    ChanceToCrit() * 100,
+                    averageHealed - averageSSHealed,
+                    folHoTUptime,
+                    averageSSHealed);
+            }
+            else
+            {
+                return base.ToString();
+            }
+        }
     }
 
     public class HolyLight : Heal
@@ -327,12 +352,12 @@ namespace Rawr.Healadin
 
         public override string ToString()
         {
-            return string.Format("Proc Absorb: {0}\nCast Absorb: {1}\nAverage Cost: {2}\nHPS: {3}\nHPM: {4}\n",
-                ProcAbsorb().ToString("N0"),
-                CastAborb().ToString("N0"),
-                Cost().ToString("N0"),
-                HPS().ToString("N0"),
-                HPM().ToString("N2"));
+            return string.Format("Proc Absorb: {0:N0}\nCast Absorb: {1:N0}\nAverage Cost: {2:N0}\nHPS: {3:N0}\nHPM: {4:N2}\n",
+                ProcAbsorb(),
+                CastAborb(),
+                Cost(),
+                HPS(),
+                HPM());
         }
 
     }
