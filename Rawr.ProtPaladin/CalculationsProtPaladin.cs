@@ -1163,6 +1163,21 @@ focus on Survival Points.",
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
+        private bool IsTriggerRelevant(Trigger trigger)
+        {
+            return (
+                    trigger == Trigger.Use                   || trigger == Trigger.MeleeCrit            ||
+                    trigger == Trigger.MeleeHit              || trigger == Trigger.PhysicalCrit         ||
+                    trigger == Trigger.PhysicalHit           || trigger == Trigger.DoTTick              ||
+                    trigger == Trigger.DamageDone            || trigger == Trigger.DamageOrHealingDone  ||
+                    trigger == Trigger.JudgementHit          || trigger == Trigger.HolyShield           ||
+                    trigger == Trigger.ShieldofRighteousness || trigger == Trigger.HammeroftheRighteous ||
+                    trigger == Trigger.SpellCast             || trigger == Trigger.SpellHit             ||
+                    trigger == Trigger.DamageSpellHit        || trigger == Trigger.DamageTaken          ||
+                    trigger == Trigger.DivinePlea
+            );
+        }
+
         public override Stats GetRelevantStats(Stats stats) {
             Stats s = new Stats() {
                 Armor = stats.Armor,
@@ -1232,15 +1247,8 @@ focus on Survival Points.",
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
-                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.HammeroftheRighteous || effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DivinePlea)
-                {
-                    if (HasRelevantStats(effect.Stats)) {
-                        s.AddSpecialEffect(effect);
-                    }
+                if (IsTriggerRelevant(effect.Trigger) && HasRelevantStats(effect.Stats)) {
+                    s.AddSpecialEffect(effect);
                 }
             }
             return s;
@@ -1249,7 +1257,7 @@ focus on Survival Points.",
         public override bool IsItemRelevant(Item item) {
             try {
                 bool relevant = (string.IsNullOrEmpty(item.RequiredClasses)
-                                 || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()))
+                                || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()))
                                 && RelevantItemTypes.Contains(item.Type)
                                 && HasRelevantStats(item.Stats)
                                 || (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Libram);
@@ -1351,16 +1359,7 @@ focus on Survival Points.",
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use          ||
-                    effect.Trigger == Trigger.MeleeHit     || effect.Trigger == Trigger.PhysicalHit    ||
-                    effect.Trigger == Trigger.MeleeCrit    || effect.Trigger == Trigger.PhysicalCrit   || 
-                    effect.Trigger == Trigger.DoTTick      || effect.Trigger == Trigger.SpellCast      ||
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.DamageTaken ||
-                    effect.Trigger == Trigger.SpellHit     || effect.Trigger == Trigger.DamageSpellHit ||
-                    effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield     ||
-                    effect.Trigger == Trigger.ShieldofRighteousness ||
-                    effect.Trigger == Trigger.HammeroftheRighteous || effect.Trigger == Trigger.DivinePlea)
-                {
+                if (IsTriggerRelevant(effect.Trigger)) {
                     relevant |= HasRelevantStats(effect.Stats);
                 }
             }
