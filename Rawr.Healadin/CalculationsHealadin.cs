@@ -255,7 +255,7 @@ namespace Rawr.Healadin
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
-            float fightLength = calcOpts.Length * 60;
+            float fightLength = calcOpts.Length * 60f;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -269,7 +269,7 @@ namespace Rawr.Healadin
 
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    float trigger = 0;
+                    float trigger = 0f;
                     if (calc == null)
                     {
                         trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
@@ -283,11 +283,29 @@ namespace Rawr.Healadin
                             trigger = 1f / Rotation.GetHealingCritsPerSec(calc);
                         else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
                             trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
-                        else if (effect.Trigger == Trigger.Use) trigger = 0f;
+                        else if (effect.Trigger == Trigger.Use)
+                        {
+                            trigger = 0f;
+                            foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects())
+                            {
+                                float childTrigger = 0f;
+
+                                if (effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit)
+                                    childTrigger = 1f / Rotation.GetHealingCastsPerSec(calc);
+                                else if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
+                                    childTrigger = 1f / Rotation.GetHealingCritsPerSec(calc);
+                                else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
+                                    childTrigger = 1f / Rotation.GetSpellCastsPerSec(calc);
+
+                                statsAverage.Accumulate(childEffect.Stats,
+                                                        effect.GetAverageUptime(0.0f, 1.0f)
+                                                            * childEffect.GetAverageStackSize(childTrigger, 1f, 1.5f, effect.Duration));
+                            }
+                        }
                         else if (effect.Trigger == Trigger.HolyLightCast) trigger = 1f / Rotation.GetHolyLightCastsPerSec(calc);
                         else continue;
                     }
-                    statsAverage += effect.GetAverageStats(trigger, 1f, 1.5f, fightLength);
+                    statsAverage.Accumulate(effect.GetAverageStats(trigger, 1f, 1.5f, fightLength));
                 }
                 statsAverage.ManaRestore *= fightLength;
                 statsAverage.Healed *= fightLength;
@@ -301,7 +319,7 @@ namespace Rawr.Healadin
 
         private void ConvertRatings(Stats stats, PaladinTalents talents, CalculationOptionsHealadin calcOpts)
         {
-            stats.Stamina *= 1 + stats.BonusStaminaMultiplier;
+            stats.Stamina *= 1f + stats.BonusStaminaMultiplier;
 
             // Intellect is used to calculate initial mana pool.
             // To avoid temporary intellect from highest stat procs changing initial mana pool
@@ -310,8 +328,8 @@ namespace Rawr.Healadin
             // TODO: However this doesn't help to deal with pure temporary intellect procs (if there are any).
             // NOTE: If we add highest stat to intellect after we calculate mana, the only visible change
             // will be the displayed intellect for the character.
-            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .02f);
-            stats.HighestStat *= (1 + stats.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .02f);
+            stats.Intellect *= (1f + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
+            stats.HighestStat *= (1f + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
 
             stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat) * talents.HolyGuidance;
             stats.SpellCrit = stats.SpellCrit + 
