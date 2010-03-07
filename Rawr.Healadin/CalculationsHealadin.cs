@@ -71,25 +71,6 @@ namespace Rawr.Healadin
             character.ActiveBuffsAdd(("Tree of Life Aura"));
         }
 
-        private static List<string> _relevantGlyphs;
-        public override List<string> GetRelevantGlyphs()
-        {
-            if (_relevantGlyphs == null)
-            {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Seal of Wisdom");
-                _relevantGlyphs.Add("Glyph of Seal of Light");
-                _relevantGlyphs.Add("Glyph of Holy Light");
-                _relevantGlyphs.Add("Glyph of Flash of Light");
-                _relevantGlyphs.Add("Glyph of Holy Shock");
-                _relevantGlyphs.Add("Glyph of Divinity");
-                _relevantGlyphs.Add("Glyph of Beacon of Light");
-                _relevantGlyphs.Add("Glyph of the Wise");
-                _relevantGlyphs.Add("Glyph of Lay on Hands");
-            }
-            return _relevantGlyphs;
-        }
-
         private string[] _optimizableCalculationLabels = null;
         /// <summary>
         /// Labels of the stats available to the Optimizer 
@@ -221,46 +202,6 @@ namespace Rawr.Healadin
             }
         }
 #endif
-
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
-                        ItemType.Plate,
-                        ItemType.Mail,
-                        ItemType.Leather,
-                        ItemType.Cloth,
-                        ItemType.None,
-						ItemType.Shield,
-						ItemType.Libram,
-						ItemType.OneHandAxe,
-						ItemType.OneHandMace,
-						ItemType.OneHandSword,
-						ItemType.TwoHandAxe,
-						ItemType.TwoHandMace,
-						ItemType.TwoHandSword
-					});
-                }
-                return _relevantItemTypes;
-            }
-        }
-
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
-        {
-            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
-            return base.EnchantFitsInSlot(enchant, character, slot);
-        }
-
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
-        {
-            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
-            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
-        }
 
 		public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
@@ -494,67 +435,6 @@ namespace Rawr.Healadin
         #endregion Custom Charts
 
         #region Relevancy Methods
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            Stats s = new Stats()
-            {
-                Stamina = stats.Stamina,
-                Intellect = stats.Intellect,
-                Mp5 = stats.Mp5,
-                SpellPower = stats.SpellPower,
-                CritRating = stats.CritRating,
-                PhysicalHit = stats.PhysicalHit,
-                HitRating = stats.HitRating,
-                HasteRating = stats.HasteRating,
-                Health = stats.Health,
-                Mana = stats.Mana,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusManaPotion = stats.BonusManaPotion,
-                SpellCrit = stats.SpellCrit,
-                SpellHaste = stats.SpellHaste,
-                FlashOfLightCrit = stats.FlashOfLightCrit,
-                FlashOfLightSpellPower = stats.FlashOfLightSpellPower,
-                FlashOfLightMultiplier = stats.FlashOfLightMultiplier,
-                HolyShockCrit = stats.HolyShockCrit,
-                HolyLightSpellPower = stats.HolyLightSpellPower,
-                HolyLightCrit = stats.HolyLightCrit,
-                HolyLightManaCostReduction = stats.HolyLightManaCostReduction,
-                HolyLightPercentManaReduction = stats.HolyLightPercentManaReduction,
-                HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
-                // Gear Procs
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                BonusManaMultiplier = stats.BonusManaMultiplier,
-                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                SpellsManaReduction = stats.SpellsManaReduction,
-                SacredShieldICDReduction = stats.SacredShieldICDReduction,
-                HolyShockHoTOnCrit = stats.HolyShockHoTOnCrit,
-                // Ony Shiny Shard of the Flame
-                FireDamage = stats.FireDamage,
-                Healed = stats.Healed,
-                Hp5 = stats.Hp5,
-            };
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (HasRelevantSpecialEffect(effect)) s.AddSpecialEffect(effect);
-            }
-            return s;
-        }
-
-        public bool HasRelevantSpecialEffect(SpecialEffect effect)
-        {
-            if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.HolyLightCast
-                || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
-                || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
-            {
-                Stats stats = effect.Stats;
-                if ((stats.Intellect + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ShieldFromHealed
-                    + stats.ManaRestore + stats.Mp5 + stats.Healed + stats.HighestStat) > 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         private static bool isSpiritIrrelevant = true;
         internal static bool IsSpiritIrrelevant
@@ -570,100 +450,199 @@ namespace Rawr.Healadin
             set { isHitIrrelevant = value; }
         }
 
-        private bool HasWantedStats(Stats stats)
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
         {
-            return (stats.SpellCrit + stats.SpellHaste  + stats.PhysicalHit + stats.Mana
-                + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit +
-                + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
-                + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
-                + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction
-                + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit + stats.MovementSpeed +
-                stats.FireDamage + stats.Healed + stats.Hp5 // this line is for the Ony trinket shard of the flame
-                ) > 0;
+            get
+            {
+                if (_relevantItemTypes == null)
+                {
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
+					{
+                        ItemType.Plate,
+                        ItemType.Mail,
+                        ItemType.Leather,
+                        ItemType.Cloth,
+                        ItemType.None,
+						ItemType.Shield,
+						ItemType.Libram,
+						ItemType.OneHandAxe,
+						ItemType.OneHandMace,
+						ItemType.OneHandSword
+					});
+                }
+                return _relevantItemTypes;
+            }
         }
 
-        private bool HasMaybeStats(Stats stats)
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
         {
-            return (stats.Mp5 + stats.Intellect + stats.HasteRating + stats.CritRating + stats.SpellPower) > 0;
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Seal of Wisdom");
+                _relevantGlyphs.Add("Glyph of Seal of Light");
+                _relevantGlyphs.Add("Glyph of Holy Light");
+                _relevantGlyphs.Add("Glyph of Flash of Light");
+                _relevantGlyphs.Add("Glyph of Holy Shock");
+                _relevantGlyphs.Add("Glyph of Divinity");
+                _relevantGlyphs.Add("Glyph of Beacon of Light");
+                _relevantGlyphs.Add("Glyph of the Wise");
+                _relevantGlyphs.Add("Glyph of Lay on Hands");
+            }
+            return _relevantGlyphs;
         }
 
-        public bool HasSurvivalStats(Stats stats)
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            return (stats.Stamina + stats.Health) > 0;
+            // Filters out Non-Shield Offhand Enchants and Ranged Enchants
+            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
+            // Filters out Death Knight and Two-Hander Enchants
+            if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == ItemSlot.TwoHand) return false;
+
+            return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        private bool HasIgnoreStats(Stats stats)
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            return (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
-                + stats.ArmorPenetrationRating + stats.DodgeRating + stats.ParryRating
-                + stats.ExpertiseRating + stats.BlockRating + stats.Block) > 0
-                || (stats.HitRating > 0 && isHitIrrelevant)
-                || (stats.Spirit > 0 && isSpiritIrrelevant);
+            if (slot == CharacterSlot.OffHand && !(item.Type == ItemType.Shield || item.Type == ItemType.None)) return false;
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+        }
+
+        private bool IsTriggerRelevant(Trigger trigger)
+        {
+            return (
+                trigger == Trigger.Use              || trigger == Trigger.HolyLightCast     ||
+                trigger == Trigger.SpellCast        || trigger == Trigger.SpellCrit         ||
+                trigger == Trigger.SpellHit         || trigger == Trigger.HealingSpellCast  ||
+                trigger == Trigger.HealingSpellCrit || trigger == Trigger.HealingSpellHit
+            );
+        }
+
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            Stats s = new Stats()
+            {
+                #region These aren't really relevant stats, but they should still appear in the tooltip
+
+                Stamina = stats.Stamina,
+                Health = stats.Health,
+
+                #endregion
+
+                Intellect = stats.Intellect,
+                Mp5 = stats.Mp5,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                Mana = stats.Mana,
+                ManaRestore = stats.ManaRestore,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusManaPotion = stats.BonusManaPotion,
+                SpellCrit = stats.SpellCrit,
+                SpellHaste = stats.SpellHaste,
+                FlashOfLightCrit = stats.FlashOfLightCrit,
+                FlashOfLightSpellPower = stats.FlashOfLightSpellPower,
+                FlashOfLightMultiplier = stats.FlashOfLightMultiplier,
+                HolyShockCrit = stats.HolyShockCrit,
+                HolyLightSpellPower = stats.HolyLightSpellPower,
+                HolyLightCrit = stats.HolyLightCrit,
+                HolyLightManaCostReduction = stats.HolyLightManaCostReduction,
+                HolyLightPercentManaReduction = stats.HolyLightPercentManaReduction,
+                HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
+                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
+
+                // Gear Procs
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+                SpellsManaReduction = stats.SpellsManaReduction,
+                SacredShieldICDReduction = stats.SacredShieldICDReduction,
+                HolyShockHoTOnCrit = stats.HolyShockHoTOnCrit,
+
+                // Ony Shiny Shard of the Flame
+                Healed = stats.Healed,
+            };
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (IsTriggerRelevant(effect.Trigger) && HasRelevantStats(effect.Stats))
+                {
+                    s.AddSpecialEffect(effect);
+                }
+            }
+            return s;
         }
 
         public override bool IsItemRelevant(Item item)
         {
-            if (item.Slot == ItemSlot.Prismatic)
-            {
-                Stats stats = item.Stats;
-                bool wantedStats = HasWantedStats(stats);
-                bool maybeStats = HasMaybeStats(stats);
-                bool ignoreStats = HasIgnoreStats(stats);
-                bool survivalStats = HasSurvivalStats(stats);
-                bool specialEffect = false;
-                foreach (SpecialEffect effect in stats.SpecialEffects())
-                {
-                    if (HasRelevantSpecialEffect(effect))
-                    {
-                        specialEffect = true;
-                        break;
-                    }
-                }
-                return wantedStats || specialEffect || maybeStats || survivalStats;
-            }
-            else return base.IsItemRelevant(item);
-        }
-
-        public override bool IsBuffRelevant(Buff buff, Character character)
-        {
-            foreach (SpecialEffect effect in buff.Stats.SpecialEffects())
-            {
-                if (HasRelevantSpecialEffect(effect)) return true;
-            }
-            return HasWantedStats(buff.Stats) || HasMaybeStats(buff.Stats) || HasSurvivalStats(buff.Stats);
-        }
-
-        public override bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            if (!IsEnchantAllowedForClass(enchant, character.Class) || 
-                    !IsProfEnchantRelevant(enchant, character))
-                return false;
-
-            foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
-                if (HasRelevantSpecialEffect(effect)) 
-                    return true;
-
-            return HasWantedStats(enchant.Stats) || HasMaybeStats(enchant.Stats);
+            return base.IsItemRelevant(item);
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool wantedStats = HasWantedStats(stats);
-            bool maybeStats = HasMaybeStats(stats);
-            bool ignoreStats = HasIgnoreStats(stats);
-            bool survivalStats = HasSurvivalStats(stats);
-            bool specialEffect = false;
-            bool hasSpecialEffect = false;
+            if (isSpiritIrrelevant && stats.Spirit > 0) return false;
+            if (isHitIrrelevant && stats.HitRating > 0) return false;
+
+            bool relevant = (
+                stats.Intellect +
+                stats.Mp5 +
+                stats.SpellPower +
+                stats.CritRating +
+                stats.HasteRating +
+                stats.Mana +
+                stats.ManaRestore +
+                stats.BonusIntellectMultiplier +
+                stats.BonusManaPotion +
+                stats.SpellCrit +
+                stats.SpellHaste +
+                stats.FlashOfLightCrit +
+                stats.FlashOfLightSpellPower +
+                stats.FlashOfLightMultiplier +
+                stats.HolyShockCrit +
+                stats.HolyLightSpellPower +
+                stats.HolyLightCrit +
+                stats.HolyLightManaCostReduction +
+                stats.HolyLightPercentManaReduction +
+                stats.HealingReceivedMultiplier +
+                stats.BonusHealingDoneMultiplier +
+
+                stats.ManaRestoreFromMaxManaPerSecond +
+                stats.BonusManaMultiplier +
+                stats.BonusCritHealMultiplier +
+                stats.SpellsManaReduction +
+                stats.SacredShieldICDReduction +
+                stats.HolyShockHoTOnCrit +
+
+                stats.Healed
+                ) != 0;
+
+            bool hasTrigger = false;
+            bool hasRelevantTrigger = false;
+            bool triggerHasRelevantStats;
+
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                hasSpecialEffect = true;
-                if (HasRelevantSpecialEffect(effect))
+                hasTrigger = true;
+                if (IsTriggerRelevant(effect.Trigger))
                 {
-                    specialEffect = true;
-                    break;
+                    triggerHasRelevantStats = HasRelevantStats(effect.Stats);
+                    relevant |= triggerHasRelevantStats;
+                    hasRelevantTrigger |= triggerHasRelevantStats;
                 }
             }
-            return wantedStats || ((specialEffect || (maybeStats && (!hasSpecialEffect || specialEffect)) || (survivalStats && !ignoreStats)) && !ignoreStats);
+            return relevant && (!hasTrigger || hasRelevantTrigger);
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            Stats stats = buff.Stats;
+            bool hasRelevantBuffStats = HasRelevantStats(stats);
+
+            bool NotClassSetBonus = buff.Group == "Set Bonuses" && (buff.AllowedClasses.Count != 1 || (buff.AllowedClasses.Count == 1 && !buff.AllowedClasses.Contains(CharacterClass.Paladin)));
+
+            bool relevant = hasRelevantBuffStats && !NotClassSetBonus;
+            return relevant;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsHealadin calcOpts) {
