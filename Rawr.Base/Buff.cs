@@ -3452,17 +3452,18 @@ namespace Rawr
             #endregion
             #region Tier  9 | Turalyon's
             #region Garb (Holy)
-            /* T9 set bonusses are unmodelled
+
             defaultBuffs.Add(new Buff()
             {
                 Name = "Turalyon's Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { JudgementDuration = 10f },    // Unmodelled
+                Stats = { BonusJudgementDuration = 10f },    // Unmodelled
                 SetName = "Turalyon's Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
+
             defaultBuffs.Add(new Buff()
             {
                 Name = "Turalyon's Garb 4 Piece Bonus",
@@ -3473,7 +3474,7 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
-            */
+
             #endregion
             #region Plate (Protection)
             defaultBuffs.Add(new Buff()

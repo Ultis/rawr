@@ -273,6 +273,8 @@ namespace Rawr {
         Healed,
         SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
         HealingOmenProc,            // Omen like proc from Soul Preserver and the like
+        BonusJudgementDuration,
+        FlashOfLightHoTMultiplier,
         #endregion
         #region Added by Rawr.Retribution
         DivineStormMultiplier,
@@ -2696,6 +2698,31 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyShockCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.HolyShockCrit] = value; }
         }
+
+        /// <summary>
+        /// Tier 9 2-piece bonus
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Increased Judgement Duration")]
+        [Category("Healadin")]
+        public float BonusJudgementDuration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusJudgementDuration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusJudgementDuration] = value; }
+        }
+
+        /// <summary>
+        /// Tier 9 4-piece bonus
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Flash of Light HoT Multiplier")]
+        [Category("Healadin")]
+        public float FlashOfLightHoTMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightHoTMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightHoTMultiplier] = value; }
+        }
+
         #endregion
         #region Added by Rawr.Warlock
         [System.ComponentModel.DefaultValueAttribute(0f)]

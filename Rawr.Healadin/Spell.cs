@@ -352,7 +352,7 @@ namespace Rawr.Healadin
         public JudgementsOfThePure(Rotation rotation, bool MaintainDebuff)
             : base(rotation)
         {
-            Duration = MaintainDebuff ? 20f : 60f;
+            Duration = MaintainDebuff ? (20f + Stats.BonusJudgementDuration) : 60f;
             Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
             BaseCost = 219f;
         }
