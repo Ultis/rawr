@@ -4,20 +4,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Text;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Rawr.WarlockTmp {
     public partial class CalculationOptionsPanelWarlock
         : CalculationOptionsPanelBase {
-
-        #region constants
-        private static string[] ALL_SPELLS = { 
-            "Corruption",
-            "Instant Shadow Bolt",
-            "Metamorphosis",
-            "Shadow Bolt" };
-        #endregion
-
 
         #region properties
 
@@ -32,7 +24,7 @@ namespace Rawr.WarlockTmp {
         private void RefreshRotationPanel() {
 
             rotationSpellCombo.Items.Clear();
-            foreach (String spell in ALL_SPELLS) {
+            foreach (String spell in Spell.ALL_SPELLS) {
                 if (!_options.SpellPriority.Contains(spell)) {
                     rotationSpellCombo.Items.Add(spell);
                 }

@@ -65,6 +65,7 @@ namespace Rawr.WarlockTmp {
 
         #endregion
 
+
         #region Basic Model Properties and Methods
 
         public override void SetDefaults(Character character) { }
@@ -90,7 +91,7 @@ namespace Rawr.WarlockTmp {
                         "Affliction:Life Tap",
                         "Demonology:Metamorphosis",
                         "Destruction:Shadow Bolt",
-                        "Destruction:Instant Shadow Bolt" };
+                        "Destruction:Shadow Bolt (Instant)" };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -162,6 +163,7 @@ namespace Rawr.WarlockTmp {
         }
 
         #endregion
+
 
         #region Primary Calculation Methods
 
@@ -391,6 +393,7 @@ namespace Rawr.WarlockTmp {
         }
 
         #endregion
+
 
         #region Relevancy Methods
 
@@ -743,7 +746,8 @@ namespace Rawr.WarlockTmp {
                     = new List<string>{
                         "Glyph of Metamorphosis",
                         "Glyph of Quick Decay",
-                        "Glyph of Corruption" };
+                        "Glyph of Corruption",
+                        "Glyph of Life Tap" };
             }
             return _relevantGlyphs;
         }

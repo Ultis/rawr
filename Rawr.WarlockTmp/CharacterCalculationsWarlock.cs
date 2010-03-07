@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Rawr.WarlockTmp {
 
@@ -54,14 +55,8 @@ namespace Rawr.WarlockTmp {
         public float BaseTickDamageMultiplier { get; private set; }
         public float BaseCritChance { get; private set; }
 
-        public Dictionary<string, Spell> CastSpells
-            { get; private set; }
-        public CorruptionSpell CorruptionStats { get; private set; }
-        public LifeTapSpell LifeTapStats { get; private set; }
-        public MetamorphosisSpell MetamorphosisStats { get; private set; }
-        public ShadowBoltSpell ShadowBoltStats { get; private set; }
-        public InstantShadowBoltSpell InstantShadowBoltSpell {
-            get; private set; }
+        public Dictionary<string, Spell> Spells { get; private set; }
+        public Dictionary<string, Spell> CastSpells { get; private set; }
 
         #endregion
 
@@ -80,6 +75,7 @@ namespace Rawr.WarlockTmp {
             }
             Talents = character.WarlockTalents;
             BaseMana = BaseStats.GetBaseStats(character).Mana;
+            Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
             float multiplier
                 = 1f
@@ -251,14 +247,14 @@ namespace Rawr.WarlockTmp {
                     Math.Max(1.0f, 1.5f / (1 + Stats.SpellHaste))));
             #endregion Haste
 
-            dictValues.Add("Corruption", GetCorruptionStats().GetToolTip());
-            dictValues.Add("Life Tap", GetLifeTapStats().GetToolTip());
-            dictValues.Add(
-                "Metamorphosis", GetMetamorphosisStats().GetToolTip());
-            dictValues.Add("Shadow Bolt", GetShadowBoltStats().GetToolTip());
-            dictValues.Add(
-                "Instant Shadow Bolt",
-                GetInstantShadowBoltStats().GetToolTip());
+            foreach (string spellName in Spell.ALL_SPELLS) {
+                if (CastSpells.ContainsKey(spellName)) {
+                    dictValues.Add(
+                        spellName, CastSpells[spellName].GetToolTip());
+                } else {
+                    dictValues.Add(spellName, "-");
+                }
+            }
 
             return dictValues;
         }
@@ -273,22 +269,35 @@ namespace Rawr.WarlockTmp {
                 return PersonalDps;
             }
 
+            LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
+
             // first run through the priorities and calculate how many times
             // each spell will be cast
             float timeRemaining = Options.Duration;
             float manaRemaining = Stats.Mana;
+            float haste = 1f + Stats.SpellHaste;
+            float lag = Options.Latency;
             foreach (string spellName in Options.SpellPriority) {
                 Spell spell = GetSpell(spellName);
                 if (!spell.IsCastable()) {
                     continue;
                 }
-                spell.SetCastingStats(
-                    manaRemaining,
-                    timeRemaining,
-                    1f + Stats.SpellHaste);
+                if (spell.IsSpammable()) {
+                    lifeTap.AddCastsForRegen(
+                        timeRemaining, manaRemaining, haste, spell);
+                    if (lifeTap.NumCasts > 0) {
+                        if (!CastSpells.ContainsKey("Life Tap")) {
+                            CastSpells.Add("Life Tap", lifeTap);
+                        }
+                        manaRemaining -= spell.ManaCost * spell.NumCasts;
+                        timeRemaining
+                            -= lifeTap.NumCasts * (lifeTap.GetCastTime() + lag);
+                    }
+                }
+                spell.SetCastingStats(timeRemaining);
                 CastSpells.Add(spellName, spell);
                 timeRemaining
-                    -= (spell.AvgCastTime + Options.Latency) * spell.NumCasts;
+                    -= (spell.GetCastTime() + lag) * spell.NumCasts;
                 manaRemaining -= spell.ManaCost * spell.NumCasts;
                 if (timeRemaining <= .0001) {
                     break;
@@ -298,14 +307,15 @@ namespace Rawr.WarlockTmp {
             float hitChance
                 = Math.Min(
                     1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
-            float spellPower = Stats.SpellPower;
+            float spellPower
+                = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
 
             // then for each spell that is cast calculate its damage, and our
             // overall damage
             float damageDone = 0f;
             foreach (KeyValuePair<string, Spell> pair in CastSpells) {
                 Spell spell = pair.Value;
-                spell.SetDamageStats(spellPower, hitChance, CastSpells);
+                spell.SetDamageStats(spellPower, hitChance);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
             PersonalDps = damageDone / Options.Duration;
@@ -320,73 +330,21 @@ namespace Rawr.WarlockTmp {
         #endregion
 
 
-        #region spell stats
+        public Spell GetSpell(string spellName) {
 
-        public Spell GetSpell(String spellName) {
-
-            switch (spellName) {
-                case "Corruption":
-                    return GetCorruptionStats();
-                case "Instant Shadow Bolt":
-                    return GetInstantShadowBoltStats();
-                case "Life Tap":
-                    return GetLifeTapStats();
-                case "Metamorphosis":
-                    return GetMetamorphosisStats();
-                case "Shadow Bolt":
-                    return GetShadowBoltStats();
-                default:
-                    return null;
+            if (Spells.ContainsKey(spellName)) {
+                return Spells[spellName];
             }
+
+            string className = spellName.Replace(" ", "");
+            className = className.Replace("(", "_");
+            className = className.Replace(")", "");
+            Type type = Type.GetType("Rawr.WarlockTmp." + className);
+            Spell spell
+                = (Spell) Activator.CreateInstance(type, new object[] { this });
+            Spells[spellName] = spell;
+            return spell;
         }
-
-        public CorruptionSpell GetCorruptionStats() {
-
-            if (CorruptionStats == null) {
-                CorruptionStats
-                    = new CorruptionSpell(
-                        this, BaseTickDamageMultiplier, BaseCritChance);
-            }
-            return CorruptionStats;
-        }
-
-        public LifeTapSpell GetLifeTapStats() {
-
-            if (LifeTapStats == null) {
-                LifeTapStats
-                    = new LifeTapSpell(this);
-            }
-            return LifeTapStats;
-        }
-
-        public MetamorphosisSpell GetMetamorphosisStats() {
-
-            if (MetamorphosisStats == null) {
-                MetamorphosisStats = new MetamorphosisSpell(this);
-            }
-            return MetamorphosisStats;
-        }
-
-        public ShadowBoltSpell GetShadowBoltStats() {
-
-            if (ShadowBoltStats == null) {
-                ShadowBoltStats = new ShadowBoltSpell(
-                    this, BaseDirectDamageMultiplier, BaseCritChance);
-            }
-            return ShadowBoltStats;
-        }
-
-        public InstantShadowBoltSpell GetInstantShadowBoltStats() {
-
-            if (InstantShadowBoltSpell == null) {
-                InstantShadowBoltSpell
-                    = new InstantShadowBoltSpell(
-                        this, BaseDirectDamageMultiplier, BaseCritChance);
-            }
-            return InstantShadowBoltSpell;
-        }
-
-        #endregion
     }
 }
 //3456789 223456789 323456789 423456789 523456789 623456789 723456789 8234567890

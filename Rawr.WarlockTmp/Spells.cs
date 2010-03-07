@@ -1,10 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Rawr.WarlockTmp {
 
     public class Spell {
+
+        public static List<string> ALL_SPELLS = new List<String>();
+
+        static Spell() {
+
+            Type spellType = Type.GetType("Rawr.WarlockTmp.Spell");
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                if (type.IsSubclassOf(spellType))
+                {
+                    string name = type.Name;
+                    for (int i = 1; i < name.Length; ++i)
+                    {
+                        if (char.IsUpper(name[i]))
+                        {
+                            name = name.Insert(i, " ");
+                            ++i;
+                        }
+                        else if (name[i] == '_')
+                        {
+                            name = name.Replace("_", " (");
+                            name = name.Insert(name.Length, ")");
+                            i += 2;
+                        }
+                    }
+                    ALL_SPELLS.Add(name);
+                }
+            }
+        }
 
         public enum SpellTree { Affliction, Demonology, Destruction }
 
@@ -51,8 +81,7 @@ namespace Rawr.WarlockTmp {
         public float TickDamageMultiplier { get; protected set; }
         public float Cooldown { get; protected set; }
 
-        // set via SetNumCasts()
-        public float AvgCastTime { get; protected set; }
+        // set via SetCastingStats()
         public float NumCasts { get; protected set; }
 
         // set via SetDamageStats()
@@ -116,44 +145,31 @@ namespace Rawr.WarlockTmp {
             return true;
         }
 
-        public virtual void SetCastingStats(
-            float manaRemaining,
-            float timeRemaining,
-            float baseHasteDivisor) {
+        public bool IsSpammable() {
 
-            AvgCastTime = Math.Max(1f, BaseCastTime / baseHasteDivisor);
+            return Cooldown == 0;
+        }
 
-            float lag = Mommy.Options.Latency;
-            if (Cooldown > 0) {
+        public virtual void SetCastingStats(float timeRemaining) {
 
-                // This spell is on a cooldown.
-                float avgSpellCastTime = Math.Max(1f, 2f / baseHasteDivisor);
+            if (IsSpammable()) {
+                NumCasts
+                    = timeRemaining / (GetCastTime() + Mommy.Options.Latency);
+            } else {
+                float avgSpellCastTime = GetCastTime(2f);
                 float effectiveCooldown
                     = Cooldown + GetCollisionDelay(avgSpellCastTime);
                 NumCasts = Mommy.Options.Duration / effectiveCooldown;
-            } else {
-
-                // This spell is spammable.  It and Life Tap will share the
-                // rest of the remaining combat time.
-                LifeTapSpell lt = Mommy.GetLifeTapStats();
-                lt.AddCastsForRegen(
-                    timeRemaining, manaRemaining, baseHasteDivisor, this);
-                timeRemaining -= lt.NumCasts * (lt.AvgCastTime + lag);
-                NumCasts
-                    = timeRemaining / (AvgCastTime + lag);
             }
         }
 
-        public void SetDamageStats(
-            float baseSpellPower,
-            float hitChance,
-            Dictionary<string, Spell> castSpells) {
+        public void SetDamageStats(float baseSpellPower, float hitChance) {
 
             float directMultiplier = DirectDamageMultiplier;
             float tickMultiplier = TickDamageMultiplier;
-            if (castSpells.ContainsKey("Metamorphosis")) {
+            if (Mommy.CastSpells.ContainsKey("Metamorphosis")) {
                 float morphBonus
-                    = ((MetamorphosisSpell) castSpells["Metamorphosis"])
+                    = ((Metamorphosis) Mommy.CastSpells["Metamorphosis"])
                         .GetAvgDamageMultiplier();
                 directMultiplier += morphBonus;
                 tickMultiplier += morphBonus;
@@ -215,7 +231,7 @@ namespace Rawr.WarlockTmp {
                 += String.Format(
                     "{0:0.0}s\tCast Time\r\n"
                         + "{1:0.0}\tMana\r\n",
-                    AvgCastTime,
+                    GetCastTime(),
                     ManaCost);
             if (Cooldown > 0) {
                 toolTip += String.Format("{0:0.0}s\tCooldown\r\n", Cooldown);
@@ -229,10 +245,20 @@ namespace Rawr.WarlockTmp {
                         + "{4:0.0}\tCasts",
                     Mommy.Options.Duration / NumCasts,
                     AvgDamagePerCast,
-                    AvgDamagePerCast / AvgCastTime,
+                    AvgDamagePerCast / GetCastTime(),
                     AvgDamagePerCast / ManaCost,
                     NumCasts);
             return toolTip;
+        }
+
+        public float GetCastTime() {
+
+            return GetCastTime(BaseCastTime);
+        }
+
+        public float GetCastTime(float baseCastTime) {
+
+            return Math.Max(1f, baseCastTime / (1f + Mommy.Stats.SpellHaste));
         }
 
         /// <param name="avgSpellCastTime">
@@ -244,7 +270,7 @@ namespace Rawr.WarlockTmp {
             List<float> frequencies = new List<float>();
             foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
                 Spell spell = pair.Value;
-                castTimes.Add(spell.AvgCastTime + Mommy.Options.Latency);
+                castTimes.Add(spell.GetCastTime() + Mommy.Options.Latency);
                 frequencies.Add(spell.NumCasts / Mommy.Options.Duration);
             }
 
@@ -288,7 +314,7 @@ namespace Rawr.WarlockTmp {
             }
             #endregion
 
-            // Use the probabilites to calculated a weighted average of how long
+            // Use the probabilites to calculate a weighted average of how long
             // THIS spell will have to wait between coming off cooldown and
             // and being cast.
             float weightedAverage = 0f;
@@ -305,7 +331,7 @@ namespace Rawr.WarlockTmp {
             }
             weightedAverage
                 += (1 - totalProbability)
-                    * (AvgCastTime + Mommy.Options.Latency) / 2;
+                    * (GetCastTime() + Mommy.Options.Latency) / 2;
             return weightedAverage;
         }
 
@@ -319,7 +345,8 @@ namespace Rawr.WarlockTmp {
         /// <returns>
         /// The order of permutations returned will be from longest to shortest.
         /// </returns>
-        private List<IntList> GetLongerPermutations(IntList stem, IntList values) {
+        private List<IntList> GetLongerPermutations(
+            IntList stem, IntList values) {
 
             List<IntList> permutations = new List<IntList>();
             if (stem.Count == values.Count) {
@@ -417,12 +444,9 @@ namespace Rawr.WarlockTmp {
         }
     }
 
-    public class CorruptionSpell : Spell {
+    public class Corruption : Spell {
 
-        public CorruptionSpell(
-           CharacterCalculationsWarlock mommy,
-            float tickMultiplier,
-            float baseCritChance)
+        public Corruption(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
                 MagicSchool.Shadow, // magic school
@@ -440,29 +464,25 @@ namespace Rawr.WarlockTmp {
                         + mommy.Talents.EmpoweredCorruption * .12f
                         + mommy.Talents.EverlastingAffliction * .01f)
                     / 6f, // tick coefficient
-                tickMultiplier
+                mommy.BaseTickDamageMultiplier
                     + mommy.Talents.ImprovedCorruption * .02f
                     + mommy.Talents.Contagion * .01f, // tick multiplier
-                (baseCritChance + mommy.Talents.Malediction * .03f)
+                (mommy.BaseCritChance + mommy.Talents.Malediction * .03f)
                     * mommy.Talents.Pandemic, // crit chance
                 mommy.Stats.BonusCritMultiplier
                     + mommy.Talents.Pandemic * .5f, // crit multiplier
                 18f) { } // "cooldown"
 
-        public override void SetCastingStats(
-            float manaRemaining,
-            float timeRemaining,
-            float baseHasteDivisor) {
+        public override void SetCastingStats(float timeRemaining) {
 
             if (Mommy.Talents.GlyphQuickDecay) {
-                Cooldown /= baseHasteDivisor;
+                Cooldown /= 1f + Mommy.Stats.SpellHaste;
             }
-            base.SetCastingStats(
-                manaRemaining, timeRemaining, baseHasteDivisor);
+            base.SetCastingStats(timeRemaining);
         }
     }
 
-    public class LifeTapSpell : Spell {
+    public class LifeTap : Spell {
 
         // This exists as a spell object only for the case when we would have
         // enough mana to never life tap, but still need to keep up the gyph. So
@@ -470,7 +490,7 @@ namespace Rawr.WarlockTmp {
         // enough time to make cooldown collisions & such don't let it drop
         // off).
 
-        public LifeTapSpell(CharacterCalculationsWarlock mommy)
+        public LifeTap(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
                 MagicSchool.Shadow, // magic school
@@ -493,15 +513,16 @@ namespace Rawr.WarlockTmp {
             ManaCost = -1490f - mommy.Stats.Spirit * 3f;
         }
 
+        public override bool IsCastable() {
+
+            return Mommy.Talents.GlyphLifeTap;
+        }
+
         public void AddCastsForRegen(
             float timeRemaining,
             float manaRemaining,
             float baseHasteDivisor,
             Spell spammedSpell) {
-
-            if (AvgCastTime == 0) {
-                AvgCastTime = Math.Max(1f, 1.5f / baseHasteDivisor);
-            }
 
             // The number of needed lifetaps is obtained by solving this
             // system of equations:
@@ -513,16 +534,27 @@ namespace Rawr.WarlockTmp {
             float a = spammedSpell.ManaCost;
             float b = ManaCost;
             float c = manaRemaining;
-            float d = spammedSpell.AvgCastTime + latency;
-            float e = AvgCastTime + latency;
+            float d = spammedSpell.GetCastTime() + latency;
+            float e = GetCastTime() + latency;
             float f = timeRemaining;
             NumCasts += Math.Max(0f, (c * d - a * f) / (b * d - a * e));
         }
+
+        public float GetAvgBonusSpellPower() {
+
+            if (!Mommy.Talents.GlyphLifeTap) {
+                return 0f;
+            }
+
+            float uprate
+                = Math.Min(1f, NumCasts * 40f / Mommy.Options.Duration);
+            return uprate * Mommy.Stats.Spirit * .2f;
+        }
     }
 
-    public class MetamorphosisSpell : Spell {
+    public class Metamorphosis : Spell {
 
-        public MetamorphosisSpell(CharacterCalculationsWarlock mommy)
+        public Metamorphosis(CharacterCalculationsWarlock mommy)
             : base(
                 mommy, // options
                 0, // magic school
@@ -549,11 +581,9 @@ namespace Rawr.WarlockTmp {
             return Mommy.Talents.Metamorphosis > 0;
         }
 
-        public override void SetCastingStats(
-            float manaRemaining, float timeRemaining, float baseHasteDivisor) {
+        public override void SetCastingStats(float timeRemaining) {
 
-            base.SetCastingStats(
-                manaRemaining, timeRemaining, baseHasteDivisor);
+            base.SetCastingStats(timeRemaining);
 
             // Discretize NumCasts.  This makes sense becasue of this spell's
             // long cooldown, so that it's (correctly) modelled as more
@@ -582,12 +612,9 @@ namespace Rawr.WarlockTmp {
         }
     }
 
-    public class ShadowBoltSpell : Spell {
+    public class ShadowBolt : Spell {
 
-        public ShadowBoltSpell(
-            CharacterCalculationsWarlock mommy,
-            float directMultiplier,
-            float baseCritChance)
+        public ShadowBolt(CharacterCalculationsWarlock mommy)
             : base(
                 mommy, // options
                 MagicSchool.Shadow, // magic school
@@ -599,32 +626,30 @@ namespace Rawr.WarlockTmp {
                 770f, // high base
                 .8571f
                     + mommy.Talents.ShadowAndFlame * .04f, // direct coefficient
-                directMultiplier
+                mommy.BaseDirectDamageMultiplier
                     + mommy.Talents.ImprovedShadowBolt
                         * .01f, // damage multiplier
                 0f, // damage per tick
                 0f, // num ticks
                 0f, // tick coefficient
                 0f, // tick multiplier
-                baseCritChance
+                mommy.BaseCritChance
                     + mommy.Stats.Warlock4T8
                     + mommy.Stats.Warlock2T10, // crit chance
                 mommy.Stats.BonusCritMultiplier, // bonus crit
                 0f) { } // cooldown
     }
 
-    public class InstantShadowBoltSpell : ShadowBoltSpell {
+    public class ShadowBolt_Instant : ShadowBolt {
 
-        public InstantShadowBoltSpell(
-            CharacterCalculationsWarlock mommy,
-            float directMultiplier,
-            float baseCritChance)
-            : base(
-                mommy,
-                directMultiplier,
-                baseCritChance) {
+        public ShadowBolt_Instant(CharacterCalculationsWarlock mommy)
+            : base(mommy) {
 
             BaseCastTime = 1.5f;
+
+            // will be calculated later, but set to > 0 now to indicate this
+            // spell is not spammable
+            Cooldown = 1f; 
         }
 
         public override bool IsCastable() {
@@ -634,10 +659,7 @@ namespace Rawr.WarlockTmp {
                     || Mommy.Talents.Nightfall > 0);
         }
 
-        public override void SetCastingStats(
-            float manaRemaining,
-            float timeRemaining,
-            float baseHasteDivisor) {
+        public override void SetCastingStats(float timeRemaining) {
 
             // Currently modeled as a spell on a cooldown equal to the
             // average time between procs.  This lengthens the time between
@@ -653,8 +675,7 @@ namespace Rawr.WarlockTmp {
             float numProcs
                 = procChance * corruption.NumCasts * corruption.NumTicks;
             Cooldown = Mommy.Options.Duration / numProcs;
-            base.SetCastingStats(
-                manaRemaining, timeRemaining, baseHasteDivisor);
+            base.SetCastingStats(timeRemaining);
         }
     }
 }
