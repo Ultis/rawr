@@ -129,10 +129,16 @@ namespace Rawr.WarlockTmp {
 
             // apply talents that affect entire magic schools or spell trees
             WarlockTalents talents = mommy.Talents;
+            float bonusMultiplier = 0f;
             if (magicSchool == MagicSchool.Shadow) {
-                DirectDamageMultiplier += talents.ShadowMastery * .03f;
-                TickDamageMultiplier += talents.ShadowMastery * .03f;
+                bonusMultiplier
+                    = talents.ShadowMastery * .03f
+                        + Mommy.Stats.BonusShadowDamageMultiplier;
+            } else if (magicSchool == MagicSchool.Fire) {
+                bonusMultiplier = Mommy.Stats.BonusFireDamageMultiplier;
             }
+            DirectDamageMultiplier += bonusMultiplier;
+            TickDamageMultiplier += bonusMultiplier;
             if (spellTree == SpellTree.Destruction) {
                 BaseBonusCritMultiplier += talents.Ruin * .2f;
                 CritChance += talents.Devastation * .05f;

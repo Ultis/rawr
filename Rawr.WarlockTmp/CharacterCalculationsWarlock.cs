@@ -80,12 +80,13 @@ namespace Rawr.WarlockTmp {
             float multiplier
                 = 1f
                     + Talents.DemonicPact * .01f
-                    + Talents.Malediction * .01f;
+                    + Talents.Malediction * .01f
+                    + Stats.BonusDamageMultiplier;
             BaseTickDamageMultiplier
                 = multiplier + Stats.WarlockSpellstoneDotDamageMultiplier;
             BaseDirectDamageMultiplier
                 = multiplier + Stats.WarlockFirestoneDirectDamageMultiplier;
-            BaseCritChance = Stats.SpellCrit;
+            BaseCritChance = Stats.SpellCrit + Stats.SpellCritOnTarget;
             float bonus = Stats.CritBonusDamage;
 
             // If the 5% crit debuff is not already being maintained by somebody
@@ -271,10 +272,17 @@ namespace Rawr.WarlockTmp {
 
             LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
 
+            // calculate the entire fight's mana pool
+            float timeRemaining = Options.Duration;
+            float manaRemaining
+                = Stats.Mana
+                    + Stats.ManaRestore
+                    + timeRemaining
+                        * (Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana
+                            + Stats.Mp5 / 5f);
+
             // first run through the priorities and calculate how many times
             // each spell will be cast
-            float timeRemaining = Options.Duration;
-            float manaRemaining = Stats.Mana;
             float haste = 1f + Stats.SpellHaste;
             float lag = Options.Latency;
             foreach (string spellName in Options.SpellPriority) {
@@ -304,14 +312,13 @@ namespace Rawr.WarlockTmp {
                 }
             }
 
+            // then for each spell that is cast calculate its damage, and our
+            // overall damage
             float hitChance
                 = Math.Min(
                     1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
             float spellPower
                 = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
-
-            // then for each spell that is cast calculate its damage, and our
-            // overall damage
             float damageDone = 0f;
             foreach (KeyValuePair<string, Spell> pair in CastSpells) {
                 Spell spell = pair.Value;
