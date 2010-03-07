@@ -3458,7 +3458,7 @@ namespace Rawr
                 Name = "Turalyon's Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusJudgementDuration = 10f },    // Unmodelled
+                Stats = { BonusJudgementDuration = 10f },
                 SetName = "Turalyon's Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
@@ -3469,7 +3469,7 @@ namespace Rawr
                 Name = "Turalyon's Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { FlashOfLightHoTMultiplier = 1.00f },  // Unmodelled
+                Stats = { FlashOfLightHoTMultiplier = 1.00f },
                 SetName = "Turalyon's Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },

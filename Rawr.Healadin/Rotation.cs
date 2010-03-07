@@ -39,6 +39,7 @@ namespace Rawr.Healadin
 
         public float DivinePleas { get; set; }
         public float FightLength { get; set; }
+        public float FoLCasts { get; set; }
 
         private FlashOfLight fol;
         private HolyLight hl;
@@ -138,22 +139,6 @@ namespace Rawr.Healadin
             calc.UsageHS = hs.Usage();
             #endregion
 
-            #region Infusion of Light
-            if (CalcOpts.InfusionOfLight)
-            {
-                Heal hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
-                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
-                calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
-                calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
-                calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
-
-                float iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
-                calc.UsageFoL += iol_folcasts * fol.AverageCost();
-                calc.RotationFoL += iol_folcasts * fol.CastTime();
-                calc.HealedFoL += iol_folcasts * fol.AverageHealed();
-            }
-            #endregion
-
             #region Divine Illumination
             if (Talents.DivineIllumination > 0)
             {
@@ -180,6 +165,7 @@ namespace Rawr.Healadin
             float remainingTime = FightLength * CalcOpts.Activity;
             remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
 
+            FoLCasts = 0f;
             if (remainingMana > 0)
             {
                 float hl_time = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
@@ -193,10 +179,29 @@ namespace Rawr.Healadin
                 calc.UsageHL += hl.MPS() * hl_time;
                 calc.RotationHL += hl_time;
 
+                FoLCasts = fol_time / fol.CastTime();
+
                 calc.RotationFoL += fol_time;
                 calc.UsageFoL += fol.MPS() * fol_time;
                 calc.HealedFoL += fol.HPS() * fol_time;
             }
+
+            // Infusion of Light must be processed after FoLCasts is calculated
+            #region Infusion of Light
+            if (CalcOpts.InfusionOfLight)
+            {
+                Heal hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
+                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
+                calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
+                calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
+                calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
+
+                float iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
+                calc.UsageFoL += iol_folcasts * fol.AverageCost();
+                calc.RotationFoL += iol_folcasts * fol.CastTime();
+                calc.HealedFoL += iol_folcasts * fol.AverageHealed();
+            }
+            #endregion
 
             calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS;
 

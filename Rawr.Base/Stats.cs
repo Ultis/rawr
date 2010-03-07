@@ -2703,7 +2703,7 @@ namespace Rawr {
         /// Tier 9 2-piece bonus
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Increased Judgement Duration")]
+        [DisplayName("sec Increased Judgement Duration")]
         [Category("Healadin")]
         public float BonusJudgementDuration
         {
@@ -2715,7 +2715,8 @@ namespace Rawr {
         /// Tier 9 4-piece bonus
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Flash of Light HoT Multiplier")]
+        [Percentage]
+        [DisplayName("% Flash of Light HoT")]
         [Category("Healadin")]
         public float FlashOfLightHoTMultiplier
         {
