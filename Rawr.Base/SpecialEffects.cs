@@ -1879,7 +1879,7 @@ namespace Rawr {
                 // Estimate cast as every 2.0f seconds, average stack height is 0.5f of final value
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Mp5 = mp5 * int.Parse(match.Groups["duration"].Value) * 0.5f / 2.0f }, int.Parse(match.Groups["duration"].Value), 120));
             }
-            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<amount>\d+) spell power.  Stacks up to (?<stacks>\d+) times.  Entire effect lasts (?<duration>\d+) sec.")).Success)
+            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<amount>\d+) spell power. *Stacks up to (?<stacks>\d+) times. *Entire effect lasts (?<duration>\d+) sec.")).Success)
             {   // Binding Light / Stone
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), (float)int.Parse(match.Groups["duration"].Value), 2f * 60f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.HealingSpellCast, new Stats() { SpellPower = (float)int.Parse(match.Groups["amount"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value));
