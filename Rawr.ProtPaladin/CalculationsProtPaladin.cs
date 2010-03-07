@@ -1115,6 +1115,7 @@ focus on Survival Points.",
         }
 
         #region Relevancy Methods
+        
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes {
             get {
@@ -1153,8 +1154,7 @@ focus on Survival Points.",
             if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
             // Filters out Death Knight and Two-Hander Enchants
             if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == ItemSlot.TwoHand) return false;
-            // Paladin ZG enchant
-            if (enchant.Name.Contains("Syncretist's Sigil") && (enchant.Slot == ItemSlot.Legs || enchant.Slot == ItemSlot.Head)) return false;
+
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
