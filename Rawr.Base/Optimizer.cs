@@ -967,7 +967,7 @@ namespace Rawr.Optimizer
                     ReportProgress(0, 0);
                     foreach (CharacterSlot slot in slots)
                     {
-                        if (item.FitsInSlot(slot, _character))
+                        if (item.FitsInSlot(slot, _character, true))
                         {
                             List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
@@ -1097,7 +1097,7 @@ namespace Rawr.Optimizer
                 ItemInstance item = upgrade;
                 foreach (CharacterSlot slot in slots)
                 {
-                    if (item.Item.FitsInSlot(slot, _character))
+                    if (item.Item.FitsInSlot(slot, _character, true))
                     {
                         lockedItems = new List<object>() { item };
                         lockedSlot = slot;
