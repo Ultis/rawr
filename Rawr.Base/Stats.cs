@@ -276,6 +276,7 @@ namespace Rawr {
         BonusJudgementDuration,
         FlashOfLightHoTMultiplier,
         DivineIlluminationHealingMultiplier,
+        HolyLightCastTimeReductionFromHolyShock,
         #endregion
         #region Added by Rawr.Retribution
         DivineStormMultiplier,
@@ -2736,6 +2737,18 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineIlluminationHealingMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.DivineIlluminationHealingMultiplier] = value; }
+        }
+
+        /// <summary>
+        /// Tier 10 4-piece bonus
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("sec Holy Light Cast Time Reduction after Holy Shock")]
+        [Category("Healadin")]
+        public float HolyLightCastTimeReductionFromHolyShock
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCastTimeReductionFromHolyShock]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightCastTimeReductionFromHolyShock] = value; }
         }
 
         #endregion

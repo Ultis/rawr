@@ -3543,19 +3543,17 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
 
-            /*
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lightsworn Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
+                Stats = { HolyLightCastTimeReductionFromHolyShock = 0.3f },
                 SetName = "Lightsworn Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShockCast, new Stats() { HolyLightCastTimeReduction = .3f }, 0.0f, 0.0f, 1.0f));
-            */
+
             #endregion
             #region Plate (Protection)
             defaultBuffs.Add(new Buff()

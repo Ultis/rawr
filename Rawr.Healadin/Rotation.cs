@@ -160,20 +160,43 @@ namespace Rawr.Healadin
             #endregion
 
             #region Infusion of Light
-            
+
+            float iol_hlcasts = 0;
             float iol_folcasts = 0;
-            if (CalcOpts.InfusionOfLight) {
+            if (CalcOpts.InfusionOfLight)
+            {
                 float iol_count = hs.Casts() * hs.ChanceToCrit();
 
                 HolyLight hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
-                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
+                if (Stats.HolyLightCastTimeReductionFromHolyShock > 0)
+                {
+                    hl_iol.CastTimeReductionFromHolyShock = false; //TODO: Change back to TRUE when done!
+                }
+
+                iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
+
                 calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
                 calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
                 calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
 
                 iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
             }
+
             #endregion
+
+            #region Holy Light cast time reduction from Holy Shock (T10 4 piece)
+
+            //if (Stats.HolyLightCastTimeReductionFromHolyShock > 0)
+            //{
+            //    HolyLight hl_hs = new HolyLight(this) { CastTimeReductionFromHolyShock = true };
+
+            //    float hs_hlcasts = hs.Casts() - iol_hlcasts;
+
+            //    calc.UsageHL += hs_hlcasts * hl_hs.AverageCost();
+            //    calc.RotationHL += hs_hlcasts * hl_hs.CastTime();
+            //    calc.HealedHL += hs_hlcasts * hl_hs.AverageHealed();
+            //}
+            //#endregion
 
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
@@ -185,15 +208,20 @@ namespace Rawr.Healadin
             if (remainingMana > 0)
             {
                 float hl_time = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
+
+
+
                 float fol_time = remainingTime - hl_time;
                 if (hl_time == 0)
                 {
                     fol_time = Math.Min(remainingTime, remainingMana / fol.MPS());
                 }
-
-                calc.HealedHL += hl.HPS() * hl_time;
-                calc.UsageHL += hl.MPS() * hl_time;
-                calc.RotationHL += hl_time;
+                else
+                {
+                    calc.HealedHL += hl.HPS() * hl_time;
+                    calc.UsageHL += hl.MPS() * hl_time;
+                    calc.RotationHL += hl_time;
+                }
 
                 // Calculate Flash of Light data
                 if (iol_folcasts > 0) // We are using Infusion of Light, so we must calculate it differently than normal

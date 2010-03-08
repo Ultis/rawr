@@ -573,6 +573,7 @@ namespace Rawr.Healadin
                 BonusJudgementDuration = stats.BonusJudgementDuration,
                 FlashOfLightHoTMultiplier = stats.FlashOfLightHoTMultiplier,
                 DivineIlluminationHealingMultiplier = stats.DivineIlluminationHealingMultiplier,
+                HolyLightCastTimeReductionFromHolyShock = stats.HolyLightCastTimeReductionFromHolyShock,
 
                 // Gear Procs
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
@@ -630,6 +631,7 @@ namespace Rawr.Healadin
                 stats.BonusJudgementDuration +
                 stats.FlashOfLightHoTMultiplier +
                 stats.DivineIlluminationHealingMultiplier +
+                stats.HolyLightCastTimeReductionFromHolyShock +
 
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.BonusManaMultiplier +

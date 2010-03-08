@@ -164,8 +164,9 @@ namespace Rawr.Healadin
             : base(rotation)
         { }
 
-        public override float BaseCastTime { get { return 2.5f; } }
+        public override float BaseCastTime { get { return CastTimeReductionFromHolyShock ? 2.5f - Stats.HolyLightCastTimeReductionFromHolyShock : 2.5f; } }
         public override float BaseMana { get { return 1274f; } }
+        public bool CastTimeReductionFromHolyShock { get; set; }
 
         protected override float AbilityCritChance()
         {
