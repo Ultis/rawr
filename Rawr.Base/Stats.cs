@@ -275,6 +275,7 @@ namespace Rawr {
         HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         BonusJudgementDuration,
         FlashOfLightHoTMultiplier,
+        DivineIlluminationHealingMultiplier,
         #endregion
         #region Added by Rawr.Retribution
         DivineStormMultiplier,
@@ -2722,6 +2723,19 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightHoTMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightHoTMultiplier] = value; }
+        }
+
+        /// <summary>
+        /// Tier 10 2-piece bonus
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Healing with Divine Illumination Active")]
+        [Category("Healadin")]
+        public float DivineIlluminationHealingMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineIlluminationHealingMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineIlluminationHealingMultiplier] = value; }
         }
 
         #endregion

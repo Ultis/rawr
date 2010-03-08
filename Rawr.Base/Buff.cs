@@ -3532,18 +3532,18 @@ namespace Rawr
             #endregion
             #region Tier 10 | Lightsworn
             #region Garb (Holy)
-            /* Neither of the 2 set buffs are currently modelled.
-            defaultBuffs.Add(buf = new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lightsworn Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
+                Stats = { DivineIlluminationHealingMultiplier = 0.35f },
                 SetName = "Lightsworn Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivineIlluminationActive, new Stats() { HealingDoneMultiplier = .35f }, 15.0f, 0.0f, 1.0f));
+
+            /*
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lightsworn Garb 4 Piece Bonus",

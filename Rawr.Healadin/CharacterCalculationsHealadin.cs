@@ -88,7 +88,7 @@ namespace Rawr.Healadin
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            dictValues.Add("Status", string.Format("Overall: {0,-10}\tFight: {1,-10}\tBurst: {2,-10}",
+            dictValues.Add("Status", string.Format("Overall: {0,-10} Fight: {1,-10} Burst: {2,-10}",
                 OverallPoints.ToString("N0"),
                 FightPoints.ToString("N0"),
                 BurstPoints.ToString("N0")));
