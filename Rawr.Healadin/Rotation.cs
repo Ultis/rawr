@@ -159,6 +159,22 @@ namespace Rawr.Healadin
             }
             #endregion
 
+            #region Infusion of Light
+            
+            float iol_folcasts = 0;
+            if (CalcOpts.InfusionOfLight) {
+                float iol_count = hs.Casts() * hs.ChanceToCrit();
+
+                HolyLight hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
+                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
+                calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
+                calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
+                calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
+
+                iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
+            }
+            #endregion
+
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
 
@@ -179,29 +195,55 @@ namespace Rawr.Healadin
                 calc.UsageHL += hl.MPS() * hl_time;
                 calc.RotationHL += hl_time;
 
-                FoLCasts = fol_time / fol.CastTime();
+                // Calculate Flash of Light data
+                if (iol_folcasts > 0) // We are using Infusion of Light, so we must calculate it differently than normal
+                {
+                    // Get the Flash of Light model for Infusion of Light
+                    FlashOfLight fol_iol = new FlashOfLight(this) { InfusionOfLight = true };
 
-                calc.RotationFoL += fol_time;
-                calc.UsageFoL += fol.MPS() * fol_time;
-                calc.HealedFoL += fol.HPS() * fol_time;
+                    // If there is less time remaining than it would take to cast all of the
+                    // Infusion of Light procs, we are forced to drop some of them.  Note
+                    // that this should *never* happen, but is here for a sanity check.
+                    if (fol_time <= iol_folcasts * fol_iol.CastTime())
+                    {
+                        // Determine how many total casts we are going to be able to do
+                        FoLCasts = fol_time / fol_iol.CastTime();
+
+                        // Adding Flash of Light with Infusion of Light
+                        calc.UsageFoL += FoLCasts * fol_iol.AverageCost();
+                        calc.RotationFoL += FoLCasts * fol_iol.CastTime();
+                        calc.HealedFoL += FoLCasts * fol_iol.AverageHealed();
+                    }
+                    else
+                    {
+                        // Adding Flash of Light with Infusion of Light
+                        calc.UsageFoL += iol_folcasts * fol_iol.AverageCost();
+                        calc.RotationFoL += iol_folcasts * fol_iol.CastTime();
+                        calc.HealedFoL += iol_folcasts * fol_iol.AverageHealed();
+
+                        // Determine how much time we have left to cast Flash of Light without the procs
+                        fol_time = fol_time - iol_folcasts * fol.CastTime();
+
+                        // Determine how many total casts, with and without Infusion of Light
+                        FoLCasts = iol_folcasts + fol_time / fol.CastTime();
+
+                        // Adding Flash of Light
+                        calc.RotationFoL += fol_time;
+                        calc.UsageFoL += fol.MPS() * fol_time;
+                        calc.HealedFoL += fol.HPS() * fol_time;
+                    }
+                }
+                else // We don't use Infusion of Light, so just calculate normal data for Flash of Light
+                {
+                    // Determine how many total casts, with and without Infusion of Light
+                    FoLCasts = fol_time / fol.CastTime();
+
+                    // Adding Flash of Light
+                    calc.RotationFoL += fol_time;
+                    calc.UsageFoL += fol.MPS() * fol_time;
+                    calc.HealedFoL += fol.HPS() * fol_time;
+                }
             }
-
-            // Infusion of Light must be processed after FoLCasts is calculated
-            #region Infusion of Light
-            if (CalcOpts.InfusionOfLight)
-            {
-                Heal hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
-                float iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
-                calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
-                calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
-                calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
-
-                float iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
-                calc.UsageFoL += iol_folcasts * fol.AverageCost();
-                calc.RotationFoL += iol_folcasts * fol.CastTime();
-                calc.HealedFoL += iol_folcasts * fol.AverageHealed();
-            }
-            #endregion
 
             calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS;
 

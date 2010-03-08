@@ -104,8 +104,9 @@ namespace Rawr.Healadin
             : base(rotation)
         { }
 
-        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseCastTime { get { return InfusionOfLight ? 1.5f - 0.75f * Talents.InfusionOfLight : 1.5f; } }
         public override float BaseMana { get { return 307f; } }
+        public bool InfusionOfLight { get; set; }
 
         protected override float AbilityCritChance()
         {
