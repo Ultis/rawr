@@ -767,6 +767,7 @@ namespace Rawr.HolyPriest
 
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
+                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
@@ -788,6 +789,8 @@ namespace Rawr.HolyPriest
                 PWSBonusSpellPowerProc = stats.PWSBonusSpellPowerProc,
                 PriestHeal_T9_2pc = stats.PriestHeal_T9_2pc,
                 PriestHeal_T9_4pc = stats.PriestHeal_T9_4pc,
+                PriestHeal_T10_2pc = stats.PriestHeal_T10_2pc,
+                PriestHeal_T10_4pc = stats.PriestHeal_T10_4pc,
                 /*
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
@@ -861,8 +864,8 @@ namespace Rawr.HolyPriest
                 + stats.SpellHaste + stats.SpellCrit
                 + stats.HasteRating + stats.CritRating
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
-                + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
-                + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
+                + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotion
+                + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
                 + stats.Healed
 
                 + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
@@ -872,6 +875,7 @@ namespace Rawr.HolyPriest
                 + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
                 + stats.WeakenedSoulDurationDecrease
                 + stats.PriestHeal_T9_2pc + stats.PriestHeal_T9_4pc
+                + stats.PriestHeal_T10_2pc + stats.PriestHeal_T10_4pc
 
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
                 + stats.ShieldFromHealed

@@ -4414,7 +4414,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Priest: Num extra jumps on Prayer of Mending (Priest)")]
+        [DisplayName(" extra jumps on Prayer of Mending (Priest)")]
         [Category("Priest")]
         public float PrayerOfMendingExtraJumps
         {
@@ -4492,7 +4492,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% chance for Circle of Healing or Penance to reset cooldown of Circle of Healing or Penance when casting Flash Heal within 6 seconds. (Priest)")]
+        [DisplayName("% increased effect from Renew and Power Word: Shield. (Priest)")]
         [Category("Priest")]
         public float PriestHeal_T10_4pc
         {

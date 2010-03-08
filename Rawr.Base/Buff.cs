@@ -3845,7 +3845,7 @@ namespace Rawr
                 Name = "Crimson Acolyte's Raiment 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PriestHeal_T10_4pc = 0.2f },
+                Stats = { PriestHeal_T10_4pc = 0.05f },
                 SetName = "Crimson Acolyte's Raiment",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },

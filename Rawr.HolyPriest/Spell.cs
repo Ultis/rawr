@@ -208,11 +208,12 @@ namespace Rawr.HolyPriest
             MinHeal = (MinHeal +
                 stats.SpellPower * (SP2HP * HealingCoef * (1 - RankCoef)
                 + character.PriestTalents.EmpoweredRenew * 0.05f))
-                * (1 + character.PriestTalents.ImprovedRenew * 0.05f) 
+                * (1 + character.PriestTalents.ImprovedRenew * 0.05f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
+                * (1 + stats.PriestHeal_T10_4pc);
 
             if (stats.RenewDurationIncrease > 0)
             {
@@ -888,7 +889,8 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f
                     + character.PriestTalents.SpiritualHealing * 0.02f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
+                * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
+                * (1 + stats.PriestHeal_T10_4pc);
 
             ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.MentalAgility * 0.1f / 3f 

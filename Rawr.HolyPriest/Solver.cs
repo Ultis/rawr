@@ -157,7 +157,7 @@ namespace Rawr.HolyPriest
 
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
-            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + simstats.HealingReceivedMultiplier);
+            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + simstats.HealingReceivedMultiplier) * (1 + simstats.BonusHealingDoneMultiplier);
 
             // Add on Renewed Hope crit & Grace for Disc Maintank Rotation.
             if (role == CalculationOptionsHolyPriest.eRole.Disc_Tank_FH
@@ -300,6 +300,23 @@ namespace Rawr.HolyPriest
                     sr.Add(fh_bt);      // 1.5  7.5  -1.0  -3.5  -5.5
                     // repeat
                     break;
+                case CalculationOptionsHolyPriest.eRole.Holy_Raid_Renew:    // Holy Raid healing with Renew. Almost no FH.
+                    Role += "Holy Raid Renew";
+                    sr.Add(prom_4);
+                    sr.Add(coh);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(prom_4);
+                    sr.Add(coh);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(renew);
+                    sr.Add(fh);
+                    break;
                 default:
                     break;
             }
@@ -330,6 +347,8 @@ namespace Rawr.HolyPriest
                 {   // Flash Heal (Same applies to FH as GHeal with regards to borrowed time)
                     clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
+                    if (simstats.PriestHeal_T10_2pc > 0)
+                        heal = rheal * 1 / 9;   // 33% chance of getting 33% of healed amount over 6s. 1/9 (11.11...%)
                     absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * divineaegis;
                     solctr = 1f - (1f - solctr) * (1f - solchance);
                     mcost = sr[x].ManaCost;
@@ -768,7 +787,7 @@ namespace Rawr.HolyPriest
             }
 
             // Insightful Earthstorm Diamond.
-            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.045f) * (1 + simstats.HealingReceivedMultiplier);
+            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.045f) * (1 + simstats.HealingReceivedMultiplier) * (1 + simstats.BonusHealingDoneMultiplier);
             float divineaegis = character.PriestTalents.DivineAegis * 0.1f
                 * (1f + stats.PriestHeal_T9_4pc);
 
@@ -846,6 +865,8 @@ namespace Rawr.HolyPriest
                 TimeUsed += fh.CastTime * calculationOptions.FlashHealCast;
                 BaseTimeUsed += fh.BaseCastTime * calculationOptions.FlashHealCast;
                 DirectHeal += fh.AvgTotHeal * healmultiplier * calculationOptions.FlashHealCast;
+                if (simstats.PriestHeal_T10_2pc > 0)
+                    OtherHeal += fh.AvgTotHeal * healmultiplier * calculationOptions.FlashHealCast * (1 / 9); // 33% chance to get 33% of healed over time. (~11.11...%)
                 AbsorbHeal += fh.AvgCrit * fh.CritChance * healmultiplier * calculationOptions.FlashHealCast * divineaegis;
                 CritCounter += fh.CritChance * calculationOptions.FlashHealCast;
                 HCCritCounter += fh.CritChance * calculationOptions.FlashHealCast;

@@ -142,6 +142,7 @@
             // 
             this.cbRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRotation.FormattingEnabled = true;
+            this.cbRotation.ItemHeight = 13;
             this.cbRotation.Items.AddRange(new object[] {
             "Auto Tank (Rawr picks from Talents)",
             "Auto Raid (Rawr picks from Talents)",
@@ -153,9 +154,10 @@
             "Disc-Tank (Penance/PW:S/ProM/GH)",
             "Disc-Tank (Penance/PW:S/ProM/FH)",
             "Disc-Raid (PW:S/Penance/Flash)",
-            "Custom Role (You pick!)"});
+            "Custom Role (You pick!)",
+            "Holy-Raid-Renew (ProM/CoH/Renew/FH)"});
             this.cbRotation.Location = new System.Drawing.Point(6, 138);
-            this.cbRotation.MaxDropDownItems = 11;
+            this.cbRotation.MaxDropDownItems = 12;
             this.cbRotation.Name = "cbRotation";
             this.cbRotation.Size = new System.Drawing.Size(262, 21);
             this.cbRotation.TabIndex = 26;
