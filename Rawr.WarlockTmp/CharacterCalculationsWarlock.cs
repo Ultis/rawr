@@ -54,6 +54,8 @@ namespace Rawr.WarlockTmp {
         public float BaseDirectDamageMultiplier { get; private set; }
         public float BaseTickDamageMultiplier { get; private set; }
         public float BaseCritChance { get; private set; }
+        public float BaseBonusCritMultiplier { get; private set; }
+        public float HitChance { get; private set; }
 
         public Dictionary<string, Spell> Spells { get; private set; }
         public Dictionary<string, Spell> CastSpells { get; private set; }
@@ -87,7 +89,10 @@ namespace Rawr.WarlockTmp {
             BaseDirectDamageMultiplier
                 = multiplier + Stats.WarlockFirestoneDirectDamageMultiplier;
             BaseCritChance = Stats.SpellCrit + Stats.SpellCritOnTarget;
-            float bonus = Stats.CritBonusDamage;
+            HitChance
+                = Math.Min(
+                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
+            BaseBonusCritMultiplier = Stats.CritBonusDamage;
 
             // If the 5% crit debuff is not already being maintained by somebody
             // else (i.e. it's not selected in the buffs tab), we may supply it
@@ -270,6 +275,11 @@ namespace Rawr.WarlockTmp {
                 return PersonalDps;
             }
 
+            if (GetError(Options.SpellPriority) != null) {
+                PersonalDps = 0f;
+                return 0f;
+            }
+
             LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
 
             // calculate the entire fight's mana pool
@@ -311,17 +321,23 @@ namespace Rawr.WarlockTmp {
                 }
             }
 
+            // adjust bonuses based on spell uptimes, etc
+            if (CastSpells.ContainsKey("Metamorphosis")) {
+                float morphBonus
+                    = ((Metamorphosis) CastSpells["Metamorphosis"])
+                        .GetAvgBonusMultiplier();
+                BaseDirectDamageMultiplier += morphBonus;
+                BaseTickDamageMultiplier += morphBonus;
+            }
+
             // then for each spell that is cast calculate its damage, and our
             // overall damage
-            float hitChance
-                = Math.Min(
-                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
             float spellPower
                 = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
             float damageDone = 0f;
             foreach (KeyValuePair<string, Spell> pair in CastSpells) {
                 Spell spell = pair.Value;
-                spell.SetDamageStats(spellPower, hitChance);
+                spell.SetDamageStats(spellPower);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
             PersonalDps = damageDone / Options.Duration;
@@ -350,6 +366,23 @@ namespace Rawr.WarlockTmp {
                 = (Spell) Activator.CreateInstance(type, new object[] { this });
             Spells[spellName] = spell;
             return spell;
+        }
+
+        public static string GetError(List<string> spellPriority) {
+
+            int corr = spellPriority.IndexOf("Corruption");
+            int sb = spellPriority.IndexOf("Shadow Bolt");
+            int sbInstant = spellPriority.IndexOf("Shadow Bolt (Instant)");
+            if (sbInstant >= 0 && sbInstant < corr) {
+                return "Shadow Bolt (Instant) can only appear after Corruption.";
+            }
+            if (sb == -1) {
+                return "You have not included a spammable spell.";
+            }
+            if (sb != spellPriority.Count - 1) {
+                return "No spell may appear after a spammable spell.";
+            }
+            return null;
         }
     }
 }

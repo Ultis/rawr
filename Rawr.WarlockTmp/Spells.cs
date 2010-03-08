@@ -12,20 +12,14 @@ namespace Rawr.WarlockTmp {
         static Spell() {
 
             Type spellType = Type.GetType("Rawr.WarlockTmp.Spell");
-            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                if (type.IsSubclassOf(spellType))
-                {
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes()) {
+                if (type.IsSubclassOf(spellType)) {
                     string name = type.Name;
-                    for (int i = 1; i < name.Length; ++i)
-                    {
-                        if (char.IsUpper(name[i]))
-                        {
+                    for (int i = 1; i < name.Length; ++i) {
+                        if (char.IsUpper(name[i])) {
                             name = name.Insert(i, " ");
                             ++i;
-                        }
-                        else if (name[i] == '_')
-                        {
+                        } else if (name[i] == '_') {
                             name = name.Replace("_", " (");
                             name = name.Insert(name.Length, ")");
                             i += 2;
@@ -65,20 +59,24 @@ namespace Rawr.WarlockTmp {
             }
         }
 
+        #region properties
+
         // set via constructor (all numbers that vary between spell, but not
         // between casts of each spell)
         public CharacterCalculationsWarlock Mommy { get; protected set; }
+        public MagicSchool MagicSchool { get; protected set; }
         public float ManaCost { get; protected set; }
         public float BaseCastTime { get; protected set; }
-        public float CritChance { get; protected set; }
         public float BaseDamage { get; protected set; }
         public float DirectCoefficient { get; protected set; }
-        public float DirectDamageMultiplier { get; protected set; }
+        public float BonusDirectMultiplier { get; protected set; }
         public float BaseTickDamage { get; protected set; }
         public float NumTicks { get; protected set; }
         public float TickCoefficient { get; protected set; }
-        public float BaseBonusCritMultiplier { get; protected set; }
-        public float TickDamageMultiplier { get; protected set; }
+        public bool CanCrit { get; protected set; }
+        public float BonusTickMultiplier { get; protected set; }
+        public float BonusCritChance { get; protected set; }
+        public float BonusCritMultiplier { get; protected set; }
         public float Cooldown { get; protected set; }
 
         // set via SetCastingStats()
@@ -91,6 +89,8 @@ namespace Rawr.WarlockTmp {
         public float AvgTickCritDamage { get; protected set; }
         public float AvgDamagePerCast { get; protected set; }
 
+        #endregion
+
         #region Constructor
         public Spell(
             CharacterCalculationsWarlock mommy,
@@ -102,29 +102,32 @@ namespace Rawr.WarlockTmp {
             float spellLowDamage,
             float spellHighDamage,
             float directCoefficient,
-            float directMultiplier,
+            float bonusDirectMultiplier,
             float baseTickDamage,
             float numTicks,
             float tickCoefficient,
-            float tickMultiplier,
-            float spellCritChance,
-            float spellBonusCritMultiplier,
+            float bonusTickMultiplier,
+            bool canCrit,
+            float bonusCritChance,
+            float bonusCritMultiplier,
             float cooldown) {
 
             Mommy = mommy;
+            MagicSchool = magicSchool;
             // TODO factor in "mana cost reduction" proc trinket(s?)
             // TODO factor in mana restore procs (as cost reduction)
             ManaCost = mommy.BaseMana * percentBaseMana * costMultiplier;
             BaseCastTime = spellCastTime;
-            CritChance = spellCritChance;
             BaseDamage = (spellLowDamage + spellHighDamage) / 2f;
             DirectCoefficient = directCoefficient;
-            DirectDamageMultiplier = directMultiplier;
+            BonusDirectMultiplier = bonusDirectMultiplier;
             BaseTickDamage = baseTickDamage;
             NumTicks = numTicks;
             TickCoefficient = tickCoefficient;
-            TickDamageMultiplier = tickMultiplier;
-            BaseBonusCritMultiplier = spellBonusCritMultiplier;
+            BonusTickMultiplier = bonusTickMultiplier;
+            CanCrit = canCrit;
+            BonusCritChance = bonusCritChance;
+            BonusCritMultiplier = bonusCritMultiplier;
             Cooldown = cooldown;
 
             // apply talents that affect entire magic schools or spell trees
@@ -138,16 +141,16 @@ namespace Rawr.WarlockTmp {
                     || (Mommy.Options.SpellPriority.Contains("Haunt")
                         && talents.Haunt > 0)) {
 
-                    TickDamageMultiplier += talents.ShadowEmbrace * .05f * 3f;
+                    BonusTickMultiplier += talents.ShadowEmbrace * .05f * 3f;
                 }
             } else if (magicSchool == MagicSchool.Fire) {
                 bonusMultiplier = Mommy.Stats.BonusFireDamageMultiplier;
             }
-            DirectDamageMultiplier += bonusMultiplier;
-            TickDamageMultiplier += bonusMultiplier;
+            BonusDirectMultiplier += bonusMultiplier;
+            BonusTickMultiplier += bonusMultiplier;
             if (spellTree == SpellTree.Destruction) {
-                BaseBonusCritMultiplier += talents.Ruin * .2f;
-                CritChance += talents.Devastation * .05f;
+                BonusCritMultiplier += talents.Ruin * .2f;
+                BonusCritChance += talents.Devastation * .05f;
             }
         }
         #endregion
@@ -175,44 +178,52 @@ namespace Rawr.WarlockTmp {
             }
         }
 
-        public void SetDamageStats(float baseSpellPower, float hitChance) {
+        public void SetDamageStats(float baseSpellPower) {
 
-            float directMultiplier = DirectDamageMultiplier;
-            float tickMultiplier = TickDamageMultiplier;
-            if (Mommy.CastSpells.ContainsKey("Metamorphosis")) {
-                float morphBonus
-                    = ((Metamorphosis) Mommy.CastSpells["Metamorphosis"])
-                        .GetAvgDamageMultiplier();
-                directMultiplier += morphBonus;
-                tickMultiplier += morphBonus;
+            float directMultiplier
+                = Mommy.BaseDirectDamageMultiplier + BonusDirectMultiplier;
+            float tickMultiplier
+                = Mommy.BaseTickDamageMultiplier + BonusTickMultiplier;
+            float critChance = 0f;
+            float critMultiplier = 0f;
+            if (CanCrit) {
+                critChance = Mommy.BaseCritChance + BonusCritChance;
+                critMultiplier
+                    = 1f + Mommy.BaseBonusCritMultiplier + BonusCritMultiplier;
+                critMultiplier = 1f + .5f * critMultiplier;
+            }
+
+            if (MagicSchool == MagicSchool.Shadow
+                && Mommy.CastSpells.ContainsKey("Haunt")) {
+
+                tickMultiplier
+                    += ((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus();
             }
 
             AvgDirectDamage
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
                     * directMultiplier;
-            AvgDirectCritDamage
-                = AvgDirectDamage * (1.5f + .5f * BaseBonusCritMultiplier);
+            AvgDirectCritDamage = AvgDirectDamage * critMultiplier;
 
             AvgTickDamage
                 = (BaseTickDamage + TickCoefficient * baseSpellPower)
                     * tickMultiplier;
-            AvgTickCritDamage
-                = AvgTickDamage * (1.5f + .5f * BaseBonusCritMultiplier);
+            AvgTickCritDamage = AvgTickDamage * critMultiplier;
 
             float directDamage
                 = Utilities.GetWeightedSum(
                     AvgDirectCritDamage,
-                    CritChance,
+                    critChance,
                     AvgDirectDamage,
-                    1 - CritChance);
+                    1 - critChance);
             float tickDamage
                 = Utilities.GetWeightedSum(
                     AvgTickCritDamage,
-                    CritChance,
+                    critChance,
                     AvgTickDamage,
-                    1 - CritChance);
+                    1 - critChance);
             AvgDamagePerCast
-                = hitChance * (directDamage + NumTicks * tickDamage);
+                = Mommy.HitChance * (directDamage + NumTicks * tickDamage);
         }
 
         public String GetToolTip() {
@@ -469,21 +480,20 @@ namespace Rawr.WarlockTmp {
                 0f, // low damage
                 0f, // high damage
                 0f, // direct coefficient
-                0f, // direct multiplier
+                0f, // bonus direct multiplier
                 1080f / 6f, // damage per tick
                 6f, // num ticks
                 (1.2f
                         + mommy.Talents.EmpoweredCorruption * .12f
                         + mommy.Talents.EverlastingAffliction * .01f)
                     / 6f, // tick coefficient
-                mommy.BaseTickDamageMultiplier
-                    + mommy.Talents.ImprovedCorruption * .02f
+                mommy.Talents.ImprovedCorruption * .02f
                     + mommy.Talents.Contagion * .01f
-                    + mommy.Talents.SiphonLife * .05f, // tick multiplier
-                (mommy.BaseCritChance + mommy.Talents.Malediction * .03f)
-                    * mommy.Talents.Pandemic, // crit chance
-                mommy.Stats.BonusCritMultiplier
-                    + mommy.Talents.Pandemic * .5f, // crit multiplier
+                    + mommy.Talents.SiphonLife * .05f, // bonus tick multiplier
+                mommy.Talents.Pandemic > 0, // can crit
+                mommy.Talents.Malediction * .03f
+                    * mommy.Talents.Pandemic, // bonus crit chance
+                mommy.Talents.Pandemic, // bonus crit multiplier
                 18f) { } // "cooldown"
 
         public override void SetCastingStats(float timeRemaining) {
@@ -497,7 +507,7 @@ namespace Rawr.WarlockTmp {
 
     public class CurseOfAgony : Spell {
 
-        public CurseOfAgony(CharacterCalculationsWarlock mommy) 
+        public CurseOfAgony(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
                 MagicSchool.Shadow, // magic school
@@ -508,19 +518,65 @@ namespace Rawr.WarlockTmp {
                 0f, // low direct damage
                 0f, // high direct damage
                 0f, // direct coefficient
-                0f, // direct multiplier
+                0f, // bonus direct multiplier
                 1740f / 12f
                     * (mommy.Talents.GlyphCoA
                         ? 8f / 7f : 1f), // damage per tick
                 mommy.Talents.GlyphCoA ? 14f : 12f, // num ticks
                 1.2f / 12f, // tick coefficient
-                mommy.BaseTickDamageMultiplier
-                    + mommy.Talents.ImprovedCurseOfAgony * .05f
-                    + mommy.Talents.Contagion * .01f, // tick multiplier
-                0f, // crit chance
-                0f, // crit multiplier
+                mommy.Talents.ImprovedCurseOfAgony * .05f
+                    + mommy.Talents.Contagion * .01f, // bonus tick multiplier
+                false, // can crit
+                0f, // bonus crit chance
+                0f, // bonus crit multiplier
                 mommy.Talents.GlyphCoA ? 28f : 24f) { // "cooldown"
 
+        }
+    }
+
+    public class Haunt : Spell {
+
+        public Haunt(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow,
+                SpellTree.Affliction,
+                .12f, // percent base mana
+                1f, // cost multiplier,
+                1.5f, // cast time
+                645f, // low direct damage
+                753f, // high direct damage
+                .4266f, // direct coefficient
+                0f, // bonus direct multiplier
+                0f, // tick damage
+                0f, // num ticks
+                0f, // tick coefficient
+                0f, // bonus tick multiplier
+                true, // can crit
+                0f, // bonus crit chance
+                mommy.Talents.Pandemic, // bonus crit multiplier
+                8f) { } // cooldown
+
+        public override bool IsCastable() {
+
+            return Mommy.Talents.Haunt > 0;
+        }
+
+        public float GetAvgTickBonus() {
+
+            float timeBetweenCasts = Mommy.Options.Duration / NumCasts;
+            float timeLostOnSingleMiss = timeBetweenCasts - Cooldown;
+            float timeLostOnDoubleMiss = timeBetweenCasts;
+
+            float overallMissChance = 1f - Mommy.HitChance;
+            float doubleMissChance = overallMissChance * overallMissChance;
+            float singleMissChance = overallMissChance - doubleMissChance;
+
+            return (Mommy.Talents.GlyphHaunt ? .23f : .2f)
+                * (1
+                    - (singleMissChance * timeLostOnSingleMiss
+                            + doubleMissChance * timeLostOnDoubleMiss)
+                        / timeBetweenCasts);
         }
     }
 
@@ -543,12 +599,13 @@ namespace Rawr.WarlockTmp {
                 0f, // low damage
                 0f, // high damage
                 0f, // direct coefficient
-                0f, // direct multiplier
+                0f, // bonus direct multiplier
                 0f, // base tick damage
                 0f, // num ticks
                 0f, // tick coefficient
-                0f, // tick multiplier
-                0f, // crit chance
+                0f, // bonus tick multiplier
+                false, // can crit
+                0f, // bonus crit chance
                 0f, // bonus crit multiplier
                 37f) { // cooldown
 
@@ -611,13 +668,14 @@ namespace Rawr.WarlockTmp {
                 0f, // low damage
                 0f, // high damage
                 0f, // direct coefficient
-                0f, // direct multiplier
+                0f, // bonus direct multiplier
                 0f, // damage per tick
                 0f, // num ticks
                 0f, // tick coefficient
-                0f, // tick multiplier
-                0f, // crit chance
-                0f, // bonus crit
+                0f, // bonus tick multiplier
+                false, // can crit
+                0f, // bonus crit chance
+                0f, // bonus crit multiplier
                 180f
                     * (1f
                         - mommy.Talents.Nemesis * .1f)) { } // cooldown
@@ -641,7 +699,7 @@ namespace Rawr.WarlockTmp {
             NumCasts = wholeCasts + Math.Min(1f, partialCast / maxUprate);
         }
 
-        public float GetAvgDamageMultiplier() {
+        public float GetAvgBonusMultiplier() {
 
             float uprate
                 = NumCasts * GetSpellDuration() / Mommy.Options.Duration;
@@ -672,17 +730,16 @@ namespace Rawr.WarlockTmp {
                 770f, // high base
                 .8571f
                     + mommy.Talents.ShadowAndFlame * .04f, // direct coefficient
-                mommy.BaseDirectDamageMultiplier
-                    + mommy.Talents.ImprovedShadowBolt
-                        * .01f, // damage multiplier
+                mommy.Talents.ImprovedShadowBolt
+                    * .01f, // bonus damage multiplier
                 0f, // damage per tick
                 0f, // num ticks
                 0f, // tick coefficient
-                0f, // tick multiplier
-                mommy.BaseCritChance
-                    + mommy.Stats.Warlock4T8
-                    + mommy.Stats.Warlock2T10, // crit chance
-                mommy.Stats.BonusCritMultiplier, // bonus crit
+                0f, // bonus tick multiplier
+                true, // can crit
+                mommy.Stats.Warlock4T8
+                    + mommy.Stats.Warlock2T10, // bonus crit chance
+                0f, // bonus crit multiplier
                 0f) { } // cooldown
     }
 
@@ -695,7 +752,7 @@ namespace Rawr.WarlockTmp {
 
             // will be calculated later, but set to > 0 now to indicate this
             // spell is not spammable
-            Cooldown = 1f; 
+            Cooldown = 1f;
         }
 
         public override bool IsCastable() {
@@ -738,16 +795,16 @@ namespace Rawr.WarlockTmp {
                 0f, // direct low damage
                 0f, // direct high damage
                 0f, // direct coefficient
-                0f, // direct multiplier
+                0f, // bonus direct multiplier
                 1150f / 5f, // tick damage
                 5f, // num ticks
                 (1f + mommy.Talents.EverlastingAffliction * .01f)
                     / 5f, // tick coefficient
-                mommy.BaseTickDamageMultiplier
-                    + mommy.Talents.SiphonLife * .05f, // tick multiplier
-                (mommy.BaseCritChance + mommy.Talents.Malediction * .03f)
-                    * mommy.Talents.Pandemic, // crit chance
-                0f, // crit multiplier
+                mommy.Talents.SiphonLife * .05f, // bonus tick multiplier
+                mommy.Talents.Pandemic > 0, // can crit
+                mommy.Talents.Malediction * .03f
+                    * mommy.Talents.Pandemic, // bonus crit chance
+                mommy.Talents.Pandemic, // bonus crit multiplier
                 15f) { } // "cooldown"
 
         public override bool IsCastable() {

@@ -50,6 +50,9 @@ namespace Rawr.WarlockTmp {
             rotationDownButton.Enabled
                 = curIndex >= 0 && curIndex < itemCount - 1;
             rotationClearButton.Enabled = itemCount > 0;
+
+            rotationErrorLabel.Text
+                = CharacterCalculationsWarlock.GetError(_options.SpellPriority);
         }
 
         private void RotationSwap(int swapWith) {

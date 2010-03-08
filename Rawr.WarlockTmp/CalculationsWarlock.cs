@@ -89,6 +89,7 @@ namespace Rawr.WarlockTmp {
                         "Spell:Haste Rating",
                         "Affliction:Corruption",
                         "Affliction:Curse Of Agony",
+                        "Affliction:Haunt",
                         "Affliction:Life Tap",
                         "Affliction:Unstable Affliction",
                         "Demonology:Metamorphosis",
@@ -751,7 +752,8 @@ namespace Rawr.WarlockTmp {
                         "Glyph of Corruption",
                         "Glyph of Life Tap",
                         "Glyph of Curse of Agony",
-                        "Glyph of Unstable Affliction" };
+                        "Glyph of Unstable Affliction",
+                        "Glyph of Haunt" };
             }
             return _relevantGlyphs;
         }

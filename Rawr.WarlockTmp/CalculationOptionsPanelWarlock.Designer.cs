@@ -50,6 +50,7 @@
             this.latencySpinner = new System.Windows.Forms.NumericUpDown();
             this.latencyLabel = new System.Windows.Forms.Label();
             this.infernalCheck = new System.Windows.Forms.CheckBox();
+            this.rotationErrorLabel = new System.Windows.Forms.Label();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
@@ -106,6 +107,7 @@
             // 
             // rotationBox
             // 
+            this.rotationBox.Controls.Add(this.rotationErrorLabel);
             this.rotationBox.Controls.Add(this.rotationRenameButton);
             this.rotationBox.Controls.Add(this.rotationSeparator);
             this.rotationBox.Controls.Add(this.rotationSpellCombo);
@@ -120,7 +122,7 @@
             this.rotationBox.Controls.Add(this.newRotationButton);
             this.rotationBox.Location = new System.Drawing.Point(3, 132);
             this.rotationBox.Name = "rotationBox";
-            this.rotationBox.Size = new System.Drawing.Size(294, 229);
+            this.rotationBox.Size = new System.Drawing.Size(294, 280);
             this.rotationBox.TabIndex = 7;
             this.rotationBox.TabStop = false;
             this.rotationBox.Text = "Spell Priorities";
@@ -316,6 +318,15 @@
             this.infernalCheck.UseVisualStyleBackColor = true;
             this.infernalCheck.CheckedChanged += new System.EventHandler(this.infernalCheck_CheckedChanged);
             // 
+            // rotationErrorLabel
+            // 
+            this.rotationErrorLabel.ForeColor = System.Drawing.Color.Red;
+            this.rotationErrorLabel.Location = new System.Drawing.Point(6, 224);
+            this.rotationErrorLabel.Name = "rotationErrorLabel";
+            this.rotationErrorLabel.Size = new System.Drawing.Size(282, 13);
+            this.rotationErrorLabel.TabIndex = 19;
+            this.rotationErrorLabel.Text = "label1";
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -331,7 +342,7 @@
             this.Controls.Add(this.petLabel);
             this.Controls.Add(this.rotationBox);
             this.Name = "CalculationOptionsPanelWarlock";
-            this.Size = new System.Drawing.Size(300, 365);
+            this.Size = new System.Drawing.Size(300, 448);
             this.rotationBox.ResumeLayout(false);
             this.rotationBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).EndInit();
@@ -365,5 +376,6 @@
         private System.Windows.Forms.CheckBox infernalCheck;
         private System.Windows.Forms.Panel rotationSeparator;
         private System.Windows.Forms.Button rotationRenameButton;
+        private System.Windows.Forms.Label rotationErrorLabel;
     }
 }
