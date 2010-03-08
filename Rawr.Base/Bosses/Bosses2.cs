@@ -13,10 +13,11 @@ namespace Rawr.Bosses {
     {
         public MultiDiffBoss() {
             // Initialize
-            this[0] = new BossHandler();
-            this[1] = new BossHandler();
-            this[2] = new BossHandler();
-            this[3] = new BossHandler();
+            //this = new List<BossHandler>() { };
+            this.Add(new BossHandler());
+            this.Add(new BossHandler());
+            this.Add(new BossHandler());
+            this.Add(new BossHandler());
             // Basic Setups we don't want to repeat over and over again
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T10_0, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_9 };
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H };
@@ -183,7 +184,7 @@ namespace Rawr.Bosses {
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             // Fight Requirements
             Min_Tanks   = new int[] {  2,  3,  2,  3 } ;
-            Min_Healers = new int[] {  2,  5,  2,  5 } ;
+            Min_Healers = new int[] {  2,  5,  3,  6 } ;
             // Resistance
             // Attacks
             int[] temps, temps2;
