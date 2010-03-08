@@ -289,6 +289,11 @@ namespace Rawr {
             {   // Idol of the Flourishing Life
                 stats.NourishSpellpower += int.Parse(match.Groups["amount"].Value);
             }
+            else if ((match = new Regex(@"Increases the periodic healing of Rejuvenation by (?<amount>\d+)").Match(line)).Success)
+            {
+                // Idol of Pure Thoughts
+                stats.RejuvenationHealBonus += int.Parse(match.Groups["amount"].Value);
+            }
             #endregion
             #region Added by Druid: Moonkin
             else if ((match = new Regex(@"The periodic damage from your Insect Swarm and Moonfire spells grants (?<amount>\d\d*) critical strike rating for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times.").Match(line)).Success)
@@ -591,7 +596,16 @@ namespace Rawr {
             #region Added by Rogue
             #endregion
             #endregion
-
+            #region Professions
+            else if (line.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
+            {
+                // Alchemist's Stone
+                line = line.Substring("Increases the effect that healing and mana potions have on the wearer by ".Length);
+                line = line.Substring(0, line.IndexOf('%'));
+                stats.BonusManaPotion += int.Parse(line) / 100f;
+                stats.HealthRestore += int.Parse(line) / 100f;
+            }
+            #endregion
             #region General
             #region Armor Penetration Rating
             else if ((match = new Regex(@"Chance on melee (and|or) ranged critical strike to increase your armor penetration rating by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
@@ -853,23 +867,33 @@ namespace Rawr {
                     0f, 45f, 0.15f));
             }
             #endregion
-            #region Specialty Stat Procs
-            else if ((match = new Regex(@"When you heal or deal damage you have a chance to gain Greatness").Match(line)).Success)
-            {   // Darkmoon Card: Greatness
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+            #region Spirit
+            else if ((match = new Regex(@"Each time you cast a spell you gain (?<amount>\d\d*) Spirit for the next (?<dur>\d\d*) sec, stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
+            {   // Majestic Dragon Figurine
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { Spirit = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if (line.StartsWith("Your harmful spells have a chance to cause you to summon a Val'kyr to fight by your side for 30 sec"))
-            {   // Nibelung
-                // source http://elitistjerks.com/f75/t37825-rawr_mage/p42/#post1517923
-                // 5% crit rate, 1.5 crit multiplier, not affected by talents, affected only by target debuffs
-                float damage = (id == 50648) ? 30000 : 27008; // enter value for heroic when it becomes known
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
-            }
+            #endregion
+            #region Armor
             else if ((match = new Regex(@"Each time a melee attack strikes you, you have a chance to gain (?<amount>\d\d*) armor for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // The Black Heart
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken,
                     new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 45f, 0.25f));
+            }
+            #endregion
+            #region Specialty Stat Procs
+            else if ((match = new Regex(@"When you heal or deal damage you have a chance to gain Greatness").Match(line)).Success)
+            {   // Darkmoon Card: Greatness
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageOrHealingDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
+            }
+            else if ((match = new Regex(@"Your harmful spells have a chance to cause you to summon a Val'kyr to fight by your side for 30 sec").Match(line)).Success)
+            {   // Nibelung
+                // source http://elitistjerks.com/f75/t37825-rawr_mage/p42/#post1517923
+                // 5% crit rate, 1.5 crit multiplier, not affected by talents, affected only by target debuffs
+                float damage = (id == 50648) ? 30000 : 27008; // enter value for heroic when it becomes known
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
             }
             #endregion
             #region Misc
@@ -881,9 +905,6 @@ namespace Rawr {
             {   // Mechanized Snow Goggles of the...
                 stats.FrostResistance = 20;
             }
-            #endregion
-            #endregion
-
             else if ((match = Regex.Match(line, @"You gain (?:a|an) (?<buffName>[\w\s]+) each time you cause a (?<trigger>non-periodic|damaging)+ spell critical strike\.(?:\s|nbsp;)+When you reach (?<stackSize>\d+) [\w\s]+, they will release, firing (?<projectile>[\w\s]+) for (?<mindmg>\d+) to (?<maxdmg>\d+) damage\.(?:\s|nbsp;)+[\w\s]+ cannot be gained more often than once every (?<icd>\d+(?:\.\d+)?) sec")).Success)
             {
                 // Capacitor like procs
@@ -905,38 +926,9 @@ namespace Rawr {
                     projectileStats.FireDamage = avgdmgperstack;
                 stats.AddSpecialEffect(new SpecialEffect(trigger, projectileStats, 0f, icd));
             }
-            else if (line.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
-            {
-                line = line.Substring("Increases the effect that healing and mana potions have on the wearer by ".Length);
-                line = line.Substring(0, line.IndexOf('%'));
-                stats.BonusManaPotion += int.Parse(line) / 100f;
-                // TODO health potion effect
-            }
-            else if (line.StartsWith("Increases the periodic healing of Rejuvenation by "))
-            {
-                // Idol of Pure Thoughts
-                line = line.Substring("Increases the periodic healing of Rejuvenation by ".Length);
-                line = line.Replace(".", "");
-                stats.RejuvenationHealBonus += (float)int.Parse(line);
-            }
-            else if (line.StartsWith("Increases the amount healed by Healing Touch by "))
-            {
-                // Idol of Health
-                line = line.Substring("Increases the amount healed by Healing Touch by ".Length);
-                line = line.Replace(".", "");
-                stats.HealingTouchFinalHealBonus += (float)int.Parse(line);
-            }
-            else if (line.StartsWith("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for "))
-            { //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.
-                line = line.Substring("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for ".Length);
-                line = line.Replace(" sec", "");
-                //stats.BangleProc += (float)int.Parse(line);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellCombatManaRegeneration = 0.1f }, 15.0f, 45.0f));
-            }
-            else if (line.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec"))
-            {
-                // Darkmoon Card: Blue Dragon
-            }
+            #endregion
+            #endregion
+
             else if (line.StartsWith("Increases your pet's critical strike chance by "))
             {
                 string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
@@ -960,11 +952,6 @@ namespace Rawr {
                 stats.ManacostReduceWithin15OnHealingCast += 800; 
                 // And that is how Tree does it:
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HealingOmenProc = 800 }, 0, 0, 0.02f));
-            }
-            else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec, stacking up to 10 times"))
-            {
-                // Majestic Dragon Figurine
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 18.0f }, 10f, 0f, 1.0f, 10));
             }
             else if ((match = Regex.Match(line, @"Reduces the base mana cost of your spells by (?<amount>\d+).")).Success)
             {
@@ -997,7 +984,6 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Steals (?<amount1>\d\d*) to (?<amount2>\d\d*) life from target enemy.*").Match(line)).Success)
             {
-
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
                 {
                     ShadowDamage = (int.Parse(match.Groups["amount1"].Value) + int.Parse(match.Groups["amount2"].Value)) / 2f,

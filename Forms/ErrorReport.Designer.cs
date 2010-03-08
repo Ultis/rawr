@@ -193,6 +193,7 @@
             this.Controls.Add(this.CloseButton);
             this.MinimumSize = new System.Drawing.Size(382, 303);
             this.Name = "ErrorReport";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Error Report";
             this.Load += new System.EventHandler(this.ErrorReport_Load);

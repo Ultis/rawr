@@ -647,6 +647,7 @@ These numbers to do not include racial bonuses.",
                 BonusRageOnCrit = stats.BonusRageOnCrit,
                 HealthRestore = stats.HealthRestore,
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
+                BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier, // not realy rel but want it if it's available on something else
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (RelevantTriggers.Contains(effect.Trigger) && (HasRelevantStats(effect.Stats) || HasSurvivabilityStats(effect.Stats)))

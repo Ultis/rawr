@@ -4926,8 +4926,7 @@ namespace Rawr
                 Name = "Luck of the Draw",
                 Group = "Temporary Buffs",
                 Source = "Dungeon Finder Groups",
-                Stats =
-                {
+                Stats = {
                     BonusHealthMultiplier = .05f,
                     BonusDamageMultiplier = .05f,
                     BonusHealingDoneMultiplier = .05f,
