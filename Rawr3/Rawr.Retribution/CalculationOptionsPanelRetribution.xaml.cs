@@ -49,8 +49,9 @@ namespace Rawr.Retribution
             isLoading = true;
             for (int i = 0; i < 6; i++)
             {
-                RotationCheckBox(i).IsChecked = CalcOpts.Selected[i];
-                RotationLabel(i).Text = RotationParameters.AbilityString(CalcOpts.Order[i]);
+                // FIX
+                //RotationCheckBox(i).IsChecked = CalcOpts.Selected[i];
+                //RotationLabel(i).Text = RotationParameters.AbilityString(CalcOpts.Order[i]);
             }
             isLoading = false;
         }
@@ -104,7 +105,8 @@ namespace Rawr.Retribution
             if (!isLoading)
             {
                 int abilityIndex = int.Parse(((StackPanel)((CheckBox)sender).Parent).Tag.ToString());
-                CalcOpts.Selected[abilityIndex] = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+                // FIX
+                //CalcOpts.Selected[abilityIndex] = ((CheckBox)sender).IsChecked.GetValueOrDefault();
                 UpdateRotation();
                 Character.OnCalculationsInvalidated();
             }
@@ -115,13 +117,14 @@ namespace Rawr.Retribution
             int abilityIndex = int.Parse(((StackPanel)RotationList.SelectedItem).Tag.ToString());
             if (abilityIndex > 0)
             {
-                Ability temp = CalcOpts.Order[abilityIndex];
-                CalcOpts.Order[abilityIndex] = CalcOpts.Order[abilityIndex - 1];
-                CalcOpts.Order[abilityIndex - 1] = temp;
+                // FIX
+                //Ability temp = CalcOpts.Order[abilityIndex];
+                //CalcOpts.Order[abilityIndex] = CalcOpts.Order[abilityIndex - 1];
+                //CalcOpts.Order[abilityIndex - 1] = temp;
 
-                bool tempSel = CalcOpts.Selected[abilityIndex];
-                CalcOpts.Selected[abilityIndex] = CalcOpts.Selected[abilityIndex - 1];
-                CalcOpts.Selected[abilityIndex - 1] = tempSel;
+                //bool tempSel = CalcOpts.Selected[abilityIndex];
+                //CalcOpts.Selected[abilityIndex] = CalcOpts.Selected[abilityIndex - 1];
+                //CalcOpts.Selected[abilityIndex - 1] = tempSel;
 
                 RotationList.SelectedIndex = abilityIndex - 1;
                 UpdateRotation();
@@ -134,13 +137,14 @@ namespace Rawr.Retribution
             int abilityIndex = int.Parse(((StackPanel)RotationList.SelectedItem).Tag.ToString());
             if (abilityIndex < 5)
             {
-                Ability temp = CalcOpts.Order[abilityIndex];
-                CalcOpts.Order[abilityIndex] = CalcOpts.Order[abilityIndex + 1];
-                CalcOpts.Order[abilityIndex + 1] = temp;
+                // FIX
+                //Ability temp = CalcOpts.Order[abilityIndex];
+                //CalcOpts.Order[abilityIndex] = CalcOpts.Order[abilityIndex + 1];
+                //CalcOpts.Order[abilityIndex + 1] = temp;
 
-                bool tempSel = CalcOpts.Selected[abilityIndex];
-                CalcOpts.Selected[abilityIndex] = CalcOpts.Selected[abilityIndex + 1];
-                CalcOpts.Selected[abilityIndex + 1] = tempSel;
+                //bool tempSel = CalcOpts.Selected[abilityIndex];
+                //CalcOpts.Selected[abilityIndex] = CalcOpts.Selected[abilityIndex + 1];
+                //CalcOpts.Selected[abilityIndex + 1] = tempSel;
 
                 RotationList.SelectedIndex = abilityIndex + 1;
                 UpdateRotation();

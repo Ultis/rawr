@@ -80,6 +80,9 @@
     <Compile Include="..\..\Rawr.Base\Algorithms\ArrayPool.cs">
       <Link>Algorithms\ArrayPool.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\Algorithms\CalculationCache.cs">
+      <Link>Algorithms\CalculationCache.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Algorithms\LU.cs">
       <Link>Algorithms\LU.cs</Link>
     </Compile>

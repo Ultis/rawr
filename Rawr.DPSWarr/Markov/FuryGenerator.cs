@@ -503,10 +503,14 @@ namespace Rawr.DPSWarr.Markov
         public void StateSpaceGeneratorFuryTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, bool showOutput)
         {
             FuryGenerator gen = new FuryGenerator(c, s, cf, wa, co);
+#if !SILVERLIGHT
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
             List<State<Skills.Ability>> stateSpace = gen.GenerateStateSpace();
+#if !SILVERLIGHT
             sw.Stop();
             Console.WriteLine("GenStateSpace: " + sw.ElapsedTicks);
+#endif
             if (showOutput)
             {
                 try
@@ -519,10 +523,14 @@ namespace Rawr.DPSWarr.Markov
                         double averageDamage = 0;
                         double rageNeededNoHS = 0f;
 
+#if !SILVERLIGHT
                         sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
                         MarkovProcess<Skills.Ability> mp2 = new MarkovProcess<Rawr.DPSWarr.Skills.Ability>(stateSpace);
+#if !SILVERLIGHT
                         sw.Stop();
                         Console.WriteLine("MarkovProcess._ctor: " + sw.ElapsedTicks);
+#endif
                         foreach (KeyValuePair<Skills.Ability, double> kvp in mp2.AbilityWeight)
                         {
                             rageNeededNoHS += kvp.Key.RageCost * (kvp.Value * co.Duration / mp2.AverageTransitionDuration);

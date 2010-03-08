@@ -59,6 +59,9 @@
     <Compile Include="..\..\Rawr.Base\Algorithms\ArrayPool.cs">
       <Link>Algorithms\ArrayPool.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\Algorithms\CalculationCache.cs">
+      <Link>Algorithms\CalculationCache.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Algorithms\LU.cs">
       <Link>Algorithms\LU.cs</Link>
     </Compile>
@@ -112,6 +115,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\Enums.cs">
       <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\ICharacterCalculationOptions.cs">
+      <Link>ICharacterCalculationOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Item.cs">
       <Link>Item.cs</Link>
@@ -169,6 +175,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\StatusMessaging.cs">
       <Link>StatusMessaging.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Utilities.cs">
+      <Link>Utilities.cs</Link>
     </Compile>
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />

@@ -63,98 +63,11 @@
     <Compile Include="..\..\Rawr.Rogue\CharacterCalculationsRogue.cs">
       <Link>CharacterCalculationsRogue.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ClassAbilities\Glyphs.cs">
-      <Link>ClassAbilities\Glyphs.cs</Link>
+    <Compile Include="..\..\Rawr.Rogue\RogueAbilityStats.cs">
+      <Link>RogueAbilityStats.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ClassAbilities\Talents.cs">
-      <Link>ClassAbilities\Talents.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ClassAbilities\TalentsAndGlyphs.cs">
-      <Link>ClassAbilities\TalentsAndGlyphs.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\CombatFactors.cs">
-      <Link>CombatFactors.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\Backstab.cs">
-      <Link>ComboPointGenerators\Backstab.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\ComboPointGenerator.cs">
-      <Link>ComboPointGenerators\ComboPointGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\ComboPointGeneratorList.cs">
-      <Link>ComboPointGenerators\ComboPointGeneratorList.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\Hemo.cs">
-      <Link>ComboPointGenerators\Hemo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\HonorAmongThieves.cs">
-      <Link>ComboPointGenerators\HonorAmongThieves.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\Mutilate.cs">
-      <Link>ComboPointGenerators\Mutilate.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComboPointGenerators\SinisterStrike.cs">
-      <Link>ComboPointGenerators\SinisterStrike.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\ComparisonCalculationsRogue.cs">
-      <Link>ComparisonCalculationsRogue.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Cycle.cs">
-      <Link>Cycle.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\CycleTime.cs">
-      <Link>CycleTime.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\DisplayValue.cs">
-      <Link>DisplayValue.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Envenom.cs">
-      <Link>FinishingMoves\Envenom.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Evis.cs">
-      <Link>FinishingMoves\Evis.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\FinisherBase.cs">
-      <Link>FinishingMoves\FinisherBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Finishers.cs">
-      <Link>FinishingMoves\Finishers.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\NoFinisher.cs">
-      <Link>FinishingMoves\NoFinisher.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\Rupture.cs">
-      <Link>FinishingMoves\Rupture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\FinishingMoves\SnD.cs">
-      <Link>FinishingMoves\SnD.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Poisons\DeadlyPoison.cs">
-      <Link>Poisons\DeadlyPoison.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Poisons\InstantPoison.cs">
-      <Link>Poisons\InstantPoison.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Poisons\NoPoison.cs">
-      <Link>Poisons\NoPoison.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Poisons\PoisonBase.cs">
-      <Link>Poisons\PoisonBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Poisons\PoisonList.cs">
-      <Link>Poisons\PoisonList.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\Poisons\WoundPoison.cs">
-      <Link>Poisons\WoundPoison.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\SpecialAbilities\Feint.cs">
-      <Link>SpecialAbilities\Feint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\SpecialAbilities\SwordSpec.cs">
-      <Link>SpecialAbilities\SwordSpec.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\WhiteAttacks.cs">
-      <Link>WhiteAttacks.cs</Link>
+    <Compile Include="..\..\Rawr.Rogue\RogueRotationCalculator.cs">
+      <Link>RogueRotationCalculator.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelRogue.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRogue.WPF.xaml</DependentUpon>
@@ -175,9 +88,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BasicStats\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

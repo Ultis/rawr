@@ -75,6 +75,12 @@
     <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
       <Link>ComparisonCalculationsDPSWarr.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Markov\BloodSurgeMatrix.cs">
+      <Link>Markov\BloodSurgeMatrix.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Markov\FuryGenerator.cs">
+      <Link>Markov\FuryGenerator.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Markov\StateSpaceArms.cs">
       <Link>Markov\StateSpaceArms.cs</Link>
     </Compile>

@@ -1,38 +1,54 @@
 ﻿using System;
-using System.Windows;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
+using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Controls.Primitives;
 
 namespace Rawr.UI
 {
-	public partial class ItemFilterPopup : UserControl
-	{
-		public ItemFilterPopup()
-		{
-			// Required to initialize variables
-			InitializeComponent();
-            FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
+    [TemplatePart(Name = "PART_Toggle", Type = typeof(ToggleButton))]
+    [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
+    [TemplatePart(Name = "PART_PopupControl", Type = typeof(Control))]
+    public class PopupControl : Control
+    {
+        static PopupControl()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(PopupControl), new FrameworkPropertyMetadata(typeof(PopupControl)));
         }
 
-        private void Close()
+        private ToggleButton toggle;
+        private Popup popup;
+        private Control popupControl;
+
+        public override void OnApplyTemplate()
         {
-            PopupFilter.IsOpen = false;
+            toggle = Template.FindName("PART_Toggle", this) as ToggleButton;
+            popup = Template.FindName("PART_Popup", this) as Popup;
+
+#if !SILVERLIGHT
+            MouseDown += PopupControl_MouseDown;
+            LostMouseCapture += PopupControl_LostMouseCapture;
+
+            if (popup != null)
+            {
+                popup.Opened += Popup_Opened;
+                popup.Closed += Popup_Closed;
+            }
+#endif
         }
 
-        private void Background_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public virtual void Close()
         {
-            Close();
+            popup.IsOpen = false;
         }
 
         #region WPF Popup Handling
 #if !SILVERLIGHT
-        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void PopupControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (Mouse.Captured == this && e.OriginalSource == this)
             {
@@ -101,11 +117,11 @@ namespace Rawr.UI
             return false;
         }
 
-        private void UserControl_LostMouseCapture(object sender, MouseEventArgs e)
+        private void PopupControl_LostMouseCapture(object sender, MouseEventArgs e)
         {
             if (Mouse.Captured != this)
             {
-                if (e.OriginalSource == Toggle && Mouse.Captured == null)
+                if (e.OriginalSource == toggle && Mouse.Captured == null)
                 {
                     // reclicking on button, if you close the click will cause toggle => open
                     return;
@@ -123,7 +139,7 @@ namespace Rawr.UI
                     if (IsDescendant(this, e.OriginalSource as DependencyObject))
                     {
                         // Take capture if one of our children gave up capture
-                        if (PopupFilter.IsOpen && Mouse.Captured == null)
+                        if (popup.IsOpen && Mouse.Captured == null)
                         {
                             Mouse.Capture(this, CaptureMode.SubTree);
                             e.Handled = true;
@@ -137,12 +153,12 @@ namespace Rawr.UI
             }
         }
 
-        private void PopupFilter_Opened(object sender, EventArgs e)
+        private void Popup_Opened(object sender, EventArgs e)
         {
             Mouse.Capture(this, CaptureMode.SubTree);
         }
 
-        private void PopupFilter_Closed(object sender, EventArgs e)
+        private void Popup_Closed(object sender, EventArgs e)
         {
             if (Mouse.Captured == this)
             {
@@ -151,5 +167,5 @@ namespace Rawr.UI
         }
 #endif
         #endregion
-	}
+    }
 }

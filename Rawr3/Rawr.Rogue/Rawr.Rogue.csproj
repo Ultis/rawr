@@ -60,12 +60,16 @@
     <Compile Include="..\..\Rawr.Rogue\CharacterCalculationsRogue.cs">
       <Link>CharacterCalculationsRogue.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Rogue\RogueAbilityStats.cs">
+      <Link>RogueAbilityStats.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Rogue\RogueRotationCalculator.cs">
+      <Link>RogueRotationCalculator.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsPanelRogue.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRogue.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RogueAbilityStats.cs" />
-    <Compile Include="RogueRotationCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

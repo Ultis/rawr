@@ -72,11 +72,14 @@
     <Compile Include="..\..\Rawr.RestoSham\CharacterCalculationsRestoSham.cs">
       <Link>CharacterCalculationsRestoSham.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.RestoSham\Charting.cs">
+      <Link>Charting.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.RestoSham\ComparisonCalculationRestoSham.cs">
       <Link>ComparisonCalculationRestoSham.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.RestoSham\RelevantStats.cs">
-      <Link>RelevantStats.cs</Link>
+    <Compile Include="..\..\Rawr.RestoSham\RestoSham.Base.cs">
+      <Link>RestoSham.Base.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelRestoSham.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRestoSham.WPF.xaml</DependentUpon>
