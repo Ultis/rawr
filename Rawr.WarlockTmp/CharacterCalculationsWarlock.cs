@@ -291,15 +291,14 @@ namespace Rawr.WarlockTmp {
                     continue;
                 }
                 if (spell.IsSpammable()) {
-                    lifeTap.AddCastsForRegen(
+                    float added = lifeTap.AddCastsForRegen(
                         timeRemaining, manaRemaining, haste, spell);
-                    if (lifeTap.NumCasts > 0) {
+                    if (added > 0) {
                         if (!CastSpells.ContainsKey("Life Tap")) {
                             CastSpells.Add("Life Tap", lifeTap);
                         }
-                        manaRemaining -= spell.ManaCost * spell.NumCasts;
                         timeRemaining
-                            -= lifeTap.NumCasts * (lifeTap.GetCastTime() + lag);
+                            -= added * (lifeTap.GetCastTime() + lag);
                     }
                 }
                 spell.SetCastingStats(timeRemaining);

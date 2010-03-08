@@ -478,7 +478,8 @@ namespace Rawr.WarlockTmp {
                     / 6f, // tick coefficient
                 mommy.BaseTickDamageMultiplier
                     + mommy.Talents.ImprovedCorruption * .02f
-                    + mommy.Talents.Contagion * .01f, // tick multiplier
+                    + mommy.Talents.Contagion * .01f
+                    + mommy.Talents.SiphonLife * .05f, // tick multiplier
                 (mommy.BaseCritChance + mommy.Talents.Malediction * .03f)
                     * mommy.Talents.Pandemic, // crit chance
                 mommy.Stats.BonusCritMultiplier
@@ -508,15 +509,17 @@ namespace Rawr.WarlockTmp {
                 0f, // high direct damage
                 0f, // direct coefficient
                 0f, // direct multiplier
-                1740f / 8f, // damage per tick
-                8f, // num ticks
-                1.2f / 8f, // tick coefficient
+                1740f / 12f
+                    * (mommy.Talents.GlyphCoA
+                        ? 8f / 7f : 1f), // damage per tick
+                mommy.Talents.GlyphCoA ? 14f : 12f, // num ticks
+                1.2f / 12f, // tick coefficient
                 mommy.BaseTickDamageMultiplier
                     + mommy.Talents.ImprovedCurseOfAgony * .05f
                     + mommy.Talents.Contagion * .01f, // tick multiplier
                 0f, // crit chance
                 0f, // crit multiplier
-                24f) { // "cooldown"
+                mommy.Talents.GlyphCoA ? 28f : 24f) { // "cooldown"
 
         }
     }
@@ -549,7 +552,9 @@ namespace Rawr.WarlockTmp {
                 0f, // bonus crit multiplier
                 37f) { // cooldown
 
-            ManaCost = -1490f - mommy.Stats.Spirit * 3f;
+            ManaCost
+                = (-1490f - mommy.Stats.Spirit * 3f)
+                    * (1f + mommy.Talents.ImprovedLifeTap * .1f);
         }
 
         public override bool IsCastable() {
@@ -557,7 +562,7 @@ namespace Rawr.WarlockTmp {
             return Mommy.Talents.GlyphLifeTap;
         }
 
-        public void AddCastsForRegen(
+        public float AddCastsForRegen(
             float timeRemaining,
             float manaRemaining,
             float baseHasteDivisor,
@@ -576,7 +581,9 @@ namespace Rawr.WarlockTmp {
             float d = spammedSpell.GetCastTime() + latency;
             float e = GetCastTime() + latency;
             float f = timeRemaining;
-            NumCasts += Math.Max(0f, (c * d - a * f) / (b * d - a * e));
+            float toAdd = Math.Max(0f, (c * d - a * f) / (b * d - a * e));
+            NumCasts += toAdd;
+            return toAdd;
         }
 
         public float GetAvgBonusSpellPower() {
@@ -715,6 +722,37 @@ namespace Rawr.WarlockTmp {
                 = procChance * corruption.NumCasts * corruption.NumTicks;
             Cooldown = Mommy.Options.Duration / numProcs;
             base.SetCastingStats(timeRemaining);
+        }
+    }
+
+    public class UnstableAffliction : Spell {
+
+        public UnstableAffliction(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow,
+                SpellTree.Affliction,
+                .15f, // percent base mana
+                1f, // cost multiplier
+                mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
+                0f, // direct low damage
+                0f, // direct high damage
+                0f, // direct coefficient
+                0f, // direct multiplier
+                1150f / 5f, // tick damage
+                5f, // num ticks
+                (1f + mommy.Talents.EverlastingAffliction * .01f)
+                    / 5f, // tick coefficient
+                mommy.BaseTickDamageMultiplier
+                    + mommy.Talents.SiphonLife * .05f, // tick multiplier
+                (mommy.BaseCritChance + mommy.Talents.Malediction * .03f)
+                    * mommy.Talents.Pandemic, // crit chance
+                0f, // crit multiplier
+                15f) { } // "cooldown"
+
+        public override bool IsCastable() {
+
+            return Mommy.Talents.UnstableAffliction > 0;
         }
     }
 }

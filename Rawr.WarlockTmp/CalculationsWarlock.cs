@@ -90,6 +90,7 @@ namespace Rawr.WarlockTmp {
                         "Affliction:Corruption",
                         "Affliction:Curse Of Agony",
                         "Affliction:Life Tap",
+                        "Affliction:Unstable Affliction",
                         "Demonology:Metamorphosis",
                         "Destruction:Shadow Bolt",
                         "Destruction:Shadow Bolt (Instant)" };
@@ -748,7 +749,9 @@ namespace Rawr.WarlockTmp {
                         "Glyph of Metamorphosis",
                         "Glyph of Quick Decay",
                         "Glyph of Corruption",
-                        "Glyph of Life Tap" };
+                        "Glyph of Life Tap",
+                        "Glyph of Curse of Agony",
+                        "Glyph of Unstable Affliction" };
             }
             return _relevantGlyphs;
         }
