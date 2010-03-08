@@ -17,6 +17,7 @@ namespace Rawr.UI
 		{
 			// Required to initialize variables
 			InitializeComponent();
+            PopupUtilities.RegisterPopup(this, PopupFilter, Toggle, Close);
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
         }
 
@@ -29,127 +30,5 @@ namespace Rawr.UI
         {
             Close();
         }
-
-        #region WPF Popup Handling
-#if !SILVERLIGHT
-        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (Mouse.Captured == this && e.OriginalSource == this)
-            {
-                Close();
-            }
-        }
-
-        private bool IsDescendant(DependencyObject reference, DependencyObject node)
-        {
-            DependencyObject o = node;
-            while (o != null)
-            {
-                if (o == reference)
-                {
-                    return true;
-                }
-                Popup popup = o as Popup;
-                if (popup != null)
-                {
-                    o = popup.Parent;
-                    if (o == null)
-                    {
-                        o = popup.PlacementTarget;
-                    }
-                }
-                else
-                {
-                    //handle content elements separately
-                    ContentElement contentElement = o as ContentElement;
-                    if (contentElement != null)
-                    {
-                        DependencyObject parent = ContentOperations.GetParent(contentElement);
-                        if (parent != null)
-                        {
-                            o = parent;
-                        }
-                        FrameworkContentElement fce = contentElement as FrameworkContentElement;
-                        if (fce != null)
-                        {
-                            o = fce.Parent;
-                        }
-                        else
-                        {
-                            o = null;
-                        }
-                    }
-                    else
-                    {
-                        //also try searching for parent in framework elements (such as DockPanel, etc)
-                        FrameworkElement frameworkElement = o as FrameworkElement;
-                        if (frameworkElement != null)
-                        {
-                            DependencyObject parent = frameworkElement.Parent;
-                            if (parent != null)
-                            {
-                                o = parent;
-                                continue;
-                            }
-                        }
-
-                        //if it's not a ContentElement/FrameworkElement, rely on VisualTreeHelper
-                        o = VisualTreeHelper.GetParent(o);
-                    }
-                }
-            }
-            return false;
-        }
-
-        private void UserControl_LostMouseCapture(object sender, MouseEventArgs e)
-        {
-            if (Mouse.Captured != this)
-            {
-                if (e.OriginalSource == Toggle && Mouse.Captured == null)
-                {
-                    // reclicking on button, if you close the click will cause toggle => open
-                    return;
-                }
-                if (e.OriginalSource == this)
-                {
-                    // If capture is null or it's not below the combobox, close. 
-                    if (Mouse.Captured == null || !IsDescendant(this, Mouse.Captured as DependencyObject))
-                    {
-                        Close();
-                    }
-                }
-                else
-                {
-                    if (IsDescendant(this, e.OriginalSource as DependencyObject))
-                    {
-                        // Take capture if one of our children gave up capture
-                        if (PopupFilter.IsOpen && Mouse.Captured == null)
-                        {
-                            Mouse.Capture(this, CaptureMode.SubTree);
-                            e.Handled = true;
-                        }
-                    }
-                    else
-                    {
-                        Close();
-                    }
-                }
-            }
-        }
-
-        private void PopupFilter_Opened(object sender, EventArgs e)
-        {
-            Mouse.Capture(this, CaptureMode.SubTree);
-        }
-
-        private void PopupFilter_Closed(object sender, EventArgs e)
-        {
-            if (Mouse.Captured == this)
-            {
-                Mouse.Capture(null);
-            }
-        }
-#endif
-        #endregion
 	}
 }

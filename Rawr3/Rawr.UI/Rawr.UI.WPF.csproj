@@ -212,7 +212,7 @@
     <Compile Include="Optimizer\UpgradesComparison.xaml.cs">
       <DependentUpon>UpgradesComparison.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopupControl.cs" />
+    <Compile Include="PopupUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

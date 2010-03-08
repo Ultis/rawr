@@ -187,6 +187,7 @@
     <Compile Include="Optimizer\UpgradesComparison.xaml.cs">
       <DependentUpon>UpgradesComparison.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PopupUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LoadScreen.xaml.cs">
       <DependentUpon>LoadScreen.xaml</DependentUpon>
