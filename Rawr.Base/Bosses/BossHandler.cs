@@ -133,7 +133,7 @@ namespace Rawr {
             Name = "Generic";
             Content = TierLevels.T7_0;
             Instance = "None";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Comment = "No comments have been written for this Boss.";
             BerserkTimer = 8 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
             SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
@@ -199,9 +199,9 @@ namespace Rawr {
             "10 Man (H)",
             "25 Man (H)",
         };
-        public enum Versions   : int { V_10 = 0, V_25, V_10H, V_25H, }
+        public enum Versions   : int { V_10N = 0, V_25N, V_10H, V_25H, }
         public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9 }
-        public readonly float[] StandardMeleePerHit = new float[] {
+        public static readonly float[] StandardMeleePerHit = new float[] {
               5000f*2f, //T7_0,
              10000f*2f, //T7_5,
              20000f*2f, //T8_0,

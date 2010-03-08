@@ -17,7 +17,7 @@ namespace Rawr.Bosses {
             Name = "Anub'Rekhan";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2230000f;
             // ==== Fight Requirements ====
             Max_Players = 10;
@@ -87,7 +87,7 @@ namespace Rawr.Bosses {
             Name = "Grand Widow Faerlina";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2231200f;
             // Fight Requirements
             Max_Players = 10;
@@ -155,7 +155,7 @@ namespace Rawr.Bosses {
             Name = "Maexxna";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2510000f;
             // Fight Requirements
             Max_Players = 10;
@@ -258,7 +258,7 @@ namespace Rawr.Bosses {
             Name = "Noth the Plaguebringer";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2500000f;
             BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
             // Fight Requirements
@@ -291,7 +291,7 @@ namespace Rawr.Bosses {
             Name = "Heigan the Unclean";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 3067900f;
             // Fight Requirements
             Max_Players = 10;
@@ -339,7 +339,7 @@ namespace Rawr.Bosses {
             Name = "Loatheb";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 6693600f;
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Fight Requirements
@@ -396,7 +396,7 @@ namespace Rawr.Bosses {
             Name = "Instructor Razuvious";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 3349000f;
             // Fight Requirements
             Max_Players = 10;
@@ -443,7 +443,7 @@ namespace Rawr.Bosses {
             Name = "Gothik the Harvester";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 836700f;
             BerserkTimer = BerserkTimer - (4 * 60 + 34);
             // Fight Requirements
@@ -475,7 +475,7 @@ namespace Rawr.Bosses {
             Name = "Four Horsemen";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 781000f * 4f;
             // Fight Requirements
             Max_Players = 10;
@@ -547,7 +547,7 @@ namespace Rawr.Bosses {
             Name = "Patchwerk";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 6 * 60;
             Health = 4322950;
             // Fight Requirements
@@ -586,7 +586,7 @@ namespace Rawr.Bosses {
             Name = "Grobbulus";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2928000f;
             BerserkTimer = 12 * 60;
             // Resistance
@@ -631,7 +631,7 @@ namespace Rawr.Bosses {
             Name = "Gluth";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2789000;
             BerserkTimer = 8 * 60;
             // Fight Requirements
@@ -665,7 +665,7 @@ namespace Rawr.Bosses {
             Name = "Thaddius";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 3850000f + 838300f; // one player only deals with one of the add's total health + thadd's health
             BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
             // Fight Requirements
@@ -713,7 +713,7 @@ namespace Rawr.Bosses {
             Name = "Sapphiron";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 4250000f;
             BerserkTimer = 15 * 60;
             // Fight Requirements
@@ -769,7 +769,7 @@ namespace Rawr.Bosses {
             Name = "Kel'Thuzad";
             Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2230000f;
             BerserkTimer = 19 * 60;
             SpeedKillTimer = 6 * 60;
@@ -831,7 +831,7 @@ namespace Rawr.Bosses {
             Name = "Shadron";
             Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 976150f;
             // Fight Requirements
             Max_Players = 10;
@@ -894,7 +894,7 @@ namespace Rawr.Bosses {
             Name = "Tenebron";
             Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 976150f;
             // Fight Requirements
             Max_Players = 10;
@@ -963,7 +963,7 @@ namespace Rawr.Bosses {
             Name = "Vesperon";
             Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 976150f;
             // Fight Requirements
             Max_Players = 10;
@@ -1018,7 +1018,7 @@ namespace Rawr.Bosses {
             Name = "Sartharion";
             Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2510100f;
             // Fight Requirements
             Max_Players = 10;
@@ -1064,7 +1064,7 @@ namespace Rawr.Bosses {
             Name = "Archavon The Stone Watcher";
             Content = TierLevels.T7_0;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2300925f;
             BerserkTimer = 5 * 60;
             // Fight Requirements
@@ -1107,7 +1107,7 @@ namespace Rawr.Bosses {
             Name = "Malygos";
             Content = TierLevels.T7_0;
             Instance = "The Eye of Eternity";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2230000f;
             // Fight Requirements
             Max_Players = 10;
@@ -1149,7 +1149,7 @@ namespace Rawr.Bosses {
             Name = "Anub'Rekhan";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 6763325f;
             // ==== Fight Requirements ====
             Max_Players = 25;
@@ -1220,7 +1220,7 @@ namespace Rawr.Bosses {
             Name = "Grand Widow Faerlina";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 6763325;
             // Fight Requirements
             Max_Players = 25;
@@ -1277,7 +1277,7 @@ namespace Rawr.Bosses {
             Name = "Maexxna";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 7600000f;
             // Fight Requirements
             Max_Players = 25;
@@ -1380,7 +1380,7 @@ namespace Rawr.Bosses {
             Name = "Noth the Plaguebringer";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2500000f;
             BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
             // Fight Requirements
@@ -1413,7 +1413,7 @@ namespace Rawr.Bosses {
             Name = "Heigan the Unclean";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 9273425f;
             // Fight Requirements
             Max_Players = 25;
@@ -1458,7 +1458,7 @@ namespace Rawr.Bosses {
             Name = "Loatheb";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 20220250f;
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Fight Requirements
@@ -1516,7 +1516,7 @@ namespace Rawr.Bosses {
             Name = "Instructor Razuvious";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 10110125;
             // Fight Requirements
             Max_Players = 25;
@@ -1562,7 +1562,7 @@ namespace Rawr.Bosses {
             Name = "Gothik the Harvester";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2510100f;
             //BerserkTimer = (8 * 60) - (4 * 60 + 34);
             // Fight Requirements
@@ -1594,7 +1594,7 @@ namespace Rawr.Bosses {
             Name = "Four Horsemen";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2370650f * 4f;
             // Fight Requirements
             Max_Players = 25;
@@ -1662,7 +1662,7 @@ namespace Rawr.Bosses {
             Name = "Patchwerk";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 13038575;
             // Fight Requirements
             Max_Players = 25;
@@ -1700,7 +1700,7 @@ namespace Rawr.Bosses {
             Name = "Grobbulus";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 9552325;
             BerserkTimer = 12 * 60;
             // Fight Requirements
@@ -1749,7 +1749,7 @@ namespace Rawr.Bosses {
             Name = "Gluth";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 8436725;
             BerserkTimer = 8 * 60;
             // Fight Requirements
@@ -1783,7 +1783,7 @@ namespace Rawr.Bosses {
             Name = "Thaddius";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 3834875 + 30400100; // one player only deals with one of the add's total health + thadd's health
             BerserkTimer = 6 * 60; // Starts at beg. of Thadd, not begin of fight
             // Fight Requirements
@@ -1830,7 +1830,7 @@ namespace Rawr.Bosses {
             Name = "Sapphiron";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 4250000f;
             BerserkTimer = 15 * 60;
             // Fight Requirements
@@ -1887,7 +1887,7 @@ namespace Rawr.Bosses {
             Name = "Kel'Thuzad";
             Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2500000;
             BerserkTimer = 19 * 60;
             SpeedKillTimer = 6 * 60;
@@ -1949,7 +1949,7 @@ namespace Rawr.Bosses {
             Name = "Shadron";
             Content = TierLevels.T7_5;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2231200f;
             // Fight Requirements
             Max_Players = 25;
@@ -2008,7 +2008,7 @@ namespace Rawr.Bosses {
             // Basics
             Name = "Tenebron";
             Content = TierLevels.T7_5;
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Instance = "The Obsidian Sanctum";
             Health = 2231200;
             // Fight Requirements
@@ -2075,7 +2075,7 @@ namespace Rawr.Bosses {
             Name = "Vesperon";
             Content = TierLevels.T7_5;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2231200f;
             // Fight Requirements
             Max_Players = 25;
@@ -2130,7 +2130,7 @@ namespace Rawr.Bosses {
             Name = "Sartharion";
             Content = TierLevels.T7_5;
             Instance = "The Obsidian Sanctum";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 7669750f;
             // Fight Requirements
             Max_Players = 25;
@@ -2174,7 +2174,7 @@ namespace Rawr.Bosses {
             Name = "Archavon The Stone Watcher";
             Content = TierLevels.T7_5;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 9970675f;
             BerserkTimer = 5 * 60;
             // Fight Requirements
@@ -2214,7 +2214,7 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Content = TierLevels.T7_5;
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 2230000f;
             // Fight Requirements
             Max_Players = 25;
@@ -2254,7 +2254,7 @@ namespace Rawr.Bosses {
             Name = "Emalon the Storm Watcher";
             Content = TierLevels.T8_0;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 2789000f;
             BerserkTimer = 6 * 60;
             // Fight Requirements
@@ -2310,7 +2310,7 @@ namespace Rawr.Bosses {
             Name = "Ignis the Furnace Master";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 5578000f;
             // Fight Requirements
             Max_Players = 10;
@@ -2398,7 +2398,7 @@ namespace Rawr.Bosses {
             Name = "Razorscale";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 15 * 60;
             Health = 3555975f;
             // Fight Requirements
@@ -2447,7 +2447,7 @@ namespace Rawr.Bosses {
             Name = "XT-002 Deconstructor";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 10 * 60;
             Health = 5000008f;
             // Fight Requirements
@@ -2544,7 +2544,7 @@ namespace Rawr.Bosses {
             Name = "Assembly of Iron";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 15 * 60;
             Health = 2998175f;
             // Fight Requirements
@@ -2627,7 +2627,7 @@ namespace Rawr.Bosses {
             Name = "Kologarn";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 3625700f;
             // Fight Requirements
             Max_Players = 10;
@@ -2667,7 +2667,7 @@ namespace Rawr.Bosses {
             Name = "Auriaya";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 10 * 60;
             Health = 3137625f;
             // Fight Requirements
@@ -2711,7 +2711,7 @@ namespace Rawr.Bosses {
             Name = "Mimiron";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 15 * 60;
             Health = 1742400f*3f;
             // Fight Requirements
@@ -2763,7 +2763,7 @@ namespace Rawr.Bosses {
             Name = "Auriaya";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 10 * 60;
             Health = 1394500f;
             // Fight Requirements
@@ -2819,7 +2819,7 @@ namespace Rawr.Bosses {
             Name = "Thorim";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 5 * 60 * 2;
             Health = 1742400f;
             // Fight Requirements
@@ -2891,7 +2891,7 @@ namespace Rawr.Bosses {
             Name = "Hodir";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 8 * 60;
             Health = 8115990f;
             // Fight Requirements
@@ -2941,7 +2941,7 @@ namespace Rawr.Bosses {
             Name = "General Vezax";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 10 * 60;
             Health = 6275250f;
             // Fight Requirements
@@ -2981,7 +2981,7 @@ namespace Rawr.Bosses {
             Name = "Yogg-Saron";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 15 * 60;
             Health = 10999997f;
             // Fight Requirements
@@ -3034,7 +3034,7 @@ namespace Rawr.Bosses {
             Name = "Algalon the Observer";
             Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             BerserkTimer = 6 * 60;
             Health = 8367000f;
             // Fight Requirements
@@ -3076,7 +3076,7 @@ namespace Rawr.Bosses {
             Name = "Emalon the Storm Watcher";
             Content = TierLevels.T8_5;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 11156000f;
             BerserkTimer = 6 * 60;
             // Fight Requirements
@@ -3135,7 +3135,7 @@ namespace Rawr.Bosses {
             Name = "Auriaya";
             Content = TierLevels.T8_5;
             Instance = "Ulduar";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             BerserkTimer = 10 * 60;
             Health = 16734000f;
             // Fight Requirements
@@ -3181,7 +3181,7 @@ namespace Rawr.Bosses {
             Name = "Hodir";
             Content = TierLevels.T8_5;
             Instance = "Ulduar";
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             BerserkTimer = 8 * 60;
             Health = 32477904f;
             // Fight Requirements
@@ -3228,7 +3228,7 @@ namespace Rawr.Bosses {
             Name = "Koralon the Flame Watcher";
             Content = TierLevels.T9_0;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_10;
+            Version = Versions.V_10N;
             Health = 4183500f;
             // Resistance
             // Attacks
@@ -3259,7 +3259,7 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Content = TierLevels.T9_5;
-            Version = Versions.V_25;
+            Version = Versions.V_25N;
             Health = 4183500f;
             // Resistance
             // Attacks

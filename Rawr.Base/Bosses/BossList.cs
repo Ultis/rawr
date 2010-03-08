@@ -740,7 +740,7 @@ namespace Rawr {
             // Fight Requirements
             bool is25 = false;
             foreach (BossHandler boss in passedList) {
-                if (boss.Version == BossHandler.Versions.V_25 || boss.Version == BossHandler.Versions.V_25H) {
+                if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) {
                     is25 = true;
                     break;
                 }
