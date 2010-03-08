@@ -63,7 +63,7 @@
 		</Style>
 	</UserControl.Resources>
     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-        <ToggleButton HorizontalAlignment="Left" Margin="4,0,4,0" IsChecked="{Binding IsOpen, ElementName=PopupChartPicker, Mode=TwoWay}">
+        <ToggleButton x:Name="Toggle" HorizontalAlignment="Left" Margin="4,0,4,0" IsChecked="{Binding IsOpen, ElementName=PopupChartPicker, Mode=TwoWay}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="TextBlockChartButtonPrimary" Margin="3,0,3,0" Text="Gear"/>
                 <Path Fill="#000066" Margin="3,0,3,0" Height="7" Width="7" VerticalAlignment="Center" Data="M0,0 7,3.5 0,7 z"/>

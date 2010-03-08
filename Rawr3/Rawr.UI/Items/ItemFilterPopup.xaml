@@ -20,7 +20,7 @@
 	</UserControl.Resources>
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-        <ToggleButton HorizontalAlignment="Left" Margin="4,0,4,0" Width="56" IsChecked="{Binding IsOpen, ElementName=PopupFilter, Mode=TwoWay}">
+        <ToggleButton x:Name="Toggle"  HorizontalAlignment="Left" Margin="4,0,4,0" Width="56" IsChecked="{Binding IsOpen, ElementName=PopupFilter, Mode=TwoWay}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="3,0,3,0" Text="Filter"/>
                 <Path Fill="#000066" Margin="3,0,3,0" Height="4" Width="7" VerticalAlignment="Center" Data="M0,0 7,0 3.5,4 z"/>
