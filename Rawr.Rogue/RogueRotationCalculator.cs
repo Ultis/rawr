@@ -290,7 +290,6 @@ namespace Rawr.Rogue
                 float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * MainHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
-                dPCount = Math.Min(dPCount, dPCountTemp);
                 if (oHPoison == 1)
                     iPCount += dPCountTemp;
                 else if (oHPoison == 3)
@@ -315,7 +314,6 @@ namespace Rawr.Rogue
                 float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * OffHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
-                dPCount = Math.Min(dPCount, dPCountTemp);
                 if (mHPoison == 1)
                     iPCount += dPCountTemp;
                 else if (mHPoison == 3)
