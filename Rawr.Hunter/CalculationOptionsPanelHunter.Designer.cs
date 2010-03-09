@@ -193,6 +193,7 @@
             this.LB_Aspect = new System.Windows.Forms.Label();
             this.CB_Aspect = new System.Windows.Forms.ComboBox();
             this.GB_Misc = new System.Windows.Forms.GroupBox();
+            this.CK_SE_UseDur = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
             this.LB_SurvScale = new System.Windows.Forms.Label();
             this.CK_PTRMode = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -257,7 +258,6 @@
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
             this.BT_Calculate = new System.Windows.Forms.Button();
-            this.CK_SE_UseDur = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
@@ -2658,7 +2658,7 @@
             this.CK_UseBeastDuringBW.AutoSize = true;
             this.CK_UseBeastDuringBW.Location = new System.Drawing.Point(18, 73);
             this.CK_UseBeastDuringBW.Name = "CK_UseBeastDuringBW";
-            this.CK_UseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
+            this.CK_UseBeastDuringBW.Size = new System.Drawing.Size(239, 17);
             this.CK_UseBeastDuringBW.TabIndex = 4;
             this.CK_UseBeastDuringBW.Text = "Use Aspect of the Beast during Bestial Wrath";
             this.CK_UseBeastDuringBW.UseVisualStyleBackColor = true;
@@ -2727,6 +2727,18 @@
             this.GB_Misc.TabIndex = 2;
             this.GB_Misc.TabStop = false;
             this.GB_Misc.Text = "Misc";
+            // 
+            // CK_SE_UseDur
+            // 
+            this.CK_SE_UseDur.AutoSize = true;
+            this.CK_SE_UseDur.Enabled = false;
+            this.CK_SE_UseDur.Location = new System.Drawing.Point(104, 65);
+            this.CK_SE_UseDur.Name = "CK_SE_UseDur";
+            this.CK_SE_UseDur.Size = new System.Drawing.Size(177, 17);
+            this.CK_SE_UseDur.TabIndex = 5;
+            this.CK_SE_UseDur.Text = "Use Duration for Special Effects";
+            this.CK_SE_UseDur.ToolTipText = "";
+            this.CK_SE_UseDur.CheckedChanged += new System.EventHandler(this.CK_SE_UseDur_CheckedChanged);
             // 
             // NUD_SurvScale
             // 
@@ -3011,7 +3023,7 @@
             this.GB_ShotRotation.Controls.Add(this.CB_ShotPriority_01);
             this.GB_ShotRotation.Location = new System.Drawing.Point(3, 3);
             this.GB_ShotRotation.Name = "GB_ShotRotation";
-            this.GB_ShotRotation.Size = new System.Drawing.Size(277, 314);
+            this.GB_ShotRotation.Size = new System.Drawing.Size(277, 317);
             this.GB_ShotRotation.TabIndex = 0;
             this.GB_ShotRotation.TabStop = false;
             this.GB_ShotRotation.Text = "Hunter Shot Priority";
@@ -3260,7 +3272,7 @@
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_03);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_02);
             this.GB_PetRotation.Controls.Add(this.CB_PetPrio_01);
-            this.GB_PetRotation.Location = new System.Drawing.Point(3, 323);
+            this.GB_PetRotation.Location = new System.Drawing.Point(3, 326);
             this.GB_PetRotation.Name = "GB_PetRotation";
             this.GB_PetRotation.Size = new System.Drawing.Size(277, 210);
             this.GB_PetRotation.TabIndex = 1;
@@ -3500,18 +3512,6 @@
             this.BT_Calculate.Text = "Calculate";
             this.BT_Calculate.UseVisualStyleBackColor = true;
             this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
-            // 
-            // CK_SE_UseDur
-            // 
-            this.CK_SE_UseDur.AutoSize = true;
-            this.CK_SE_UseDur.Enabled = false;
-            this.CK_SE_UseDur.Location = new System.Drawing.Point(104, 65);
-            this.CK_SE_UseDur.Name = "CK_SE_UseDur";
-            this.CK_SE_UseDur.Size = new System.Drawing.Size(177, 17);
-            this.CK_SE_UseDur.TabIndex = 5;
-            this.CK_SE_UseDur.Text = "Use Duration for Special Effects";
-            this.CK_SE_UseDur.ToolTipText = "";
-            this.CK_SE_UseDur.CheckedChanged += new System.EventHandler(this.CK_SE_UseDur_CheckedChanged);
             // 
             // CalculationOptionsPanelHunter
             // 

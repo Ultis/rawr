@@ -288,12 +288,14 @@ namespace Rawr.Hunter
         public int PriorityIndex10 = 0;
         [XmlIgnore]
         public int[] PriorityIndexes {
-            get {
+            get
+            {
                 int[] _PriorityIndexes = { PriorityIndex1, PriorityIndex2, PriorityIndex3, PriorityIndex4, PriorityIndex5, 
                                            PriorityIndex6, PriorityIndex7, PriorityIndex8, PriorityIndex9, PriorityIndex10 };
                 return _PriorityIndexes;
             }
-            set {
+            set
+            {
                 int[] _PriorityIndexes = value;
                 PriorityIndex1 = _PriorityIndexes[0];
                 PriorityIndex2 = _PriorityIndexes[1];
