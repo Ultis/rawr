@@ -102,19 +102,19 @@ namespace Rawr {
                 // Trial of the Grand Crusader
                 // ==== Tier 10 (10) Content ====
                 // Icecrown Citadel
-                new LordMarrowgar_10(),
+                //new LordMarrowgar_10(),
                 new LordMarrowgar()[0],
                 // ==== Tier 10 (25) Content ====
                 // Icecrown Citadel
-                new LordMarrowgar_25(),
+                //new LordMarrowgar_25(),
                 new LordMarrowgar()[1],
                 // ==== Tier 10 (10) H Content ====
                 // Icecrown Citadel
-                new LordMarrowgar_10H(),
+                //new LordMarrowgar_10H(),
                 new LordMarrowgar()[2],
                 // ==== Tier 10 (25) H Content ====
                 // Icecrown Citadel
-                new LordMarrowgar_25H(),
+                //new LordMarrowgar_25H(),
                 new LordMarrowgar()[3],
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);

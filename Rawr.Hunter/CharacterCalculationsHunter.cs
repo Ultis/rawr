@@ -41,7 +41,7 @@ namespace Rawr.Hunter
         public Skills.FreezingTrap Freezing { get; set; }
         public Skills.FrostTrap Frost { get; set; }
         public Skills.Readiness Ready { get; set; }
-        public Skills.BeastialWrath Beastial { get; set; }
+        public Skills.BestialWrath Bestial { get; set; }
         public Skills.RapidFire Rapid { get; set; }
         #endregion
 
@@ -181,7 +181,7 @@ namespace Rawr.Hunter
         public ShotData chimeraShot = new ShotData(Shots.ChimearaShot, false, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, true, false, false);
         public ShotData readiness = new ShotData(Shots.Readiness, true, false, true);
-        public ShotData beastialWrath = new ShotData(Shots.BeastialWrath, true, false, false);
+        public ShotData bestialWrath = new ShotData(Shots.BestialWrath, true, false, false);
 
         public ShotPriority priorityRotation = null;
 
@@ -456,7 +456,7 @@ namespace Rawr.Hunter
             
             //dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
             //dictValues.Add("Readiness", readiness.GenTooltip());
-            //dictValues.Add("Beastial Wrath", beastialWrath.GenTooltip());
+            //dictValues.Add("Bestial Wrath", bestialWrath.GenTooltip());
 
             // Sting Stats
             dictValues.Add("Serpent Sting", serpentSting.GenTooltip());

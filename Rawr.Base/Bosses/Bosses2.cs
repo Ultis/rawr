@@ -26,8 +26,24 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] {  2,  5,  2,  5 } ;
         }
         #region Variable Convenience Overrides
-        public string Name { get { return this[0].Name; } set { this[0].Name = value; } }
-        public string Instance { get { return this[0].Instance; } set { this[0].Instance = value; } }
+        public string Name {
+            get { return this[0].Name; }
+            set {
+                this[0].Name = value;
+                this[1].Name = value;
+                this[2].Name = value;
+                this[3].Name = value;
+            }
+        }
+        public string Instance {
+            get { return this[0].Instance; }
+            set {
+                this[0].Instance = value;
+                this[1].Instance = value;
+                this[2].Instance = value;
+                this[3].Instance = value;
+            }
+        }
         public BossHandler.TierLevels[] Content
         {
             get
@@ -183,8 +199,8 @@ namespace Rawr.Bosses {
             Health = new float[] { 6972500, 23706500, 10500000, 31400000 };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             // Fight Requirements
-            Min_Tanks   = new int[] {  2,  3,  2,  3 } ;
-            Min_Healers = new int[] {  2,  5,  3,  6 } ;
+            Min_Tanks   = new int[] {  2,  3,  2,  3 };
+            Min_Healers = new int[] {  2,  5,  3,  6 };
             // Resistance
             // Attacks
             int[] temps, temps2;

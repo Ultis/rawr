@@ -186,7 +186,7 @@ namespace Rawr.Hunter
                     RotationShotInfo s = shotTable[i];
                     if (s != null)
                     {
-                        if (s.type == Shots.BeastialWrath && BWTime > currentTime) {
+                        if (s.type == Shots.BestialWrath && BWTime > currentTime) {
                             // do nothing if Rapid Fire is still active
                         } else if (s.type == Shots.RapidFire && RFTime > currentTime) {
                             // Check if TBW/BW CD is nearly up if we want to use Rapid Fire
@@ -194,7 +194,7 @@ namespace Rawr.Hunter
                             // Wait for Rapid Fire if it's close too
                         } else if (s.type == Shots.Readiness && RFCD < (currentTime + CDCutoff)) {
                             // wait for Rapid Fire
-                        } else if (s.type == Shots.BeastialWrath && !BMSpec) {
+                        } else if (s.type == Shots.BestialWrath && !BMSpec) {
                             // do nothing
                         //} else if (s.type == Shots.Volley && VLYCD < (currentTime + CDCutoff)) {
                             // do nothing, we're channelling
@@ -330,7 +330,7 @@ namespace Rawr.Hunter
                                 // Do not use Kill Shot if Boss HP is above 20%
                             } else if (s.type == Shots.Volley && VolleyTime > currentTime) {
                                 // do nothing if Volley is still active
-                            } else if (s.type == Shots.BeastialWrath && BWTime > currentTime) {
+                            } else if (s.type == Shots.BestialWrath && BWTime > currentTime) {
                                 // do nothing if TBW or BW is still active
                             } else if (s.type == Shots.RapidFire && RFTime > currentTime) {
                                 // do nothing if Rapid Fire is still active
@@ -343,7 +343,7 @@ namespace Rawr.Hunter
                                 // do nothing if we don't get all the ticks of Serpent Sting anyway
                             } else if (s.type == Shots.BlackArrow && FightLength - currentTime < BA) {
                                 // ditto for Black Arrow
-                            } else if (s.type == Shots.BeastialWrath && !BMSpec) {
+                            } else if (s.type == Shots.BestialWrath && !BMSpec) {
                                 // do nothing
                             } else {
                                 thisShot = s.type;
@@ -632,7 +632,7 @@ namespace Rawr.Hunter
                     }
 
                     // If we used Beast Within, set duration to 18 seconds
-                    if (thisShot == Shots.BeastialWrath)
+                    if (thisShot == Shots.BestialWrath)
                     {
                         BWTime = currentTime + 10;
                         // also record the time when it comes off CD
@@ -665,7 +665,7 @@ namespace Rawr.Hunter
                             {
                                 if (s.type != Shots.Readiness
                                     && s.type != Shots.SerpentSting
-                                    && s.type != Shots.BeastialWrath
+                                    && s.type != Shots.BestialWrath
                                     && s.type != Shots.Volley)
                                 {
                                     s.time_until_off_cd = 0;

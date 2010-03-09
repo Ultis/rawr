@@ -2660,7 +2660,7 @@
             this.CK_UseBeastDuringBW.Name = "CK_UseBeastDuringBW";
             this.CK_UseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
             this.CK_UseBeastDuringBW.TabIndex = 4;
-            this.CK_UseBeastDuringBW.Text = "Use Aspect of the Beast during Beastial Wrath";
+            this.CK_UseBeastDuringBW.Text = "Use Aspect of the Beast during Bestial Wrath";
             this.CK_UseBeastDuringBW.UseVisualStyleBackColor = true;
             this.CK_UseBeastDuringBW.CheckedChanged += new System.EventHandler(this.CK_UseBeastDuringBW_CheckedChanged);
             // 

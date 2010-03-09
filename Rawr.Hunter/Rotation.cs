@@ -92,14 +92,40 @@ namespace Rawr.Hunter {
         //public Skills.DeathWish Death;
         //public Skills.Recklessness RK;
         // Shots
+        public Skills.ExplosiveShot Explosive;
         public Skills.MultiShot Multi;
         public Skills.SteadyShot Steady;
+        public Skills.AimedShot Aimed;
+        public Skills.ArcaneShot Arcane;
+        public Skills.SilencingShot Silencing;
+        public Skills.Volley Volley;
+        //public Skills.ChimeraShot ChimeraS;
+
+        // Buffs.
+        public Skills.BestialWrath Bestial;
+        public Skills.RapidFire Rapid;
+        public Skills.BlackArrowBuff BlackArrowB;
+        public Skills.Readiness Ready;
+
+        // DoTs.
+        public Skills.PiercingShots Piercing;
+        public Skills.BlackArrowDoT BlackArrowD;
+
+        public Skills.SerpentSting Serpent;
+        public Skills.ScorpidSting Scorpid;
+        public Skills.ViperSting Viper;
+        public Skills.ChimeraShot_Serpent Chimera;
+
+        // Traps.
+        public Skills.ImmolationTrap Immolation;
+        public Skills.ExplosiveTrap ExplosiveT;
+        public Skills.FreezingTrap Freezing;
+        public Skills.FrostTrap Frost;
 
         public float _Steady_DPS = 0f, _Steady_HPS = 0f, _Steady_GCDs = 0f;
         public float _Multi_DPS = 0f, _Multi_HPS = 0f, _Multi_GCDs = 0f;
         
         // Generic
-        public Skills.PiercingShots Piercing;
         //public Skills.Cleave CL;
         //public Skills.HeroicStrike HS;
         public Skills.KillShot Kill;
@@ -153,6 +179,7 @@ namespace Rawr.Hunter {
             // Whites
             calcs.Whites = WhiteAtks;
             // Anti-Debuff
+            calcs.Explosive = Explosive;
             /*calcs.HF = HF;
             calcs.EM = EM;
             calcs.CH = CH;
@@ -179,6 +206,9 @@ namespace Rawr.Hunter {
             // Shared Instants
             calcs.Multi = Multi;
             calcs.Steady = Steady;
+            calcs.Aimed = Aimed;
+            calcs.Multi = Multi;
+            calcs.Arcane = Arcane;
             // Arms
             
             // Generic
@@ -186,6 +216,25 @@ namespace Rawr.Hunter {
             calcs.Piercing = Piercing;
             //calcs.HS = HS;
             calcs.Kill = Kill;
+            calcs.Silencing = Silencing;
+            calcs.Volley = Volley;
+
+            calcs.Bestial = Bestial;
+            calcs.Rapid = Rapid;
+            calcs.BlackArrowB = BlackArrowB;
+            calcs.Ready = Ready;
+
+            calcs.Piercing = Piercing;
+            calcs.BlackArrowD = BlackArrowD;
+            calcs.Serpent = Serpent;
+            calcs.Scorpid = Scorpid;
+            calcs.Viper = Viper;
+            calcs.Chimera = Chimera;
+
+            calcs.Immolation = Immolation;
+            calcs.ExplosiveT = ExplosiveT;
+            calcs.Freezing = Freezing;
+            calcs.Frost = Frost;
         }
         public virtual void Initialize() { initAbilities(); /*doIterations();*/ }
 
@@ -393,35 +442,35 @@ namespace Rawr.Hunter {
         
         protected virtual float RageGenOverDur_Other {
             get {
-                    float rage = RageGenOverDur_Anger               // Anger Management Talent
-                               + RageGenOverDur_IncDmg              // Damage from the bosses
+                    float mana = RageGenOverDur_Anger               // Anger Management Talent
+                               //+ RageGenOverDur_IncDmg              // Damage from the bosses
                                + (100f * StatS.ManaorEquivRestore)  // 0.02f becomes 2f
                                + StatS.BonusRageGen;                // Bloodrage, Berserker Rage, Might Rage Pot
 
                     foreach (AbilWrapper aw in GetAbilityList())
                     {
                         if (aw.Mana < 0) 
-                            rage += (-1f) * aw.Mana;
+                            mana += (-1f) * aw.Mana;
                     }
 
                     // 4pcT7
-                    if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (CalcOpts.Maintenance[(int)CalculationOptionsHunter.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
-                    }
+                    //if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
+                    //    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
+                    //    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (CalcOpts.Maintenance[(int)CalculationOptionsHunter.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
+                    //}
                     
-                return rage;
+                return mana;
             }
         }
         protected float RageNeededOverDur {
             get {
-                float rage = 0f;
+                float mana = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
                     if (aw.Mana > 0f) 
-                        rage += aw.Mana;
+                        mana += aw.Mana;
                 }
-                return rage;
+                return mana;
             }
         }
         #endregion
@@ -449,7 +498,7 @@ namespace Rawr.Hunter {
         /// </summary>
         /// <param name="totalPercTimeLost">Time lost due to stun/fear/movement</param>
         /// <param name="abil">The ability to add</param>
-        /// <returns>The final result from Abil.GetRageUseOverDur</returns>
+        /// <returns>The final result from Abil.GetManaUseOverDur</returns>
         private float AddMaintenanceAbility(float totalPercTimeLost, AbilWrapper aw)
         {
             if (!aw.ability.Validated) return 0f;
@@ -478,7 +527,6 @@ namespace Rawr.Hunter {
         {
             _emActs = 0f; //_emRecovery = 0f; _emRecoveryTotal = 0f;
             TimeLostGCDs = 0;
-            RageGainedWhileMoving = 0; 
 
             float percTimeInMovement = CalculateMovement(MS);
             float percTimeInFear = CalculateFear();

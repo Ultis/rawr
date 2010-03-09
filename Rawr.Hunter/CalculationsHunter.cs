@@ -167,7 +167,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                         //"Shot Stats:Rapid Fire",
                         //"Shot Stats:Readiness",
-                        //"Shot Stats:Beastial Wrath",
+                        //"Shot Stats:Bestial Wrath",
 
 				        "Sting Stats:Serpent Sting",
 				        "Sting Stats:Scorpid Sting",
@@ -856,7 +856,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedMPS(calculations.chimeraShot),
                         comparisonFromShotSpammedMPS(calculations.rapidFire),
                         comparisonFromShotSpammedMPS(calculations.readiness),
-                        comparisonFromShotSpammedMPS(calculations.beastialWrath),
+                        comparisonFromShotSpammedMPS(calculations.bestialWrath),
                     };
                 case "Rotation DPS":
                     _subPointNameColors = _subPointNameColorsDPS;
@@ -908,7 +908,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationMPS(calculations.chimeraShot),
                         comparisonFromShotRotationMPS(calculations.rapidFire),
                         comparisonFromShotRotationMPS(calculations.readiness),
-                        comparisonFromShotRotationMPS(calculations.beastialWrath),
+                        comparisonFromShotRotationMPS(calculations.bestialWrath),
                         comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
                     };
                 case "Shot Damage per Mana":
@@ -1156,8 +1156,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.readiness.Cd = 180;
 
-            calculatedStats.beastialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
-            calculatedStats.beastialWrath.Duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
+            calculatedStats.bestialWrath.Cd = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
+            calculatedStats.bestialWrath.Duration = calcOpts.PetFamily == PetFamily.None ? 0 : 10;
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.initializeTimings();
@@ -1600,12 +1600,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 }
             }
 
-            float aspectUptimeBeast = calcOpts.useBeastDuringBeastialWrath && calculatedStats.beastialWrath.Freq > 0
-                ? (calculatedStats.beastialWrath.Duration * (calcOpts.Duration / calculatedStats.beastialWrath.Cd)) / calcOpts.Duration : 0;
+            float aspectUptimeBeast = calcOpts.useBeastDuringBestialWrath && calculatedStats.bestialWrath.Freq > 0
+                ? (calculatedStats.bestialWrath.Duration * (calcOpts.Duration / calculatedStats.bestialWrath.Cd)) / calcOpts.Duration : 0;
 
             switch (calcOpts.selectedAspect) {
                 case Aspect.Viper:
-                    aspectUptimeViper = calcOpts.useBeastDuringBeastialWrath ? 1f - aspectUptimeBeast : 1f;
+                    aspectUptimeViper = calcOpts.useBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
                     break;
                 case Aspect.Beast:
                     aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
@@ -2467,7 +2467,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     statsTalents.AddSpecialEffect(callofthewild);
                 }
                 if (calcOpts.PetFamily != PetFamily.None
-                    && calculatedStats.priorityRotation.containsShot(Shots.BeastialWrath)
+                    && calculatedStats.priorityRotation.containsShot(Shots.BestialWrath)
                     && talents.BestialWrath > 0)
                 {
                     float cooldown = (talents.GlyphOfBestialWrath ? 100f : 120f) * (1f - talents.Longevity * 0.10f);
@@ -2850,7 +2850,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (index == 17) return calculatedStats.chimeraShot;
             if (index == 18) return calculatedStats.rapidFire;
             if (index == 19) return calculatedStats.readiness;
-            if (index == 20) return calculatedStats.beastialWrath;
+            if (index == 20) return calculatedStats.bestialWrath;
             return null;
         }
         public static float CalcEffectiveDamage(float damageNormal, float missChance, float critChance, float critAdjust, float damageAdjust) {

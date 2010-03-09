@@ -125,13 +125,13 @@ namespace Rawr.Hunter.Skills
         private float CriticalAtksOverDur { get { return CriticalAtksOverDurRW; } }
         public float CriticalAtksOverDurRW { get { return RwActivates * RWAtkTable.Crit; } }
         // Other
-        public float ManaSlip(float abilInterval, float rageCost)
+        public float ManaSlip(float abilInterval, float manaCost)
         {
             //float whiteAtkInterval = (MhActivates + OhActivates) / FightDuration;
-            //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * rageCost / MHSwingRage;
-            //float whiteMod = (MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration;
+            //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * manaCost / MHSwingMana;
+            //float whiteMod = (MhActivates * MHSwingMana + (combatFactors.useOH ? OhActivates * OHSwingMana : 0f)) / FightDuration;
             if (RwActivates <= 0f) { return 0f; }
-            return (RWAtkTable.Miss * rageCost) / (abilInterval * ((RwActivates /* * (MHSwingRage + MHUWProcValue)*/) / FightDuration));
+            return (RWAtkTable.Miss * manaCost) / (abilInterval * ((RwActivates /* * (MHSwingMana + MHUWProcValue)*/) / FightDuration));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts)
         {
@@ -171,7 +171,7 @@ namespace Rawr.Hunter.Skills
             string tooltip = "*" + "White Damage (Ranged Weapon)" +
                 Environment.NewLine + "Cast Time: Instant"
                                     + ", CD: " + (RwEffectiveSpeed != -1 ? RwEffectiveSpeed.ToString("0.00") : "None")
-                                    + //", Rage Generated: " + (MHSwingRage != -1 ? MHSwingRage.ToString("0.00") : "None") +
+                                    + //", Mana Generated: " + (MHSwingMana != -1 ? MHSwingMana.ToString("0.00") : "None") +
             Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
             //(showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
@@ -223,9 +223,6 @@ namespace Rawr.Hunter.Skills
             ManaCost = -1f;
             ManaCostisPerc = false;
             CastTime = -1f; // In Seconds
-            StanceOkFury = false;
-            StanceOkArms = false;
-            StanceOkDef = false;
             UseReact = false;
             DamageBase = 0f;
             DamageBonus = 1f;
@@ -259,9 +256,6 @@ namespace Rawr.Hunter.Skills
         private float MANACOST;
         private bool MANACOSTISPERC;
         private float CASTTIME; // In Seconds
-        private bool STANCEOKARMS; // The ability can be used in Battle Stance
-        private bool STANCEOKFURY; // The ability can be used in Berserker Stance
-        private bool STANCEOKDEF;  // The ability can be used in Defensive Stance
         private bool USEREACT; // if this ability is used as a proc effect
         private Character CHARACTER;
         private HunterTalents TALENTS;
@@ -334,9 +328,6 @@ namespace Rawr.Hunter.Skills
         protected float HealingBase { get { return HEALINGBASE; } set { HEALINGBASE = value; } }
         protected float HealingBonus { get { return HEALINGBONUS; } set { HEALINGBONUS = value; } }
         protected float BonusCritChance { get { return BONUSCRITCHANCE; } set { BONUSCRITCHANCE = value; } }
-        protected bool StanceOkFury { get { return STANCEOKFURY; } set { STANCEOKFURY = value; } }
-        protected bool StanceOkArms { get { return STANCEOKARMS; } set { STANCEOKARMS = value; } }
-        protected bool StanceOkDef { get { return STANCEOKDEF; } set { STANCEOKDEF = value; } }
         protected bool UseReact { get { return USEREACT; } set { USEREACT = value; } }
         protected Character Char
         {
@@ -369,7 +360,7 @@ namespace Rawr.Hunter.Skills
         public virtual AttackTable RWAtkTable { get { return RWATTACKTABLE; } protected set { RWATTACKTABLE = value; } }
         public WhiteAttacks Whiteattacks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
         protected CalculationOptionsHunter CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
-        public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * ManaCost); } }
+        public virtual float ManaUseOverDur { get { return (!Validated ? 0f : Activates * ManaCost); } }
         protected float FightDuration { get { return CalcOpts.Duration; } }
         protected bool UseSpellHit { get { return USESPELLHIT; } set { USESPELLHIT = value; } }
         protected bool UseHitTable { get { return USEHITTABLE; } set { USEHITTABLE = value; } }
@@ -438,9 +429,9 @@ namespace Rawr.Hunter.Skills
                 //float Every = LatentGCD / GCDPerc;
                 if (ManaCost > 0f)
                 {
-                    /*float rageSlip = (float)Math.Pow(Whiteattacks.MHAtkTable.AnyNotLand, Whiteattacks.AvoidanceStreak * Every);
-                    float rageSlip2 = Whiteattacks.MHAtkTable.AnyNotLand / Every / Whiteattacks.AvoidanceStreak * RageCost / Whiteattacks.MHSwingRage;
-                    float ret = FightDuration / Every * (1f - rageSlip);
+                    /*float manaSlip = (float)Math.Pow(Whiteattacks.MHAtkTable.AnyNotLand, Whiteattacks.AvoidanceStreak * Every);
+                    float manaSlip2 = Whiteattacks.MHAtkTable.AnyNotLand / Every / Whiteattacks.AvoidanceStreak * ManaCost / Whiteattacks.MHSwingMana;
+                    float ret = FightDuration / Every * (1f - manaSlip);
                     return ret;*/
                     return Math.Max(0f, FightDuration / (LatentGCD / GCDPerc) * (1f - Whiteattacks.ManaSlip(LatentGCD / GCDPerc, ManaCost)));
                 }
@@ -575,7 +566,7 @@ namespace Rawr.Hunter.Skills
             string tooltip = "*" + Name +
                 Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
                                     + ", CD: " + (Cd != -1 ? Cd.ToString() : "None")
-                                    + ", RageCost: " + (ManaCost != -1 ? ManaCost.ToString() : "None") +
+                                    + ", ManaCost: " + (ManaCost != -1 ? ManaCost.ToString() : "None") +
             Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
             //(showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
@@ -601,7 +592,7 @@ namespace Rawr.Hunter.Skills
             }
             protected set { ; }
         }
-        public override float RageUseOverDur { get { return 0; } }
+        public override float ManaUseOverDur { get { return 0; } }
         protected override float ActivatesOverride { get { return 0; } }
         protected override float DamageOnUseOverride { get { return 0; } }
         public override float DamageOverride { get { return 0; } }
@@ -619,7 +610,7 @@ namespace Rawr.Hunter.Skills
         private float OVERRIDESOVERDUR;
         // Get/Set
         public float OverridesOverDur { get { return OVERRIDESOVERDUR; } set { OVERRIDESOVERDUR = value; } }
-        public virtual float FullRageCost { get { return ManaCost /*+ Whiteattacks.MHSwingRage - Whiteattacks.MHUWProcValue * RWAtkTable.AnyLand*/; } }
+        public virtual float FullManaCost { get { return ManaCost /*+ Whiteattacks.MHSwingMana - Whiteattacks.MHUWProcValue * RWAtkTable.AnyLand*/; } }
         // Functions
         public override float Activates
         {

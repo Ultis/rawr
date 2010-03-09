@@ -29,7 +29,6 @@ namespace Rawr.Hunter.Skills
             Cd = 6f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.10f; // 10% of base mana, but higher shots are 7% so we need to verify
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = (StatS.RangedAttackPower * 0.14f + ((386f + 464f) / 2f)) * 3f;
             BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.04f : 0f;
             //
@@ -62,7 +61,6 @@ namespace Rawr.Hunter.Skills
             Cd = 10f - (Talents.GlyphOfChimeraShot ? 1f : 0f); // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.12f; // 12% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted * 1.25f;
             //
             Initialize();
@@ -90,7 +88,6 @@ namespace Rawr.Hunter.Skills
             //Targets += StatS.BonusTargets;
             ManaCostisPerc = true;
             ManaCost = 0.05f; // 5% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted
                        + (Char.Projectile.Item.MinDamage + Char.Projectile.Item.MaxDamage) / 2f
                        + StatS.RangedAttackPower * 0.1f + 252f;
@@ -122,7 +119,6 @@ namespace Rawr.Hunter.Skills
             Duration = 10f;
             ManaCostisPerc = true;
             ManaCost = 0.08f; // 8% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.NormalizedRwWeaponDmg + 408;
             //
             Initialize();
@@ -148,7 +144,6 @@ namespace Rawr.Hunter.Skills
             CastTime = cf.RWSpeed;
             ManaCostisPerc = true;
             ManaCost = 0.09f; // 9% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = cf.AvgRwWeaponDmgUnhasted + 408f;
             //
             Initialize();
@@ -177,7 +172,6 @@ namespace Rawr.Hunter.Skills
             ManaCostisPerc = true;
             ManaCost = 0.05f; // 5% of base mana
             // -20% with a sting active
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = StatS.RangedAttackPower * 0.15f + 492f;
             DamageBonus = 1f + Talents.ImprovedArcaneShot * 0.05f;
             //
@@ -207,7 +201,6 @@ namespace Rawr.Hunter.Skills
             Cd = 15f - (Talents.GlyphOfKillShot ? 6f : 0f); // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.07f; // 7% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = cf.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.40f + 650f;
             //
             Initialize();
@@ -235,7 +228,6 @@ namespace Rawr.Hunter.Skills
             Cd = 20f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.06f; // 6% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = cf.AvgRwWeaponDmgUnhasted * 0.50f;
             //
             Initialize();
@@ -271,7 +263,6 @@ namespace Rawr.Hunter.Skills
             TimeBtwnTicks = 1f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.06f; // 6% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = StatS.RangedAttackPower * 0.10f + 2765f;
             //
             Initialize();
@@ -332,7 +323,6 @@ namespace Rawr.Hunter.Skills
             Cd = 30f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.06f; // 6% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusDamageMultiplier = 0.06f, },
                 Duration, Cd);
@@ -365,7 +355,6 @@ namespace Rawr.Hunter.Skills
             TimeBtwnTicks = 1f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.06f; // 6% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = StatS.RangedAttackPower * 0.10f + 2765f;
             //
             Initialize();
@@ -429,7 +418,6 @@ namespace Rawr.Hunter.Skills
             Duration = 15f + (Talents.GlyphOfSerpentSting ? 6f : 0f);
             ManaCostisPerc = true;
             ManaCost = 0.09f; // 9% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = StatS.RangedAttackPower * 0.2f + 1210f;
             //
             Initialize();
@@ -489,7 +477,6 @@ namespace Rawr.Hunter.Skills
             //Targets += StatS.BonusTargets;
             ManaCostisPerc = true;
             ManaCost = 0.11f; // 11% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             //
             Initialize();
         }
@@ -516,7 +503,6 @@ namespace Rawr.Hunter.Skills
             Cd = 15f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.08f; // 8% of base mana
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
             //
             Initialize();
         }
@@ -535,7 +521,7 @@ namespace Rawr.Hunter.Skills
     #endregion
 
     #region Buff Effects
-    public class BeastialWrath : BuffEffect { }
+    public class BestialWrath : BuffEffect { }
     public class RapidFire : BuffEffect
     {
         /// <summary>
@@ -554,7 +540,6 @@ namespace Rawr.Hunter.Skills
             Duration = 15f;
             ManaCostisPerc = true;
             ManaCost = 0.03f;
-            StanceOkDef = StanceOkArms = StanceOkFury = true;
             UseHitTable = false;
             //
             Effect = new SpecialEffect(Trigger.Use,

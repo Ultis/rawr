@@ -200,7 +200,7 @@ namespace Rawr.Hunter
                 if (CalcOpts.aspectUsage == AspectUsage.ViperToOOM) CB_AspectUsage.SelectedIndex = 1;
                 if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
                 isLoading = true;
-                CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBeastialWrath;
+                CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBestialWrath;
                 CK_UseRotation.Checked = CalcOpts.useRotationTest;
                 CK_RandomProcs.Enabled = CK_UseRotation.Checked;
                 CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
@@ -406,7 +406,7 @@ namespace Rawr.Hunter
         }
         private void CK_UseBeastDuringBW_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.useBeastDuringBeastialWrath = CK_UseBeastDuringBW.Checked;
+            CalcOpts.useBeastDuringBestialWrath = CK_UseBeastDuringBW.Checked;
             Character.OnCalculationsInvalidated();
         }
         private void CK_UseRotation_CheckedChanged(object sender, EventArgs e) {
@@ -478,7 +478,7 @@ namespace Rawr.Hunter
 
             /* I want to do a conglomerate one:
                 CB_ShotPriority_01.SelectedIndex = CalculationOptionsHunter.RapidFire.Index;
-                CB_ShotPriority_02.SelectedIndex = CalculationOptionsHunter.BeastialWrath.Index;
+                CB_ShotPriority_02.SelectedIndex = CalculationOptionsHunter.BestialWrath.Index;
                 CB_ShotPriority_03.SelectedIndex = CalculationOptionsHunter.Readiness.Index;
                 CB_ShotPriority_04.SelectedIndex = CalculationOptionsHunter.SerpentSting.Index;
                 CB_ShotPriority_05.SelectedIndex = CalculationOptionsHunter.ChimeraShot.Index;

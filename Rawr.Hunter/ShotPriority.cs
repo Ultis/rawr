@@ -67,7 +67,7 @@ namespace Rawr.Hunter {
                 if (priorities[i] != null && priorities[i].Type == Shots.ChimearaShot && Talents.ChimeraShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].Type == Shots.AimedShot && Talents.AimedShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].Type == Shots.ExplosiveShot && Talents.ExplosiveShot == 0){priorities[i].FailReason_LackTalent = true; priorities[i] = null;}
-                if (priorities[i] != null && priorities[i].Type == Shots.BeastialWrath && Talents.BestialWrath == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
+                if (priorities[i] != null && priorities[i].Type == Shots.BestialWrath && Talents.BestialWrath == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].Type == Shots.SilencingShot && Talents.SilencingShot == 0) { priorities[i].FailReason_LackTalent = true; priorities[i] = null; }
 
                 if (priorities[i] != null)

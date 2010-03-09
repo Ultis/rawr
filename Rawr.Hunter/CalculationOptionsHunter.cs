@@ -241,7 +241,7 @@ namespace Rawr.Hunter
         public int timeSpentSub20 = 72;
         public int timeSpent35To20 = 54;
         public float bossHPPercentage = 1;
-        public bool useBeastDuringBeastialWrath = false;
+        public bool useBeastDuringBestialWrath = false;
         public bool useKillCommand = true;
         public Aspect selectedAspect = Aspect.Dragonhawk;
         public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
