@@ -101,6 +101,7 @@
     <Compile Include="CalculationsWarlock.cs" />
     <Compile Include="CharacterCalculationsWarlock.cs" />
     <Compile Include="ComparisonCalculationWarlock.cs" />
+    <Compile Include="Pets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spells.cs" />
     <EmbeddedResource Include="CalculationOptionsPanelWarlock.resx">

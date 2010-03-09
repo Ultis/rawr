@@ -11,32 +11,8 @@ namespace Rawr.WarlockTmp {
     public class CharacterCalculationsWarlock : CharacterCalculationsBase {
 
         #region overridden properties
-
-        private float _overallPoints = -1f;
-        public override float OverallPoints {
-            get {
-                if (_overallPoints == -1f) {
-                    _overallPoints = 0f;
-                    foreach (float subPoint in SubPoints) {
-                        _overallPoints += subPoint;
-                    }
-                }
-                return _overallPoints;
-            }
-            set { }
-        }
-
-        private float[] _subPoints;
-        public override float[] SubPoints {
-            get {
-                if (_subPoints == null) {
-                    _subPoints = new float[] { GetPersonalDps(), GetPetDps() };
-                }
-                return _subPoints;
-            }
-            set { }
-        }
-
+        public override float OverallPoints { get; set; }
+        public override float[] SubPoints { get; set; }
         #endregion
 
 
@@ -104,6 +80,11 @@ namespace Rawr.WarlockTmp {
                 // TODO calculate uptime when less than 5 points are invested.
                 BaseCritChance += .05f;
             }
+
+            float personalDps = CalcPersonalDps();
+            float petDps = CalcPetDps();
+            SubPoints = new float[] { personalDps, petDps };
+            OverallPoints = personalDps + petDps;
         }
 
         #endregion
@@ -269,13 +250,9 @@ namespace Rawr.WarlockTmp {
 
         #region dps calculations
 
-        private float GetPersonalDps() {
+        private float CalcPersonalDps() {
 
-            if (PersonalDps >= 0) {
-                return PersonalDps;
-            }
-
-            if (GetError(Options.SpellPriority) != null) {
+           if (GetError(Options.SpellPriority) != null) {
                 PersonalDps = 0f;
                 return 0f;
             }
@@ -344,11 +321,10 @@ namespace Rawr.WarlockTmp {
                 spell.SetDamageStats(spellPower);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
-            PersonalDps = damageDone / Options.Duration;
-            return PersonalDps;
+            return damageDone / Options.Duration;
         }
 
-        private float GetPetDps() {
+        private float CalcPetDps() {
 
             return 0f;
         }
