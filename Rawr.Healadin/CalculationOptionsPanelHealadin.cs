@@ -63,6 +63,9 @@ namespace Rawr.Healadin
             trkSacredShield.Value = (int)Math.Round(calcOpts.SSUptime * 100);
             lblSacredShield.Text = trkSacredShield.Value + "%";
 
+            trkFlashOfLightOnTank.Value = (int)Math.Round(calcOpts.FoLOnTank * 100);
+            lblFlashOfLightOnTank.Text = trkFlashOfLightOnTank.Value + "%";
+
             chkIoL.Checked = calcOpts.InfusionOfLight;
             trkIoLRatio.Value = (int)Math.Round(calcOpts.IoLHolyLight * 100f);
             lblIoLHL.Text = trkIoLRatio.Value + "% HL";
@@ -252,6 +255,17 @@ namespace Rawr.Healadin
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.SSUptime = trkSacredShield.Value / 100f;
                 lblSacredShield.Text = trkSacredShield.Value + "%";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkFlashOfLightOnTank_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.FoLOnTank = trkFlashOfLightOnTank.Value / 100f;
+                lblFlashOfLightOnTank.Text = trkFlashOfLightOnTank.Value + "%";
                 Character.OnCalculationsInvalidated();
             }
         }

@@ -72,6 +72,9 @@
             this.chkJudgement = new System.Windows.Forms.CheckBox();
             this.chkSpiritIrrelevant = new System.Windows.Forms.CheckBox();
             this.chkHitIrrelevant = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.trkFlashOfLightOnTank = new System.Windows.Forms.TrackBar();
+            this.lblFlashOfLightOnTank = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -85,6 +88,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkBurstScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkIoLRatio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSacredShield)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkFlashOfLightOnTank)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -95,7 +99,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(221, 134);
+            this.cmbLength.Location = new System.Drawing.Point(221, 196);
             this.cmbLength.Maximum = new decimal(new int[] {
             60,
             0,
@@ -119,7 +123,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(146, 136);
+            this.label3.Location = new System.Drawing.Point(146, 198);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 13);
             this.label3.TabIndex = 21;
@@ -137,7 +141,7 @@
             this.groupBox2.Controls.Add(this.lblDivinePlea);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 232);
+            this.groupBox2.Location = new System.Drawing.Point(6, 248);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(294, 123);
             this.groupBox2.TabIndex = 22;
@@ -277,6 +281,7 @@
             this.trkActivity.Size = new System.Drawing.Size(137, 45);
             this.trkActivity.TabIndex = 23;
             this.trkActivity.TickFrequency = 10;
+            this.toolTip.SetToolTip(this.trkActivity, "Overall activity.  100% means you\'re always casting with no latency.");
             this.trkActivity.Value = 90;
             this.trkActivity.Scroll += new System.EventHandler(this.trkActivity_Scroll);
             // 
@@ -307,7 +312,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.lblBoLUp);
             this.groupBox1.Controls.Add(this.trkBoLUp);
-            this.groupBox1.Location = new System.Drawing.Point(3, 355);
+            this.groupBox1.Location = new System.Drawing.Point(6, 371);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(294, 87);
             this.groupBox1.TabIndex = 28;
@@ -386,6 +391,8 @@
             this.trkHS.Size = new System.Drawing.Size(137, 45);
             this.trkHS.TabIndex = 29;
             this.trkHS.TickFrequency = 10;
+            this.toolTip.SetToolTip(this.trkHS, "Percentage of casts of Holy Shock possible.  ie: In a 1 minute fight, you can cas" +
+                    "t up to 10 holy shocks.  50% would mean you only cast 5 holy shocks.");
             this.trkHS.Value = 20;
             this.trkHS.Scroll += new System.EventHandler(this.trkHS_Scroll);
             // 
@@ -411,7 +418,7 @@
             // chkJotP
             // 
             this.chkJotP.AutoSize = true;
-            this.chkJotP.Location = new System.Drawing.Point(151, 186);
+            this.chkJotP.Location = new System.Drawing.Point(6, 198);
             this.chkJotP.Name = "chkJotP";
             this.chkJotP.Size = new System.Drawing.Size(90, 17);
             this.chkJotP.TabIndex = 37;
@@ -422,7 +429,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(148, 162);
+            this.label12.Location = new System.Drawing.Point(148, 224);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(67, 13);
             this.label12.TabIndex = 38;
@@ -436,7 +443,7 @@
             0,
             0,
             65536});
-            this.nudGHL.Location = new System.Drawing.Point(221, 160);
+            this.nudGHL.Location = new System.Drawing.Point(221, 222);
             this.nudGHL.Maximum = new decimal(new int[] {
             5,
             0,
@@ -511,6 +518,7 @@
             this.trkSacredShield.Size = new System.Drawing.Size(137, 45);
             this.trkSacredShield.TabIndex = 49;
             this.trkSacredShield.TickFrequency = 10;
+            this.toolTip.SetToolTip(this.trkSacredShield, "Amount of time you have Sacred Shield active on a target.");
             this.trkSacredShield.Value = 90;
             this.trkSacredShield.Scroll += new System.EventHandler(this.trkSacredShield_Scroll);
             // 
@@ -554,7 +562,7 @@
             // chkJudgement
             // 
             this.chkJudgement.AutoSize = true;
-            this.chkJudgement.Location = new System.Drawing.Point(151, 209);
+            this.chkJudgement.Location = new System.Drawing.Point(6, 221);
             this.chkJudgement.Name = "chkJudgement";
             this.chkJudgement.Size = new System.Drawing.Size(121, 17);
             this.chkJudgement.TabIndex = 55;
@@ -565,7 +573,7 @@
             // chkSpiritIrrelevant
             // 
             this.chkSpiritIrrelevant.AutoSize = true;
-            this.chkSpiritIrrelevant.Location = new System.Drawing.Point(6, 448);
+            this.chkSpiritIrrelevant.Location = new System.Drawing.Point(9, 464);
             this.chkSpiritIrrelevant.Name = "chkSpiritIrrelevant";
             this.chkSpiritIrrelevant.Size = new System.Drawing.Size(110, 17);
             this.chkSpiritIrrelevant.TabIndex = 56;
@@ -576,7 +584,7 @@
             // chkHitIrrelevant
             // 
             this.chkHitIrrelevant.AutoSize = true;
-            this.chkHitIrrelevant.Location = new System.Drawing.Point(151, 448);
+            this.chkHitIrrelevant.Location = new System.Drawing.Point(154, 464);
             this.chkHitIrrelevant.Name = "chkHitIrrelevant";
             this.chkHitIrrelevant.Size = new System.Drawing.Size(100, 17);
             this.chkHitIrrelevant.TabIndex = 57;
@@ -584,10 +592,45 @@
             this.chkHitIrrelevant.UseVisualStyleBackColor = true;
             this.chkHitIrrelevant.CheckedChanged += new System.EventHandler(this.chkHitIrrelevant_CheckedChanged);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(151, 131);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(135, 13);
+            this.label8.TabIndex = 59;
+            this.label8.Text = "Flash of Light on SS target:";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // trkFlashOfLightOnTank
+            // 
+            this.trkFlashOfLightOnTank.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkFlashOfLightOnTank.Location = new System.Drawing.Point(151, 147);
+            this.trkFlashOfLightOnTank.Maximum = 100;
+            this.trkFlashOfLightOnTank.Name = "trkFlashOfLightOnTank";
+            this.trkFlashOfLightOnTank.Size = new System.Drawing.Size(137, 45);
+            this.trkFlashOfLightOnTank.TabIndex = 58;
+            this.trkFlashOfLightOnTank.TickFrequency = 10;
+            this.toolTip.SetToolTip(this.trkFlashOfLightOnTank, "Percentage of Flash of Lights you directly apply to your Sacred Shield target.");
+            this.trkFlashOfLightOnTank.Value = 90;
+            this.trkFlashOfLightOnTank.Scroll += new System.EventHandler(this.trkFlashOfLightOnTank_Scroll);
+            // 
+            // lblFlashOfLightOnTank
+            // 
+            this.lblFlashOfLightOnTank.AutoSize = true;
+            this.lblFlashOfLightOnTank.Location = new System.Drawing.Point(255, 180);
+            this.lblFlashOfLightOnTank.Name = "lblFlashOfLightOnTank";
+            this.lblFlashOfLightOnTank.Size = new System.Drawing.Size(33, 13);
+            this.lblFlashOfLightOnTank.TabIndex = 60;
+            this.lblFlashOfLightOnTank.Text = "100%";
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblFlashOfLightOnTank);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.trkFlashOfLightOnTank);
             this.Controls.Add(this.chkHitIrrelevant);
             this.Controls.Add(this.chkSpiritIrrelevant);
             this.Controls.Add(this.chkJudgement);
@@ -615,7 +658,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(300, 475);
+            this.Size = new System.Drawing.Size(300, 486);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -631,6 +674,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkBurstScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkIoLRatio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSacredShield)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkFlashOfLightOnTank)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -681,5 +725,8 @@
         private System.Windows.Forms.CheckBox chkJudgement;
         private System.Windows.Forms.CheckBox chkSpiritIrrelevant;
         private System.Windows.Forms.CheckBox chkHitIrrelevant;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TrackBar trkFlashOfLightOnTank;
+        private System.Windows.Forms.Label lblFlashOfLightOnTank;
     }
 }

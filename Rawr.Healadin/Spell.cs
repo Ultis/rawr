@@ -128,7 +128,7 @@ namespace Rawr.Healadin
             // Infusion of Light's Flash of Light HoT for Sacred Shield
             // Max HoT Uptime is 12 seconds.  If user is casting FoL more often than every 12 seconds, the HoT gets overridden
             // so we must calculate how long the HoT will be active.
-            folHoTUptime = Rotation.FoLCasts == 0f ? 12f : Math.Min(Rotation.FightLength / Rotation.FoLCasts, 12f);
+            folHoTUptime = Rotation.FoLCasts == 0f ? 12f : Math.Min(Rotation.FightLength / (Rotation.FoLCasts * Rotation.CalcOpts.FoLOnTank), 12f);
             float ssHealed = baseHealed * (0.5f * Talents.InfusionOfLight) * (folHoTUptime / 12f) * (1f + Stats.FlashOfLightHoTMultiplier) * Rotation.CalcOpts.SSUptime;
             ssPercentage = ssHealed / (baseHealed + ssHealed);
             return baseHealed + ssHealed;
