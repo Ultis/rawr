@@ -783,6 +783,43 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return statsBuffs;
         }
         public override void SetDefaults(Character character) { }
+        public Stats GetPetBuffsStats(Character character, CalculationOptionsHunter calcOpts)
+        {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            float hasRelevantBuff;
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            {
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (calcOpts.petActiveBuffs.Contains(a)) { calcOpts.petActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (calcOpts.petActiveBuffs.Contains(b)) { calcOpts.petActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (calcOpts.petActiveBuffs.Contains(c)) { calcOpts.petActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
+            }
+            /* [More Buffs to Come to this method]
+             * Ferocious Inspiration | Sanctified Retribution
+             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
+             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
+             */
+            #endregion
+
+            Stats statsBuffs = GetBuffsStats(calcOpts.petActiveBuffs);
+
+            foreach (Buff b in removedBuffs) { calcOpts.petActiveBuffs.Add(b); }
+            foreach (Buff b in addedBuffs) { calcOpts.petActiveBuffs.Remove(b); }
+
+            return statsBuffs;
+        }
 
         #endregion
 
@@ -1278,7 +1315,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.BasicStats = stats;
             calculatedStats.BaseHealth = statsRace.Health;
 
-            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, stats, GetBuffsStats(calcOpts.petActiveBuffs));
+            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, stats, GetPetBuffsStats(character, calcOpts));
             
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
                                              && character.Ranged.Item.Type != ItemType.Gun
