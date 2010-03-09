@@ -2203,7 +2203,15 @@ namespace Rawr
             character.AssignAllTalentsFromCharacter(reload, false);
             character.PrimaryProfession = reload.PrimaryProfession;
             character.SecondaryProfession = reload.SecondaryProfession;
-			character.IsLoading = false;
+            #region Hunter Pets if a Hunter
+            if (character.Class == CharacterClass.Hunter)
+            {
+                // Pull Pet(s) Info if you are a Hunter
+                List<ArmoryPet> pets = Armory.GetPet(character.Region, character.Realm, character.Name);
+                if (pets != null) { character.ArmoryPets = pets; }
+            }
+            #endregion
+            character.IsLoading = false;
 			character.OnCalculationsInvalidated();
         }
 

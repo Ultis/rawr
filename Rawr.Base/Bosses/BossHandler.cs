@@ -199,7 +199,7 @@ namespace Rawr {
             "10 Man (H)",
             "25 Man (H)",
         };
-        public enum Versions   : int { V_10N = 0, V_25N, V_10H, V_25H, }
+        public enum Versions   : int { V_10N = 0, V_25N = 1, V_10H = 2, V_25H = 3, V_10 = 0, V_25 = 1 } // last two are for file compatibility between versions
         public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9 }
         public static readonly float[] StandardMeleePerHit = new float[] {
               5000f*2f, //T7_0,
