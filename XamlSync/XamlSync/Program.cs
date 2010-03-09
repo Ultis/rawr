@@ -119,6 +119,8 @@ namespace XamlSync
         {
             //CacheMode="BitmapCache"
             line = Regex.Replace(line, "CacheMode\\s*=\\s*\"BitmapCache\"", "d:CacheMode=\"BitmapCache\"");
+            //TabNavigation
+            line = line.Replace("TabNavigation", "KeyboardNavigation.TabNavigation");
             return line;
         }
 
@@ -126,6 +128,8 @@ namespace XamlSync
         {
             //CacheMode="BitmapCache"
             line = Regex.Replace(line, "d:CacheMode\\s*=\\s*\"BitmapCache\"", "CacheMode=\"BitmapCache\"");
+            //TabNavigation
+            line = line.Replace("KeyboardNavigation.TabNavigation", "TabNavigation");
             return line;
         }
 
