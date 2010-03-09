@@ -2647,7 +2647,7 @@ namespace Rawr.Optimizer
             OptimizerCharacter optCharacter = GenerateIndividual(parent.Items);
             object[] items = optCharacter.Items;
             Character character = optCharacter.Character;
-#if SILVERLIGHT
+#if RAWR3
             TalentsBase talents = ((TalentsBase)items[characterSlots + 3]).Clone();
 #else
             TalentsBase talents = (TalentsBase)((ICloneable)items[characterSlots + 3]).Clone();

@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using Rawr.Optimizer;
 using Rawr.Properties;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace Rawr.UI
 {
@@ -22,6 +23,8 @@ namespace Rawr.UI
         private ItemInstanceOptimizer optimizer;
         private Item itemToEvaluate;
 
+        private string[] talentList;
+
         public void EvaluateUpgrades(Item itemToEvaluate)
         {
             this.itemToEvaluate = itemToEvaluate;
@@ -29,8 +32,24 @@ namespace Rawr.UI
             this.itemToEvaluate = null;
         }
 
+        private void InitializeTalentList(Character character)
+        {
+            talentList = new string[character.CurrentTalents.Data.Length];
+            foreach (PropertyInfo pi in character.CurrentTalents.GetType().GetProperties())
+            {
+                TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
+                if (talentDatas.Length > 0)
+                {
+                    TalentDataAttribute talentData = talentDatas[0];
+                    talentList[talentData.Index] = talentData.Name;
+                }
+            }
+        }
+
         public OptimizeWindow(Character c)
         {
+            InitializeTalentList(c);
+
             InitializeComponent();
 
             character = c;
@@ -103,6 +122,7 @@ namespace Rawr.UI
         {
             Grid requirementGrid = new Grid();
             requirementGrid.Style = Resources["RequirementGridStyle"] as Style;
+            requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
             requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
             requirementGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
@@ -116,29 +136,40 @@ namespace Rawr.UI
             foreach (string subPoint in Calculations.SubPointNameColors.Keys)
                 requirements.Add(subPoint + " Rating");
             requirements.AddRange(Calculations.OptimizableCalculationLabels);
+            requirements.Add("Talent");
+            requirements.Add("Cost");
             requirementCalculationCombo.ItemsSource = requirements;
             requirementCalculationCombo.Tag = Calculations.SubPointNameColors.Count;
             requirementCalculationCombo.Tag = 0;
             Grid.SetColumn(requirementCalculationCombo, 0);
+            Grid.SetColumnSpan(requirementCalculationCombo, 2);
+            requirementCalculationCombo.SelectionChanged += requirementCalculationCombo_SelectionChanged;
             requirementGrid.Children.Add(requirementCalculationCombo);
+
+            ComboBox requirementTalentsCombo = new ComboBox();
+            requirementTalentsCombo.Style = Resources["RequirementComboStyle"] as Style;
+            requirementTalentsCombo.ItemsSource = talentList;
+            requirementTalentsCombo.Visibility = Visibility.Collapsed;
+            Grid.SetColumn(requirementTalentsCombo, 1);
+            requirementGrid.Children.Add(requirementTalentsCombo);
 
             ComboBox requirementGreaterCombo = new ComboBox();
             requirementGreaterCombo.Style = Resources["RequirementGreaterComboStyle"] as Style;
             requirementGreaterCombo.ItemsSource = new string[] { "≥", "≤" };
             requirementGreaterCombo.Tag = 1;
-            Grid.SetColumn(requirementGreaterCombo, 1);
+            Grid.SetColumn(requirementGreaterCombo, 2);
             requirementGrid.Children.Add(requirementGreaterCombo);
 
             NumericUpDown requirementNum = new NumericUpDown();
             requirementNum.Style = Resources["RequirementNumStyle"] as Style;
             requirementNum.Tag = 2;
-            Grid.SetColumn(requirementNum, 2);
+            Grid.SetColumn(requirementNum, 3);
             requirementGrid.Children.Add(requirementNum);
 
             Button requirementRemoveButton = new Button();
             requirementRemoveButton.Style = Resources["RequirementRemoveStyle"] as Style;
             requirementRemoveButton.Click += new RoutedEventHandler(RemoveRequirement_Click);
-            Grid.SetColumn(requirementRemoveButton, 3);
+            Grid.SetColumn(requirementRemoveButton, 4);
             requirementGrid.Children.Add(requirementRemoveButton);
 
             if (requirement == null)
@@ -149,7 +180,41 @@ namespace Rawr.UI
             }
             else
             {
-                requirementCalculationCombo.SelectedItem = requirement.Calculation;
+                string calculationString = requirement.Calculation;
+                if (calculationString.StartsWith("[Overall]", StringComparison.Ordinal))
+                {
+                    requirementCalculationCombo.SelectedIndex = 0;
+                }
+                else if (calculationString.StartsWith("[SubPoint ", StringComparison.Ordinal))
+                {
+                    calculationString = calculationString.Substring(10).TrimEnd(']');
+                    int index = int.Parse(calculationString);
+                    if (index < Calculations.SubPointNameColors.Count)
+                    {
+                        requirementCalculationCombo.SelectedIndex = index + 1;
+                    }
+                }
+                else if (calculationString.StartsWith("[Talent ", StringComparison.Ordinal))
+                {
+                    requirementCalculationCombo.SelectedItem = "Talent";
+                    string talent = calculationString.Substring(8).TrimEnd(']');
+                    int index = int.Parse(talent);
+                    if (index < talentList.Length)
+                    {
+                        requirementTalentsCombo.SelectedIndex = index;
+                    }
+                }
+                else if (calculationString.StartsWith("[Cost]", StringComparison.Ordinal))
+                {
+                    requirementCalculationCombo.SelectedItem = "Cost";
+                }
+                else
+                {
+                    if (Array.IndexOf(Calculations.OptimizableCalculationLabels, calculationString) >= 0)
+                    {
+                        requirementCalculationCombo.SelectedItem = calculationString;
+                    }
+                }
                 requirementGreaterCombo.SelectedIndex = requirement.LessThan ? 1 : 0;
                 requirementNum.Value = (double)requirement.Value;
             }
@@ -157,15 +222,36 @@ namespace Rawr.UI
             RequirementsStack.Children.Add(requirementGrid);
         }
 
+        void requirementCalculationCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox requirementCalculationCombo = (ComboBox)sender;
+            Grid grid = (Grid)requirementCalculationCombo.Parent;
+            ComboBox requirementTalentsCombo = (ComboBox)grid.Children[1];
+            if ((string)requirementCalculationCombo.SelectedItem == "Talent")
+            {
+                Grid.SetColumnSpan(requirementCalculationCombo, 1);
+                requirementTalentsCombo.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Grid.SetColumnSpan(requirementCalculationCombo, 2);
+                requirementTalentsCombo.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void RemoveRequirement_Click(object sender, RoutedEventArgs e)
         {
-            RequirementsStack.Children.Remove((Grid)((Button)sender).Parent);
+            Grid grid = (Grid)((Button)sender).Parent;
+            ComboBox requirementCalculationCombo = (ComboBox)grid.Children[0];
+            requirementCalculationCombo.SelectionChanged -= requirementCalculationCombo_SelectionChanged;
+
+            RequirementsStack.Children.Remove(grid);
         }
 
         private List<TalentsBase> GetOptimizeTalentSpecs()
         {
             List<TalentsBase> talentSpecs = null;
-            if (TalentsCheck.IsChecked.GetValueOrDefault(false))
+            if (TalentsCheck.IsChecked.GetValueOrDefault(false) || TalentSpecsCheck.IsChecked.GetValueOrDefault(false))
             {
                 talentSpecs = new List<TalentsBase>();
                 foreach (SavedTalentSpec spec in SavedTalentSpec.SpecsFor(character.Class))
@@ -185,12 +271,16 @@ namespace Rawr.UI
             return talentSpecs;
         }
 
-        private string GetCalculationStringFromComboBox(ComboBox comboBox)
+        private string GetCalculationStringFromComboBox(ComboBox comboBox, ComboBox comboBoxTalent)
         {
             if (comboBox.SelectedIndex == 0)
                 return "[Overall]";
             else if (comboBox.SelectedIndex <= (int)comboBox.Tag)
                 return string.Format("[SubPoint {0}]", comboBox.SelectedIndex - 1);
+            else if ((string)comboBox.SelectedItem == "Talent")
+                return string.Format("[Talent {0}]", comboBoxTalent.SelectedIndex);
+            else if ((string)comboBox.SelectedItem == "Cost")
+                return "[Cost]";
             else
                 return comboBox.SelectedItem as string;
         }
@@ -228,24 +318,29 @@ namespace Rawr.UI
 
         private List<OptimizationRequirement> GetOptimizationRequirements()
         {
+            bool ignore;
+            return GetOptimizationRequirements(out ignore);
+        }
+
+        private List<OptimizationRequirement> GetOptimizationRequirements(out bool costRequirement)
+        {
+            costRequirement = false;
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
             foreach (UIElement requirementGrid in RequirementsStack.Children)
             {
-                OptimizationRequirement currentRequirement = new OptimizationRequirement();
-                foreach (UIElement requirementControl in ((Grid)requirementGrid).Children)
+                Grid grid = requirementGrid as Grid;
+                if (grid != null)
                 {
-                    if (requirementControl is FrameworkElement && ((FrameworkElement)requirementControl).Tag is int)
+                    OptimizationRequirement requirement = new OptimizationRequirement();
+                    requirement.Calculation = GetCalculationStringFromComboBox(grid.Children[0] as ComboBox, grid.Children[1] as ComboBox);
+                    requirement.LessThan = (grid.Children[2] as ComboBox).SelectedIndex == 1;
+                    requirement.Value = (float)((grid.Children[3] as NumericUpDown).Value);
+                    requirements.Add(requirement);
+                    if (requirement.Calculation == "[Cost]")
                     {
-                        int tag = (int)((FrameworkElement)requirementControl).Tag;
-                        if (tag == 0)
-                            currentRequirement.Calculation = GetCalculationStringFromComboBox(requirementControl as ComboBox);
-                        else if (tag == 1)
-                            currentRequirement.LessThan = ((ComboBox)requirementControl).SelectedIndex == 1;
-                        else if (tag == 2)
-                            currentRequirement.Value = (float)((NumericUpDown)requirementControl).Value;
+                        costRequirement = true;
                     }
                 }
-                requirements.Add(currentRequirement);
             }
             return requirements;
         }
@@ -273,7 +368,7 @@ namespace Rawr.UI
             OptimizerSettings.Default.OverrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.OverrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.Thoroughness = (int)ThoroughnessSlider.Value;
-            OptimizerSettings.Default.CalculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo);
+            OptimizerSettings.Default.CalculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             character.OptimizationRequirements = GetOptimizationRequirements();
         }
 
@@ -287,8 +382,9 @@ namespace Rawr.UI
             bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
             bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
             int thoroughness = (int)ThoroughnessSlider.Value;
-            string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo);
-            OptimizationRequirement[] requirements = GetOptimizationRequirements().ToArray();
+            string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
+            bool costRequirement;
+            List<OptimizationRequirement> requirements = GetOptimizationRequirements(out costRequirement);
 
             optimizer.OptimizationMethod = OptimizerSettings.Default.OptimizationMethod;
             optimizer.GreedyOptimizationMethod = OptimizerSettings.Default.GreedyOptimizationMethod;
@@ -296,14 +392,23 @@ namespace Rawr.UI
             optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
                 FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false);
+                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), TalentsCheck.IsChecked.GetValueOrDefault(), costRequirement);
 
             if (OptimizerSettings.Default.WarningsEnabled)
             {
                 string prompt = optimizer.GetWarningPromptIfNeeded();
                 if (prompt != null)
                 {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
+                }
+                prompt =optimizer.CheckOneHandedWeaponUniqueness();
+                if (prompt != null)
+                {
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
+                }
+                if (!optimizer.ItemGenerator.IsCharacterValid(character, out prompt, true))
+                {
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
                 }
             }
 
@@ -311,7 +416,7 @@ namespace Rawr.UI
             DoneButton.Visibility = Visibility.Collapsed;
 
             ControlsEnabled(false);
-            optimizer.OptimizeCharacterAsync(character, calculationToOptimize, new List<OptimizationRequirement>(requirements), thoroughness, false);
+            optimizer.OptimizeCharacterAsync(character, calculationToOptimize, requirements, thoroughness, false);
         }
 
         private void optimizer_OptimizeCharacterCompleted(object sender, OptimizeCharacterCompletedEventArgs e)
@@ -367,8 +472,8 @@ namespace Rawr.UI
             bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
             bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
             int thoroughness = (int)Math.Ceiling((float)ThoroughnessSlider.Value / 10f);
-            string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo);
-            OptimizationRequirement[] requirements = GetOptimizationRequirements().ToArray();
+            string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
+            List<OptimizationRequirement> requirements = GetOptimizationRequirements();
 
             if ((overrideReenchant || overrideRegem || thoroughness > 100) && OptimizerSettings.Default.WarningsEnabled)
             {
@@ -390,13 +495,13 @@ namespace Rawr.UI
                 string prompt = optimizer.GetWarningPromptIfNeeded();
                 if (prompt != null)
                 {
-                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
                 }
             }
 
             ControlsEnabled(false);
 
-            optimizer.ComputeUpgradesAsync(character, calculationToOptimize, new List<OptimizationRequirement>(requirements), thoroughness, itemToEvaluate);
+            optimizer.ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, itemToEvaluate);
         }
 
         private void optimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)

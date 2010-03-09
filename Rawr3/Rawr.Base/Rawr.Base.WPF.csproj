@@ -8,7 +8,7 @@
     <ProjectGuid>{542537D3-F86B-4022-A161-B2FC6F0218B7}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rawr.Base.WPF</RootNamespace>
+    <RootNamespace>Rawr.Base</RootNamespace>
     <AssemblyName>Rawr.Base.WPF</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

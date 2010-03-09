@@ -6,6 +6,7 @@
 	mc:Ignorable="d"
 	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
 	xmlns:local="clr-namespace:Rawr.UI"
 	xmlns:Rawr_Properties="clr-namespace:Rawr.Properties;assembly=Rawr.Base" xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 	x:Class="Rawr.UI.OptimizeWindow"
@@ -101,11 +102,14 @@
 				<CheckBox x:Name="OverrideRegemCheck" HorizontalAlignment="Left" Margin="2,2,2,2" Content="Override Regem" Grid.Row="3" d:LayoutOverrides="Height" VerticalAlignment="Center" />
 				<CheckBox x:Name="OverrideReenchantCheck" Margin="116,2,2,2" Content="Override Reenchant" Grid.Row="3" d:LayoutOverrides="Height" HorizontalAlignment="Left" VerticalAlignment="Center" />
 				<TextBlock HorizontalAlignment="Stretch" Margin="2,2,2,2" Grid.Row="4" Text="Choose additional properties to optimize as well." TextWrapping="Wrap" d:LayoutOverrides="Height" VerticalAlignment="Center" FontSize="10"/>
-				<CheckBox x:Name="FoodCheck" HorizontalAlignment="Left" Margin="2,2,2,2" Content="Food" Grid.Row="5" d:LayoutOverrides="Height" VerticalAlignment="Center"/>
-				<CheckBox x:Name="ElixirsFlasksCheck" Margin="55,2,0,2" Content="Elixirs/Flasks" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-				<CheckBox x:Name="MixologyCheck" HorizontalAlignment="Left" Margin="153,2,0,2" Content="Mixology" Grid.Row="5" VerticalAlignment="Center"/>
-				<CheckBox x:Name="TalentsCheck" HorizontalAlignment="Left" Margin="228,2,0,2" Content="Talents" Grid.Row="5" VerticalAlignment="Center"/>
-			</Grid>
+                <toolkit:WrapPanel Orientation="Horizontal" Grid.Row="5" >
+                    <CheckBox x:Name="FoodCheck" Margin="2,2,2,2" Content="Food" />
+                    <CheckBox x:Name="ElixirsFlasksCheck" Margin="2,2,2,2" Content="Elixirs/Flasks" />
+                    <CheckBox x:Name="MixologyCheck" Margin="2,2,2,2" Content="Mixology" />
+                    <CheckBox x:Name="TalentSpecsCheck" Margin="2,2,2,2" Content="Talent Specs" />
+                    <CheckBox x:Name="TalentsCheck" Margin="2,2,2,2" Content="Talents" />
+                </toolkit:WrapPanel>
+            </Grid>
 		</local:GroupBox>
 		<TextBlock x:Name="MaxScoreLabel" HorizontalAlignment="Left" Margin="4,2,2,4" VerticalAlignment="Center" Grid.Row="4" TextWrapping="Wrap"/>
 		<Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Grid.Row="4" HorizontalAlignment="Right" Margin="0,2,4,4" VerticalAlignment="Bottom" Width="75" Grid.Column="1" Visibility="Collapsed" />
