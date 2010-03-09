@@ -30,6 +30,13 @@ namespace Rawr.WarlockTmp {
             }
         }
 
+        public static float CalcUprate(
+            float procRate, float duration, float triggerPeriod) {
+
+            return 1f
+                - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
+        }
+
         public enum SpellTree { Affliction, Demonology, Destruction }
 
         private class IntList : List<int> {
@@ -284,9 +291,8 @@ namespace Rawr.WarlockTmp {
             float critMultiplier = 0f;
             if (CanCrit) {
                 critChance = Mommy.BaseCritChance + BonusCritChance;
-                critMultiplier
-                    = 1f + Mommy.BaseBonusCritMultiplier + BonusCritMultiplier;
-                critMultiplier = 1f + .5f * critMultiplier;
+                float critBonus = .5f + 1.5f * Mommy.BaseBonusCritMultiplier;
+                critMultiplier = 1f + critBonus * (1f + BonusCritMultiplier);
             }
 
             if (MagicSchool == MagicSchool.Shadow

@@ -94,7 +94,7 @@ namespace Rawr.WarlockTmp {
                 0f) { // float attackPowerPerStrength,
 
             // real firebolt avg hit, naked untalented = 236, NOT whatever the
-            // tooltip would indicate
+            // tooltip indicates
         }
     }
 

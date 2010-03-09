@@ -18,13 +18,13 @@ namespace Rawr.WarlockTmp {
 
         #region subclass specific properties
 
+        public float PersonalDps { get { return SubPoints[0]; } }
+        public float PetDps { get { return SubPoints[1]; } }
+
         public Character Character { get; private set; }
         public Stats Stats { get; private set; }
         public CalculationOptionsWarlock Options { get; private set; }
         public WarlockTalents Talents { get; private set; }
-
-        private float PersonalDps = -1f;
-        private float PetDps = -1f;
 
         public float BaseMana { get; private set; }
         public float BaseDirectDamageMultiplier { get; private set; }
@@ -68,18 +68,7 @@ namespace Rawr.WarlockTmp {
             HitChance
                 = Math.Min(
                     1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
-            BaseBonusCritMultiplier = Stats.CritBonusDamage;
-
-            // If the 5% crit debuff is not already being maintained by somebody
-            // else (i.e. it's not selected in the buffs tab), we may supply it
-            // via Improved Shadow Bolt.
-            if (Talents.ImprovedShadowBolt > 0
-                && Stats.SpellCritOnTarget == 0
-                && Options.SpellPriority.Contains("Shadow Bolt")) {
-
-                // TODO calculate uptime when less than 5 points are invested.
-                BaseCritChance += .05f;
-            }
+            BaseBonusCritMultiplier = Stats.BonusSpellCritMultiplier;
 
             float personalDps = CalcPersonalDps();
             float petDps = CalcPetDps();
@@ -252,14 +241,12 @@ namespace Rawr.WarlockTmp {
 
         private float CalcPersonalDps() {
 
-           if (GetError(Options.SpellPriority) != null) {
-                PersonalDps = 0f;
+            if (GetError(Options.SpellPriority) != null) {
                 return 0f;
             }
 
+            #region Calculate the entire fight's mana pool
             LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
-
-            // calculate the entire fight's mana pool
             float timeRemaining = Options.Duration;
             float manaRemaining
                 = Stats.Mana
@@ -267,9 +254,9 @@ namespace Rawr.WarlockTmp {
                     + timeRemaining
                         * (Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana
                             + Stats.Mp5 / 5f);
+            #endregion
 
-            // first run through the priorities and calculate how many times
-            // each spell will be cast
+            #region Calculate NumCasts for each spell
             float haste = 1f + Stats.SpellHaste;
             float lag = Options.Latency;
             foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
@@ -297,8 +284,9 @@ namespace Rawr.WarlockTmp {
                     break;
                 }
             }
+            #endregion
 
-            // adjust bonuses based on spell uptimes, etc
+            #region Calculate bonuses based on spell uptimes, etc
             if (CastSpells.ContainsKey("Metamorphosis")) {
                 float morphBonus
                     = ((Metamorphosis) CastSpells["Metamorphosis"])
@@ -310,9 +298,29 @@ namespace Rawr.WarlockTmp {
                 BaseDirectDamageMultiplier += .13f;
                 BaseTickDamageMultiplier += .13f;
             }
+            if (Talents.ImprovedShadowBolt > 0
+                && Stats.SpellCritOnTarget < .05f) {
 
-            // then for each spell that is cast calculate its damage, and our
-            // overall damage
+                // If the 5% crit debuff is not already being maintained by
+                // somebody else (i.e. it's not selected in the buffs tab), we
+                // may supply it via Improved Shadow Bolt.
+                float casts = 0f;
+                if (CastSpells.ContainsKey("Shadow Bolt")) {
+                    casts += CastSpells["Shadow Bolt"].NumCasts;
+                }
+                if (CastSpells.ContainsKey("Shadow Bolt (Instant)")) {
+                    casts += CastSpells["Shadow Bolt (Instant)"].NumCasts;
+                }
+                float uprate = Spell.CalcUprate(
+                    Talents.ImprovedShadowBolt * .2f, // proc rate
+                    30f, // duration
+                    Options.Duration / casts); // trigger period
+                float benefit = .05f - Stats.SpellCritOnTarget;
+                BaseCritChance += benefit * uprate;
+            }
+            #endregion
+
+            #region Calculate damage done for each spell
             float spellPower
                 = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
             float damageDone = 0f;
@@ -321,6 +329,8 @@ namespace Rawr.WarlockTmp {
                 spell.SetDamageStats(spellPower);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
             }
+            #endregion
+
             return damageDone / Options.Duration;
         }
 
