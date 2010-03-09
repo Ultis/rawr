@@ -823,6 +823,11 @@ namespace Rawr
                     #endregion
                 }
                 #endregion
+            } else if(item.Stats.Resilience > 0){
+                // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
+                PvpItem locInfo = new PvpItem();
+                //locInfo.
+                LocationFactory.Add(item.Id.ToString(), locInfo);
             } else {
                 // We DON'T have Source Data
                 // Since we are doing nothing, the ItemSource cache doesn't change
