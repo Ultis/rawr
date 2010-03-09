@@ -196,7 +196,7 @@ namespace Rawr.Healadin
             //    calc.RotationHL += hs_hlcasts * hl_hs.CastTime();
             //    calc.HealedHL += hs_hlcasts * hl_hs.AverageHealed();
             //}
-            //#endregion
+            #endregion
 
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
