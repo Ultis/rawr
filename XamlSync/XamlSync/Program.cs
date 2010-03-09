@@ -20,6 +20,7 @@ namespace XamlSync
             slMap["xmlns:toolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit\"";
 	        slMap["xmlns:controls"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\"";
 	        slMap["xmlns:Rawr"] = "\"clr-namespace:Rawr;assembly=Rawr.Base\"";
+            slMap["xmlns:Rawr_Properties"] = "\"clr-namespace:Rawr.Properties;assembly=Rawr.Base\"";
             slMap["xmlns:basics"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\"";
     	    slMap["xmlns:common"] = "\"clr-namespace:System.Windows;assembly=System.Windows.Controls\"";
             slMap["xmlns:data"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data\"";
@@ -28,7 +29,8 @@ namespace XamlSync
             wpfMap["xmlns:toolkit"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 	        wpfMap["xmlns:controls"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:Rawr"] = "\"clr-namespace:Rawr;assembly=Rawr.Base.WPF\"";
-	        wpfMap["xmlns:basics"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
+            wpfMap["xmlns:Rawr_Properties"] = "\"clr-namespace:Rawr.Properties;assembly=Rawr.Base.WPF\"";
+            wpfMap["xmlns:basics"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 	        wpfMap["xmlns:common"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:data"] = "\"clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit\"";
             wpfMap["xmlns:dataInput"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
