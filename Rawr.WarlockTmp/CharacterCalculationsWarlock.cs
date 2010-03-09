@@ -295,7 +295,7 @@ namespace Rawr.WarlockTmp {
             // each spell will be cast
             float haste = 1f + Stats.SpellHaste;
             float lag = Options.Latency;
-            foreach (string spellName in Options.SpellPriority) {
+            foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
                 Spell spell = GetSpell(spellName);
                 if (!spell.IsCastable()) {
                     continue;
@@ -328,6 +328,10 @@ namespace Rawr.WarlockTmp {
                         .GetAvgBonusMultiplier();
                 BaseDirectDamageMultiplier += morphBonus;
                 BaseTickDamageMultiplier += morphBonus;
+            }
+            if (CastSpells.ContainsKey("Curse Of The Elements")) {
+                BaseDirectDamageMultiplier += .13f;
+                BaseTickDamageMultiplier += .13f;
             }
 
             // then for each spell that is cast calculate its damage, and our
@@ -383,6 +387,19 @@ namespace Rawr.WarlockTmp {
                 return "No spell may appear after a spammable spell.";
             }
             return null;
+        }
+
+        public List<string> PrepForCalcs(List<string> spellPriority) {
+
+            List<string> forCalcs = new List<string>(spellPriority);
+            if (forCalcs.Contains("Shadow Bolt")
+                && !forCalcs.Contains("Shadow Bolt (Instant)")
+                && ShadowBolt_Instant.MightCast(
+                    Talents, forCalcs.Contains("Corruption"))) {
+
+                forCalcs.Insert(forCalcs.Count - 1, "Shadow Bolt (Instant)");
+            }
+            return forCalcs;
         }
     }
 }

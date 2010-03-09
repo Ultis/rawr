@@ -33,6 +33,7 @@
             this.newRotationButton = new System.Windows.Forms.Button();
             this.deleteRotationButton = new System.Windows.Forms.Button();
             this.rotationBox = new System.Windows.Forms.GroupBox();
+            this.rotationErrorLabel = new System.Windows.Forms.Label();
             this.rotationRenameButton = new System.Windows.Forms.Button();
             this.rotationSeparator = new System.Windows.Forms.Panel();
             this.rotationSpellCombo = new System.Windows.Forms.ComboBox();
@@ -50,7 +51,6 @@
             this.latencySpinner = new System.Windows.Forms.NumericUpDown();
             this.latencyLabel = new System.Windows.Forms.Label();
             this.infernalCheck = new System.Windows.Forms.CheckBox();
-            this.rotationErrorLabel = new System.Windows.Forms.Label();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
@@ -122,10 +122,19 @@
             this.rotationBox.Controls.Add(this.newRotationButton);
             this.rotationBox.Location = new System.Drawing.Point(3, 132);
             this.rotationBox.Name = "rotationBox";
-            this.rotationBox.Size = new System.Drawing.Size(294, 280);
+            this.rotationBox.Size = new System.Drawing.Size(294, 244);
             this.rotationBox.TabIndex = 7;
             this.rotationBox.TabStop = false;
             this.rotationBox.Text = "Spell Priorities";
+            // 
+            // rotationErrorLabel
+            // 
+            this.rotationErrorLabel.ForeColor = System.Drawing.Color.Red;
+            this.rotationErrorLabel.Location = new System.Drawing.Point(6, 224);
+            this.rotationErrorLabel.Name = "rotationErrorLabel";
+            this.rotationErrorLabel.Size = new System.Drawing.Size(282, 13);
+            this.rotationErrorLabel.TabIndex = 19;
+            this.rotationErrorLabel.Text = "label1";
             // 
             // rotationRenameButton
             // 
@@ -318,15 +327,6 @@
             this.infernalCheck.UseVisualStyleBackColor = true;
             this.infernalCheck.CheckedChanged += new System.EventHandler(this.infernalCheck_CheckedChanged);
             // 
-            // rotationErrorLabel
-            // 
-            this.rotationErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.rotationErrorLabel.Location = new System.Drawing.Point(6, 224);
-            this.rotationErrorLabel.Name = "rotationErrorLabel";
-            this.rotationErrorLabel.Size = new System.Drawing.Size(282, 13);
-            this.rotationErrorLabel.TabIndex = 19;
-            this.rotationErrorLabel.Text = "label1";
-            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -342,7 +342,7 @@
             this.Controls.Add(this.petLabel);
             this.Controls.Add(this.rotationBox);
             this.Name = "CalculationOptionsPanelWarlock";
-            this.Size = new System.Drawing.Size(300, 448);
+            this.Size = new System.Drawing.Size(300, 380);
             this.rotationBox.ResumeLayout(false);
             this.rotationBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).EndInit();

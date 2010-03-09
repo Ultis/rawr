@@ -91,16 +91,112 @@ namespace Rawr.WarlockTmp {
 
         #endregion
 
-        #region Constructor
+        #region Non-Damage Constructor
         public Spell(
             CharacterCalculationsWarlock mommy,
             MagicSchool magicSchool,
             SpellTree spellTree,
             float percentBaseMana,
-            float costMultiplier,
-            float spellCastTime,
-            float spellLowDamage,
-            float spellHighDamage,
+            float baseCastTime,
+            float cooldown)
+            : this(
+                mommy,
+                magicSchool,
+                spellTree,
+                percentBaseMana,
+                baseCastTime,
+                0f, // lowDirectDamage,
+                0f, // highDirectDamage,
+                0f, // directCoefficient,
+                0f, // bonusDirectMultiplier,
+                0f, // baseTickDamage,
+                0f, // numTicks,
+                0f, // tickCoefficient,
+                0f, // bonusTickMultiplier,
+                false, // canCrit,
+                0f, // bonusCritChance,
+                0f, // bonusCritMultiplier,
+                cooldown) { }
+        #endregion
+
+        #region Direct Damage Constructor
+        public Spell(
+            CharacterCalculationsWarlock mommy,
+            MagicSchool magicSchool,
+            SpellTree spellTree,
+            float percentBaseMana,
+            float baseCastTime,
+            float lowDirectDamage,
+            float highDirectDamage,
+            float directCoefficient,
+            float bonusDirectMultiplier,
+            float bonusCritChance,
+            float bonusCritMultiplier,
+            float cooldown)
+            : this(
+                mommy,
+                magicSchool,
+                spellTree,
+                percentBaseMana,
+                baseCastTime,
+                lowDirectDamage,
+                highDirectDamage,
+                directCoefficient,
+                bonusDirectMultiplier,
+                0f, // baseTickDamage,
+                0f, // numTicks,
+                0f, // tickCoefficient,
+                0f, // bonusTickMultiplier,
+                true, // canCrit,
+                bonusCritChance,
+                bonusCritMultiplier,
+                cooldown) { }
+        #endregion
+
+        #region DoT Constructor
+        public Spell(
+            CharacterCalculationsWarlock mommy,
+            MagicSchool magicSchool,
+            SpellTree spellTree,
+            float percentBaseMana,
+            float baseCastTime,
+            float baseTickDamage,
+            float numTicks,
+            float tickCoefficient,
+            float bonusTickMultiplier,
+            bool canCrit,
+            float bonusCritChance,
+            float bonusCritMultiplier,
+            float cooldown)
+            : this(
+                mommy,
+                magicSchool,
+                spellTree,
+                percentBaseMana,
+                baseCastTime,
+                0f, // direct low damage
+                0f, // direct high damage
+                0f, // direct coefficient
+                0f, // bonus direct multiplier
+                baseTickDamage,
+                numTicks,
+                tickCoefficient,
+                bonusTickMultiplier,
+                canCrit,
+                bonusCritChance,
+                bonusCritMultiplier,
+                cooldown) { }
+        #endregion
+
+        #region Kitchen Sink Constructor
+        public Spell(
+            CharacterCalculationsWarlock mommy,
+            MagicSchool magicSchool,
+            SpellTree spellTree,
+            float percentBaseMana,
+            float baseCastTime,
+            float lowDirectDamage,
+            float highDirectDamage,
             float directCoefficient,
             float bonusDirectMultiplier,
             float baseTickDamage,
@@ -116,9 +212,9 @@ namespace Rawr.WarlockTmp {
             MagicSchool = magicSchool;
             // TODO factor in "mana cost reduction" proc trinket(s?)
             // TODO factor in mana restore procs (as cost reduction)
-            ManaCost = mommy.BaseMana * percentBaseMana * costMultiplier;
-            BaseCastTime = spellCastTime;
-            BaseDamage = (spellLowDamage + spellHighDamage) / 2f;
+            ManaCost = mommy.BaseMana * percentBaseMana;
+            BaseCastTime = baseCastTime;
+            BaseDamage = (lowDirectDamage + highDirectDamage) / 2f;
             DirectCoefficient = directCoefficient;
             BonusDirectMultiplier = bonusDirectMultiplier;
             BaseTickDamage = baseTickDamage;
@@ -228,10 +324,15 @@ namespace Rawr.WarlockTmp {
 
         public String GetToolTip() {
 
-            string toolTip
-                = String.Format(
-                    "{0:0.0} dps*",
-                    NumCasts * AvgDamagePerCast / Mommy.Options.Duration);
+            string toolTip;
+            if (AvgDamagePerCast > 0) {
+                toolTip
+                    = String.Format(
+                        "{0:0.0} dps*",
+                        NumCasts * AvgDamagePerCast / Mommy.Options.Duration);
+            } else {
+                toolTip = String.Format("{0:0.0} casts*", NumCasts);
+            }
             if (AvgDirectDamage > 0) {
                 toolTip
                     += String.Format(
@@ -261,16 +362,20 @@ namespace Rawr.WarlockTmp {
             }
             toolTip
                 += String.Format(
-                    "{0:0.0}s\tBetween Casts (Average)\r\n"
-                        + "{1:0.0}\tDPC\r\n"
-                        + "{2:0.0}\tDPCT\r\n"
-                        + "{3:0.0}\tDPM\r\n"
-                        + "{4:0.0}\tCasts",
-                    Mommy.Options.Duration / NumCasts,
-                    AvgDamagePerCast,
-                    AvgDamagePerCast / GetCastTime(),
-                    AvgDamagePerCast / ManaCost,
-                    NumCasts);
+                    "{0:0.0}s\tBetween Casts (Average)\r\n",
+                    Mommy.Options.Duration / NumCasts);
+            if (AvgDamagePerCast > 0) {
+                toolTip
+                    += String.Format(
+                        "{0:0.0}\tDPC\r\n"
+                            + "{1:0.0}\tDPCT\r\n"
+                            + "{2:0.0}\tDPM\r\n"
+                            + "{3:0.0}\tCasts",
+                        AvgDamagePerCast,
+                        AvgDamagePerCast / GetCastTime(),
+                        AvgDamagePerCast / ManaCost,
+                        NumCasts);
+            }
             return toolTip;
         }
 
@@ -475,12 +580,7 @@ namespace Rawr.WarlockTmp {
                 MagicSchool.Shadow, // magic school
                 SpellTree.Affliction, // spell tree
                 .14f, // percent base mana
-                1f, // cost multiplier
                 1.5f, // cast time
-                0f, // low damage
-                0f, // high damage
-                0f, // direct coefficient
-                0f, // bonus direct multiplier
                 1080f / 6f, // damage per tick
                 6f, // num ticks
                 (1.2f
@@ -513,12 +613,7 @@ namespace Rawr.WarlockTmp {
                 MagicSchool.Shadow, // magic school
                 SpellTree.Affliction, // spell tree
                 .1f, // percent base mana
-                1f, // cost multiplier
                 1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
-                0f, // low direct damage
-                0f, // high direct damage
-                0f, // direct coefficient
-                0f, // bonus direct multiplier
                 1740f / 12f
                     * (mommy.Talents.GlyphCoA
                         ? 8f / 7f : 1f), // damage per tick
@@ -534,6 +629,23 @@ namespace Rawr.WarlockTmp {
         }
     }
 
+    public class CurseOfTheElements : Spell {
+
+        public CurseOfTheElements(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                0, // magic school
+                SpellTree.Affliction, // spell tree
+                .1f, // percent base mana
+                1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
+                300f) { } // "cooldown"
+
+        public override bool IsCastable() {
+
+            return Mommy.Stats.BonusShadowDamageMultiplier == 0;
+        }
+    }
+
     public class Haunt : Spell {
 
         public Haunt(CharacterCalculationsWarlock mommy)
@@ -542,17 +654,11 @@ namespace Rawr.WarlockTmp {
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .12f, // percent base mana
-                1f, // cost multiplier,
                 1.5f, // cast time
                 645f, // low direct damage
                 753f, // high direct damage
                 .4266f, // direct coefficient
                 0f, // bonus direct multiplier
-                0f, // tick damage
-                0f, // num ticks
-                0f, // tick coefficient
-                0f, // bonus tick multiplier
-                true, // can crit
                 0f, // bonus crit chance
                 mommy.Talents.Pandemic, // bonus crit multiplier
                 8f) { } // cooldown
@@ -591,22 +697,10 @@ namespace Rawr.WarlockTmp {
         public LifeTap(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
-                MagicSchool.Shadow, // magic school
+                0, // magic school
                 SpellTree.Affliction, // spell tree
                 0f, // percent base mana (overwritten below)
-                0f, // cost multiplier
                 1.5f, // cast time
-                0f, // low damage
-                0f, // high damage
-                0f, // direct coefficient
-                0f, // bonus direct multiplier
-                0f, // base tick damage
-                0f, // num ticks
-                0f, // tick coefficient
-                0f, // bonus tick multiplier
-                false, // can crit
-                0f, // bonus crit chance
-                0f, // bonus crit multiplier
                 37f) { // cooldown
 
             ManaCost
@@ -663,19 +757,7 @@ namespace Rawr.WarlockTmp {
                 0, // magic school
                 SpellTree.Demonology, // spell tree
                 0f, // percent base mana
-                1f, // cost multiplier
                 1.5f, // cast time
-                0f, // low damage
-                0f, // high damage
-                0f, // direct coefficient
-                0f, // bonus direct multiplier
-                0f, // damage per tick
-                0f, // num ticks
-                0f, // tick coefficient
-                0f, // bonus tick multiplier
-                false, // can crit
-                0f, // bonus crit chance
-                0f, // bonus crit multiplier
                 180f
                     * (1f
                         - mommy.Talents.Nemesis * .1f)) { } // cooldown
@@ -724,7 +806,6 @@ namespace Rawr.WarlockTmp {
                 MagicSchool.Shadow, // magic school
                 SpellTree.Destruction, // spell tree
                 .17f, // percent base mana
-                1f, // cost multiplier
                 3f - mommy.Talents.Bane * .1f, // cast time
                 690f, // low base
                 770f, // high base
@@ -732,11 +813,6 @@ namespace Rawr.WarlockTmp {
                     + mommy.Talents.ShadowAndFlame * .04f, // direct coefficient
                 mommy.Talents.ImprovedShadowBolt
                     * .01f, // bonus damage multiplier
-                0f, // damage per tick
-                0f, // num ticks
-                0f, // tick coefficient
-                0f, // bonus tick multiplier
-                true, // can crit
                 mommy.Stats.Warlock4T8
                     + mommy.Stats.Warlock2T10, // bonus crit chance
                 0f, // bonus crit multiplier
@@ -744,6 +820,13 @@ namespace Rawr.WarlockTmp {
     }
 
     public class ShadowBolt_Instant : ShadowBolt {
+
+        public static bool MightCast(
+            WarlockTalents talents, bool usingCorruption) {
+
+            return usingCorruption
+                && (talents.GlyphCorruption || talents.Nightfall > 0);
+        }
 
         public ShadowBolt_Instant(CharacterCalculationsWarlock mommy)
             : base(mommy) {
@@ -757,9 +840,8 @@ namespace Rawr.WarlockTmp {
 
         public override bool IsCastable() {
 
-            return Mommy.CastSpells.ContainsKey("Corruption")
-                && (Mommy.Talents.GlyphCorruption
-                    || Mommy.Talents.Nightfall > 0);
+            return MightCast(
+                Mommy.Talents, Mommy.CastSpells.ContainsKey("Corruption"));
         }
 
         public override void SetCastingStats(float timeRemaining) {
@@ -790,12 +872,7 @@ namespace Rawr.WarlockTmp {
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .15f, // percent base mana
-                1f, // cost multiplier
                 mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
-                0f, // direct low damage
-                0f, // direct high damage
-                0f, // direct coefficient
-                0f, // bonus direct multiplier
                 1150f / 5f, // tick damage
                 5f, // num ticks
                 (1f + mommy.Talents.EverlastingAffliction * .01f)
