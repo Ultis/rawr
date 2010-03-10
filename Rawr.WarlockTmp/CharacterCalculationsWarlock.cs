@@ -264,7 +264,7 @@ namespace Rawr.WarlockTmp {
                 if (!spell.IsCastable()) {
                     continue;
                 }
-                if (spell.IsSpammable()) {
+                if (spell.IsSpammed()) {
                     float added = lifeTap.AddCastsForRegen(
                         timeRemaining, manaRemaining, haste, spell);
                     if (added > 0) {

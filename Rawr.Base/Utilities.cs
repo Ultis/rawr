@@ -188,6 +188,24 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Calculates the weighted sum of any number of values.
+        /// </summary>
+        /// <param name="arguments">
+        /// (val1, weight1, val2, weight2, ..., valN, weightN).
+        /// </param>
+        /// <returns>The weighted sum.</returns>
+        public static float GetWeightedSum(params float[] arguments) {
+
+            float numerator = 0f;
+            float denominator = 0f;
+            for (int i = 0; i < arguments.Length; i += 2) {
+                numerator += arguments[i] * arguments[i + 1];
+                denominator += Math.Abs(arguments[i + 1]);
+            }
+            return numerator / denominator;
+        }
+
+        /// <summary>
         /// Calculates weighted sum of two values.
         /// The values are not directly provided.
         /// Delegates that calculate the values are provided instead.

@@ -74,6 +74,9 @@ namespace Rawr.WarlockTmp {
         public MagicSchool MagicSchool { get; protected set; }
         public float ManaCost { get; protected set; }
         public float BaseCastTime { get; protected set; }
+        public float Cooldown { get; protected set; }
+        public float RecastPeriod { get; protected set; }
+        public bool CanMiss { get; protected set; }
         public float BaseDamage { get; protected set; }
         public float DirectCoefficient { get; protected set; }
         public float BonusDirectMultiplier { get; protected set; }
@@ -84,7 +87,6 @@ namespace Rawr.WarlockTmp {
         public float BonusTickMultiplier { get; protected set; }
         public float BonusCritChance { get; protected set; }
         public float BonusCritMultiplier { get; protected set; }
-        public float Cooldown { get; protected set; }
 
         // set via SetCastingStats()
         public float NumCasts { get; protected set; }
@@ -105,13 +107,18 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
-            float cooldown)
+            float cooldown,
+            float recastPeriod,
+            bool canMiss)
             : this(
                 mommy,
                 magicSchool,
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
+                cooldown,
+                recastPeriod,
+                canMiss,
                 0f, // lowDirectDamage,
                 0f, // highDirectDamage,
                 0f, // directCoefficient,
@@ -122,8 +129,7 @@ namespace Rawr.WarlockTmp {
                 0f, // bonusTickMultiplier,
                 false, // canCrit,
                 0f, // bonusCritChance,
-                0f, // bonusCritMultiplier,
-                cooldown) { }
+                0f) { } // bonusCritMultiplier,
         #endregion
 
         #region Direct Damage Constructor
@@ -133,19 +139,23 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float cooldown,
+            float recastPeriod,
             float lowDirectDamage,
             float highDirectDamage,
             float directCoefficient,
             float bonusDirectMultiplier,
             float bonusCritChance,
-            float bonusCritMultiplier,
-            float cooldown)
+            float bonusCritMultiplier)
             : this(
                 mommy,
                 magicSchool,
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
+                cooldown,
+                recastPeriod,
+                true,
                 lowDirectDamage,
                 highDirectDamage,
                 directCoefficient,
@@ -156,8 +166,7 @@ namespace Rawr.WarlockTmp {
                 0f, // bonusTickMultiplier,
                 true, // canCrit,
                 bonusCritChance,
-                bonusCritMultiplier,
-                cooldown) { }
+                bonusCritMultiplier) { }
         #endregion
 
         #region DoT Constructor
@@ -167,20 +176,23 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float recastPeriod,
             float baseTickDamage,
             float numTicks,
             float tickCoefficient,
             float bonusTickMultiplier,
             bool canCrit,
             float bonusCritChance,
-            float bonusCritMultiplier,
-            float cooldown)
+            float bonusCritMultiplier)
             : this(
                 mommy,
                 magicSchool,
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
+                0f, // cooldown
+                recastPeriod,
+                true,
                 0f, // direct low damage
                 0f, // direct high damage
                 0f, // direct coefficient
@@ -191,8 +203,7 @@ namespace Rawr.WarlockTmp {
                 bonusTickMultiplier,
                 canCrit,
                 bonusCritChance,
-                bonusCritMultiplier,
-                cooldown) { }
+                bonusCritMultiplier) { }
         #endregion
 
         #region Kitchen Sink Constructor
@@ -202,6 +213,9 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float cooldown,
+            float recastPeriod,
+            bool canMiss,
             float lowDirectDamage,
             float highDirectDamage,
             float directCoefficient,
@@ -212,8 +226,7 @@ namespace Rawr.WarlockTmp {
             float bonusTickMultiplier,
             bool canCrit,
             float bonusCritChance,
-            float bonusCritMultiplier,
-            float cooldown) {
+            float bonusCritMultiplier) {
 
             Mommy = mommy;
             MagicSchool = magicSchool;
@@ -222,6 +235,9 @@ namespace Rawr.WarlockTmp {
             ManaCost = mommy.BaseMana * percentBaseMana;
             BaseCastTime = baseCastTime;
             BaseDamage = (lowDirectDamage + highDirectDamage) / 2f;
+            Cooldown = cooldown;
+            RecastPeriod = recastPeriod;
+            CanMiss = canMiss && Mommy.HitChance < 1;
             DirectCoefficient = directCoefficient;
             BonusDirectMultiplier = bonusDirectMultiplier;
             BaseTickDamage = baseTickDamage;
@@ -231,7 +247,6 @@ namespace Rawr.WarlockTmp {
             CanCrit = canCrit;
             BonusCritChance = bonusCritChance;
             BonusCritMultiplier = bonusCritMultiplier;
-            Cooldown = cooldown;
 
             // apply talents that affect entire magic schools or spell trees
             WarlockTalents talents = mommy.Talents;
@@ -263,21 +278,40 @@ namespace Rawr.WarlockTmp {
             return true;
         }
 
-        public bool IsSpammable() {
+        public bool IsSpammed() {
 
-            return Cooldown == 0;
+            return Cooldown == 0 && RecastPeriod == 0;
         }
 
         public virtual void SetCastingStats(float timeRemaining) {
 
-            if (IsSpammable()) {
+            if (IsSpammed()) {
                 NumCasts
                     = timeRemaining / (GetCastTime() + Mommy.Options.Latency);
             } else {
                 float avgSpellCastTime = GetCastTime(2f);
-                float effectiveCooldown
-                    = Cooldown + GetCollisionDelay(avgSpellCastTime);
-                NumCasts = Mommy.Options.Duration / effectiveCooldown;
+                float collisionDelay = GetCollisionDelay(avgSpellCastTime);
+                float period
+                    = Math.Max(RecastPeriod, Cooldown) + collisionDelay;
+                if (CanMiss && Cooldown < RecastPeriod) {
+
+                    // Model recasting after up to two misses in a row.
+                    // Even at the full 17% miss rate, three in a row will
+                    // happen less than .5% of the time, so we stop at two.
+                    float missRate = 1 - Mommy.HitChance;
+                    float doubleMissRate = missRate * missRate;
+                    float periodAfterMiss
+                        = Math.Max(Cooldown, avgSpellCastTime) + collisionDelay;
+                    period
+                        = Utilities.GetWeightedSum(
+                            period,
+                            Mommy.HitChance,
+                            periodAfterMiss,
+                            missRate - doubleMissRate,
+                            2 * periodAfterMiss,
+                            doubleMissRate);
+                }
+                NumCasts = Mommy.Options.Duration / period;
             }
         }
 
@@ -587,6 +621,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 .14f, // percent base mana
                 1.5f, // cast time
+                18f, // recast period
                 1080f / 6f, // damage per tick
                 6f, // num ticks
                 (1.2f
@@ -599,13 +634,12 @@ namespace Rawr.WarlockTmp {
                 mommy.Talents.Pandemic > 0, // can crit
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance
-                mommy.Talents.Pandemic, // bonus crit multiplier
-                18f) { } // "cooldown"
+                mommy.Talents.Pandemic) { } // bonus crit multiplier
 
         public override void SetCastingStats(float timeRemaining) {
 
             if (Mommy.Talents.GlyphQuickDecay) {
-                Cooldown /= 1f + Mommy.Stats.SpellHaste;
+                RecastPeriod /= 1f + Mommy.Stats.SpellHaste;
             }
             base.SetCastingStats(timeRemaining);
         }
@@ -620,6 +654,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 .1f, // percent base mana
                 1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
+                mommy.Talents.GlyphCoA ? 28f : 24f, // recast period
                 1740f / 12f
                     * (mommy.Talents.GlyphCoA
                         ? 8f / 7f : 1f), // damage per tick
@@ -629,10 +664,7 @@ namespace Rawr.WarlockTmp {
                     + mommy.Talents.Contagion * .01f, // bonus tick multiplier
                 false, // can crit
                 0f, // bonus crit chance
-                0f, // bonus crit multiplier
-                mommy.Talents.GlyphCoA ? 28f : 24f) { // "cooldown"
-
-        }
+                0f) { } // bonus crit multiplier
     }
 
     public class CurseOfTheElements : Spell {
@@ -644,7 +676,9 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 .1f, // percent base mana
                 1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
-                300f) { } // "cooldown"
+                0f, // cooldown
+                300f, // recast period
+                true) { } // can miss
 
         public override bool IsCastable() {
 
@@ -661,13 +695,14 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction,
                 .12f, // percent base mana
                 1.5f, // cast time
+                8f, // cooldown
+                10f, // recast period
                 645f, // low direct damage
                 753f, // high direct damage
                 .4266f, // direct coefficient
                 0f, // bonus direct multiplier
                 0f, // bonus crit chance
-                mommy.Talents.Pandemic, // bonus crit multiplier
-                8f) { } // cooldown
+                mommy.Talents.Pandemic) { } // bonus crit multiplier
 
         public override bool IsCastable() {
 
@@ -676,19 +711,11 @@ namespace Rawr.WarlockTmp {
 
         public float GetAvgTickBonus() {
 
-            float timeBetweenCasts = Mommy.Options.Duration / NumCasts;
-            float timeLostOnSingleMiss = timeBetweenCasts - Cooldown;
-            float timeLostOnDoubleMiss = timeBetweenCasts;
-
-            float overallMissChance = 1f - Mommy.HitChance;
-            float doubleMissChance = overallMissChance * overallMissChance;
-            float singleMissChance = overallMissChance - doubleMissChance;
-
             return (Mommy.Talents.GlyphHaunt ? .23f : .2f)
-                * (1
-                    - (singleMissChance * timeLostOnSingleMiss
-                            + doubleMissChance * timeLostOnDoubleMiss)
-                        / timeBetweenCasts);
+                * Spell.CalcUprate(
+                    Mommy.HitChance, // proc rate
+                    12f, // duration
+                    Mommy.Options.Duration / NumCasts); // trigger period
         }
     }
 
@@ -707,7 +734,9 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 0f, // percent base mana (overwritten below)
                 1.5f, // cast time
-                37f) { // cooldown
+                0f, // cooldown
+                37f, // recast period
+                false) { // can miss
 
             ManaCost
                 = (-1490f - mommy.Stats.Spirit * 3f)
@@ -750,7 +779,8 @@ namespace Rawr.WarlockTmp {
             }
 
             float uprate
-                = Math.Min(1f, NumCasts * 40f / Mommy.Options.Duration);
+                = Math.Min(
+                    1f, (NumCasts + .8f) * 40f / Mommy.Options.Duration);
             return uprate * Mommy.Stats.Spirit * .2f;
         }
     }
@@ -766,7 +796,9 @@ namespace Rawr.WarlockTmp {
                 1.5f, // cast time
                 180f
                     * (1f
-                        - mommy.Talents.Nemesis * .1f)) { } // cooldown
+                        - mommy.Talents.Nemesis * .1f), // cooldown
+                0f, // recast period
+                false) { } // can miss
 
         public override bool IsCastable() {
 
@@ -813,6 +845,8 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Destruction, // spell tree
                 .17f, // percent base mana
                 3f - mommy.Talents.Bane * .1f, // cast time
+                0f, // cooldown
+                0f, // recast period
                 690f, // low base
                 770f, // high base
                 .8571f
@@ -821,8 +855,7 @@ namespace Rawr.WarlockTmp {
                     * .01f, // bonus damage multiplier
                 mommy.Stats.Warlock4T8
                     + mommy.Stats.Warlock2T10, // bonus crit chance
-                0f, // bonus crit multiplier
-                0f) { } // cooldown
+                0f) { } // bonus crit multiplier
     }
 
     public class ShadowBolt_Instant : ShadowBolt {
@@ -863,9 +896,9 @@ namespace Rawr.WarlockTmp {
                 procChance += .04f;
             }
             Spell corruption = Mommy.CastSpells["Corruption"];
-            float numProcs
-                = procChance * corruption.NumCasts * corruption.NumTicks;
-            Cooldown = Mommy.Options.Duration / numProcs;
+            float corrTicks
+                = Mommy.HitChance * corruption.NumCasts * corruption.NumTicks;
+            Cooldown = Mommy.Options.Duration / (corrTicks * procChance);
             base.SetCastingStats(timeRemaining);
         }
     }
@@ -879,6 +912,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction,
                 .15f, // percent base mana
                 mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
+                15f, // recast period
                 1150f / 5f, // tick damage
                 5f, // num ticks
                 (1f + mommy.Talents.EverlastingAffliction * .01f)
@@ -887,8 +921,7 @@ namespace Rawr.WarlockTmp {
                 mommy.Talents.Pandemic > 0, // can crit
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance
-                mommy.Talents.Pandemic, // bonus crit multiplier
-                15f) { } // "cooldown"
+                mommy.Talents.Pandemic) { } // bonus crit multiplier
 
         public override bool IsCastable() {
 
