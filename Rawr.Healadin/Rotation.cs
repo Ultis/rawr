@@ -114,6 +114,8 @@ namespace Rawr.Healadin
 
         public float CalculateFightHealing(CharacterCalculationsHealadin calc)
         {
+            float fol_BaseHealed = 0f;
+
             #region Copying Stuff to Calc
             calc.FightLength = FightLength;
 
@@ -272,6 +274,8 @@ namespace Rawr.Healadin
                         calc.UsageFoL += FoLCasts * fol_iol.AverageCost();
                         calc.RotationFoL += FoLCasts * fol_iol.CastTime();
                         calc.HealedFoL += FoLCasts * fol_iol.AverageHealed();
+
+                        fol_BaseHealed += FoLCasts * fol_iol.BaseAverageHealed();
                     }
                     else
                     {
@@ -280,16 +284,21 @@ namespace Rawr.Healadin
                         calc.RotationFoL += iol_folcasts * fol_iol.CastTime();
                         calc.HealedFoL += iol_folcasts * fol_iol.AverageHealed();
 
+                        fol_BaseHealed += iol_folcasts * fol_iol.BaseAverageHealed();
+
                         // Determine how much time we have left to cast Flash of Light without the procs
                         fol_time = fol_time - iol_folcasts * fol.CastTime();
 
                         // Determine how many total casts, with and without Infusion of Light
-                        FoLCasts = iol_folcasts + fol_time / fol.CastTime();
+                        float remaining_folcasts = fol_time / fol.CastTime();
+                        FoLCasts = iol_folcasts + remaining_folcasts;
 
                         // Adding Flash of Light stats
                         calc.RotationFoL += fol_time;
                         calc.UsageFoL += fol.MPS() * fol_time;
                         calc.HealedFoL += fol.HPS() * fol_time;
+
+                        fol_BaseHealed += remaining_folcasts * fol.BaseAverageHealed();
                     }
                 }
                 else // We don't use Infusion of Light, so just calculate normal data for Flash of Light
@@ -301,6 +310,8 @@ namespace Rawr.Healadin
                     calc.RotationFoL += fol_time;
                     calc.UsageFoL += fol.MPS() * fol_time;
                     calc.HealedFoL += fol.HPS() * fol_time;
+
+                    fol_BaseHealed += FoLCasts * fol.BaseAverageHealed();
                 }
             }
 
@@ -308,7 +319,7 @@ namespace Rawr.Healadin
 
             if (Talents.BeaconOfLight > 0)
             {
-                calc.TotalHealed += calc.HealedBoL = bol.HealingDone(calc.TotalHealed);
+                calc.TotalHealed += calc.HealedBoL = bol.HealingDone(fol_BaseHealed + calc.HealedHL + calc.HealedHS);
             }
 
             calc.TotalHealed += calc.HealedGHL = hl.GlyphOfHolyLight(calc.HealedHL);
