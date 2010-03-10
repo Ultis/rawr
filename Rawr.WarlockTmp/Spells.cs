@@ -294,22 +294,16 @@ namespace Rawr.WarlockTmp {
                 float period
                     = Math.Max(RecastPeriod, Cooldown) + collisionDelay;
                 if (CanMiss && Cooldown < RecastPeriod) {
-
-                    // Model recasting after up to two misses in a row.
-                    // Even at the full 17% miss rate, three in a row will
-                    // happen less than .5% of the time, so we stop at two.
                     float missRate = 1 - Mommy.HitChance;
-                    float doubleMissRate = missRate * missRate;
                     float periodAfterMiss
-                        = Math.Max(Cooldown, avgSpellCastTime) + collisionDelay;
+                        = Math.Max(Cooldown, avgSpellCastTime / 2)
+                            + collisionDelay;
                     period
                         = Utilities.GetWeightedSum(
                             period,
                             Mommy.HitChance,
                             periodAfterMiss,
-                            missRate - doubleMissRate,
-                            2 * periodAfterMiss,
-                            doubleMissRate);
+                            missRate);
                 }
                 NumCasts = Mommy.Options.Duration / period;
             }

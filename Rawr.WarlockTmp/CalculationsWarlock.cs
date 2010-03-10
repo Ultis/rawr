@@ -68,6 +68,8 @@ namespace Rawr.WarlockTmp {
 
         #region Basic Model Properties and Methods
 
+        public const float AVG_UNHASTED_CAST_TIME = 2f; // total SWAG
+
         public override void SetDefaults(Character character) { }
 
         private string[] _characterDisplayCalculationLabels = null;
@@ -273,111 +275,131 @@ namespace Rawr.WarlockTmp {
                     = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
             };
 
-            Stats statsTotal
-                = statsBase + statsItem + statsBuffs + statsTalents;
+            Stats stats = new Stats();
+            stats.Accumulate(statsBase);
+            stats.Accumulate(statsItem);
+            stats.Accumulate(statsBuffs);
+            stats.Accumulate(statsTalents);
+
+            // apply special effects to the stats
+            //Dictionary<Trigger, float> periods
+            //    = new Dictionary<Trigger, float>();
+            //Dictionary<Trigger, float> chances
+            //    = new Dictionary<Trigger, float>();
+            //periods[Trigger.Use] = 0f;
+            //chances[Trigger.Use] = 0f;
+            //periods[Trigger.SpellHit] = 0f;
+            //chances[Trigger.SpellHit] = 0f;
+            //periods[Trigger.SpellCrit] = 0f;
+            //chances[Trigger.SpellCrit] = 0f;
+            //periods[Trigger.SpellCast] = 0f;
+            //chances[Trigger.SpellCast] = 0f;
+            //periods[Trigger.SpellMiss] = 0f;
+            //chances[Trigger.SpellMiss] = 0f;
+            //periods[Trigger.DamageSpellHit] = 0f;
+            //chances[Trigger.DamageSpellHit] = 0f;
+            //periods[Trigger.DamageSpellCrit] = 0f;
+            //chances[Trigger.DamageSpellCrit] = 0f;
+            //periods[Trigger.DamageSpellCast] = 0f;
+            //chances[Trigger.DamageSpellCast] = 0f;
+            //periods[Trigger.DamageDone] = 0f;
+            //chances[Trigger.DamageDone] = 0f;
+            //periods[Trigger.DoTTick] = 0f;
+            //chances[Trigger.DoTTick] = 0f;
+            //periods[Trigger.DamageOrHealingDone] = 0f;
+            //chances[Trigger.DamageOrHealingDone] = 0f;
+            //float duration
+            //    = (character.CalculationOptions as CalculationOptionsWarlock)
+            //        .Duration;
+            //foreach (SpecialEffect effect in stats.SpecialEffects()) {
+            //    stats.Accumulate(
+            //        effect.GetAverageStats(
+            //            periods[effect.Trigger],
+            //            chances[effect.Trigger],
+            //            AVG_UNHASTED_CAST_TIME,
+            //            duration));
+            //}
 
             //make sure that the bonus multipliers have been applied to each
             //stat
-            statsTotal.Stamina
+            stats.Stamina
                 = (float) Math.Floor(
-                    statsTotal.Stamina
-                    * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect
+                    stats.Stamina * (1f + stats.BonusStaminaMultiplier));
+            stats.Intellect
                 = (float) Math.Floor(
-                    statsTotal.Intellect
-                    * (1f + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit
+                    stats.Intellect * (1f + stats.BonusIntellectMultiplier));
+            stats.Spirit
                 = (float) Math.Floor(
-                    statsTotal.Spirit
-                    * (1f + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Strength
+                    stats.Spirit * (1f + stats.BonusSpiritMultiplier));
+            stats.Strength
                 = (float) Math.Floor(
-                    statsTotal.Strength
-                    * (1f + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility
+                    stats.Strength
+                    * (1f + stats.BonusStrengthMultiplier));
+            stats.Agility
                 = (float) Math.Floor(
-                    statsTotal.Agility
-                    * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Armor
+                    stats.Agility * (1f + stats.BonusAgilityMultiplier));
+            stats.Armor
                 = (float) Math.Floor(
-                    statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
+                    stats.Armor * (1f + stats.BonusArmorMultiplier));
 
             //Agility increases Armor by 2 per point
             //(http://www.wowwiki.com/Agility#Agility)
-            statsTotal.BonusArmor += statsTotal.Agility * 2;
-            statsTotal.Armor += statsTotal.BonusArmor;
+            stats.BonusArmor += stats.Agility * 2;
+            stats.Armor += stats.BonusArmor;
 
             //Health is calculated from stamina rating first, then its bonus
             //multiplier (in this case, "Fel Vitality" talent) gets applied
-            statsTotal.Health
-                += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-            statsTotal.Health *= (1 + statsTotal.BonusHealthMultiplier);
+            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina);
+            stats.Health *= 1 + stats.BonusHealthMultiplier;
 
             //Mana is calculated from intellect rating first, then its bonus
             //multiplier (in this case, "Expansive Mind" - Gnome racial) is
             //applied
-            statsTotal.Mana
-                += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
-            statsTotal.Mana *= (1 + statsTotal.BonusManaMultiplier);
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect);
+            stats.Mana *= 1 + stats.BonusManaMultiplier;
 
             //Crit rating - the MasterConjuror talent improves the firestone
-            statsTotal.CritRating
-                += statsTotal.WarlockFirestoneSpellCritRating
-                    * (1f + (talents.MasterConjuror * 1.5f));
-            statsTotal.SpellCrit
-                += StatConversion.GetSpellCritFromIntellect(
-                    statsTotal.Intellect);
-            statsTotal.SpellCrit
-                += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
-            statsTotal.SpellCrit += statsTotal.BonusCritChance;
-            statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
+            float conjuror = 1f + talents.MasterConjuror * 1.5f;
+            stats.CritRating
+                += stats.WarlockFirestoneSpellCritRating * conjuror;
+            stats.SpellCrit
+                += StatConversion.GetSpellCritFromIntellect(stats.Intellect)
+                    + StatConversion.GetSpellCritFromRating(stats.CritRating)
+                    + stats.BonusCritChance
+                    + stats.SpellCritOnTarget;
 
             //Haste rating - the MasterConjuror talent improves the spellstone
-            statsTotal.HasteRating
-                += statsTotal.WarlockSpellstoneHasteRating
-                    * (1f + (talents.MasterConjuror * 1.5f));
-            statsTotal.SpellHaste
-                += StatConversion.GetSpellHasteFromRating(
-                    statsTotal.HasteRating);
+            stats.HasteRating += stats.WarlockSpellstoneHasteRating * conjuror;
+            stats.SpellHaste
+                += StatConversion.GetSpellHasteFromRating(stats.HasteRating);
 
             //Hit rating 
-            statsTotal.SpellHit
-                += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+            stats.SpellHit
+                += StatConversion.GetSpellHitFromRating(stats.HitRating);
 
-            if (statsTotal.WarlockFelArmor > 0) {
-                statsTotal.SpellPower
-                    += statsTotal.WarlockFelArmor
-                        * (1 + talents.DemonicAegis * 0.10f);
-                statsTotal.SpellDamageFromSpiritPercentage
-                    += 0.30f * (1 + talents.DemonicAegis * 0.10f);
-                statsTotal.Hp5
-                    += statsTotal.Health
-                        * 0.02f
-                        * (1 + talents.DemonicAegis * 0.10f);
-            } else if (statsTotal.WarlockDemonArmor > 0) {
-                statsTotal.Armor
-                    += statsTotal.WarlockDemonArmor
-                        * (1 + talents.DemonicAegis * 0.10f);
-                statsTotal.HealingReceivedMultiplier
-                    += 0.2f * (1 + talents.DemonicAegis * 0.10f);
+            // Bonuses from armor choice
+            if (stats.WarlockFelArmor > 0) {
+                float aegis = 1 + talents.DemonicAegis * 0.10f;
+                stats.SpellPower += stats.WarlockFelArmor * aegis;
+                stats.SpellDamageFromSpiritPercentage += 0.30f * aegis;
+                stats.Hp5 += stats.Health * .02f * aegis;
+            } else if (stats.WarlockDemonArmor > 0) {
+                float aegis = 1 + talents.DemonicAegis * 0.10f;
+                stats.Armor += stats.WarlockDemonArmor * aegis;
+                stats.HealingReceivedMultiplier += 0.2f * aegis;
             }
 
-            statsTotal.SpellPower
-                += (float) Math.Round(
-                    statsTotal.SpellDamageFromSpiritPercentage
-                    * statsTotal.Spirit);
-
-            statsTotal.SpellPower
-                = (float) Math.Floor(
-                    statsTotal.SpellPower
-                        * (1f + statsTotal.BonusSpellPowerMultiplier));
+            // Spell Power
+            stats.SpellPower
+                += stats.SpellDamageFromSpiritPercentage * stats.Spirit;
+            stats.SpellPower *= 1f + stats.BonusSpellPowerMultiplier;
 
             if (talents.DemonicKnowledge > 0) {
                 //PetCalculations pet = new PetCalculations(statsTotal, character);
                 //statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * talents.DemonicKnowledge * 0.04f;
             }
 
-            return statsTotal;
+            return stats;
         }
 
         /// <summary>

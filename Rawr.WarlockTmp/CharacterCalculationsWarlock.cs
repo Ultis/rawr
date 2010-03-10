@@ -45,30 +45,7 @@ namespace Rawr.WarlockTmp {
 
         public CharacterCalculationsWarlock(Character character, Stats stats) {
 
-            Character = character;
-            Stats = stats;
-            Options = (CalculationOptionsWarlock) character.CalculationOptions;
-            if (Options == null) {
-                Options = new CalculationOptionsWarlock();
-            }
-            Talents = character.WarlockTalents;
-            BaseMana = BaseStats.GetBaseStats(character).Mana;
-            Spells = new Dictionary<string, Spell>();
-            CastSpells = new Dictionary<string, Spell>();
-            float multiplier
-                = 1f
-                    + Talents.DemonicPact * .01f
-                    + Talents.Malediction * .01f
-                    + Stats.BonusDamageMultiplier;
-            BaseTickDamageMultiplier
-                = multiplier + Stats.WarlockSpellstoneDotDamageMultiplier;
-            BaseDirectDamageMultiplier
-                = multiplier + Stats.WarlockFirestoneDirectDamageMultiplier;
-            BaseCritChance = Stats.SpellCrit + Stats.SpellCritOnTarget;
-            HitChance
-                = Math.Min(
-                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
-            BaseBonusCritMultiplier = Stats.BonusSpellCritMultiplier;
+            SetBaseStats(character, stats);
 
             float personalDps = CalcPersonalDps();
             float petDps = CalcPetDps();
@@ -238,6 +215,34 @@ namespace Rawr.WarlockTmp {
 
 
         #region dps calculations
+
+        private void SetBaseStats(Character character, Stats stats) {
+
+            Character = character;
+            Stats = stats;
+            Options = (CalculationOptionsWarlock) character.CalculationOptions;
+            if (Options == null) {
+                Options = new CalculationOptionsWarlock();
+            }
+            Talents = character.WarlockTalents;
+            BaseMana = BaseStats.GetBaseStats(character).Mana;
+            Spells = new Dictionary<string, Spell>();
+            CastSpells = new Dictionary<string, Spell>();
+            float multiplier
+                = 1f
+                    + Talents.DemonicPact * .01f
+                    + Talents.Malediction * .01f
+                    + Stats.BonusDamageMultiplier;
+            BaseTickDamageMultiplier
+                = multiplier + Stats.WarlockSpellstoneDotDamageMultiplier;
+            BaseDirectDamageMultiplier
+                = multiplier + Stats.WarlockFirestoneDirectDamageMultiplier;
+            BaseCritChance = Stats.SpellCrit + Stats.SpellCritOnTarget;
+            HitChance
+                = Math.Min(
+                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
+            BaseBonusCritMultiplier = Stats.BonusSpellCritMultiplier;
+        }
 
         private float CalcPersonalDps() {
 
