@@ -140,6 +140,10 @@ namespace Rawr
         /// <summary>The Warrior's Deep Wounds ability ticks on the target</summary>
         DeepWoundsTick,
         #endregion
+        #region Added by Warlock
+        /// <summary>The Warlock's Corruption DoT ticks</summary>
+        CorruptionTick,
+        #endregion
     }
 
     public partial class SpecialEffect

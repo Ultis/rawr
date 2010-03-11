@@ -43,6 +43,8 @@ namespace Rawr.WarlockTmp {
 
             public IntList() : base() { }
 
+            public IntList(int capacity) : base(capacity) { }
+
             public IntList(IEnumerable<int> collection) : base(collection) { }
 
             public override bool Equals(object obj) {
@@ -289,11 +291,21 @@ namespace Rawr.WarlockTmp {
                 NumCasts
                     = timeRemaining / (GetCastTime() + Mommy.Options.Latency);
             } else {
-                float avgSpellCastTime = GetCastTime(2f);
-                float collisionDelay = GetCollisionDelay(avgSpellCastTime);
+                float avgSpellCastTime
+                    = GetCastTime(CalculationsWarlock.AVG_UNHASTED_CAST_TIME);
+                float collisionDelay
+                    = GetCollisionDelay(avgSpellCastTime, timeRemaining);
                 float period
                     = Math.Max(RecastPeriod, Cooldown) + collisionDelay;
                 if (CanMiss && Cooldown < RecastPeriod) {
+
+                    // If a spell misses, and it can be recast sooner than it
+                    // normally would otherwise, it will instead wait for
+                    // either its cooldown (if it has one), or for one spell
+                    // to be cast inbetween (to allow for travel time and
+                    // reaction time for the player to detect the miss).
+                    // Note that coolisionDelay already has 1/2 an avereage
+                    // spellcast factored into it.
                     float missRate = 1 - Mommy.HitChance;
                     float periodAfterMiss
                         = Math.Max(Cooldown, avgSpellCastTime / 2)
@@ -423,36 +435,63 @@ namespace Rawr.WarlockTmp {
             return Math.Max(1f, baseCastTime / (1f + Mommy.Stats.SpellHaste));
         }
 
+        /// <summary>
+        /// Calculates the average time a spell will have to wait between
+        /// "queuing up" (e.g. coming off cooldown) and being cast, during which
+        /// time a player is finishing (approx. 1/2) of whatever cast they
+        /// were in the middle of, plus casting any higher priority spells that
+        /// queue up during other wait times.
+        /// </summary>
         /// <param name="avgSpellCastTime">
         /// The average spell casting time for *lower* priority spells.
         /// </param>
-        private float GetCollisionDelay(float avgSpellCastTime) {
+        private float GetCollisionDelay(float avgSpellCastTime, float timeRemaining) {
 
+            float lag = Mommy.Options.Latency;
+            avgSpellCastTime += lag;
             List<float> castTimes = new List<float>();
             List<float> frequencies = new List<float>();
+            Dictionary<IntList, float> probablities
+                = new Dictionary<IntList, float>();
+
+            #region initialize variables
+            float fightLength = Mommy.Options.Duration;
             foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
                 Spell spell = pair.Value;
-                castTimes.Add(spell.GetCastTime() + Mommy.Options.Latency);
-                frequencies.Add(spell.NumCasts / Mommy.Options.Duration);
+                castTimes.Add(spell.GetCastTime() + lag);
+                frequencies.Add(spell.NumCasts / fightLength);
             }
+            IntList prioritySpells = new IntList();
+            for (int i = castTimes.Count; --i >= 0; ) {
+                prioritySpells.Add(i);
+            }
+            List<IntList> allSpellStrings
+                = GetLongerPermutations(new IntList(), prioritySpells);
+            List<IntList> withLowerPriority = new List<IntList>();
+            castTimes.Add(avgSpellCastTime);
+            frequencies.Add(timeRemaining / avgSpellCastTime / fightLength);
+            int lowPrioritySpell = castTimes.Count - 1;
+            foreach (IntList spellString in allSpellStrings) {
+                IntList newString = new IntList(spellString.Count + 1);
+                newString.Add(lowPrioritySpell);
+                newString.AddRange(spellString);
+                withLowerPriority.Add(newString);
+            }
+            allSpellStrings.AddRange(withLowerPriority);
+            allSpellStrings.Add(new IntList() { lowPrioritySpell });
+            #endregion
 
             #region create probabilities
             // Create a map of the probability of randomly choosing a point in
             // time while key[0] is being cast, and key[1-n] are all queued up
             // after it.  This assumes 1) spells have an equal chance of coming
             // off cooldown at any given point in time, and 2) no spell on a
-            // cooldown can show up twice in the same string of spellcasts.  (1)
-            // is a simplifying assumption.  I believe (2) holds true for any
-            // in-game warlock.
-            Dictionary<IntList, float> probablities
-                = new Dictionary<IntList, float>();
-            IntList allSpells = new IntList();
-            for (int i = castTimes.Count; --i >= 0; ) {
-                allSpells.Add(i);
-            }
-            foreach (
-                IntList spellString
-                in GetLongerPermutations(new IntList(), allSpells)) {
+            // cooldown can show up twice in the same string of spellcasts.
+            // These are both simplifying assumptions, especially when
+            // considering that spells like corruption will be recast immediatly
+            // if they miss, but I had a hard enough time coming up with just
+            // THIS math.
+            foreach (IntList spellString in allSpellStrings) {
 
                 // first calculate the probability of the given spell string
                 int spell = spellString[0];
@@ -468,7 +507,7 @@ namespace Rawr.WarlockTmp {
                 // of a longer string of spellcasts
                 foreach (
                     IntList longerString
-                    in GetLongerPermutations(spellString, allSpells)) {
+                    in GetLongerPermutations(spellString, prioritySpells)) {
 
                     probability -= probablities[longerString];
                 }
@@ -491,9 +530,6 @@ namespace Rawr.WarlockTmp {
                 weightedAverage += probability * delay;
                 totalProbability += probability;
             }
-            weightedAverage
-                += (1 - totalProbability)
-                    * (GetCastTime() + Mommy.Options.Latency) / 2;
             return weightedAverage;
         }
 
@@ -502,7 +538,7 @@ namespace Rawr.WarlockTmp {
         /// by appending values in "values" that are not already included in
         /// "stem".
         /// </summary>
-        /// <param name="stem">A subset of "values".</param>
+        /// <param name="stem"></param>
         /// <param name="values">The universe of values to permute.</param>
         /// <returns>
         /// The order of permutations returned will be from longest to shortest.
@@ -510,16 +546,15 @@ namespace Rawr.WarlockTmp {
         private List<IntList> GetLongerPermutations(
             IntList stem, IntList values) {
 
-            List<IntList> permutations = new List<IntList>();
-            if (stem.Count == values.Count) {
-                return permutations;
-            }
-
             IntList remainingValues = new IntList();
             for (int i = values.Count; --i >= 0; ) {
                 if (!stem.Contains(values[i])) {
                     remainingValues.Add(values[i]);
                 }
+            }
+            List<IntList> permutations = new List<IntList>();
+            if (remainingValues.Count == 0) {
+                return permutations;
             }
 
             for (

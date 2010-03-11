@@ -214,6 +214,8 @@ namespace Rawr.WarlockTmp {
             Character character, Item additionalItem) {
 
             WarlockTalents talents = character.WarlockTalents;
+            CalculationOptionsWarlock options
+                = character.CalculationOptions as CalculationOptionsWarlock;
 
             Stats statsBase = BaseStats.GetBaseStats(character);
             Stats statsItem = GetItemStats(character, additionalItem);
@@ -249,16 +251,11 @@ namespace Rawr.WarlockTmp {
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
+            float[] talentValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
 
                 //Demonic Embrace: increases your stamina by 4/7/10%
-                BonusStaminaMultiplier
-                    = (talents.DemonicEmbrace == 1)
-                        ? 0.04f
-                        : (talents.DemonicEmbrace == 2)
-                            ? 0.07f
-                            : (talents.DemonicEmbrace == 3)
-                                ? 0.10f : 0f,
+                BonusStaminaMultiplier = talentValues[talents.DemonicEmbrace],
 
                 //Fel Vitality: increases your maximum Health & Mana by 1/2/3%
                 BonusHealthMultiplier = talents.FelVitality * 0.01f,
@@ -274,6 +271,17 @@ namespace Rawr.WarlockTmp {
                 BonusCritChance
                     = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
             };
+            if (talents.Eradication > 0) {
+                talentValues = new float[] { 0f, .06f, .12f, .20f };
+                statsTalents.AddSpecialEffect(
+                    new SpecialEffect(
+                        Trigger.CorruptionTick,
+                        new Stats() {
+                            SpellHaste = talentValues[talents.Eradication] },
+                        6f,
+                        0f,
+                        .06f));
+            }
 
             Stats stats = new Stats();
             stats.Accumulate(statsBase);
@@ -281,66 +289,16 @@ namespace Rawr.WarlockTmp {
             stats.Accumulate(statsBuffs);
             stats.Accumulate(statsTalents);
 
-            // apply special effects to the stats
-            //Dictionary<Trigger, float> periods
-            //    = new Dictionary<Trigger, float>();
-            //Dictionary<Trigger, float> chances
-            //    = new Dictionary<Trigger, float>();
-            //periods[Trigger.Use] = 0f;
-            //chances[Trigger.Use] = 0f;
-            //periods[Trigger.SpellHit] = 0f;
-            //chances[Trigger.SpellHit] = 0f;
-            //periods[Trigger.SpellCrit] = 0f;
-            //chances[Trigger.SpellCrit] = 0f;
-            //periods[Trigger.SpellCast] = 0f;
-            //chances[Trigger.SpellCast] = 0f;
-            //periods[Trigger.SpellMiss] = 0f;
-            //chances[Trigger.SpellMiss] = 0f;
-            //periods[Trigger.DamageSpellHit] = 0f;
-            //chances[Trigger.DamageSpellHit] = 0f;
-            //periods[Trigger.DamageSpellCrit] = 0f;
-            //chances[Trigger.DamageSpellCrit] = 0f;
-            //periods[Trigger.DamageSpellCast] = 0f;
-            //chances[Trigger.DamageSpellCast] = 0f;
-            //periods[Trigger.DamageDone] = 0f;
-            //chances[Trigger.DamageDone] = 0f;
-            //periods[Trigger.DoTTick] = 0f;
-            //chances[Trigger.DoTTick] = 0f;
-            //periods[Trigger.DamageOrHealingDone] = 0f;
-            //chances[Trigger.DamageOrHealingDone] = 0f;
-            //float duration
-            //    = (character.CalculationOptions as CalculationOptionsWarlock)
-            //        .Duration;
-            //foreach (SpecialEffect effect in stats.SpecialEffects()) {
-            //    stats.Accumulate(
-            //        effect.GetAverageStats(
-            //            periods[effect.Trigger],
-            //            chances[effect.Trigger],
-            //            AVG_UNHASTED_CAST_TIME,
-            //            duration));
-            //}
-
             //make sure that the bonus multipliers have been applied to each
             //stat
-            stats.Stamina
-                = (float) Math.Floor(
-                    stats.Stamina * (1f + stats.BonusStaminaMultiplier));
+            stats.Stamina = stats.Stamina * (1f + stats.BonusStaminaMultiplier);
             stats.Intellect
-                = (float) Math.Floor(
-                    stats.Intellect * (1f + stats.BonusIntellectMultiplier));
-            stats.Spirit
-                = (float) Math.Floor(
-                    stats.Spirit * (1f + stats.BonusSpiritMultiplier));
+                = stats.Intellect * (1f + stats.BonusIntellectMultiplier);
+            stats.Spirit = stats.Spirit * (1f + stats.BonusSpiritMultiplier);
             stats.Strength
-                = (float) Math.Floor(
-                    stats.Strength
-                    * (1f + stats.BonusStrengthMultiplier));
-            stats.Agility
-                = (float) Math.Floor(
-                    stats.Agility * (1f + stats.BonusAgilityMultiplier));
-            stats.Armor
-                = (float) Math.Floor(
-                    stats.Armor * (1f + stats.BonusArmorMultiplier));
+                = stats.Strength * (1f + stats.BonusStrengthMultiplier);
+            stats.Agility = stats.Agility * (1f + stats.BonusAgilityMultiplier);
+            stats.Armor = stats.Armor * (1f + stats.BonusArmorMultiplier);
 
             //Agility increases Armor by 2 per point
             //(http://www.wowwiki.com/Agility#Agility)
@@ -371,7 +329,11 @@ namespace Rawr.WarlockTmp {
             //Haste rating - the MasterConjuror talent improves the spellstone
             stats.HasteRating += stats.WarlockSpellstoneHasteRating * conjuror;
             stats.SpellHaste
-                += StatConversion.GetSpellHasteFromRating(stats.HasteRating);
+                = (1 + stats.SpellHaste)
+                        * (1
+                            + StatConversion.GetSpellHasteFromRating(
+                                stats.HasteRating))
+                    - 1;
 
             //Hit rating 
             stats.SpellHit
@@ -398,6 +360,80 @@ namespace Rawr.WarlockTmp {
                 //PetCalculations pet = new PetCalculations(statsTotal, character);
                 //statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * talents.DemonicKnowledge * 0.04f;
             }
+
+
+            #region add special effects to the stats
+
+            // the trigger rates are all guestimates, since the real values
+            // depend on special effects (if that effect uses haste) and the
+            // special effect trigger rates depend on the real values.
+            // TODO: move all but the haste effects to the dps calculations,
+            // where we'll have real values.
+
+            Dictionary<Trigger, float> periods
+                = new Dictionary<Trigger, float>();
+            Dictionary<Trigger, float> chances
+                = new Dictionary<Trigger, float>();
+            periods[Trigger.Use] = 0f;
+            periods[Trigger.SpellHit]
+                = periods[Trigger.SpellCrit]
+                = periods[Trigger.SpellCast]
+                = periods[Trigger.SpellMiss]
+                = periods[Trigger.DamageSpellHit]
+                = periods[Trigger.DamageSpellCrit]
+                = periods[Trigger.DamageSpellCast]
+                = AVG_UNHASTED_CAST_TIME / stats.SpellHaste;
+            periods[Trigger.DoTTick] = 1.5f;
+            periods[Trigger.DamageDone]
+                = periods[Trigger.DamageOrHealingDone]
+                = 1f
+                    / (1 / periods[Trigger.DoTTick]
+                        + 1 / periods[Trigger.SpellHit]);
+
+            chances[Trigger.Use] = 1f;
+            chances[Trigger.SpellHit]
+                = chances[Trigger.DamageSpellHit]
+                = Math.Min(1f, stats.SpellHit);
+            chances[Trigger.SpellCrit]
+                = chances[Trigger.DamageSpellCrit]
+                = chances[Trigger.DamageDone]
+                = chances[Trigger.DamageOrHealingDone]
+                = chances[Trigger.SpellHit]
+                    * (StatConversion.GetSpellCritFromIntellect(stats.Intellect)
+                        + StatConversion.GetSpellCritFromRating(
+                            stats.CritRating
+                                + stats.WarlockFirestoneSpellCritRating
+                                    * conjuror)
+                        + stats.BonusCritChance
+                        + stats.SpellCritOnTarget);
+            chances[Trigger.SpellCast] = chances[Trigger.DamageSpellCast] = 1f;
+            chances[Trigger.SpellMiss] = 1 - chances[Trigger.SpellHit];
+            chances[Trigger.DoTTick] = 1f;
+
+            if (options.SpellPriority.Contains("Corruption")) {
+                periods[Trigger.CorruptionTick] = 3.1f;
+                if (talents.GlyphQuickDecay) {
+                    periods[Trigger.CorruptionTick] /= 1 + stats.SpellHaste;
+                }
+                chances[Trigger.CorruptionTick] = 1f;
+            } else {
+                periods[Trigger.CorruptionTick] = 0f;
+                chances[Trigger.CorruptionTick] = 0f;
+            }
+            float duration
+                = (character.CalculationOptions as CalculationOptionsWarlock)
+                    .Duration;
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                stats.Accumulate(
+                    effect.GetAverageStats(
+                        periods[effect.Trigger],
+                        chances[effect.Trigger],
+                        AVG_UNHASTED_CAST_TIME,
+                        options.Duration));
+            }
+
+            #endregion
+
 
             return stats;
         }
