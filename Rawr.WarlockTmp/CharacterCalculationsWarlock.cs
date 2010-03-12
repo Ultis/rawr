@@ -82,6 +82,7 @@ namespace Rawr.WarlockTmp {
 
             dictValues.Add("Health", String.Format("{0:0}", Stats.Health));
             dictValues.Add("Mana", String.Format("{0:0}", Stats.Mana));
+            dictValues.Add("Spirit", String.Format("{0:0}", Stats.Spirit));
 
             #region Bonus Damage
             //pet scaling consts: http://www.wowwiki.com/Warlock_minions
@@ -228,15 +229,15 @@ namespace Rawr.WarlockTmp {
             BaseMana = BaseStats.GetBaseStats(character).Mana;
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
-            float multiplier
-                = 1f
-                    + Talents.DemonicPact * .01f
-                    + Talents.Malediction * .01f
-                    + Stats.BonusDamageMultiplier;
             BaseTickDamageMultiplier
-                = multiplier + Stats.WarlockSpellstoneDotDamageMultiplier;
+                = Stats.BonusDamageMultiplier;
+                //= Spell.Multiply(
+                //    Stats.BonusDamageMultiplier,
+                //    Stats.WarlockSpellstoneDotDamageMultiplier);
             BaseDirectDamageMultiplier
-                = multiplier + Stats.WarlockFirestoneDirectDamageMultiplier;
+                = Spell.Multiply(
+                    Stats.BonusDamageMultiplier,
+                    Stats.WarlockFirestoneDirectDamageMultiplier);
             BaseCritChance = Stats.SpellCrit + Stats.SpellCritOnTarget;
             HitChance
                 = Math.Min(
@@ -296,12 +297,16 @@ namespace Rawr.WarlockTmp {
                 float morphBonus
                     = ((Metamorphosis) CastSpells["Metamorphosis"])
                         .GetAvgBonusMultiplier();
-                BaseDirectDamageMultiplier += morphBonus;
-                BaseTickDamageMultiplier += morphBonus;
+                BaseDirectDamageMultiplier
+                    = Spell.Multiply(BaseDirectDamageMultiplier, morphBonus);
+                BaseTickDamageMultiplier
+                    = Spell.Multiply(BaseTickDamageMultiplier, morphBonus);
             }
             if (CastSpells.ContainsKey("Curse Of The Elements")) {
-                BaseDirectDamageMultiplier += .13f;
-                BaseTickDamageMultiplier += .13f;
+                BaseDirectDamageMultiplier
+                    = Spell.Multiply(BaseDirectDamageMultiplier, .13f);
+                BaseTickDamageMultiplier
+                    = Spell.Multiply(BaseTickDamageMultiplier, .13f);
             }
             if (Talents.ImprovedShadowBolt > 0
                 && Stats.SpellCritOnTarget < .05f) {
