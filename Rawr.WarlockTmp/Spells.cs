@@ -37,15 +37,6 @@ namespace Rawr.WarlockTmp {
                 - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
         }
 
-        public static float Multiply(params float[] multipliers) {
-
-            float result = 1f;
-            foreach (float multiplier in multipliers) {
-                result *= 1 + multiplier;
-            }
-            return result - 1;
-        }
-
         public enum SpellTree { Affliction, Demonology, Destruction }
 
         private class IntList : List<int> {
@@ -90,14 +81,11 @@ namespace Rawr.WarlockTmp {
         public bool CanMiss { get; protected set; }
         public float BaseDamage { get; protected set; }
         public float DirectCoefficient { get; protected set; }
-        public float BonusDirectMultiplier { get; protected set; }
         public float BaseTickDamage { get; protected set; }
         public float NumTicks { get; protected set; }
         public float TickCoefficient { get; protected set; }
         public bool CanCrit { get; protected set; }
-        public float BonusTickMultiplier { get; protected set; }
-        public float BonusCritChance { get; protected set; }
-        public float BonusCritMultiplier { get; protected set; }
+        public SpellModifiers SpellModifiers { get; protected set; }
 
         // set via SetCastingStats()
         public float NumCasts { get; protected set; }
@@ -254,64 +242,37 @@ namespace Rawr.WarlockTmp {
             NumTicks = numTicks;
             TickCoefficient = tickCoefficient;
             CanCrit = canCrit;
-            BonusCritChance = bonusCritChance;
-            BonusCritMultiplier = bonusCritMultiplier;
 
-            // apply affects from entire magic schools or spell trees
             WarlockTalents talents = mommy.Talents;
-            //directMultiplierFromTalents
-            //    += talents.DemonicPact * .01f;
-            //tickMultiplierFromTalents
-            //    += talents.DemonicPact * .01f;
+            SpellModifiers = new SpellModifiers(Mommy.SpellModifiers);
+            SpellModifiers.AddAdditiveDirectMultiplier(
+                directMultiplierFromTalents);
+            SpellModifiers.AddAdditiveTickMultiplier(
+                tickMultiplierFromTalents);
+            SpellModifiers.AddCritChance(bonusCritChance);
+            SpellModifiers.AddCritBonusMultiplier(bonusCritMultiplier);
             if (magicSchool == MagicSchool.Shadow) {
-                directMultiplierFromTalents += talents.ShadowMastery * .03f;
-                tickMultiplierFromTalents += talents.ShadowMastery * .03f;
-                BonusDirectMultiplier
-                    = Multiply(
-                        BonusDirectMultiplier,
-                        Mommy.Stats.BonusShadowDamageMultiplier);
-                BonusTickMultiplier
-                    = Multiply(
-                        BonusTickMultiplier,
-                        Mommy.Stats.BonusShadowDamageMultiplier);
+                SpellModifiers.AddMultiplicativeMultiplier(
+                    Mommy.Stats.BonusShadowDamageMultiplier);
+                SpellModifiers.AddAdditiveMultiplier(
+                    talents.ShadowMastery * .03f);
                 if (Mommy.Options.SpellPriority.Contains("Shadow Bolt")
                     || (Mommy.Options.SpellPriority.Contains("Haunt")
                         && talents.Haunt > 0)) {
 
-                    BonusTickMultiplier
-                        = Multiply(
-                            BonusTickMultiplier,
-                            Mommy.Talents.ShadowEmbrace * .01f * 3f);
+                    SpellModifiers.AddMultiplicativeTickMultiplier(
+                        Mommy.Talents.ShadowEmbrace * .01f * 3f);
                 }
             } else if (magicSchool == MagicSchool.Fire) {
-                BonusDirectMultiplier
-                    = Multiply(
-                        BonusDirectMultiplier,
-                        Mommy.Stats.BonusFireDamageMultiplier);
-                BonusTickMultiplier
-                    = Multiply(
-                        BonusTickMultiplier,
-                        Mommy.Stats.BonusFireDamageMultiplier);
+                SpellModifiers.AddMultiplicativeMultiplier(
+                    Mommy.Stats.BonusFireDamageMultiplier);
             }
             if (spellTree == SpellTree.Destruction) {
-                BonusCritMultiplier
-                    = Multiply(BonusCritMultiplier, talents.Ruin * .2f);
-                BonusCritChance += talents.Devastation * .05f;
+                SpellModifiers.AddCritBonusMultiplier(talents.Ruin * .2f);
+                SpellModifiers.AddCritChance(talents.Devastation * .05f);
             } else if (spellTree == SpellTree.Affliction) {
                 ManaCost *= (1 - Mommy.Talents.Suppression * .01f);
             }
-
-            // roll them up into final multipliers!
-            BonusDirectMultiplier
-                = Multiply(
-                    BonusDirectMultiplier,
-                    directMultiplierFromTalents,
-                    talents.Malediction * .01f);
-            BonusTickMultiplier
-                = Multiply(
-                    BonusTickMultiplier,
-                    tickMultiplierFromTalents,
-                    talents.Malediction * .01f);
         }
         #endregion
 
@@ -363,54 +324,47 @@ namespace Rawr.WarlockTmp {
 
         public void SetDamageStats(float baseSpellPower) {
 
-            float directMultiplier
-                = Multiply(
-                    Mommy.BaseDirectDamageMultiplier, BonusDirectMultiplier);
-            float tickMultiplier
-                = Multiply(Mommy.BaseTickDamageMultiplier, BonusTickMultiplier);
-                //= Mommy.BaseTickDamageMultiplier + BonusTickMultiplier;
-            float critChance = 0f;
-            float critMultiplier = 0f;
-            if (CanCrit) {
-                critChance = Mommy.BaseCritChance + BonusCritChance;
-                float critBonus = .5f + 1.5f * Mommy.BaseBonusCritMultiplier;
-                critMultiplier = 1f + critBonus * (1f + BonusCritMultiplier);
-            }
-
             if (MagicSchool == MagicSchool.Shadow
                 && Mommy.CastSpells.ContainsKey("Haunt")) {
 
-                tickMultiplier
-                    = Multiply(
-                        tickMultiplier,
+                SpellModifiers.AddMultiplicativeTickMultiplier(
                     //((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus());
-                        .2f);
+                    .2f);
             }
 
             AvgDirectDamage
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
-                    * (1f + directMultiplier);
-            AvgDirectCritDamage = AvgDirectDamage * critMultiplier;
-
+                    * SpellModifiers.GetFinalDirectMultiplier();
             AvgTickDamage
                 = (BaseTickDamage + TickCoefficient * baseSpellPower)
-                    * (1 + tickMultiplier);
-            AvgTickCritDamage = AvgTickDamage * critMultiplier;
+                    * SpellModifiers.GetFinalTickMultiplier();
 
-            float directDamage
-                = Utilities.GetWeightedSum(
-                    AvgDirectCritDamage,
-                    critChance,
-                    AvgDirectDamage,
-                    1 - critChance);
-            float tickDamage
-                = Utilities.GetWeightedSum(
-                    AvgTickCritDamage,
-                    critChance,
-                    AvgTickDamage,
-                    1 - critChance);
+            float avgDirectDamage;
+            float avgTickDamage;
+            if (CanCrit) {
+                float critChance = SpellModifiers.CritChance;
+                float multiplier = SpellModifiers.GetFinalCritMultiplier();
+                AvgDirectCritDamage = AvgDirectDamage * multiplier;
+                AvgTickCritDamage = AvgTickDamage * multiplier;
+                avgDirectDamage
+                    = Utilities.GetWeightedSum(
+                        AvgDirectCritDamage,
+                        critChance,
+                        AvgDirectDamage,
+                        1 - critChance);
+                avgTickDamage
+                    = Utilities.GetWeightedSum(
+                        AvgTickCritDamage,
+                        critChance,
+                        AvgTickDamage,
+                        1 - critChance);
+            } else {
+                avgDirectDamage = AvgDamagePerCast;
+                avgTickDamage = AvgTickDamage;
+            }
             AvgDamagePerCast
-                = Mommy.HitChance * (directDamage + NumTicks * tickDamage);
+                = Mommy.HitChance
+                    * (avgDirectDamage + NumTicks * avgTickDamage);
         }
 
         public String GetToolTip() {
@@ -729,11 +683,19 @@ namespace Rawr.WarlockTmp {
                 .1f, // percent base mana
                 1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
                 mommy.Talents.GlyphCoA ? 28f : 24f, // recast period
+
+                // Glyph of Curse of Agony raises the *average* tick to
+                // 8/7 its unglyphed value.
+                
                 1740f / 12f
                     * (mommy.Talents.GlyphCoA
                         ? 8f / 7f : 1f), // damage per tick
                 mommy.Talents.GlyphCoA ? 14f : 12f, // num ticks
                 1.2f / 12f, // tick coefficient
+
+                // Notice that spellstone is NOT applied to Curse of Agony.
+                // Why?  Ask Blizzard, I have no idea.
+
                 mommy.Talents.ImprovedCurseOfAgony * .05f
                     + mommy.Talents.Contagion * .01f, // bonus tick multiplier
                 false, // can crit
@@ -989,10 +951,10 @@ namespace Rawr.WarlockTmp {
                 15f, // recast period
                 1150f / 5f, // tick damage
                 5f, // num ticks
-                mommy.Stats.WarlockSpellstoneDotDamageMultiplier
-                    + mommy.Talents.EverlastingAffliction * .01f
+                mommy.Talents.EverlastingAffliction * .01f
                     + 1f / 5f, // tick coefficient
-                mommy.Talents.SiphonLife * .05f, // bonus tick multiplier
+                mommy.Stats.WarlockSpellstoneDotDamageMultiplier
+                    + mommy.Talents.SiphonLife * .05f, // bonus tick multiplier
                 mommy.Talents.Pandemic > 0, // can crit
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance

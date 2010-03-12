@@ -25,12 +25,9 @@ namespace Rawr.WarlockTmp {
         public Stats Stats { get; private set; }
         public CalculationOptionsWarlock Options { get; private set; }
         public WarlockTalents Talents { get; private set; }
+        public SpellModifiers SpellModifiers { get; private set; }
 
         public float BaseMana { get; private set; }
-        public float BaseDirectDamageMultiplier { get; private set; }
-        public float BaseTickDamageMultiplier { get; private set; }
-        public float BaseCritChance { get; private set; }
-        public float BaseBonusCritMultiplier { get; private set; }
         public float HitChance { get; private set; }
 
         public Dictionary<string, Spell> Spells { get; private set; }
@@ -45,7 +42,32 @@ namespace Rawr.WarlockTmp {
 
         public CharacterCalculationsWarlock(Character character, Stats stats) {
 
-            SetBaseStats(character, stats);
+            Character = character;
+            Stats = stats;
+            Options = (CalculationOptionsWarlock) character.CalculationOptions;
+            if (Options == null) {
+                Options = new CalculationOptionsWarlock();
+            }
+            Talents = character.WarlockTalents;
+            BaseMana = BaseStats.GetBaseStats(character).Mana;
+            Spells = new Dictionary<string, Spell>();
+            CastSpells = new Dictionary<string, Spell>();
+
+            SpellModifiers = new SpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusDamageMultiplier);
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Talents.Malediction * .01f);
+            // The spellstone bonus is added in individual spells, since it
+            // doesn't actually affect Curse of Agony.
+            SpellModifiers.AddAdditiveDirectMultiplier(
+                Stats.WarlockFirestoneDirectDamageMultiplier);
+            SpellModifiers.AddCritChance(Stats.SpellCrit);
+            SpellModifiers.AddCritChance(Stats.SpellCritOnTarget);
+            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
+            HitChance
+                = Math.Min(
+                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
 
             float personalDps = CalcPersonalDps();
             float petDps = CalcPetDps();
@@ -217,34 +239,6 @@ namespace Rawr.WarlockTmp {
 
         #region dps calculations
 
-        private void SetBaseStats(Character character, Stats stats) {
-
-            Character = character;
-            Stats = stats;
-            Options = (CalculationOptionsWarlock) character.CalculationOptions;
-            if (Options == null) {
-                Options = new CalculationOptionsWarlock();
-            }
-            Talents = character.WarlockTalents;
-            BaseMana = BaseStats.GetBaseStats(character).Mana;
-            Spells = new Dictionary<string, Spell>();
-            CastSpells = new Dictionary<string, Spell>();
-            BaseTickDamageMultiplier
-                = Stats.BonusDamageMultiplier;
-                //= Spell.Multiply(
-                //    Stats.BonusDamageMultiplier,
-                //    Stats.WarlockSpellstoneDotDamageMultiplier);
-            BaseDirectDamageMultiplier
-                = Spell.Multiply(
-                    Stats.BonusDamageMultiplier,
-                    Stats.WarlockFirestoneDirectDamageMultiplier);
-            BaseCritChance = Stats.SpellCrit + Stats.SpellCritOnTarget;
-            HitChance
-                = Math.Min(
-                    1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
-            BaseBonusCritMultiplier = Stats.BonusSpellCritMultiplier;
-        }
-
         private float CalcPersonalDps() {
 
             if (GetError(Options.SpellPriority) != null) {
@@ -294,19 +288,12 @@ namespace Rawr.WarlockTmp {
 
             #region Calculate bonuses based on spell uptimes, etc
             if (CastSpells.ContainsKey("Metamorphosis")) {
-                float morphBonus
-                    = ((Metamorphosis) CastSpells["Metamorphosis"])
-                        .GetAvgBonusMultiplier();
-                BaseDirectDamageMultiplier
-                    = Spell.Multiply(BaseDirectDamageMultiplier, morphBonus);
-                BaseTickDamageMultiplier
-                    = Spell.Multiply(BaseTickDamageMultiplier, morphBonus);
+                SpellModifiers.AddMultiplicativeMultiplier(
+                    ((Metamorphosis) CastSpells["Metamorphosis"])
+                        .GetAvgBonusMultiplier());
             }
             if (CastSpells.ContainsKey("Curse Of The Elements")) {
-                BaseDirectDamageMultiplier
-                    = Spell.Multiply(BaseDirectDamageMultiplier, .13f);
-                BaseTickDamageMultiplier
-                    = Spell.Multiply(BaseTickDamageMultiplier, .13f);
+                SpellModifiers.AddMultiplicativeMultiplier(.13f);
             }
             if (Talents.ImprovedShadowBolt > 0
                 && Stats.SpellCritOnTarget < .05f) {
@@ -326,7 +313,7 @@ namespace Rawr.WarlockTmp {
                     30f, // duration
                     Options.Duration / casts); // trigger period
                 float benefit = .05f - Stats.SpellCritOnTarget;
-                BaseCritChance += benefit * uprate;
+                SpellModifiers.AddCritChance(benefit * uprate);
             }
             #endregion
 
