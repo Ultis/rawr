@@ -357,6 +357,16 @@ namespace Rawr.WarlockTmp {
 
         public static string GetError(List<string> spellPriority) {
 
+            bool foundCurse = false;
+            foreach (string spell in spellPriority) {
+                if (spell.StartsWith("Curse")) {
+                    if (foundCurse) {
+                        return "You may only include one curse.";
+                    }
+                    foundCurse = true;
+                }
+            }
+
             int corr = spellPriority.IndexOf("Corruption");
             int sb = spellPriority.IndexOf("Shadow Bolt");
             int sbInstant = spellPriority.IndexOf("Shadow Bolt (Instant)");

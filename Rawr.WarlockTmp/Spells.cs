@@ -37,6 +37,12 @@ namespace Rawr.WarlockTmp {
                 - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
         }
 
+        public static float GetCastTime(
+            float baseCastTime, float minGCD, float haste) {
+
+            return Math.Max(minGCD, baseCastTime / (1f + haste));
+        }
+
         public enum SpellTree { Affliction, Demonology, Destruction }
 
         private class IntList : List<int> {
@@ -76,6 +82,7 @@ namespace Rawr.WarlockTmp {
         public MagicSchool MagicSchool { get; protected set; }
         public float ManaCost { get; protected set; }
         public float BaseCastTime { get; protected set; }
+        public float MinGCD { get; protected set; }
         public float Cooldown { get; protected set; }
         public float RecastPeriod { get; protected set; }
         public bool CanMiss { get; protected set; }
@@ -88,7 +95,9 @@ namespace Rawr.WarlockTmp {
         public SpellModifiers SpellModifiers { get; protected set; }
 
         // set via SetCastingStats()
+        public List<KeyValuePair<float, float>> CollisionProfile { get; protected set; }
         public float NumCasts { get; protected set; }
+        public float AvgCollision { get; protected set; }
 
         // set via SetDamageStats()
         public float AvgDirectDamage { get; protected set; }
@@ -106,6 +115,7 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float minGCD,
             float cooldown,
             float recastPeriod,
             bool canMiss)
@@ -115,6 +125,7 @@ namespace Rawr.WarlockTmp {
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
+                minGCD,
                 cooldown,
                 recastPeriod,
                 canMiss,
@@ -152,6 +163,7 @@ namespace Rawr.WarlockTmp {
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
+                1f, // minGCD
                 cooldown,
                 recastPeriod,
                 true,
@@ -175,6 +187,7 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float minGCD,
             float recastPeriod,
             float baseTickDamage,
             float numTicks,
@@ -189,6 +202,7 @@ namespace Rawr.WarlockTmp {
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
+                minGCD,
                 0f, // cooldown
                 recastPeriod,
                 true,
@@ -212,6 +226,7 @@ namespace Rawr.WarlockTmp {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float minGCD,
             float cooldown,
             float recastPeriod,
             bool canMiss,
@@ -233,6 +248,7 @@ namespace Rawr.WarlockTmp {
             // TODO factor in mana restore procs (as cost reduction)
             ManaCost = mommy.BaseMana * percentBaseMana;
             BaseCastTime = baseCastTime;
+            MinGCD = minGCD;
             BaseDamage = (lowDirectDamage + highDirectDamage) / 2f;
             Cooldown = cooldown;
             RecastPeriod = recastPeriod;
@@ -293,11 +309,11 @@ namespace Rawr.WarlockTmp {
                     = timeRemaining / (GetCastTime() + Mommy.Options.Latency);
             } else {
                 float avgSpellCastTime
-                    = GetCastTime(CalculationsWarlock.AVG_UNHASTED_CAST_TIME);
-                float collisionDelay
-                    = GetCollisionDelay(avgSpellCastTime, timeRemaining);
+                    = GetCastTime(
+                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME, 1f);
+                SetCollisionDelay(avgSpellCastTime, timeRemaining);
                 float period
-                    = Math.Max(RecastPeriod, Cooldown) + collisionDelay;
+                    = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
                 if (CanMiss && Cooldown < RecastPeriod) {
 
                     // If a spell misses, and it can be recast sooner than it
@@ -310,7 +326,7 @@ namespace Rawr.WarlockTmp {
                     float missRate = 1 - Mommy.HitChance;
                     float periodAfterMiss
                         = Math.Max(Cooldown, avgSpellCastTime / 2)
-                            + collisionDelay;
+                            + AvgCollision;
                     period
                         = Utilities.GetWeightedSum(
                             period,
@@ -328,8 +344,8 @@ namespace Rawr.WarlockTmp {
                 && Mommy.CastSpells.ContainsKey("Haunt")) {
 
                 SpellModifiers.AddMultiplicativeTickMultiplier(
-                    //((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus());
-                    .2f);
+                    ((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus());
+                    //.2f);
             }
 
             AvgDirectDamage
@@ -424,14 +440,9 @@ namespace Rawr.WarlockTmp {
             return toolTip;
         }
 
-        public float GetCastTime() {
+        public virtual float GetCastTime() {
 
-            return GetCastTime(BaseCastTime);
-        }
-
-        public float GetCastTime(float baseCastTime) {
-
-            return Math.Max(1f, baseCastTime / (1f + Mommy.Stats.SpellHaste));
+            return GetCastTime(BaseCastTime, MinGCD, Mommy.Stats.SpellHaste);
         }
 
         /// <summary>
@@ -444,7 +455,8 @@ namespace Rawr.WarlockTmp {
         /// <param name="avgSpellCastTime">
         /// The average spell casting time for *lower* priority spells.
         /// </param>
-        private float GetCollisionDelay(float avgSpellCastTime, float timeRemaining) {
+        private void SetCollisionDelay(
+            float avgSpellCastTime, float timeRemaining) {
 
             float lag = Mommy.Options.Latency;
             avgSpellCastTime += lag;
@@ -519,6 +531,7 @@ namespace Rawr.WarlockTmp {
             // and being cast.
             float weightedAverage = 0f;
             float totalProbability = 0f;
+            CollisionProfile = new List<KeyValuePair<float, float>>();
             foreach (KeyValuePair<IntList, float> pair in probablities) {
                 IntList spellString = pair.Key;
                 float delay = castTimes[spellString[0]] / 2;
@@ -526,10 +539,12 @@ namespace Rawr.WarlockTmp {
                     delay += castTimes[spellString[i]];
                 }
                 float probability = pair.Value;
+                CollisionProfile.Add(
+                    new KeyValuePair<float, float>(probability, delay));
                 weightedAverage += probability * delay;
                 totalProbability += probability;
             }
-            return weightedAverage;
+            AvgCollision = weightedAverage;
         }
 
         /// <summary>
@@ -649,6 +664,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 .14f, // percent base mana
                 1.5f, // cast time
+                1f, // minGCD
                 18f, // recast period
                 1080f / 6f, // damage per tick
                 6f, // num ticks
@@ -682,6 +698,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 .1f, // percent base mana
                 1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
+                1f - mommy.Talents.AmplifyCurse * .5f, // minGCD
                 mommy.Talents.GlyphCoA ? 28f : 24f, // recast period
 
                 // Glyph of Curse of Agony raises the *average* tick to
@@ -712,6 +729,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 .1f, // percent base mana
                 1.5f - mommy.Talents.AmplifyCurse * .5f, // cast time
+                1f - mommy.Talents.AmplifyCurse * .5f, // minGCD
                 0f, // cooldown
                 300f, // recast period
                 true) { } // can miss
@@ -724,6 +742,8 @@ namespace Rawr.WarlockTmp {
 
     public class Haunt : Spell {
 
+        private float AvgBonus;
+
         public Haunt(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
@@ -731,6 +751,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction,
                 .12f, // percent base mana
                 1.5f, // cast time
+                1f, // minGCD
                 8f, // cooldown
                 10f, // recast period
                 645f, // low direct damage
@@ -747,11 +768,58 @@ namespace Rawr.WarlockTmp {
 
         public float GetAvgTickBonus() {
 
-            return (Mommy.Talents.GlyphHaunt ? .23f : .2f)
-                * Spell.CalcUprate(
-                    Mommy.HitChance, // proc rate
-                    12f, // duration
-                    Mommy.Options.Duration / NumCasts); // trigger period
+            if (AvgBonus > 0) {
+                return AvgBonus;
+            }
+
+            // Consider the window from cast time until the next (actual, not
+            // planned) cast time.  This can be broken into three cases, when
+            // it hits, when it misses & the previous cast hit, and when it
+            // misses & the previous cast missed. Calculate the average uprate
+            // in each case, then combine them with a weighted average to get
+            // the overall uprate.
+
+            float uprate;
+            float hitUprate = 0f;
+            float missFollowingHitUprate = 0f;
+            float tolerance = 12f - RecastPeriod;
+            foreach (KeyValuePair<float, float> pair in CollisionProfile) {
+                float probability = pair.Key;
+                float collisionDelay = pair.Value;
+
+                // CASE 1: this cast hits.
+                // uprate = duration / window
+                // duration = 12
+                // window = RecastPeriod + collisionDelay
+                uprate = Math.Min(1f, 12f / (RecastPeriod + collisionDelay));
+                hitUprate += probability * uprate;
+
+                // CASE 2: this cast misses, previous cast hit.
+                // uprate = leftoverUptime / window
+                // leftoverUptime = tolerance - collisionDelay
+                // window = Cooldown + collisionDelay
+                uprate
+                    = Math.Max(tolerance - collisionDelay, 0)
+                        / (Cooldown + AvgCollision);
+                missFollowingHitUprate += probability * uprate;
+
+                // CASE 3: this cast misses, previous cast missed.
+                // This case will always yeild zero uptime/uprate.
+            }
+
+            // average them all together for the overall uprate
+            float hitChance = Mommy.HitChance;
+            float missChance = 1 - hitChance;
+            uprate = Utilities.GetWeightedSum(
+                hitUprate,
+                hitChance,
+                missFollowingHitUprate,
+                missChance * hitChance,
+                0f,
+                missChance * missChance);
+
+            AvgBonus = (Mommy.Talents.GlyphHaunt ? .23f : .2f) * uprate;
+            return AvgBonus;
         }
     }
 
@@ -770,6 +838,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction, // spell tree
                 0f, // percent base mana (overwritten below)
                 1.5f, // cast time
+                1f, // minGCD
                 0f, // cooldown
                 37f, // recast period
                 false) { // can miss
@@ -830,6 +899,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Demonology, // spell tree
                 0f, // percent base mana
                 1.5f, // cast time
+                1f, // minGCD
                 180f
                     * (1f
                         - mommy.Talents.Nemesis * .1f), // cooldown
@@ -948,6 +1018,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction,
                 .15f, // percent base mana
                 mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
+                1f, // minGCD
                 15f, // recast period
                 1150f / 5f, // tick damage
                 5f, // num ticks

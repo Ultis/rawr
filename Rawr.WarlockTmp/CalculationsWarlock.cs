@@ -425,12 +425,14 @@ namespace Rawr.WarlockTmp {
                 = (character.CalculationOptions as CalculationOptionsWarlock)
                     .Duration;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                stats.Accumulate(
-                    effect.GetAverageStats(
-                        periods[effect.Trigger],
-                        chances[effect.Trigger],
-                        AVG_UNHASTED_CAST_TIME,
-                        options.Duration));
+                if (periods.ContainsKey(effect.Trigger)) {
+                    stats.Accumulate(
+                        effect.GetAverageStats(
+                            periods[effect.Trigger],
+                            chances[effect.Trigger],
+                            AVG_UNHASTED_CAST_TIME,
+                            options.Duration));
+                }
             }
 
             #endregion
