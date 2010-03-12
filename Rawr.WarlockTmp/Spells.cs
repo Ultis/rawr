@@ -9,6 +9,19 @@ namespace Rawr.WarlockTmp {
 
         public static List<string> ALL_SPELLS = new List<String>();
 
+        public static float CalcUprate(
+            float procRate, float duration, float triggerPeriod) {
+
+            return 1f
+                - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
+        }
+
+        public static float GetCastTime(
+            float baseCastTime, float minGCD, float haste) {
+
+            return Math.Max(minGCD, baseCastTime / (1f + haste));
+        }
+
         static Spell() {
 
             Type spellType = Type.GetType("Rawr.WarlockTmp.Spell");
@@ -28,19 +41,6 @@ namespace Rawr.WarlockTmp {
                     ALL_SPELLS.Add(name);
                 }
             }
-        }
-
-        public static float CalcUprate(
-            float procRate, float duration, float triggerPeriod) {
-
-            return 1f
-                - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
-        }
-
-        public static float GetCastTime(
-            float baseCastTime, float minGCD, float haste) {
-
-            return Math.Max(minGCD, baseCastTime / (1f + haste));
         }
 
         public enum SpellTree { Affliction, Demonology, Destruction }
@@ -76,8 +76,7 @@ namespace Rawr.WarlockTmp {
 
         #region properties
 
-        // set via constructor (all numbers that vary between spell, but not
-        // between casts of each spell)
+        // set via constructor
         public CharacterCalculationsWarlock Mommy { get; protected set; }
         public MagicSchool MagicSchool { get; protected set; }
         public float ManaCost { get; protected set; }
@@ -91,7 +90,7 @@ namespace Rawr.WarlockTmp {
         public float BaseTickDamage { get; protected set; }
         public float NumTicks { get; protected set; }
         public float TickCoefficient { get; protected set; }
-        public bool CanCrit { get; protected set; }
+        public bool CanTickCrit { get; protected set; }
         public SpellModifiers SpellModifiers { get; protected set; }
 
         // set via SetCastingStats()
@@ -132,12 +131,12 @@ namespace Rawr.WarlockTmp {
                 0f, // lowDirectDamage,
                 0f, // highDirectDamage,
                 0f, // directCoefficient,
-                0f, // bonusDirectMultiplier,
+                0f, // addedDirectMultiplier,
                 0f, // baseTickDamage,
                 0f, // numTicks,
                 0f, // tickCoefficient,
-                0f, // bonusTickMultiplier,
-                false, // canCrit,
+                0f, // addedTickMultiplier,
+                false, // canTickCrit,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier,
         #endregion
@@ -154,7 +153,7 @@ namespace Rawr.WarlockTmp {
             float lowDirectDamage,
             float highDirectDamage,
             float directCoefficient,
-            float bonusDirectMultiplier,
+            float addedDirectMultiplier,
             float bonusCritChance,
             float bonusCritMultiplier)
             : this(
@@ -170,12 +169,12 @@ namespace Rawr.WarlockTmp {
                 lowDirectDamage,
                 highDirectDamage,
                 directCoefficient,
-                bonusDirectMultiplier,
+                addedDirectMultiplier,
                 0f, // baseTickDamage,
                 0f, // numTicks,
                 0f, // tickCoefficient,
-                0f, // bonusTickMultiplier,
-                true, // canCrit,
+                0f, // addedTickMultiplier,
+                false, // canTickCrit,
                 bonusCritChance,
                 bonusCritMultiplier) { }
         #endregion
@@ -192,8 +191,8 @@ namespace Rawr.WarlockTmp {
             float baseTickDamage,
             float numTicks,
             float tickCoefficient,
-            float bonusTickMultiplier,
-            bool canCrit,
+            float addedTickMultiplier,
+            bool canTickCrit,
             float bonusCritChance,
             float bonusCritMultiplier)
             : this(
@@ -209,12 +208,12 @@ namespace Rawr.WarlockTmp {
                 0f, // direct low damage
                 0f, // direct high damage
                 0f, // direct coefficient
-                0f, // bonus direct multiplier
+                0f, // addedDirectMultiplier
                 baseTickDamage,
                 numTicks,
                 tickCoefficient,
-                bonusTickMultiplier,
-                canCrit,
+                addedTickMultiplier,
+                canTickCrit,
                 bonusCritChance,
                 bonusCritMultiplier) { }
         #endregion
@@ -233,12 +232,12 @@ namespace Rawr.WarlockTmp {
             float lowDirectDamage,
             float highDirectDamage,
             float directCoefficient,
-            float directMultiplierFromTalents,
+            float addedDirectMultiplier,
             float baseTickDamage,
             float numTicks,
             float tickCoefficient,
-            float tickMultiplierFromTalents,
-            bool canCrit,
+            float addedTickMultiplier,
+            bool canTickCrit,
             float bonusCritChance,
             float bonusCritMultiplier) {
 
@@ -257,14 +256,14 @@ namespace Rawr.WarlockTmp {
             BaseTickDamage = baseTickDamage;
             NumTicks = numTicks;
             TickCoefficient = tickCoefficient;
-            CanCrit = canCrit;
+            CanTickCrit = canTickCrit;
 
             WarlockTalents talents = mommy.Talents;
             SpellModifiers = new SpellModifiers(Mommy.SpellModifiers);
             SpellModifiers.AddAdditiveDirectMultiplier(
-                directMultiplierFromTalents);
+                addedDirectMultiplier);
             SpellModifiers.AddAdditiveTickMultiplier(
-                tickMultiplierFromTalents);
+                addedTickMultiplier);
             SpellModifiers.AddCritChance(bonusCritChance);
             SpellModifiers.AddCritBonusMultiplier(bonusCritMultiplier);
             if (magicSchool == MagicSchool.Shadow) {
@@ -282,10 +281,13 @@ namespace Rawr.WarlockTmp {
             } else if (magicSchool == MagicSchool.Fire) {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     Mommy.Stats.BonusFireDamageMultiplier);
+                SpellModifiers.AddAdditiveMultiplier(talents.Emberstorm * .03f);
             }
             if (spellTree == SpellTree.Destruction) {
                 SpellModifiers.AddCritBonusMultiplier(talents.Ruin * .2f);
                 SpellModifiers.AddCritChance(talents.Devastation * .05f);
+                float[] talentAffects = { 0f, .04f, .07f, .1f };
+                ManaCost *= (1 - talentAffects[Mommy.Talents.Cataclysm]);
             } else if (spellTree == SpellTree.Affliction) {
                 ManaCost *= (1 - Mommy.Talents.Suppression * .01f);
             }
@@ -310,7 +312,9 @@ namespace Rawr.WarlockTmp {
             } else {
                 float avgSpellCastTime
                     = GetCastTime(
-                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME, 1f);
+                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                        1f,
+                        Mommy.Stats.SpellHaste);
                 SetCollisionDelay(avgSpellCastTime, timeRemaining);
                 float period
                     = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
@@ -338,7 +342,7 @@ namespace Rawr.WarlockTmp {
             }
         }
 
-        public void SetDamageStats(float baseSpellPower) {
+        public virtual void SetDamageStats(float baseSpellPower) {
 
             if (MagicSchool == MagicSchool.Shadow
                 && Mommy.CastSpells.ContainsKey("Haunt")) {
@@ -348,6 +352,7 @@ namespace Rawr.WarlockTmp {
                     //.2f);
             }
 
+            // non-crit damage
             AvgDirectDamage
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
                     * SpellModifiers.GetFinalDirectMultiplier();
@@ -355,29 +360,33 @@ namespace Rawr.WarlockTmp {
                 = (BaseTickDamage + TickCoefficient * baseSpellPower)
                     * SpellModifiers.GetFinalTickMultiplier();
 
-            float avgDirectDamage;
-            float avgTickDamage;
-            if (CanCrit) {
-                float critChance = SpellModifiers.CritChance;
-                float multiplier = SpellModifiers.GetFinalCritMultiplier();
-                AvgDirectCritDamage = AvgDirectDamage * multiplier;
-                AvgTickCritDamage = AvgTickDamage * multiplier;
-                avgDirectDamage
+            // crit direct damage
+            float critChance = SpellModifiers.CritChance;
+            float critMultiplier = SpellModifiers.GetFinalCritMultiplier();
+            AvgDirectCritDamage = AvgDirectDamage * critMultiplier;
+            float avgDirectDamage
                     = Utilities.GetWeightedSum(
                         AvgDirectCritDamage,
                         critChance,
                         AvgDirectDamage,
                         1 - critChance);
+
+            // crit tick damage (if possible)
+            float avgTickDamage = AvgTickDamage;
+            if (CanTickCrit) {
+                AvgTickCritDamage = avgTickDamage * critMultiplier;
                 avgTickDamage
                     = Utilities.GetWeightedSum(
+                        avgTickDamage,
+                        1 - critChance,
                         AvgTickCritDamage,
-                        critChance,
-                        AvgTickDamage,
-                        1 - critChance);
+                        critChance);
             } else {
-                avgDirectDamage = AvgDamagePerCast;
+                AvgTickCritDamage = AvgTickDamage;
                 avgTickDamage = AvgTickDamage;
             }
+
+            // overall damage
             AvgDamagePerCast
                 = Mommy.HitChance
                     * (avgDirectDamage + NumTicks * avgTickDamage);
@@ -443,6 +452,13 @@ namespace Rawr.WarlockTmp {
         public virtual float GetCastTime() {
 
             return GetCastTime(BaseCastTime, MinGCD, Mommy.Stats.SpellHaste);
+        }
+
+        protected void ApplyImprovedSoulLeech() {
+
+            float reductionOnProc
+                = Mommy.Stats.Mana * Mommy.Talents.ImprovedSoulLeech * .01f;
+            ManaCost -= .3f * reductionOnProc;
         }
 
         /// <summary>
@@ -655,6 +671,77 @@ namespace Rawr.WarlockTmp {
         }
     }
 
+    public class ChaosBolt : Spell {
+
+        public ChaosBolt(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Fire,
+                SpellTree.Destruction,
+                .07f, // percentBaseMana,
+                2.5f - mommy.Talents.Bane * .1f, // baseCastTime,
+                12f, // cooldown,
+                0f, // recastPeriod,
+                1429f, // lowDirectDamage,
+                1813f, // highDirectDamage,
+                .7142f
+                    + mommy.Talents.ShadowAndFlame * .04f, // directCoefficient,
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                0f) { // bonus crit multiplier
+
+            ApplyImprovedSoulLeech();
+        }
+
+        public override bool IsCastable() {
+            
+            return Mommy.Talents.ChaosBolt > 0;
+        }
+    }
+
+    public class Conflagrate : Spell {
+
+        public Conflagrate(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Fire,
+                SpellTree.Destruction,
+                .16f, // percentBaseMana,
+                1.5f, // baseCastTime,
+                1f, // minGCD,
+                10f, // cooldown,
+                6f, // recastPeriod,
+                true, // canMiss,
+                0f, // lowDirectDamage, damage calculated later
+                0f, // highDirectDamage, damage calculated later
+                0f, // directCoefficient,
+                0f, // addedDirectMultiplier,
+                0f, // baseTickDamage, damage calculated later
+                3f, // numTicks,
+                0f, // tickCoefficient,
+                0f, // addedTickMultiplier,
+                true, // canTickCrit,
+                mommy.Talents.FireAndBrimstone * .05f, // bonusCritChance,
+                0f) { // bonusCritMultiplier) {
+
+            ApplyImprovedSoulLeech();
+        }
+
+        public override bool IsCastable() {
+
+            return Mommy.Talents.Conflagrate > 0;
+        }
+
+        public override void SetDamageStats(float baseSpellPower) {
+
+            Spell immolate = Mommy.CastSpells["Immolate"];
+            float immolateDamage = immolate.AvgTickDamage * immolate.NumTicks;
+            BaseDamage = .6f * immolateDamage;
+            BaseTickDamage = .4f * immolateDamage / NumTicks;
+            base.SetDamageStats(baseSpellPower);
+        }
+    }
+
     public class Corruption : Spell {
 
         public Corruption(CharacterCalculationsWarlock mommy)
@@ -674,8 +761,8 @@ namespace Rawr.WarlockTmp {
                 mommy.Stats.WarlockSpellstoneDotDamageMultiplier
                     + mommy.Talents.ImprovedCorruption * .02f
                     + mommy.Talents.Contagion * .01f
-                    + mommy.Talents.SiphonLife * .05f, // bonus tick multiplier
-                mommy.Talents.Pandemic > 0, // can crit
+                    + mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
+                mommy.Talents.Pandemic > 0, // canTickCrit
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance
                 mommy.Talents.Pandemic) { } // bonus crit multiplier
@@ -714,8 +801,8 @@ namespace Rawr.WarlockTmp {
                 // Why?  Ask Blizzard, I have no idea.
 
                 mommy.Talents.ImprovedCurseOfAgony * .05f
-                    + mommy.Talents.Contagion * .01f, // bonus tick multiplier
-                false, // can crit
+                    + mommy.Talents.Contagion * .01f, // addedTickMultiplier
+                false, // canTickCrit
                 0f, // bonus crit chance
                 0f) { } // bonus crit multiplier
     }
@@ -751,7 +838,6 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Affliction,
                 .12f, // percent base mana
                 1.5f, // cast time
-                1f, // minGCD
                 8f, // cooldown
                 10f, // recast period
                 645f, // low direct damage
@@ -820,6 +906,62 @@ namespace Rawr.WarlockTmp {
 
             AvgBonus = (Mommy.Talents.GlyphHaunt ? .23f : .2f) * uprate;
             return AvgBonus;
+        }
+    }
+
+    public class Immolate : Spell {
+
+        private static bool IsClippedByConflagrate(
+            CharacterCalculationsWarlock mommy) {
+
+            return mommy.Options.SpellPriority.Contains("Conflagrate")
+                && !mommy.Talents.GlyphConflag;
+        }
+
+        public Immolate(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Fire,
+                SpellTree.Destruction,
+                .17f, // percentBaseMana,
+                2f - mommy.Talents.Bane * .1f, // baseCastTime,
+                1f, // minGCD,
+                0f, // cooldown,
+                IsClippedByConflagrate(mommy) ? 10f : 15f, // recastPeriod,
+                true, // canMiss,
+                460f, // lowDirectDamage,
+                460f, // highDirectDamage,
+                .2f, // directCoefficient,
+                mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
+                785f / 5f, // baseTickDamage,
+                IsClippedByConflagrate(mommy) ? 3f : 5f, // numTicks,
+                .2f, // tickCoefficient,
+                mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
+                false, // canTickCrit,
+                0f, // bonusCritChance,
+                0f) { } // bonusCritMultiplier) {
+    }
+
+    public class Incinerate : Spell {
+
+        public Incinerate(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Fire,
+                SpellTree.Destruction,
+                .14f, // percentBaseMana,
+                2.5f - mommy.Talents.Emberstorm * .05f, // baseCastTime,
+                0f, // cooldown,
+                0f, // recastPeriod,
+                582f, // lowDirectDamage,
+                676f, // highDirectDamage,
+                .7143f
+                    + mommy.Talents.ShadowAndFlame * .04f, // directCoefficient,
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                0f) { // bonus crit multiplier
+
+            ApplyImprovedSoulLeech();
         }
     }
 
@@ -958,10 +1100,13 @@ namespace Rawr.WarlockTmp {
                 .8571f
                     + mommy.Talents.ShadowAndFlame * .04f, // direct coefficient
                 mommy.Talents.ImprovedShadowBolt
-                    * .01f, // bonus damage multiplier
+                    * .01f, // addedDirectMultiplier
                 mommy.Stats.Warlock4T8
                     + mommy.Stats.Warlock2T10, // bonus crit chance
-                0f) { } // bonus crit multiplier
+                0f) { // bonus crit multiplier
+
+            ApplyImprovedSoulLeech();
+        }
     }
 
     public class ShadowBolt_Instant : ShadowBolt {
@@ -1025,8 +1170,8 @@ namespace Rawr.WarlockTmp {
                 mommy.Talents.EverlastingAffliction * .01f
                     + 1f / 5f, // tick coefficient
                 mommy.Stats.WarlockSpellstoneDotDamageMultiplier
-                    + mommy.Talents.SiphonLife * .05f, // bonus tick multiplier
-                mommy.Talents.Pandemic > 0, // can crit
+                    + mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
+                mommy.Talents.Pandemic > 0, // canTickCrit
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance
                 mommy.Talents.Pandemic) { } // bonus crit multiplier

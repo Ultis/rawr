@@ -58,6 +58,8 @@ namespace Rawr.WarlockTmp {
                 Stats.BonusDamageMultiplier);
             SpellModifiers.AddMultiplicativeMultiplier(
                 Talents.Malediction * .01f);
+            SpellModifiers.AddMultiplicativeDirectMultiplier(
+                Talents.DemonicPact * .01f);
             // The spellstone bonus is added in individual spells, since it
             // doesn't actually affect Curse of Agony.
             SpellModifiers.AddAdditiveDirectMultiplier(
@@ -321,10 +323,20 @@ namespace Rawr.WarlockTmp {
             float spellPower
                 = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
             float damageDone = 0f;
+            Spell conflagrate = null;
             foreach (KeyValuePair<string, Spell> pair in CastSpells) {
                 Spell spell = pair.Value;
+                if (pair.Key.Equals("Conflagrate")) {
+                    conflagrate = spell;
+                    continue; // save until we're sure immolate is done
+                }
                 spell.SetDamageStats(spellPower);
                 damageDone += spell.NumCasts * spell.AvgDamagePerCast;
+            }
+            if (conflagrate != null) {
+                conflagrate.SetDamageStats(spellPower);
+                damageDone
+                    += conflagrate.NumCasts * conflagrate.AvgDamagePerCast;
             }
             #endregion
 
@@ -368,15 +380,19 @@ namespace Rawr.WarlockTmp {
             }
 
             int corr = spellPriority.IndexOf("Corruption");
-            int sb = spellPriority.IndexOf("Shadow Bolt");
             int sbInstant = spellPriority.IndexOf("Shadow Bolt (Instant)");
             if (sbInstant >= 0 && sbInstant < corr) {
                 return "Shadow Bolt (Instant) can only appear after Corruption.";
             }
-            if (sb == -1) {
+
+            int spammed = spellPriority.IndexOf("Shadow Bolt");
+            if (spammed == -1) {
+                spammed = spellPriority.IndexOf("Incinerate");
+            }
+            if (spammed == -1) {
                 return "You have not included a spammable spell.";
             }
-            if (sb != spellPriority.Count - 1) {
+            if (spammed != spellPriority.Count - 1) {
                 return "No spell may appear after a spammable spell.";
             }
             return null;

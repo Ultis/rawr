@@ -97,6 +97,10 @@ namespace Rawr.WarlockTmp {
                         "Affliction:Life Tap",
                         "Affliction:Unstable Affliction",
                         "Demonology:Metamorphosis",
+                        "Destruction:Chaos Bolt",
+                        "Destruction:Conflagrate",
+                        "Destruction:Immolate",
+                        "Destruction:Incinerate",
                         "Destruction:Shadow Bolt",
                         "Destruction:Shadow Bolt (Instant)" };
                 return _characterDisplayCalculationLabels;
