@@ -346,7 +346,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
+        public override CharacterCalculationsBase GetCharacterCalculations
+            (
+                Character character, 
+                Item additionalItem, 
+                bool referenceCalculation, 
+                bool significantChange, 
+                bool needsDisplayCalculations
+            ) 
         {
             #region Setup what we need and validate.
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
@@ -376,18 +383,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Get the shotrotation/combat model here.
             if (opts.m_Rotation == null) { return calcs; }
 
-            calcs.cType = opts.cType;
-            if (opts.cType == CalculationType.Burst)
-            {
-                _subPointNameColors = _subPointNameColors_Burst;
-            }
-            else
-            {
-                _subPointNameColors = _subPointNameColors_SMT;
-            }
-
             // Level differences.
             int iTargetLevel = opts.TargetLevel;
+            if (opts.bExperimental)
+            {
+                iTargetLevel = opts.hCurrentBoss.Level;
+            }
             int iLevelDiff = iTargetLevel - character.Level;
             float fLevelDiffModifier = iLevelDiff * 0.2f;
 
@@ -481,7 +482,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             Stats sPaperDoll = stats.Clone();
 
             CombatTable ct = new CombatTable(character, calcs, stats, opts);
-
+            if (opts.bExperimental)
+            {
+                // Setup for new combat table using the new ability objects.
+                CombatTable2 ct2 = new CombatTable2(character, stats, calcs, opts);
+            }
             // Now that we have the combat table, we should be able to integrate the Special effects.
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
@@ -692,9 +697,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             BossHandler hCurrentBoss = new BossHandler();
             if (opts.bExperimental)
             {
-                Rawr.BossList BL = new Rawr.BossList();
-                hCurrentBoss = BL.TheHardestBoss;
-
+                hCurrentBoss = opts.hCurrentBoss;                
                 // How much of what kind of damage does this boss deal with?
                 #region ** Incoming Boss Damage **
                 int uAttackCount = hCurrentBoss.Attacks.Count;
@@ -704,17 +707,42 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 }
                 else
                 {
+                    fPhyDamageDPS = hCurrentBoss.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, stats.Miss, stats.Dodge, stats.Parry, 0, 0);
                     foreach (Attack a in hCurrentBoss.Attacks)
                     {
-                        // Bleeds vs Magic vs Physical
+                        if (a.IgnoresAllTanks == false)
+                        {
+                            // Bleeds vs Magic vs Physical
+                            if (a.DamageType == ItemDamageType.Physical)
+                            {
+                                // Bleed or Physical
+                                // Need to figure out how to determine bleed vs. physical hits.
+                                // Also need to balance out the physical hits and balance the hit rate.
+                                if (a.Avoidable)
+                                {
+                                    fPhyDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
+                                }
+                                else
+                                {
+                                    fBleedDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
+                                }
+                            }
+                            else
+                            {
+                                // Magic
+                                fMagicDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
+                            }
+                        }
                     }
                 }
                 #endregion
 
+                #region Fight Settings
                 // Set the Fight Duration to no larger than the Berserk Timer
                 // Question: What is the units for Berserk & Speed Timer? MS/S/M?
                 fFightDuration = Math.Min(hCurrentBoss.BerserkTimer, fFightDuration);
-                //bParryHaste = hCurrentBoss.UseParryHaste;
+                bParryHaste = hCurrentBoss.UseParryHaste;
+                #endregion 
             }
             #endregion
 
@@ -998,6 +1026,16 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #region Display only work
 //            if (needsDisplayCalculations)
 //            {
+                calcs.cType = opts.cType;
+                if (opts.cType == CalculationType.Burst)
+                {
+                    _subPointNameColors = _subPointNameColors_Burst;
+                }
+                else
+                {
+                    _subPointNameColors = _subPointNameColors_SMT;
+                }
+
                 // TODO: not sure if I want this here...
                 calcs.BasicStats = sPaperDoll;
                 // The full character data.
@@ -1104,6 +1142,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             return statsBuffs;
         }
 
+        /// <summary>
+        /// Process the Stat modifier values 
+        /// </summary>
+        /// <param name="statsTotal">[in/out] Stats object for the total character stats.</param>
+        /// <param name="iBladedArmor">[in] character.talent.BladedArmor</param>
         private void ProcessStatModifiers( Stats statsTotal, int iBladedArmor )
         {
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
@@ -1131,7 +1174,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Parry from str. is only available to DKs.
             statsTotal.ParryRating += statsTotal.Strength * 0.25f;
-
         }
 
         /// <summary>
@@ -1428,9 +1470,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.DeathKnightTalents.ImprovedIcyTouch > 0)
             {
                 FullCharacterStats.BonusIcyTouchDamage += (0.05f * character.DeathKnightTalents.ImprovedIcyTouch);
-                // TODO: Need to factor in the correct haste adjustment for target.
-                // For now assuming a straight 2% damage reduction per point.
-
+                // Haste Damage reduction added into Boss Attack speed.
                 //                sReturn.DamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.ImprovedIcyTouch;
             }
 
@@ -1530,17 +1570,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // when active IT, HB, FS, Oblit will crit.
 
             // Improved Icy Talons
-            // increases the melee hast of the group/raid by 20%
+            // increases the melee haste of the group/raid by 20%
             // increases your haste by 5% all the time.
             if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
             {
                 FullCharacterStats.PhysicalHaste += 0.05f;
                 // TODO: Factor in raid utility by improving raid haste by 20%
-                // Effect does NOT stack w/ existing IcyTalons.  So this does not directly benefit
-                // the tank beyond the constant 5% haste.  Rather it has benefit for the rest of the raid.
-                // newStats = new Stats();
-                // newStats.PhysicalHaste += 0.2f;
-                // FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.FrostFeverHit, newStats, 20f, 0f));
+                // As per Blue Post Effect *does* stack w/ existing IcyTalons.
+                // However, it will not stack if already included on Buffs tab.
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Icy Talons")) != true)
+                {
+                    newStats = new Stats();
+                    newStats.PhysicalHaste += 0.2f;
+                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.FrostFeverHit, newStats, 20f, 0f));
+                }
             }
 
             // Merciless Combat

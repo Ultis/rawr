@@ -3,6 +3,11 @@
 Currently targeting: 
 * Wow version 3.3.2
 
+2.3.12:
+* Defect 16597: Imp Icy Talons stacks /w Icy Talons
+* Defect 16012: IIT was double stacking if it was selected in the Buffs Pane.
+* No Defect: Experimental code expanded for shot rotation, and changes to BossHandler features.
+
 2.3.11:
 * No Defect: Adjust the defaults to be more appropriate for T9ish levels rather than Heroics.
 

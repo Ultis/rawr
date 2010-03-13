@@ -107,6 +107,7 @@
     <Compile Include="DKAbilities\AbilityDK.CorpseExplosion.cs" />
     <Compile Include="DKAbilities\AbilityDK.ScourgeStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.Obliterate.cs" />
+    <Compile Include="DKAbilities\CombatTable2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RotationViewer.cs">
       <SubType>Form</SubType>

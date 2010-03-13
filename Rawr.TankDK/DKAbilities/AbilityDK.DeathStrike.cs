@@ -9,10 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_DeathStrike : AbilityDK_Base
     {
-        public AbilityDK_DeathStrike(Stats s, Weapon w)
+        public AbilityDK_DeathStrike(Stats s, Weapon MH, Weapon OH)
         {
             this.sStats = s;
-            this.wWeapon = w;
+            this.wMH = MH;
+            this.wOH = OH;
             this.szName = "Death Strike";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;

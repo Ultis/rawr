@@ -160,7 +160,7 @@ namespace Rawr.UnitTests.TankDK
             CalculationOptionsTankDK c = new CalculationOptionsTankDK();
             c.talents = new DeathKnightTalents();
             Weapon w = new Weapon(i, FFTestStats, c, 0f);
-            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(FFTestStats, w);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(FFTestStats, w, null);
 
             // Blood Plauge application.
             AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(FFTestStats);
@@ -175,8 +175,8 @@ namespace Rawr.UnitTests.TankDK
             Assert.AreEqual(PS.AbilityCost[(int)DKCostTypes.Frost], 0, "Frost Rune");
             Assert.AreEqual(PS.AbilityCost[(int)DKCostTypes.UnHoly], 1, "UnHoly Rune");
             Assert.AreEqual(PS.AbilityCost[(int)DKCostTypes.RunicPower], -10, "RP");
-            Assert.AreEqual(Math.Floor((378 + PS.wWeapon.damage) / 2), PS.uBaseDamage, "BaseDamage");
-            Assert.AreEqual(Math.Floor((378 + PS.wWeapon.damage) / 2), PS.uBaseDamage, "Total Damage");
+            Assert.AreEqual(Math.Floor((378 + PS.wMH.damage) / 2), PS.uBaseDamage, "BaseDamage");
+            Assert.AreEqual(Math.Floor((378 + PS.wMH.damage) / 2), PS.uBaseDamage, "Total Damage");
             Assert.AreEqual(PS.uRange, AbilityDK_Base.MELEE_RANGE, "Range");
             Assert.AreEqual(PS.tDamageType, ItemDamageType.Physical, "Damage Type");
             Assert.AreEqual(PS.Cooldown, 1500u, "Cooldown");

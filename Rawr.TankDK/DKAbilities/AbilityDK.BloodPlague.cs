@@ -14,15 +14,6 @@ namespace Rawr.TankDK
         /// Base damage 0
         /// Bonus from attack power [AP * 0.055 * 1.15]
         /// </summary>
-        public AbilityDK_BloodPlague()
-        {
-            this.szName = "Blood Plague";
-            this.tDamageType = ItemDamageType.Shadow;
-            this.uDuration = 15000;
-            this.uTickRate = 3000;
-            this.uBaseDamage = 0;
-            this.bTriggersGCD = false;
-        }
         public AbilityDK_BloodPlague(Stats s)
         {
             this.szName = "Blood Plague";

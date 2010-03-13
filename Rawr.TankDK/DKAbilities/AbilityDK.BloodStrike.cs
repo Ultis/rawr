@@ -9,10 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_BloodStrike : AbilityDK_Base
     {
-        public AbilityDK_BloodStrike(Stats s, Weapon w)
+        public AbilityDK_BloodStrike(Stats s, Weapon MH, Weapon OH)
         {
             this.sStats = s;
-            this.wWeapon = w;
+            this.wMH = MH;
+            this.wOH = OH;
             this.szName = "Blood Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;

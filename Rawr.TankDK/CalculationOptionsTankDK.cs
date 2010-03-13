@@ -13,8 +13,6 @@ namespace Rawr.TankDK
         ICalculationOptionBase,
         INotifyPropertyChanged
 	{
-        // No one will ever tank in anything other than Frost.
-        //		public enum Presence { Blood, Frost, Unholy }
         #region Options
         private int _TargetLevel = 83;
         public int TargetLevel
@@ -364,7 +362,19 @@ namespace Rawr.TankDK
         }
         #endregion
 
-		public DeathKnightTalents talents;
+        #region BossHandler
+        private BossHandler _hCurrentBoss = new Bosses.LordMarrowgar()[(int)BossHandler.Versions.V_10N];
+        public BossHandler hCurrentBoss
+        {
+            get
+            {
+                return _hCurrentBoss;
+            }
+            set { _hCurrentBoss = value; OnPropertyChanged("BossHandler"); }
+        }
+        #endregion
+
+        public DeathKnightTalents talents;
 
 
         #region XML IO

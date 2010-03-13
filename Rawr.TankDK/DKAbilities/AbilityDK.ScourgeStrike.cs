@@ -9,10 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_ScourgeStrike : AbilityDK_Base
     {
-        public AbilityDK_ScourgeStrike(Stats s, Weapon w)
+        public AbilityDK_ScourgeStrike(Stats s, Weapon MH, Weapon OH)
         {
             this.sStats = s;
-            this.wWeapon = w;
+            this.wMH = MH;
+            this.wOH = OH;
             this.szName = "Scourge Strike";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;

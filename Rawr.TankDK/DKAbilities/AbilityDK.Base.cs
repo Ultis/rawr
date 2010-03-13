@@ -123,8 +123,9 @@ namespace Rawr.TankDK
                 uint AvgDam = (this.uMinDamage + this.uMaxDamage) / 2;
                 uint WDam = 0;
                 // Handle non-weapon based effects:
-                if (null != this.wWeapon)
-                    WDam = (uint)(this.wWeapon.damage * this.fWeaponDamageModifier);
+                if (null != this.wMH)
+                    WDam = (uint)(this.wMH.damage * this.fWeaponDamageModifier);
+                // TODO: Off hand stuff w/ talents.
                 // Average out the min & max damage, then add in baseDamage from the weapon.
                 return (AvgDam + WDam);
             }
@@ -227,9 +228,8 @@ namespace Rawr.TankDK
         #region Weapon related Items
         /////////////////////////////////////////////////
         // Weapon related items.
-
         public bool bWeaponRequired { get; set; }
-        public Weapon wWeapon;
+        public Weapon wMH, wOH;
         public float fWeaponDamageModifier { get; set; }
         #endregion 
 
