@@ -34,5 +34,13 @@ namespace Rawr.WPF
 		{
 			LoadScreen.SaveFiles();
 		}*/
+
+        public override void OpenNewWindow(string title, System.Windows.Controls.Control control)
+        {
+            WindowChild window = new WindowChild();
+            window.RootVisual.Children.Add(control);
+            window.Title = title;
+            window.Show();
+        }
 	}
 }

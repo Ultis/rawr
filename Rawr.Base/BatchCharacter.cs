@@ -4,6 +4,9 @@ using System.Text;
 using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
+#if SILVERLIGHT
+using System.Collections.ObjectModel;
+#endif
 
 namespace Rawr
 {
@@ -24,7 +27,9 @@ namespace Rawr
                     character = null;
 
                     string curDir = Directory.GetCurrentDirectory();
+#if !SILVERLIGHT
                     Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+#endif
                     absolutePath = Path.GetFullPath(relativePath);
                     Directory.SetCurrentDirectory(curDir);
 
@@ -32,13 +37,14 @@ namespace Rawr
 
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Score"));
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Character"));
                 }
             }
         }
 
         private string absolutePath;
         [XmlIgnore]
-        public string AbsulutePath
+        public string AbsolutePath
         {
             get
             {
@@ -66,7 +72,14 @@ namespace Rawr
             {
                 if (character == null && absolutePath != null)
                 {
+#if !RAWR3
                     character = Character.Load(absolutePath);
+#else
+                    using (StreamReader reader = new StreamReader(absolutePath))
+                    {
+                        character = Character.LoadFromXml(reader.ReadToEnd());
+                    }
+#endif
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
                 }
                 return character;
@@ -165,7 +178,11 @@ namespace Rawr
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
+#if SILVERLIGHT
+    public class BatchCharacterList : ObservableCollection<BatchCharacter>
+#else
     public class BatchCharacterList : BindingList<BatchCharacter>
+#endif
     {
         public static BatchCharacterList Load(string path)
         {
@@ -180,6 +197,14 @@ namespace Rawr
         {
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(BatchCharacterList));
             System.IO.StreamWriter writer = new System.IO.StreamWriter(path);
+            serializer.Serialize(writer, this);
+            writer.Close();
+        }
+
+        public void Save(Stream stream)
+        {
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(BatchCharacterList));
+            System.IO.StreamWriter writer = new System.IO.StreamWriter(stream);
             serializer.Serialize(writer, this);
             writer.Close();
         }

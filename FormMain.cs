@@ -843,7 +843,7 @@ namespace Rawr
                     _storedUnsavedChanged = _unsavedChanges;
                 }
                 _batchCharacter = character;
-                _characterPath = character.AbsulutePath;
+                _characterPath = character.AbsolutePath;
                 EnsureItemsLoaded(character.Character.GetAllEquippedAndAvailableGearIds());
                 LoadCharacterIntoForm(character.Character, character.UnsavedChanges);
             }

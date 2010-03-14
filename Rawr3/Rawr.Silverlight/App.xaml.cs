@@ -18,6 +18,8 @@ namespace Rawr.Silverlight
     {
 		private MainPage _mainPage = null;
 
+        private Dictionary<Control, string> _windows = new Dictionary<Control, string>();
+
         public App()
         {
 #if DEBUG
@@ -50,11 +52,29 @@ namespace Rawr.Silverlight
             Grid g = RootVisual as Grid;
             g.Children.RemoveAt(0);
 			_mainPage = new MainPage();
+            _mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = "Character", Tag = _mainPage });
+            _mainPage.WindowsComboBox.SelectionChanged += new SelectionChangedEventHandler(WindowsComboBox_SelectionChanged);
+            _windows[_mainPage] = "Character";
             g.Children.Add(_mainPage);
 			ProcessBookmark();
 		
 			this.CheckAndDownloadUpdateAsync();
 		}
+
+        void WindowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_mainPage.WindowsComboBox != null)
+            {
+                int newIndex = _mainPage.WindowsComboBox.SelectedIndex;
+                if (newIndex > 0)
+                {
+                    Control window = (Control)((ComboBoxItem)_mainPage.WindowsComboBox.SelectedItem).Tag;
+                    _mainPage.WindowsComboBox.IsDropDownOpen = false;
+                    _mainPage.WindowsComboBox.SelectedIndex = 0;
+                    ShowWindow(window);
+                }
+            }
+        }
 
 		private void ProcessBookmark()
 		{
@@ -120,6 +140,20 @@ namespace Rawr.Silverlight
             catch (Exception)
             {
             }
+        }
+
+        public override void OpenNewWindow(string title, Control control)
+        {
+            _windows[control] = title;
+            _mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = title, Tag = control });
+            ShowWindow(control);
+        }
+
+        public override void ShowWindow(Control control)
+        {
+            Grid g = RootVisual as Grid;
+            g.Children.RemoveAt(0);
+            g.Children.Add(control);
         }
     }
 }

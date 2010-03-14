@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Rawr
 {
-    public class BatchTools
+    public class BatchTools : INotifyPropertyChanged
     {
         ItemInstanceOptimizer optimizer;
         BatchOptimizer batchOptimizer;
@@ -73,7 +73,19 @@ namespace Rawr
             }
         }
 
-        public BatchCharacterList BatchCharacterList { get; set; }
+        private BatchCharacterList batchCharacterList;
+        public BatchCharacterList BatchCharacterList 
+        {
+            get
+            {
+                return batchCharacterList;
+            }
+            set
+            {
+                batchCharacterList = value;
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("BatchCharacterList"));
+            }
+        }
 
         private BatchCharacter CurrentBatchCharacter
         {
@@ -990,7 +1002,14 @@ namespace Rawr
             {
                 if (character.Character != null && character.UnsavedChanges)
                 {
-                    character.Character.Save(character.AbsulutePath);
+#if !RAWR3
+                    character.Character.Save(character.AbsolutePath);
+#else
+                    using (Stream stream = new FileStream(character.AbsolutePath, FileMode.Create))
+                    {
+                        character.Character.Save(stream);
+                    }
+#endif
                     character.UnsavedChanges = false;
                 }
             }
@@ -1007,8 +1026,15 @@ namespace Rawr
             {
                 if (character.Character != null && character.UnsavedChanges)
                 {
-                    string copyPath = Path.ChangeExtension(character.AbsulutePath, null) + " " + now.ToString("yyyy-M-d H-m") + ".xml";
+                    string copyPath = Path.ChangeExtension(character.AbsolutePath, null) + " " + now.ToString("yyyy-M-d H-m") + ".xml";
+#if !RAWR3
                     character.Character.Save(copyPath);
+#else
+                    using (Stream stream = new FileStream(copyPath, FileMode.Create))
+                    {
+                        character.Character.Save(stream);
+                    }
+#endif
                 }
             }
         }
@@ -1318,5 +1344,7 @@ namespace Rawr
             workingCharacter = character;
             optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, _thoroughness, itemList[itemIndex]);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -32,7 +32,7 @@ namespace XamlSync
             wpfMap["xmlns:Rawr_Properties"] = "\"clr-namespace:Rawr.Properties;assembly=Rawr.Base.WPF\"";
             wpfMap["xmlns:basics"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 	        wpfMap["xmlns:common"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
-            wpfMap["xmlns:data"] = "\"clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit\"";
+            wpfMap["xmlns:data"] = "\"http://schemas.microsoft.com/wpf/2008/toolkit\"";
             wpfMap["xmlns:dataInput"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 
             vsComnTools = Environment.GetEnvironmentVariable("VS90COMNTOOLS");
@@ -123,6 +123,10 @@ namespace XamlSync
             line = Regex.Replace(line, "CacheMode\\s*=\\s*\"BitmapCache\"", "d:CacheMode=\"BitmapCache\"");
             //TabNavigation
             line = line.Replace("TabNavigation", "KeyboardNavigation.TabNavigation");
+            //TickPlacement=""
+            line = Regex.Replace(line, "d:TickPlacement\\s*=\\s*\"(?<value>.*)\"", "TickPlacement=\"${value}\"");
+            //TickFrequency=""
+            line = Regex.Replace(line, "d:TickFrequency\\s*=\\s*\"(?<value>.*)\"", "TickFrequency=\"${value}\"");
             return line;
         }
 
@@ -132,6 +136,10 @@ namespace XamlSync
             line = Regex.Replace(line, "d:CacheMode\\s*=\\s*\"BitmapCache\"", "CacheMode=\"BitmapCache\"");
             //TabNavigation
             line = line.Replace("KeyboardNavigation.TabNavigation", "TabNavigation");
+            //TickPlacement=""
+            line = Regex.Replace(line, "TickPlacement\\s*=\\s*\"(?<value>.*)\"", "d:TickPlacement=\"${value}\"");
+            //TickFrequency=""
+            line = Regex.Replace(line, "TickFrequency\\s*=\\s*\"(?<value>.*)\"", "d:TickFrequency=\"${value}\"");
             return line;
         }
 

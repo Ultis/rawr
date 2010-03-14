@@ -90,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="BatchTools.xaml.cs">
+      <DependentUpon>BatchTools.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BossHandler\BossPicker.xaml.cs">
       <DependentUpon>BossPicker.WPF.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,8 @@
     <Compile Include="Converters\GemConverter.cs" />
     <Compile Include="Converters\IconPathConverter.cs" />
     <Compile Include="Converters\ItemConverters.cs" />
+    <Compile Include="Converters\NullToBooleanConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\PercentConverter.cs" />
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.WPF.xaml</DependentUpon>
@@ -320,6 +325,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="BatchTools.WPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="BossHandler\BossPicker.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

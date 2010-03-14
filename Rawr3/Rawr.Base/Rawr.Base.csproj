@@ -98,6 +98,15 @@
     <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\BatchCharacter.cs">
+      <Link>BatchCharacter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\BatchOptimizer.cs">
+      <Link>BatchOptimizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\BatchTools.cs">
+      <Link>BatchTools.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Bosses\Bosses.cs">
       <Link>Bosses\Bosses.cs</Link>
     </Compile>

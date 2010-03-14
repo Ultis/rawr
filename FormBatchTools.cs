@@ -322,7 +322,7 @@ namespace Rawr
             else if (e.ColumnIndex == diffBatchCharacterColumn.Index && e.RowIndex != dataGridView.NewRowIndex)
             {
                 BatchCharacter character = (BatchCharacter)dataGridView.Rows[e.RowIndex].DataBoundItem;
-                Character before = Character.Load(character.AbsulutePath); // load clean version for comparison
+                Character before = Character.Load(character.AbsolutePath); // load clean version for comparison
                 Character after = character.Character;
                 FormOptimizeResult result = new FormOptimizeResult(before, after);
                 result.SetOptimizerScores(character.Score, character.NewScore.GetValueOrDefault(character.Score));
@@ -391,7 +391,7 @@ namespace Rawr
             {
                 if (character.Character != null && character.UnsavedChanges)
                 {
-                    character.Character.Save(character.AbsulutePath);
+                    character.Character.Save(character.AbsolutePath);
                     character.UnsavedChanges = false;
                     FormMain.Instance.BatchCharacterSaved(character);
                 }
@@ -407,7 +407,7 @@ namespace Rawr
             {
                 if (character.Character != null && character.UnsavedChanges)
                 {
-                    string copyPath = Path.ChangeExtension(character.AbsulutePath, null) + " " + now.ToString("yyyy-M-d H-m") + ".xml";
+                    string copyPath = Path.ChangeExtension(character.AbsolutePath, null) + " " + now.ToString("yyyy-M-d H-m") + ".xml";
                     character.Character.Save(copyPath);
                 }
             }

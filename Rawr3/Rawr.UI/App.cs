@@ -16,14 +16,6 @@ namespace Rawr.UI
     public class App : Application, INotifyPropertyChanged
     {
 #if !SILVERLIGHT
-        public new static App Current
-        {
-            get
-            {
-                return Application.Current as App;
-            }
-        }
-
         public Grid RootVisual
         {
             get
@@ -55,6 +47,14 @@ namespace Rawr.UI
         }
 #endif
 
+        public new static App Current
+        {
+            get
+            {
+                return Application.Current as App;
+            }
+        }
+
 		#region INotifyPropertyChanged Members
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string property)
@@ -84,5 +84,13 @@ namespace Rawr.UI
 		{
 			LoadProgress = string.Empty;
 		}
+
+        public virtual void OpenNewWindow(string title, Control control)
+        {
+        }
+
+        public virtual void ShowWindow(Control control)
+        {
+        }
 	}
 }

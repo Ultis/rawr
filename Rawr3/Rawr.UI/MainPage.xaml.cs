@@ -24,6 +24,14 @@ namespace Rawr.UI
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
 
+        public ComboBox WindowsComboBox
+        {
+            get
+            {
+                return WindowsMenu;
+            }
+        }
+
         private Status status;
         public Status Status
         {
@@ -99,6 +107,47 @@ namespace Rawr.UI
                     ItemCache.OnItemsChanged();
                     Character.IsLoading = false;
                 }
+            }
+        }
+
+        private Character _storedCharacter;
+        private BatchCharacter _batchCharacter;
+        public void BatchCharacterSaved(BatchCharacter character)
+        {
+            if (_batchCharacter == character)
+            {
+                //_unsavedChanges = false;
+                //SetTitle();
+            }
+        }
+
+        public void LoadBatchCharacter(BatchCharacter character)
+        {
+            if (character.Character != null)
+            {
+                if (_batchCharacter == null)
+                {
+                    _storedCharacter = this.character;
+                    //_storedCharacterPath = _characterPath;
+                    //_storedUnsavedChanged = _unsavedChanges;
+                }
+                _batchCharacter = character;
+                //_characterPath = character.AbsulutePath;
+                EnsureItemsLoaded(character.Character.GetAllEquippedAndAvailableGearIds());
+                //LoadCharacterIntoForm(character.Character, character.UnsavedChanges);
+                Character = character.Character;
+            }
+        }
+
+        public void UnloadBatchCharacter()
+        {
+            if (_batchCharacter != null)
+            {
+                _batchCharacter = null;
+                //_characterPath = _storedCharacterPath;
+                //LoadCharacterIntoForm(_storedCharacter, _storedUnsavedChanged);
+                Character = _storedCharacter;
+                _storedCharacter = null;
             }
         }
 
@@ -406,6 +455,7 @@ namespace Rawr.UI
                     else if (newIndex == 3) ShowItemRefinement();
                     else if (newIndex == 4) ShowItemFilters();
                     else if (newIndex == 6) ShowOptimizer();
+                    else if (newIndex == 7) ShowBatchTools();
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
@@ -419,6 +469,11 @@ namespace Rawr.UI
         private void ShowOptimizer()
         {
             new OptimizeWindow(Character).Show();
+        }
+
+        private void ShowBatchTools()
+        {
+            App.Current.OpenNewWindow("Batch Tools", new BatchTools());
         }
 
         private void ShowHelp(string uri)
