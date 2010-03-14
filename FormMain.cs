@@ -2690,7 +2690,27 @@ namespace Rawr
             ItemCache.LoadTokenItemCost("Emblem of Frost");
         }
 
-		private void txtFilterBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void loadEmblemOfTriumphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Triumph");
+        }
+
+        private void loadEmblemOfConquestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Conquest");
+        }
+
+        private void loadEmblemOfValorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Valor");
+        }
+
+        private void loadEmblemOfToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Heroism");
+        }
+        
+        private void txtFilterBox_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if(e.KeyChar == (char)Keys.Enter) {
 				// search next selected item
