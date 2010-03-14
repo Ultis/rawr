@@ -1,44 +1,53 @@
-<basics2:ChildWindow
+<basics:ChildWindow
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-    xmlns:manas="clr-namespace:Manas.Silverlight"
-	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+  xmlns:manas="clr-namespace:Manas.Silverlight"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	x:Class="Rawr.UI.ArmoryLoadDialog"
-	Title="Load Character from Armory" d:DesignHeight="176" Width="248">
+	Title="Load Character from Armory" >
 	<Grid x:Name="LayoutRoot" Background="White">
 		<Grid.RowDefinitions>
-			<RowDefinition />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
 
-		<Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Grid.Row="1" Margin="0,4,4,4" />
-		<Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right"  Margin="0,4,83,4" Grid.Row="1" />
-		<Grid Margin="4,4,4,4">
-			<Grid.RowDefinitions>
-				<RowDefinition />
-				<RowDefinition />
-				<RowDefinition />
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
-            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="0" Text="Name:" Margin="4,4,4,4" />
-            <TextBox x:Name="NameText" Grid.Column="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,4,4,4" Width="150" manas:Autocomplete.Suggest="DoSuggestName" />
-			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Text="Realm:" Margin="4,4,4,4"/>
-			<TextBox x:Name="RealmText" Grid.Column="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,4,4,4" Width="150" Grid.Row="1" manas:Autocomplete.Suggest="DoSuggestRealm" />
-			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="2" Text="Region:" Margin="4,4,4,4"/>
-			<ComboBox x:Name="RegionCombo" IsDropDownOpen="False" SelectedIndex="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Margin="4,4,4,4" Width="50">
-				<ComboBoxItem Content="US"/>
-				<ComboBoxItem Content="EU"/>
-				<ComboBoxItem Content="KR"/>
-				<ComboBoxItem Content="TW"/>
-				<ComboBoxItem Content="CN"/>
-			</ComboBox>
-		</Grid>
+    <Grid Margin="4,4,4,4">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0" Grid.Row="0" FontSize="9" Text="Region" Margin="4,4,4,0" />
+      <TextBlock Grid.Column="1" Grid.Row="0" FontSize="9" Text="Realm" Margin="4,4,4,0" />
+      <TextBlock Grid.Column="2" Grid.Row="0" FontSize="9" Text="Character" Margin="4,4,4,0" />
+
+      <ComboBox x:Name="RegionCombo" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="0,0,2,4" Width="50" >
+        <ComboBoxItem Content="US"/>
+        <ComboBoxItem Content="EU"/>
+        <ComboBoxItem Content="KR"/>
+        <ComboBoxItem Content="TW"/>
+        <ComboBoxItem Content="CN"/>
+      </ComboBox>
+      <TextBox x:Name="RealmText" Margin="2,0,2,0" Width="150" Grid.Column="1" Grid.Row="1" manas:Autocomplete.Suggest="DoSuggestRealm" />
+      <TextBox x:Name="NameText" Margin="2,0,0,0" Width="150" Grid.Column="2" Grid.Row="1" manas:Autocomplete.Suggest="DoSuggestName" />
+    </Grid>
+
+    <Grid Grid.Row="1" Margin="4" Height="20">
+      <ProgressBar x:Name="ProgressBarStatus"/>
+      <TextBlock x:Name="TextBlockStatus" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Grid>
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+      <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" Margin="4" />
+      <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" Margin="4" />
+    </StackPanel>
 	</Grid>
-</basics2:ChildWindow>
+</basics:ChildWindow>

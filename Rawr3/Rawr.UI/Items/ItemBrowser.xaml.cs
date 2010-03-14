@@ -166,7 +166,7 @@ namespace Rawr.UI
             // try the armory (if requested)
             if (useArmory)
             {
-                Armory.GetItemIdByName(name, armoryId => AddItemByName(name, armoryId, useWowhead));
+                //TODO-ARMORY-ITEM: Armory.GetItemIdByName(name, armoryId => AddItemByName(name, armoryId, useWowhead));
             }
             else
             {

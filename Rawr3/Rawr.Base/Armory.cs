@@ -6,13 +6,13 @@ using System.Reflection;
 
 namespace Rawr
 {
+	/*
     public class Armory
     {
-
-        public static void GetCharacter(string name, string realm, CharacterRegion region, Action<Character> callback)
-        {
-            new CharacterRequest(name, realm, region, callback);
-        }
+		public static void GetCharacter(string name, string realm, CharacterRegion region, Action<Character> callback)
+		{
+			new CharacterRequest(name, realm, region, callback);
+		}
 
         public static void GetItem(int id, Action<Item> callback)
         {
@@ -185,7 +185,7 @@ namespace Rawr
                 if (!string.IsNullOrEmpty(subclassName))
                     type = GetItemType(subclassName, inventoryType, classId);
 
-                /* fix class restrictions on BOP items that can only be made by certain classes */
+                // fix class restrictions on BOP items that can only be made by certain classes
                 switch (Id)
                 {
                     case 35181:
@@ -1169,4 +1169,5 @@ namespace Rawr
 			Calculations.GetModel(Result.CurrentModel).SetDefaults(Result);
         }
     }
+	*/
 }

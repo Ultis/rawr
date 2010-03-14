@@ -16,14 +16,15 @@ namespace Rawr.UI
 {
     public partial class ArmoryLoadDialog : ChildWindow
     {
-
-        public string CharacterName { get; private set; }
-        public string Realm { get; private set; }
-        public CharacterRegion Region { get; private set; }
+		public Character Character { get; private set; }
+		private Rawr.ElitistArmoryService _armoryService = new ElitistArmoryService();
 
         public ArmoryLoadDialog()
         {
             InitializeComponent();
+
+			_armoryService.GetCharacterProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_GetCharacterProgressChanged);
+			_armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
 
             if (Rawr.Properties.RecentSettings.Default.RecentChars != null) {
                 int count = Rawr.Properties.RecentSettings.Default.RecentChars.Count;
@@ -97,18 +98,49 @@ namespace Rawr.UI
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            CharacterName = NameText.Text;
-            Realm = RealmText.Text;
-            Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion),
-                ((ComboBoxItem)RegionCombo.SelectedItem).Content.ToString(), false);
+			_armoryService.GetCharacterAsync((CharacterRegion)Enum.Parse(typeof(CharacterRegion),
+				((ComboBoxItem)RegionCombo.SelectedItem).Content.ToString(), false), 
+				RealmText.Text, NameText.Text, true);
 
-            this.DialogResult = true;
-        }
+			ProgressBarStatus.IsIndeterminate = true;
+			OKButton.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = false;
+		}
+
+		void _armoryService_GetCharacterProgressChanged(object sender, EventArgs<string> e)
+		{
+			TextBlockStatus.Text = e.Value;
+		}
+
+		void _armoryService_GetCharacterCompleted(object sender, EventArgs<Character> e)
+		{
+			ProgressBarStatus.IsIndeterminate = true;
+			ProgressBarStatus.Value = ProgressBarStatus.Maximum;
+			Character = e.Value;
+			this.DialogResult = true;
+		}
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+			if (OKButton.IsEnabled)
+			{
+				this.DialogResult = false;
+			}
+			else
+			{
+				_armoryService.CancelAsync();
+				OKButton.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = true;
+				ProgressBarStatus.IsIndeterminate = false;
+				TextBlockStatus.Text = string.Empty;
+			}
         }
-    }
+
+		public void Load(string characterName, CharacterRegion region, string realm)
+		{
+			NameText.Text = characterName;
+			RealmText.Text = realm;
+			RegionCombo.SelectedItem = RegionCombo.Items.FirstOrDefault(i => ((ComboBoxItem)i).Content.ToString() == region.ToString());
+			OKButton_Click(null, null);
+		}
+	}
 }
 

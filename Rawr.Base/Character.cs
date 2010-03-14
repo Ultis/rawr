@@ -951,7 +951,7 @@ namespace Rawr //O O . .
                 case Rawr.ItemSlot.Meta: return CharacterSlot.Metas;
                 default: return CharacterSlot.None;
             }
-        }
+		}
 
         public ItemAvailability GetItemAvailability(Item item)
         {

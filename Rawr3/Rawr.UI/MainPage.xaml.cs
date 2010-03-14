@@ -341,33 +341,35 @@ namespace Rawr.UI
             armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
         }
 
-        private void armoryLoad_Closed(object sender, EventArgs e)
+		public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
+		{
+			ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
+			armoryLoad.Show();
+			armoryLoad.Load(characterName, region, realm);
+			armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
+		}
+
+		private void armoryLoad_Closed(object sender, EventArgs e)
         {
             ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
             if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
-                {
-                    // The removes force it to put those items at the end.
-                    // So we can use that for recall later on what was last used
-                    if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(ald.CharacterName)) {
-                        Rawr.Properties.RecentSettings.Default.RecentChars.Remove(ald.CharacterName);
-                    }
-                    if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(ald.Realm)) {
-                        Rawr.Properties.RecentSettings.Default.RecentServers.Remove(ald.Realm);
-                    }
-                    Rawr.Properties.RecentSettings.Default.RecentChars.Add(ald.CharacterName);
-                    Rawr.Properties.RecentSettings.Default.RecentServers.Add(ald.Realm);
-                    Rawr.Properties.RecentSettings.Default.RecentRegion = ald.Region.ToString();
+				Character character = ald.Character;
+                // The removes force it to put those items at the end.
+                // So we can use that for recall later on what was last used
+                if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name)) {
+                    Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
                 }
-                LoadFromArmory(ald.CharacterName, ald.Region, ald.Realm);
+                if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm)) {
+					Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
+                }
+				Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
+				Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
+                Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
+
+				this.Character = character;
             }
         }
-
-		public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
-		{
-			Status.Show();	
-			Armory.GetCharacter(characterName, realm, region, armory_ResultReady);
-		}
 
         private void armory_ResultReady(Character newChar)
         {

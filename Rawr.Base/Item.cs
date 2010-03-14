@@ -914,7 +914,7 @@ namespace Rawr
 			else
 			{
 #if RAWR3
-                Armory.GetItem(id, ItemLoaded);
+				//TODO-ARMORY-ITEM: Armory.GetItem(id, ItemLoaded);
                 if (cachedItem != null) return cachedItem;
                 else
                 {
