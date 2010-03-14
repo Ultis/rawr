@@ -100,7 +100,7 @@ namespace Rawr.UI
         {
 			_armoryService.GetCharacterAsync((CharacterRegion)Enum.Parse(typeof(CharacterRegion),
 				((ComboBoxItem)RegionCombo.SelectedItem).Content.ToString(), false), 
-				RealmText.Text, NameText.Text, true);
+				RealmText.Text, NameText.Text, ForceRefreshCheckBox.IsChecked.Value);
 
 			ProgressBarStatus.IsIndeterminate = true;
 			OKButton.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = false;

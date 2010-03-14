@@ -13,6 +13,9 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
     <Grid Margin="4,4,4,4">
@@ -29,7 +32,7 @@
       <TextBlock Grid.Column="1" Grid.Row="0" FontSize="9" Text="Realm" Margin="4,4,4,0" />
       <TextBlock Grid.Column="2" Grid.Row="0" FontSize="9" Text="Character" Margin="4,4,4,0" />
 
-      <ComboBox x:Name="RegionCombo" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="0,0,2,4" Width="50" >
+      <ComboBox x:Name="RegionCombo" SelectedIndex="0" Grid.Column="0" Grid.Row="1" Margin="0,0,2,0" Width="50" >
         <ComboBoxItem Content="US"/>
         <ComboBoxItem Content="EU"/>
         <ComboBoxItem Content="KR"/>
@@ -45,9 +48,26 @@
       <TextBlock x:Name="TextBlockStatus" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-      <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" Margin="4" />
-      <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" Margin="4" />
+    <Grid Grid.Row="2">
+      <CheckBox x:Name="ForceRefreshCheckBox" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Force Refresh"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" Margin="4" />
+        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" Margin="4" />
+      </StackPanel>
+    </Grid>
+
+    <StackPanel Grid.Row="3" HorizontalAlignment="Left" Orientation="Horizontal">
+      <TextBlock Margin="4,4,0,2" VerticalAlignment="Center" Text="Armory access powered by "/>
+      <HyperlinkButton Margin="-2,2,2,0" VerticalAlignment="Center" Content="ElitistArmory.com" NavigateUri="http://elitistarmory.com/" TargetName="_blank"/>
     </StackPanel>
-	</Grid>
+
+    <StackPanel Grid.Row="4" HorizontalAlignment="Left" Orientation="Horizontal">
+      <HyperlinkButton Margin="2,0,-2,-2" VerticalAlignment="Center" Content="Click here" NavigateUri="http://elitistarmory.com/mirror" TargetName="_blank"/>
+      <TextBlock Margin="0,2,4,0" VerticalAlignment="Center" Text=" to find out how to improve the performance"/>
+    </StackPanel>
+
+    <StackPanel Grid.Row="5" HorizontalAlignment="Left" Orientation="Horizontal">
+      <TextBlock Margin="4,0,4,4" VerticalAlignment="Center" Text="of Armory access - support ElitistArmory!"/>
+    </StackPanel>
+  </Grid>
 </basics:ChildWindow>
