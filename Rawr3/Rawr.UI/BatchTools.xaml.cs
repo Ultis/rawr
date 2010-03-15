@@ -25,6 +25,7 @@ namespace Rawr.UI
     /// </summary>
     public partial class BatchTools : UserControl
     {
+        public static BatchTools Instance { get; set; }
         internal Rawr.BatchTools batchTools;
         private bool _unsavedChanges;
         private string _filePath;
@@ -45,7 +46,19 @@ namespace Rawr.UI
             batchTools.StatusUpdated += new EventHandler(batchTools_StatusUpdated);
             batchTools.UpgradeListCompleted += new EventHandler(batchTools_UpgradeListCompleted);
 
+            // Silverlight does not support load/save functionality for batch tools
+#if SILVERLIGHT
+            ((ComboBoxItem)FileMenu.Items[3]).Visibility = Visibility.Collapsed;
+            ((ComboBoxItem)FileMenu.Items[4]).Visibility = Visibility.Collapsed;
+            ((ComboBoxItem)FileMenu.Items[5]).Visibility = Visibility.Collapsed;
+            ((ComboBoxItem)ToolsMenu.Items[8]).Visibility = Visibility.Collapsed;
+            ((ComboBoxItem)ToolsMenu.Items[9]).Visibility = Visibility.Collapsed;
+            ((ComboBoxItem)ToolsMenu.Items[10]).Visibility = Visibility.Collapsed;
+#endif
+
             DataContext = batchTools;
+
+            Instance = this;
         }
 
         void batchTools_UpgradeListCompleted(object sender, EventArgs e)
@@ -90,6 +103,9 @@ namespace Rawr.UI
                             break;
                         case 5:
                             SaveAs();
+                            break;
+                        case 7:
+                            Close();
                             break;
                         default:
                             new ErrorWindow() { Message = "Not yet implemented." }.Show();
@@ -249,7 +265,11 @@ namespace Rawr.UI
 #if SILVERLIGHT
                     foreach (FileInfo file in dialog.Files)
                     {
-                        list.Add(new BatchCharacter() { RelativePath = file.FullName });
+                        // we can only securely read the file name
+                        using (StreamReader reader = file.OpenText())
+                        {
+                            list.Add(new BatchCharacter() { RelativePath = file.Name, Character = Character.LoadFromXml(reader.ReadToEnd()) });
+                        }
                     }
 #else
                     foreach (string filename in dialog.FileNames)
@@ -314,6 +334,13 @@ namespace Rawr.UI
                 //FormMain.Instance.AddRecentCharacter(_filePath);
                 _unsavedChanges = false;
             }
+        }
+
+        public void Close()
+        {
+            Instance = null;
+            MainPage.Instance.UnloadBatchCharacter();
+            App.Current.CloseWindow(this);
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -385,7 +412,11 @@ namespace Rawr.UI
             if (dialog.ShowDialog().GetValueOrDefault())
             {
 #if SILVERLIGHT
-                batchCharacter.RelativePath = dialog.File.FullName;
+                batchCharacter.RelativePath = dialog.File.Name;
+                using (StreamReader reader = dialog.File.OpenText())
+                {
+                    batchCharacter.Character = Character.LoadFromXml(reader.ReadToEnd());
+                }
 #else
                 batchCharacter.RelativePath = RelativePath(dialog.FileName, AppDomain.CurrentDomain.BaseDirectory);
 #endif
@@ -400,6 +431,7 @@ namespace Rawr.UI
             BatchCharacter batchCharacter = (BatchCharacter)DataGrid.CurrentItem;
 #endif
             MainPage.Instance.LoadBatchCharacter(batchCharacter);
+            App.Current.ShowWindow(MainPage.Instance);
         }
 
         private void DiffButton_Click(object sender, RoutedEventArgs e)
@@ -410,10 +442,14 @@ namespace Rawr.UI
             BatchCharacter character = (BatchCharacter)DataGrid.CurrentItem;
 #endif
             Character before;
+#if SILVERLIGHT
+            before = character.OriginalCharacter;
+#else
             using (StreamReader reader = new StreamReader(character.AbsolutePath))
             {
                 before = Character.LoadFromXml(reader.ReadToEnd()); // load clean version for comparison
             }
+#endif
             Character after = character.Character;
 
             OptimizerResults results = new OptimizerResults(before, after);

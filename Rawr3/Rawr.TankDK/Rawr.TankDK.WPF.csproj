@@ -78,6 +78,48 @@
     <Compile Include="..\..\Rawr.TankDK\ComparisonCalculationTankDK.cs">
       <Link>ComparisonCalculationTankDK.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.Base.cs">
+      <Link>DKAbilities\AbilityDK.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.BloodPlague.cs">
+      <Link>DKAbilities\AbilityDK.BloodPlague.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.BloodStrike.cs">
+      <Link>DKAbilities\AbilityDK.BloodStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.CorpseExplosion.cs">
+      <Link>DKAbilities\AbilityDK.CorpseExplosion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.DeathCoil.cs">
+      <Link>DKAbilities\AbilityDK.DeathCoil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.DeathStrike.cs">
+      <Link>DKAbilities\AbilityDK.DeathStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.FrostFever.cs">
+      <Link>DKAbilities\AbilityDK.FrostFever.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.HeartStrike.cs">
+      <Link>DKAbilities\AbilityDK.HeartStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.HowlingBlast.cs">
+      <Link>DKAbilities\AbilityDK.HowlingBlast.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.IcyTouch.cs">
+      <Link>DKAbilities\AbilityDK.IcyTouch.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.Obliterate.cs">
+      <Link>DKAbilities\AbilityDK.Obliterate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.PlagueStrike.cs">
+      <Link>DKAbilities\AbilityDK.PlagueStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.ScourgeStrike.cs">
+      <Link>DKAbilities\AbilityDK.ScourgeStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\CombatTable2.cs">
+      <Link>DKAbilities\CombatTable2.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.TankDK\ShotRotation.cs">
       <Link>ShotRotation.cs</Link>
     </Compile>

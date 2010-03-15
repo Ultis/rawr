@@ -1,13 +1,14 @@
-<basics:ChildWindow
+<basics2:ChildWindow
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-  xmlns:manas="clr-namespace:Manas.Silverlight"
+    xmlns:manas="clr-namespace:Manas.Silverlight"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	x:Class="Rawr.UI.ArmoryLoadDialog"
-	Title="Load Character from Armory" >
+	Title="Load Character from Armory" d:SizeToContent="WidthAndHeight">
 	<Grid x:Name="LayoutRoot" Background="White">
 		<Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -57,17 +58,31 @@
     </Grid>
 
     <StackPanel Grid.Row="3" HorizontalAlignment="Left" Orientation="Horizontal">
-      <TextBlock Margin="4,4,0,2" VerticalAlignment="Center" Text="Armory access powered by "/>
-      <HyperlinkButton Margin="-2,2,2,0" VerticalAlignment="Center" Content="ElitistArmory.com" NavigateUri="http://elitistarmory.com/" TargetName="_blank"/>
+        <TextBlock Margin="4,4,0,2" VerticalAlignment="Center" Text="Armory access powered by "/>
+        <!--IFSL-->
+        <HyperlinkButton Margin="-2,2,2,0" VerticalAlignment="Center" Content="ElitistArmory.com" NavigateUri="http://elitistarmory.com/" TargetName="_blank"/>
+        <!--ENDIFSL-->
+        <!--IFWPF
+        <TextBlock Margin="-2,2,2,0" VerticalAlignment="Center">
+            <Hyperlink NavigateUri="http://elitistarmory.com/" RequestNavigate="Hyperlink_RequestNavigate">ElitistArmory.com</Hyperlink>
+        </TextBlock>
+        ENDIFWPF-->
     </StackPanel>
 
     <StackPanel Grid.Row="4" HorizontalAlignment="Left" Orientation="Horizontal">
-      <HyperlinkButton Margin="2,0,-2,-2" VerticalAlignment="Center" Content="Click here" NavigateUri="http://elitistarmory.com/mirror" TargetName="_blank"/>
-      <TextBlock Margin="0,2,4,0" VerticalAlignment="Center" Text=" to find out how to improve the performance"/>
+        <!--IFSL-->
+        <HyperlinkButton Margin="2,0,-2,-2" VerticalAlignment="Center" Content="Click here" NavigateUri="http://elitistarmory.com/mirror" TargetName="_blank"/>
+        <!--ENDIFSL-->
+        <!--IFWPF
+        <TextBlock Margin="2,0,-2,-2" VerticalAlignment="Center">
+            <Hyperlink NavigateUri="http://elitistarmory.com/mirror" RequestNavigate="Hyperlink_RequestNavigate">Click here</Hyperlink>
+        </TextBlock>
+        ENDIFWPF-->
+        <TextBlock Margin="0,2,4,0" VerticalAlignment="Center" Text=" to find out how to improve the performance"/>
     </StackPanel>
 
     <StackPanel Grid.Row="5" HorizontalAlignment="Left" Orientation="Horizontal">
       <TextBlock Margin="4,0,4,4" VerticalAlignment="Center" Text="of Armory access - support ElitistArmory!"/>
     </StackPanel>
   </Grid>
-</basics:ChildWindow>
+</basics2:ChildWindow>

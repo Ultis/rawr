@@ -24,20 +24,20 @@ namespace Rawr
                 if (relativePath != value)
                 {
                     relativePath = value;
+#if !SILVERLIGHT
                     character = null;
 
                     string curDir = Directory.GetCurrentDirectory();
-#if !SILVERLIGHT
                     Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-#endif
                     absolutePath = Path.GetFullPath(relativePath);
                     Directory.SetCurrentDirectory(curDir);
 
                     score = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(Character, Model, true);
 
-                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Score"));
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Character"));
+#endif
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                 }
             }
         }
@@ -84,7 +84,32 @@ namespace Rawr
                 }
                 return character;
             }
+#if SILVERLIGHT
+            set
+            {
+                // Silverlight does not support loading via file name, so we need to load it directly
+                character = value;
+                originalCharacter = character.Clone();
+                character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
+                score = Optimizer.ItemInstanceOptimizer.GetOptimizationValue(character, Model, true);
+
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Score"));
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Character"));
+            }
+#endif
         }
+
+#if SILVERLIGHT
+        // in Silverlight there's no way to load clean version unless we make a clone
+        private Character originalCharacter;
+        public Character OriginalCharacter
+        {
+            get
+            {
+                return originalCharacter;
+            }
+        }
+#endif
 
         void character_CalculationsInvalidated(object sender, EventArgs e)
         {

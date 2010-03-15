@@ -190,6 +190,8 @@
     </Compile>
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
+    <Compile Include="ElitistArmoryService.cs" />
+    <Compile Include="EventArgsT.cs" />
     <Compile Include="GemmingTemplate.cs" />
     <Compile Include="ItemFilter.cs" />
     <Compile Include="ItemLocation.cs" />

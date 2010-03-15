@@ -240,7 +240,7 @@ namespace Rawr.UI
         private void Instance_ItemsChanged(object sender, EventArgs e)
         {
             Character.InvalidateItemInstances();
-            Character.OnCalculationsInvalidated();
+            ComparisonGraph.UpdateGraph();
         }
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)
@@ -337,16 +337,16 @@ namespace Rawr.UI
         private void LoadFromArmory()
         {
             ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
-            armoryLoad.Show();
             armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
+            armoryLoad.Show();
         }
 
 		public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
 		{
 			ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
-			armoryLoad.Show();
+            armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
+            armoryLoad.Show();
 			armoryLoad.Load(characterName, region, realm);
-			armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
 		}
 
 		private void armoryLoad_Closed(object sender, EventArgs e)
@@ -475,7 +475,19 @@ namespace Rawr.UI
 
         private void ShowBatchTools()
         {
+#if SILVERLIGHT
+            // in silverlight we want to reuse current batch tools
+            if (BatchTools.Instance != null)
+            {
+                App.Current.ShowWindow(BatchTools.Instance);
+            }
+            else
+            {
+                App.Current.OpenNewWindow("Batch Tools", new BatchTools());
+            }
+#else
             App.Current.OpenNewWindow("Batch Tools", new BatchTools());
+#endif
         }
 
         private void ShowHelp(string uri)

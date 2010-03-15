@@ -520,21 +520,29 @@ namespace Rawr.UI
         public void Show(UIElement relativeTo, double offsetX, double offsetY)
         {
 #if SILVERLIGHT
-            GeneralTransform gt = relativeTo.TransformToVisual((UIElement)this.Parent);
-            Point offset = gt.Transform(new Point(offsetX, offsetY));
-            ItemPopup.VerticalOffset = offset.Y;
-            ItemPopup.HorizontalOffset = offset.X;
-            ItemPopup.IsOpen = true;            
-
-            ItemGrid.Measure(App.Current.RootVisual.DesiredSize);
-
-            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
-            double distBetweenBottomOfPopupAndBottomOfWindow =
-                App.Current.RootVisual.RenderSize.Height - offsetY -
-                transform.Transform(new Point(0, ItemGrid.DesiredSize.Height)).Y;
-            if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+            try
             {
-                ItemPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
+                GeneralTransform gt = relativeTo.TransformToVisual((UIElement)this.Parent);
+                Point offset = gt.Transform(new Point(offsetX, offsetY));
+                ItemPopup.VerticalOffset = offset.Y;
+                ItemPopup.HorizontalOffset = offset.X;
+                ItemPopup.IsOpen = true;
+
+                ItemGrid.Measure(App.Current.RootVisual.DesiredSize);
+
+                GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
+                double distBetweenBottomOfPopupAndBottomOfWindow =
+                    App.Current.RootVisual.RenderSize.Height - offsetY -
+                    transform.Transform(new Point(0, ItemGrid.DesiredSize.Height)).Y;
+                if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+                {
+                    ItemPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
+                }
+            }
+            catch (ArgumentException)
+            {
+                // Value does not fall within the expected range
+                // apparently happens if you call while it's still loading the visual tree or something
             }
 #else
             ItemPopup.PlacementTarget = relativeTo;

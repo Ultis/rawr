@@ -74,7 +74,12 @@
         </Grid>
         <data:DataGrid x:Name="DataGrid" Grid.Column="0" Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding BatchCharacterList}" SelectionChanged="DataGrid_SelectionChanged">
             <data:DataGrid.Columns>
+                <!--IFWPF-->
+                <data:DataGridTextColumn Width="*" CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}" Header="Character"/>
+                <!--ENDIFWPF-->
+                <!--IFSL
                 <data:DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Name}" Header="Character"/>
+                ENDIFSL-->
                 <data:DataGridCheckBoxColumn Width="SizeToHeader" CanUserSort="False" Binding="{Binding Locked}" Header="Locked"/>
                 <data:DataGridTextColumn CanUserSort="False" Binding="{Binding Weight}" Header="Weight"/>
                 <data:DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Score}" Header="Score"/>
@@ -89,14 +94,24 @@
                 <data:DataGridTemplateColumn Width="50">
                     <data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+                            <!--IFWPF-->
                             <Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Show"/>
+                            <!--ENDIFWPF-->
+                            <!--IFSL
+                            <Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Show"/>
+                            ENDIFSL-->
                         </DataTemplate>
                     </data:DataGridTemplateColumn.CellTemplate>
                 </data:DataGridTemplateColumn>
                 <data:DataGridTemplateColumn Width="50">
                     <data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+                            <!--IFWPF-->
                             <Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Diff"/>
+                            <!--ENDIFWPF-->
+                            <!--IFSL
+                            <Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Diff"/>
+                            ENDIFSL-->
                         </DataTemplate>
                     </data:DataGridTemplateColumn.CellTemplate>
                 </data:DataGridTemplateColumn>

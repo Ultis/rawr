@@ -92,5 +92,9 @@ namespace Rawr.UI
         public virtual void ShowWindow(Control control)
         {
         }
+
+        public virtual void CloseWindow(Control control)
+        {
+        }
 	}
 }

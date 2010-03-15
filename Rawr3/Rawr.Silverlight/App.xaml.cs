@@ -155,5 +155,15 @@ namespace Rawr.Silverlight
             g.Children.RemoveAt(0);
             g.Children.Add(control);
         }
+
+        public override void CloseWindow(Control control)
+        {
+            Grid g = RootVisual as Grid;
+            if (g.Children[0] == control && control != _mainPage)
+            {
+                g.Children.RemoveAt(0);
+                g.Children.Add(_mainPage);
+            }
+        }
     }
 }

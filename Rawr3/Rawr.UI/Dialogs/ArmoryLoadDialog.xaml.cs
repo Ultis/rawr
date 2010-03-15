@@ -106,6 +106,15 @@ namespace Rawr.UI
 			OKButton.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = false;
 		}
 
+#if !SILVERLIGHT
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
+#endif
+
 		void _armoryService_GetCharacterProgressChanged(object sender, EventArgs<string> e)
 		{
 			TextBlockStatus.Text = e.Value;
@@ -138,7 +147,11 @@ namespace Rawr.UI
 		{
 			NameText.Text = characterName;
 			RealmText.Text = realm;
+#if SILVERLIGHT
 			RegionCombo.SelectedItem = RegionCombo.Items.FirstOrDefault(i => ((ComboBoxItem)i).Content.ToString() == region.ToString());
+#else
+            RegionCombo.SelectedItem = RegionCombo.Items.Cast<object>().FirstOrDefault(i => ((ComboBoxItem)i).Content.ToString() == region.ToString());
+#endif
 			OKButton_Click(null, null);
 		}
 	}
