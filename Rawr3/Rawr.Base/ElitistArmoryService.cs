@@ -20,9 +20,10 @@ namespace Rawr
 {
 	public class ElitistArmoryService
 	{
-		private const string URL_REQ = "http://www.elitistarmory.com/rawr/req/{0}/{1}/{2}/{3}";
-		private const string URL_QUEUE = "http://www.elitistarmory.com/rawr/queue/{0}/{1}/{2}";
-		private const string URL_CHAR = "http://www.elitistarmory.com/rawr/char/{0}/{1}/{2}";
+		private const string URL_CHAR_REQ = "http://www.elitistarmory.com/rawr/req/{0}/{1}/{2}/{3}";
+		private const string URL_CHAR_QUEUE = "http://www.elitistarmory.com/rawr/queue/{0}/{1}/{2}";
+		private const string URL_CHAR_DATA = "http://www.elitistarmory.com/rawr/char/{0}/{1}/{2}";
+		private const string URL_ITEM = "http://www.elitistarmory.com/rawr/item/{0}";
 		private WebClient _webClient;
 
 		public ElitistArmoryService()
@@ -32,7 +33,7 @@ namespace Rawr
 			_queueTimer.Tick += new EventHandler(CheckQueueAsync);
 		}
 
-		public event EventHandler<EventArgs<string>> GetCharacterProgressChanged;
+		public event EventHandler<EventArgs<string>> ProgressChanged;
 		private string _progress = "Requesting Character...";
 		public string Progress
 		{
@@ -42,9 +43,9 @@ namespace Rawr
 				if (_progress != value)
 				{
 					_progress = value;
-					if (GetCharacterProgressChanged != null)
+					if (ProgressChanged != null)
 					{
-						GetCharacterProgressChanged(this, new EventArgs<string>(value));
+						ProgressChanged(this, new EventArgs<string>(value));
 					}
 				}
 			}
@@ -57,33 +58,6 @@ namespace Rawr
 			_canceled = true;
 		}
 
-		public event EventHandler<EventArgs<Character>> GetCharacterCompleted;
-		public void GetCharacterAsync(CharacterRegion region, string realm, string name, bool forceRefresh)
-		{
-			_lastRegion = region;
-			_lastRealm = realm;
-			_lastName = name;
-			_canceled = false;
-			_webClient.DownloadStringAsync(new Uri(string.Format(URL_REQ,
-				region.ToString().ToLower(), realm.ToLower(), name.ToLower(), forceRefresh ? "1" : "0")));
-			this.Progress = "Downloading Character Data...";
-		}
-
-		private DispatcherTimer _queueTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
-		private CharacterRegion _lastRegion;
-		private string _lastRealm;
-		private string _lastName;
-		private void CheckQueueAsync(object sender, EventArgs e)
-		{
-			_queueTimer.Stop();
-			if (!_canceled)
-			{
-				_webClient.DownloadStringAsync(new Uri(string.Format(URL_QUEUE,
-					_lastRegion.ToString().ToLower(), _lastRealm.ToLower(), _lastName.ToLower())));
-				this.Progress = "Downloading Character Data...";
-			}
-		}
-
 		private void _webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
 		{
 			if (!e.Cancelled)
@@ -93,28 +67,77 @@ namespace Rawr
 				{
 					xdoc = XDocument.Load(sr);
 				}
+
 				if (xdoc.Root.Name == "queue")
 				{
 					Progress = "Queued (Postion: " + xdoc.Root.Attribute("position").Value + ")";
 					_queueTimer.Start();
 				}
-				else
+				else if (xdoc.Root.Name == "characterInfo")
 				{
 					Progress = "Parsing Character Data...";
-					BackgroundWorker bwParse = new BackgroundWorker();
-					bwParse.DoWork += new DoWorkEventHandler(ParseCharacterXDoc);
-					bwParse.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParse_RunWorkerCompleted);
-					bwParse.RunWorkerAsync(xdoc);
+					BackgroundWorker bwParseCharacter = new BackgroundWorker();
+					bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
+					bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
+					bwParseCharacter.RunWorkerAsync(xdoc);
+				}
+				else if (xdoc.Root.Name == "itemData")
+				{
+					Progress = "Parsing Item Data...";
+					BackgroundWorker bwParseItem = new BackgroundWorker();
+					bwParseItem.DoWork += new DoWorkEventHandler(bwParseItem_DoWork);
+					bwParseItem.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseItem_RunWorkerCompleted);
+					bwParseItem.RunWorkerAsync(xdoc);
 				}
 			}
 		}
 
-		void bwParse_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		private DispatcherTimer _queueTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
+		private CharacterRegion _lastRegion;
+		private string _lastRealm;
+		private string _lastName;
+		private int _lastItemId;
+		private bool _lastRequestWasItem = false;
+		private void CheckQueueAsync(object sender, EventArgs e)
+		{
+			_queueTimer.Stop();
+			if (!_canceled)
+			{
+				if (_lastRequestWasItem)
+				{
+					_webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, _lastItemId)));
+					this.Progress = "Downloading Item Data...";
+				}
+				else
+				{
+					_webClient.DownloadStringAsync(new Uri(string.Format(URL_CHAR_QUEUE,
+						_lastRegion.ToString().ToLower(), _lastRealm.ToLower(), _lastName.ToLower())));
+					this.Progress = "Downloading Character Data...";
+				}
+			}
+		}
+
+		#region Characters
+		public event EventHandler<EventArgs<Character>> GetCharacterCompleted;
+		public void GetCharacterAsync(CharacterRegion region, string realm, string name, bool forceRefresh)
+		{
+			_lastRegion = region;
+			_lastRealm = realm;
+			_lastName = name;
+			_canceled = false;
+			_lastRequestWasItem = false;
+			_webClient.DownloadStringAsync(new Uri(string.Format(URL_CHAR_REQ,
+				region.ToString().ToLower(), realm.ToLower(), name.ToLower(), forceRefresh ? "1" : "0")));
+			this.Progress = "Downloading Character Data...";
+		}
+
+		void bwParseCharacter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>> kvp = (KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>)e.Result;
 			Character character = kvp.Key;
 			Dictionary<CharacterSlot, ItemInstance> items = kvp.Value;
 
+			//Handle items here, due to threading issues (this is on the main UI thread)
 			foreach (KeyValuePair<CharacterSlot, ItemInstance> item in items)
 			{
 				character[item.Key] = item.Value;
@@ -134,7 +157,7 @@ namespace Rawr
 				this.GetCharacterCompleted(this, new EventArgs<Character>(character));
 		}
 
-		private void ParseCharacterXDoc(object sender, DoWorkEventArgs e)
+		private void bwParseCharacter_DoWork(object sender, DoWorkEventArgs e)
 		{
 			XDocument xdoc = e.Argument as XDocument;
 			Character character = new Character();
@@ -272,6 +295,750 @@ namespace Rawr
 
 			e.Result = new KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>(character, items);
 		}
+		#endregion
+
+		#region Items
+		public event EventHandler<EventArgs<Item>> GetItemCompleted;
+		public void GetItemAsync(int itemId)
+		{
+			_lastItemId = itemId;
+			_lastRequestWasItem = true;
+			_webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, itemId)));
+			this.Progress = "Downloading Item Data...";
+		}
+
+		void bwParseItem_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			Progress = "Complete!";
+			if (this.GetItemCompleted != null)
+				this.GetItemCompleted(this, new EventArgs<Item>(e.Result as Item));
+		}
+
+		private void bwParseItem_DoWork(object sender, DoWorkEventArgs e)
+		{
+			XDocument xdoc = e.Argument as XDocument;
+			int id = 0;
+			try
+			{
+				XElement xtooltip = xdoc.Root.Element("page").Element("itemTooltips").Element("itemTooltip");
+				ItemLocation location = LocationFactory.Create(xdoc, xdoc.Root.Element("item").Attribute("id").Value);
+
+				ItemQuality quality = ItemQuality.Common;
+				ItemType type = ItemType.None;
+				ItemSlot socketColor1 = ItemSlot.None;
+				ItemSlot socketColor2 = ItemSlot.None;
+				ItemSlot socketColor3 = ItemSlot.None;
+				Stats socketStats = new Stats();
+				string name = string.Empty;
+				string iconPath = string.Empty;
+				string setName = string.Empty;
+				ItemSlot slot = ItemSlot.None;
+				Stats stats = new Stats();
+				int inventoryType = -1;
+				int classId = -1;
+				string subclassName = string.Empty;
+				int minDamage = 0;
+				int maxDamage = 0;
+				ItemDamageType damageType = ItemDamageType.Physical;
+				float speed = 0f;
+				List<string> requiredClasses = new List<string>();
+				bool unique = false;
+				int itemLevel = 0;
+
+				foreach (XElement node in xtooltip.SelectNodes("id")) { id = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("name")) { name = node.Value; }
+				foreach (XElement node in xtooltip.SelectNodes("icon")) { iconPath = node.Value; }
+				foreach (XElement node in xtooltip.SelectNodes("maxCount")) { unique = node.Value == "1"; }
+				foreach (XElement node in xtooltip.SelectNodes("overallQualityId")) { quality = (ItemQuality)Enum.Parse(typeof(ItemQuality), node.Value, false); }
+				foreach (XElement node in xtooltip.SelectNodes("classId")) { classId = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("equipData/inventoryType")) { inventoryType = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("equipData/subclassName")) { subclassName = node.Value; }
+				foreach (XElement node in xtooltip.SelectNodes("damageData/damage/min")) { minDamage = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("damageData/damage/max")) { maxDamage = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("damageData/damage/type")) { damageType = (ItemDamageType)Enum.Parse(typeof(ItemDamageType), node.Value, false); }
+				foreach (XElement node in xtooltip.SelectNodes("damageData/speed")) { speed = float.Parse(node.Value, System.Globalization.CultureInfo.InvariantCulture); }
+				foreach (XElement node in xtooltip.SelectNodes("setData/name")) { setName = node.Value; }
+				foreach (XElement node in xtooltip.SelectNodes("allowableClasses/class")) { requiredClasses.Add(node.Value); }
+
+				itemLevel = int.Parse(xtooltip.Element("itemLevel").Value);
+
+				if (inventoryType >= 0)
+					slot = GetItemSlot(inventoryType, classId);
+				if (!string.IsNullOrEmpty(subclassName))
+					type = GetItemType(subclassName, inventoryType, classId);
+
+				// fix class restrictions on BOP items that can only be made by certain classes
+				switch (id)
+				{
+					case 35181:
+					case 32495:
+						requiredClasses.Add("Priest");
+						break;
+					case 32476:
+					case 35184:
+					case 32475:
+					case 34355:
+						requiredClasses.Add("Shaman");
+						break;
+					case 32474:
+					case 34356:
+						requiredClasses.Add("Hunter");
+						break;
+					case 46106:
+					case 32479:
+					case 32480:
+					case 46109:
+						requiredClasses.Add("Druid");
+						break;
+					case 32478:
+					case 34353:
+						requiredClasses.Add("Druid");
+						requiredClasses.Add("Rogue");
+						break;
+				}
+
+				foreach (XElement node in xtooltip.SelectNodes("bonusAgility")) { stats.Agility = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusAttackPower")) { stats.AttackPower = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("armor")) { stats.Armor = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusParryRating")) { stats.ParryRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusBlockRating")) { stats.BlockRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusBlockValue")) { stats.BlockValue = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("blockValue")) { stats.BlockValue = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusResilienceRating")) { stats.Resilience = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusStamina")) { stats.Stamina = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusIntellect")) { stats.Intellect = int.Parse(node.Value); }
+
+				foreach (XElement node in xtooltip.SelectNodes("bonusStrength")) { stats.Strength = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusHitRating")) { stats.HitRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusHasteRating")) { stats.HasteRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusCritRating")) { stats.CritRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusExpertiseRating")) { stats.ExpertiseRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusArmorPenetration")) { stats.ArmorPenetrationRating = int.Parse(node.Value); }
+
+				foreach (XElement node in xtooltip.SelectNodes("arcaneResist")) { stats.ArcaneResistance = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("fireResist")) { stats.FireResistance = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("frostResist")) { stats.FrostResistance = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("natureResist")) { stats.NatureResistance = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("shadowResist")) { stats.ShadowResistance = int.Parse(node.Value); }
+
+				foreach (XElement node in xtooltip.SelectNodes("bonusCritSpellRating")) { stats.CritRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusHitSpellRating")) { stats.HitRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusHasteSpellRating")) { stats.HasteRating = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusSpellPower")) { stats.SpellPower = int.Parse(node.Value); }
+
+				foreach (XElement node in xtooltip.SelectNodes("bonusMana")) { stats.Mana = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusSpirit")) { stats.Spirit = int.Parse(node.Value); }
+				foreach (XElement node in xtooltip.SelectNodes("bonusManaRegen")) { stats.Mp5 = int.Parse(node.Value); }
+
+				if (slot == ItemSlot.Finger ||
+					slot == ItemSlot.MainHand ||
+					slot == ItemSlot.Neck ||
+					(slot == ItemSlot.OffHand && type != ItemType.Shield) ||
+					slot == ItemSlot.OneHand ||
+					slot == ItemSlot.Trinket ||
+					slot == ItemSlot.TwoHand)
+				{
+					stats.BonusArmor += stats.Armor;
+					stats.Armor = 0f;
+				}
+
+				if (slot == ItemSlot.Back)
+				{
+					float baseArmor = 0;
+					switch (quality)
+					{
+						case ItemQuality.Temp:
+						case ItemQuality.Poor:
+						case ItemQuality.Common:
+						case ItemQuality.Uncommon:
+							baseArmor = (float)itemLevel * 1.19f + 5.1f;
+							break;
+
+						case ItemQuality.Rare:
+							baseArmor = ((float)itemLevel + 26.6f) * 16f / 25f;
+							break;
+
+						case ItemQuality.Epic:
+						case ItemQuality.Legendary:
+						case ItemQuality.Artifact:
+						case ItemQuality.Heirloom:
+							baseArmor = ((float)itemLevel + 358f) * 7f / 26f;
+							break;
+					}
+
+					baseArmor = (float)Math.Floor(baseArmor);
+					stats.BonusArmor = stats.Armor - baseArmor;
+					stats.Armor = baseArmor;
+				}
+
+				foreach (XElement node in xtooltip.SelectNodes("spellData/spell"))
+				{
+					bool isEquip = false;
+					bool isUse = false;
+					string spellDesc = null;
+					foreach (XElement childNode in node.Elements())
+					{
+						if (childNode.Name == "trigger")
+						{
+							isEquip = childNode.Value == "1";
+							isUse = childNode.Value == "0";
+						}
+						if (childNode.Name == "desc")
+							spellDesc = childNode.Value;
+					}
+
+					//parse Use/Equip lines
+					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, id);
+					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true, itemLevel, id);
+				}
+
+				List<XElement> socketNodes = new List<XElement>(xtooltip.SelectNodes("socketData/socket"));
+				if (socketNodes.Count > 0) socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[0].Attribute("color").Value, false);
+				if (socketNodes.Count > 1) socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[1].Attribute("color").Value, false);
+				if (socketNodes.Count > 2) socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[2].Attribute("color").Value, false);
+				string socketBonusesString = string.Empty;
+				foreach (XElement node in xtooltip.SelectNodes("socketData/socketMatchEnchant")) { socketBonusesString = node.Value.Trim('+'); }
+				if (!string.IsNullOrEmpty(socketBonusesString))
+				{
+					try
+					{
+						List<string> socketBonuses = new List<string>();
+						string[] socketBonusStrings = socketBonusesString.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+						foreach (string socketBonusString in socketBonusStrings)
+						{
+							if (socketBonusString.LastIndexOf('+') > 2 && socketBonusString.LastIndexOf('+') < socketBonusString.Length - 3)
+							{
+								socketBonuses.Add(socketBonusString.Substring(0, socketBonusString.IndexOf(" +")));
+								socketBonuses.Add(socketBonusString.Substring(socketBonusString.IndexOf(" +") + 1));
+							}
+							else
+								socketBonuses.Add(socketBonusString);
+						}
+						foreach (string socketBonus in socketBonuses)
+						{
+							int socketBonusValue = 0;
+							if (socketBonus.IndexOf(' ') > 0) socketBonusValue = int.Parse(socketBonus.Substring(0, socketBonus.IndexOf(' ')));
+							switch (socketBonus.Substring(socketBonus.IndexOf(' ') + 1))
+							{
+								case "Agility":
+									socketStats.Agility = socketBonusValue;
+									break;
+								case "Stamina":
+									socketStats.Stamina = socketBonusValue;
+									break;
+								case "Dodge Rating":
+									socketStats.DodgeRating = socketBonusValue;
+									break;
+								case "Parry Rating":
+									socketStats.ParryRating = socketBonusValue;
+									break;
+								case "Block Rating":
+									socketStats.BlockRating = socketBonusValue;
+									break;
+								case "Block Value":
+									socketStats.BlockValue = socketBonusValue;
+									break;
+								case "Defense Rating":
+									socketStats.DefenseRating = socketBonusValue;
+									break;
+								case "Hit Rating":
+									socketStats.HitRating = socketBonusValue;
+									break;
+								case "Haste Rating":
+									socketStats.HasteRating = socketBonusValue;
+									break;
+								case "Expertise Rating":
+									socketStats.ExpertiseRating = socketBonusValue;
+									break;
+								case "Armor Penetration Rating":
+									socketStats.ArmorPenetrationRating = socketBonusValue;
+									break;
+								case "Strength":
+									socketStats.Strength = socketBonusValue;
+									break;
+								case "Healing":
+									//case "Healing +4 Spell Damage":
+									//case "Healing +3 Spell Damage":
+									//case "Healing +2 Spell Damage":
+									//case "Healing +1 Spell Damage":
+									//case "Healing and +4 Spell Damage":
+									//case "Healing and +3 Spell Damage":
+									//case "Healing and +2 Spell Damage":
+									//case "Healing and +1 Spell Damage":
+									if (socketBonusValue == 0)
+										socketStats.SpellPower = (float)Math.Round(int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' '))) / 1.88f);
+									else
+										socketStats.SpellPower = (float)Math.Round(socketBonusValue / 1.88f);
+									break;
+								case "Spell Damage":
+									// Only update Spell Damage if its not already set (Incase its an old heal bonus)
+									if (socketStats.SpellPower == 0)
+										socketStats.SpellPower = socketBonusValue;
+									//sockets.Stats.Healing = socketBonusValue;
+									break;
+								case "Spell Power":
+									socketStats.SpellPower = socketBonusValue;
+									break;
+								case "Crit Rating":
+								case "Crit Strike Rating":
+								case "Critical Rating":
+								case "Critical Strike Rating":
+									socketStats.CritRating = socketBonusValue;
+									break;
+								case "Attack Power":
+									socketStats.AttackPower = socketBonusValue;
+									break;
+								case "Weapon Damage":
+									socketStats.WeaponDamage = socketBonusValue;
+									break;
+								case "Resilience":
+								case "Resilience Rating":
+									socketStats.Resilience = socketBonusValue;
+									break;
+								//case "Spell Damage and Healing":
+								//    sockets.Stats.SpellDamageRating = socketBonusValue;
+								//    sockets.Stats.Healing = socketBonusValue;
+								//    break;
+								case "Spell Hit Rating":
+									socketStats.HitRating = socketBonusValue;
+									break;
+								case "Intellect":
+									socketStats.Intellect = socketBonusValue;
+									break;
+								case "Spell Crit":
+								case "Spell Crit Rating":
+								case "Spell Critical":
+								case "Spell Critical Rating":
+								case "Spell Critical Strike Rating":
+									socketStats.CritRating = socketBonusValue;
+									break;
+								case "Spell Haste Rating":
+									socketStats.HasteRating = socketBonusValue;
+									break;
+								case "Spirit":
+									socketStats.Spirit = socketBonusValue;
+									break;
+								case "Mana every 5 seconds":
+								case "Mana ever 5 Sec":
+								case "mana per 5 sec":
+								case "mana per 5 sec.":
+								case "Mana per 5 sec.":
+								case "Mana per 5 Seconds":
+									socketStats.Mp5 = socketBonusValue;
+									break;
+							}
+						}
+					}
+					catch { }
+				}
+				foreach (XElement nodeGemProperties in xtooltip.SelectNodes("gemProperties"))
+				{
+					List<string> gemBonuses = new List<string>();
+					string[] gemBonusStrings = nodeGemProperties.Value.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+					foreach (string gemBonusString in gemBonusStrings)
+					{
+						if (gemBonusString.IndexOf('+') != gemBonusString.LastIndexOf('+'))
+						{
+							gemBonuses.Add(gemBonusString.Substring(0, gemBonusString.IndexOf(" +")));
+							gemBonuses.Add(gemBonusString.Substring(gemBonusString.IndexOf(" +") + 1));
+						}
+						else
+							gemBonuses.Add(gemBonusString);
+					}
+					foreach (string gemBonus in gemBonuses)
+					{
+						if (gemBonus == "Spell Damage +6")
+						{
+							stats.SpellPower = 6.0f;
+						}
+						else if (gemBonus == "2% Increased Armor Value from Items")
+						{
+							stats.BaseArmorMultiplier = 0.02f;
+						}
+						else if (gemBonus == "Stamina +6")
+						{
+							stats.Stamina = 6.0f;
+						}
+						else if (gemBonus == "Chance to restore mana on spellcast")
+						{
+							stats.ManaRestoreOnCast_5_15 = 300; // IED
+						}
+						else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
+						{
+							stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
+						}
+						else if (gemBonus == "+10% Shield Block Value")
+						{
+							stats.BonusBlockValueMultiplier = 0.1f;
+						}
+						else if (gemBonus == "+2% Intellect")
+						{
+							stats.BonusIntellectMultiplier = 0.02f;
+						}
+						else if (gemBonus == "2% Reduced Threat")
+						{
+							stats.ThreatReductionMultiplier = 0.02f;
+						}
+						else if (gemBonus == "3% Increased Critical Healing Effect")
+						{
+							stats.BonusCritHealMultiplier = 0.03f;
+						}
+						else
+						{
+							try
+							{
+								int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
+								switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
+								{
+									case "to All Stats":
+									case "All Stats":
+										stats.Agility = gemBonusValue;
+										stats.Strength = gemBonusValue;
+										stats.Stamina = gemBonusValue;
+										stats.Intellect = gemBonusValue;
+										stats.Spirit = gemBonusValue;
+										break;
+									case "Resist All":
+										stats.ArcaneResistance = gemBonusValue;
+										stats.FireResistance = gemBonusValue;
+										stats.FrostResistance = gemBonusValue;
+										stats.NatureResistance = gemBonusValue;
+										stats.ShadowResistance = gemBonusValue;
+										break;
+									case "Increased Critical Damage":
+										stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
+										stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
+										break;
+									case "Agility":
+										stats.Agility = gemBonusValue;
+										break;
+									case "Stamina":
+										stats.Stamina = gemBonusValue;
+										break;
+									case "Dodge Rating":
+										stats.DodgeRating = gemBonusValue;
+										break;
+									case "Parry Rating":
+										stats.ParryRating = gemBonusValue;
+										break;
+									case "Block Rating":
+										stats.BlockRating = gemBonusValue;
+										break;
+									case "Defense Rating":
+										stats.DefenseRating = gemBonusValue;
+										break;
+									case "Hit Rating":
+										stats.HitRating = gemBonusValue;
+										break;
+									case "Haste Rating":
+										stats.HasteRating = gemBonusValue;
+										break;
+									case "Expertise Rating":
+										stats.ExpertiseRating = gemBonusValue;
+										break;
+									case "Armor Penetration Rating":
+										stats.ArmorPenetrationRating = gemBonusValue;
+										break;
+									case "Strength":
+										stats.Strength = gemBonusValue;
+										break;
+									case "Crit Rating":
+									case "Crit Strike Rating":
+									case "Critical Rating":
+									case "Critical Strike Rating":
+										stats.CritRating = gemBonusValue;
+										break;
+									case "Attack Power":
+										stats.AttackPower = gemBonusValue;
+										break;
+									case "Weapon Damage":
+										stats.WeaponDamage = gemBonusValue;
+										break;
+									case "Resilience":
+									case "Resilience Rating":
+										stats.Resilience = gemBonusValue;
+										break;
+									case "Spell Hit Rating":
+										stats.HitRating = gemBonusValue;
+										break;
+									case "Spell Haste Rating":
+										stats.HasteRating = gemBonusValue;
+										break;
+									case "Spell Damage":
+										// Ignore spell damage from gem if Healing has already been applied, as it might be a "9 Healing 3 Spell" gem. 
+										if (stats.SpellPower == 0)
+											stats.SpellPower = gemBonusValue;
+										break;
+									case "Spell Damage and Healing":
+										stats.SpellPower = gemBonusValue;
+										break;
+									case "Healing":
+										stats.SpellPower = (float)Math.Round(gemBonusValue / 1.88f);
+										break;
+									case "Spell Power":
+										stats.SpellPower = gemBonusValue;
+										break;
+									case "Spell Crit":
+									case "Spell Crit Rating":
+									case "Spell Critical":
+									case "Spell Critical Rating":
+										stats.CritRating = gemBonusValue;
+										break;
+									case "Mana every 5 seconds":
+									case "Mana ever 5 Sec":
+									case "mana per 5 sec":
+									case "mana per 5 sec.":
+									case "Mana per 5 Seconds":
+										stats.Mp5 = gemBonusValue;
+										break;
+									case "Intellect":
+										stats.Intellect = gemBonusValue;
+										break;
+									case "Spirit":
+										stats.Spirit = gemBonusValue;
+										break;
+								}
+							}
+							catch { }
+						}
+					}
+				}
+				string desc = string.Empty;
+				foreach (XElement node in xtooltip.SelectNodes("desc")) { desc = node.Value; }
+				if (desc.Contains("Matches any socket"))
+				{
+					slot = ItemSlot.Prismatic;
+				}
+				else if (desc.Contains("Matches a "))
+				{
+					bool red = desc.Contains("Red");
+					bool blue = desc.Contains("Blue");
+					bool yellow = desc.Contains("Yellow");
+					slot = red && blue && yellow ? ItemSlot.Prismatic :
+						red && blue ? ItemSlot.Purple :
+						blue && yellow ? ItemSlot.Green :
+						red && yellow ? ItemSlot.Orange :
+						red ? ItemSlot.Red :
+						blue ? ItemSlot.Blue :
+						yellow ? ItemSlot.Yellow :
+						ItemSlot.None;
+				}
+				else if (desc.Contains("meta gem slot"))
+					slot = ItemSlot.Meta;
+
+				Item item = new Item()
+				{
+					Id = id,
+					Name = name,
+					Quality = quality,
+					Type = type,
+					IconPath = iconPath,
+					Slot = slot,
+					SetName = setName,
+					Stats = stats,
+					SocketColor1 = socketColor1,
+					SocketColor2 = socketColor2,
+					SocketColor3 = socketColor3,
+					SocketBonus = socketStats,
+					MinDamage = minDamage,
+					MaxDamage = maxDamage,
+					DamageType = damageType,
+					Speed = speed,
+					RequiredClasses = string.Join("|", requiredClasses.ToArray()),
+					Unique = unique,
+					ItemLevel = itemLevel,
+				};
+				e.Result = item;
+			}
+			catch (Exception ex)
+			{
+				StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item from Armory: " + id);
+			}
+		}
+
+		private static ItemType GetItemType(string subclassName, int inventoryType, int classId)
+		{
+			switch (subclassName.ToLower())
+			{
+				case "cloth":
+					return ItemType.Cloth;
+
+				case "leather":
+					return ItemType.Leather;
+
+				case "mail":
+					return ItemType.Mail;
+
+				case "plate":
+					return ItemType.Plate;
+
+				case "dagger":
+					return ItemType.Dagger;
+
+				case "fist weapon":
+					return ItemType.FistWeapon;
+
+				case "axe":
+					if (inventoryType == 17)
+						return ItemType.TwoHandAxe;
+					else
+						return ItemType.OneHandAxe;
+
+				case "mace":
+					if (inventoryType == 17)
+						return ItemType.TwoHandMace;
+					else
+						return ItemType.OneHandMace;
+
+				case "sword":
+					if (inventoryType == 17)
+						return ItemType.TwoHandSword;
+					else
+						return ItemType.OneHandSword;
+
+				case "polearm":
+					return ItemType.Polearm;
+
+				case "staff":
+					return ItemType.Staff;
+
+				case "shield":
+					return ItemType.Shield;
+
+				case "bow":
+					return ItemType.Bow;
+
+				case "crossbow":
+					return ItemType.Crossbow;
+
+				case "gun":
+					return ItemType.Gun;
+
+				case "wand":
+					return ItemType.Wand;
+
+				case "thrown":
+					return ItemType.Thrown;
+
+				case "idol":
+					return ItemType.Idol;
+
+				case "libram":
+					return ItemType.Libram;
+
+				case "totem":
+					return ItemType.Totem;
+
+				case "arrow":
+					return ItemType.Arrow;
+
+				case "bullet":
+					return ItemType.Bullet;
+
+				case "quiver":
+					return ItemType.Quiver;
+
+				case "ammo pouch":
+					return ItemType.AmmoPouch;
+
+				case "sigil":
+					return ItemType.Sigil;
+
+				default:
+					return ItemType.None;
+			}
+		}
+
+		private static ItemSlot GetItemSlot(int inventoryType, int classId)
+		{
+			switch (classId)
+			{
+				case 6:
+					return ItemSlot.Projectile;
+
+				case 11:
+					return ItemSlot.ProjectileBag;
+			}
+
+			switch (inventoryType)
+			{
+				case 1:
+					return ItemSlot.Head;
+
+				case 2:
+					return ItemSlot.Neck;
+
+				case 3:
+					return ItemSlot.Shoulders;
+
+				case 16:
+					return ItemSlot.Back;
+
+				case 5:
+				case 20:
+					return ItemSlot.Chest;
+
+				case 4:
+					return ItemSlot.Shirt;
+
+				case 19:
+					return ItemSlot.Tabard;
+
+				case 9:
+					return ItemSlot.Wrist;
+
+				case 10:
+					return ItemSlot.Hands;
+
+				case 6:
+					return ItemSlot.Waist;
+
+				case 7:
+					return ItemSlot.Legs;
+
+				case 8:
+					return ItemSlot.Feet;
+
+				case 11:
+					return ItemSlot.Finger;
+
+				case 12:
+					return ItemSlot.Trinket;
+
+				case 13:
+					return ItemSlot.OneHand;
+
+				case 17:
+					return ItemSlot.TwoHand;
+
+				case 21:
+					return ItemSlot.MainHand;
+
+				case 14:
+				case 22:
+				case 23:
+					return ItemSlot.OffHand;
+
+				case 15:
+				case 25:
+				case 26:
+				case 28:
+					return ItemSlot.Ranged;
+
+				case 24:
+					return ItemSlot.Projectile;
+
+				case 27:
+					return ItemSlot.ProjectileBag;
+
+				default:
+					return ItemSlot.None;
+			}
+		}
+		#endregion
+
 	}
 }
 
@@ -280,56 +1047,66 @@ namespace Rawr
 
 
 /*
-<?xml version='1.0' encoding='utf-8' ?>
-<characterInfo>
-<character class_id='11' name='Astrylian' race_id='4' realm='Suramar' region='us'>
-<equipInfo>
-<equipment enchant_id='3818' enchant_item_id='44878' gem1_id='41380' gem2_id='40130' item_id='51143' slot='0'></equipment>
-<equipment gem1_id='40130' item_id='47133' slot='1'></equipment>
-<equipment enchant_id='3837' gem1_id='40119' item_id='51140' slot='2'></equipment>
-<equipment enchant_id='3832' enchant_item_id='44465' gem1_id='40119' gem2_id='40119' gem3_id='40119' item_id='50001' slot='4'></equipment>
-<equipment gem1_id='40119' gem2_id='40130' gem3_id='40119' item_id='50067' slot='5'></equipment>
-<equipment enchant_id='3327' gem1_id='40119' gem2_id='40119' item_id='51142' slot='6'></equipment>
-<equipment enchant_id='3232' enchant_item_id='39006' gem1_id='40119' gem2_id='40119' item_id='50607' slot='7'></equipment>
-<equipment enchant_id='3757' gem1_id='40119' item_id='50333' slot='8'></equipment>
-<equipment enchant_id='3260' enchant_item_id='34207' gem1_id='40119' item_id='51144' slot='9'></equipment>
-<equipment gem1_id='40119' item_id='50404' slot='10'></equipment>
-<equipment gem1_id='40119' item_id='47955' slot='11'></equipment>
-<equipment item_id='47088' slot='12'></equipment>
-<equipment item_id='47735' slot='13'></equipment>
-<equipment enchant_id='3294' enchant_item_id='39001' gem1_id='40119' item_id='50466' slot='14'></equipment>
-<equipment enchant_id='2673' enchant_item_id='35458' gem1_id='40130' gem2_id='40119' item_id='50040' slot='15'></equipment>
-<equipment item_id='50456' slot='17'></equipment>
-</equipInfo>
-<talentInfo>
-<talent active='1' value='0000000000000000000000000000503232130322010353120303213511203500010000000000000000000000000000000000'>
-<glyphInfo>
-<glyph id='162' name='Glyph of Maul' type='major'></glyph>
-<glyph id='432' name='Glyph of Challenging Roar' type='minor'></glyph>
-<glyph id='431' name='Glyph of Aquatic Form' type='minor'></glyph>
-<glyph id='163' name='Glyph of Growling' type='major'></glyph>
-<glyph id='434' name='Glyph of Unburdened Rebirth' type='minor'></glyph>
-<glyph id='811' name='Glyph of Survival Instincts' type='major'></glyph>
-</glyphInfo>
-</talent>
-<talent active='0' value='0000000000000000000000000000503202132322212053120003313511205500010000000000000000000000000000000000'>
-<glyphInfo>
-<glyph id='671' name='Glyph of Berserk' type='major'></glyph>
-<glyph id='434' name='Glyph of Unburdened Rebirth' type='minor'></glyph>
-<glyph id='551' name='Glyph of Dash' type='minor'></glyph>
-<glyph id='811' name='Glyph of Survival Instincts' type='major'></glyph>
-<glyph id='435' name='Glyph of Thorns' type='minor'></glyph>
-<glyph id='164' name='Glyph of Mangle' type='major'></glyph>
-</glyphInfo>
-</talent>
-</talentInfo>
-<petTalentInfo>
-</petTalentInfo>
-<professionInfo>
-<profession current='450' id='773'></profession>
-<profession current='450' id='165'></profession>
-</professionInfo>
-</character>
-</characterInfo>
-
+ * 
+<itemData> 
+<item id='51931' type='plate'> 
+<sourceInfo> 
+<source area='Icecrown Citadel' id='36612' is_heroic='1' name='Lord Marrowgar' players='10' source_type='drop'> 
+</source> 
+</sourceInfo> 
+</item> 
+<page globalSearch="1" lang="en_us" requestUrl="/item-tooltip.xml"> 
+  <itemxtooltips> 
+    <itemxtooltip> 
+      <id>51931</id> 
+      <name>Ancient Skeletal Boots</name> 
+      <icon>inv_boots_plate_14</icon> 
+      <heroic>1</heroic> 
+      <overallQualityId>4</overallQualityId> 
+      <bonding>1</bonding> 
+      <classId>4</classId> 
+      <equipData> 
+        <inventoryType>8</inventoryType> 
+        <subclassName>Plate</subclassName> 
+      </equipData> 
+      <damageData/> 
+      <bonusStamina>92</bonusStamina> 
+      <bonusIntellect>92</bonusIntellect> 
+      <armor armorBonus="0">1815</armor> 
+      <socketData> 
+        <socket color="Yellow"/> 
+        <socket color="Red"/> 
+      </socketData> 
+      <durability current="75" max="75"/> 
+      <requiredLevel>80</requiredLevel> 
+      <itemLevel>264</itemLevel> 
+      <bonusSpellPower>122</bonusSpellPower> 
+      <bonusCritRating>80</bonusCritRating> 
+      <bonusManaRegen>32</bonusManaRegen> 
+      <itemSource areaId="4812" areaName="Icecrown Citadel (10)" creatureId="36612" creatureName="Lord Marrowgar" difficulty="h" dropRate="2" value="sourceType.creatureDrop"/> 
+    </itemxtooltip> 
+  </itemxtooltips> 
+</page> 
+ 
+</itemData> 
+ * 
+ * 
+ * 
+ * 
+ * 
+TODO: Handle errors.
+ * 
+ * Item Errors:
+ * badItemID - Either a blank item id or something that fails to parse into a number (or 0) is passed
+ * queueFailure - It couldn't queue the item, but no data is found, should never happen
+ * noItem - Item ID entered doesn't exist (Armory returned no data)
+ * maintenance
+ * 500
+ * 503
+ *
+ * Character Errors:
+ * ...
+ * maintenance
+ * 500
+ * 503
 */

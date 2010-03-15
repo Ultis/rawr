@@ -23,7 +23,7 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
-			_armoryService.GetCharacterProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_GetCharacterProgressChanged);
+			_armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
 			_armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
 
             if (Rawr.Properties.RecentSettings.Default.RecentChars != null) {
@@ -115,7 +115,7 @@ namespace Rawr.UI
         }
 #endif
 
-		void _armoryService_GetCharacterProgressChanged(object sender, EventArgs<string> e)
+		void _armoryService_ProgressChanged(object sender, EventArgs<string> e)
 		{
 			TextBlockStatus.Text = e.Value;
 		}

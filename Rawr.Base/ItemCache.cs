@@ -162,7 +162,7 @@ namespace Rawr
                 Items[item.Id] = item;
                 AutoSetUniqueId(item);
 #if RAWR3
-            Items.OrderBy(kvp => kvp.Key);
+            Items.OrderBy(kvp => kvp.Key); //Astryl: What's the point of this? It doesn't order the items in Items, it returns an ordered list, but the return value isn't used...?
 #endif
             }
 

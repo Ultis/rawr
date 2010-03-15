@@ -914,8 +914,11 @@ namespace Rawr
 			else
 			{
 #if RAWR3
-				//TODO-ARMORY-ITEM: Armory.GetItem(id, ItemLoaded);
-                if (cachedItem != null) return cachedItem;
+				ElitistArmoryService armoryService = new ElitistArmoryService();
+				armoryService.GetItemCompleted += new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
+				armoryService.GetItemAsync(id);
+				
+				if (cachedItem != null) return cachedItem;
                 else
                 {
                     Item tempItem = new Item();
@@ -1013,10 +1016,12 @@ namespace Rawr
 		}
 
 #if RAWR3
-        private static void ItemLoaded(Item item)
-        {
-            ItemCache.AddItem(item, true);
-        }
+		private static void armoryService_GetItemCompleted(object sender, EventArgs<Item> e)
+		{
+			if (e.Value != null)
+				ItemCache.AddItem(e.Value, true);
+			((ElitistArmoryService)sender).GetItemCompleted -= new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
+		}
 #endif
 
 		/// <summary>

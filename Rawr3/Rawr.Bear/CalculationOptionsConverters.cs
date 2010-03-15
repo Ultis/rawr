@@ -60,7 +60,11 @@ namespace Rawr.Bear
             if (survivalSoftCap == 180000) return "T9 Raids (10)";
             if (survivalSoftCap == 210000) return "T9 Raids (10, Heroic)";
             if (survivalSoftCap == 190000) return "T9 Raids (25)";
-            if (survivalSoftCap == 225000) return "T9 Raids (25, Heroic)";
+			if (survivalSoftCap == 225000) return "T9 Raids (25, Heroic)";
+			if (survivalSoftCap == 250000) return "T10 Raids (10)";
+			if (survivalSoftCap == 300000) return "T10 Raids (10, Heroic)";
+			if (survivalSoftCap == 300000) return "T10 Raids (25)";
+			if (survivalSoftCap == 350000) return "T10 Raids (25, Heroic)";
             else return "Custom...";
         }
 
@@ -76,11 +80,15 @@ namespace Rawr.Bear
                 case "T8 Raids (10)": return 170000;
                 case "T8 Raids (10, Hard)": return 195000;
                 case "T8 Raids (25)": return 185000;
-                case "T8 Raids (25, Hard)": return 215000;
-                case "T9 Raids (10": return 180000;
-                case "T9 Raids (10, Heroic)": return 210000;
-                case "T9 Raids (25)": return 190000;
-                case "T9 Raids (25, Heroic)": return 225000;
+				case "T8 Raids (25, Hard)": return 215000;
+				case "T9 Raids (10": return 180000;
+				case "T9 Raids (10, Heroic)": return 210000;
+				case "T9 Raids (25)": return 190000;
+				case "T9 Raids (25, Heroic)": return 225000;
+				case "T10 Raids (10": return 250000;
+				case "T10 Raids (10, Heroic)": return 300000;
+				case "T10 Raids (25)": return 300000;
+				case "T10 Raids (25, Heroic)": return 350000;
             }
             return null;
         }
@@ -106,7 +114,11 @@ namespace Rawr.Bear
             if (survivalSoftCap == 70000) return "T9 Raids (10)";
             if (survivalSoftCap == 85000) return "T9 Raids (10, Heroic)";
             if (survivalSoftCap == 80000) return "T9 Raids (25)";
-            if (survivalSoftCap == 95000) return "T9 Raids (25, Heroic)";
+			if (survivalSoftCap == 95000) return "T9 Raids (25, Heroic)";
+			if (survivalSoftCap == 90000) return "T9 Raids (10)";
+			if (survivalSoftCap == 105000) return "T9 Raids (10, Heroic)";
+			if (survivalSoftCap == 100000) return "T9 Raids (25)";
+			if (survivalSoftCap == 120000) return "T9 Raids (25, Heroic)";
             else return "Custom...";
         }
 
@@ -122,11 +134,15 @@ namespace Rawr.Bear
                 case "T8 Raids (10)": return 55000;
                 case "T8 Raids (10, Hard)": return 75000;
                 case "T8 Raids (25)": return 71000;
-                case "T8 Raids (25, Hard)": return 90000;
-                case "T9 Raids (10": return 70000;
-                case "T9 Raids (10, Heroic)": return 85000;
-                case "T9 Raids (25)": return 80000;
-                case "T9 Raids (25, Heroic)": return 95000;
+				case "T8 Raids (25, Hard)": return 90000;
+				case "T9 Raids (10": return 70000;
+				case "T9 Raids (10, Heroic)": return 85000;
+				case "T9 Raids (25)": return 80000;
+				case "T9 Raids (25, Heroic)": return 95000;
+				case "T10 Raids (10": return 90000;
+				case "T10 Raids (10, Heroic)": return 105000;
+				case "T10 Raids (25)": return 100000;
+				case "T10 Raids (25, Heroic)": return 120000;
             }
             return null;
         }
