@@ -99,10 +99,10 @@ namespace Rawr.WarlockTmp {
         public float AvgCollision { get; protected set; }
 
         // set via SetDamageStats()
-        public float AvgDirectDamage { get; protected set; }
-        public float AvgDirectCritDamage { get; protected set; }
-        public float AvgTickDamage { get; protected set; }
-        public float AvgTickCritDamage { get; protected set; }
+        public float AvgDirectHit { get; protected set; }
+        public float AvgDirectCrit { get; protected set; }
+        public float AvgTickHit { get; protected set; }
+        public float AvgTickCrit { get; protected set; }
         public float AvgDamagePerCast { get; protected set; }
 
         #endregion
@@ -352,38 +352,36 @@ namespace Rawr.WarlockTmp {
                     //.2f);
             }
 
-            // non-crit damage
-            AvgDirectDamage
+            AvgDirectHit
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
                     * SpellModifiers.GetFinalDirectMultiplier();
-            AvgTickDamage
+            AvgTickHit
                 = (BaseTickDamage + TickCoefficient * baseSpellPower)
                     * SpellModifiers.GetFinalTickMultiplier();
 
             // crit direct damage
             float critChance = SpellModifiers.CritChance;
             float critMultiplier = SpellModifiers.GetFinalCritMultiplier();
-            AvgDirectCritDamage = AvgDirectDamage * critMultiplier;
+
+            // crit direct damage
+            AvgDirectCrit = AvgDirectHit * critMultiplier;
             float avgDirectDamage
                     = Utilities.GetWeightedSum(
-                        AvgDirectCritDamage,
+                        AvgDirectCrit,
                         critChance,
-                        AvgDirectDamage,
+                        AvgDirectHit,
                         1 - critChance);
 
             // crit tick damage (if possible)
-            float avgTickDamage = AvgTickDamage;
+            float avgTickDamage;
             if (CanTickCrit) {
-                AvgTickCritDamage = avgTickDamage * critMultiplier;
+                AvgTickCrit = AvgTickHit * critMultiplier;
                 avgTickDamage
                     = Utilities.GetWeightedSum(
-                        avgTickDamage,
-                        1 - critChance,
-                        AvgTickCritDamage,
-                        critChance);
+                        AvgTickHit, 1 - critChance, AvgTickCrit, critChance);
             } else {
-                AvgTickCritDamage = AvgTickDamage;
-                avgTickDamage = AvgTickDamage;
+                AvgTickCrit = AvgTickHit;
+                avgTickDamage = AvgTickHit;
             }
 
             // overall damage
@@ -403,22 +401,22 @@ namespace Rawr.WarlockTmp {
             } else {
                 toolTip = String.Format("{0:0.0} casts*", NumCasts);
             }
-            if (AvgDirectDamage > 0) {
+            if (AvgDirectHit > 0) {
                 toolTip
                     += String.Format(
                         "{0:0.0}\tAverage Hit\r\n"
                             + "{1:0.0}\tAverage Crit\r\n",
-                        AvgDirectDamage,
-                        AvgDirectCritDamage);
+                        AvgDirectHit,
+                        AvgDirectCrit);
             }
-            if (AvgTickDamage > 0) {
+            if (AvgTickHit > 0) {
                 toolTip
                     += String.Format(
                         "{0:0.0}\tAverage Tick\r\n"
                             + "{1:0.0}\tAverage Tick Crit\r\n"
                             + "{2:0.0}\tTicks Per Cast\r\n",
-                        AvgTickDamage,
-                        AvgTickCritDamage,
+                        AvgTickHit,
+                        AvgTickCrit,
                         NumTicks);
             }
             toolTip
@@ -684,8 +682,8 @@ namespace Rawr.WarlockTmp {
                 0f, // recastPeriod,
                 1429f, // lowDirectDamage,
                 1813f, // highDirectDamage,
-                .7142f
-                    + mommy.Talents.ShadowAndFlame * .04f, // directCoefficient,
+                (1 + mommy.Talents.ShadowAndFlame * .04f)
+                    * .7142f, // directCoefficient,
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
                 0f) { // bonus crit multiplier
@@ -712,14 +710,14 @@ namespace Rawr.WarlockTmp {
                 10f, // cooldown,
                 6f, // recastPeriod,
                 true, // canMiss,
-                0f, // lowDirectDamage, damage calculated later
-                0f, // highDirectDamage, damage calculated later
-                0f, // directCoefficient,
-                0f, // addedDirectMultiplier,
-                0f, // baseTickDamage, damage calculated later
+                .6f * 785f, // lowDirectDamage
+                .6f * 785f, // highDirectDamage
+                .6f * .2f * 5f, // directCoefficient,
+                0f, // addedDirectMultiplier, modified in SetDamageStats
+                .4f * 785f / 3f, // baseTickDamage
                 3f, // numTicks,
-                0f, // tickCoefficient,
-                0f, // addedTickMultiplier,
+                .4f * .2f * 5f / 3f, // tickCoefficient,
+                0f, // addedTickMultiplier, modified in SetDamageStats
                 true, // canTickCrit,
                 mommy.Talents.FireAndBrimstone * .05f, // bonusCritChance,
                 0f) { // bonusCritMultiplier) {
@@ -734,10 +732,20 @@ namespace Rawr.WarlockTmp {
 
         public override void SetDamageStats(float baseSpellPower) {
 
-            Spell immolate = Mommy.CastSpells["Immolate"];
-            float immolateDamage = immolate.AvgTickDamage * immolate.NumTicks;
-            BaseDamage = .6f * immolateDamage;
-            BaseTickDamage = .4f * immolateDamage / NumTicks;
+            // For some reason I may never understand, firestone's 1% bonus gets
+            // 1% of Shadow and Flame and 1% of Emberstorm subtracted from it.
+            // Also, that modifier becomes multiplicitive instead of additive.
+            float direct = SpellModifiers.AdditiveDirectMultiplier;
+            SpellModifiers.AddAdditiveDirectMultiplier(-direct);
+            direct -= .01f * Mommy.Talents.Emberstorm * .03f;
+            SpellModifiers.AddMultiplicativeDirectMultiplier(direct);
+
+            // Also account for improvements to immolate, which in turn improve
+            // conflagrate
+            SpellModifiers.AddAdditiveMultiplier(
+                Mommy.Talents.ImprovedImmolate * .1f
+                    + Mommy.Talents.Aftermath * .03f);
+
             base.SetDamageStats(baseSpellPower);
         }
     }
@@ -936,7 +944,9 @@ namespace Rawr.WarlockTmp {
                 785f / 5f, // baseTickDamage,
                 IsClippedByConflagrate(mommy) ? 3f : 5f, // numTicks,
                 .2f, // tickCoefficient,
-                mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
+                mommy.Stats.WarlockSpellstoneDotDamageMultiplier
+                    + mommy.Talents.ImprovedImmolate * .1f
+                    + mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
                 false, // canTickCrit,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier) {
@@ -955,8 +965,8 @@ namespace Rawr.WarlockTmp {
                 0f, // recastPeriod,
                 582f, // lowDirectDamage,
                 676f, // highDirectDamage,
-                .7143f
-                    + mommy.Talents.ShadowAndFlame * .04f, // directCoefficient,
+                (1 + mommy.Talents.ShadowAndFlame * .04f)
+                    * .7143f, // directCoefficient,
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
                 0f) { // bonus crit multiplier
@@ -1095,10 +1105,10 @@ namespace Rawr.WarlockTmp {
                 3f - mommy.Talents.Bane * .1f, // cast time
                 0f, // cooldown
                 0f, // recast period
-                690f, // low base
-                770f, // high base
-                .8571f
-                    + mommy.Talents.ShadowAndFlame * .04f, // direct coefficient
+                694f, // low base
+                775f, // high base
+                (1 + mommy.Talents.ShadowAndFlame * .04f)
+                    * .8571f, // direct coefficient
                 mommy.Talents.ImprovedShadowBolt
                     * .01f, // addedDirectMultiplier
                 mommy.Stats.Warlock4T8
