@@ -117,7 +117,15 @@ namespace Rawr.UI
 
 		void _armoryService_ProgressChanged(object sender, EventArgs<string> e)
 		{
-			TextBlockStatus.Text = e.Value;
+			string[] progress = e.Value.Split('|');
+			TextBlockStatus.Text = progress[0];
+			if (progress.Length > 1)
+			{
+				ToolTipStatus.Visibility = Visibility.Visible;
+				ToolTipStatus.Content = progress[1];
+			}
+			else
+				ToolTipStatus.Visibility = Visibility.Collapsed;
 		}
 
 		void _armoryService_GetCharacterCompleted(object sender, EventArgs<Character> e)

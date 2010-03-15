@@ -18,7 +18,7 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-
+        
     <Grid Margin="4,4,4,4">
       <Grid.RowDefinitions>
         <RowDefinition />
@@ -46,7 +46,11 @@
 
     <Grid Grid.Row="1" Margin="4" Height="20">
       <ProgressBar x:Name="ProgressBarStatus"/>
-      <TextBlock x:Name="TextBlockStatus" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      <TextBlock x:Name="TextBlockStatus" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ToolTipService.ToolTip>
+          <ToolTip x:Name="ToolTipStatus" Visibility="Collapsed" Content=""></ToolTip>
+        </ToolTipService.ToolTip>
+      </TextBlock>
     </Grid>
 
     <Grid Grid.Row="2">
