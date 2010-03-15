@@ -1,17 +1,20 @@
-Rawr v2.3.10.0
+Rawr v2.3.12.0
 ------------
-Welcome to Rawr v2.3.11.0.
+Welcome to Rawr v2.3.12.0.
    
 Recent Changes:
- - Load from Armory code cleaned up. 
- - Tiny Abomination in a Jar's proc how now been more accurately modeled. 
- - You should now be able to reload (or load) a character from the EU armory without trouble.
- - Rawr.Mage: Frost DPS Cycles with Frostfire Bolt on Brain Freeze DPS in 3.3.3 implemented. Fire Mage changes for 3.3.3 implemented.
- - Rawr.Retribution: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits) Wrath of Air Totem is now a relevant buff. Corrections to calculations for rotational changes under 20% hp and during heroism made. Swift Retribution and Heart of the Crusader talents will automatically turn this buff on for you.
- - Rawr.Enhance: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits)
- - Rawr.Hunter: Shot rotations cleaned up.
- - Rawr.Rogue: White attacks are no longer normalized, rupture should now have the correct duration. Model will now prioritize between rupture and SnD. Killing Spree (and Glyph of Killing Spree) now modeled. Deadly Poison application chance is now increased by Improved Poisons. Multiple other talents modeled or fixed.
- - Rawr.ShadowPriest: Glyph of Dispersion is now modeled correctly. DoT effects which are subject to haste now have a decimal duration displayed. Nibelung should now be modeled correctly.
+ - First, a note about Rawr3. Rawr3 has been in development for quite a while now, and we know that everyone's eager to get it. It's been held back for a while now by a showstopping issue that we've been trying to work around. I'm pleased to report that we've found an awesome solution to that showstopping issue (Shadowed rocks), and so Rawr3 is nearing public beta. We're tentatively shooting for next weekend (Mar 20/21), but please don't shoot us if something comes up and we're not able to make that date!
+ - Vault of Archavon has its own catagory in the filtering. 
+ - Strength of Wrynn / Hellscream's Warsong Buff have been added to the Temporary Buff section. 
+ - Almost all healing/dps/tanking models have support for this buff. 
+ - Items with Resilience now are catagorized as "Purchaseable PvP Item" instead of displaying with no source.
+ - Rawr.Retribution: Spell selection logic cleaned up.
+ - Rawr.Hunter: Hunter rotation logic fixes. 4T10 should be properly modeled now, the DPS value of it was far lower then it actually is. The optimizer should now instruct you to use Iceblade Arrows rather then Saronite Arrows.
+ - Rawr.DPSDK: 3.3.3 Frost changes implemented.
+ - Rawr.Mage: 3.3.3 changes to Incanters Absorbtion implemented. Haste procs should be modeled more accurately now.
+ - Rawr.Healadin: Implemented Infusion of Light. 4T9 set bonus should now be modeled correctly. 4T10 set bonus is now modeled correctly.
+ - Rawr.HolyPriest: New "Renew" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.
+
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. It's available to beta-test for all Elitist Jerks Benefactors.
  
@@ -80,7 +83,7 @@ Now we equip Helm of AP, pushing your combined stats to:
 Now we calculate the optimal rotation to give 1010 dps, with 2% misses. Thus its value is shown as 10 dps.
 
 If you then decide to replace your hit rating potion with a crit potion, your total stats while wearing each helm would again be calculated. Now that you have freed up some hit rating elsewhere, the Helm of Major Hit will be at the top of the list. The reason is that in this case you can fully use all the stats it provides. 
-This same effect will be visible in the displayed value of rings (or trinket), depending on which slot is being displayed. It isn't which slot is being used, but rather the extra stats being provided by the ring (or trinket) in the other slot. For example if your 2nd ring contains a lot of crit, rings that contain a lot of AP might complement it better and appear high in the list for ring 1. If you look at the list for ring 2, the ring with the highest crit is likely to be on top.  
+This same effect will be visible in the displayed value of rings (or trinket), depending on which slot is being displayed. It isn't which slot is being used, but rather the extra stats being provided by the ring (or trinket) in the other slot. For example if your 2nd ring contains a lot of crit, rings that contain a lot of AP might complement it better and appear high in the list for ring 1. If you look at the list for ring 2, the ring with the highest crit is likely to be on top. 
 
 An important thing to realize is that we never decide that a stat like hit rating has a relative weight compared to AP and then tried to calculate the score for an item using that weight and the stats of the item (that type of approach is used by many in-game addons but is extremely inaccurate when dealing with capped stats). We simply compare DPS numbers while wearing each possible item. Using this combined stats approach we handle all capping effects.
 
@@ -118,6 +121,17 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.11.0
+ - Load from Armory code cleaned up. 
+ - Tiny Abomination in a Jar's proc how now been more accurately modeled. 
+ - You should now be able to reload (or load) a character from the EU armory without trouble.
+ - Rawr.Mage: Frost DPS Cycles with Frostfire Bolt on Brain Freeze DPS in 3.3.3 implemented. Fire Mage changes for 3.3.3 implemented.
+ - Rawr.Retribution: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits) Wrath of Air Totem is now a relevant buff. Corrections to calculations for rotational changes under 20% hp and during heroism made. Swift Retribution and Heart of the Crusader talents will automatically turn this buff on for you.
+ - Rawr.Enhance: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits)
+ - Rawr.Hunter: Shot rotations cleaned up.
+ - Rawr.Rogue: White attacks are no longer normalized, rupture should now have the correct duration. Model will now prioritize between rupture and SnD. Killing Spree (and Glyph of Killing Spree) now modeled. Deadly Poison application chance is now increased by Improved Poisons. Multiple other talents modeled or fixed.
+ - Rawr.ShadowPriest: Glyph of Dispersion is now modeled correctly. DoT effects which are subject to haste now have a decimal duration displayed. Nibelung should now be modeled correctly.
+
 v2.3.10.0
  - More improvements to the default filters
  - Further improvement on avoiding useless gem swaps from the Optimizer.
@@ -159,16 +173,16 @@ v2.3.8.0
  - Rawr.DPSDK: Fix for Blood's Glyph of Disease priority.
 
 v2.3.7.0
- - Default Item Filters should now more accurately reflect what most raiders have available to them.  A filter was also added which enables the hide/show of green quality gems.  Token items which require the prior version (ie: T10 251 -->T10 264) are now correctly filtered.
+ - Default Item Filters should now more accurately reflect what most raiders have available to them. A filter was also added which enables the hide/show of green quality gems. Token items which require the prior version (ie: T10 251 -->T10 264) are now correctly filtered.
  - Rawr.Enhance: Improvements to accuracy of EnhanceSim Export.
- - Rawr.Hunter: Fixed a crash with hunter pet talents.  
+ - Rawr.Hunter: Fixed a crash with hunter pet talents. 
  - Rawr.Moonkin: Idol of Lunar Eclipse should now be properly modeled.
  - Rawr.Mage: Cycles with 2T10 should now be more accurate.
  - Rawr.ProtPaladin: HotR should do the correct threat/damage now.
- - Rawr.Rogue: Murder is now modeled correctly.  Glyph of Hunger for Blood is now properly modeled, display of stat values cleaned up.  Glyph of Tricks of the Trade is now listed.  Rogue T10 set bonuses are now properly modeled.
- - Rawr.DPSDK: Moved location of Rotation information to the options pane, rotation calculations smoothed out.  Tweeked priority system and disease uptime calculations.  Blood Gorged should now properly apply the armor penetration bonus of the talent. 
+ - Rawr.Rogue: Murder is now modeled correctly. Glyph of Hunger for Blood is now properly modeled, display of stat values cleaned up. Glyph of Tricks of the Trade is now listed. Rogue T10 set bonuses are now properly modeled.
+ - Rawr.DPSDK: Moved location of Rotation information to the options pane, rotation calculations smoothed out. Tweeked priority system and disease uptime calculations. Blood Gorged should now properly apply the armor penetration bonus of the talent. 
  - Rawr.TankDK: Armor in Frost Presence updated, checkbox added to enable/disable Parry Haste.
- - Rawr.DPSWarr: Cleaned up calculations for 2T10 this set bonus should properly show as an upgrade when it is one.  Fixed a crash with Fury when not equiping a mainhand weapon.
+ - Rawr.DPSWarr: Cleaned up calculations for 2T10 this set bonus should properly show as an upgrade when it is one. Fixed a crash with Fury when not equiping a mainhand weapon.
 
 v2.3.6.0
  - Chart Data should Export correctly now.
@@ -265,8 +279,8 @@ v2.3.2.0
 v2.3.1.0
  - Many 3.3 trinkets now have their effects modeled correctly.
  - Filters have been updated to include new 3.3 gear.
- - Hymn of Hope and Mana Tide totem are now selectable buffs.  
- - Your dodge is now floored at 0% even with the Chill of the Throne debuff active.  
+ - Hymn of Hope and Mana Tide totem are now selectable buffs. 
+ - Your dodge is now floored at 0% even with the Chill of the Throne debuff active. 
  - Additional Teir 10 set bonus effects for many modules implemented.
  - Rawr.TankdDK: Rune of the Nerubian Carapace is now avalible for selection.
  - Rawr.Mage: Improved handeling of Frost DPS Cycles.
@@ -304,7 +318,7 @@ v2.2.26.0
 
 v2.2.25.0
  - Rawr.Enhance: Many Updates to GCD interaction with ability usage to improve accuracy of the module.
- - Rawr.DPSWarr: Using Bladestorm will no longer eat all your GCDs in low rage settings. Offhand weapon enchants will no longer use your Mainhand weapon's speed for their uptime calculations.  
+ - Rawr.DPSWarr: Using Bladestorm will no longer eat all your GCDs in low rage settings. Offhand weapon enchants will no longer use your Mainhand weapon's speed for their uptime calculations. 
  - Rawr.Tree: Added a replenishment buff checkbox in the buffs tab (previously, this was assumed "on" all the time). Added a slider to allow users to define how much time they cast vs not cast.
  - Rawr.TankDK: Fixed multiple issues with the value of hit, implemented caps and floors for avoidance stats. T9 set bonus should now be properly modeled.
  - Rawr.Elemental: Added support for multiple targets and player latency.
@@ -315,8 +329,8 @@ v2.2.24.0
  - A debuff was added to represent the "Expose Weakness" debuff used in the ToTC Anub encounter.
  - Rawr.Bear: Fixed a bug with Heroic Presense calculation.
  - Rawr.Moonkin: DoTs now benefit from Nature's Grace
- - Rawr.Enhance: User selected priority system implemnted.  Added support for modeling Flame Shock.
- - Rawr.Rogue: Many updated applied; this should fix a number of issues with trinkets and talents not being modeled correctly.  Haste has been updated, Rawr also now assumes (if you have the talent) that you use Blade Flurry ever 120 seconds.
+ - Rawr.Enhance: User selected priority system implemnted. Added support for modeling Flame Shock.
+ - Rawr.Rogue: Many updated applied; this should fix a number of issues with trinkets and talents not being modeled correctly. Haste has been updated, Rawr also now assumes (if you have the talent) that you use Blade Flurry ever 120 seconds.
  - Rawr.ProtWarr: Support added for boss dehaste abilities (ie: Thunder Clap, Imp. Icy Touch, etc) 
  - Rawr.Warlock: Added Glyph of Quick Decay. Fix for a crash when using a non-filler spell as the last spell in your rotation (DPS will be terrible, due to not having a filler, but at least won't crash when you're in the middle of swapping spells around in your rotation).
 
@@ -1138,7 +1152,7 @@ Beta 14:
  - Rawr.Retribution changes:
     - Include more customizable buff options
  - Rawr.Moonkin changes:
-    - Calculation model overhauled. Should give much more accurate results now.    
+    - Calculation model overhauled. Should give much more accurate results now.   
 
 Beta 13.1:
  - Fix for several Optimizer crashes. If you can get the Optimizer to crash still, please e-mail me your character file (cnervig@hotmail.com).

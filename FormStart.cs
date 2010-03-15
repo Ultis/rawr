@@ -18,16 +18,18 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.11.0
- - Load from Armory code cleaned up. 
- - Tiny Abomination in a Jar's proc how now been more accurately modeled. 
- - You should now be able to reload (or load) a character from the EU armory without trouble.
- - Rawr.Mage: Frost DPS Cycles with Frostfire Bolt on Brain Freeze DPS in 3.3.3 implemented. Fire Mage changes for 3.3.3 implemented.
- - Rawr.Retribution: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits) Wrath of Air Totem is now a relevant buff. Corrections to calculations for rotational changes under 20% hp and during heroism made. Swift Retribution and Heart of the Crusader talents will automatically turn this buff on for you.
- - Rawr.Enhance: Crit Depression calculations adjusted per latest testing in-game. (4.8% are no longer forced hits)
- - Rawr.Hunter: Shot rotations cleaned up.
- - Rawr.Rogue: White attacks are no longer normalized, rupture should now have the correct duration. Model will now prioritize between rupture and SnD. Killing Spree (and Glyph of Killing Spree) now modeled. Deadly Poison application chance is now increased by Improved Poisons. Multiple other talents modeled or fixed.
- - Rawr.ShadowPriest: Glyph of Dispersion is now modeled correctly. DoT effects which are subject to haste now have a decimal duration displayed. Nibelung should now be modeled correctly.";
+			labelVersionHistory.Text = @"v2.3.12.0
+ - First, a note about Rawr3. Rawr3 has been in development for quite a while now, and we know that everyone's eager to get it. It's been held back for a while now by a showstopping issue that we've been trying to work around. I'm pleased to report that we've found an awesome solution to that showstopping issue (Shadowed rocks), and so Rawr3 is nearing public beta. We're tentatively shooting for next weekend (Mar 20/21), but please don't shoot us if something comes up and we're not able to make that date!
+ - Vault of Archavon has its own catagory in the filtering. 
+ - Strength of Wrynn / Hellscream's Warsong Buff have been added to the Temporary Buff section. 
+ - Almost all healing/dps/tanking models have support for this buff. 
+ - Items with Resilience now are catagorized as ""Purchaseable PvP Item"" instead of displaying with no source.
+ - Rawr.Retribution: Spell selection logic cleaned up.
+ - Rawr.Hunter: Hunter rotation logic fixes. 4T10 should be properly modeled now, the DPS value of it was far lower then it actually is. The optimizer should now instruct you to use Iceblade Arrows rather then Saronite Arrows.
+ - Rawr.DPSDK: 3.3.3 Frost changes implemented.
+ - Rawr.Mage: 3.3.3 changes to Incanters Absorbtion implemented. Haste procs should be modeled more accurately now.
+ - Rawr.Healadin: Implemented Infusion of Light. 4T9 set bonus should now be modeled correctly. 4T10 set bonus is now modeled correctly.
+ - Rawr.HolyPriest: New ""Renew"" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
