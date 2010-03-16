@@ -819,7 +819,10 @@ namespace Rawr.WarlockTmp {
                         "Glyph of Life Tap",
                         "Glyph of Curse of Agony",
                         "Glyph of Unstable Affliction",
-                        "Glyph of Haunt" };
+                        "Glyph of Haunt",
+                        "Glyph of Chaos Bolt",
+                        "Glyph of Immolate",
+                        "Glyph of Incinerate" };
             }
             return _relevantGlyphs;
         }

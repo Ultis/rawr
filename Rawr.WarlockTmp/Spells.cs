@@ -678,7 +678,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Destruction,
                 .07f, // percentBaseMana,
                 2.5f - mommy.Talents.Bane * .1f, // baseCastTime,
-                12f, // cooldown,
+                mommy.Talents.GlyphChaosBolt ? 12f : 10f, // cooldown,
                 0f, // recastPeriod,
                 1429f, // lowDirectDamage,
                 1813f, // highDirectDamage,
@@ -737,13 +737,14 @@ namespace Rawr.WarlockTmp {
             // Also, that modifier becomes multiplicitive instead of additive.
             float direct = SpellModifiers.AdditiveDirectMultiplier;
             SpellModifiers.AddAdditiveDirectMultiplier(-direct);
-            direct -= .01f * Mommy.Talents.Emberstorm * .03f;
+            direct -= direct * Mommy.Talents.Emberstorm * .03f;
             SpellModifiers.AddMultiplicativeDirectMultiplier(direct);
 
             // Also account for improvements to immolate, which in turn improve
             // conflagrate
             SpellModifiers.AddAdditiveMultiplier(
                 Mommy.Talents.ImprovedImmolate * .1f
+                    + (Mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + Mommy.Talents.Aftermath * .03f);
 
             base.SetDamageStats(baseSpellPower);
@@ -945,6 +946,7 @@ namespace Rawr.WarlockTmp {
                 IsClippedByConflagrate(mommy) ? 3f : 5f, // numTicks,
                 .2f, // tickCoefficient,
                 mommy.Stats.WarlockSpellstoneDotDamageMultiplier
+                    + (mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f
                     + mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
                 false, // canTickCrit,
@@ -967,7 +969,8 @@ namespace Rawr.WarlockTmp {
                 676f, // highDirectDamage,
                 (1 + mommy.Talents.ShadowAndFlame * .04f)
                     * .7143f, // directCoefficient,
-                0f, // addedDirectMultiplier,
+                mommy.Talents.GlyphIncinerate
+                    ? .05f : 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
                 0f) { // bonus crit multiplier
 

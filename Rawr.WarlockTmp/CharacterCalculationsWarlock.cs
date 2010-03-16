@@ -382,7 +382,13 @@ namespace Rawr.WarlockTmp {
             int corr = spellPriority.IndexOf("Corruption");
             int sbInstant = spellPriority.IndexOf("Shadow Bolt (Instant)");
             if (sbInstant >= 0 && sbInstant < corr) {
-                return "Shadow Bolt (Instant) can only appear after Corruption.";
+                return "Shadow Bolt (Instant) may only appear after Corruption.";
+            }
+
+            int immo = spellPriority.IndexOf("Immolate");
+            int conf = spellPriority.IndexOf("Conflagrate");
+            if (conf >= 0 && conf < immo) {
+                return "Conflagrate may only appear after Immolate.";
             }
 
             int spammed = spellPriority.IndexOf("Shadow Bolt");
