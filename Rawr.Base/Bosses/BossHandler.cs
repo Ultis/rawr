@@ -223,6 +223,7 @@ namespace Rawr {
         // Resistance
         private float RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
         // Attacks
+        private List<DoT> DOTS;// not actually used! Dont even try!
         private List<Attack> ATTACKS;
         // Situational Changes
         public List<Impedence> Stuns = new List<Impedence>();
@@ -695,6 +696,7 @@ namespace Rawr {
         public int    Min_Healers        { get { return MIN_HEALERS;        } set { MIN_HEALERS        = value; } }
         public int    Min_Tanks          { get { return MIN_TANKS;          } set { MIN_TANKS          = value; } }
         // ==== Attacks ====
+        public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
         public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
         // ==== Methods for Pulling Boss DPS ==========
         public List<Attack> GetFilteredAttackList(ATTACK_TYPES type) {
