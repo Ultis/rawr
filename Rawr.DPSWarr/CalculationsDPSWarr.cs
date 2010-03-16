@@ -850,7 +850,7 @@ These numbers to do not include racial bonuses.",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffsContains("Heroic Presence"))
             {
-                character.ActiveBuffsAdd(("Heroic Presence"));
+                character.ActiveBuffsAdd("Heroic Presence");
             }
             #endregion
 

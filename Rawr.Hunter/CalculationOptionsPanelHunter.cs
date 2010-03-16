@@ -222,9 +222,9 @@ namespace Rawr.Hunter
                 int k = 0;
                 foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalcOpts.PriorityIndexes[k]; k++; }
                 CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
-                if (ShotRotationIsntSet) {
+                if (ShotRotationFunctions.ShotRotationIsntSet(CalcOpts)) {
                     isLoading = false;
-                    CB_PriorityDefaults.SelectedIndex = ShotRotationGetRightSpec;
+                    CB_PriorityDefaults.SelectedIndex = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
                     isLoading = true;
                 }
                 //
@@ -498,9 +498,7 @@ namespace Rawr.Hunter
 
             int j = 0;
             int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-            foreach (ComboBox cb in ShotPriorityBoxes) {
-                _prioIndxs[j] = cb.SelectedIndex; j++;
-            }
+            foreach (ComboBox cb in ShotPriorityBoxes) { _prioIndxs[j] = cb.SelectedIndex; j++; }
             CalcOpts.PriorityIndexes = _prioIndxs;
 
             Character.OnCalculationsInvalidated();
@@ -511,11 +509,7 @@ namespace Rawr.Hunter
 
             int j = 0;
             int[] k = new int[10];
-            foreach (ComboBox cb in ShotPriorityBoxes) {
-                k[j] = cb.SelectedIndex;
-                //CalcOpts.PriorityIndexes[j] = cb.SelectedIndex;
-                j++;
-            }
+            foreach (ComboBox cb in ShotPriorityBoxes) { k[j] = cb.SelectedIndex; j++; }
 
             CalcOpts.PriorityIndexes = k;
 
@@ -645,30 +639,6 @@ namespace Rawr.Hunter
             CB_PetPrio_06.SelectedIndex = 0; // none
             CB_PetPrio_07.SelectedIndex = 0; // none
         }
-        private bool ShotRotationIsntSet {
-            get {
-                return ((CalcOpts.PriorityIndex1 + CalcOpts.PriorityIndex2 +
-                         CalcOpts.PriorityIndex3 + CalcOpts.PriorityIndex4 +
-                         CalcOpts.PriorityIndex5 + CalcOpts.PriorityIndex6 +
-                         CalcOpts.PriorityIndex7 + CalcOpts.PriorityIndex8 +
-                         CalcOpts.PriorityIndex9 + CalcOpts.PriorityIndex10)
-                        == 0);
-            }
-        }
-        private int ShotRotationGetRightSpec {
-            get {
-                int specIndex = 0;
-                int Iter = 0;
-                int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += Character.HunterTalents.Data[Iter]; }
-                int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += Character.HunterTalents.Data[Iter]; }
-                int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += Character.HunterTalents.Data[Iter]; }
-                // No Shot Priority set up, use a default based on talent spec
-                if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)Specs.BeastMaster; }
-                if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)Specs.Marksman; }
-                if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)Specs.Survival; }
-                return specIndex;
-            }
-        }
         /// <summary>
         /// This is to figure out which of the default rotations (if any) are in use
         /// </summary>
@@ -692,16 +662,16 @@ namespace Rawr.Hunter
             get { return _CurrentSpec; }
             set { _CurrentSpec = value; }
         }
-        private enum Specs { BeastMaster=1, Marksman, Survival }
+        public enum Specs { BeastMaster=1, Marksman, Survival }
 
         private void CharTalents_Changed(object sender, EventArgs e) {
             if (isLoading) return;
             //CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
             //ErrorBox eb = new ErrorBox("Event fired", "yay!", "CharTalents_Changed");
-            int rightSpec = ShotRotationGetRightSpec;
-            if (ShotRotationIsntSet) {
+            int rightSpec = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
+            if (ShotRotationFunctions.ShotRotationIsntSet(CalcOpts)) {
                  // No Shot Priority set up, use a default based on talent spec
-                CB_PriorityDefaults.SelectedIndex = ShotRotationGetRightSpec;
+                CB_PriorityDefaults.SelectedIndex = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
             } else if (rightSpec != 0 && CurrentSpec != rightSpec) {
                 // The rotation setup needs to change, user has changed to a totally different spec
                 CB_PriorityDefaults.SelectedIndex = rightSpec;
@@ -1189,5 +1159,42 @@ namespace Rawr.Hunter
             calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
         }
         #endregion
+    }
+    public static class ShotRotationFunctions {
+        public static int ShotRotationGetRightSpec(Character character)
+        {
+            int specIndex = 0;
+            int Iter = 0;
+            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += character.HunterTalents.Data[Iter]; }
+            int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += character.HunterTalents.Data[Iter]; }
+            int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += character.HunterTalents.Data[Iter]; }
+            // No Shot Priority set up, use a default based on talent spec
+            if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.BeastMaster; }
+            if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Marksman; }
+            if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Survival; }
+            return specIndex;
+        }
+        public static int ShotRotationGetRightSpec(HunterTalents talents)
+        {
+            int specIndex = 0;
+            int Iter = 0;
+            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += talents.Data[Iter]; }
+            int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += talents.Data[Iter]; }
+            int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += talents.Data[Iter]; }
+            // No Shot Priority set up, use a default based on talent spec
+            if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.BeastMaster; }
+            if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Marksman; }
+            if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Survival; }
+            return specIndex;
+        }
+        public static bool ShotRotationIsntSet(CalculationOptionsHunter CalcOpts)
+        {
+            return ((CalcOpts.PriorityIndex1 + CalcOpts.PriorityIndex2 +
+                     CalcOpts.PriorityIndex3 + CalcOpts.PriorityIndex4 +
+                     CalcOpts.PriorityIndex5 + CalcOpts.PriorityIndex6 +
+                     CalcOpts.PriorityIndex7 + CalcOpts.PriorityIndex8 +
+                     CalcOpts.PriorityIndex9 + CalcOpts.PriorityIndex10)
+                    == 0);
+        }
     }
 }

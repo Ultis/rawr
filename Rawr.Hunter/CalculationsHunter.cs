@@ -702,10 +702,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
-                character.ActiveBuffsAdd(("Heroic Presence"));
+                character.ActiveBuffsAdd("Heroic Presence");
             }
             #endregion
 
+            List<Buff> buffGroup = new List<Buff>();
             #region Passive Ability Auto-Fixing
             // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
             // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
@@ -785,38 +786,51 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public override void SetDefaults(Character character) { }
         public Stats GetPetBuffsStats(Character character, CalculationOptionsHunter calcOpts)
         {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            float hasRelevantBuff;
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
+            Stats statsBuffs;
+            try
             {
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
+                List<Buff> removedBuffs = new List<Buff>();
+                List<Buff> addedBuffs = new List<Buff>();
+
+                float hasRelevantBuff;
+
+                List<Buff> Buffs2Acc = new List<Buff>(calcOpts.petActiveBuffs);
+
+                #region Passive Ability Auto-Fixing
+                // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+                // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+                // value to relevant talents
                 {
-                    if (calcOpts.petActiveBuffs.Contains(a)) { calcOpts.petActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (calcOpts.petActiveBuffs.Contains(b)) { calcOpts.petActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (calcOpts.petActiveBuffs.Contains(c)) { calcOpts.petActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                    hasRelevantBuff = character.HunterTalents.TrueshotAura;
+                    Buff a = Buff.GetBuffByName("Trueshot Aura");
+                    Buff b = Buff.GetBuffByName("Unleashed Rage");
+                    Buff c = Buff.GetBuffByName("Abomination's Might");
+                    if (hasRelevantBuff > 0)
+                    {
+                        if (Buffs2Acc.Contains(a)) { Buffs2Acc.Remove(a); removedBuffs.Add(a); }
+                        if (Buffs2Acc.Contains(b)) { Buffs2Acc.Remove(b); removedBuffs.Add(b); }
+                        if (Buffs2Acc.Contains(c)) { Buffs2Acc.Remove(c); removedBuffs.Add(c); }
+                    }
                 }
+                /* [More Buffs to Come to this method]
+                 * Ferocious Inspiration | Sanctified Retribution
+                 * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
+                 * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
+                 */
+                #endregion
+
+                statsBuffs = GetBuffsStats(Buffs2Acc);
+
+                foreach (Buff b in removedBuffs) { Buffs2Acc.Add(b); }
+                foreach (Buff b in addedBuffs) { Buffs2Acc.Remove(b); }
             }
-            /* [More Buffs to Come to this method]
-             * Ferocious Inspiration | Sanctified Retribution
-             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-             */
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(calcOpts.petActiveBuffs);
-
-            foreach (Buff b in removedBuffs) { calcOpts.petActiveBuffs.Add(b); }
-            foreach (Buff b in addedBuffs) { calcOpts.petActiveBuffs.Remove(b); }
+            catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Generating Pet Buff Stats",
+                    ex.Message, "GetPetBuffsStats(...)",
+                    "No Additional Info", ex.StackTrace);
+                eb.Show();
+                statsBuffs = new Stats();
+            }
 
             return statsBuffs;
         }
@@ -2631,7 +2645,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                 #region Handle Special Effects
                 calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, statsTotal,
-                    GetBuffsStats(calcOpts.petActiveBuffs));
+                    GetPetBuffsStats(character, calcOpts));
                 calculatedStats.pet.GenPetStats();
 
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
