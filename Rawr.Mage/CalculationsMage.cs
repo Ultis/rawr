@@ -185,10 +185,77 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
+#if RAWR3
+                    _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
+#else
                     _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage" };
+#endif
                 return _customChartNames;
             }
         }
+
+#if RAWR3
+        public override System.Windows.Controls.Control GetCustomChartControl(string chartName)
+        {
+            switch (chartName)
+            {
+                case "Stats Graph":
+                case "Scaling vs Spell Power":
+                case "Scaling vs Crit Rating":
+                case "Scaling vs Haste Rating":
+                case "Scaling vs Intellect":
+                case "Scaling vs Spirit":
+                    return Graph.Instance;
+                default:
+                    return null;
+            }
+        }
+
+        public override void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+
+            string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Hit Rating", "10 Intellect", "10 Spirit" };
+            Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.FromArgb(0xFF, 0x00, 0x00, 0x8B), Color.FromArgb(255, 255, 165, 0), Color.FromArgb(0xFF, 0x80, 0x80, 0x00), Color.FromArgb(255, 154, 205, 50), Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF), Color.FromArgb(255, 0, 0, 255) };
+
+            CharacterCalculationsMage calculations = calculationOptions.Calculations;
+
+            List<float> X = new List<float>();
+            List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
+
+            Stats[] statsList = new Stats[] {
+                        new Stats() { SpellPower = 1.17f },
+                        new Stats() { Mp5 = 0.4f },
+                        new Stats() { CritRating = 1 },
+                        new Stats() { HasteRating = 1 },
+                        new Stats() { HitRating = 1 },
+                        new Stats() { Intellect = 1 },
+                        new Stats() { Spirit = 1 },
+                    };
+
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 100, "", "Dps Rating");
+                    break;
+                case "Scaling vs Spell Power":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { SpellPower = 5 }, true, statColors, 100, "", "Dps Rating");
+                    break;
+                case "Scaling vs Crit Rating":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { CritRating = 5 }, true, statColors, 100, "", "Dps Rating");
+                    break;
+                case "Scaling vs Haste Rating":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { HasteRating = 5 }, true, statColors, 100, "", "Dps Rating");
+                    break;
+                case "Scaling vs Intellect":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { Intellect = 5 }, true, statColors, 100, "", "Dps Rating");
+                    break;
+                case "Scaling vs Spirit":
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { Spirit = 5 }, true, statColors, 100, "", "Dps Rating");
+                    break;
+            }
+        }
+#endif
 
 #if !RAWR3
         // for RAWR3 include all charts in CustomChartNames

@@ -11,6 +11,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
+using System.Collections.ObjectModel;
 
 namespace Rawr.UI
 {
@@ -18,7 +19,7 @@ namespace Rawr.UI
     {
         public GraphDisplay GraphDisplay { get; set; }
 
-        public List<ChartPickerItem> Items { get; set; }
+        public ObservableCollection<ChartPickerItem> Items { get; set; }
 
         public static readonly DependencyProperty PrimaryItemProperty =
             DependencyProperty.Register("PrimaryItem", typeof(ChartPickerItem), typeof(ChartPicker), new PropertyMetadata(null));
@@ -33,19 +34,18 @@ namespace Rawr.UI
         {
             InitializeComponent();
             PopupUtilities.RegisterPopup(this, PopupChartPicker, Toggle, Close);
-            this.Items = new List<ChartPickerItem>(new ChartPickerItem[]
-            {
-                new ChartPickerItem("Gear", "Head", "Neck", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet", "Finger 1", "Finger 2", "Trinket 1", "Trinket 2", "Main Hand", "Off Hand", "Ranged", "Projectile", "Projectile Bag"),
-                new ChartPickerItem("Enchants", "Head", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Legs", "Feet", "Finger 1", "Finger 2", "Main Hand", "Off Hand", "Ranged"),
-                new ChartPickerItem("Gems", "All Normal", "Red", "Blue", "Yellow", "Meta"),
-                new ChartPickerItem("Buffs", "All", "Food", "Flasks and Elixirs", "Scrolls", "Potions", "Raid Buffs", "Set Bonuses"),
-                new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Talent Specs", "Glyphs"),
-                new ChartPickerItem("Equipped", "Gear", "Enchants", "Buff"),
-                new ChartPickerItem("Available", "Gear", "Enchants"),
-                new ChartPickerItem("Direct Upgrades", "Gear", "Enchants"),
-                new ChartPickerItem("Stat Values", "Relative Stat Values"),
-                //new ChartPickerItem("{0} Specific")
-            });
+            Items = new ObservableCollection<ChartPickerItem>();
+            Items.Add(new ChartPickerItem("Gear", "Head", "Neck", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet", "Finger 1", "Finger 2", "Trinket 1", "Trinket 2", "Main Hand", "Off Hand", "Ranged", "Projectile", "Projectile Bag"));
+            Items.Add(new ChartPickerItem("Enchants", "Head", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Legs", "Feet", "Finger 1", "Finger 2", "Main Hand", "Off Hand", "Ranged"));
+            Items.Add(new ChartPickerItem("Gems", "All Normal", "Red", "Blue", "Yellow", "Meta"));
+            Items.Add(new ChartPickerItem("Buffs", "All", "Food", "Flasks and Elixirs", "Scrolls", "Potions", "Raid Buffs", "Set Bonuses"));
+            Items.Add(new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Talent Specs", "Glyphs"));
+            Items.Add(new ChartPickerItem("Equipped", "Gear", "Enchants", "Buff"));
+            Items.Add(new ChartPickerItem("Available", "Gear", "Enchants"));
+            Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Enchants"));
+            Items.Add(new ChartPickerItem("Stat Values", "Relative Stat Values"));
+            //new ChartPickerItem("{0} Specific")
+
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 
             this.DataContext = this;

@@ -43,6 +43,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -54,6 +55,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Rawr.Base\Algorithms\ArrayPool.cs">
@@ -190,6 +192,9 @@
     </Compile>
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
+    <Compile Include="CustomControls\Graph.xaml.cs">
+      <DependentUpon>Graph.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ElitistArmoryService.cs" />
     <Compile Include="EventArgsT.cs" />
     <Compile Include="GemmingTemplate.cs" />
@@ -209,6 +214,12 @@
     <Compile Include="XMLUtils.cs" />
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CustomControls\Graph.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
