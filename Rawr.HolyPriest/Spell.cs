@@ -212,8 +212,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
-                * (1 + stats.PriestHeal_T10_4pc);
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
 
             if (stats.RenewDurationIncrease > 0)
             {
@@ -532,14 +531,16 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
+                * (1 + stats.PriestHeal_T10_4pc * 2f);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
+                * (1 + stats.PriestHeal_T10_4pc * 2f);
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 

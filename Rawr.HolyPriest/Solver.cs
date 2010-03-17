@@ -259,36 +259,26 @@ namespace Rawr.HolyPriest
                     break;
                 case CalculationOptionsHolyPriest.eRole.Disc_Tank_GH:     // Disc MT Healing, pws, penance, prom, gh, penance
                     Role += "Disc Tank w/Gheal";
-                    sr.Add(pws);        // 1.5s 1.5  -15.0 -2.5 -??   -??
-                    sr.Add(penance_bt); // 1.5s 3.0  -13.5 -1.0 -??   -6.5
-                    sr.Add(prom_1);     // 1.5s 4.5  -12.0 -??  -8.5  -5.0
-                    sr.Add(gh);         // 2.5s 7.0  -9.5  -??  -6.0  -2.5
-                    sr.Add(gh);         // 2.5s 9.5  -7.0  -??  -3.5  -??
-                    sr.Add(penance);    // 2.0s 11.5 -5.0  -??  -1.5  -6.0
-                    sr.Add(gh);         // 2.5s 14.0 -2.5  -??  -??   -3.5
-                    sr.Add(prom_1);     // 1.5s 17.0 -1.0  -??  -8.5  -2.0
-                    sr.Add(gh);         // 2.5s 19.5 -1.5  -??  -6.0  -??
-                    sr.Add(penance);    // 2.0s 20.5 -0.5  -??  -5.0  -6.0
-                    sr.Add(gh);         // 2.5s 23.0 -??   -??  -3.5  -3.5
+                    sr.Add(pws);        
+                    sr.Add(penance_bt); 
+                    sr.Add(prom_1_bt);  
+                    sr.Add(gh_bt);      
+                    sr.Add(gh);         
+                    sr.Add(gh);         
+                    sr.Add(gh);         
                     // repeat
                     break;
                 case CalculationOptionsHolyPriest.eRole.Disc_Tank_FH:     // Disc MT Healing, pws, penance, prom, fh - Does not have Divine Fury.
                     Role += "Disc Tank w/Fheal";
-                    sr.Add(pws);        // 1.5s 1.5  -15.0 -2.5 -??   -??
-                    sr.Add(penance_bt); // 1.5s 3.0  -13.5 -1.0 -??   -6.5
-                    sr.Add(prom_1_bt);  // 1.5s 4.5  -12.0 -??  -8.5  -5.0
-                    sr.Add(fh_bt);      // 1.5s 6.0  -10.5 -??  -7.0  -3.5
-                    sr.Add(fh);         // 1.5s 7.5  -9.0  -??  -5.5  -2.0
-                    sr.Add(fh);         // 1.5s 9.0  -7.5  -??  -4.0  -0.5
-                    sr.Add(fh);         // 1.5s 10.5 -6.0  -??  -2.5  -??
-                    sr.Add(penance);    // 2.0s 12.5 -4.0  -??  -0.5  -6.0
-                    sr.Add(fh);         // 1.5s 14.0 -2.5  -??  -0.5  -4.5
-                    sr.Add(fh);         // 1.5s 15.5 -1.0  -??  -0.5  -3.0
-                    sr.Add(prom_1);     // 1.5s 12.5 -4.0  -??  -8.5  -1.5
-                    sr.Add(fh);         // 1.5s 14.0 -2.5  -??  -7.0  -??
-                    sr.Add(penance);    // 2.0s 16.0 -0.5  -??  -5.0  -6.0
-                    sr.Add(fh);         // 1.5s 19.0 -??   -??  -3.5  -4.5
-                    sr.Add(fh);         // 1.5s 19.0 -??   -??  -3.5  -3.0
+                    sr.Add(pws);        
+                    sr.Add(penance_bt); 
+                    sr.Add(prom_1_bt);  
+                    sr.Add(fh_bt);      
+                    sr.Add(fh);         
+                    sr.Add(fh);         
+                    sr.Add(fh);         
+                    sr.Add(fh);         
+                    sr.Add(fh);         
                     // repeat
                     break;
                 case CalculationOptionsHolyPriest.eRole.Disc_Raid:     // Disc Raid Healing, pws, penance, prom, pw:s, fh, fh
