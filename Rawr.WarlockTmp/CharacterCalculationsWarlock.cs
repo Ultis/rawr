@@ -404,6 +404,12 @@ namespace Rawr.WarlockTmp {
             return null;
         }
 
+        /// <summary>
+        /// Gets a modified version of the user's spell priorities, for internal
+        /// purposes.
+        /// </summary>
+        /// <param name="spellPriority"></param>
+        /// <returns></returns>
         public List<string> PrepForCalcs(List<string> spellPriority) {
 
             List<string> forCalcs = new List<string>(spellPriority);

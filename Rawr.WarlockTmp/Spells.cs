@@ -82,15 +82,17 @@ namespace Rawr.WarlockTmp {
         public float ManaCost { get; protected set; }
         public float BaseCastTime { get; protected set; }
         public float MinGCD { get; protected set; }
-        public float Cooldown { get; protected set; }
-        public float RecastPeriod { get; protected set; }
         public bool CanMiss { get; protected set; }
         public float BaseDamage { get; protected set; }
         public float DirectCoefficient { get; protected set; }
         public float BaseTickDamage { get; protected set; }
-        public float NumTicks { get; protected set; }
         public float TickCoefficient { get; protected set; }
         public bool CanTickCrit { get; protected set; }
+
+        // set via constructor but sometimes modified via SetCastingStats()
+        public float Cooldown { get; protected set; }
+        public float RecastPeriod { get; protected set; }
+        public float NumTicks { get; protected set; }
         public SpellModifiers SpellModifiers { get; protected set; }
 
         // set via SetCastingStats()
@@ -299,47 +301,100 @@ namespace Rawr.WarlockTmp {
             return true;
         }
 
+        /// <returns>
+        /// Whether this spell 1) can be hasted by backdraft and 2) is NOT
+        /// garuanteed to be on cooldown when it procs.
+        /// </returns>
+        public virtual bool UsesBackdraft() {
+
+            return false;
+        }
+
         public bool IsSpammed() {
 
             return Cooldown == 0 && RecastPeriod == 0;
         }
 
+        /// <summary>
+        /// Sets the variables NumCasts, CollisionProfile and AvgCollision.
+        /// Called on spells in the order of thier priority, and before
+        /// SetDamageStats on any spell. Subclasses may also override to modify
+        /// RecastPeriod, Cooldown, NumTicks or SpellModifiers. Do not use the
+        /// value of any of these variables before SetCastingStats has been
+        /// called on that Spell.
+        /// </summary>
+        /// <param name="timeRemaining"></param>
         public virtual void SetCastingStats(float timeRemaining) {
 
-            if (IsSpammed()) {
-                NumCasts
-                    = timeRemaining / (GetCastTime() + Mommy.Options.Latency);
-            } else {
-                float avgSpellCastTime
-                    = GetCastTime(
-                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                        1f,
-                        Mommy.Stats.SpellHaste);
-                SetCollisionDelay(avgSpellCastTime, timeRemaining);
-                float period
-                    = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
-                if (CanMiss && Cooldown < RecastPeriod) {
+            float lag = Mommy.Options.Latency;
+            float avgSpellCastTime
+                = GetCastTime(
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    1f,
+                    Mommy.Stats.SpellHaste);
 
-                    // If a spell misses, and it can be recast sooner than it
-                    // normally would otherwise, it will instead wait for
-                    // either its cooldown (if it has one), or for one spell
-                    // to be cast inbetween (to allow for travel time and
-                    // reaction time for the player to detect the miss).
-                    // Note that coolisionDelay already has 1/2 an avereage
-                    // spellcast factored into it.
-                    float missRate = 1 - Mommy.HitChance;
-                    float periodAfterMiss
-                        = Math.Max(Cooldown, avgSpellCastTime / 2)
-                            + AvgCollision;
-                    period
-                        = Utilities.GetWeightedSum(
-                            period,
-                            Mommy.HitChance,
-                            periodAfterMiss,
-                            missRate);
+            float backdraftSpeedup = 1 - Mommy.Talents.Backdraft * .1f;
+            if (backdraftSpeedup < 1 && UsesBackdraft()) {
+
+                // we can safely assume that no spell on a cooldown will be cast
+                // twice during a single same backdraft proc
+
+                // get a list off all the spells that will be cast during
+                // backdraft
+                float castsRemaining = 3f;
+                float backdraftWindow = 3f * (avgSpellCastTime + lag);
+                foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
+                    Spell spell = pair.Value;
+                    if (spell is Conflagrate) {
+                        continue;
+                    }
+                    float numCasts;
+                    if (spell is Immolate && !Mommy.Talents.GlyphConflag) {
+                        numCasts = 1f;
+                    } else {
+                        numCasts
+                            = backdraftWindow
+                                / Math.Max(spell.RecastPeriod, spell.Cooldown);
+                    }
+                    numCasts = Math.Min(castsRemaining, numCasts);
+                    backdraftWindow += numCasts * (spell.GetCastTime() + lag);
+                    if (!spell.UsesBackdraft()) {
+                        backdraftWindow -= numCasts * (avgSpellCastTime + lag);
+                    }
                 }
-                NumCasts = Mommy.Options.Duration / period;
+
+                // TODO continue from here
             }
+
+            if (IsSpammed()) {
+                NumCasts = timeRemaining / (GetCastTime() + lag);
+                return;
+            } 
+
+            SetCollisionDelay(avgSpellCastTime, timeRemaining);
+            float period
+                = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
+            if (CanMiss && Cooldown < RecastPeriod) {
+
+                // If a spell misses, and it can be recast sooner than it
+                // normally would otherwise, it will instead wait for
+                // either its cooldown (if it has one), or for one spell
+                // to be cast inbetween (to allow for travel time and
+                // reaction time for the player to detect the miss).
+                // Note that coolisionDelay already has 1/2 an avereage
+                // spellcast factored into it.
+                float missRate = 1 - Mommy.HitChance;
+                float periodAfterMiss
+                    = Math.Max(Cooldown, avgSpellCastTime / 2)
+                        + AvgCollision;
+                period
+                    = Utilities.GetWeightedSum(
+                        period,
+                        Mommy.HitChance,
+                        periodAfterMiss,
+                        missRate);
+            }
+            NumCasts = Mommy.Options.Duration / period;
         }
 
         public virtual void SetDamageStats(float baseSpellPower) {
@@ -678,7 +733,7 @@ namespace Rawr.WarlockTmp {
                 SpellTree.Destruction,
                 .07f, // percentBaseMana,
                 2.5f - mommy.Talents.Bane * .1f, // baseCastTime,
-                mommy.Talents.GlyphChaosBolt ? 12f : 10f, // cooldown,
+                mommy.Talents.GlyphChaosBolt ? 10f : 12f, // cooldown,
                 0f, // recastPeriod,
                 1429f, // lowDirectDamage,
                 1813f, // highDirectDamage,
@@ -692,7 +747,7 @@ namespace Rawr.WarlockTmp {
         }
 
         public override bool IsCastable() {
-            
+
             return Mommy.Talents.ChaosBolt > 0;
         }
     }
@@ -778,6 +833,36 @@ namespace Rawr.WarlockTmp {
 
         public override void SetCastingStats(float timeRemaining) {
 
+
+            //float rollChance = Mommy.Talents.EverlastingAffliction * .2f;
+            //bool castingHaunt
+            //    = Mommy.Options.SpellPriority.Contains("Haunt")
+            //        && Mommy.Talents.Haunt > 0;
+            //bool castingSB
+            //    = Mommy.Options.SpellPriority.Contains("Shadow Bolt");
+            //if (rollChance > .99f && castingSB) {
+            //    RecastPeriod = Mommy.Options.Duration - 
+            //}
+
+            //if (rollChance > 0) {
+
+            //    // estimate the freqency of shadow bolt & haunt
+            //    float rollFrequency = 0f;
+            //    if (castingHaunt) {
+            //        rollFrequency += 1f / 11f;
+            //    }
+            //    if (castingSB) {
+
+            //        // guess that shadow bolt fills in 50% of the time
+            //        rollFrequency
+            //            += Mommy.HitChance
+            //                * .5f
+            //                / (3f - Mommy.Talents.Bane * .1f);
+            //    }
+
+            //}
+
+
             if (Mommy.Talents.GlyphQuickDecay) {
                 RecastPeriod /= 1f + Mommy.Stats.SpellHaste;
             }
@@ -799,7 +884,7 @@ namespace Rawr.WarlockTmp {
 
                 // Glyph of Curse of Agony raises the *average* tick to
                 // 8/7 its unglyphed value.
-                
+
                 1740f / 12f
                     * (mommy.Talents.GlyphCoA
                         ? 8f / 7f : 1f), // damage per tick
@@ -978,6 +1063,28 @@ namespace Rawr.WarlockTmp {
         }
     }
 
+    //public class Incinerate_UnderBackdraft : Incinerate {
+
+    //    public Incinerate_UnderBackdraft(CharacterCalculationsWarlock mommy)
+    //        : base(mommy) {
+
+    //        float multiplier = 1 - Mommy.Talents.Backdraft * .1f;
+    //        BaseCastTime *= multiplier;
+    //        MinGCD *= multiplier;
+    //    }
+
+    //    public override bool IsCastable() {
+
+    //        return Mommy.Talents.Backdraft > 0;
+    //    }
+
+    //    public override void SetCastingStats(float timeRemaining) {
+
+
+    //        base.SetCastingStats(timeRemaining);
+    //    }
+    //}
+
     public class LifeTap : Spell {
 
         // This exists as a spell object only for the case when we would have
@@ -1153,8 +1260,8 @@ namespace Rawr.WarlockTmp {
             // average time between procs.  This lengthens the time between
             // casts according to the rules for cooldown collision, which is not
             // completely accurate, but close enough.  To be accurate it
-            // should instead model the probability that it will proc twice (or
-            // more) during the casting of higher priority spells.
+            // should instead factor in the probability that it will proc twice
+            // (or more) while casting higher priority spells.
             float procChance = Mommy.Talents.Nightfall * .02f;
             if (Mommy.Talents.GlyphCorruption) {
                 procChance += .04f;
