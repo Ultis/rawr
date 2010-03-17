@@ -1732,6 +1732,7 @@ namespace Rawr
                 case "3766": stats.Stamina += 12; break;
                 #endregion
                 #region Mp5
+                case "2367":
                 case "2865": 
                 case "3306": stats.Mp5 += 2; break;
                 case "2370": 
