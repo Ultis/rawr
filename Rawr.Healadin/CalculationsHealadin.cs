@@ -575,6 +575,7 @@ namespace Rawr.Healadin
                 DivineIlluminationHealingMultiplier = stats.DivineIlluminationHealingMultiplier,
                 HolyLightCastTimeReductionFromHolyShock = stats.HolyLightCastTimeReductionFromHolyShock,
                 MovementSpeed = stats.MovementSpeed,
+                ShieldFromHealed = stats.ShieldFromHealed,
 
                 // Gear Procs
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
@@ -634,6 +635,7 @@ namespace Rawr.Healadin
                 stats.DivineIlluminationHealingMultiplier +
                 stats.HolyLightCastTimeReductionFromHolyShock +
                 stats.MovementSpeed +
+                stats.ShieldFromHealed +
 
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.BonusManaMultiplier +
