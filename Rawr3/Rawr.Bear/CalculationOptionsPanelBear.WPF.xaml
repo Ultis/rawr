@@ -56,7 +56,11 @@
 					<System:String>T9 Raids (10)</System:String>
 					<System:String>T9 Raids (10, Heroic)</System:String>
 					<System:String>T9 Raids (25)</System:String>
-					<System:String>T9 Raids (25, Heroic)</System:String>
+          <System:String>T9 Raids (25, Heroic)</System:String>
+          <System:String>T10 Raids (10)</System:String>
+          <System:String>T10 Raids (10, Heroic)</System:String>
+          <System:String>T10 Raids (25)</System:String>
+          <System:String>T10 Raids (25, Heroic)</System:String>
 					<System:String>Custom...</System:String>
 				</ComboBox>
 				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="3" Value="{Binding SurvivalSoftCap, Mode=TwoWay}" Maximum="999999" Increment="1000" />
@@ -105,6 +109,10 @@
 					<System:String>T9 Raids (10, Heroic)</System:String>
 					<System:String>T9 Raids (25)</System:String>
 					<System:String>T9 Raids (25, Heroic)</System:String>
+          <System:String>T10 Raids (10)</System:String>
+          <System:String>T10 Raids (10, Heroic)</System:String>
+          <System:String>T10 Raids (25)</System:String>
+          <System:String>T10 Raids (25, Heroic)</System:String>
 					<System:String>Custom...</System:String>
 				</ComboBox>
 				<inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="3" Value="{Binding TargetDamage, Mode=TwoWay}" Maximum="999999" Increment="1000" />

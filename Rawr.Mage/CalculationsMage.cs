@@ -190,6 +190,8 @@ namespace Rawr.Mage
             }
         }
 
+#if !RAWR3
+        // for RAWR3 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -202,6 +204,7 @@ namespace Rawr.Mage
                 return _customRenderedChartNames;
             }
         }
+#endif
 
         private CalculationOptionsPanelMage _calculationOptionsPanel = null;
 #if RAWR3

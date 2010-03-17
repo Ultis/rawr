@@ -198,6 +198,14 @@ namespace Rawr.UI
             }
         }
 
+        private void SetGraphControl(Control graphControl)
+        {
+            if (GraphScroll.Content != graphControl)
+            {
+                GraphScroll.Content = graphControl;
+            }
+        }
+
 		private int _calculationCount = 0;
 		private ComparisonCalculationBase[] _itemCalculations = null;
 		private AutoResetEvent _autoResetEvent = null;
@@ -205,6 +213,7 @@ namespace Rawr.UI
 
         private void UpdateGraphGear(string subgraph)
 		{
+            SetGraphControl(ComparisonGraph);
 			_characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
 			bool seenEquippedItem = (Character[_characterSlot] == null);
 
@@ -244,7 +253,8 @@ namespace Rawr.UI
 
         private void UpdateGraphEnchants(string subgraph)
         {
-            ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1","").Replace(" 2","").Replace(" ", ""), true);
+            SetGraphControl(ComparisonGraph);
+            ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
@@ -252,6 +262,7 @@ namespace Rawr.UI
 
         private void UpdateGraphGems(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             CharacterSlot cslot = CharacterSlot.Gems;
             ItemSlot islot = ItemSlot.None;
             switch (subgraph)
@@ -294,6 +305,7 @@ namespace Rawr.UI
 
         private void UpdateGraphBuffs(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(Calculations.GetBuffCalculations(Character, 
@@ -302,6 +314,7 @@ namespace Rawr.UI
 
         private void UpdateGraphTalents(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             if (subgraph == "Individual Talents")
             {
                 List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
@@ -442,6 +455,7 @@ namespace Rawr.UI
 
         private void UpdateGraphEquipped(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             if (subgraph == "Gear")
             {
 				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
@@ -493,6 +507,7 @@ namespace Rawr.UI
 
         private void UpdateGraphAvailable(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             if (subgraph == "Gear")
             {
 				foreach (string availableItem in Character.AvailableItems)
@@ -514,6 +529,7 @@ namespace Rawr.UI
 
         private void UpdateGraphDirectUpgrades(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             if (subgraph == "Gear")
             {
                 List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
@@ -668,6 +684,7 @@ namespace Rawr.UI
 
         private void UpdateGraphStatValues(string subgraph)
         {
+            SetGraphControl(ComparisonGraph);
             if (subgraph == "Relative Stat Values")
             {
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
@@ -678,9 +695,19 @@ namespace Rawr.UI
 
         private void UpdateGraphModelSpecific(string subgraph)
         {
-            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
-            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(Calculations.GetCustomChartData(Character, subgraph));
+            Control control = Calculations.GetCustomChartControl(subgraph);
+            if (control != null)
+            {
+                SetGraphControl(control);
+                Calculations.UpdateCustomChartData(Character, subgraph, control);
+            }
+            else
+            {
+                SetGraphControl(ComparisonGraph);
+                ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+                ComparisonGraph.DisplayCalcs(Calculations.GetCustomChartData(Character, subgraph));
+            }
         }
 
         // takes a list of items and returns a sorted filtered array of the top X gemmings

@@ -402,6 +402,8 @@ applied and result is scaled down by 100)",
             }
         }
 
+#if !RAWR3
+        // for RAWR3 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -414,6 +416,7 @@ applied and result is scaled down by 100)",
                 return _customRenderedChartNames;
             }
         }
+#endif
 
         private string[] _optimizableCalculationLabels = null;
         public override string[] OptimizableCalculationLabels {

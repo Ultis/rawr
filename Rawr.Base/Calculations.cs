@@ -191,10 +191,12 @@ namespace Rawr
 		{
 			get { return Instance.CustomChartNames; }
 		}
+#if !RAWR3
         public static string[] CustomRenderedChartNames
         {
             get { return Instance.CustomRenderedChartNames; }
         }
+#endif
 #if RAWR3
         public static Dictionary<string, System.Windows.Media.Color> SubPointNameColors
 #else
@@ -296,6 +298,17 @@ namespace Rawr
 		{
 			return Instance.GetCustomChartData(character, chartName);
 		}
+#if RAWR3
+        public static System.Windows.Controls.Control GetCustomChartControl(string chartName)
+        {
+            return Instance.GetCustomChartControl(chartName);
+        }
+
+        public static void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+            Instance.UpdateCustomChartData(character, chartName, control);
+        }
+#endif
 #if !RAWR3
         public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
@@ -452,10 +465,12 @@ namespace Rawr
 		/// </summary>
 		public abstract string[] CustomChartNames { get; }
 
+#if !RAWR3
         /// <summary>
         /// The names of charts for which the model provides custom rendering.
         /// </summary>
         public virtual string[] CustomRenderedChartNames { get { return new string[] { }; } }
+#endif
 
 		/// <summary>
 		/// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
@@ -560,6 +575,30 @@ namespace Rawr
 		/// <param name="chartName">The name of the custom chart to get data for.</param>
 		/// <returns>The data for the custom chart.</returns>
 		public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
+
+#if RAWR3
+        /// <summary>
+        /// Gets control to use for display of chart data, based on the chart name, as defined in CustomChartNames.
+        /// If you return null a default comparison graph will be used and GetCustomChartData will be called to
+        /// populate its data. When a custom control is used UpdateCustomChartData will be called instead.
+        /// </summary>
+        /// <param name="chartName">The name of the custom chart to get data for.</param>
+        /// <returns>Custom control or null for default comparison graph.</returns>
+        public virtual System.Windows.Controls.Control GetCustomChartControl(string chartName)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Update the provided control with custom chart data, based on the chart name, as defined in CustomChartNames.
+        /// </summary>
+        /// <param name="character">The character to build the chart for.</param>
+        /// <param name="chartName">The name of the custom chart to get data for.</param>
+        /// <param name="control">Custom control used to display chart data.</param>
+        public virtual void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+        {
+        }
+#endif
 
 #if !RAWR3
 		/// <summary>

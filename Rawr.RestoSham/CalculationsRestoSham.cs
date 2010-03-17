@@ -176,12 +176,15 @@ namespace Rawr.RestoSham
         {
             get { return CustomCharts.CustomChartNames; }
         }
+#if !RAWR3
+        // for RAWR3 include all charts in CustomChartNames
         public override string[] CustomRenderedChartNames
         {
             get { return CustomCharts.CustomRenderedChartNames; }
         }
+#endif
         #endregion
-        
+
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel

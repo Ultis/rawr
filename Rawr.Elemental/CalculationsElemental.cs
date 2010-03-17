@@ -265,6 +265,8 @@ namespace Rawr.Elemental
             return new ComparisonCalculationBase[0];
         }
 
+#if !RAWR3
+        // for RAWR3 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -277,6 +279,7 @@ namespace Rawr.Elemental
                 return _customRenderedChartNames;
             }
         }
+#endif
 
 #if !RAWR3
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
