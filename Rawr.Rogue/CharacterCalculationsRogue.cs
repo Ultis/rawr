@@ -134,7 +134,7 @@ namespace Rawr.Rogue
 
             dictValues.Add("Avoided White Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedWhiteAttacks, DodgedAttacks, MissedWhiteAttacks));
             dictValues.Add("Avoided Yellow Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
-            dictValues.Add("Avoided Poison Attacks", string.Format("{0}%*{1}% Dodged", AvoidedPoisonAttacks, MissedPoisonAttacks));
+            dictValues.Add("Avoided Poison Attacks", string.Format("{0}%*{1}% Missed", AvoidedPoisonAttacks, MissedPoisonAttacks));
             dictValues.Add("Crit Chance", CritChance.ToString() + "%");
             dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
             dictValues.Add("OffHand Speed", OffHandSpeed.ToString() + "s");
