@@ -25,6 +25,7 @@ namespace Rawr
             try
 			{
                 XmlNode node = null;
+                XmlAttribute attr = null;
 				WebRequestWrapper wrw = new WebRequestWrapper();
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
                 if (docCharacter == null)
@@ -36,6 +37,12 @@ namespace Rawr
                 else if (((node = docCharacter.SelectSingleNode("page/errorhtml")) != null) && node.Attributes["type"].Value == "maintenance")
                 {
                     StatusMessaging.ReportError("Get Character", null, "The Armory returned a message that it is down for maintenance.");
+                    itemsOnCharacter = null;
+                    return null;
+                }
+                else if (((node = docCharacter.SelectSingleNode("page/characterInfo")) != null) && (attr = node.Attributes["errCode"]) != null && attr.Value == "noCharacter")
+                {
+                    StatusMessaging.ReportError("Get Character", null, "The character " + name + "@" + region + "-" + realm + " does not exist.");
                     itemsOnCharacter = null;
                     return null;
                 }
