@@ -445,7 +445,7 @@ namespace Rawr.Rogue
             float sStrikeDamageRaw = (baseDamageNorm * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusSStrikeDamageMultiplier + bonusYellowDamageMultiplier) * modArmor;
             float mutiDamageRaw = (baseDamageNorm * 1f + 181f + baseOffDamageNorm * 1f + 181f * (1f + bonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
             mutiDamageRaw *= (character.RogueTalents.Mutilate > 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
-            float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f /*+ (stats.BonusRuptDamagePerCPPerTick * 5f * 8f)*/) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusRuptDamageMultiplier + bonusYellowDamageMultiplier);
+            float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f /*+ (stats.BonusRuptDamagePerCPPerTick * 5f * 8f)*/) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusRuptDamageMultiplier + bonusYellowDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
             float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusEvisDamageMultiplier + bonusYellowDamageMultiplier) * modArmor;
             float evisCPDamageRaw = ((370f + stats.AttackPower * 0.03f) + (370f + stats.AttackPower * 0.07f)) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusEvisDamageMultiplier + bonusYellowDamageMultiplier) * modArmor;
             float envenomBaseDamageRaw = 0f;
@@ -1019,6 +1019,7 @@ namespace Rawr.Rogue
                ChanceOn3CPOnFinisher = stats.ChanceOn3CPOnFinisher,
 
                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+               BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                SpellHit = stats.SpellHit,
                SpellCrit = stats.SpellCrit,
                SpellCritOnTarget = stats.SpellCritOnTarget,
@@ -1101,6 +1102,7 @@ namespace Rawr.Rogue
                     stats.ChanceOn3CPOnFinisher +
 
                     stats.BonusPhysicalDamageMultiplier +
+                    stats.BonusBleedDamageMultiplier + 
                     stats.SpellHit +
                     stats.SpellCrit +
                     stats.SpellCritOnTarget +
