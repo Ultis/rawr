@@ -275,7 +275,7 @@ namespace Rawr.DPSDK
             get
             {
                 _damage = (combatTable.MH.baseDamage + ((stats.AttackPower / 14d) *
-                                combatTable.normalizationFactor)) * 0.5d + 400d + stats.BonusScourgeStrikeDamage; 
+                                combatTable.normalizationFactor)) * 0.7d + 560d + stats.BonusScourgeStrikeDamage; 
                 double SSCritDmgMult = 1d + .15d * talents.ViciousStrikes + stats.BonusCritMultiplier;
                 SSCritDmgMult = 1d + ((combatTable.physCrits + .03d * (talents.ViciousStrikes + talents.Subversion) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                 _damage *= SSCritDmgMult;
@@ -288,7 +288,7 @@ namespace Rawr.DPSDK
         {
             get
             {
-                _secondaryDamage = Damage * calcOpts.rotation.AvgDiseaseMult * .25d;
+                _secondaryDamage = Damage * calcOpts.rotation.AvgDiseaseMult * .12d;
                 double SSCritDmgMult = 1d + .15d * talents.ViciousStrikes + stats.BonusCritMultiplier;
                 SSCritDmgMult = 1d + ((combatTable.physCrits + .03d * (talents.ViciousStrikes + talents.Subversion) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                 SSCritDmgMult = 1d;
