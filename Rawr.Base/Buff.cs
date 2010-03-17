@@ -2388,8 +2388,8 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { 
-                    BonusBloodStrikeDamage = .05f,
-                    BonusHeartStrikeDamage = .05f,
+                    BonusBloodStrikeDamageMultiplier = .05f,
+                    BonusHeartStrikeDamageMultiplier = .05f,
                 },
                 SetName = "Koltira's Plate",
                 SetThreshold = 2,
@@ -2414,8 +2414,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
                 {
-                    BonusBloodStrikeDamage = .05f,
-                    BonusHeartStrikeDamage = .05f,
+                    BonusBloodStrikeDamageMultiplier = .05f,
+                    BonusHeartStrikeDamageMultiplier = .05f,
                 },
                 SetName = "Thassarian's Plate",
                 SetThreshold = 2,

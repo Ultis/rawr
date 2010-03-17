@@ -379,7 +379,6 @@ namespace Rawr {
         BonusRPFromDeathStrike,
         BonusRPFromObliterate,
         BonusRPFromScourgeStrike,
-        BonusRuneStrikeMultiplier,
         BonusScourgeStrikeCrit,
         TankDK_T10_2pc,
         TankDK_T10_4pc,
@@ -446,6 +445,11 @@ namespace Rawr {
         StunDurReduc,
         SnareRootDurReduc,
         FearDurReduc,
+        #region Added by Rawr.TankDK
+        BonusRuneStrikeMultiplier,
+        BonusBloodStrikeDamageMultiplier, // T9_2p
+        BonusHeartStrikeDamageMultiplier, // T9_2p
+        #endregion
         #region Added by Rawr.Mage
         BonusMageNukeMultiplier,    // T6 setbonus. set parsing no longer applies this. Consider cleanup.
         #endregion
@@ -1575,6 +1579,8 @@ namespace Rawr {
         
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Blood Strike Damage")]
+        /// This is NOT a multiplier, this is additive raw damage bonus.
         public float BonusBloodStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusBloodStrikeDamage]; }
@@ -1583,6 +1589,8 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Heart Strike Damage")]
+        /// This is NOT a multiplier, this is additive raw damage bonus.
         public float BonusHeartStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeDamage]; }
@@ -1788,8 +1796,28 @@ namespace Rawr {
         [DisplayName("% Rune Strike Damage Multiplier")]
         public float BonusRuneStrikeMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusRuneStrikeMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusRuneStrikeMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusRuneStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusRuneStrikeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Blood Strike Damage Multiplier")]
+        public float BonusBloodStrikeDamageMultiplier
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusBloodStrikeDamageMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusBloodStrikeDamageMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        [DisplayName("% Heart Strike Damage Multiplier")]
+        public float BonusHeartStrikeDamageMultiplier
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusHeartStrikeDamageMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusHeartStrikeDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

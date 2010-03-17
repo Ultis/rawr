@@ -1961,12 +1961,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
-                // Bringing in some of the relavent stats from DPSDK.
                 // General Damage Mods.
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
     			BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
+                BonusHeartStrikeDamageMultiplier = stats.BonusHeartStrikeDamageMultiplier,
+                BonusBloodStrikeDamageMultiplier = stats.BonusBloodStrikeDamageMultiplier,
 
                 // Ability mods.
                 BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
@@ -2143,12 +2144,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
 
-            // Bringing in the damage stuff from DPSDK for better threat data
             // Damage Multipliers:
             bResults |= (stats.BonusShadowDamageMultiplier != 0);
             bResults |= (stats.BonusFrostDamageMultiplier != 0);
             bResults |= (stats.BonusDiseaseDamageMultiplier != 0);
             bResults |= (stats.BonusRuneStrikeMultiplier != 0);
+            bResults |= (stats.BonusBloodStrikeDamageMultiplier != 0);
+            bResults |= (stats.BonusHeartStrikeDamageMultiplier != 0);
 
             // Bulk Damage:
             bResults |= (stats.BonusBloodStrikeDamage != 0);

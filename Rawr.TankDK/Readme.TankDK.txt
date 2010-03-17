@@ -3,6 +3,10 @@
 Currently targeting: 
 * Wow version 3.3.2
 
+2.3.13:
+* Defect 16792: Crash when trying to save - Fixed by Jothay.
+* Defect 16745: T9_2Piece not properly evalutated.
+
 2.3.12:
 * Defect 16597: Imp Icy Talons stacks /w Icy Talons
 * Defect 16012: IIT was double stacking if it was selected in the Buffs Pane.

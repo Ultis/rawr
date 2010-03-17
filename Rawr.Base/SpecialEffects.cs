@@ -2198,7 +2198,7 @@ namespace Rawr {
         /// </summary>
         /// <param name="ability">What ability is having it's damage boosted?</param>
         /// <param name="s">The Stats instance to be updated.</param>
-        /// <param name="amount">The amount by which the bonSus should be applied.</param>
+        /// <param name="amount">The amount by which the bonus should be applied.</param>
         public static void EvalAbility(string ability, Stats s, float amount) {
             switch (ability) {
                 case "Blood Strike"  : { s.BonusBloodStrikeDamage   += amount; break; }

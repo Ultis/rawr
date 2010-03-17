@@ -262,9 +262,9 @@ namespace Rawr.TankDK
 
             //spell AP multipliers, for diseases its per tick
             // TODO: Factor in BB & CE values for Multi-Target Tank roations
-            float BloodBoilAPMult = .04f;
+//            float BloodBoilAPMult = .04f;
             float BloodPlagueAPMult = 0.055f;
-            float CorpseExplosionAPMult = .0475f;
+//            float CorpseExplosionAPMult = .0475f;
             float DeathCoilAPMult = 0.15f;
             float DeathNDecayAPMult = .0475f;
             float FrostFeverAPMult = 0.055f;
@@ -767,7 +767,7 @@ namespace Rawr.TankDK
                     float BSDmg = (MHDam * 0.4f) + 305.6f + stats.BonusBloodStrikeDamage;
                     // Threat of Thassarian:
                     BSDmg += (OHDam * .4f) * (talents.ThreatOfThassarian / 3f) * 0.5f;
-                    BSDmg *= 1f + 0.125f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
+                    BSDmg *= 1f + 0.125f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage) ;
                     fDamBloodStrike = BSDmg * BSCount;
                     float BSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + (.15f * (float)talents.GuileOfGorefiend) + 
                         stats.BonusCritMultiplier);
@@ -787,7 +787,7 @@ namespace Rawr.TankDK
                     float HSCount = calcOpts.m_Rotation.HeartStrike;
                     float HSDmg = ((this.MH.baseDamage + ((stats.AttackPower / 14f) * this.normalizationFactor)) *
                         0.5f) + 368f + stats.BonusHeartStrikeDamage;
-                    HSDmg *= 1f + 0.1f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
+                    HSDmg *= 1f + 0.1f * (float)calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage) ;
                     fDamHeartStrike = HSDmg * HSCount;
                     float HSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier);
                     float HSCrit = 1f + ((this.physCrits + (.03f * (float)talents.Subversion)) * HSCritDmgMult);
@@ -839,13 +839,13 @@ namespace Rawr.TankDK
 
             float BCBMult = 1f;
             float BloodPlagueMult = 1f;
-            float BloodStrikeMult = 1f;
+            float BloodStrikeMult = 1f + stats.BonusBloodStrikeDamageMultiplier;
             float DeathCoilMult = 1f;
             float DancingRuneWeaponMult = 1f;
             float FrostFeverMult = 1f;
             float FrostStrikeMult = 1f;
             float BloodwormsMult = 1f + commandMult;
-            float HeartStrikeMult = 1f;
+            float HeartStrikeMult = 1f + stats.BonusHeartStrikeDamageMultiplier;
             float HowlingBlastMult = 1f;
             // Adding the multiplier from the T10 set bonus.
             float DeathNDecayMult = 1f + stats.TankDK_T10_2pc;
