@@ -114,6 +114,12 @@ namespace Rawr.Rogue
             get { return _trinketOffset; }
             set { if (_trinketOffset != value) { _trinketOffset = value; OnPropertyChanged("TrinketOffset"); } }
         }
+        private bool _PTRMode = false;
+        public bool PTRMode
+        {
+            get { return _PTRMode; }
+            set { if (_PTRMode != value) { _PTRMode = value; OnPropertyChanged("PTRMode"); } }
+        }
         private int _lagVariance = 200;
         public int LagVariance
         {

@@ -66,6 +66,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label6 = new System.Windows.Forms.Label();
+            this.checkBoxPTR = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
@@ -545,10 +546,23 @@
             this.label6.Text = "Target is bleeding*:";
             this.toolTip1.SetToolTip(this.label6, "Check this if a bleed will be up without you applying it");
             // 
+            // checkBoxPTR
+            // 
+            this.checkBoxPTR.AutoSize = true;
+            this.checkBoxPTR.Location = new System.Drawing.Point(9, 408);
+            this.checkBoxPTR.Name = "checkBoxPTR";
+            this.checkBoxPTR.Size = new System.Drawing.Size(82, 17);
+            this.checkBoxPTR.TabIndex = 11;
+            this.checkBoxPTR.Text = "PTR Mode*";
+            this.toolTip1.SetToolTip(this.checkBoxPTR, "Enable the PTR mode (patch 3.3.3)");
+            this.checkBoxPTR.UseVisualStyleBackColor = true;
+            this.checkBoxPTR.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxPTR);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.checkBoxBleed);
             this.Controls.Add(this.label11);
@@ -622,5 +636,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox checkBoxTotT;
+        private System.Windows.Forms.CheckBox checkBoxPTR;
     }
 }

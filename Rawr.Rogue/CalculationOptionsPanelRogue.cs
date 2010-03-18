@@ -74,6 +74,7 @@ namespace Rawr.Rogue
                 calcOpts.CustomMHPoison = comboBoxMHPoison.SelectedIndex;
                 calcOpts.CustomOHPoison = comboBoxOHPoison.SelectedIndex;
                 calcOpts.TrinketOffset = (float)trackBarTrinketOffset.Value / 2f;
+                calcOpts.PTRMode = checkBoxPTR.Checked;
 
                 labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
 

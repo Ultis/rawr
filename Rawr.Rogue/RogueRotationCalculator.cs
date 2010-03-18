@@ -53,6 +53,7 @@ namespace Rawr.Rogue
         public float CPOnFinisher { get; set; }
         public float FlurryCostReduction { get; set; }
         public float ToTTCDReduction { get; set; }
+        public float ToTTCostReduction { get; set; }
         public float VanishCDReduction { get; set; }
 
         private float[] _chanceExtraCP = new float[5];
@@ -119,16 +120,17 @@ namespace Rawr.Rogue
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
             FlurryCostReduction = Char.RogueTalents.GlyphOfBladeFlurry ? 25 : 0;
             ToTTCDReduction = 5 * Char.RogueTalents.FilthyTricks;
+            ToTTCostReduction = 5 * Char.RogueTalents.FilthyTricks;
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
         }
 
-        public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT)
+        public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool PTRMode)
 		{
             float energyRegen = 10f * (1f + BonusEnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + BonusMaxEnergy +
                                          energyRegen * Duration +
                                          ((Duration - 20f) / (180f - VanishCDReduction)) * 20f * energyRegen * BonusStealthEnergyRegen +
-                                         (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + ToTTCDReduction)) * (Duration - 5f) / (30f - ToTTCDReduction) : 0f) +
+                                         (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + (PTRMode ? ToTTCostReduction : 0))) * (Duration - 5f) / (30f - ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
                                          energyRegen * 2f * BonusEnergyRegen * (Duration / 180f) -
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * Duration / 120f : 0f);
