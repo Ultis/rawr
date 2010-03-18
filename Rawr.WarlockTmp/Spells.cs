@@ -253,7 +253,7 @@ namespace Rawr.WarlockTmp {
             BaseDamage = (lowDirectDamage + highDirectDamage) / 2f;
             Cooldown = cooldown;
             RecastPeriod = recastPeriod;
-            CanMiss = canMiss && Mommy.HitChance < 1;
+            CanMiss = canMiss;
             DirectCoefficient = directCoefficient;
             BaseTickDamage = baseTickDamage;
             NumTicks = numTicks;
@@ -374,7 +374,11 @@ namespace Rawr.WarlockTmp {
             SetCollisionDelay(avgSpellCastTime, timeRemaining);
             float period
                 = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
-            if (CanMiss && Cooldown < RecastPeriod) {
+            float hitChance = Mommy.HitChance;
+            if (IsBinary()) {
+                hitChance -= GetResist();
+            }
+            if (CanMiss && hitChance < 1 && Cooldown < RecastPeriod) {
 
                 // If a spell misses, and it can be recast sooner than it
                 // normally would otherwise, it will instead wait for
@@ -383,16 +387,14 @@ namespace Rawr.WarlockTmp {
                 // reaction time for the player to detect the miss).
                 // Note that coolisionDelay already has 1/2 an avereage
                 // spellcast factored into it.
-                float missRate = 1 - Mommy.HitChance;
                 float periodAfterMiss
-                    = Math.Max(Cooldown, avgSpellCastTime / 2)
-                        + AvgCollision;
+                    = Math.Max(Cooldown, avgSpellCastTime / 2) + AvgCollision;
                 period
                     = Utilities.GetWeightedSum(
                         period,
-                        Mommy.HitChance,
+                        hitChance,
                         periodAfterMiss,
-                        missRate);
+                        1 - hitChance);
             }
             NumCasts = Mommy.Options.Duration / period;
         }
@@ -442,6 +444,7 @@ namespace Rawr.WarlockTmp {
             // overall damage
             AvgDamagePerCast
                 = Mommy.HitChance
+                    * (1 - GetResist())
                     * (avgDirectDamage + NumTicks * avgTickDamage);
         }
 
@@ -512,6 +515,17 @@ namespace Rawr.WarlockTmp {
             float reductionOnProc
                 = Mommy.Stats.Mana * Mommy.Talents.ImprovedSoulLeech * .01f;
             ManaCost -= .3f * reductionOnProc;
+        }
+
+        protected float GetResist() {
+
+            return StatConversion.GetAverageResistance(
+                80, Mommy.Options.TargetLevel, 0f, 0f);
+        }
+
+        private bool IsBinary() {
+
+            return NumTicks > 0;
         }
 
         /// <summary>
@@ -847,15 +861,17 @@ namespace Rawr.WarlockTmp {
             // P = the chance a trigger will actually reset the duration
             // TC = the time between corruption ticks
             //
-            // S = 1 - (1-P)^(3*T)
+            // S = 1 - (1-P)^(TC*T)
             // R = (1-P)^(D*T)
             // En = (1-R) / (R*S)
-            // Avg Duration = 3 * En
+            // Avg Duration = TC * En
             //
             // This is the solution in the last else case below.
             float d = RecastPeriod;
             float t = CalcRollingTriggerFrequency();
-            float p = Mommy.HitChance * talents.EverlastingAffliction * .2f;
+            float p
+                = (Mommy.HitChance - GetResist())
+                    * talents.EverlastingAffliction * .2f;
             float tc = d / 6f;
             if (p == 1 && t <= d) {
                 RecastPeriod = Mommy.Options.Duration;
@@ -864,10 +880,10 @@ namespace Rawr.WarlockTmp {
                 float avgResetDuration = tc + (d - tc) / 2f;
                 RecastPeriod = d + chanceOfReset * avgResetDuration;
             } else if (p > 0) {
-                float s = 1f - (float) Math.Pow(1f - p, 3f * t);
+                float s = 1f - (float) Math.Pow(1f - p, tc * t);
                 float r = (float) Math.Pow(1f - p, d * t);
                 float en = (1f - r) / (r * s);
-                RecastPeriod = Math.Min(3f * en, Mommy.Options.Duration);
+                RecastPeriod = Math.Min(tc * en, Mommy.Options.Duration);
             }
             NumTicks = RecastPeriod / tc;
             #endregion
