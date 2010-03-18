@@ -833,40 +833,67 @@ namespace Rawr.WarlockTmp {
 
         public override void SetCastingStats(float timeRemaining) {
 
-
-            //float rollChance = Mommy.Talents.EverlastingAffliction * .2f;
-            //bool castingHaunt
-            //    = Mommy.Options.SpellPriority.Contains("Haunt")
-            //        && Mommy.Talents.Haunt > 0;
-            //bool castingSB
-            //    = Mommy.Options.SpellPriority.Contains("Shadow Bolt");
-            //if (rollChance > .99f && castingSB) {
-            //    RecastPeriod = Mommy.Options.Duration - 
-            //}
-
-            //if (rollChance > 0) {
-
-            //    // estimate the freqency of shadow bolt & haunt
-            //    float rollFrequency = 0f;
-            //    if (castingHaunt) {
-            //        rollFrequency += 1f / 11f;
-            //    }
-            //    if (castingSB) {
-
-            //        // guess that shadow bolt fills in 50% of the time
-            //        rollFrequency
-            //            += Mommy.HitChance
-            //                * .5f
-            //                / (3f - Mommy.Talents.Bane * .1f);
-            //    }
-
-            //}
-
-
-            if (Mommy.Talents.GlyphQuickDecay) {
+            WarlockTalents talents = Mommy.Talents;
+            if (talents.GlyphQuickDecay) {
                 RecastPeriod /= 1f + Mommy.Stats.SpellHaste;
             }
+
+            #region rolling corruption
+            // Kavan solved the average duration of a rolling Corruption, see
+            // http://rawr.codeplex.com/Thread/View.aspx?ThreadId=203628
+            //
+            // D = the non-rolling duration
+            // T = the frequency of reset triggers
+            // P = the chance a trigger will actually reset the duration
+            // TC = the time between corruption ticks
+            //
+            // S = 1 - (1-P)^(3*T)
+            // R = (1-P)^(D*T)
+            // En = (1-R) / (R*S)
+            // Avg Duration = 3 * En
+            //
+            // This is the solution in the last else case below.
+            float d = RecastPeriod;
+            float t = CalcRollingTriggerFrequency();
+            float p = Mommy.HitChance * talents.EverlastingAffliction * .2f;
+            float tc = d / 6f;
+            if (p == 1 && t <= d) {
+                RecastPeriod = Mommy.Options.Duration;
+            } else if (p > 0 && t > d) {
+                float chanceOfReset = p * d * t;
+                float avgResetDuration = tc + (d - tc) / 2f;
+                RecastPeriod = d + chanceOfReset * avgResetDuration;
+            } else if (p > 0) {
+                float s = 1f - (float) Math.Pow(1f - p, 3f * t);
+                float r = (float) Math.Pow(1f - p, d * t);
+                float en = (1f - r) / (r * s);
+                RecastPeriod = Math.Min(3f * en, Mommy.Options.Duration);
+            }
+            NumTicks = RecastPeriod / tc;
+            #endregion
+
             base.SetCastingStats(timeRemaining);
+        }
+
+        private float CalcRollingTriggerFrequency() {
+
+            float freq = 0f;
+            if (Mommy.Options.SpellPriority.Contains("Shadow Bolt")) {
+
+                // assume about 1/2 the time will be spent spamming shadow bolt
+                freq += .5f / (GetCastTime(
+                                ShadowBolt.GetBaseCastTime(Mommy),
+                                1.5f,
+                                Mommy.Stats.SpellHaste)
+                            + Mommy.Options.Latency);
+            }
+            if (Mommy.Options.SpellPriority.Contains("Haunt")
+                && Mommy.Talents.Haunt > 0) {
+
+                // assume 11 seconds between haunt casts, on average
+                freq += 1f / 11f;
+            }
+            return freq;
         }
     }
 
@@ -1206,13 +1233,19 @@ namespace Rawr.WarlockTmp {
 
     public class ShadowBolt : Spell {
 
+        public static float GetBaseCastTime(
+            CharacterCalculationsWarlock mommy) {
+
+            return 3f - mommy.Talents.Bane * .1f;
+        }
+
         public ShadowBolt(CharacterCalculationsWarlock mommy)
             : base(
                 mommy, // options
                 MagicSchool.Shadow, // magic school
                 SpellTree.Destruction, // spell tree
                 .17f, // percent base mana
-                3f - mommy.Talents.Bane * .1f, // cast time
+                GetBaseCastTime(mommy), // cast time
                 0f, // cooldown
                 0f, // recast period
                 694f, // low base
