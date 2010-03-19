@@ -72,7 +72,7 @@ namespace Rawr.DPSDK
             }
             if (talents.WanderingPlague > 0)
             {
-                float modifier = 1 + (combatTable.physCrits * (talents.WanderingPlague / 3));
+                float modifier = 1f + (combatTable.physCrits * (talents.WanderingPlague / 3f));
                 BP.DamageMod *= modifier;
                 FF.DamageMod *= modifier;
             }
