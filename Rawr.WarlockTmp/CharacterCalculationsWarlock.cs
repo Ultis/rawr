@@ -53,19 +53,6 @@ namespace Rawr.WarlockTmp {
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
 
-            SpellModifiers = new SpellModifiers();
-            SpellModifiers.AddMultiplicativeMultiplier(
-                Stats.BonusDamageMultiplier);
-            SpellModifiers.AddMultiplicativeMultiplier(
-                Talents.Malediction * .01f);
-            SpellModifiers.AddMultiplicativeDirectMultiplier(
-                Talents.DemonicPact * .01f);
-            // The spellstone bonus is added in individual spells, since it
-            // doesn't actually affect Curse of Agony.
-            SpellModifiers.AddAdditiveDirectMultiplier(
-                Stats.WarlockFirestoneDirectDamageMultiplier);
-            SpellModifiers.AddCritChance(Stats.SpellCrit);
-            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
             HitChance
                 = Math.Min(
                     1f, Options.GetBaseHitRate() / 100f + Stats.SpellHit);
@@ -257,6 +244,99 @@ namespace Rawr.WarlockTmp {
                             + Stats.Mp5 / 5f);
             #endregion
 
+            #region Calculate all the possible haste values
+
+            // the trigger rates are all guestimates at this point, since the
+            // real values depend on haste, this is set-up work to determine
+            // haste!
+
+            Dictionary<Trigger, float> periods
+                = new Dictionary<Trigger, float>();
+            Dictionary<Trigger, float> chances
+                = new Dictionary<Trigger, float>();
+            periods[Trigger.Use] = 0f;
+            periods[Trigger.SpellHit]
+                = periods[Trigger.SpellCrit]
+                = periods[Trigger.SpellCast]
+                = periods[Trigger.SpellMiss]
+                = periods[Trigger.DamageSpellHit]
+                = periods[Trigger.DamageSpellCrit]
+                = periods[Trigger.DamageSpellCast]
+                = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / Stats.SpellHaste;
+            periods[Trigger.DoTTick] = 1.5f;
+            periods[Trigger.DamageDone]
+                = periods[Trigger.DamageOrHealingDone]
+                = 1f
+                    / (1 / periods[Trigger.DoTTick]
+                        + 1 / periods[Trigger.SpellHit]);
+
+            chances[Trigger.Use] = 1f;
+            chances[Trigger.SpellHit]
+                = chances[Trigger.DamageSpellHit]
+                = Math.Min(1f, Stats.SpellHit);
+            chances[Trigger.SpellCrit]
+                = chances[Trigger.DamageSpellCrit]
+                = chances[Trigger.DamageDone]
+                = chances[Trigger.DamageOrHealingDone]
+                = chances[Trigger.SpellHit]
+                    * (StatConversion.GetSpellCritFromIntellect(Stats.Intellect)
+                        + StatConversion.GetSpellCritFromRating(
+                            Stats.CritRating
+                                + Stats.WarlockFirestoneSpellCritRating
+                                    * (1f + Talents.MasterConjuror * 1.5f))
+                        + Stats.BonusCritChance
+                        + Stats.SpellCritOnTarget);
+            chances[Trigger.SpellCast] = chances[Trigger.DamageSpellCast] = 1f;
+            chances[Trigger.SpellMiss] = 1 - chances[Trigger.SpellHit];
+            chances[Trigger.DoTTick] = 1f;
+
+            if (Options.SpellPriority.Contains("Corruption")) {
+                periods[Trigger.CorruptionTick] = 3.1f;
+                if (Talents.GlyphQuickDecay) {
+                    periods[Trigger.CorruptionTick] /= 1 + Stats.SpellHaste;
+                }
+                chances[Trigger.CorruptionTick] = 1f;
+            } else {
+                periods[Trigger.CorruptionTick] = 0f;
+                chances[Trigger.CorruptionTick] = 0f;
+            }
+
+            List<SpecialEffect> hasteEffects = new List<SpecialEffect>();
+            List<float> hasteIntervals = new List<float>();
+            List<float> hasteChances = new List<float>();
+            List<float> hasteOffsets = new List<float>();
+            List<float> hasteScales = new List<float>();
+            List<float> hasteValues = new List<float>();
+            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
+                if (periods.ContainsKey(effect.Trigger)) {
+                    //if (AffectsHaste(effect.Stats)) {
+                    //    hasteEffects.Add(effect);
+                    //    hasteIntervals.Add(periods[effect.Trigger]);
+                    //    hasteChances.Add(chances[effect.Trigger]);
+                    //    hasteOffsets.Add(0f);
+                    //    hasteScales.Add(1f);
+                    //} else {
+                        Stats.Accumulate(
+                            effect.GetAverageStats(
+                                periods[effect.Trigger],
+                                chances[effect.Trigger],
+                                CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                                Options.Duration));
+                    //}
+                }
+            }
+            WeightedStat[] hasteUptimes
+                = SpecialEffect.GetAverageCombinedUptimeCombinations(
+                    hasteEffects.ToArray(),
+                    hasteIntervals.ToArray(),
+                    hasteChances.ToArray(),
+                    hasteOffsets.ToArray(),
+                    hasteScales.ToArray(),
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    Options.Duration,
+                    hasteValues.ToArray());
+            #endregion
+
             #region Calculate NumCasts for each spell
             float haste = 1f + Stats.SpellHaste;
             float lag = Options.Latency;
@@ -287,7 +367,20 @@ namespace Rawr.WarlockTmp {
             }
             #endregion
 
-            #region Calculate bonuses based on spell uptimes, etc
+            #region Calculate spell modifiers
+            SpellModifiers = new SpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusDamageMultiplier);
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Talents.Malediction * .01f);
+            SpellModifiers.AddMultiplicativeDirectMultiplier(
+                Talents.DemonicPact * .01f);
+            // The spellstone bonus is added in individual spells, since it
+            // doesn't actually affect Curse of Agony.
+            SpellModifiers.AddAdditiveDirectMultiplier(
+                Stats.WarlockFirestoneDirectDamageMultiplier);
+            SpellModifiers.AddCritChance(Stats.SpellCrit);
+            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
             if (CastSpells.ContainsKey("Metamorphosis")) {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     ((Metamorphosis) CastSpells["Metamorphosis"])
@@ -349,6 +442,17 @@ namespace Rawr.WarlockTmp {
         private float CalcPetDps() {
 
             return 0f;
+        }
+
+        private bool AffectsHaste(Stats stats) {
+
+            if (stats.SpellHaste > 0 || stats.HasteRating > 0) {
+                return true;
+            }
+            if (stats._rawSpecialEffectDataSize == 0) {
+                return false;
+            }
+            return AffectsHaste(stats._rawSpecialEffectData[0].Stats);
         }
 
         #endregion
