@@ -266,8 +266,8 @@ namespace Rawr.Rogue
             #endregion
 
             #region Extra Mainhand attacks from Hack and Slash
-            if (MainHandStats.Weapon == ItemType.OneHandAxe || MainHandStats.Weapon == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
-            if (OffHandStats.Weapon == ItemType.OneHandAxe || OffHandStats.Weapon == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
+            if (MainHandStats.Weapon._type == ItemType.OneHandAxe || MainHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
+            if (OffHandStats.Weapon._type == ItemType.OneHandAxe || OffHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
             #endregion
 
             #region Poisons
@@ -277,12 +277,12 @@ namespace Rawr.Rogue
             float dPCount = 0f;
             float wPCount = 0f;
             float aPCount = 0f;
-            float iPPPS = 8.53f * (1f + BonusIPFrequencyMultiplier) / 60f;
+            float iPProcRate = 0.2f * (1f + BonusIPFrequencyMultiplier) / 1.4f;
             float dPApplyChance = 0.3f + 0.04f * Char.RogueTalents.ImprovedPoisons;
             float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
-                iPCount += mHHitCount * MainHandSpeed * iPPPS * ((Duration - envenomBuffTime) / Duration +
+                iPCount += mHHitCount * MainHandStats.Weapon._speed * iPProcRate * ((Duration - envenomBuffTime) / Duration +
                                                                  1.75f * envenomBuffTime / Duration);
             else if (mHPoison == 2 && oHPoison != 2)
             {
@@ -300,13 +300,13 @@ namespace Rawr.Rogue
                     aPCount += dPCountTemp;
             }
             else if (mHPoison == 3)
-                wPCount += mHHitCount * MainHandSpeed * 21.43f / 60f;
+                wPCount += mHHitCount * MainHandStats.Weapon._speed * 21.43f / 60f;
             else if (mHPoison == 4)
                 aPCount += mHHitCount * 0.5f;
             #endregion
             #region OffHand Poison
             if (oHPoison == 1)
-                iPCount += oHHitCount * OffHandSpeed * iPPPS * ((Duration - envenomBuffTime) / Duration +
+                iPCount += oHHitCount * OffHandStats.Weapon._speed * iPProcRate * ((Duration - envenomBuffTime) / Duration +
                                                                 1.75f * envenomBuffTime / Duration);
             else if (oHPoison == 2 && mHPoison != 2)
             {
@@ -324,7 +324,7 @@ namespace Rawr.Rogue
                     aPCount += dPCountTemp;
             }
             else if (oHPoison == 3)
-                wPCount += oHHitCount * OffHandSpeed * 21.43f / 60f;
+                wPCount += oHHitCount * OffHandStats.Weapon._speed * 21.43f / 60f;
             else if (oHPoison == 4)
                 aPCount += oHHitCount * 0.5f;
             #endregion

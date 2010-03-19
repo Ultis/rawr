@@ -300,7 +300,7 @@ namespace Rawr.Rogue
             float offHandModArmor = offHand.Type != ItemType.OneHandMace ? modArmor : Math.Min(1f, modArmor - bonusMaceArP);
             float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
             float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
-            float critMultiplierPoison = 2f * (1f + stats.BonusCritMultiplier);
+            float critMultiplierPoison = 1.5f * (1f + stats.BonusCritMultiplier);
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue);
             hasteBonus = (1f + hasteBonus) * (1f + bonusFlurryHaste * 15f / 120f) - 1f;
             float speedModifier = 1f / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
@@ -362,7 +362,7 @@ namespace Rawr.Rogue
                     + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80])
                     + bonusMainHandCrit;
                 float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
-                float chanceCritPoisonTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Rogue)
+                float chanceCritPoisonTemp = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating + iStat.Value)
                     + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Rogue)
                     + stats.SpellCrit
                     + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
@@ -524,14 +524,14 @@ namespace Rawr.Rogue
             {
                 DamagePerHit = meleeDamageRaw,
                 DamagePerSwing = meleeDamageAverage,
-                Weapon = mainHand._type,
+                Weapon = mainHand,
                 CritChance = chanceCritWhiteMain,
             };
             RogueAbilityStats offHandStats = new RogueOHStats()
             {
                 DamagePerHit = meleeOffDamageRaw,
                 DamagePerSwing = meleeOffDamageAverage,
-                Weapon = offHand._type,
+                Weapon = offHand,
                 CritChance = chanceCritWhiteOff,
             };
             RogueAbilityStats backstabStats = new RogueBackstabStats()
