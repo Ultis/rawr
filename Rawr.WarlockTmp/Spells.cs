@@ -261,7 +261,7 @@ namespace Rawr.WarlockTmp {
             CanTickCrit = canTickCrit;
 
             WarlockTalents talents = mommy.Talents;
-            SpellModifiers = new SpellModifiers(Mommy.SpellModifiers);
+            SpellModifiers = new SpellModifiers();
             SpellModifiers.AddAdditiveDirectMultiplier(
                 addedDirectMultiplier);
             SpellModifiers.AddAdditiveTickMultiplier(
@@ -333,11 +333,11 @@ namespace Rawr.WarlockTmp {
                     1f,
                     Mommy.Stats.SpellHaste);
 
-            float backdraftSpeedup = 1 - Mommy.Talents.Backdraft * .1f;
-            if (backdraftSpeedup < 1 && UsesBackdraft()) {
+            float backdraftReducer = 1 - Mommy.Talents.Backdraft * .1f;
+            if (backdraftReducer < 1 && UsesBackdraft()) {
 
                 // we can safely assume that no spell on a cooldown will be cast
-                // twice during a single same backdraft proc
+                // twice during a single backdraft proc
 
                 // get a list off all the spells that will be cast during
                 // backdraft
@@ -358,7 +358,7 @@ namespace Rawr.WarlockTmp {
                     }
                     numCasts = Math.Min(castsRemaining, numCasts);
                     backdraftWindow += numCasts * (spell.GetCastTime() + lag);
-                    if (!spell.UsesBackdraft()) {
+                    if (spell.UsesBackdraft()) {
                         backdraftWindow -= numCasts * (avgSpellCastTime + lag);
                     }
                 }
@@ -401,13 +401,7 @@ namespace Rawr.WarlockTmp {
 
         public virtual void SetDamageStats(float baseSpellPower) {
 
-            if (MagicSchool == MagicSchool.Shadow
-                && Mommy.CastSpells.ContainsKey("Haunt")) {
-
-                SpellModifiers.AddMultiplicativeTickMultiplier(
-                    ((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus());
-                    //.2f);
-            }
+            FinalizeSpellModifiers();
 
             AvgDirectHit
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
@@ -510,6 +504,18 @@ namespace Rawr.WarlockTmp {
             return GetCastTime(BaseCastTime, MinGCD, Mommy.Stats.SpellHaste);
         }
 
+        protected virtual void FinalizeSpellModifiers() {
+
+            SpellModifiers.Accumulate(Mommy.SpellModifiers);
+            if (MagicSchool == MagicSchool.Shadow
+                && Mommy.CastSpells.ContainsKey("Haunt")) {
+
+                SpellModifiers.AddMultiplicativeTickMultiplier(
+                    ((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus());
+                //.2f);
+            }
+        }
+
         protected void ApplyImprovedSoulLeech() {
 
             float reductionOnProc
@@ -523,9 +529,10 @@ namespace Rawr.WarlockTmp {
                 80, Mommy.Options.TargetLevel, 0f, 0f);
         }
 
+
         private bool IsBinary() {
 
-            return NumTicks > 0;
+            return false;
         }
 
         /// <summary>
@@ -799,7 +806,9 @@ namespace Rawr.WarlockTmp {
             return Mommy.Talents.Conflagrate > 0;
         }
 
-        public override void SetDamageStats(float baseSpellPower) {
+        protected override void  FinalizeSpellModifiers() {
+
+ 	        base.FinalizeSpellModifiers();
 
             // For some reason I may never understand, firestone's 1% bonus gets
             // 1% of Shadow and Flame and 1% of Emberstorm subtracted from it.
@@ -815,8 +824,6 @@ namespace Rawr.WarlockTmp {
                 Mommy.Talents.ImprovedImmolate * .1f
                     + (Mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + Mommy.Talents.Aftermath * .03f);
-
-            base.SetDamageStats(baseSpellPower);
         }
     }
 
@@ -853,42 +860,83 @@ namespace Rawr.WarlockTmp {
             }
 
             #region rolling corruption
-            // Kavan solved the average duration of a rolling Corruption, see
+            // Malficus solved the average duration of a rolling Corruption, see
             // http://rawr.codeplex.com/Thread/View.aspx?ThreadId=203628
             //
             // D = the non-rolling duration
-            // T = the frequency of reset triggers
+            // T = the time between reset triggers
             // P = the chance a trigger will actually reset the duration
             // TC = the time between corruption ticks
-            //
-            // S = 1 - (1-P)^(TC*T)
-            // R = (1-P)^(D*T)
-            // En = (1-R) / (R*S)
-            // Avg Duration = TC * En
-            //
-            // This is the solution in the last else case below.
             float d = RecastPeriod;
             float t = CalcRollingTriggerFrequency();
-            float p
-                = (Mommy.HitChance - GetResist())
-                    * talents.EverlastingAffliction * .2f;
+            float p = Mommy.HitChance * talents.EverlastingAffliction * .2f;
             float tc = d / 6f;
             if (p == 1 && t <= d) {
                 RecastPeriod = Mommy.Options.Duration;
-            } else if (p > 0 && t > d) {
-                float chanceOfReset = p * d * t;
-                float avgResetDuration = tc + (d - tc) / 2f;
-                RecastPeriod = d + chanceOfReset * avgResetDuration;
-            } else if (p > 0) {
-                float s = 1f - (float) Math.Pow(1f - p, tc * t);
-                float r = (float) Math.Pow(1f - p, d * t);
-                float en = (1f - r) / (r * s);
-                RecastPeriod = Math.Min(tc * en, Mommy.Options.Duration);
+            } else {
+	            float fightLen = Mommy.Options.Duration;
+	            int maxTriggers = (int) (fightLen * t);
+	            int maxTicks = (int) (fightLen / tc);
+
+	            RecastPeriod
+                    = tc
+                        * maleficusDuration(
+	                        new float[maxTicks + 1, maxTriggers + 1],
+	                        tc,
+	                        p,
+	                        1 / t,
+	                        (int) (fightLen / tc),
+	                        6,
+	                        0);
             }
             NumTicks = RecastPeriod / tc;
             #endregion
 
             base.SetCastingStats(timeRemaining);
+        }
+
+        private static float maleficusDuration(
+            float[,] cache,
+            float TC,
+            float P,
+            float T,
+            int maxTicks,
+            int accumTicks,
+            int triggerIndex) {
+
+            if (accumTicks >= maxTicks)
+                return maxTicks;
+            double now = triggerIndex * T;
+            double curLen = accumTicks * TC;
+            if (now > curLen)
+                return accumTicks;
+
+            if (cache[accumTicks, triggerIndex] > 0) {
+                return cache[accumTicks, triggerIndex];
+            }
+
+            float procDuration =
+                maleficusDuration(
+                cache,
+                TC,
+                P,
+                T,
+                maxTicks,
+                (int) (now / TC) + 7,
+                triggerIndex + 1);
+            float nonProcDuration =
+                maleficusDuration(
+                cache,
+                TC,
+                P,
+                T,
+                maxTicks,
+                accumTicks,
+                triggerIndex + 1);
+            float res = procDuration * P + nonProcDuration * (1 - P);
+
+            cache[accumTicks, triggerIndex] = res;
+            return res;
         }
 
         private float CalcRollingTriggerFrequency() {

@@ -18,19 +18,19 @@ namespace Rawr.WarlockTmp {
 
         public SpellModifiers() { }
 
-        public SpellModifiers(SpellModifiers toCopy) {
+        public void Accumulate(SpellModifiers other) {
 
-            AddAdditiveMultiplier(toCopy.AdditiveMultiplier);
-            AddAdditiveDirectMultiplier(toCopy.AdditiveDirectMultiplier);
-            AddAdditiveTickMultiplier(toCopy.AdditiveTickMultiplier);
-            AddMultiplicativeMultiplier(toCopy.MultiplicativeMultiplier);
+            AddAdditiveMultiplier(other.AdditiveMultiplier);
+            AddAdditiveDirectMultiplier(other.AdditiveDirectMultiplier);
+            AddAdditiveTickMultiplier(other.AdditiveTickMultiplier);
+            AddMultiplicativeMultiplier(other.MultiplicativeMultiplier);
             AddMultiplicativeDirectMultiplier(
-                toCopy.MultiplicativeDirectMultiplier);
+                other.MultiplicativeDirectMultiplier);
             AddMultiplicativeTickMultiplier(
-                toCopy.MultiplicativeTickMultiplier);
-            AddCritChance(toCopy.CritChance);
-            AddCritOverallMultiplier(toCopy.CritOverallMultiplier);
-            AddCritBonusMultiplier(toCopy.CritBonusMultiplier);
+                other.MultiplicativeTickMultiplier);
+            AddCritChance(other.CritChance);
+            AddCritOverallMultiplier(other.CritOverallMultiplier);
+            AddCritBonusMultiplier(other.CritBonusMultiplier);
         }
 
         public float GetFinalDirectMultiplier() {

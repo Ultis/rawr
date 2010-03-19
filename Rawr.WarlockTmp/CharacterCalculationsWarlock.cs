@@ -65,7 +65,6 @@ namespace Rawr.WarlockTmp {
             SpellModifiers.AddAdditiveDirectMultiplier(
                 Stats.WarlockFirestoneDirectDamageMultiplier);
             SpellModifiers.AddCritChance(Stats.SpellCrit);
-            SpellModifiers.AddCritChance(Stats.SpellCritOnTarget);
             SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
             HitChance
                 = Math.Min(
@@ -295,6 +294,10 @@ namespace Rawr.WarlockTmp {
                         .GetAvgBonusMultiplier());
             }
             if (CastSpells.ContainsKey("Curse Of The Elements")) {
+
+                // If the raid is already providing this debuff, the curse will
+                // not actually end up casting, so this will not double-count
+                // the debuff.
                 SpellModifiers.AddMultiplicativeMultiplier(.13f);
             }
             if (Talents.ImprovedShadowBolt > 0
