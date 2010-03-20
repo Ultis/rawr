@@ -3905,16 +3905,7 @@ namespace Rawr.Mage
                 {
                     if (useGlobalOptimizations)
                     {
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
-                        {
-                            list.Add(CycleId.ABABarSc);
-                            list.Add(CycleId.ABABarCSc);
-                            list.Add(CycleId.ABAMABarSc);
-                            list.Add(CycleId.AB3AMABarSc);
-                            list.Add(CycleId.AB3ABarCSc);
-                            list.Add(CycleId.AB3MBAMABarSc);
-                        }
-                        else if (talents.PiercingIce == 3 && talents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
+                        if (talents.PiercingIce == 3 && talents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                         {
                             if (talents.LivingBomb > 0)
                             {
@@ -3946,15 +3937,6 @@ namespace Rawr.Mage
                             {
                                 list.Add(CycleId.FFBScLBPyro);
                             }
-                        }
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
-                        {
-                            list.Add(CycleId.ABABarSc);
-                            list.Add(CycleId.ABABarCSc);
-                            list.Add(CycleId.ABAMABarSc);
-                            list.Add(CycleId.AB3AMABarSc);
-                            list.Add(CycleId.AB3ABarCSc);
-                            list.Add(CycleId.AB3MBAMABarSc);
                         }
                     }
                 }
