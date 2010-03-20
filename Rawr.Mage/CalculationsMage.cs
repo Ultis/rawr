@@ -778,7 +778,7 @@ namespace Rawr.Mage
             statsTotal.Stamina = (float)Math.Round((statsRaceStamina + statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier) - 0.00001);
             statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
-            statsTotal.Health = (float)Math.Round(((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Health = (float)Math.Round((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) * (1 + statsTotal.BonusHealthMultiplier));
             statsTotal.Mana = (float)Math.Round(statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect);
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * talents.ArcaneFortitude);
 
@@ -1706,6 +1706,7 @@ namespace Rawr.Mage
                 Mage4T9 = stats.Mage4T9,
                 Mage2T10 = stats.Mage2T10,
                 Mage4T10 = stats.Mage4T10,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1815,7 +1816,7 @@ namespace Rawr.Mage
         public override bool HasRelevantStats(Stats stats)
         {
             bool mageStats = HasMageStats(stats);
-            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience;
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.ArmorPenetration + stats.ArmorPenetrationRating;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
