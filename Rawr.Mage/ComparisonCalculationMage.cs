@@ -73,7 +73,11 @@ namespace Rawr.Mage
 
         public override string ToString()
         {
-            return string.Format("{0:F}: ({1:F} Dps, {2:F} Survivability)", Name, Math.Round(DpsRating), Math.Round(SurvivabilityRating));
+            if (_subPoints.Length == 2)
+            {
+                return string.Format("{0:F}: ({1:F} Dps, {2:F} Survivability)", Name, Math.Round(DpsRating), Math.Round(SurvivabilityRating));
+            }
+            return null;
         }
     }
 }

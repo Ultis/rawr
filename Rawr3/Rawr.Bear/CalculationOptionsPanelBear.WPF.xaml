@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d" 
     xmlns:local="clr-namespace:Rawr.Bear"
-	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit" 
+	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit" 
 	xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
 	xmlns:System="clr-namespace:System;assembly=mscorlib" 
 	x:Class="Rawr.Bear.CalculationOptionsPanelBear"

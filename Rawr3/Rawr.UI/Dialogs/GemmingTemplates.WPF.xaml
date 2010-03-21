@@ -9,7 +9,7 @@
 	xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:local="clr-namespace:Rawr.UI"
 	xmlns:data="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit"
-	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
 	x:Class="Rawr.UI.GemmingTemplates"
 	Title="Edit Gemming Templates"
 	Height="450" Width="420">

@@ -105,7 +105,6 @@
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ManasAutoCompleting.cs" />
     <Compile Include="Dialogs\EnterId.xaml.cs">
       <DependentUpon>EnterId.xaml</DependentUpon>
     </Compile>

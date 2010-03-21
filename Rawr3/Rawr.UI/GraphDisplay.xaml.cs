@@ -704,9 +704,10 @@ namespace Rawr.UI
             else
             {
                 SetGraphControl(ComparisonGraph);
+                var calcs = Calculations.GetCustomChartData(Character, subgraph); // should be called before requesting SubPointNameColors because some models swap colors depending on subgraph, ideally an api would be changed that allows query of subpoints based on chart name
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(Calculations.GetCustomChartData(Character, subgraph));
+                ComparisonGraph.DisplayCalcs(calcs);
             }
         }
 

@@ -26,6 +26,8 @@ namespace XamlSync
             slMap["xmlns:data"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data\"";
             slMap["xmlns:dataInput"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input\"";
             slMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
+            slMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input\"";
+            slMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
 
             wpfMap["xmlns:toolkit"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 	        wpfMap["xmlns:controls"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
@@ -36,6 +38,8 @@ namespace XamlSync
             wpfMap["xmlns:data"] = "\"http://schemas.microsoft.com/wpf/2008/toolkit\"";
             wpfMap["xmlns:dataInput"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
+            wpfMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
+            wpfMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit\"";
 
             vsComnTools = Environment.GetEnvironmentVariable("VS90COMNTOOLS");
 

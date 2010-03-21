@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.ProtPaladin"
-    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
 	xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     >

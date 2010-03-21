@@ -224,10 +224,11 @@ namespace Rawr.UI
 
                 item.NameGrid.Tag = c;
 
+                // set visibility first, otherwise ActualWidth is 0 and it will fail to reset colors
+                item.Visibility = Visibility.Visible;
                 if (Mode == DisplayMode.Overall) { item[0] = c.OverallPoints; }
                 else { for (int j = 0; j < c.SubPoints.Length; j++) item[j] = c.SubPoints[j]; }
                 
-                item.Visibility = Visibility.Visible;
                 i++;
 			}
 #if DEBUG

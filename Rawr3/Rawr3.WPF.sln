@@ -35,7 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		WpfControls\System.Windows.Controls.dll = WpfControls\System.Windows.Controls.dll
 		WpfControls\System.Windows.Controls.Input.dll = WpfControls\System.Windows.Controls.Input.dll
-		WpfControls\System.Windows.Controls.Input.Toolkit.dll = WpfControls\System.Windows.Controls.Input.Toolkit.dll
+		WpfControls\System.Windows.Controls.Input.WPFToolkit.dll = WpfControls\System.Windows.Controls.Input.WPFToolkit.dll
 		WpfControls\System.Windows.Controls.Layout.Toolkit.dll = WpfControls\System.Windows.Controls.Layout.Toolkit.dll
 	EndProjectSection
 EndProject

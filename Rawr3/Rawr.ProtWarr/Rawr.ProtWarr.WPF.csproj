@@ -44,9 +44,9 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="System.Windows.Controls.Input.WPFToolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\WpfControls\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+      <HintPath>..\WpfControls\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

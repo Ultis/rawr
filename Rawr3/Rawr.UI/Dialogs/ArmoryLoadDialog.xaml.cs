@@ -10,12 +10,262 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Manas.Silverlight;
 
 namespace Rawr.UI
 {
     public partial class ArmoryLoadDialog : ChildWindow
     {
+        private static List<string> ServerNames;
+
+        static ArmoryLoadDialog()
+        {
+            #region Server Names
+            ServerNames = new List<string>() {
+                "Caelestrasz",
+                "Dath'Remar",
+                "Khaz'goroth",
+                "Nagrand",
+                "Saurfang",
+                "Barthilas",
+                "Dreadmaul",
+                "Frostmourne",
+                "Gundrak",
+                "Jubei'Thos",
+                "Thaurissan",
+                "Aerie Peak",
+                "Anvilmar",
+                "Arathor",
+                "Antonidas",
+                "Azuremyst",
+                "Baelgun",
+                "Blade's Edge",
+                "Bladefist",
+                "Bronzebeard",
+                "Cenarius",
+                "Draenor",
+                "Dragonblight",
+                "Echo Isles",
+                "Galakrond",
+                "Gnomeregan",
+                "Hyjal",
+                "Kilrogg",
+                "Korialstrasz",
+                "Lightbringer",
+                "Misha",
+                "Moonrunner",
+                "Nordrassil",
+                "Proudmoore",
+                "Shadowsong",
+                "Shu'Halo",
+                "Silvermoon",
+                "Skywall",
+                "Suramar",
+                "Uldum",
+                "Uther",
+                "Velen",
+                "Windrunner",
+                "Blackrock",
+                "Blackwing Lair",
+                "Bonechewer",
+                "Boulderfist",
+                "Coilfang",
+                "Crushridge",
+                "Daggerspine",
+                "Dark Iron",
+                "Darrowmere",
+                "Destromath",
+                "Dethecus",
+                "Dragonmaw",
+                "Dunemaul",
+                "Frostwolf",
+                "Gorgonnash",
+                "Gurubashi",
+                "Kalecgos",
+                "Kil'Jaeden",
+                "Lethon",
+                "Maiev",
+                "Nazjatar",
+                "Ner'zhul",
+                "Onyxia",
+                "Rivendare",
+                "Shattered Halls",
+                "Spinebreaker",
+                "Spirestone",
+                "Stonemaul",
+                "Stormscale",
+                "Tichondrius",
+                "Ursin",
+                "Vashj",
+                "Blackwater Raiders",
+                "Cenarion Circle",
+                "Feathermoon",
+                "Sentinels",
+                "Silver Hand",
+                "The Scryers",
+                "Wyrmrest Accord",
+                "The Venture Co.",
+                "Azjol-Nerub",
+                "Doomhammer",
+                "Icecrown",
+                "Perenolde",
+                "Terenas",
+                "Zangarmarsh",
+                "Kel'Thuzad",
+                "Darkspear",
+                "Deathwing",
+                "Bloodscalp",
+                "Nathrezim",
+                "Shadow Council",
+                "Aggramar",
+                "Alexstrasza",
+                "Alleria",
+                "Blackhand",
+                "Borean Tundra",
+                "Cairne",
+                "Dawnbringer",
+                "Draka",
+                "Eitrigg",
+                "Fizzcrank",
+                "Garona",
+                "Ghostlands",
+                "Greymane",
+                "Grizzly Hills",
+                "Hellscream",
+                "Hydraxis",
+                "Kael'thas",
+                "Khaz Modan",
+                "Kul Tiras",
+                "Madoran",
+                "Malfurion",
+                "Malygos",
+                "Muradin",
+                "Nesingwary",
+                "Quel'Dorei",
+                "Ravencrest",
+                "Rexxar",
+                "Runetotem",
+                "Sen'Jin",
+                "Staghelm",
+                "Terokkar",
+                "Thunderhorn",
+                "Vek'nilash",
+                "Whisperwind",
+                "Winterhoof",
+                "Aegwynn",
+                "Agamaggan",
+                "Akama",
+                "Archimonde",
+                "Azgalor",
+                "Azshara",
+                "Balnazzar",
+                "Blood Furnace",
+                "Burning Legion",
+                "Cho'gall",
+                "Chromaggus",
+                "Detheroc",
+                "Drak'tharon",
+                "Drak'thul",
+                "Frostmane",
+                "Garithos",
+                "Gul'dan",
+                "Hakkar",
+                "Illidan",
+                "Korgath",
+                "Laughing Skull",
+                "Mal'Ganis",
+                "Malorne",
+                "Mug'thol",
+                "Stormreaver",
+                "Sargeras",
+                "The Underbog",
+                "Thunderlord",
+                "Wildhammer",
+                "Farstriders",
+                "Kirin Tor",
+                "Moon Guard",
+                "Scarlet Crusade",
+                "Sisters of Elune",
+                "Thorium Brotherhood",
+                "Emerald Dream",
+                "Lightninghoof",
+                "Maelstrom",
+                "Twisting Nether",
+                "Area 52",
+                "Arygos",
+                "Bloodhoof",
+                "Dalaran",
+                "Drenden",
+                "Durotan",
+                "Duskwood",
+                "Eldre'Thalas",
+                "Elune",
+                "Eonar",
+                "Exodar",
+                "Fenris",
+                "Garrosh",
+                "Gilneas",
+                "Grizzly Hills",
+                "Kargath",
+                "Khadgar",
+                "Llane",
+                "Lothar",
+                "Medivh",
+                "Nazgrel",
+                "Norgannon",
+                "Shandris",
+                "Stormrage",
+                "Tanaris",
+                "Thrall",
+                "Trollbane",
+                "Turalyon",
+                "Uldaman",
+                "Undermine",
+                "Ysera",
+                "Zul'jin",
+                "Altar of Storms",
+                "Alterac Mountains",
+                "Andorhal",
+                "Anetheron",
+                "Anub'arak",
+                "Arthas",
+                "Auchindoun",
+                "Black Dragonflight",
+                "Bleeding Hollow",
+                "Burning Blade",
+                "Dalvengyr",
+                "Demon Soul",
+                "Dentarg",
+                "Eredar",
+                "Executus",
+                "Firetree",
+                "Gorefiend",
+                "Haomarush",
+                "Jaedenar",
+                "Lightning's Blade",
+                "Mannoroth",
+                "Magtheridon",
+                "Scilla",
+                "Shadowmoon",
+                "Shattered Hand",
+                "Skullcrusher",
+                "Smolderthorn",
+                "The Forgotten Coast",
+                "Tortheldrin",
+                "Warsong",
+                "Ysondre",
+                "Zuluhed",
+                "Argent Dawn",
+                "Earthen Ring",
+                "Steamwheedle Cartel",
+                "Ravenholdt",
+                "Quel'Thalas",
+                "Drakkari",
+                "Ragnaros"
+            };
+            ServerNames.Sort();
+            #endregion
+        }
+
 		public Character Character { get; private set; }
 		private Rawr.ElitistArmoryService _armoryService = new ElitistArmoryService();
 
@@ -31,69 +281,40 @@ namespace Rawr.UI
                 if (count > 0) {
                     string[] autocomplete = new string[count];
                     Rawr.Properties.RecentSettings.Default.RecentChars.CopyTo(autocomplete, 0);
-                    //textBoxName.AutoCompleteCustomSource.AddRange(autocomplete);
+                    NameText.IsTextCompletionEnabled = true;
+                    NameText.ItemsSource = autocomplete;
                     NameText.Text = Rawr.Properties.RecentSettings.Default.RecentChars[count - 1];
                 }
             } else { Rawr.Properties.RecentSettings.Default.RecentChars = new List<string>() { }; }
-            if (Rawr.Properties.RecentSettings.Default.RecentServers != null) {
-                int count = Rawr.Properties.RecentSettings.Default.RecentServers.Count;
-                if (count > 0) {
-                    string[] autocomplete = new string[count];
-                    Rawr.Properties.RecentSettings.Default.RecentServers.CopyTo(autocomplete, 0);
-                    //textBoxRealm.AutoCompleteCustomSource.AddRange(autocomplete);
-                    RealmText.Text = Rawr.Properties.RecentSettings.Default.RecentServers[count - 1];
+            if (Rawr.Properties.RecentSettings.Default.RecentServers == null)
+            {
+                Rawr.Properties.RecentSettings.Default.RecentServers = new List<string>() { }; 
+            }
+            List<string> autocompletelist = new List<string>(ServerNames);
+            bool dirty = false;
+            foreach (var server in Rawr.Properties.RecentSettings.Default.RecentServers)
+            {
+                if (!autocompletelist.Contains(server))
+                {
+                    autocompletelist.Add(server);
+                    dirty = true;
                 }
-            } else { Rawr.Properties.RecentSettings.Default.RecentServers = new List<string>() { }; }
+            }
+            if (dirty)
+            {
+                autocompletelist.Sort();
+            }
+            RealmText.IsTextCompletionEnabled = true;
+            RealmText.ItemsSource = autocompletelist;
+            int c = Rawr.Properties.RecentSettings.Default.RecentServers.Count;
+            if (c > 0)
+            {
+                RealmText.Text = Rawr.Properties.RecentSettings.Default.RecentServers[c - 1];
+            }
+
             if (Rawr.Properties.RecentSettings.Default.RecentRegion != null) {
                 RegionCombo.SelectedItem = Rawr.Properties.RecentSettings.Default.RecentRegion;
             } else { Rawr.Properties.RecentSettings.Default.RecentRegion = "US"; }
-        }
-
-        // The method we have to implement to offer suggestions
-        public void DoSuggestName(string text, SuggestCallback callback)
-        {
-            // Don't suggest if there's no text
-            if (text.Length == 0)
-            {
-                callback(this, null);
-                return;
-            }
-
-            List<Suggestion> result = new List<Suggestion>();
-
-            // See which options have as a prefix the text entered by the user
-            foreach (string option in Rawr.Properties.RecentSettings.Default.RecentChars)
-            {
-                if (option.StartsWith(text, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    result.Add(new Suggestion() { DisplayString = option, ReplaceString = option });
-                }
-            }
-
-            callback(this, result.ToArray());
-        }
-        // The method we have to implement to offer suggestions
-        public void DoSuggestRealm(string text, SuggestCallback callback)
-        {
-            // Don't suggest if there's no text
-            if (text.Length == 0)
-            {
-                callback(this, null);
-                return;
-            }
-
-            var result = new List<Suggestion>();
-
-            // See which options have as a prefix the text entered by the user
-            foreach (var option in Rawr.Properties.RecentSettings.Default.RecentServers)
-            {
-                if (option.StartsWith(text, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    result.Add(new Suggestion() { DisplayString = option, ReplaceString = option });
-                }
-            }
-
-            callback(this, result.ToArray());
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

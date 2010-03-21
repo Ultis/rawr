@@ -10,7 +10,7 @@
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
 	xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
 	xmlns:local="clr-namespace:Rawr.UI"
-	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
 	x:Class="Rawr.UI.ItemEditor"
 	Title="Item Editor"
 	Height="560" Width="539">
