@@ -260,6 +260,109 @@ namespace Rawr
             return result;
         }
 
+        /// <summary>
+        /// Computes the average uptime of specific effects being active/inactive.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds for each effect.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced for each effect.</param>
+        /// <param name="active">Determines if specific effects are being active/inactive for the uptime calculation.</param>
+        /// <param name="offset">Initial cooldown for each effect.</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public static WeightedStat[] GetAverageCombinedUptimeCombinationsMultiplicative(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float fightDuration, MultiplicativeStat stat)
+        {
+            return GetAverageCombinedUptimeCombinationsMultiplicative(effects, triggerInterval, triggerChance, offset, null, attackSpeed, fightDuration, stat);
+        }
+
+        /// <summary>
+        /// Computes the average uptime of specific effects being active/inactive.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds for each effect.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced for each effect.</param>
+        /// <param name="active">Determines if specific effects are being active/inactive for the uptime calculation.</param>
+        /// <param name="offset">Initial cooldown for each effect.</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="scale">Chance that the effect will give the desired proc.</param>
+        /// <param name="effects">The effects for which the combined uptime is to be computed.</param>
+        /// <param name="stat">The stat for which we're computing the combinations.</param>
+        public static WeightedStat[] GetAverageCombinedUptimeCombinationsMultiplicative(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float[] scale, float attackSpeed, float fightDuration, MultiplicativeStat stat)
+        {
+            float[] value = new float[effects.Length];
+            for (int j = 0; j < effects.Length; j++)
+            {
+                value[j] = effects[j].Stats._rawMultiplicativeData[(int)stat];
+            }
+            return GetAverageCombinedUptimeCombinationsMultiplicative(effects, triggerInterval, triggerChance, offset, scale, attackSpeed, fightDuration, value);
+        }
+
+        /// <summary>
+        /// Computes the average uptime of specific effects being active/inactive.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds for each effect.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced for each effect.</param>
+        /// <param name="active">Determines if specific effects are being active/inactive for the uptime calculation.</param>
+        /// <param name="offset">Initial cooldown for each effect.</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="scale">Chance that the effect will give the desired proc.</param>
+        /// <param name="effects">The effects for which the combined uptime is to be computed.</param>
+        /// <param name="value">The value of special effects when procced, used to compute the value in returned WeightedStat.</param>
+        public static WeightedStat[] GetAverageCombinedUptimeCombinationsMultiplicative(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float[] scale, float attackSpeed, float fightDuration, float[] value)
+        {
+            // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
+
+            // initialize data, translate into interval time
+            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed, scale, value, fightDuration);
+
+            // integrate using adaptive Simspon's method
+            // if there's only one nonstationary use noncombination solution for efficiency
+            if (p.N > 1)
+            {
+                AdaptiveSimpsonsMethodCombinations(p, fightDuration, 0.001f, maxRecursionDepth);
+            }
+            else if (p.N == 1)
+            {
+                p.partialIntegral[0, 1] = fightDuration * p.k[0] * p.effects[0].GetAverageUptime(triggerInterval[p.I], triggerChance[p.I], attackSpeed, fightDuration);
+                p.partialIntegral[0, 0] = fightDuration - p.partialIntegral[0, 1];
+            }
+
+            WeightedStat[] result = new WeightedStat[1 << effects.Length];
+
+            int mask = p.NC - 1;
+            for (int i = 0; i < (1 << effects.Length); i++)
+            {
+                if (p.N > 0)
+                {
+                    result[i].Chance = p.partialIntegral[0, i & mask] / fightDuration;
+                }
+                else
+                {
+                    result[i].Chance = 1.0f;
+                }
+                for (int j = 0; j < effects.Length; j++)
+                {
+                    if ((i & (1 << j)) != 0)
+                    {
+                        result[i].Value = (1 + result[i].Value) * (1 + p.v[j]) - 1;
+                        if (j >= p.N)
+                        {
+                            result[i].Chance *= p.uptime[j];
+                        }
+                    }
+                    else
+                    {
+                        if (j >= p.N)
+                        {
+                            result[i].Chance *= (1.0f - p.uptime[j]);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         private static float AdaptiveSimpsonsAux(Parameters p, float a, float b, float epsilon, float S, float fa, float fb, float fc, int bottom)
         {
             float c = (a + b) / 2;
