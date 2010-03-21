@@ -235,7 +235,7 @@
                 </controls:TabItem>
     		</controls:TabControl>
     	</toolkit:DockPanel>
-      <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="b2" Foreground="#99999999" Grid.ColumnSpan="4" Margin="0,4,300,4"/>
+      <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="b3" Foreground="#99999999" Grid.ColumnSpan="4" Margin="0,4,300,4"/>
       <Button x:Name="PerformanceTestButton" HorizontalAlignment="Right" Content="Test Calculation Performance" Margin="0,4,100,4" Grid.Column="0" Click="PerformanceTest" Grid.ColumnSpan="4"/>
       <Button x:Name="OfflineInstallButton" HorizontalAlignment="Right" Content="Install Offline" Margin="0,4,8,4" Grid.Column="0" Click="InstallOffline" Grid.ColumnSpan="4"/>
     </Grid>
