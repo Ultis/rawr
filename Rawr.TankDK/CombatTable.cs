@@ -170,7 +170,7 @@ namespace Rawr.TankDK
                 OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
 
                 // Talent: Nerves of Cold Steel 
-                float OHMult = .05f * (float)talents.NervesOfColdSteel;
+                float OHMult = .08f * (float)talents.NervesOfColdSteel;
                 OH.damage *= (.5f + OHMult);
 
                 //need this for weapon swing procs
@@ -510,8 +510,9 @@ namespace Rawr.TankDK
                     float ITCritDmgMult = 1.5f * (1f + stats.BonusSpellCritMultiplier);
                     float ITCrit = 1f + ((this.spellCrits + addedCritFromKM + (.05f * (float)talents.Rime)) * ITCritDmgMult);
                     fDamIcyTouch *= ITCrit;
+                    // Using a x7 modifier for right now.  This will probably need to be fine-tuned.
+                    fDamIcyTouch *= 7;
 
-                    // TODO: Add any IT triggers here.
                 }
             }
             #endregion
@@ -619,15 +620,15 @@ namespace Rawr.TankDK
                 if (talents.ScourgeStrike > 0 && calcOpts.m_Rotation.ScourgeStrike > 0f)
                 {
                     float SSCount = calcOpts.m_Rotation.ScourgeStrike;
-                    float SSDmg = (MHDam * .50f) + 357.188f +
+                    float SSDmg = (MHDam * .70f) + 357.188f +
                         stats.BonusScourgeStrikeDamage;
-                    SSDmg *= 1f + 0.25f * calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
+                    SSDmg *= 1f + 0.12f * calcOpts.m_Rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
                     SSDmg += 120; // Bonus threat
                     fDamScourgeStrike = SSDmg * SSCount;
                     float SSCritDmgMult = 2f * (1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier);
                     float SSCrit = 1f + ((this.physCrits + (.03f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                     fDamScourgeStrike *= SSCrit;
-                    fDamScourgeStrike *= 1f + (.0666666666666666666f * (float)talents.Outbreak);
+                    fDamScourgeStrike *= 1f + ((2f/3f) * (float)talents.Outbreak);
                 }
             }
             #endregion

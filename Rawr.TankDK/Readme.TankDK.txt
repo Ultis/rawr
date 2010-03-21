@@ -1,11 +1,13 @@
 ﻿Tracking doc for status of Rawr.Tank Module.
 
 Currently targeting: 
-* Wow version 3.3.2
+* Wow version 3.3.3
 
 2.3.13:
 * Defect 16792: Crash when trying to save - Fixed by Jothay.
-* Defect 16745: T9_2Piece not properly evalutated.
+* Defect 16745: T9_2Piece now properly evalutated.
+* No Defect: Pruned down the Gem templates to help speed up optimizer.
+* No Defect: 3.3.3 Changes.
 
 2.3.12:
 * Defect 16597: Imp Icy Talons stacks /w Icy Talons

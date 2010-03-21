@@ -31,15 +31,9 @@ namespace Rawr.TankDK {
 				//Red
                 //                    UC     Rare   Epic   JC
 				int[] subtle =      { 39907, 40000, 40115, 42151 }; // +Dodge
-                //int[] bold =        { 39900, 39996, 40111, 42142 }; // +Str
-                //int[] bright =      { 39906, 39999, 40114, 36766 }; // +AP
-                //int[] delicate =    { 39905, 39997, 40112, 42143 }; // +Agi
-                //int[] flashing =    { 39908, 40001, 40116, 42152 }; // +Parry
 
 				//Purple
 				int[] regal =       { 39938, 40031, 40138, }; // +dodge, Stam
-                //int[] balanced =    { 39937, 40029, 40136, }; // +AP +Stam
-                //int[] defenders =   { 39939, 40032, 40139, }; // +Parry +Stam
 
 				//Blue
 				int[] solid =       { 39919, 40008, 40119, 36767 }; // +Stam
@@ -49,28 +43,17 @@ namespace Rawr.TankDK {
 
 				//Yellow
 				int[] thick =       { 39916, 40015, 40126, 42157 }; // +def
-                //int[] gleaming =    { }; // +Crit.
 
 				//Orange
-				int[] stalwart =    { 39964, 40056, 40160 };
-                //int[] accurate =    { }; // +Hit +Expertise
-                //int[] deadly =      { }; // +agi +crit
-                //int[] deft =        { }; // +Agi +Haste
-                //int[] etched =      { }; // +hit +Str
-                //int[] glimmering =  { }; // +parry +def
-                //int[] glinting =    { }; // +Agi +Hit
+				int[] stalwart =    { 39964, 40056, 40160 }; // +Dodge +Def
 
 				//Meta
 				int austere = 41380;
 
-                // TODO: Update template to handle new gems.
+                // TODO: Add the +10Stats gem.
 				return new List<GemmingTemplate>() {
-				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Max Defense
-				        RedId = thick[0], YellowId = thick[0], BlueId = thick[0], PrismaticId = thick[0], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Defense 
 				        RedId = stalwart[0], YellowId = thick[0], BlueId = enduring[0], PrismaticId = thick[0], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Max Dodge
-				        RedId = subtle[0], YellowId = subtle[0], BlueId = subtle[0], PrismaticId = subtle[0], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Dodge
 				        RedId = subtle[0], YellowId = stalwart[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Max Stamina
@@ -78,12 +61,8 @@ namespace Rawr.TankDK {
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Stamina
 				        RedId = regal[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
 						
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Defense
-				        RedId = thick[1], YellowId = thick[1], BlueId = thick[1], PrismaticId = thick[1], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Defense 
 				        RedId = stalwart[1], YellowId = thick[1], BlueId = enduring[1], PrismaticId = thick[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Dodge
-				        RedId = subtle[1], YellowId = subtle[1], BlueId = subtle[1], PrismaticId = subtle[1], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Dodge
 				        RedId = subtle[1], YellowId = stalwart[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Stamina
@@ -91,12 +70,8 @@ namespace Rawr.TankDK {
 				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Stamina
 				        RedId = regal[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
 
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Max Defense
-				        RedId = thick[2], YellowId = thick[2], BlueId = thick[2], PrismaticId = thick[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
 				        RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Max Dodge
-				        RedId = subtle[2], YellowId = subtle[2], BlueId = subtle[2], PrismaticId = subtle[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Dodge
 				        RedId = subtle[2], YellowId = stalwart[2], BlueId = regal[2], PrismaticId = subtle[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Max Stamina
@@ -1343,19 +1318,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Abominations Might
-            // BS & HS have 25% chance per point
-            // DS and Oblit have 50% chance per point
-            // increase AP by 10% of raid for 10 sec.
+            // increase AP by 5%/10% of raid.
             // 1% per point increase to str.
             if (character.DeathKnightTalents.AbominationsMight > 0)
             {
                 FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
-                newStats = new Stats();
-                newStats.BonusAttackPowerMultiplier = .1f;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.ObliterateHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DeathStrikeHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
+                FullCharacterStats.BonusAttackPowerMultiplier += (.5f * character.DeathKnightTalents.AbominationsMight);
             }
 
             // Bloodworms
@@ -1428,16 +1396,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Will of the Necropolis
             // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
-            // CD 15 sec.
-            // Incoming damage must be >= than 5% of total health.
             if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
             {
                 newStats = new Stats();
                 newStats.DamageTakenMultiplier -= (0.05f * character.DeathKnightTalents.WillOfTheNecropolis);
                 // Need to factor in the damage taken aspect of the trigger.
                 // Using the assumption that the tank will be at < 35% health about that % of the time.
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 0, 15f, 0.35f));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 15f, 0.35f));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 0, 0, 0.35f));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 0, 0.35f));
             }
 
             // Heart Strike
@@ -1503,7 +1469,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Nerves of Cold Steel
             // Increase hit w/ 1H weapons by 1% per point
-            // Increase damage done by off hand weapons by 5% per point
+            // Increase damage done by off hand weapons by 8/16/25% per point
             // Implement in combat shot roation
 
             // Icy Talons
@@ -1540,8 +1506,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // CoI, HB, IT and Oblit generate 2.5 RP per point.
 
             // Endless Winter
-            // CoI has 50% per point to cause FF
+            // removes FF from COI
             // Mind Freeze RP cost is reduced by 50% per point.
+            if (character.DeathKnightTalents.EndlessWinter > 0)
+            {
+                FullCharacterStats.BonusStrengthMultiplier += (.02f * character.DeathKnightTalents.EndlessWinter);
+            }
 
             // Frigid Dreadplate
             // Melee attacks against you will miss by +1% per point
@@ -1578,11 +1548,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // TODO: Factor in raid utility by improving raid haste by 20%
                 // As per Blue Post Effect *does* stack w/ existing IcyTalons.
                 // However, it will not stack if already included on Buffs tab.
+                // Now passive - no longer procs.
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Icy Talons")) != true)
                 {
-                    newStats = new Stats();
-                    newStats.PhysicalHaste += 0.2f;
-                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.FrostFeverHit, newStats, 20f, 0f));
+                    FullCharacterStats.PhysicalHaste += .2f;
                 }
             }
 
@@ -1631,11 +1600,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Unbreakable Armor
-            // Reinforces your armor with a thick coat of ice, Increasing Armor by 25% and increasing your Strength by 10% for 20 sec.
+            // Reinforces your armor with a thick coat of ice, Increasing Armor by 25% and increasing your Strength by 20% for 20 sec.
             if (character.DeathKnightTalents.UnbreakableArmor > 0)
             {
                 newStats = new Stats();
-                newStats.BonusStrengthMultiplier += 0.10f;
+                newStats.BonusStrengthMultiplier += 0.20f;
                 newStats.BaseArmorMultiplier += .25f;
                 newStats.BonusArmorMultiplier += .25f;
                 if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
