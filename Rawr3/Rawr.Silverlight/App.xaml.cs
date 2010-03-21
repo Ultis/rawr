@@ -57,7 +57,7 @@ namespace Rawr.Silverlight
             _windows[_mainPage] = "Character";
             g.Children.Add(_mainPage);
 			ProcessBookmark();
-		
+			new WelcomeWindow().Show();
 			this.CheckAndDownloadUpdateAsync();
 		}
 

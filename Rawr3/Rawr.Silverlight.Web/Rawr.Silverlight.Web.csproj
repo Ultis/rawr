@@ -115,6 +115,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ClientBin\Rawr.Silverlight.xap" />
+    <Content Include="RawrLoading.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RawrLoading.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

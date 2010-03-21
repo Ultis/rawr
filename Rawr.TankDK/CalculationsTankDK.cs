@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Xml.Serialization;
 
 namespace Rawr.TankDK {
-    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", CharacterClass.DeathKnight)]
+	[Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight)]
     public class CalculationsTankDK : CalculationsBase {
         enum GemQuality {
             Uncommon,

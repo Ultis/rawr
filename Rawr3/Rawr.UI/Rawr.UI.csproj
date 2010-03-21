@@ -105,6 +105,10 @@
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\WelcomeWindow.xaml.cs">
+      <DependentUpon>WelcomeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ManasAutoCompleting.cs" />
     <Compile Include="Dialogs\EnterId.xaml.cs">
       <DependentUpon>EnterId.xaml</DependentUpon>
     </Compile>
@@ -250,6 +254,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ArmoryLoadDialog.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\WelcomeWindow.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -564,6 +572,7 @@
     <Content Include="Images\icon-64.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\Rawr.Splash.2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\V3.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

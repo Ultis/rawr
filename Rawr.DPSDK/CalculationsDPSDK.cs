@@ -10,8 +10,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.DPSDK
 {
-    //[Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.Paladin)]  wont work until wotlk goes live on wowhead
-    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
         public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
