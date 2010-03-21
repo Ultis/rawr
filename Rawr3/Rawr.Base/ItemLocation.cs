@@ -738,12 +738,12 @@ namespace Rawr
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
 
-            XElement subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/rewardFromQuests/quest");
+            XElement subNode = xdoc.SelectSingleNode("/itemData/item/sourceInfo/source");
 
             Area = subNode.Attribute("area").Value;
             Quest = subNode.Attribute("name").Value;
-            MinLevel = int.Parse(subNode.Attribute("reqMinLevel").Value);
-            Party = int.Parse(subNode.Attribute("suggestedPartySize").Value);
+            //MinLevel = int.Parse(subNode.Attribute("reqMinLevel").Value);
+            //Party = int.Parse(subNode.Attribute("suggestedPartySize").Value);
             return this;
         }
         public static new ItemLocation Construct()

@@ -555,7 +555,11 @@ namespace Rawr //O O . .
 		public bool EnforceGemRequirements
 		{
 			get { return _enforceMetagemRequirements; }
-			set { _enforceMetagemRequirements = value; }
+			set
+			{
+				_enforceMetagemRequirements = value;
+				OnCalculationsInvalidated();
+			}
 		}
 
         [XmlIgnore]
@@ -1758,6 +1762,7 @@ namespace Rawr //O O . .
 			_projectile = projectile;
 			_projectileBag = projectileBag;
 
+			EnforceGemRequirements = true;
             WaistBlacksmithingSocketEnabled = true;
             SetFaction();
             _activeBuffs = new List<Buff>(); 

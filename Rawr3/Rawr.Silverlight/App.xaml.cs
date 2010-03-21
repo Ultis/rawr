@@ -119,13 +119,32 @@ namespace Rawr.Silverlight
             // icon in the status bar and Firefox will display a script error.
             if (!System.Diagnostics.Debugger.IsAttached)
             {
+				ChildWindow errorWin = new ChildWindow()
+				{
+					Content = new StackPanel()
+				};
+				(errorWin.Content as StackPanel).Children.Add(
+					new TextBlock() { Text = "An error has occurred. Please check the Issue Tracker on Rawr's development website (http://rawr.codeplex.com) for a solution, or report it there if it hasn't been reported:" });
+				
+				string errorString = string.Empty;
+				Exception ex = e.ExceptionObject;
+				do
+				{
+					errorString += ex.Message + "\r\n\r\n" + ex.StackTrace;
+					ex = ex.InnerException;
+				} while (ex != null);
 
-                // NOTE: This will allow the application to continue running after an exception has been thrown
+				(errorWin.Content as StackPanel).Children.Add(
+					new TextBox() { Text = errorString });
+
+				errorWin.Show();
+
+				// NOTE: This will allow the application to continue running after an exception has been thrown
                 // but not handled. 
                 // For production applications this error handling should be replaced with something that will 
                 // report the error to the website and stop the application.
                 e.Handled = true;
-                Deployment.Current.Dispatcher.BeginInvoke(delegate { ReportErrorToDOM(e); });
+                //Deployment.Current.Dispatcher.BeginInvoke(delegate { ReportErrorToDOM(e); });
             }
         }
         private void ReportErrorToDOM(ApplicationUnhandledExceptionEventArgs e)

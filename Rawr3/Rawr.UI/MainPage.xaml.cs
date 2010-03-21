@@ -103,7 +103,8 @@ namespace Rawr.UI
 
                     character_ClassChanged(this, EventArgs.Empty);
 
-                    character_CalculationsInvalidated(this, EventArgs.Empty);
+					//character_CalculationsInvalidated(this, EventArgs.Empty); //Fired by ItemCache.OnItemsChanged();
+					Character.IsLoading = false;
                     ItemCache.OnItemsChanged();
                     Character.IsLoading = false;
                 }
@@ -202,7 +203,7 @@ namespace Rawr.UI
             Character = c;
 
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
-            ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
+            ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
             StatusMessaging.Ready = true;
         }
@@ -237,9 +238,10 @@ namespace Rawr.UI
             }
         }
         
-        private void Instance_ItemsChanged(object sender, EventArgs e)
+        private void ItemCacheInstance_ItemsChanged(object sender, EventArgs e)
         {
             Character.InvalidateItemInstances();
+			Character.OnCalculationsInvalidated();
             ComparisonGraph.UpdateGraph();
         }
 

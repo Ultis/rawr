@@ -119,7 +119,7 @@ namespace Rawr.UI
         private void SetCurrentGraph()
         {
             TextBlockChartButtonPrimary.Text = PrimaryItem.Header;
-            TextBlockChartButtonSecondary.Text = PrimaryItem.SelectedItem.Header;
+            TextBlockChartButtonSecondary.Text = PrimaryItem.SelectedItem == null ? "" : PrimaryItem.SelectedItem.Header;
             GraphDisplay.CurrentGraph = string.Format("{0}|{1}", PrimaryItem, PrimaryItem.SelectedItem);
         }
 

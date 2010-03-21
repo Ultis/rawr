@@ -75,11 +75,11 @@
 
     <StackPanel Grid.Row="4" HorizontalAlignment="Left" Orientation="Horizontal">
         <!--IFSL-->
-        <HyperlinkButton Margin="2,0,-2,-2" VerticalAlignment="Center" Content="Click here" NavigateUri="http://elitistarmory.com/mirror" TargetName="_blank"/>
+        <HyperlinkButton Margin="2,0,-2,-2" VerticalAlignment="Center" Content="Click here" NavigateUri="http://elitistarmory.com/proxy" TargetName="_blank"/>
         <!--ENDIFSL-->
         <!--IFWPF
         <TextBlock Margin="2,0,-2,-2" VerticalAlignment="Center">
-            <Hyperlink NavigateUri="http://elitistarmory.com/mirror" RequestNavigate="Hyperlink_RequestNavigate">Click here</Hyperlink>
+            <Hyperlink NavigateUri="http://elitistarmory.com/proxy" RequestNavigate="Hyperlink_RequestNavigate">Click here</Hyperlink>
         </TextBlock>
         ENDIFWPF-->
         <TextBlock Margin="0,2,4,0" VerticalAlignment="Center" Text=" to find out how to improve the performance"/>
