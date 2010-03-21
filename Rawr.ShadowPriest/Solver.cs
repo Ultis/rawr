@@ -1043,6 +1043,13 @@ namespace Rawr.ShadowPriest
                     else if (se.Trigger == Trigger.SpellCrit
                         || se.Trigger == Trigger.DamageSpellCrit)
                         simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                    else if (se.Trigger == Trigger.DoTTick)
+                    {
+                        int dots = 0;
+                        foreach (Spell spell in SpellPriority)
+                            if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                        simStats.SpellPower += se.GetAverageStats((float)dots / 3, 1f).SpellPower;
+                    }
                 }
             }
             #endregion

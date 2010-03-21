@@ -657,6 +657,7 @@ namespace Rawr.ShadowPriest {
             CritCoef = 1.5f * (1f + stats.BonusSpellCritMultiplier) ;
 
             ManaCost = 0;
+            DebuffDuration = 0f;
 
             Range = 0;
         }
