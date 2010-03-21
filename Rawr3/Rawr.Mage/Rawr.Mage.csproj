@@ -49,14 +49,12 @@
     <Reference Include="mscorlib" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.dll">
       <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Windows.Controls.Input.Toolkit.dll">
-      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Silverlight\v3.0\Toolkit\March 2009\Libraries\System.Windows.Controls.Input.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
@@ -156,6 +154,17 @@
     <Compile Include="CalculationOptionsPanelMage.xaml.cs">
       <DependentUpon>CalculationOptionsPanelMage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Graphs\ChartWithText.cs" />
+    <Compile Include="Graphs\EnumerableFunctions.cs" />
+    <Compile Include="Graphs\ProcUptimeControl.xaml.cs">
+      <DependentUpon>ProcUptimeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graphs\SequenceReconstructionControl.xaml.cs">
+      <DependentUpon>SequenceReconstructionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graphs\TimeIntervalDataPoint.cs" />
+    <Compile Include="Graphs\TimeIntervalSeries.cs" />
+    <Compile Include="Graphs\ValueHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +177,18 @@
     <Page Include="CalculationOptionsPanelMage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Graphs\ProcUptimeControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Graphs\SequenceReconstructionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v3.0\Microsoft.Silverlight.CSharp.targets" />

@@ -186,7 +186,7 @@ namespace Rawr.Mage
             {
                 if (_customChartNames == null)
 #if RAWR3
-                    _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
+                    _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage", "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
 #else
                     _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage" };
 #endif
@@ -206,6 +206,10 @@ namespace Rawr.Mage
                 case "Scaling vs Intellect":
                 case "Scaling vs Spirit":
                     return Graph.Instance;
+                case "Sequence Reconstruction":
+                    return Graphs.SequenceReconstructionControl.Instance;
+                case "Proc Uptime":
+                    return Graphs.ProcUptimeControl.Instance;
                 default:
                     return null;
             }
@@ -215,7 +219,6 @@ namespace Rawr.Mage
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
 
-            string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Hit Rating", "10 Intellect", "10 Spirit" };
             Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.FromArgb(0xFF, 0x00, 0x00, 0x8B), Color.FromArgb(255, 255, 165, 0), Color.FromArgb(0xFF, 0x80, 0x80, 0x00), Color.FromArgb(255, 154, 205, 50), Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF), Color.FromArgb(255, 0, 0, 255) };
 
             CharacterCalculationsMage calculations = calculationOptions.Calculations;
@@ -235,6 +238,12 @@ namespace Rawr.Mage
 
             switch (chartName)
             {
+                case "Sequence Reconstruction":
+                    Graphs.SequenceReconstructionControl.Instance.UpdateGraph(calculationOptions);
+                    break;
+                case "Proc Uptime":
+                    Graphs.ProcUptimeControl.Instance.UpdateGraph(calculations);
+                    break;
                 case "Stats Graph":
                     Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 100, "", "Dps Rating");
                     break;

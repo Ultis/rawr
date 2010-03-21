@@ -75,7 +75,7 @@ namespace Rawr
                     points[index][count + scale] = new Point(count, dpsChange);
                 }
                 Style dataPointStyle = new Style(typeof(LineDataPoint));
-                dataPointStyle.Setters.Add(new Setter(DataPoint.VisibilityProperty, Visibility.Collapsed));
+                dataPointStyle.Setters.Add(new Setter(DataPoint.TemplateProperty, Resources["InvisibleDataPointTemplate"]));
                 dataPointStyle.Setters.Add(new Setter(DataPoint.BackgroundProperty, new SolidColorBrush(colors[index])));
                 Chart.Series.Add(new LineSeries()
                 {
@@ -144,7 +144,7 @@ namespace Rawr
             for (int index = 0; index < statsList.Length; index++)
             {
                 Style dataPointStyle = new Style(typeof(LineDataPoint));
-                dataPointStyle.Setters.Add(new Setter(DataPoint.VisibilityProperty, Visibility.Collapsed));
+                dataPointStyle.Setters.Add(new Setter(DataPoint.TemplateProperty, Resources["InvisibleDataPointTemplate"]));
                 dataPointStyle.Setters.Add(new Setter(DataPoint.BackgroundProperty, new SolidColorBrush(colors[index])));
                 Chart.Series.Add(new LineSeries()
                 {

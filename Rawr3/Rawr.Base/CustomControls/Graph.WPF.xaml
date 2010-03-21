@@ -6,6 +6,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
+        <ControlTemplate x:Key="InvisibleDataPointTemplate" TargetType="chartingToolkit:LineDataPoint">
+            <Grid x:Name="Root" Opacity="0">
+                <ToolTipService.ToolTip>
+                    <ContentControl Content="{TemplateBinding FormattedDependentValue}" />
+                </ToolTipService.ToolTip>
+                <Ellipse Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" />
+            </Grid>
+        </ControlTemplate>
         <Style x:Key="LegendStyle" TargetType="visualizationToolkit:Legend">
             <Setter Property="Background">
                 <Setter.Value>
