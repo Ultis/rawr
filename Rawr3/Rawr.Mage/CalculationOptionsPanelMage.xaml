@@ -137,7 +137,7 @@
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="17" IsChecked="{Binding Mode=TwoWay, Path=ManaGemEnabled}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="19" IsChecked="{Binding Mode=TwoWay, Path=CustomSpellMixOnly}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="18" IsChecked="{Binding Mode=TwoWay, Path=CustomSpellMixEnabled}" Width="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <Button Margin="0,2,0,2" Content="..." Grid.Column="1" Grid.Row="18" Width="96" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="False"/>
+                    <Button Margin="0,2,0,2" Content="..." Grid.Column="1" Grid.Row="18" Width="96" HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="CustomSpellMix_Click" />
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=SnaredTime}" TextWrapping="Wrap" Grid.Row="20"/>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=FrostbiteUtilization}" TextWrapping="Wrap" Grid.Row="21"/>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=FocusMagicTargetCritRate}" TextWrapping="Wrap" Grid.Row="22"/>

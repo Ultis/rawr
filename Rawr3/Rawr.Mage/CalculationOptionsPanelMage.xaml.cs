@@ -136,5 +136,13 @@ namespace Rawr.Mage
             //CycleAnalyzer analyzer = new CycleAnalyzer(Character);
             //analyzer.Show();
         }
+
+        private void CustomSpellMix_Click(object sender, RoutedEventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            if (calculationOptions.CustomSpellMix == null) calculationOptions.CustomSpellMix = new List<SpellWeight>();
+            CustomSpellMixDialog dialog = new CustomSpellMixDialog(calculationOptions.CustomSpellMix);
+            dialog.Show();
+        }
     }
 }
