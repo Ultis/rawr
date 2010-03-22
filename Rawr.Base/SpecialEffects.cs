@@ -735,7 +735,7 @@ namespace Rawr {
             {   // Phylactery of the Nameless Lich
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 90f, 0.30f));
+                    int.Parse(match.Groups["dur"].Value), 100f, 0.30f));
             }
             else if ((match = new Regex(@"Each time you deal spell damage to an opponent, you gain (?<amount>\d\d*) spell power for the next (?<dur>\d\d*) sec, stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
             {   // Muradin's Spyglass
