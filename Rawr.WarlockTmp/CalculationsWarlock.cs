@@ -333,12 +333,6 @@ namespace Rawr.WarlockTmp {
 
             //Haste rating - the MasterConjuror talent improves the spellstone
             stats.HasteRating += stats.WarlockSpellstoneHasteRating * conjuror;
-            stats.SpellHaste
-                = (1 + stats.SpellHaste)
-                        * (1
-                            + StatConversion.GetSpellHasteFromRating(
-                                stats.HasteRating))
-                    - 1;
 
             //Hit rating 
             stats.SpellHit

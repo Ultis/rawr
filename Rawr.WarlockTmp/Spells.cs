@@ -17,9 +17,14 @@ namespace Rawr.WarlockTmp {
         }
 
         public static float GetCastTime(
-            float baseCastTime, float minGCD, float haste) {
+            float baseCastTime, float minGCD, WeightedStat[] haste) {
 
-            return Math.Max(minGCD, baseCastTime / (1f + haste));
+            float castTime = 0f;
+            foreach (WeightedStat h in haste) {
+                castTime
+                    += h.Chance * Math.Max(minGCD, baseCastTime / h.Value);
+            }
+            return castTime;
         }
 
         static Spell() {
@@ -327,11 +332,10 @@ namespace Rawr.WarlockTmp {
         public virtual void SetCastingStats(float timeRemaining) {
 
             float lag = Mommy.Options.Latency;
+            WeightedStat[] haste = Mommy.Haste;
             float avgSpellCastTime
                 = GetCastTime(
-                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                    1f,
-                    Mommy.Stats.SpellHaste);
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME, 1f, haste);
 
             float backdraftReducer = 1 - Mommy.Talents.Backdraft * .1f;
             if (backdraftReducer < 1 && UsesBackdraft()) {
@@ -501,7 +505,7 @@ namespace Rawr.WarlockTmp {
 
         public virtual float GetCastTime() {
 
-            return GetCastTime(BaseCastTime, MinGCD, Mommy.Stats.SpellHaste);
+            return GetCastTime(BaseCastTime, MinGCD, Mommy.Haste);
         }
 
         protected virtual void FinalizeSpellModifiers() {
@@ -528,7 +532,6 @@ namespace Rawr.WarlockTmp {
             return StatConversion.GetAverageResistance(
                 80, Mommy.Options.TargetLevel, 0f, 0f);
         }
-
 
         private bool IsBinary() {
 
@@ -856,7 +859,11 @@ namespace Rawr.WarlockTmp {
 
             WarlockTalents talents = Mommy.Talents;
             if (talents.GlyphQuickDecay) {
-                RecastPeriod /= 1f + Mommy.Stats.SpellHaste;
+                float avgHaste = 0f;
+                foreach (WeightedStat h in Mommy.Haste) {
+                    avgHaste += h.Chance * h.Value;
+                }
+                RecastPeriod /= avgHaste;
             }
 
             #region rolling corruption
@@ -948,7 +955,7 @@ namespace Rawr.WarlockTmp {
                 freq += .5f / (GetCastTime(
                                 ShadowBolt.GetBaseCastTime(Mommy),
                                 1.5f,
-                                Mommy.Stats.SpellHaste)
+                                Mommy.Haste)
                             + Mommy.Options.Latency);
             }
             if (Mommy.Options.SpellPriority.Contains("Haunt")
@@ -1207,10 +1214,7 @@ namespace Rawr.WarlockTmp {
         }
 
         public float AddCastsForRegen(
-            float timeRemaining,
-            float manaRemaining,
-            float baseHasteDivisor,
-            Spell spammedSpell) {
+            float timeRemaining, float manaRemaining, Spell spammedSpell) {
 
             // The number of needed lifetaps is obtained by solving this
             // system of equations:

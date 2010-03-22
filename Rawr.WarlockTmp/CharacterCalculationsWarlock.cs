@@ -26,6 +26,7 @@ namespace Rawr.WarlockTmp {
         public CalculationOptionsWarlock Options { get; private set; }
         public WarlockTalents Talents { get; private set; }
         public SpellModifiers SpellModifiers { get; private set; }
+        public WeightedStat[] Haste { get; private set; }
 
         public float BaseMana { get; private set; }
         public float HitChance { get; private set; }
@@ -193,6 +194,9 @@ namespace Rawr.WarlockTmp {
             #endregion
 
             #region Haste
+            float fromRating
+                = StatConversion.GetSpellHasteFromRating(Stats.HasteRating);
+            float spellHaste = (1 + Stats.SpellHaste) * (1 + fromRating) - 1;
             dictValues.Add(
                 "Haste Rating",
                 String.Format(
@@ -200,15 +204,11 @@ namespace Rawr.WarlockTmp {
                         + "*{1:0.00}%\tfrom {2} Haste rating\r\n"
                         + "{3:0.00}%\tfrom Buffs\r\n"
                         + "{4:0.00}s\tGlobal Cooldown",
-                    Stats.SpellHaste * 100f,
-                    StatConversion.GetSpellHasteFromRating(Stats.HasteRating)
-                        * 100f,
+                    spellHaste * 100f,
+                    fromRating * 100f,
                     Stats.HasteRating,
-                    (Stats.SpellHaste
-                            - StatConversion.GetSpellHasteFromRating(
-                                Stats.HasteRating))
-                        * 100f,
-                    Math.Max(1.0f, 1.5f / (1 + Stats.SpellHaste))));
+                    (spellHaste - fromRating) * 100f,
+                    Math.Max(1.0f, 1.5f / (1 + spellHaste))));
             #endregion Haste
 
             foreach (string spellName in Spell.ALL_SPELLS) {
@@ -245,6 +245,9 @@ namespace Rawr.WarlockTmp {
             #endregion
 
             #region Calculate all the possible haste values
+            float nonProcHaste
+                = 1 + Stats.SpellHaste
+                    + StatConversion.GetSpellHasteFromRating(Stats.HasteRating);
 
             // the trigger rates are all guestimates at this point, since the
             // real values depend on haste, this is set-up work to determine
@@ -262,18 +265,18 @@ namespace Rawr.WarlockTmp {
                 = periods[Trigger.DamageSpellHit]
                 = periods[Trigger.DamageSpellCrit]
                 = periods[Trigger.DamageSpellCast]
-                = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / Stats.SpellHaste;
+                = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste;
             periods[Trigger.DoTTick] = 1.5f;
             periods[Trigger.DamageDone]
                 = periods[Trigger.DamageOrHealingDone]
                 = 1f
-                    / (1 / periods[Trigger.DoTTick]
-                        + 1 / periods[Trigger.SpellHit]);
+                    / (1f / periods[Trigger.DoTTick]
+                        + 1f / periods[Trigger.SpellHit]);
 
             chances[Trigger.Use] = 1f;
             chances[Trigger.SpellHit]
                 = chances[Trigger.DamageSpellHit]
-                = Math.Min(1f, Stats.SpellHit);
+                = HitChance;
             chances[Trigger.SpellCrit]
                 = chances[Trigger.DamageSpellCrit]
                 = chances[Trigger.DamageDone]
@@ -293,7 +296,7 @@ namespace Rawr.WarlockTmp {
             if (Options.SpellPriority.Contains("Corruption")) {
                 periods[Trigger.CorruptionTick] = 3.1f;
                 if (Talents.GlyphQuickDecay) {
-                    periods[Trigger.CorruptionTick] /= 1 + Stats.SpellHaste;
+                    periods[Trigger.CorruptionTick] /= nonProcHaste;
                 }
                 chances[Trigger.CorruptionTick] = 1f;
             } else {
@@ -307,26 +310,56 @@ namespace Rawr.WarlockTmp {
             List<float> hasteOffsets = new List<float>();
             List<float> hasteScales = new List<float>();
             List<float> hasteValues = new List<float>();
+            List<SpecialEffect> hasteRatingEffects = new List<SpecialEffect>();
+            List<float> hasteRatingIntervals = new List<float>();
+            List<float> hasteRatingChances = new List<float>();
+            List<float> hasteRatingOffsets = new List<float>();
+            List<float> hasteRatingScales = new List<float>();
+            List<float> hasteRatingValues = new List<float>();
+            Stats procStats = new Stats();
             foreach (SpecialEffect effect in Stats.SpecialEffects()) {
-                if (periods.ContainsKey(effect.Trigger)) {
-                    //if (AffectsHaste(effect.Stats)) {
-                    //    hasteEffects.Add(effect);
-                    //    hasteIntervals.Add(periods[effect.Trigger]);
-                    //    hasteChances.Add(chances[effect.Trigger]);
-                    //    hasteOffsets.Add(0f);
-                    //    hasteScales.Add(1f);
-                    //} else {
-                        Stats.Accumulate(
-                            effect.GetAverageStats(
-                                periods[effect.Trigger],
-                                chances[effect.Trigger],
-                                CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                                Options.Duration));
-                    //}
+                if (!periods.ContainsKey(effect.Trigger)) {
+                    continue;
+                }
+
+                procStats.Accumulate(
+                    effect.GetAverageStats(
+                        periods[effect.Trigger],
+                        chances[effect.Trigger],
+                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                        Options.Duration));
+                if (effect.Stats.HasteRating > 0) {
+                    hasteRatingEffects.Add(effect);
+                    hasteRatingIntervals.Add(periods[effect.Trigger]);
+                    hasteRatingChances.Add(chances[effect.Trigger]);
+                    hasteRatingOffsets.Add(0f);
+                    hasteRatingScales.Add(1f);
+                    hasteRatingValues.Add(effect.Stats.HasteRating);
+                }
+                if (effect.Stats.SpellHaste > 0) {
+                    hasteEffects.Add(effect);
+                    hasteIntervals.Add(periods[effect.Trigger]);
+                    hasteChances.Add(chances[effect.Trigger]);
+                    hasteOffsets.Add(0f);
+                    hasteScales.Add(1f);
+                    hasteValues.Add(effect.Stats.SpellHaste);
                 }
             }
-            WeightedStat[] hasteUptimes
+            procStats.HasteRating = 0;
+            procStats.SpellHaste = 0;
+            Stats.Accumulate(procStats);
+            WeightedStat[] ratings
                 = SpecialEffect.GetAverageCombinedUptimeCombinations(
+                    hasteRatingEffects.ToArray(),
+                    hasteRatingIntervals.ToArray(),
+                    hasteRatingChances.ToArray(),
+                    hasteRatingOffsets.ToArray(),
+                    hasteRatingScales.ToArray(),
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    Options.Duration,
+                    hasteRatingValues.ToArray());
+            WeightedStat[] percentages
+                = SpecialEffect.GetAverageCombinedUptimeCombinationsMultiplicative(
                     hasteEffects.ToArray(),
                     hasteIntervals.ToArray(),
                     hasteChances.ToArray(),
@@ -335,31 +368,39 @@ namespace Rawr.WarlockTmp {
                     CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
                     Options.Duration,
                     hasteValues.ToArray());
+            Haste = new WeightedStat[ratings.Length * percentages.Length];
+            for (int p = percentages.Length, f = 0; --p >= 0; ) {
+                for (int r = ratings.Length; --r >= 0; ++f) {
+                    Haste[f].Chance = percentages[p].Chance * ratings[r].Chance;
+                    Haste[f].Value
+                        = (1 + percentages[p].Value)
+                            * (1 + StatConversion.GetSpellHasteFromRating(
+                                    ratings[r].Value + Stats.HasteRating));
+                }
+            }
             #endregion
 
             #region Calculate NumCasts for each spell
-            float haste = 1f + Stats.SpellHaste;
             float lag = Options.Latency;
             foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
                 Spell spell = GetSpell(spellName);
                 if (!spell.IsCastable()) {
                     continue;
                 }
+
                 if (spell.IsSpammed()) {
                     float added = lifeTap.AddCastsForRegen(
-                        timeRemaining, manaRemaining, haste, spell);
+                        timeRemaining, manaRemaining, spell);
                     if (added > 0) {
                         if (!CastSpells.ContainsKey("Life Tap")) {
                             CastSpells.Add("Life Tap", lifeTap);
                         }
-                        timeRemaining
-                            -= added * (lifeTap.GetCastTime() + lag);
+                        timeRemaining -= added * (lifeTap.GetCastTime() + lag);
                     }
                 }
                 spell.SetCastingStats(timeRemaining);
                 CastSpells.Add(spellName, spell);
-                timeRemaining
-                    -= (spell.GetCastTime() + lag) * spell.NumCasts;
+                timeRemaining -= (spell.GetCastTime() + lag) * spell.NumCasts;
                 manaRemaining -= spell.ManaCost * spell.NumCasts;
                 if (timeRemaining <= .0001) {
                     break;
@@ -442,17 +483,6 @@ namespace Rawr.WarlockTmp {
         private float CalcPetDps() {
 
             return 0f;
-        }
-
-        private bool AffectsHaste(Stats stats) {
-
-            if (stats.SpellHaste > 0 || stats.HasteRating > 0) {
-                return true;
-            }
-            if (stats._rawSpecialEffectDataSize == 0) {
-                return false;
-            }
-            return AffectsHaste(stats._rawSpecialEffectData[0].Stats);
         }
 
         #endregion
