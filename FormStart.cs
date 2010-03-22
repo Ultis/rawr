@@ -18,18 +18,13 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.12.0
- - First, a note about Rawr3. Rawr3 has been in development for quite a while now, and we know that everyone's eager to get it. It's been held back for a while now by a showstopping issue that we've been trying to work around. I'm pleased to report that we've found an awesome solution to that showstopping issue (Shadowed rocks), and so Rawr3 is nearing public beta. We're tentatively shooting for next weekend (Mar 20/21), but please don't shoot us if something comes up and we're not able to make that date!
- - Vault of Archavon has its own catagory in the filtering. 
- - Strength of Wrynn / Hellscream's Warsong Buff have been added to the Temporary Buff section. 
- - Almost all healing/dps/tanking models have support for this buff. 
- - Items with Resilience now are catagorized as ""Purchaseable PvP Item"" instead of displaying with no source.
- - Rawr.Retribution: Spell selection logic cleaned up.
- - Rawr.Hunter: Hunter rotation logic fixes. 4T10 should be properly modeled now, the DPS value of it was far lower then it actually is. The optimizer should now instruct you to use Iceblade Arrows rather then Saronite Arrows.
- - Rawr.DPSDK: 3.3.3 Frost changes implemented.
- - Rawr.Mage: 3.3.3 changes to Incanters Absorbtion implemented. Haste procs should be modeled more accurately now.
- - Rawr.Healadin: Implemented Infusion of Light. 4T9 set bonus should now be modeled correctly. 4T10 set bonus is now modeled correctly.
- - Rawr.HolyPriest: New ""Renew"" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.";
+			labelVersionHistory.Text = @"v2.3.13.0
+ - Rawr now properly reports if Armory cannot find a character.
+ - Rawr.Hunter: Pets should no longer gain double benefit from buffs on both the hunter and the pet.
+ - Rawr.Rogue: Mangle and Trauma debuffs should now properly increase bleed damage. 3.3.3 changes implemented in PTR mode. Deadly and Instant Poison damage and crit rate is now more accurate.
+ - Rawr.DPSDK: Scourge Strike updated for 3.3.3 values.
+ - Rawr.Mage: Support for Arcane + Scorch DPS Cycles removed.
+ - Rawr.SPriest: Phylactery of the Nameless Lich finally modeled correctly.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;

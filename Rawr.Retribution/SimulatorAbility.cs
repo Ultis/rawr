@@ -9,7 +9,7 @@ namespace Rawr.Retribution
 
         public SimulatorAbility(int cooldown, int globalCooldown)
         {
-            Cooldown = cooldown;
+			Cooldown = cooldown;//TODO: Redo this whole model to not be a simulator
             GlobalCooldown = globalCooldown;
             FirstUse = -1;
             LastUse = -1;
@@ -24,7 +24,7 @@ namespace Rawr.Retribution
         public int FirstUse { get; set; }
         public int LastUse { get; set; }
         public int NextUse { get; set; }
-        public int Uses { get; set; }
+		public int Uses { get; set; }//TODO: Redo this whole model to not be a simulator
 
         public void ResetCooldown(int currentTime)
         {
@@ -39,7 +39,7 @@ namespace Rawr.Retribution
         /// <returns>GCD finish time</returns>
         public int UseAbility(int currentTime)
         {
-            int usageTime = currentTime + Delay;
+			int usageTime = currentTime + Delay;//TODO: Redo this whole model to not be a simulator
 
             if (FirstUse < 0) 
                 FirstUse = usageTime;
@@ -48,13 +48,13 @@ namespace Rawr.Retribution
             Uses++;
             return usageTime + GlobalCooldown;
         }
-
+		//TODO: Redo this whole model to not be a simulator
         public bool ShouldAbilityBeUsedNext(int currentTime)
         {
             return NextUse <= currentTime + Wait;
         }
 
-        public bool CanAbilityBeUsedNow(int currentTime)
+		public bool CanAbilityBeUsedNow(int currentTime)//TODO: Redo this whole model to not be a simulator
         {
             return currentTime >= NextUse;
         }

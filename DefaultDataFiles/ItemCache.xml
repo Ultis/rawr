@@ -22619,6 +22619,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
       <CritRating>95</CritRating>
+      <BonusHeartStrikeDamageMultiplier>900</BonusHeartStrikeDamageMultiplier>
       <ManaRestoreOnCrit_25_45>900</ManaRestoreOnCrit_25_45>
     </Stats>
     <Quality>Epic</Quality>
@@ -65471,8 +65472,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59656</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_92</IconPath>
     <Stats>
       <Armor>1056</Armor>
@@ -66569,8 +66570,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59647</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_69</IconPath>
     <Stats>
       <Armor>1056</Armor>
@@ -66707,8 +66708,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59647</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_69</IconPath>
     <Stats>
       <Armor>1056</Armor>
@@ -66818,8 +66819,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59646</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_69</IconPath>
     <Stats>
       <Armor>1056</Armor>
@@ -67171,8 +67172,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59677</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_58</IconPath>
     <Stats>
       <Armor>1886</Armor>
@@ -67334,8 +67335,8 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <DisplayId>59677</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_58</IconPath>
     <Stats>
       <Armor>1886</Armor>
@@ -77252,8 +77253,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>61840</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_25</IconPath>
     <Stats>
       <Armor>821</Armor>
@@ -77393,8 +77394,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59417</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_28</IconPath>
     <Stats>
       <Armor>1467</Armor>
@@ -77825,8 +77826,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59446</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_28</IconPath>
     <Stats>
       <Armor>1467</Armor>
@@ -78764,8 +78765,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59481</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_25</IconPath>
     <Stats>
       <Armor>821</Armor>
@@ -78791,8 +78792,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59483</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_25</IconPath>
     <Stats>
       <Armor>821</Armor>
@@ -78987,8 +78988,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59481</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_25</IconPath>
     <Stats>
       <Armor>821</Armor>
@@ -124077,8 +124078,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64523</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
       <Armor>2526</Armor>
@@ -124104,8 +124105,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64525</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_86</IconPath>
     <Stats>
       <Armor>1579</Armor>
@@ -124130,8 +124131,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64527</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_158</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -124157,8 +124158,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64568</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_32</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -124184,8 +124185,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64618</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_129</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -124210,8 +124211,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>63692</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_leather_22</IconPath>
     <Stats>
       <Armor>636</Armor>
@@ -124238,8 +124239,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>63693</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_85</IconPath>
     <Stats>
       <Armor>398</Armor>
@@ -124265,8 +124266,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>63690</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_149</IconPath>
     <Stats>
       <Armor>517</Armor>
@@ -124293,8 +124294,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>63691</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_leather_34</IconPath>
     <Stats>
       <Armor>557</Armor>
@@ -124321,8 +124322,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64592</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_26</IconPath>
     <Stats>
       <Armor>2526</Armor>
@@ -124348,8 +124349,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64593</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_87</IconPath>
     <Stats>
       <Armor>1579</Armor>
@@ -124374,8 +124375,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64594</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_151</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -124401,8 +124402,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64595</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_31</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -124428,8 +124429,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64705</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_130</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -124454,8 +124455,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>63689</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_112</IconPath>
     <Stats>
       <Armor>477</Armor>
@@ -124481,8 +124482,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64730</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_leather_21</IconPath>
     <Stats>
       <Armor>636</Armor>
@@ -124509,8 +124510,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64448</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_83</IconPath>
     <Stats>
       <Armor>398</Armor>
@@ -124536,8 +124537,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64446</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_148</IconPath>
     <Stats>
       <Armor>517</Armor>
@@ -124564,8 +124565,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64458</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_leather_35</IconPath>
     <Stats>
       <Armor>557</Armor>
@@ -124592,8 +124593,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64457</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_111</IconPath>
     <Stats>
       <Armor>477</Armor>
@@ -124619,8 +124620,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64810</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_84</IconPath>
     <Stats>
       <Armor>883</Armor>
@@ -124647,8 +124648,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65130</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_158</IconPath>
     <Stats>
       <Armor>1148</Armor>
@@ -124676,8 +124677,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64812</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_mail_32</IconPath>
     <Stats>
       <Armor>1237</Armor>
@@ -124705,8 +124706,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64804</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_113</IconPath>
     <Stats>
       <Armor>1060</Armor>
@@ -124733,8 +124734,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64814</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_mail_11</IconPath>
     <Stats>
       <Armor>1413</Armor>
@@ -125990,8 +125991,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64283</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_88</IconPath>
     <Stats>
       <Armor>211</Armor>
@@ -126017,8 +126018,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64286</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_152</IconPath>
     <Stats>
       <Armor>275</Armor>
@@ -126045,8 +126046,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64287</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_kilt_cloth_02</IconPath>
     <Stats>
       <Armor>296</Armor>
@@ -126073,8 +126074,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64288</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_cloth_77</IconPath>
     <Stats>
       <Armor>338</Armor>
@@ -126101,8 +126102,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64289</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_114</IconPath>
     <Stats>
       <Armor>254</Armor>
@@ -126507,8 +126508,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64267</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_90purple</IconPath>
     <Stats>
       <Armor>211</Armor>
@@ -126534,8 +126535,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64892</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_150purple</IconPath>
     <Stats>
       <Armor>275</Armor>
@@ -126562,8 +126563,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64269</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_cloth_34purple</IconPath>
     <Stats>
       <Armor>296</Armor>
@@ -126590,8 +126591,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64858</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_cloth_78purple</IconPath>
     <Stats>
       <Armor>338</Armor>
@@ -126618,8 +126619,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64893</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_116purple</IconPath>
     <Stats>
       <Armor>254</Armor>
@@ -127357,8 +127358,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64999</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_117</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -127383,8 +127384,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64633</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_33</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -127410,8 +127411,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64630</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_154</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -127437,8 +127438,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64627</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_85</IconPath>
     <Stats>
       <Armor>1579</Armor>
@@ -127463,8 +127464,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64637</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate22</IconPath>
     <Stats>
       <Armor>2526</Armor>
@@ -127925,8 +127926,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>48008</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_rune_12</IconPath>
     <Stats>
       <SpecialEffects>
@@ -127957,8 +127958,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64264</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_key_15</IconPath>
     <Stats>
       <Stamina>228</Stamina>
@@ -127976,8 +127977,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64236</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_jewelry_trinket_02</IconPath>
     <Stats>
       <SpecialEffects>
@@ -128008,8 +128009,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64631</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_ammo_gunpowder_05</IconPath>
     <Stats>
       <SpecialEffects>
@@ -128485,8 +128486,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64257</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_92</IconPath>
     <Stats>
       <Armor>211</Armor>
@@ -128512,8 +128513,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64258</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_156</IconPath>
     <Stats>
       <Armor>275</Armor>
@@ -128540,8 +128541,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64255</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_cloth_35</IconPath>
     <Stats>
       <Armor>296</Armor>
@@ -128568,8 +128569,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64167</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_cloth_80</IconPath>
     <Stats>
       <Armor>338</Armor>
@@ -128596,8 +128597,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64183</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_119</IconPath>
     <Stats>
       <Armor>254</Armor>
@@ -129213,8 +129214,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>58200</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>trade_herbalism</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129244,8 +129245,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>5452480</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_scroll_15</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129274,8 +129275,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>39652</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>spell_nature_natureguardian</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129315,8 +129316,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64624</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_offhand_1h_ulduarraid_d_01</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129346,8 +129347,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>6462980</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>spell_frost_frostnova</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129376,8 +129377,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64573</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_noose_01</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129427,10 +129428,24 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>6462580</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>spell_holy_blessedresillience</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HolyShockCast</Trigger>
+          <Stats>
+            <SpellPower>85</SpellPower>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <Faction>Neutral</Faction>
@@ -129443,10 +129458,24 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>6462680</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_offhand_ulduarraid_d_02</IconPath>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ShieldofRighteousness</Trigger>
+          <Stats>
+            <DodgeRating>73</DodgeRating>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <Faction>Neutral</Faction>
@@ -129459,8 +129488,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64615</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>ability_mount_ebonblade</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129490,8 +129519,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>6462880</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_gem_diamond_03</IconPath>
     <Stats>
       <SpecialEffects>
@@ -129520,8 +129549,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>4604580</DisplayId>
-    <DisplaySlot>28</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>spell_frost_summonwaterelemental</IconPath>
     <Stats>
       <RestoShamRelicT10>255</RestoShamRelicT10>
@@ -129538,12 +129567,11 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64328</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_13</IconPath>
     <Stats>
-      <Armor>177</Armor>
-      <BonusArmor>560</BonusArmor>
+      <Armor>737</Armor>
       <Stamina>124</Stamina>
       <Strength>90</Strength>
       <DodgeRating>48</DodgeRating>
@@ -129564,8 +129592,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>33096</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_17</IconPath>
     <Stats>
       <Armor>177</Armor>
@@ -129589,8 +129617,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>59028</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_16</IconPath>
     <Stats>
       <Armor>177</Armor>
@@ -129615,8 +129643,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>58977</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_16</IconPath>
     <Stats>
       <Armor>177</Armor>
@@ -129641,8 +129669,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64326</DisplayId>
-    <DisplaySlot>16</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_cape_14</IconPath>
     <Stats>
       <Armor>177</Armor>
@@ -129692,8 +129720,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64454</DisplayId>
-    <DisplaySlot>25</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_throwingknife_07</IconPath>
     <Stats>
       <Agility>51</Agility>
@@ -132969,8 +132997,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64258</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_156</IconPath>
     <Stats>
       <Armor>275</Armor>
@@ -132997,8 +133025,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64257</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_92</IconPath>
     <Stats>
       <Armor>211</Armor>
@@ -133024,8 +133052,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64183</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_119</IconPath>
     <Stats>
       <Armor>254</Armor>
@@ -133051,8 +133079,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64167</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_cloth_80</IconPath>
     <Stats>
       <Armor>338</Armor>
@@ -133079,8 +133107,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64255</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_cloth_35</IconPath>
     <Stats>
       <Armor>296</Armor>
@@ -134193,8 +134221,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64457</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_111</IconPath>
     <Stats>
       <Armor>477</Armor>
@@ -134220,8 +134248,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64458</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_leather_35</IconPath>
     <Stats>
       <Armor>557</Armor>
@@ -134248,8 +134276,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64446</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_148</IconPath>
     <Stats>
       <Armor>517</Armor>
@@ -134276,8 +134304,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64448</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_83</IconPath>
     <Stats>
       <Armor>398</Armor>
@@ -134303,8 +134331,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64730</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_leather_21</IconPath>
     <Stats>
       <Armor>636</Armor>
@@ -134331,8 +134359,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64457</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_111</IconPath>
     <Stats>
       <Armor>477</Armor>
@@ -134358,8 +134386,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64458</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_leather_35</IconPath>
     <Stats>
       <Armor>557</Armor>
@@ -134386,8 +134414,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64446</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_148</IconPath>
     <Stats>
       <Armor>517</Armor>
@@ -134414,8 +134442,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64448</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_83</IconPath>
     <Stats>
       <Armor>398</Armor>
@@ -134441,8 +134469,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64456</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_leather_21</IconPath>
     <Stats>
       <Armor>636</Armor>
@@ -134469,8 +134497,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65228</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_mail_15</IconPath>
     <Stats>
       <Armor>1413</Armor>
@@ -134499,8 +134527,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65230</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_104</IconPath>
     <Stats>
       <Armor>883</Armor>
@@ -134528,8 +134556,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65227</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_169</IconPath>
     <Stats>
       <Armor>1148</Armor>
@@ -134558,8 +134586,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65232</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_kilt_mail_01</IconPath>
     <Stats>
       <Armor>1237</Armor>
@@ -134588,8 +134616,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65233</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_133</IconPath>
     <Stats>
       <Armor>1060</Armor>
@@ -134617,8 +134645,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65228</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_mail_15</IconPath>
     <Stats>
       <Armor>1413</Armor>
@@ -134646,8 +134674,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65230</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_104</IconPath>
     <Stats>
       <Armor>883</Armor>
@@ -134674,8 +134702,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65227</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_169</IconPath>
     <Stats>
       <Armor>1148</Armor>
@@ -134703,8 +134731,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65232</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_kilt_mail_01</IconPath>
     <Stats>
       <Armor>1237</Armor>
@@ -134732,8 +134760,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65233</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_133</IconPath>
     <Stats>
       <Armor>1060</Armor>
@@ -134760,8 +134788,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65228</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_mail_15</IconPath>
     <Stats>
       <Armor>1413</Armor>
@@ -134789,8 +134817,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65230</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_104</IconPath>
     <Stats>
       <Armor>883</Armor>
@@ -134817,8 +134845,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65227</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_169</IconPath>
     <Stats>
       <Armor>1148</Armor>
@@ -134846,8 +134874,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65232</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_kilt_mail_01</IconPath>
     <Stats>
       <Armor>1237</Armor>
@@ -134875,8 +134903,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>65233</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_133</IconPath>
     <Stats>
       <Armor>1060</Armor>
@@ -134903,8 +134931,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64618</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_129</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -134930,8 +134958,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64568</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_32</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -134958,8 +134986,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64527</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_158</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -134986,12 +135014,11 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64525</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_86</IconPath>
     <Stats>
-      <Armor>1579</Armor>
-      <BonusArmor>882</BonusArmor>
+      <Armor>2461</Armor>
       <Stamina>148</Stamina>
       <Strength>81</Strength>
       <HitRating>54</HitRating>
@@ -135013,12 +135040,11 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64523</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
-      <Armor>2526</Armor>
-      <BonusArmor>1064</BonusArmor>
+      <Armor>3590</Armor>
       <Stamina>191</Stamina>
       <Strength>144</Strength>
       <DodgeRating>60</DodgeRating>
@@ -135065,8 +135091,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64705</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_130</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -135092,8 +135118,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64595</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_31</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -135120,8 +135146,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64594</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_151</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -135148,12 +135174,11 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64593</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_87</IconPath>
     <Stats>
-      <Armor>1579</Armor>
-      <BonusArmor>882</BonusArmor>
+      <Armor>2461</Armor>
       <Stamina>148</Stamina>
       <Strength>81</Strength>
       <HitRating>54</HitRating>
@@ -135175,12 +135200,11 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64592</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_26</IconPath>
     <Stats>
-      <Armor>2526</Armor>
-      <BonusArmor>1064</BonusArmor>
+      <Armor>3590</Armor>
       <Stamina>191</Stamina>
       <Strength>144</Strength>
       <DodgeRating>60</DodgeRating>
@@ -135255,8 +135279,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64999</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_117</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -135282,8 +135306,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64633</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_33</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -135310,8 +135334,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64630</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_154</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -135338,12 +135362,11 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64627</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_85</IconPath>
     <Stats>
-      <Armor>1579</Armor>
-      <BonusArmor>882</BonusArmor>
+      <Armor>2461</Armor>
       <Stamina>148</Stamina>
       <Strength>81</Strength>
       <HitRating>54</HitRating>
@@ -135365,12 +135388,11 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64637</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate22</IconPath>
     <Stats>
-      <Armor>2526</Armor>
-      <BonusArmor>1064</BonusArmor>
+      <Armor>3590</Armor>
       <Stamina>191</Stamina>
       <Strength>144</Strength>
       <DodgeRating>60</DodgeRating>
@@ -135393,8 +135415,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64999</DisplayId>
-    <DisplaySlot>3</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_shoulder_117</IconPath>
     <Stats>
       <Armor>1894</Armor>
@@ -135420,8 +135442,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64633</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_pants_plate_33</IconPath>
     <Stats>
       <Armor>2210</Armor>
@@ -135448,8 +135470,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64630</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_154</IconPath>
     <Stats>
       <Armor>2052</Armor>
@@ -135476,8 +135498,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64627</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_85</IconPath>
     <Stats>
       <Armor>1579</Armor>
@@ -135503,8 +135525,8 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64637</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate22</IconPath>
     <Stats>
       <Armor>2526</Armor>
@@ -135531,8 +135553,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64569</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
       <Armor>2641</Armor>
@@ -135612,12 +135634,11 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64569</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
-      <Armor>2641</Armor>
-      <BonusArmor>1176</BonusArmor>
+      <Armor>3817</Armor>
       <Stamina>207</Stamina>
       <Strength>123</Strength>
       <DefenseRating>108</DefenseRating>
@@ -135640,8 +135661,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64658</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_plate22</IconPath>
     <Stats>
       <Armor>2641</Armor>
@@ -135668,8 +135689,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64828</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_mail_11</IconPath>
     <Stats>
       <Armor>1477</Armor>
@@ -135697,8 +135718,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>65039</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_mail_15</IconPath>
     <Stats>
       <Armor>1477</Armor>
@@ -135725,8 +135746,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64426</DisplayId>
-    <DisplaySlot>5</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_leather_22</IconPath>
     <Stats>
       <Armor>665</Armor>
@@ -135753,8 +135774,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64490</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_leather_21</IconPath>
     <Stats>
       <Armor>665</Armor>
@@ -135780,8 +135801,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64350</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_cloth_78</IconPath>
     <Stats>
       <Armor>354</Armor>
@@ -135808,8 +135829,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64162</DisplayId>
-    <DisplaySlot>20</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_chest_cloth_80</IconPath>
     <Stats>
       <Armor>354</Armor>
@@ -135836,8 +135857,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64668</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_85</IconPath>
     <Stats>
       <Armor>1650</Armor>
@@ -135863,8 +135884,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64571</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_86</IconPath>
     <Stats>
       <Armor>1650</Armor>
@@ -135889,12 +135910,11 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64571</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_86</IconPath>
     <Stats>
-      <Armor>1650</Armor>
-      <BonusArmor>1008</BonusArmor>
+      <Armor>2658</Armor>
       <Stamina>157</Stamina>
       <Strength>120</Strength>
       <ParryRating>48</ParryRating>
@@ -135916,8 +135936,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64823</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_84</IconPath>
     <Stats>
       <Armor>923</Armor>
@@ -135944,8 +135964,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>65032</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_104</IconPath>
     <Stats>
       <Armor>923</Armor>
@@ -135971,8 +135991,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64491</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_83</IconPath>
     <Stats>
       <Armor>416</Armor>
@@ -135997,8 +136017,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64424</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_79</IconPath>
     <Stats>
       <Armor>416</Armor>
@@ -136024,8 +136044,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>65002</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_90</IconPath>
     <Stats>
       <Armor>221</Armor>
@@ -136051,8 +136071,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64214</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_92</IconPath>
     <Stats>
       <Armor>221</Armor>
@@ -136130,8 +136150,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64784</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_62</IconPath>
     <Stats>
       <Armor>1485</Armor>
@@ -136182,8 +136202,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64660</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_70</IconPath>
     <Stats>
       <Armor>1485</Armor>
@@ -136236,12 +136256,11 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64784</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_62</IconPath>
     <Stats>
-      <Armor>1485</Armor>
-      <BonusArmor>658</BonusArmor>
+      <Armor>2143</Armor>
       <Stamina>157</Stamina>
       <Strength>120</Strength>
       <ParryRating>63</ParryRating>
@@ -136263,8 +136282,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>65035</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_83</IconPath>
     <Stats>
       <Armor>831</Armor>
@@ -136291,8 +136310,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64820</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_60</IconPath>
     <Stats>
       <Armor>831</Armor>
@@ -136319,8 +136338,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64492</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_59</IconPath>
     <Stats>
       <Armor>374</Armor>
@@ -136346,8 +136365,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64635</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_noose_01</IconPath>
     <Stats>
       <Armor>374</Armor>
@@ -136373,8 +136392,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64347</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_66</IconPath>
     <Stats>
       <Armor>199</Armor>
@@ -136400,8 +136419,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64208</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_68</IconPath>
     <Stats>
       <Armor>199</Armor>
@@ -141850,8 +141869,8 @@
   </Item>
   <Item>
     <ItemLevel>277</ItemLevel>
-    <DisplayId>64503</DisplayId>
-    <DisplaySlot>1</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_helmet_148</IconPath>
     <Stats>
       <Armor>564</Armor>
@@ -141866,6 +141885,7 @@
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <RequiredClasses>Druid</RequiredClasses>
+    <Bind>BoP</Bind>
     <SocketColor1>Meta</SocketColor1>
     <SocketColor2>Red</SocketColor2>
     <SocketBonus>

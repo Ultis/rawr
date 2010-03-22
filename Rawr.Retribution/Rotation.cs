@@ -4,17 +4,17 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    public abstract class Rotation
+	public abstract class Rotation//TODO: Redo this whole model to not be a simulator
     {
 
         public static IEnumerable<Ability[]> GetAllRotations()
         {
-            Ability[] abilities = new Ability[(int)Ability.Last + 1];
+			Ability[] abilities = new Ability[(int)Ability.Last + 1];//TODO: Redo this whole model to not be a simulator
 
             for (int ability = 0; ability <= (int)Ability.Last; ability++)
                 abilities[ability] = (Ability)ability;
 
-            return Utilities.GetDifferentElementPermutations(abilities);
+			return Utilities.GetDifferentElementPermutations(abilities);//TODO: Redo this whole model to not be a simulator
         }
 
 
@@ -22,9 +22,9 @@ namespace Rawr.Retribution
         {
             if (combats == null)
                 throw new ArgumentNullException("combats");
-
+			//TODO: Redo this whole model to not be a simulator
             Combats = combats;
-            CS = combats.Talents.CrusaderStrike == 0 ? 
+			CS = combats.Talents.CrusaderStrike == 0 ? //TODO: Redo this whole model to not be a simulator
                 (Skill)new NullCrusaderStrike(combats) : 
                 (Skill)new CrusaderStrike(combats);
             DS = combats.Talents.DivineStorm == 0 ?
@@ -33,7 +33,7 @@ namespace Rawr.Retribution
             Exo = new Exorcism(combats);
             HoW = new HammerOfWrath(combats);
             Cons = new Consecration(combats);
-            White = new White(combats);
+			White = new White(combats);//TODO: Redo this whole model to not be a simulator
             HoR = new HandOfReckoning(combats);
 
             switch (combats.CalcOpts.Seal)
@@ -48,7 +48,7 @@ namespace Rawr.Retribution
                     if (combats.Talents.SealOfCommand == 0)
                         goto default;
 
-                    Seal = new SealOfCommand(combats);
+					Seal = new SealOfCommand(combats);//TODO: Redo this whole model to not be a simulator
                     SealDot = new NullSealDoT(combats);
                     Judge = new JudgementOfCommand(combats);
                     break;
@@ -63,7 +63,7 @@ namespace Rawr.Retribution
                 default:
                     Seal = new NullSeal(combats);
                     SealDot = new NullSealDoT(combats);
-                    Judge = new NullJudgement(combats);
+					Judge = new NullJudgement(combats);//TODO: Redo this whole model to not be a simulator
                     break;
             }
         }
@@ -75,7 +75,7 @@ namespace Rawr.Retribution
         public Skill Exo { get; private set; }
         public Skill HoW { get; private set; }
         public Skill Cons { get; private set; }
-        public Skill Seal { get; private set; }
+		public Skill Seal { get; private set; }//TODO: Redo this whole model to not be a simulator
         public Skill SealDot { get; private set; }
         public Skill HoR { get; private set; }
         public White White { get; private set; }
@@ -108,18 +108,18 @@ namespace Rawr.Retribution
             calc.CrusaderStrikeSkill = CS;
             calc.ConsecrationSkill = Cons;
             calc.ExorcismSkill = Exo;
-            calc.HammerOfWrathSkill = HoW;
+			calc.HammerOfWrathSkill = HoW;//TODO: Redo this whole model to not be a simulator
             calc.HandOfReckoningSkill = HoR;
 
             calc.DPSPoints =
                 calc.WhiteDPS +
                 calc.SealDPS +
                 calc.JudgementDPS +
-                calc.CrusaderStrikeDPS +
+				calc.CrusaderStrikeDPS +//TODO: Redo this whole model to not be a simulator
                 calc.DivineStormDPS +
                 calc.ExorcismDPS +
                 calc.HandOfReckoningDPS +
-                calc.ConsecrationDPS +
+				calc.ConsecrationDPS +//TODO: Redo this whole model to not be a simulator
                 calc.HammerOfWrathDPS +
                 calc.OtherDPS;
         }
@@ -130,8 +130,8 @@ namespace Rawr.Retribution
                 White.WhiteDPS() + 
                 SealDPS(Seal, SealDot)+ 
                 GetAbilityDps(Judge) + 
-                GetAbilityDps(DS) + 
-                GetAbilityDps(CS) + 
+                GetAbilityDps(DS) +
+				GetAbilityDps(CS) + //TODO: Redo this whole model to not be a simulator
                 GetAbilityDps(Cons) + 
                 GetAbilityDps(Exo) + 
                 GetAbilityDps(HoW) + 
@@ -148,7 +148,7 @@ namespace Rawr.Retribution
 
         public float SoVOvertakeTime()
         {
-            float sov0dps = GetAbilityDps(new JudgementOfVengeance(Combats, 0));
+			float sov0dps = GetAbilityDps(new JudgementOfVengeance(Combats, 0));//TODO: Redo this whole model to not be a simulator
             float sov5dps = GetAbilityDps(new JudgementOfVengeance(Combats, 5))
                 + SealDPS(new SealOfVengeance(Combats, 5), new SealOfVengeanceDoT(Combats, 5));
             float sordps = GetAbilityDps(new JudgementOfRighteousness(Combats))
@@ -157,19 +157,19 @@ namespace Rawr.Retribution
             if (sordps > sov0dps)
             {
                 float averageStack = (sordps - sov0dps) / (sov5dps - sov0dps) * 5f;
-                float timeToMaxStack = Combats.AttackSpeed * 4f;
+				float timeToMaxStack = Combats.AttackSpeed * 4f;//TODO: Redo this whole model to not be a simulator
                 return 2.5f * timeToMaxStack / (5f - averageStack);
             }
             else { return 0; }
         }
 
         public float AverageSoVStackSize()
-        {
+		{//TODO: Redo this whole model to not be a simulator
             float averageTimeOnMob = Combats.CalcOpts.FightLength * 60f / (Combats.CalcOpts.TargetSwitches + 1);
             float timeToMaxStack = Combats.AttackSpeed * 4f;
             if (averageTimeOnMob > timeToMaxStack)
             {
-                return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;
+				return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;//TODO: Redo this whole model to not be a simulator
             }
             else
             {
@@ -177,7 +177,7 @@ namespace Rawr.Retribution
             }
         }
 
-        public virtual float SealDPS(Skill seal, Skill sealdot)
+		public virtual float SealDPS(Skill seal, Skill sealdot)//TODO: Redo this whole model to not be a simulator
         {
             return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
         }
@@ -193,7 +193,7 @@ namespace Rawr.Retribution
         }
 
         public float GetAbilityHitsPerSecond(Skill skill)
-        {
+		{//TODO: Redo this whole model to not be a simulator
             return 
                 GetAbilityUsagePerSecond(skill) *
                 skill.ChanceToLand() * 
@@ -208,7 +208,7 @@ namespace Rawr.Retribution
                 skill.ChanceToCrit() * 
                 skill.Targets() * 
                 skill.TickCount();
-        }
+		}//TODO: Redo this whole model to not be a simulator
 
         public float GetCrusaderStrikeCD()
         {
@@ -227,7 +227,7 @@ namespace Rawr.Retribution
             // Melee hit procs can be triggered by:
             // - Crusader Strike hits
             // - Divine Storm hits
-            // - Weapon swing hits
+			// - Weapon swing hits//TODO: Redo this whole model to not be a simulator
             // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
             // - Judgement hits
@@ -238,7 +238,7 @@ namespace Rawr.Retribution
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
                 GetAbilityHitsPerSecond(Judge);
-        }
+		}//TODO: Redo this whole model to not be a simulator
 
         public float GetPhysicalAttacksPerSec()
         {
@@ -247,7 +247,7 @@ namespace Rawr.Retribution
             // - Divine Storm hits
             // - Weapon swing hits
             // - Tiny Abomination in a Jar releasing attack hits
-            // (2 multiplier needs to be moved to another place)
+			// (2 multiplier needs to be moved to another place)//TODO: Redo this whole model to not be a simulator
             // - Judgement hits
             // - Hammer of Wrath hits
 
@@ -256,7 +256,7 @@ namespace Rawr.Retribution
                 GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
-                GetAbilityHitsPerSecond(Judge) +
+				GetAbilityHitsPerSecond(Judge) +//TODO: Redo this whole model to not be a simulator
                 GetAbilityHitsPerSecond(HoW);
         }
 
@@ -280,7 +280,7 @@ namespace Rawr.Retribution
             // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
             // - Judgement crits
-
+			//TODO: Redo this whole model to not be a simulator
             return
                 GetAbilityCritsPerSecond(CS) +
                 GetAbilityCritsPerSecond(DS) +
@@ -295,7 +295,7 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Tiny Abomination in a Jar releasing attack crits
+			// - Tiny Abomination in a Jar releasing attack crits//TODO: Redo this whole model to not be a simulator
             // (2 multiplier needs to be moved to another place)
             // - Judgement crits
             // - Hammer of Wrath crits
@@ -322,7 +322,7 @@ namespace Rawr.Retribution
             // - Consecration damage ticks
             // - Exorcism hits
 
-            return
+			return//TODO: Redo this whole model to not be a simulator
                 GetAbilityHitsPerSecond(CS) +
                 GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
@@ -332,7 +332,7 @@ namespace Rawr.Retribution
                 GetAbilityHitsPerSecond(Cons) +
                 GetAbilityHitsPerSecond(Exo);
         }
-
+		//TODO: Redo this whole model to not be a simulator
     }
 
     public class Simulator : Rotation
@@ -358,7 +358,7 @@ namespace Rawr.Retribution
                 result = abilities.ToArray();
             }
 
-            if (combats.Talents.DivineStorm == 0)
+			if (combats.Talents.DivineStorm == 0)//TODO: Redo this whole model to not be a simulator
             {
                 List<Ability> abilities = new List<Ability>(result);
                 abilities.Remove(Ability.DivineStorm);
@@ -369,7 +369,7 @@ namespace Rawr.Retribution
         }
 
         /// <summary>
-        /// Calculates the solution with concrete parameters
+		/// Calculates the solution with concrete parameters//TODO: Redo this whole model to not be a simulator
         /// </summary>
         private static RotationSolution GetSolution(
             CombatStats combats,
@@ -393,7 +393,7 @@ namespace Rawr.Retribution
         /// <summary>
         /// Calculates the solution by combining subsolutions with the boss above and under 20% health
         /// </summary>
-        private static RotationSolution GetCombinedSolutionWithUnder20PercentHealth(
+		private static RotationSolution GetCombinedSolutionWithUnder20PercentHealth(//TODO: Redo this whole model to not be a simulator
             CombatStats combats,
             Ability[] rotation,
             decimal simulationTime,
@@ -424,7 +424,7 @@ namespace Rawr.Retribution
         private static RotationSolution GetCombinedSolutionWithDivineStormCooldown(
             CombatStats combats,
             Ability[] rotation,
-            decimal simulationTime,
+			decimal simulationTime,//TODO: Redo this whole model to not be a simulator
             float spellHaste,
             float swingTime)
         {
@@ -480,7 +480,7 @@ namespace Rawr.Retribution
                     normalDivineStormCooldown,
                     spellHaste),
                 1 - resultProbability);
-        }
+		}//TODO: Redo this whole model to not be a simulator
 
         /// <summary>
         /// Calculates the solution by combining subsolutions with and withou Bloodlust
@@ -539,13 +539,15 @@ namespace Rawr.Retribution
             float maxCooldown,
             float procChance)
         {
+			//TODO: Redo this whole model to not be a simulator
+
             const float divineStormCooldown = 10;
 
             for (
                     float integerSwingCountTime = 0;
                     integerSwingCountTime < divineStormCooldown;
                     integerSwingCountTime += swingSpeed)
-                if ((minCooldown < integerSwingCountTime) && (integerSwingCountTime < maxCooldown))
+                if ((minCooldown < (float)integerSwingCountTime) && ((float)integerSwingCountTime < maxCooldown))
                     return 
                         GetT10DivineStormCooldownProbability(
                             swingSpeed, 
@@ -577,7 +579,7 @@ namespace Rawr.Retribution
 
         public RotationSolution Solution { get; set; }
         public Ability[] Rotation { get; set; }
-
+		//TODO: Redo this whole model to not be a simulator
 
         public Simulator(CombatStats combats, Ability[] rotation, decimal simulationTime)
             : base(combats)

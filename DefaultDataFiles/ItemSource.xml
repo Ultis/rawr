@@ -351,10 +351,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -602,9 +602,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Crystalsong Forest</Area>
           <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Bragund Brightlink</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -38459,9 +38459,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Crystalsong Forest</Area>
           <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Bragund Brightlink</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -38972,9 +38972,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Crystalsong Forest</Area>
           <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Bragund Brightlink</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -39334,9 +39334,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Crystalsong Forest</Area>
           <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Bragund Brightlink</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -39447,9 +39447,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Crystalsong Forest</Area>
           <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Bragund Brightlink</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -39794,9 +39794,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Crystalsong Forest</Area>
           <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Bragund Brightlink</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -44936,9 +44936,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>true</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -45267,9 +45267,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>true</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -45644,9 +45644,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>true</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -45910,9 +45910,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>true</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -46412,9 +46412,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>true</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -46442,9 +46442,9 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ulduar</Area>
+          <Area>Vault of Archavon</Area>
           <Heroic>true</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+          <Boss>Emalon the Storm Watcher</Boss>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72864,10 +72864,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72896,10 +72896,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72911,10 +72911,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72926,10 +72926,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72941,10 +72941,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72956,10 +72956,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72971,10 +72971,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -72986,10 +72986,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73001,10 +73001,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73016,10 +73016,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73063,10 +73063,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73078,10 +73078,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73093,10 +73093,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73108,10 +73108,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73153,10 +73153,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73183,10 +73183,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73305,10 +73305,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73367,10 +73367,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73431,10 +73431,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73461,10 +73461,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73491,10 +73491,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73555,10 +73555,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73713,10 +73713,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73790,10 +73790,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -73940,10 +73940,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74166,10 +74166,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74211,10 +74211,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74317,10 +74317,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74454,10 +74454,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74599,10 +74599,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74614,10 +74614,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74646,10 +74646,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74706,10 +74706,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74721,10 +74721,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74796,10 +74796,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74856,10 +74856,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74918,10 +74918,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -74999,10 +74999,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75093,10 +75093,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75236,10 +75236,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75251,10 +75251,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75266,10 +75266,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75281,10 +75281,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75360,10 +75360,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75512,10 +75512,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75544,10 +75544,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75574,10 +75574,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75589,10 +75589,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75618,10 +75618,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75738,10 +75738,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75753,10 +75753,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>50</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75768,10 +75768,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>50</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75783,10 +75783,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75798,10 +75798,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75858,10 +75858,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75873,10 +75873,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75933,10 +75933,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -75993,10 +75993,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -76072,10 +76072,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>50</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -76177,10 +76177,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>50</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -76282,10 +76282,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -76479,10 +76479,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>50</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -76526,10 +76526,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -76716,10 +76716,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>30</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -77100,10 +77100,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -77835,10 +77835,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -77910,10 +77910,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -77925,10 +77925,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -77940,10 +77940,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -77955,10 +77955,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78614,10 +78614,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78629,10 +78629,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78644,10 +78644,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78659,10 +78659,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78674,10 +78674,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78689,10 +78689,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78704,10 +78704,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78719,10 +78719,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78734,10 +78734,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78749,10 +78749,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78764,10 +78764,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78779,10 +78779,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78794,10 +78794,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78809,10 +78809,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78824,10 +78824,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78839,10 +78839,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78854,10 +78854,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78869,10 +78869,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78884,10 +78884,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78899,10 +78899,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78914,10 +78914,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78929,10 +78929,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78944,10 +78944,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -78959,10 +78959,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79004,10 +79004,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79034,10 +79034,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79049,10 +79049,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79064,10 +79064,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79079,10 +79079,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79094,10 +79094,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79109,10 +79109,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79124,10 +79124,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79154,10 +79154,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79184,10 +79184,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79199,10 +79199,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79214,10 +79214,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79229,10 +79229,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79244,10 +79244,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79259,10 +79259,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79274,10 +79274,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79289,10 +79289,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79304,10 +79304,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79334,10 +79334,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79349,10 +79349,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79394,10 +79394,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79409,10 +79409,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79424,10 +79424,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79439,10 +79439,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79454,10 +79454,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79469,10 +79469,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79484,10 +79484,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79499,10 +79499,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79529,10 +79529,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79574,10 +79574,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79589,10 +79589,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79604,10 +79604,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79619,10 +79619,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79649,10 +79649,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79709,10 +79709,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79724,10 +79724,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79754,10 +79754,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79784,10 +79784,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79799,10 +79799,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79829,10 +79829,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79919,10 +79919,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79934,10 +79934,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -79994,10 +79994,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -80009,10 +80009,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -80129,10 +80129,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -80309,10 +80309,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -80339,10 +80339,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>95</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -80369,10 +80369,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Emblem of Frost</Token>
+          <Count>60</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -82466,10 +82466,10 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <ItemLocation xsi:type="StaticDrop">
-          <Area>Icecrown Citadel</Area>
-          <Heroic>false</Heroic>
-          <Boss>Unknown Boss (Wowhead lacks data)</Boss>
+        <ItemLocation xsi:type="VendorItem">
+          <Token>Vanquisher's Mark of Sanctification</Token>
+          <Count>1</Count>
+          <Cost>0</Cost>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>

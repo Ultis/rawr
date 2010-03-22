@@ -655,6 +655,19 @@ namespace Rawr
 			_splash.Dispose();
             SetTitle();
 
+			MessageBox.Show(
+@"We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're using right now), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
+
+    - You can run Rawr3 in your web browser.
+    - No need to download or install anything.
+    - It runs on Mac OS X (Intel). Welcome to Rawr, Mac users!
+    - You can optionally install it locally with 2 clicks from the web version, if you want to have it locally for offline use.
+    - Lots more.
+
+ So give Rawr3 a try today! Get started at:   http://elitistjerks.com/rawr.php
+ Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!", "A Message from the Rawr Development Team");
+
+
 			//if (Properties.Recent.Default.SeenIntroVersion < INTRO_VERSION)
 			//{
 			//    Properties.Recent.Default.SeenIntroVersion = INTRO_VERSION;
@@ -2047,36 +2060,10 @@ namespace Rawr
 			{
 				ToString(); //Breakpoint Here
 
-				string[] urls = new string[] {
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel25&fl[boss]=all&fl[difficulty]=heroic&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel25&fl[boss]=all&fl[difficulty]=normal&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel10&fl[boss]=all&fl[difficulty]=heroic&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=icecrowncitadel10&fl[boss]=all&fl[difficulty]=normal&fl[type]=all&fl[usbleBy]=all&fl[rqrMin]=&fl[rqrMax]=&fl[rrt]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=forgeofsouls&fl[boss]=all&fl[difficulty]=all&searchType=items",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=pitofsaron&fl[boss]=all&fl[difficulty]=all&searchType=items",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=hallsofreflection&fl[boss]=all&fl[difficulty]=all&searchType=items",
-					"http://www.wowarmory.com/search.xml?fl[source]=dungeon&fl[dungeon]=emblemoffrost&fl[type]=all&fl[rrt]=all&fl[rqrMin]=&fl[rqrMax]=&fl[usbleBy]=all&advOptName=none&fl[andor]=and&searchType=items&fl[advOpt]=none"};
-
-				foreach (string url in urls)
+				foreach (Item item in ItemCache.AllItems)
 				{
-					List<int> ids = new List<int>();
-					System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(url);
-					Stream responseStream = request.GetResponse().GetResponseStream();
-					StreamReader reader = new StreamReader(responseStream);
-					string items32 = reader.ReadToEnd();
-
-					while (items32.Contains("?i="))
-					{
-						items32 = items32.Substring(items32.IndexOf("?i=") + "?i=".Length);
-						ids.Add(int.Parse(items32.Substring(0, items32.IndexOf("\""))));
-					}
-
-					foreach (int id in ids)
-					{
-						Item item = Armory.GetItem(id);
-						if (item != null)
-							ItemCache.AddItem(item);
-					}
+					if (item.LocationInfo[0].Description.Contains("Wowhead lacks"))
+						Item.LoadFromId(item.Id, true, false, false);
 				}
 
 				ItemCache.OnItemsChanged();

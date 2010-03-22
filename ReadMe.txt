@@ -1,23 +1,29 @@
-Rawr v2.3.12.0
+Rawr v2.3.13.0
 ------------
-Welcome to Rawr v2.3.12.0.
+
+We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're reading the readme for), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
+
+    - You can run Rawr3 in your web browser.
+    - No need to download or install anything.
+    - It runs on Mac OS X (Intel). Welcome to Rawr, Mac users!
+    - You can optionally install it locally with 2 clicks from the web version, if you want to have it locally for offline use.
+    - Lots more.
+
+ So give Rawr3 a try today! Get started at:   http://elitistjerks.com/rawr.php
+ Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!
+   
+   
+And now back to Rawr v2.3.13.0.
    
 Recent Changes:
- - First, a note about Rawr3. Rawr3 has been in development for quite a while now, and we know that everyone's eager to get it. It's been held back for a while now by a showstopping issue that we've been trying to work around. I'm pleased to report that we've found an awesome solution to that showstopping issue (Shadowed rocks), and so Rawr3 is nearing public beta. We're tentatively shooting for next weekend (Mar 20/21), but please don't shoot us if something comes up and we're not able to make that date!
- - Vault of Archavon has its own catagory in the filtering. 
- - Strength of Wrynn / Hellscream's Warsong Buff have been added to the Temporary Buff section. 
- - Almost all healing/dps/tanking models have support for this buff. 
- - Items with Resilience now are catagorized as "Purchaseable PvP Item" instead of displaying with no source.
- - Rawr.Retribution: Spell selection logic cleaned up.
- - Rawr.Hunter: Hunter rotation logic fixes. 4T10 should be properly modeled now, the DPS value of it was far lower then it actually is. The optimizer should now instruct you to use Iceblade Arrows rather then Saronite Arrows.
- - Rawr.DPSDK: 3.3.3 Frost changes implemented.
- - Rawr.Mage: 3.3.3 changes to Incanters Absorbtion implemented. Haste procs should be modeled more accurately now.
- - Rawr.Healadin: Implemented Infusion of Light. 4T9 set bonus should now be modeled correctly. 4T10 set bonus is now modeled correctly.
- - Rawr.HolyPriest: New "Renew" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.
+ - Rawr now properly reports if Armory cannot find a character.
+ - Rawr.Hunter: Pets should no longer gain double benefit from buffs on both the hunter and the pet.
+ - Rawr.Rogue: Mangle and Trauma debuffs should now properly increase bleed damage. 3.3.3 changes implemented in PTR mode. Deadly and Instant Poison damage and crit rate is now more accurate.
+ - Rawr.DPSDK: Scourge Strike updated for 3.3.3 values.
+ - Rawr.Mage: Support for Arcane + Scorch DPS Cycles removed.
+ - Rawr.SPriest: Phylactery of the Nameless Lich finally modeled correctly.
 
- 
-TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. It's available to beta-test for all Elitist Jerks Benefactors.
- 
+
 Instructions
 ------------
 There's no installer for Rawr. Just unzip the zip anywhere you like, that you have full permissions to (that means NOT Program Files on Vista+), and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is available at http://www.codeplex.com/Rawr/ for you to review and/or to build yourself)
@@ -121,6 +127,19 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.12.0
+ - First, a note about Rawr3. Rawr3 has been in development for quite a while now, and we know that everyone's eager to get it. It's been held back for a while now by a showstopping issue that we've been trying to work around. I'm pleased to report that we've found an awesome solution to that showstopping issue (Shadowed rocks), and so Rawr3 is nearing public beta. We're tentatively shooting for next weekend (Mar 20/21), but please don't shoot us if something comes up and we're not able to make that date!
+ - Vault of Archavon has its own catagory in the filtering. 
+ - Strength of Wrynn / Hellscream's Warsong Buff have been added to the Temporary Buff section. 
+ - Almost all healing/dps/tanking models have support for this buff. 
+ - Items with Resilience now are catagorized as "Purchaseable PvP Item" instead of displaying with no source.
+ - Rawr.Retribution: Spell selection logic cleaned up.
+ - Rawr.Hunter: Hunter rotation logic fixes. 4T10 should be properly modeled now, the DPS value of it was far lower then it actually is. The optimizer should now instruct you to use Iceblade Arrows rather then Saronite Arrows.
+ - Rawr.DPSDK: 3.3.3 Frost changes implemented.
+ - Rawr.Mage: 3.3.3 changes to Incanters Absorbtion implemented. Haste procs should be modeled more accurately now.
+ - Rawr.Healadin: Implemented Infusion of Light. 4T9 set bonus should now be modeled correctly. 4T10 set bonus is now modeled correctly.
+ - Rawr.HolyPriest: New "Renew" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.
+
 v2.3.11.0
  - Load from Armory code cleaned up. 
  - Tiny Abomination in a Jar's proc how now been more accurately modeled. 
