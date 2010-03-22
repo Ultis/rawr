@@ -158,6 +158,9 @@
     <Compile Include="CustomSpellMixDialog.xaml.cs">
       <DependentUpon>CustomSpellMixDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CycleAnalyzerDialog.xaml.cs">
+      <DependentUpon>CycleAnalyzerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphs\ChartWithText.cs" />
     <Compile Include="Graphs\EnumerableFunctions.cs" />
     <Compile Include="Graphs\ProcUptimeControl.xaml.cs">
@@ -183,6 +186,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
     <Page Include="CustomSpellMixDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="CycleAnalyzerDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>

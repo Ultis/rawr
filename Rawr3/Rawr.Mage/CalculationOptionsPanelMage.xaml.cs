@@ -133,8 +133,12 @@ namespace Rawr.Mage
 
         private void CycleAnalyzer_Click(object sender, RoutedEventArgs e)
         {
-            //CycleAnalyzer analyzer = new CycleAnalyzer(Character);
-            //analyzer.Show();
+            CycleAnalyzerDialog analyzer = new CycleAnalyzerDialog(Character);
+#if SILVERLIGHT
+            analyzer.Show();
+#else
+            ((Window)analyzer).Show();
+#endif
         }
 
         private void CustomSpellMix_Click(object sender, RoutedEventArgs e)

@@ -175,6 +175,9 @@
     <Compile Include="CustomSpellMixDialog.xaml.cs">
       <DependentUpon>CustomSpellMixDialog.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CycleAnalyzerDialog.xaml.cs">
+      <DependentUpon>CycleAnalyzerDialog.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphs\ChartWithText.cs" />
     <Compile Include="Graphs\EnumerableFunctions.cs" />
     <Compile Include="Graphs\ProcUptimeControl.xaml.cs">
@@ -203,6 +206,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomSpellMixDialog.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CycleAnalyzerDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

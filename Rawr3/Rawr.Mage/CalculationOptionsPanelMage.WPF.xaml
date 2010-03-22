@@ -549,7 +549,7 @@
                         <ColumnDefinition Width="Auto" MinWidth="250"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0" Text="Cycle Analysis:" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" TextWrapping="Wrap"/>
-                    <Button Grid.Row="1" Content="Cycle Analyzer" Margin="2,2,2,2" Click="CycleAnalyzer_Click" IsEnabled="False" />
+                    <Button Grid.Row="1" Content="Cycle Analyzer" Margin="2,2,2,2" Click="CycleAnalyzer_Click" />
                     <Button Grid.Row="2" Content="Hot Streak Utilization" Margin="2,2,2,2" Click="HotStreakUtilization_Click" />
                     <TextBlock Grid.Row="4" Text="Editors:" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" TextWrapping="Wrap"/>
                     <Button Grid.Row="5" Content="Cooldown Editor" Margin="2,2,2,2" Click="CooldownEditor_Click" IsEnabled="False" />
