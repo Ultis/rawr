@@ -362,7 +362,6 @@ namespace Rawr.Rogue
                     + bonusMainHandCrit;
                 float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
                 float chanceCritPoisonTemp = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating + iStat.Value)
-                    + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Rogue)
                     + stats.SpellCrit
                     + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
                 float chanceHitPoisonTemp = 1f - chanceCritPoisonTemp;
