@@ -15,6 +15,12 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using System.Collections.Generic;
 using System.Reflection;
+#if SILVERLIGHT
+using System.Windows.Browser;
+#else
+using System.Web;
+#endif
+using System.Text;
 
 namespace Rawr
 {
@@ -29,6 +35,7 @@ namespace Rawr
 		public ElitistArmoryService()
 		{
 			_webClient = new WebClient();
+            _webClient.Encoding = Encoding.UTF8; // elitistarmory uses UTF8 encoding
 			_webClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(_webClient_DownloadStringCompleted);
 			_queueTimer.Tick += new EventHandler(CheckQueueAsync);
 		}
@@ -133,9 +140,15 @@ namespace Rawr
 			_canceled = false;
 			_lastRequestWasItem = false;
 			_webClient.DownloadStringAsync(new Uri(string.Format(URL_CHAR_REQ,
-				region.ToString().ToLower(), realm.ToLower(), name.ToLower(), forceRefresh ? "1" : "0")));
+				region.ToString().ToLower(), UrlEncode(realm), UrlEncode(name), forceRefresh ? "1" : "0")));
 			this.Progress = "Downloading Character Data...";
 		}
+
+        private string UrlEncode(string text)
+        {
+            // elitistarmory expect space to be encoded as %20
+            return HttpUtility.UrlEncode(text).Replace("+", "%20");
+        }
 
 		void bwParseCharacter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
