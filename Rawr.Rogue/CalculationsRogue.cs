@@ -717,7 +717,7 @@ namespace Rawr.Rogue
                 Expertise = 5 * talents.WeaponExpertise,
                 PhysicalCrit = 0.01f * talents.Malice + (targetPoisonable ? 0.01f * talents.MasterPoisoner : 0),
                 PhysicalHit = 0.01f * talents.Precision,
-                PhysicalHaste = 0.04f * talents.LightningReflexes,
+                PhysicalHaste = (talents.LightningReflexes == 1 ? 0.04f : (talents.LightningReflexes == 2 ? 0.07f : (talents.LightningReflexes == 3 ? 0.1f : 0))),
                 SpellCrit = 0.01f * talents.Malice + (targetPoisonable ? 0.01f * talents.MasterPoisoner : 0),
                 SpellHit = 0.01f * talents.Precision,
             };
