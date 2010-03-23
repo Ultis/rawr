@@ -360,7 +360,7 @@ namespace Rawr.Rogue
             float hemoDamageTotal = hemoCount * HemoStats.DamagePerSwing * HFBMultiplier;
             float sStrikeDamageTotal = sStrikeCount * SStrikeStats.DamagePerSwing * HFBMultiplier;
             float mutiDamageTotal = mutiCount * MutiStats.DamagePerSwing * HFBMultiplier;
-            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * ((RuptStats.DurationAverage + (2 * RuptStats.DurationPerCP)) / 12f) * HFBMultiplier;
+            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f) * HFBMultiplier;
             float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
             float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing * HFBMultiplier;
