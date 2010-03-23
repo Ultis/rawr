@@ -3608,8 +3608,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Your Blood Strikes and Heart Strikes have a [25 * Pts]% chance and your Death Strikes and Obliterates have a [50 * Pts]% chance to increase the attack power by 10% of party and raid members within 45 yards for 10 sec.  Also increases your total Strength by [1 * Pts]%.
         /// </summary>
         [TalentData(16, "Abomination's Might", 2, 0, 3, 6, -1, new[] {
-@"Your Blood Strikes and Heart Strikes have a 25% chance and your Death Strikes and Obliterates have a 50% chance to increase the attack power by 10% of party and raid members within 45 yards for 10 sec.  Also increases your total Strength by 1%.",
-@"Your Blood Strikes and Heart Strikes have a 50% chance and your Death Strikes and Obliterates have a 100% chance to increase the attack power by 10% of party and raid members within 45 yards for 10 sec.  Also increases your total Strength by 2%.",}, "ability_warrior_intensifyrage")]
+@"Increases the attack power by 5% of party and raid members within 100 yards.  Also increases your total Strength by 1%.",
+@"Increases the attack power by 10% of party and raid members within 100 yards.  Also increases your total Strength by 2%.",}, "ability_warrior_intensifyrage")]
         public int AbominationsMight { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
         /// Your weapon hits have a [3 * Pts]% chance to cause the target to spawn 2-4 Bloodworms.  Bloodworms attack your enemies, healing you as they do damage for 20 sec or until killed.
@@ -3657,9 +3657,9 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Damage that would take you below 35% health or taken while you are at 35% health is reduced by [5 * Pts]%.  This effect cannot occur more often than once every 15 sec and cannot be triggered by damage which deals less than 5% of your health.
         /// </summary>
         [TalentData(23, "Will of the Necropolis", 3, 0, 1, 9, -1, new[] {
-@"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 5%.  This effect cannot occur more often than once every 15 sec and cannot be triggered by damage which deals less than 5% of your health.",
-@"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 10%.  This effect cannot occur more often than once every 15 sec and cannot be triggered by damage which deals less than 5% of your health.",
-@"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 15%.  This effect cannot occur more often than once every 15 sec and cannot be triggered by damage which deals less than 5% of your health.",}, "ability_creature_cursed_02")]
+@"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 5%.",
+@"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 10%.",
+@"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 15%.",}, "ability_creature_cursed_02")]
         public int WillOfTheNecropolis { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
         /// Instantly strike the target and his nearest ally, causing 50% weapon damage plus 125 on the primary target, and 25% weapon damage plus 63 on the secondary target.  Each target takes 10% additional damage for each of your diseases active on that target.
@@ -3737,9 +3737,9 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Increases your chance to hit with one-handed melee weapons by [1 * Pts]% and increases the damage done by your offhand weapon by [5 * Pts]%.
         /// </summary>
         [TalentData(33, "Nerves of Cold Steel", 3, 1, 4, 2, -1, new[] {
-@"Increases your chance to hit with one-handed melee weapons by 1% and increases the damage done by your offhand weapon by 5%.",
-@"Increases your chance to hit with one-handed melee weapons by 2% and increases the damage done by your offhand weapon by 10%.",
-@"Increases your chance to hit with one-handed melee weapons by 3% and increases the damage done by your offhand weapon by 15%.",}, "ability_dualwield")]
+@"Increases your chance to hit with one-handed melee weapons by 1% and increases the damage done by your offhand weapon by 8%.",
+@"Increases your chance to hit with one-handed melee weapons by 2% and increases the damage done by your offhand weapon by 16%.",
+@"Increases your chance to hit with one-handed melee weapons by 3% and increases the damage done by your offhand weapon by 25%.",}, "ability_dualwield")]
         public int NervesOfColdSteel { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
         /// You leech heat from victims of your Frost Fever, so that when their melee attack speed is reduced, yours increases by [4 * Pts]% for the next 20 sec.
@@ -3786,8 +3786,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Your Chains of Ice has a [50 * Pts]% chance to cause Frost Fever and the cost of your Mind Freeze is reduced to [10 * Pts] runic power.
         /// </summary>
         [TalentData(39, "Endless Winter", 2, 1, 4, 4, -1, new[] {
-@"Your Chains of Ice has a 50% chance to cause Frost Fever and the cost of your Mind Freeze is reduced to 10 runic power.",
-@"Your Chains of Ice has a 100% chance to cause Frost Fever and the cost of your Mind Freeze is reduced to no runic power.",}, "spell_shadow_twilight")]
+@"Your strength is increased by 2% and the cost of your Mind Freeze is reduced to 10 runic power.",
+@"Your strength is increased by 4% and your Mind Freeze no longer costs runic power.",}, "spell_shadow_twilight")]
         public int EndlessWinter { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
         /// Reduces the chance melee attacks will hit you by [1 * Pts]%.
@@ -3815,7 +3815,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Your Icy Talons effect increases the melee haste of your group or raid by 20% for the next 20 sec.  In addition, increases your haste by 5% at all times.
         /// </summary>
         [TalentData(43, "Improved Icy Talons", 1, 1, 1, 6, 34, new[] {
-@"Your Icy Talons effect increases the melee haste of your group or raid by 20% for the next 20 sec.  In addition, increases your haste by 5% at all times.",}, "spell_deathknight_icytalons")]
+@"Increases the melee haste of all party and raid members within 100 yds by 20% and your haste by an additional 5%",}, "spell_deathknight_icytalons")]
         public int ImprovedIcyTalons { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
         /// Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional [6 * Pts]% damage when striking targets with less than 35% health.
@@ -3873,7 +3873,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Reinforces your armor with a thick coat of ice, increasing your armor by 25% and increasing your Strength by 10% for 20 sec.
         /// </summary>
         [TalentData(51, "Unbreakable Armor", 1, 1, 3, 8, -1, new[] {
-@"Reinforces your armor with a thick coat of ice, increasing your armor by 25% and increasing your Strength by 10% for 20 sec.",}, "inv_armor_helm_plate_naxxramas_raidwarrior_c_01")]
+@"Reinforces your armor with a thick coat of ice, increasing your armor by 25% and increasing your Strength by 20% for 20 sec.",}, "inv_armor_helm_plate_naxxramas_raidwarrior_c_01")]
         public int UnbreakableArmor { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// When you are hit by a spell, you have a [10 * Pts]% chance to boost your resistance to that type of magic for 18 sec.  Stacks up to 3 times.
@@ -4018,7 +4018,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec.
         /// </summary>
         [TalentData(70, "Unholy Blight", 1, 2, 1, 5, -1, new[] {
-@"Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec.",}, "spell_shadow_contagion")]
+@"Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.",}, "spell_shadow_contagion")]
         public int UnholyBlight { get { return _data[70]; } set { _data[70] = value; } }
         /// <summary>
         /// Your spells receive an additional 20% benefit from your attack [4 * Pts]
@@ -4129,7 +4129,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// An unholy strike that deals 50% of weapon damage as Physical damage plus 170.  In addition, for each of your diseases on your target, you deal an additional 25% of the Physical damage done as Shadow damage.
         /// </summary>
         [TalentData(85, "Scourge Strike", 1, 2, 3, 9, -1, new[] {
-@"An unholy strike that deals 50% of weapon damage as Physical damage plus 170.  In addition, for each of your diseases on your target, you deal an additional 25% of the Physical damage done as Shadow damage.",}, "spell_deathknight_scourgestrike")]
+@"An unholy strike that deals 70% of weapon damage as Physical damage plus 560.  In addition, for each of your diseases on your target, you deal an additional 12% of the Physical damage done as Shadow damage.",}, "spell_deathknight_scourgestrike")]
         public int ScourgeStrike { get { return _data[85]; } set { _data[85] = value; } }
         /// <summary>
         /// Your spells and abilities deal [2 * Pts]% more damage to targets infected with Blood Plague.  Also increases your expertise by [1 * Pts]
