@@ -546,6 +546,8 @@ namespace Rawr.Healadin
 
                 Stamina = stats.Stamina,
                 Health = stats.Health,
+                Spirit = stats.Spirit,
+                HitRating = stats.HitRating,
 
                 #endregion
 
@@ -598,15 +600,22 @@ namespace Rawr.Healadin
             return s;
         }
 
+        bool useIrrelevancy = false;
         public override bool IsItemRelevant(Item item)
         {
-            return base.IsItemRelevant(item);
+            useIrrelevancy = true;
+            bool result = base.IsItemRelevant(item);
+            useIrrelevancy = false;
+            return result;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            if (isSpiritIrrelevant && stats.Spirit > 0) return false;
-            if (isHitIrrelevant && stats.HitRating > 0) return false;
+            if (useIrrelevancy)
+            {
+                if (isSpiritIrrelevant && stats.Spirit > 0) return false;
+                if (isHitIrrelevant && stats.HitRating > 0) return false;
+            }
 
             bool relevant = (
                 stats.Intellect +
