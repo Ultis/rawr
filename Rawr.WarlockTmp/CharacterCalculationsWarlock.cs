@@ -388,17 +388,7 @@ namespace Rawr.WarlockTmp {
                     continue;
                 }
 
-                if (spell.IsSpammed()) {
-                    float added = lifeTap.AddCastsForRegen(
-                        timeRemaining, manaRemaining, spell);
-                    if (added > 0) {
-                        if (!CastSpells.ContainsKey("Life Tap")) {
-                            CastSpells.Add("Life Tap", lifeTap);
-                        }
-                        timeRemaining -= added * (lifeTap.GetCastTime() + lag);
-                    }
-                }
-                spell.SetCastingStats(timeRemaining);
+                spell.SetCastingStats(timeRemaining, manaRemaining);
                 CastSpells.Add(spellName, spell);
                 timeRemaining -= (spell.GetCastTime() + lag) * spell.NumCasts;
                 manaRemaining -= spell.ManaCost * spell.NumCasts;

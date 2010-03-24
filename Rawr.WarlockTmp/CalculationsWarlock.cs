@@ -740,7 +740,8 @@ namespace Rawr.WarlockTmp {
                         "Glyph of Haunt",
                         "Glyph of Chaos Bolt",
                         "Glyph of Immolate",
-                        "Glyph of Incinerate" };
+                        "Glyph of Incinerate",
+                        "Glyph of Conflagrate" };
             }
             return _relevantGlyphs;
         }

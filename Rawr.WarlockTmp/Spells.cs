@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Rawr.WarlockTmp {
 
@@ -84,6 +85,7 @@ namespace Rawr.WarlockTmp {
         // set via constructor
         public CharacterCalculationsWarlock Mommy { get; protected set; }
         public MagicSchool MagicSchool { get; protected set; }
+        public SpellTree MySpellTree { get; protected set; }
         public float ManaCost { get; protected set; }
         public float BaseCastTime { get; protected set; }
         public float MinGCD { get; protected set; }
@@ -104,6 +106,7 @@ namespace Rawr.WarlockTmp {
         public List<KeyValuePair<float, float>> CollisionProfile { get; protected set; }
         public float NumCasts { get; protected set; }
         public float AvgCollision { get; protected set; }
+        public float BackdraftMultiplier { get; protected set; }
 
         // set via SetDamageStats()
         public float AvgDirectHit { get; protected set; }
@@ -250,6 +253,7 @@ namespace Rawr.WarlockTmp {
 
             Mommy = mommy;
             MagicSchool = magicSchool;
+            MySpellTree = spellTree;
             // TODO factor in "mana cost reduction" proc trinket(s?)
             // TODO factor in mana restore procs (as cost reduction)
             ManaCost = mommy.BaseMana * percentBaseMana;
@@ -306,15 +310,6 @@ namespace Rawr.WarlockTmp {
             return true;
         }
 
-        /// <returns>
-        /// Whether this spell 1) can be hasted by backdraft and 2) is NOT
-        /// garuanteed to be on cooldown when it procs.
-        /// </returns>
-        public virtual bool UsesBackdraft() {
-
-            return false;
-        }
-
         public bool IsSpammed() {
 
             return Cooldown == 0 && RecastPeriod == 0;
@@ -329,55 +324,36 @@ namespace Rawr.WarlockTmp {
         /// called on that Spell.
         /// </summary>
         /// <param name="timeRemaining"></param>
-        public virtual void SetCastingStats(float timeRemaining) {
+        public virtual void SetCastingStats(
+            float timeRemaining, float manaRemaining) {
 
-            float lag = Mommy.Options.Latency;
-            WeightedStat[] haste = Mommy.Haste;
-            float avgSpellCastTime
+            // calc backdraft
+            BackdraftMultiplier = 1f;
+            float avgCast
                 = GetCastTime(
-                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME, 1f, haste);
-
-            float backdraftReducer = 1 - Mommy.Talents.Backdraft * .1f;
-            if (backdraftReducer < 1 && UsesBackdraft()) {
-
-                // we can safely assume that no spell on a cooldown will be cast
-                // twice during a single backdraft proc
-
-                // get a list off all the spells that will be cast during
-                // backdraft
-                float castsRemaining = 3f;
-                float backdraftWindow = 3f * (avgSpellCastTime + lag);
-                foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
-                    Spell spell = pair.Value;
-                    if (spell is Conflagrate) {
-                        continue;
-                    }
-                    float numCasts;
-                    if (spell is Immolate && !Mommy.Talents.GlyphConflag) {
-                        numCasts = 1f;
-                    } else {
-                        numCasts
-                            = backdraftWindow
-                                / Math.Max(spell.RecastPeriod, spell.Cooldown);
-                    }
-                    numCasts = Math.Min(castsRemaining, numCasts);
-                    backdraftWindow += numCasts * (spell.GetCastTime() + lag);
-                    if (spell.UsesBackdraft()) {
-                        backdraftWindow -= numCasts * (avgSpellCastTime + lag);
-                    }
-                }
-
-                // TODO continue from here
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    1f,
+                    Mommy.Haste);
+            float fullBackdraftBonus = Mommy.Talents.Backdraft * .1f;
+            if (fullBackdraftBonus > 0 && Conflagrate.WillBeCast(Mommy)) {
+                BackdraftMultiplier
+                    -= CalcAvgBackdraftBonus(fullBackdraftBonus, avgCast);
             }
 
+            // spammed?  factor in lifetaps then spam away
+            float lag = Mommy.Options.Latency;
             if (IsSpammed()) {
+                LifeTap lifeTap = (LifeTap) Mommy.GetSpell("Life Tap");
+                float added = lifeTap.AddCastsForRegen(
+                    timeRemaining, manaRemaining, this);
+                timeRemaining -= added * (lifeTap.GetCastTime() + lag);
                 NumCasts = timeRemaining / (GetCastTime() + lag);
                 return;
-            } 
+            }
 
-            SetCollisionDelay(avgSpellCastTime, timeRemaining);
-            float period
-                = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
+            // not spammed? now it's time for serious calculations
+            SetCollisionDelay(avgCast, timeRemaining);
+            float period = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
             float hitChance = Mommy.HitChance;
             if (IsBinary()) {
                 hitChance -= GetResist();
@@ -385,14 +361,13 @@ namespace Rawr.WarlockTmp {
             if (CanMiss && hitChance < 1 && Cooldown < RecastPeriod) {
 
                 // If a spell misses, and it can be recast sooner than it
-                // normally would otherwise, it will instead wait for
-                // either its cooldown (if it has one), or for one spell
-                // to be cast inbetween (to allow for travel time and
-                // reaction time for the player to detect the miss).
-                // Note that coolisionDelay already has 1/2 an avereage
-                // spellcast factored into it.
+                // normally would otherwise, it will instead wait for either its
+                // cooldown (if it has one), or for one spell to be cast
+                // inbetween (to allow for travel time and reaction time for the
+                // player to detect the miss). Note that AvgCollision already
+                // has 1/2 an average spellcast factored into it.
                 float periodAfterMiss
-                    = Math.Max(Cooldown, avgSpellCastTime / 2) + AvgCollision;
+                    = Math.Max(Cooldown, (avgCast + lag) / 2) + AvgCollision;
                 period
                     = Utilities.GetWeightedSum(
                         period,
@@ -503,9 +478,13 @@ namespace Rawr.WarlockTmp {
             return toolTip;
         }
 
+        /// <summary>
+        /// Not accurate until after SetCastingStats() sets BackdraftMultiplier.
+        /// </summary>
         public virtual float GetCastTime() {
 
-            return GetCastTime(BaseCastTime, MinGCD, Mommy.Haste);
+            return BackdraftMultiplier
+                * GetCastTime(BaseCastTime, MinGCD, Mommy.Haste);
         }
 
         protected virtual void FinalizeSpellModifiers() {
@@ -531,6 +510,78 @@ namespace Rawr.WarlockTmp {
 
             return StatConversion.GetAverageResistance(
                 80, Mommy.Options.TargetLevel, 0f, 0f);
+        }
+
+        protected virtual bool CanCollideWith(Spell spell) {
+
+            return true;
+        }
+
+        /// <summary>
+        /// This works for spells that are just as likely to be cast during
+        /// backdraft as any other time, and spells that are not affected by
+        /// backdraft (i.e. GetMaxBackdraftCasts() == 0). Override for other
+        /// spells.
+        /// </summary>
+        protected virtual float CalcAvgBackdraftBonus(
+            float fullBonus, float avgCast) {
+
+            float maxCasts = GetMaxBackdraftCasts();
+            if (maxCasts == 0) {
+                return 0;
+            }
+
+            float lag = Mommy.Options.Latency;
+            float backdraftPeriod = Conflagrate.COOLDOWN + avgCast / 2 + lag;
+            float backdraftWindow = 3f * (avgCast * (1 - fullBonus) + lag);
+            Debug.Assert(backdraftWindow < backdraftPeriod);
+
+            float castsRemaining = 3f;
+            foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
+                castsRemaining
+                    -= pair.Value.CalcAvgBackdraftCasts(
+                        backdraftWindow, backdraftPeriod);
+            }
+            if (castsRemaining < .0001) {
+                return 0f;
+            }
+
+            return Math.Min(
+                    castsRemaining,
+                    GetMaxBackdraftCasts())
+                * backdraftWindow
+                / backdraftPeriod
+                * fullBonus;
+        }
+
+        /// <summary>
+        /// The number of times this spell is cast during backdraft, factoring
+        /// in the spell's own cooldown but NOT other spells that may have
+        /// already consumed charges.
+        /// </summary>
+        protected virtual float CalcAvgBackdraftCasts(
+            float backdraftWindow, float backdraftPeriod) {
+
+            float max = GetMaxBackdraftCasts();
+            if (Cooldown == 0) {
+                return max;
+            } else {
+                Debug.Assert(Cooldown > backdraftWindow);
+                return max * backdraftWindow / backdraftPeriod;
+            }
+        }
+
+        protected virtual float GetMaxBackdraftCasts() {
+
+            if (MySpellTree == SpellTree.Destruction) {
+                if (Cooldown == 0) {
+                    return 3f;
+                } else {
+                    return 1f;
+                }
+            } else {
+                return 0f;
+            }
         }
 
         private bool IsBinary() {
@@ -562,8 +613,10 @@ namespace Rawr.WarlockTmp {
             float fightLength = Mommy.Options.Duration;
             foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
                 Spell spell = pair.Value;
-                castTimes.Add(spell.GetCastTime() + lag);
-                frequencies.Add(spell.NumCasts / fightLength);
+                if (CanCollideWith(spell)) {
+                    castTimes.Add(spell.GetCastTime() + lag);
+                    frequencies.Add(spell.NumCasts / fightLength);
+                }
             }
             IntList prioritySpells = new IntList();
             for (int i = castTimes.Count; --i >= 0; ) {
@@ -778,6 +831,14 @@ namespace Rawr.WarlockTmp {
 
     public class Conflagrate : Spell {
 
+        public const float COOLDOWN = 10f;
+
+        public static bool WillBeCast(CharacterCalculationsWarlock mommy) {
+
+            return mommy.Options.SpellPriority.Contains("Conflagrate")
+                && mommy.Talents.Conflagrate > 0;
+        }
+
         public Conflagrate(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
@@ -786,7 +847,7 @@ namespace Rawr.WarlockTmp {
                 .16f, // percentBaseMana,
                 1.5f, // baseCastTime,
                 1f, // minGCD,
-                10f, // cooldown,
+                COOLDOWN, // cooldown,
                 6f, // recastPeriod,
                 true, // canMiss,
                 .6f * 785f, // lowDirectDamage
@@ -809,9 +870,14 @@ namespace Rawr.WarlockTmp {
             return Mommy.Talents.Conflagrate > 0;
         }
 
-        protected override void  FinalizeSpellModifiers() {
+        protected override bool CanCollideWith(Spell spell) {
+            
+            return Mommy.Talents.GlyphConflag || !(spell is Immolate);
+        }
 
- 	        base.FinalizeSpellModifiers();
+        protected override void FinalizeSpellModifiers() {
+
+            base.FinalizeSpellModifiers();
 
             // For some reason I may never understand, firestone's 1% bonus gets
             // 1% of Shadow and Flame and 1% of Emberstorm subtracted from it.
@@ -827,6 +893,11 @@ namespace Rawr.WarlockTmp {
                 Mommy.Talents.ImprovedImmolate * .1f
                     + (Mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + Mommy.Talents.Aftermath * .03f);
+        }
+
+        protected override float GetMaxBackdraftCasts() {
+            
+            return 0f;
         }
     }
 
@@ -855,7 +926,8 @@ namespace Rawr.WarlockTmp {
                     * mommy.Talents.Pandemic, // bonus crit chance
                 mommy.Talents.Pandemic) { } // bonus crit multiplier
 
-        public override void SetCastingStats(float timeRemaining) {
+        public override void SetCastingStats(
+            float timeRemaining, float manaRemaining) {
 
             WarlockTalents talents = Mommy.Talents;
             if (talents.GlyphQuickDecay) {
@@ -880,26 +952,26 @@ namespace Rawr.WarlockTmp {
             float tc = d / 6f;
             if (p == 1 && t <= d) {
                 RecastPeriod = Mommy.Options.Duration;
-            } else {
-	            float fightLen = Mommy.Options.Duration;
-	            int maxTriggers = (int) (fightLen * t);
-	            int maxTicks = (int) (fightLen / tc);
+            } else if (p > 0 && t > 0) {
+                float fightLen = Mommy.Options.Duration;
+                int maxTriggers = (int) (fightLen * t);
+                int maxTicks = (int) (fightLen / tc);
 
-	            RecastPeriod
+                RecastPeriod
                     = tc
                         * maleficusDuration(
-	                        new float[maxTicks + 1, maxTriggers + 1],
-	                        tc,
-	                        p,
-	                        1 / t,
-	                        (int) (fightLen / tc),
-	                        6,
-	                        0);
+                            new float[maxTicks + 1, maxTriggers + 1],
+                            tc,
+                            p,
+                            1 / t,
+                            (int) (fightLen / tc),
+                            6,
+                            0);
             }
             NumTicks = RecastPeriod / tc;
             #endregion
 
-            base.SetCastingStats(timeRemaining);
+            base.SetCastingStats(timeRemaining, manaRemaining);
         }
 
         private static float maleficusDuration(
@@ -1135,6 +1207,27 @@ namespace Rawr.WarlockTmp {
                 false, // canTickCrit,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier) {
+
+        protected override float CalcAvgBackdraftBonus(
+            float fullBonus, float avgCast) {
+
+            if (Mommy.Talents.GlyphConflag) {
+                return fullBonus;
+            } else {
+                return base.CalcAvgBackdraftBonus(fullBonus, avgCast);
+            }
+        }
+
+        protected override float CalcAvgBackdraftCasts(
+            float backdraftPeriod, float backdraftWindow) {
+
+            if (Mommy.Talents.GlyphConflag) {
+                return 1f;
+            } else {
+                return base.CalcAvgBackdraftCasts(
+                    backdraftPeriod, backdraftWindow);
+            }
+        }
     }
 
     public class Incinerate : Spell {
@@ -1216,6 +1309,10 @@ namespace Rawr.WarlockTmp {
         public float AddCastsForRegen(
             float timeRemaining, float manaRemaining, Spell spammedSpell) {
 
+            // getting our cast time is not safe until the backdraft multilpier
+            // has been set.  fortunetly that's easy to "calculate"
+            BackdraftMultiplier = 1f;
+
             // The number of needed lifetaps is obtained by solving this
             // system of equations:
             //
@@ -1231,6 +1328,11 @@ namespace Rawr.WarlockTmp {
             float f = timeRemaining;
             float toAdd = Math.Max(0f, (c * d - a * f) / (b * d - a * e));
             NumCasts += toAdd;
+
+            if (toAdd > 0 && !Mommy.CastSpells.ContainsKey("Life Tap")) {
+                Mommy.CastSpells.Add("Life Tap", this);
+            }
+
             return toAdd;
         }
 
@@ -1268,9 +1370,10 @@ namespace Rawr.WarlockTmp {
             return Mommy.Talents.Metamorphosis > 0;
         }
 
-        public override void SetCastingStats(float timeRemaining) {
+        public override void SetCastingStats(
+            float timeRemaining, float manaRemaining) {
 
-            base.SetCastingStats(timeRemaining);
+            base.SetCastingStats(timeRemaining, manaRemaining);
 
             // Discretize NumCasts.  This makes sense becasue of this spell's
             // long cooldown, so that it's (correctly) modelled as more
@@ -1355,7 +1458,8 @@ namespace Rawr.WarlockTmp {
                 Mommy.Talents, Mommy.CastSpells.ContainsKey("Corruption"));
         }
 
-        public override void SetCastingStats(float timeRemaining) {
+        public override void SetCastingStats(
+            float timeRemaining, float manaRemaining) {
 
             // Currently modeled as a spell on a cooldown equal to the
             // average time between procs.  This lengthens the time between
@@ -1371,7 +1475,7 @@ namespace Rawr.WarlockTmp {
             float corrTicks
                 = Mommy.HitChance * corruption.NumCasts * corruption.NumTicks;
             Cooldown = Mommy.Options.Duration / (corrTicks * procChance);
-            base.SetCastingStats(timeRemaining);
+            base.SetCastingStats(timeRemaining, manaRemaining);
         }
     }
 
