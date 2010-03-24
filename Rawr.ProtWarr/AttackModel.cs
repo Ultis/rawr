@@ -72,7 +72,7 @@ namespace Rawr.ProtWarr
                         AttackModelMode = AttackModelMode.DevastateRevenge;
                     else
                         AttackModelMode = AttackModelMode.Devastate;
-                else if(Talents.UnrelentingAssault == 1)
+                else if(Talents.UnrelentingAssault == 2)
                     AttackModelMode = AttackModelMode.UnrelentingAssault;
                 else
                     AttackModelMode = AttackModelMode.Basic;                   

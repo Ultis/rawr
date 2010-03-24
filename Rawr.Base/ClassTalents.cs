@@ -641,11 +641,11 @@ namespace Rawr
 @"When activated, this ability temporarily grants you 30% of your maximum health for 20 sec.  After the effect expires, the health is lost.",}, "spell_holy_ashestoashes")]
         public int LastStand { get { return _data[63]; } set { _data[63] = value; } }
         /// <summary>
-        /// Increases damage of your Revenge ability by [10 * Pts]% and gives a [25 * Pts]% chance to stun the target for 3 sec.
+        /// Increases damage of your Revenge ability by [30 * Pts]% and causes Revenge to strike an additional target for [50 * Pts]% damage.
         /// </summary>
         [TalentData(64, "Improved Revenge", 2, 2, 2, 3, -1, new[] {
-@"Increases damage of your Revenge ability by 10% and gives a 25% chance to stun the target for 3 sec.",
-@"Increases damage of your Revenge ability by 20% and gives a 50% chance to stun the target for 3 sec.",}, "ability_warrior_revenge")]
+@"Increases damage of your Revenge ability by 30% and causes Revenge to strike an additional target for 50% damage.",
+@"Increases damage of your Revenge ability by 60% and causes Revenge to strike an additional target.",}, "ability_warrior_revenge")]
         public int ImprovedRevenge { get { return _data[64]; } set { _data[64] = value; } }
         /// <summary>
         /// Increases your block value by [15 * Pts]% and reduces the cooldown of your Shield Block ability by [10 * Pts] sec.

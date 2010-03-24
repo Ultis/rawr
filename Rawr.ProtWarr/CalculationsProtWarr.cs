@@ -529,7 +529,7 @@ threat and limited threat scaled by the threat scale.",
                         character.MainHand.Type == ItemType.Dagger ||
                         character.MainHand.Type == ItemType.FistWeapon))
                             ? talents.OneHandedWeaponSpecialization * 0.02f : 0f),
-                BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                BonusStaminaMultiplier = talents.Vitality * 0.03f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
@@ -550,7 +550,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1.0f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility += (float)Math.Floor(statsItemsBuffs.Agility * (1.0f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina, CharacterClass.Warrior);
-            statsTotal.Health *= (float)Math.Floor(1.0f + statsTotal.BonusHealthMultiplier);
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1.0f + statsTotal.BonusHealthMultiplier));
 
             // Calculate Procs and Special Effects
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, options));
@@ -621,8 +621,6 @@ threat and limited threat scaled by the threat scale.",
                             effect.AccumulateAverageStats(statsSpecialEffects, 2.0f, 1.0f, weaponSpeed);
                         break;
                     case Trigger.DamageDone:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
-                        break;
                     case Trigger.DamageOrHealingDone:
                         effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
