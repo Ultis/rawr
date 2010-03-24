@@ -69,8 +69,8 @@
                 <TextBlock  Text="Obliterate (FU):" Grid.Row="6" Margin="2" VerticalAlignment="Center"/>
                 <TextBox Margin="2" Grid.Column="1" Text="{Binding Path=Obliterate, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="6"/>
 
-                <TextBlock Text="Scourge Strike (Rp):" Margin="2" Grid.Row="7" VerticalAlignment="Center" />
-                <TextBox Margin="2" Grid.Row="7" Grid.Column="1" Text="{Binding Path=ScourgeStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                <TextBlock Text="Scourge Strike (FU):" Margin="2" Grid.Row="7" VerticalAlignment="Center" />
+                <TextBox Margin="2" Grid.Column="1" Text="{Binding Path=ScourgeStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="7" />
                 
                 <!-- MultiTarget -->
                 <TextBlock Text="Pestilence (B*):" Grid.Row="8" VerticalAlignment="Center" Margin="2" />
@@ -112,6 +112,7 @@
                     <RowDefinition Height="auto" x:Name="FightDuration"/>
                     <RowDefinition Height="auto" x:Name="GraphType"/>
                     <RowDefinition Height="auto" x:Name="ThreatWeight"/>
+                    <RowDefinition Height="auto" x:Name="MitigationWeight"/>
                     <RowDefinition Height="auto" x:Name="SurvivalWeight"/>
                     <RowDefinition Height="auto" x:Name="NumTargets"/>
                 </Grid.RowDefinitions>
@@ -138,13 +139,16 @@
                 </ComboBox>
 
                 <TextBlock Text="Threat Weight:" Grid.Row="3" VerticalAlignment="Center" Margin="2"/>
-                <Slider Value="{Binding Path=ThreatWeight, Mode=TwoWay}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="3" SmallChange="0.01" LargeChange="0.1" Minimum="0" Maximum="5"/>
+                <TextBox Text="{Binding Path=ThreatWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="3" />
+
+                <TextBlock Text="Mitigation Weight:" Grid.Row="4" VerticalAlignment="Center" Margin="2"/>
+                <TextBox Text="{Binding Path=MitigationWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="4"/>
+
+                <TextBlock Text="Survival Weight:" Grid.Row="5" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Path=SurvivalWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="5"/>
                 
-                <TextBlock Text="Survival Weight:" Grid.Row="4" Margin="2" VerticalAlignment="Center"/>
-                <Slider Value="{Binding Path=SurvivalWeight, Mode=TwoWay}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="4" SmallChange="0.01" LargeChange="0.1" Minimum="0" Maximum="5"/>
-                
-                <TextBlock Text="# of Targets:" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
-                <Slider Value="{Binding Path=uNumberTargets, Mode=TwoWay}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="5" SmallChange="1" LargeChange="1" Minimum="1" Maximum="10"/>
+                <TextBlock Text="# of Targets:" Grid.Row="6" Margin="2" VerticalAlignment="Center" />
+                <TextBox Text="{Binding Path=uNumberTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="6"/>
             </Grid>
         </layoutToolkit:AccordionItem>
     </layoutToolkit:Accordion>
