@@ -337,14 +337,8 @@ namespace Rawr.Mage
             if (CastingState.MageTalents.IncantersAbsorption > 0)
             {
                 //float incanterSpellPower = Math.Min((float)Math.Min(calculationOptions.AbsorptionPerSecond, calculationResult.IncomingDamageDps) * 0.05f * talents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
-                if (CastingState.CalculationOptions.Mode333)
-                {
-                    spellPower += Absorbed / CastTime * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10;
-                }
-                else
-                {
-                    spellPower += Math.Min((float)Math.Min(CastingState.CalculationOptions.AbsorptionPerSecond + Absorbed / CastTime, CastingState.Calculations.IncomingDamageDps) * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
-                }
+                spellPower += Absorbed / CastTime * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10;
+                //spellPower += Math.Min((float)Math.Min(CastingState.CalculationOptions.AbsorptionPerSecond + Absorbed / CastTime, CastingState.Calculations.IncomingDamageDps) * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
             }
             effectSpellPower = spellPower;
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
@@ -984,7 +978,7 @@ namespace Rawr.Mage
             DpsPerSpellPower += weight * spell.DamagePerSpellPower;
         }
 
-        public void AddSpell(bool needsDisplayCalculations, DotSpell spell, float weight, float dotUptime)
+        public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight, float dotUptime)
         {
             if (needsDisplayCalculations)
             {

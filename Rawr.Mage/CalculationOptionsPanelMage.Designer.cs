@@ -33,6 +33,7 @@
             this.tabControlFight2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label89 = new System.Windows.Forms.Label();
             this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -250,6 +251,10 @@
             this.textBoxEffectBonusSpirit = new System.Windows.Forms.TextBox();
             this.label62 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label131 = new System.Windows.Forms.Label();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.label130 = new System.Windows.Forms.Label();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.textBoxChanceToLiveAttenuation = new System.Windows.Forms.TextBox();
             this.label90 = new System.Windows.Forms.Label();
             this.textBoxAbsorptionPerSecond = new System.Windows.Forms.TextBox();
@@ -358,13 +363,9 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label130 = new System.Windows.Forms.Label();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.label131 = new System.Windows.Forms.Label();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage8.SuspendLayout();
@@ -385,7 +386,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
             this.tabPage7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlFight2
@@ -440,6 +440,11 @@
             this.textBoxChannelLatency.Name = "textBoxChannelLatency";
             this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxChannelLatency.TabIndex = 159;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label89
             // 
@@ -1761,7 +1766,7 @@
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(35, 22);
             this.toolStripLabel2.Text = "of {0}";
             this.toolStripLabel2.ToolTipText = "Total number of items";
             // 
@@ -2012,7 +2017,7 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(35, 22);
             this.toolStripLabel1.Text = "of {0}";
             this.toolStripLabel1.ToolTipText = "Total number of items";
             // 
@@ -2145,7 +2150,7 @@
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(36, 22);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 22);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -2771,6 +2776,46 @@
             this.tabPage5.Text = "Survivability";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // label131
+            // 
+            this.label131.AutoSize = true;
+            this.label131.Location = new System.Drawing.Point(-1, 415);
+            this.label131.Name = "label131";
+            this.label131.Size = new System.Drawing.Size(91, 13);
+            this.label131.TabIndex = 245;
+            this.label131.Text = "Use Frost Ward: *";
+            this.toolTipMage.SetToolTip(this.label131, "Allows use of Frost Ward every 30 seconds.");
+            // 
+            // checkBox7
+            // 
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "UseFrostWard", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox7.Location = new System.Drawing.Point(128, 415);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(15, 14);
+            this.checkBox7.TabIndex = 244;
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // label130
+            // 
+            this.label130.AutoSize = true;
+            this.label130.Location = new System.Drawing.Point(-1, 395);
+            this.label130.Name = "label130";
+            this.label130.Size = new System.Drawing.Size(85, 13);
+            this.label130.TabIndex = 243;
+            this.label130.Text = "Use Fire Ward: *";
+            this.toolTipMage.SetToolTip(this.label130, "Allows use of Fire Ward every 30 seconds.");
+            // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "UseFireWard", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox6.Location = new System.Drawing.Point(128, 395);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(15, 14);
+            this.checkBox6.TabIndex = 242;
+            this.checkBox6.UseVisualStyleBackColor = true;
+            // 
             // textBoxChanceToLiveAttenuation
             // 
             this.textBoxChanceToLiveAttenuation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveAttenuation", true));
@@ -3317,6 +3362,7 @@
             this.label107.TabIndex = 212;
             this.label107.Text = "Patch 3.3.3: *";
             this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.3.");
+            this.label107.Visible = false;
             // 
             // checkBoxMode33
             // 
@@ -3327,6 +3373,7 @@
             this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMode33.TabIndex = 211;
             this.checkBoxMode33.UseVisualStyleBackColor = true;
+            this.checkBoxMode33.Visible = false;
             // 
             // label85
             // 
@@ -3853,51 +3900,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label130
-            // 
-            this.label130.AutoSize = true;
-            this.label130.Location = new System.Drawing.Point(-1, 395);
-            this.label130.Name = "label130";
-            this.label130.Size = new System.Drawing.Size(85, 13);
-            this.label130.TabIndex = 243;
-            this.label130.Text = "Use Fire Ward: *";
-            this.toolTipMage.SetToolTip(this.label130, "Allows use of Fire Ward every 30 seconds.");
-            // 
-            // checkBox6
-            // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "UseFireWard", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox6.Location = new System.Drawing.Point(128, 395);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(15, 14);
-            this.checkBox6.TabIndex = 242;
-            this.checkBox6.UseVisualStyleBackColor = true;
-            // 
-            // label131
-            // 
-            this.label131.AutoSize = true;
-            this.label131.Location = new System.Drawing.Point(-1, 415);
-            this.label131.Name = "label131";
-            this.label131.Size = new System.Drawing.Size(91, 13);
-            this.label131.TabIndex = 245;
-            this.label131.Text = "Use Frost Ward: *";
-            this.toolTipMage.SetToolTip(this.label131, "Allows use of Frost Ward every 30 seconds.");
-            // 
-            // checkBox7
-            // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "UseFrostWard", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox7.Location = new System.Drawing.Point(128, 415);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(15, 14);
-            this.checkBox7.TabIndex = 244;
-            this.checkBox7.UseVisualStyleBackColor = true;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3909,6 +3911,7 @@
             this.tabControlFight2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -3939,7 +3942,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}

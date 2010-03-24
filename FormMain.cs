@@ -1871,7 +1871,7 @@ namespace Rawr
         public void ReloadCharacterFromArmoryUpdate(Character character, Character reload)
         {
             //load values for gear from armory into original character
-            character.SetItems(reload, true);
+            character.SetItems(reload, true, true);
             character.AssignAllTalentsFromCharacter(reload, false);
         }
 
@@ -2180,7 +2180,7 @@ namespace Rawr
         {
             //load values for gear from armory into original character
 			character.IsLoading = true;
-            character.SetItems(reload, true);
+            character.SetItems(reload, true, true);
 			foreach (string existingAvailableItem in character.AvailableItems)
 			{
 				string itemId = existingAvailableItem.Split('.')[0];

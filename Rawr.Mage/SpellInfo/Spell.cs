@@ -102,68 +102,6 @@ namespace Rawr.Mage
         }
     }
 
-    public class DotSpell : Spell
-    {
-        public DotSpell(SpellTemplate template) : base(template) { }
-
-        public float DotAverageDamage;
-        public float DotAverageThreat;
-        public float DotDamagePerSpellPower;
-
-        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom)
-        {
-            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, false, false, false);
-        }
-
-        public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool round, bool forceHit, bool forceMiss)
-        {
-            MageTalents mageTalents = castingState.MageTalents;
-            Stats baseStats = castingState.BaseStats;
-            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
-
-            SpellModifier *= AdditiveSpellModifier;
-
-            if (CritRate < 0.0f) CritRate = 0.0f;
-            if (CritRate > 1.0f) CritRate = 1.0f;
-
-            HitProcs = Ticks * HitRate;
-            CritProcs = HitProcs * CritRate;
-            TargetProcs = HitProcs;
-            DotProcs = DotDuration / DotTickInterval;
-
-            Pom = pom;
-            if (Instant) InterruptProtection = 1;
-            if (castingState.IcyVeins) InterruptProtection = 1;
-
-            CastTime = SpellTemplate.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out ChannelReduction);
-
-            if (Ticks > 0)
-            {
-                if (!forceMiss)
-                {
-                    AverageDamage = CalculateDirectAverageDamage(castingState.Calculations, RawSpellDamage, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
-                    AverageThreat = AverageDamage * ThreatMultiplier;
-
-                    DotAverageDamage = CalculateDotAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out DotDamagePerSpellPower);
-                    DotAverageThreat = DotAverageDamage * ThreatMultiplier;
-                }
-            }
-            if (ChannelReduction > 0)
-            {
-                AverageDamage *= (1 - ChannelReduction);
-                AverageThreat *= (1 - ChannelReduction);
-                DamagePerSpellPower *= (1 - ChannelReduction);
-                CastTime *= (1 - ChannelReduction);
-            }
-            AverageCost = CalculateCost(castingState.Calculations, round);
-
-            if (outOfFiveSecondRule)
-            {
-                OO5SR = 1;
-            }
-        }
-    }
-
     public class Spell
     {
         public SpellId SpellId; // set in CastingState.GetSpell
@@ -216,6 +154,10 @@ namespace Rawr.Mage
         public float IgniteDamagePerSpellPower;
         //public float DpsPerSpellPower;
         public float DamagePerSpellPower;
+        // stats valid for dot spells only
+        public float DotAverageDamage;
+        public float DotAverageThreat;
+        public float DotDamagePerSpellPower;
 
         public float DamagePerSecond
         {
@@ -455,8 +397,13 @@ namespace Rawr.Mage
             s.IgniteDamage = reference.IgniteDamage;
             s.IgniteDamagePerSpellPower = reference.IgniteDamagePerSpellPower;
             s.DamagePerSpellPower = reference.DamagePerSpellPower;
+            // absorb spells
             s.Absorb = reference.Absorb;
             s.TotalAbsorb = reference.TotalAbsorb;
+            // dot spells
+            s.DotAverageDamage = reference.DotAverageDamage;
+            s.DotAverageThreat = reference.DotAverageThreat;
+            s.DotDamagePerSpellPower = reference.DotDamagePerSpellPower;
 
             s.RecalculateCastTime(castingState);
 
@@ -538,15 +485,20 @@ namespace Rawr.Mage
 
         public void CalculateDerivedStats(CastingState castingState)
         {
-            CalculateDerivedStats(castingState, false, false, true, false, false, false);
+            CalculateDerivedStats(castingState, false, false, true, false, false, false, false);
         }
 
         public void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot)
         {
-            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, false, false, false);
+            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, false, false, false, false);
         }
 
         public virtual void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round, bool forceHit, bool forceMiss)
+        {
+            CalculateDerivedStats(castingState, outOfFiveSecondRule, pom, spammedDot, round, forceHit, forceMiss, false);
+        }
+
+        public virtual void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule, bool pom, bool spammedDot, bool round, bool forceHit, bool forceMiss, bool dotUptime)
         {
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
@@ -615,8 +567,19 @@ namespace Rawr.Mage
             SpammedDot = spammedDot;
             if (Ticks > 0 && !forceMiss)
             {
-                AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
-                AverageThreat = AverageDamage * ThreatMultiplier;
+                if (dotUptime)
+                {
+                    AverageDamage = CalculateDirectAverageDamage(castingState.Calculations, RawSpellDamage, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
+                    AverageThreat = AverageDamage * ThreatMultiplier;
+
+                    DotAverageDamage = CalculateDotAverageDamage(baseStats, calculationOptions, RawSpellDamage, forceHit, out DotDamagePerSpellPower);
+                    DotAverageThreat = DotAverageDamage * ThreatMultiplier;
+                }
+                else
+                {
+                    AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
+                    AverageThreat = AverageDamage * ThreatMultiplier;
+                }
             }
             else
             {
@@ -625,6 +588,12 @@ namespace Rawr.Mage
                 DamagePerSpellPower = 0;
                 IgniteDamage = 0;
                 IgniteDamagePerSpellPower = 0;
+                if (dotUptime)
+                {
+                    DotAverageDamage = 0;
+                    DotAverageThreat = 0;
+                    DotDamagePerSpellPower = 0;
+                }
             }
             if (ChannelReduction > 0)
             {

@@ -338,7 +338,7 @@ namespace Rawr
                         //Loading new items while IsLoading==true causes properties to be reset to their previously cached values, 
                         //so load all the items beforehand, then put them into the character all at once.
                         _character.IsLoading = true;
-                        _character.SetItems(bestCharacter);
+                        _character.SetItems(bestCharacter, false, false);
                         _character.ActiveBuffs = bestCharacter.ActiveBuffs;
                         if (checkBoxOptimizeTalents.Checked || checkBoxMutateTalents.Checked)
                         {

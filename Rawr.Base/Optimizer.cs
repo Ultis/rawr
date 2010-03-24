@@ -1442,17 +1442,7 @@ namespace Rawr.Optimizer
         protected override OptimizerCharacter GenerateIndividual(object[] items)
         {
             items = (object[])items.Clone();
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions,
-                items, characterSlots,
-                _character.ActiveBuffs, _character.CurrentModel);
-            character.CalculationOptions = _character.CalculationOptions;
-            character.PrimaryProfession = _character.PrimaryProfession;
-            character.SecondaryProfession = _character.SecondaryProfession;
-            character.Class = _character.Class;
-            character.AssignAllTalentsFromCharacter(_character, false);
-            character.CalculationToOptimize = _character.CalculationToOptimize;
-            character.OptimizationRequirements = _character.OptimizationRequirements;
-            character.EnforceGemRequirements = _character.EnforceGemRequirements;
+            Character character = new Character(_character, items, characterSlots);
             if (optimizeFood)
             {
                 Buff food = (Buff)items[characterSlots];
@@ -1631,7 +1621,7 @@ namespace Rawr.Optimizer
         {
             if (bestIndividual != null)
             {
-                itemGenerator.NormalizeCharacter(bestIndividual.Character); // this makes it nonnormal, but i don't think it should create any problems
+                itemGenerator.NormalizeCharacter(bestIndividual.Character, false); // this makes it nonnormal, but i don't think it should create any problems
             }
             return bestIndividual;
         }

@@ -25,16 +25,16 @@ namespace Rawr //O O . .
         [XmlIgnore]
         public List<Buff> _activeBuffs;
         [XmlElement("ActiveBuffs")]
-        public List<string> _activeBuffsXml = new List<string>();
+        public List<string> _activeBuffsXml;
         public const int SlotCount = 21;
         public const int OptimizableSlotCount = 19;
         [XmlIgnore]
-        internal ItemInstance[] _item = new ItemInstance[SlotCount];
+        internal ItemInstance[] _item;
 
         [XmlIgnore]
-        public List<ArmoryPet> ArmoryPets = new List<ArmoryPet>();
+        public List<ArmoryPet> ArmoryPets;
         [XmlElement("ArmoryPets")]
-        public List<string> ArmoryPetsXml = new List<string>();
+        public List<string> ArmoryPetsXml;
 
         public ItemInstance[] GetItems()
         {
@@ -43,27 +43,40 @@ namespace Rawr //O O . .
 
         public void SetItems(ItemInstance[] items)
         {
+            SetItems(items, true);
+        }
+
+        public void SetItems(ItemInstance[] items, bool invalidate)
+        {
             int max = Math.Min(OptimizableSlotCount, items.Length);
             for (int slot = 0; slot < max; slot++)
             {
                 _item[slot] = items[slot] == null ? null : items[slot].Clone();
             }
-            OnCalculationsInvalidated();
+            // when called from optimizer we never want to invalidate since that causes creation of new item instances
+            // and causes us to lose stats cache
+            if (invalidate)
+            {
+                OnCalculationsInvalidated();
+            }
         }
 
         public void SetItems(Character character)
         {
-            SetItems(character, false);
+            SetItems(character, false, true);
         }
 
-        public void SetItems(Character character, bool allSlots)
+        public void SetItems(Character character, bool allSlots, bool invalidate)
         {
             int max = allSlots ? SlotCount : OptimizableSlotCount;
             for (int slot = 0; slot < max; slot++)
             {
                 _item[slot] = character._item[slot] == null ? null : character._item[slot].Clone();
             }
-            OnCalculationsInvalidated();
+            if (invalidate)
+            {
+                OnCalculationsInvalidated();
+            }
         }
 
         #region Gem Slots
@@ -158,7 +171,7 @@ namespace Rawr //O O . .
         //[XmlElement("Talents")]
         //public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
-		public List<string> _availableItems = new List<string>();
+		public List<string> _availableItems;
 		[XmlElement("CurrentModel")]
 		public string _currentModel;
 		[XmlElement("EnforceMetagemRequirements")]
@@ -170,16 +183,16 @@ namespace Rawr //O O . .
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
 
         [XmlElement("CalculationOptions")]
-        public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
+        public SerializableDictionary<string, string> _serializedCalculationOptions;
 
-        private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
+        private Dictionary<string, ICalculationOptionBase> _calculationOptions;
 		[XmlIgnore]
 		public ICalculationOptionBase CalculationOptions {
 			get 
             {
                 ICalculationOptionBase ret;
                 _calculationOptions.TryGetValue(CurrentModel, out ret);
-                if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel)) 
+                if (ret == null && _serializedCalculationOptions != null && _serializedCalculationOptions.ContainsKey(CurrentModel)) 
                 {
                     ret = Calculations.GetModel(CurrentModel)
                         .DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
@@ -567,8 +580,11 @@ namespace Rawr //O O . .
 
         public void InvalidateItemInstances()
         {
-            _relevantItems.Clear();
-            _relevantItemInstances.Clear();
+            if (_relevantItems != null)
+            {
+                _relevantItems.Clear();
+                _relevantItemInstances.Clear();
+            }
             if (!IsLoading)
             {
                 for (int i = 0; i < _item.Length; i++)
@@ -589,7 +605,7 @@ namespace Rawr //O O . .
         }
 
         [XmlIgnore]
-        private List<ItemInstance> _customItemInstances = new List<ItemInstance>();
+        private List<ItemInstance> _customItemInstances;
 
         public List<ItemInstance> CustomItemInstances
         {
@@ -667,10 +683,10 @@ namespace Rawr //O O . .
         }
          
         [XmlIgnore]
-        private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
+        private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances;
 
         [XmlIgnore]
-        private Dictionary<CharacterSlot, List<Item>> _relevantItems = new Dictionary<CharacterSlot, List<Item>>();
+        private Dictionary<CharacterSlot, List<Item>> _relevantItems;
 
         public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot)
         {
@@ -1140,8 +1156,14 @@ namespace Rawr //O O . .
 
 		public void SerializeCalculationOptions()
 		{
-			if (CalculationOptions != null)
-				_serializedCalculationOptions[CurrentModel] = CalculationOptions.GetXml();
+            if (CalculationOptions != null)
+            {
+                if (_serializedCalculationOptions == null)
+                {
+                    _serializedCalculationOptions = new SerializableDictionary<string, string>();
+                }
+                _serializedCalculationOptions[CurrentModel] = CalculationOptions.GetXml();
+            }
 		}
 
 		public Enchant GetEnchantBySlot(ItemSlot slot)
@@ -1721,8 +1743,21 @@ namespace Rawr //O O . .
             return cslot;
         }
 
+        private void Initialize()
+        {
+            // common initialization used by constructors
+            // avoid inline instantiation of fields as not all constructors want/need the overhead
+            _item = new ItemInstance[SlotCount];
+            _availableItems = new List<string>();
+            _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
+            _customItemInstances = new List<ItemInstance>();
+            _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
+            _relevantItems = new Dictionary<CharacterSlot, List<Item>>();
+        }
+
         public Character() 
         {
+            Initialize();
             _activeBuffs = new List<Buff>();
         }
 
@@ -1735,6 +1770,7 @@ namespace Rawr //O O . .
 			int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, 
 			int enchantMainHand, int enchantOffHand, int enchantRanged*/)
         {
+            Initialize();
             IsLoading = true;
             _name = name;
             _realm = realm;
@@ -1783,6 +1819,7 @@ namespace Rawr //O O . .
 			Enchant enchantRanged, bool trackEquippedItemChanges*/
                                                                   )
         {
+            Initialize();
             //_trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
             _name = name;
@@ -1824,6 +1861,7 @@ namespace Rawr //O O . .
 			ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
 			ItemInstance projectileBag, List<Buff> activeBuffs, string model)
         {
+            Initialize();
             IsLoading = true;
             _name = name;
             _realm = realm;
@@ -1859,28 +1897,40 @@ namespace Rawr //O O . .
             BossOptions = boss.Clone();
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
-            object[] items, int count, List<Buff> activeBuffs, string model)
+        /// <summary>
+        /// This overload is used from optimizer and is optimized for performance, do not modify
+        /// </summary>
+        public Character(Character baseCharacter, object[] items, int count)
         {
             IsLoading = true;
-            _name = name;
-            _realm = realm;
-            _region = region;
-            _race = race;
+            _name = baseCharacter._name;
+            _realm = baseCharacter._realm;
+            _region = baseCharacter._region;
+            _race = baseCharacter._race;
+            _currentModel = baseCharacter._currentModel;
+            _calculationOptions = baseCharacter._calculationOptions;
+            _primaryProfession = baseCharacter._primaryProfession;
+            _secondaryProfession = baseCharacter._secondaryProfession;
+            _class = baseCharacter._class;
+            AssignAllTalentsFromCharacter(baseCharacter, false);
+            CalculationToOptimize = baseCharacter.CalculationToOptimize;
+            OptimizationRequirements = baseCharacter.OptimizationRequirements;
+            _enforceMetagemRequirements = baseCharacter._enforceMetagemRequirements;
+            _bossOptions = baseCharacter._bossOptions;
+            _faction = baseCharacter._faction;
+
+            _item = new ItemInstance[SlotCount];
             Array.Copy(items, _item, count);
-            SetFaction();
 
             IsLoading = false;
-            ActiveBuffs = new List<Buff>(activeBuffs);
-            CurrentModel = model;
+            ActiveBuffs = new List<Buff>(baseCharacter.ActiveBuffs);
             RecalculateSetBonuses();
-
-            BossOptions = boss; // don't clone, this is used from optimizer
         }
 
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
             ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
+            Initialize();
             IsLoading = true;
             _name = name;
             _realm = realm;

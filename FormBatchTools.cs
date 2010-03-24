@@ -331,7 +331,7 @@ namespace Rawr
                     // we don't want the new character, reload the old one
                     Character _character = character.Character;
                     _character.IsLoading = true;
-                    _character.SetItems(before);
+                    _character.SetItems(before, false, false);
                     _character.ActiveBuffs = before.ActiveBuffs;
                     //_character.CurrentTalents = before.CurrentTalents; // let's not play with talents for now
                     _character.IsLoading = false;

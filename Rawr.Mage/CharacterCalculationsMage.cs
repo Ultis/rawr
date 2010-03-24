@@ -55,6 +55,30 @@ namespace Rawr.Mage
         }
     }
 
+    /// <summary>
+    /// Lightweight storage for target debuffs, just store the relevant stats
+    /// instead of creating a full blown Stats object
+    /// </summary>
+    public class TargetDebuffStats
+    {
+        public float SpellCritOnTarget { get; set; }
+        public float SpellHaste { get; set; }
+        public float BonusDamageMultiplier { get; set; }
+        public float BonusFrostDamageMultiplier { get; set; }
+        public float BonusFireDamageMultiplier { get; set; }
+        public float BonusHolyDamageMultiplier { get; set; }
+
+        public void Accumulate(Stats stats)
+        {
+            SpellCritOnTarget += stats.SpellCritOnTarget;
+            SpellHaste = (1 + SpellHaste) * (1 + stats.SpellHaste) - 1;
+            BonusDamageMultiplier = (1 + BonusDamageMultiplier) * (1 + stats.BonusDamageMultiplier) - 1;
+            BonusFrostDamageMultiplier = (1 + BonusFrostDamageMultiplier) * (1 + stats.BonusFrostDamageMultiplier) - 1;
+            BonusFireDamageMultiplier = (1 + BonusFireDamageMultiplier) * (1 + stats.BonusFireDamageMultiplier) - 1;
+            BonusHolyDamageMultiplier = (1 + BonusHolyDamageMultiplier) * (1 + stats.BonusHolyDamageMultiplier) - 1;
+        }
+    }
+
     public sealed class CharacterCalculationsMage : CharacterCalculationsBase
     {
         private float _overallPoints = 0f;
@@ -781,14 +805,14 @@ namespace Rawr.Mage
         }
         #endregion
 
-        private Stats targetDebuffs;
-        public Stats TargetDebuffs
+        private TargetDebuffStats targetDebuffs;
+        public TargetDebuffStats TargetDebuffs
         {
             get
             {
                 if (targetDebuffs == null)
                 {
-                    targetDebuffs = new Stats();
+                    targetDebuffs = new TargetDebuffStats();
                     foreach (Buff buff in ActiveBuffs)
                     {
                         if (buff.IsTargetDebuff)

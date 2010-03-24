@@ -451,14 +451,8 @@ namespace Rawr.Mage
             float absorb = 1950f + spellPowerCoefficient * castingState.FireSpellPower;
             spell.Absorb = absorb;
             // in 3.3.3 warding doesn't count as absorb for IA, assume that we'll get to normal absorb at least once in 30 sec (i.e. we're not lucky enough to continue proccing warding for the whole 30 sec)
-            if (castingState.CalculationOptions.Mode333)
-            {
-                spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
-            }
-            else
-            {
-                spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
-            }
+            spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
+            //spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFire);
             return spell;
         }
@@ -502,14 +496,8 @@ namespace Rawr.Mage
             float q = 0.15f * castingState.MageTalents.FrostWarding;
             float absorb = 1950f + spellPowerCoefficient * castingState.FrostSpellPower;
             spell.Absorb = absorb;
-            if (castingState.CalculationOptions.Mode333)
-            {
-                spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
-            }
-            else
-            {
-                spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
-            }
+            spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
+            //spell.TotalAbsorb = Math.Min((1 + q / (1 - q)) * absorb, 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
             spell.AverageCost -= Math.Min(q / (1 - q) * absorb, q * 30f * (float)castingState.Calculations.IncomingDamageDpsFrost);
             return spell;
         }
@@ -555,17 +543,17 @@ namespace Rawr.Mage
         public static SpellData[] SpellData = new SpellData[11];
         static FrostboltTemplate()
         {
-            SpellData[0] = new SpellData() { Cost = (int)(0.11 * BaseMana[70]), MinDamage = 630, MaxDamage = 680, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[1] = new SpellData() { Cost = (int)(0.11 * BaseMana[71]), MinDamage = 633, MaxDamage = 684, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[2] = new SpellData() { Cost = (int)(0.11 * BaseMana[72]), MinDamage = 637, MaxDamage = 688, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[3] = new SpellData() { Cost = (int)(0.11 * BaseMana[73]), MinDamage = 641, MaxDamage = 692, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[4] = new SpellData() { Cost = (int)(0.11 * BaseMana[74]), MinDamage = 645, MaxDamage = 696, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[5] = new SpellData() { Cost = (int)(0.11 * BaseMana[75]), MinDamage = 702, MaxDamage = 758, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[6] = new SpellData() { Cost = (int)(0.11 * BaseMana[76]), MinDamage = 706, MaxDamage = 763, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[7] = new SpellData() { Cost = (int)(0.11 * BaseMana[77]), MinDamage = 710, MaxDamage = 767, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[8] = new SpellData() { Cost = (int)(0.11 * BaseMana[78]), MinDamage = 714, MaxDamage = 771, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[9] = new SpellData() { Cost = (int)(0.11 * BaseMana[79]), MinDamage = 799, MaxDamage = 861, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
-            SpellData[10] = new SpellData() { Cost = (int)(0.11 * BaseMana[80]), MinDamage = 803, MaxDamage = 866, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
+            SpellData[0] = new SpellData() { Cost = (int)(0.11 * BaseMana[70]), MinDamage = 630, MaxDamage = 680, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.11 * BaseMana[71]), MinDamage = 633, MaxDamage = 684, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.11 * BaseMana[72]), MinDamage = 637, MaxDamage = 688, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.11 * BaseMana[73]), MinDamage = 641, MaxDamage = 692, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.11 * BaseMana[74]), MinDamage = 645, MaxDamage = 696, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.11 * BaseMana[75]), MinDamage = 702, MaxDamage = 758, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[6] = new SpellData() { Cost = (int)(0.11 * BaseMana[76]), MinDamage = 706, MaxDamage = 763, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[7] = new SpellData() { Cost = (int)(0.11 * BaseMana[77]), MinDamage = 710, MaxDamage = 767, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[8] = new SpellData() { Cost = (int)(0.11 * BaseMana[78]), MinDamage = 714, MaxDamage = 771, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[9] = new SpellData() { Cost = (int)(0.11 * BaseMana[79]), MinDamage = 799, MaxDamage = 861, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[10] = new SpellData() { Cost = (int)(0.11 * BaseMana[80]), MinDamage = 803, MaxDamage = 866, SpellDamageCoefficient = 3.0f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -611,10 +599,6 @@ namespace Rawr.Mage
         public FrostboltTemplate(CharacterCalculationsMage calculations)
             : base("Frostbolt", false, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            if (calculations.CalculationOptions.Mode333)
-            {
-                SpellDamageCoefficient = 3.0f / 3.5f;
-            }
             Calculate(calculations);
             if (calculations.MageTalents.GlyphOfFrostbolt)
             {
@@ -736,14 +720,7 @@ namespace Rawr.Mage
             if (calculations.MageTalents.GlyphOfFireball)
             {
                 BasePeriodicDamage = 0.0f;
-                if (calculations.CalculationOptions.Mode333)
-                {
-                    BaseCastTime -= 0.15f;
-                }
-                else
-                {
-                    BaseCritRate += 0.05f;
-                }
+                BaseCastTime -= 0.15f;
             }
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch + 0.05f * calculations.BaseStats.Mage4T9;
             DotDuration = 8;
@@ -852,12 +829,12 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public DotSpell GetSpell(CastingState castingState, bool pom)
+        public Spell GetSpell(CastingState castingState, bool pom)
         {
-            DotSpell spell = new DotSpell(this);
+            Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            spell.CalculateDerivedStats(castingState, false, pom);
+            spell.CalculateDerivedStats(castingState, false, pom, false, false, false, false, true);
             return spell;
         }
 
@@ -870,11 +847,8 @@ namespace Rawr.Mage
             DotDuration = 12;
             DotTickInterval = 3;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
-            if (calculations.CalculationOptions.Mode333)
-            {
-                tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
-                SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
-            }
+            tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
+            SpellDamageCoefficient += 0.05f * calculations.MageTalents.EmpoweredFire;
         }
     }
 

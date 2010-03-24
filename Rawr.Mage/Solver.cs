@@ -985,14 +985,7 @@ namespace Rawr.Mage
             calculationResult.PowerInfusionCooldown = 120.0;
             calculationResult.MirrorImageDuration = 30.0;
             calculationResult.MirrorImageCooldown = 180.0;
-            if (calculationOptions.Mode333)
-            {
-                calculationResult.CombustionCooldown = 120.0;
-            }
-            else
-            {
-                calculationResult.CombustionCooldown = 180.0;
-            }
+            calculationResult.CombustionCooldown = 120.0;
 
             if (evocationAvailable)
             {
@@ -1331,14 +1324,7 @@ namespace Rawr.Mage
             float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
 
             calculationResult.ArcaneThreatMultiplier = threatFactor * (1 - talents.ArcaneSubtlety * 0.2f);
-            if (calculationOptions.Mode333)
-            {
-                calculationResult.FireThreatMultiplier = threatFactor * (1 - talents.BurningSoul * 0.1f);
-            }
-            else
-            {
-                calculationResult.FireThreatMultiplier = threatFactor * (1 - talents.BurningSoul * 0.05f);
-            }
+            calculationResult.FireThreatMultiplier = threatFactor * (1 - talents.BurningSoul * 0.1f);
             calculationResult.FrostThreatMultiplier = threatFactor * (1 - ((talents.FrostChanneling > 0) ? (0.01f + 0.03f * talents.FrostChanneling) : 0f));
             calculationResult.FrostFireThreatMultiplier = threatFactor * Math.Min(1 - talents.BurningSoul * 0.05f, 1 - ((talents.FrostChanneling > 0) ? (0.01f + 0.03f * talents.FrostChanneling) : 0f));
             calculationResult.NatureThreatMultiplier = threatFactor;
@@ -3976,10 +3962,7 @@ namespace Rawr.Mage
                             if (talents.DeepFreeze > 0)
                             {
                                 list.Add(CycleId.FrBDFFBIL);
-                                if (calculationOptions.Mode333)
-                                {
-                                    list.Add(CycleId.FrBDFFFB);
-                                }
+                                list.Add(CycleId.FrBDFFFB);
                             }
                             list.Add(CycleId.FrBIL);
                             list.Add(CycleId.FrostboltFOF);
@@ -4039,10 +4022,7 @@ namespace Rawr.Mage
                             if (talents.DeepFreeze > 0)
                             {
                                 list.Add(CycleId.FrBDFFBIL);
-                                if (calculationOptions.Mode333)
-                                {
-                                    list.Add(CycleId.FrBDFFFB);
-                                }
+                                list.Add(CycleId.FrBDFFFB);
                             }
                         }
                         list.Add(CycleId.AB2AM);

@@ -123,7 +123,7 @@ namespace Rawr.Optimizer
         /// <summary>
         /// Replaces gems/enchants on the character to minimize the number of changes from root items while preserving total stats.
         /// </summary>
-        public void NormalizeCharacter(Character character)
+        public void NormalizeCharacter(Character character, bool invalidate)
         {
             // main assumption is that gems and enchants have fixed stat allocation
             // meaning that the matched socket bonuses must be maintained in order to preserve total stats
@@ -477,7 +477,7 @@ namespace Rawr.Optimizer
             }
 
             // we were able to fill all slots, that is greedy min diff character
-            character.SetItems(items);
+            character.SetItems(items, invalidate);
         }
 
         private bool RemainingSocketBonusesCanBeMatched(Character character, bool[] slotFilled, int slot, List<int> matchedSocketBonusCount, bool[] hasSocketBonus, int[] socketBonusIndex, int bonusIndex, Dictionary<Item, int> gemCount, Dictionary<Item, int> gems)

@@ -14,7 +14,7 @@ namespace Rawr.Mage
             cycle.AffectedByFlameCap = true;
 
             Spell FB = castingState.GetSpell(SpellId.Fireball);
-            DotSpell Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             // S0: no proc, 0 count
             // FB   => S0   1-c
@@ -194,7 +194,7 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell LB;
-            DotSpell Pyro;
+            Spell Pyro;
             float X;
             float K;
             float C;
@@ -203,7 +203,7 @@ namespace Rawr.Mage
 
             FB = castingState.GetSpell(SpellId.Fireball);
             LB = castingState.GetSpell(SpellId.LivingBomb);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float H = castingState.MageTalents.HotStreak / 3.0f;
@@ -363,7 +363,7 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell LB;
-            DotSpell Pyro;
+            Spell Pyro;
             float X;
             float K;
             cycle.Name = "FFBLBPyro";
@@ -371,7 +371,7 @@ namespace Rawr.Mage
 
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             LB = castingState.GetSpell(SpellId.LivingBomb);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -462,7 +462,7 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell Sc;
             Spell LB;
-            DotSpell Pyro;
+            Spell Pyro;
             float X;
             float K;
             cycle.Name = "ScLBPyro";
@@ -471,7 +471,7 @@ namespace Rawr.Mage
 
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -563,7 +563,7 @@ namespace Rawr.Mage
             cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
-            DotSpell Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             // no Pyro
             // FB => no Pyro 1 - c*c/(1+c)
@@ -632,7 +632,7 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell Sc;
-            DotSpell Pyro;
+            Spell Pyro;
             float K;
             float X;
             cycle.Name = "FBScPyro";
@@ -641,7 +641,7 @@ namespace Rawr.Mage
 
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
             Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
@@ -796,7 +796,7 @@ namespace Rawr.Mage
             Spell FB;
             Spell Sc;
             Spell LB;
-            DotSpell Pyro;
+            Spell Pyro;
             float K;
             float X;
             float Y;
@@ -807,7 +807,7 @@ namespace Rawr.Mage
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 0;
@@ -1034,7 +1034,7 @@ namespace Rawr.Mage
             Spell FFB;
             Spell Sc;
             Spell LB;
-            DotSpell Pyro;
+            Spell Pyro;
             float K;
             float X;
             float Y;
@@ -1045,7 +1045,7 @@ namespace Rawr.Mage
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 0;
@@ -1204,7 +1204,7 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell Sc;
-            DotSpell Pyro;
+            Spell Pyro;
             float K;
             float X;
             cycle.Name = "FFBScPyro";
@@ -1213,7 +1213,7 @@ namespace Rawr.Mage
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 0;
