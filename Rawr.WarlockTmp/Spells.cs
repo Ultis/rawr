@@ -329,6 +329,7 @@ namespace Rawr.WarlockTmp {
 
             // calc backdraft
             BackdraftMultiplier = 1f;
+            float hitChance = Mommy.HitChance;
             float avgCast
                 = GetCastTime(
                     CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
@@ -337,7 +338,8 @@ namespace Rawr.WarlockTmp {
             float fullBackdraftBonus = Mommy.Talents.Backdraft * .1f;
             if (fullBackdraftBonus > 0 && Conflagrate.WillBeCast(Mommy)) {
                 BackdraftMultiplier
-                    -= CalcAvgBackdraftBonus(fullBackdraftBonus, avgCast);
+                    -= CalcAvgBackdraftBonus(
+                        hitChance * fullBackdraftBonus, avgCast);
             }
 
             // spammed?  factor in lifetaps then spam away
@@ -354,7 +356,6 @@ namespace Rawr.WarlockTmp {
             // not spammed? now it's time for serious calculations
             SetCollisionDelay(avgCast, timeRemaining);
             float period = Math.Max(RecastPeriod, Cooldown) + AvgCollision;
-            float hitChance = Mommy.HitChance;
             if (IsBinary()) {
                 hitChance -= GetResist();
             }
@@ -540,7 +541,7 @@ namespace Rawr.WarlockTmp {
             foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
                 castsRemaining
                     -= pair.Value.CalcAvgBackdraftCasts(
-                        backdraftWindow, backdraftPeriod);
+                        backdraftWindow, backdraftPeriod, avgCast);
             }
             if (castsRemaining < .0001) {
                 return 0f;
@@ -555,19 +556,27 @@ namespace Rawr.WarlockTmp {
         }
 
         /// <summary>
-        /// The number of times this spell is cast during backdraft, factoring
-        /// in the spell's own cooldown but NOT other spells that may have
-        /// already consumed charges.
+        /// The number of times this spell is cast during a single backdraft,
+        /// factoring in the spell's own cooldown but NOT other spells that may
+        /// have already consumed charges.
         /// </summary>
         protected virtual float CalcAvgBackdraftCasts(
-            float backdraftWindow, float backdraftPeriod) {
+            float backdraftWindow, float backdraftPeriod, float avgCast) {
 
             float max = GetMaxBackdraftCasts();
-            if (Cooldown == 0) {
+            if (max == 0) {
+                return 0f;
+            } else if (Cooldown == 0) {
                 return max;
             } else {
                 Debug.Assert(Cooldown > backdraftWindow);
-                return max * backdraftWindow / backdraftPeriod;
+                float chancePerSpellCast = backdraftWindow / backdraftPeriod;
+                float spellCastsPerBackdraft
+                    = Math.Min(
+                        max,
+                        backdraftWindow
+                            / (Cooldown + avgCast / 2 + Mommy.Options.Latency));
+                return chancePerSpellCast * spellCastsPerBackdraft;
             }
         }
 
@@ -1204,7 +1213,7 @@ namespace Rawr.WarlockTmp {
                     + (mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f
                     + mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
-                false, // canTickCrit,
+                true, // canTickCrit,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier) {
 
@@ -1212,21 +1221,28 @@ namespace Rawr.WarlockTmp {
             float fullBonus, float avgCast) {
 
             if (Mommy.Talents.GlyphConflag) {
-                return fullBonus;
-            } else {
                 return base.CalcAvgBackdraftBonus(fullBonus, avgCast);
+            } else {
+                // TODO if its possible to have less than 1 charge available
+                // this should be reduced.
+                return fullBonus;
             }
         }
 
         protected override float CalcAvgBackdraftCasts(
-            float backdraftPeriod, float backdraftWindow) {
+            float backdraftPeriod, float backdraftWindow, float avgCast) {
 
             if (Mommy.Talents.GlyphConflag) {
-                return 1f;
-            } else {
                 return base.CalcAvgBackdraftCasts(
-                    backdraftPeriod, backdraftWindow);
+                    backdraftPeriod, backdraftWindow, avgCast);
+            } else {
+                return 1f;
             }
+        }
+
+        protected override float GetMaxBackdraftCasts() {
+            
+            return 1f;
         }
     }
 
@@ -1297,7 +1313,7 @@ namespace Rawr.WarlockTmp {
                 false) { // can miss
 
             ManaCost
-                = (-1490f - mommy.Stats.Spirit * 3f)
+                = (-2000f - mommy.Stats.SpellPower * .5f)
                     * (1f + mommy.Talents.ImprovedLifeTap * .1f);
         }
 
