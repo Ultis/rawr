@@ -1460,7 +1460,7 @@ namespace Rawr.Mage
             }
             calculationResult.Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / ((0.04f * (calculationResult.Defense - 5 * playerLevel)) / 100f + baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
 
-            calculationResult.IgniteFactor = 0.94f /* partial resist */ * 0.08f * talents.Ignite;
+            calculationResult.IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * 0.08f * talents.Ignite;
 
             calculationResult.BaseArcaneCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage));
             calculationResult.BaseFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + calculationResult.IgniteFactor);
