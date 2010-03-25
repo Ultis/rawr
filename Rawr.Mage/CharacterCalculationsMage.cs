@@ -277,6 +277,8 @@ namespace Rawr.Mage
         public float BaseFrostFireCritRate { get; set; }
         public float BaseHolyCritRate { get; set; }
 
+        public float IgniteFactor { get; set; }
+
         public float BaseArcaneCritBonus { get; set; }
         public float BaseFireCritBonus { get; set; }
         public float BaseFrostCritBonus { get; set; }

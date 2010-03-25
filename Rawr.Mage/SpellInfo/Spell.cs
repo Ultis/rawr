@@ -78,7 +78,7 @@ namespace Rawr.Mage
             }
             if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
             {
-                igniteDamage = averageDamage * PartialResistFactor * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);
+                igniteDamage = averageDamage * PartialResistFactor * CritBonus * calculations.IgniteFactor / (1 + calculations.IgniteFactor) * Math.Max(0, CritRate);
                 igniteDamagePerSpellPower = 0; // we're not applying effect spell power to aoe
             }
             else
@@ -646,7 +646,7 @@ namespace Rawr.Mage
             damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
             if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
             {
-                float igniteMultiplier = commonMultiplier * DirectDamageModifier * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);
+                float igniteMultiplier = commonMultiplier * DirectDamageModifier * CritBonus * calculations.IgniteFactor / (1 + calculations.IgniteFactor) * Math.Max(0, CritRate);
                 igniteDamage = (baseAverage + SpellDamageCoefficient * spellPower) * igniteMultiplier;
                 igniteDamagePerSpellPower = SpellDamageCoefficient * igniteMultiplier;
             }
@@ -679,7 +679,7 @@ namespace Rawr.Mage
             damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
             if (calculations.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && calculations.MageTalents.Ignite > 0)
             {
-                float igniteMultiplier = commonMultiplier * DirectDamageModifier * CritBonus * (0.08f * calculations.MageTalents.Ignite) / (1 + 0.08f * calculations.MageTalents.Ignite) * Math.Max(0, CritRate);
+                float igniteMultiplier = commonMultiplier * DirectDamageModifier * CritBonus * calculations.IgniteFactor / (1 + calculations.IgniteFactor) * Math.Max(0, CritRate);
                 igniteDamage = (baseAverage + SpellDamageCoefficient * spellPower) * igniteMultiplier;
                 igniteDamagePerSpellPower = SpellDamageCoefficient * igniteMultiplier;
             }

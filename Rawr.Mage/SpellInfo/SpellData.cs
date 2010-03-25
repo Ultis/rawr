@@ -890,7 +890,7 @@ namespace Rawr.Mage
                 // add ignite contribution from dot
                 if (castingState.Calculations.NeedsDisplayCalculations)
                 {
-                    float igniteFactor = spell.SpellModifier * spell.HitRate * spell.PartialResistFactor * Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * castingState.FireCritBonus * (0.08f * castingState.MageTalents.Ignite) / (1 + 0.08f * castingState.MageTalents.Ignite);
+                    float igniteFactor = spell.SpellModifier * spell.HitRate * spell.PartialResistFactor * Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * castingState.FireCritBonus * castingState.Calculations.IgniteFactor / (1 + castingState.Calculations.IgniteFactor);
                     spell.IgniteDamage += spell.BasePeriodicDamage * igniteFactor;
                     spell.IgniteDamagePerSpellPower += spell.DotDamageCoefficient * igniteFactor;
                 }
