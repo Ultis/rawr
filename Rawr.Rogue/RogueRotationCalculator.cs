@@ -138,7 +138,7 @@ namespace Rawr.Rogue
             float averageGCD = 1f / (1f - AvoidedAttacks);
             float averageFinisherGCD = 1f / (1f - AvoidedFinisherAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
-            float averageFinisherCP = 5f + _chanceExtraCP[4] - CPOnFinisher;
+            float averageFinisherCP = 5f + _chanceExtraCP[4];
 			
 			#region Melee
 			float mainHandCount = Duration / MainHandSpeed;
@@ -194,14 +194,14 @@ namespace Rawr.Rogue
                 float ruptCountMax = durationRuptable / RuptStats.DurationAverage;
                 float ruptsFromAvailableCP = Math.Min(ruptCountMax, totalCPAvailable / averageFinisherCP);
                 ruptCount += ruptsFromAvailableCP;
-                totalCPAvailable -= averageFinisherCP * ruptsFromAvailableCP;
+                totalCPAvailable -= averageFinisherCP * ruptsFromAvailableCP - ruptsFromAvailableCP * CPOnFinisher;
                 totalEnergyAvailable -= RuptStats.EnergyCost * ruptsFromAvailableCP - 25 * ChanceOnEnergyPerCPFinisher * ruptsFromAvailableCP * averageFinisherCP;
 
-                float ruptCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost - 25 * ChanceOnEnergyPerCPFinisher * averageFinisherCP;
+                float ruptCycleEnergy = ((averageFinisherCP - CPOnFinisher)/ CPPerCPG) * cpgEnergy + RuptStats.EnergyCost - 25 * ChanceOnEnergyPerCPFinisher * averageFinisherCP;
                 float ruptsFromNewCP = Math.Min(ruptCountMax - ruptsFromAvailableCP, totalEnergyAvailable / ruptCycleEnergy);
 
                 ruptCount += ruptsFromNewCP;
-                cpgCount += (averageFinisherCP / CPPerCPG) * ruptsFromNewCP;
+                cpgCount += ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * ruptsFromNewCP;
                 totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP;
                 #endregion
             }
@@ -209,20 +209,20 @@ namespace Rawr.Rogue
             {
                 #region Eviscerate
                 float averageEvisCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
-                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]) - CPOnFinisher;
+                + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]);
                 float evisDamageMultiplier = Math.Min(1f,
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * averageEvisCP) /
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * 5f));
                 float evisFromAvailableCP = totalCPAvailable / averageEvisCP;
                 evisCount += evisFromAvailableCP * evisDamageMultiplier;
-                totalCPAvailable = 0;
+                totalCPAvailable += evisFromAvailableCP * CPOnFinisher;
                 totalEnergyAvailable -= EvisStats.EnergyCost * evisFromAvailableCP - 25 * ChanceOnEnergyPerCPFinisher * evisFromAvailableCP * averageEvisCP;
 
-                float evisCycleEnergy = (averageEvisCP / CPPerCPG) * cpgEnergy + EvisStats.EnergyCost - 25 * ChanceOnEnergyPerCPFinisher * averageEvisCP;
+                float evisCycleEnergy = ((averageEvisCP - CPOnFinisher)/ CPPerCPG) * cpgEnergy + EvisStats.EnergyCost - 25 * ChanceOnEnergyPerCPFinisher * averageEvisCP;
                 float evisFromNewCP = totalEnergyAvailable / evisCycleEnergy;
 
                 evisCount += evisFromNewCP * evisDamageMultiplier;
-                cpgCount += evisFromNewCP * (averageEvisCP / CPPerCPG);
+                cpgCount += evisFromNewCP * ((averageEvisCP - CPOnFinisher) / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
@@ -236,14 +236,14 @@ namespace Rawr.Rogue
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * 5f));
                 float envenomFromAvailableCP = totalCPAvailable / averageEnvenomCP;
                 envenomCount += envenomFromAvailableCP * envenomDamageMultiplier;
-                totalCPAvailable = 0;
+                totalCPAvailable = envenomCount - CPOnFinisher;
                 totalEnergyAvailable -= EnvenomStats.EnergyCost * envenomFromAvailableCP - 25 * ChanceOnEnergyPerCPFinisher * envenomFromAvailableCP * averageEnvenomCP;
 
-                float envenomCycleEnergy = (averageEnvenomCP / CPPerCPG) * cpgEnergy + EnvenomStats.EnergyCost - 25 * ChanceOnEnergyPerCPFinisher * averageEnvenomCP;
+                float envenomCycleEnergy = ((averageEnvenomCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EnvenomStats.EnergyCost - 25 * ChanceOnEnergyPerCPFinisher * averageEnvenomCP;
                 float envenomFromNewCP = totalEnergyAvailable / envenomCycleEnergy;
 
                 envenomCount += envenomFromNewCP * envenomDamageMultiplier;
-                cpgCount += envenomFromNewCP * (averageEnvenomCP / CPPerCPG);
+                cpgCount += envenomFromNewCP * ((averageEnvenomCP - CPOnFinisher) / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
