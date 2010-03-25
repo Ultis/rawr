@@ -233,17 +233,6 @@ namespace Rawr.WarlockTmp {
                 return 0f;
             }
 
-            #region Calculate the entire fight's mana pool
-            LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
-            float timeRemaining = Options.Duration;
-            float manaRemaining
-                = Stats.Mana
-                    + Stats.ManaRestore
-                    + timeRemaining
-                        * (Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana
-                            + Stats.Mp5 / 5f);
-            #endregion
-
             #region Calculate all the possible haste values
             float nonProcHaste
                 = 1 + Stats.SpellHaste
@@ -380,6 +369,27 @@ namespace Rawr.WarlockTmp {
             }
             #endregion
 
+            #region Calculate the entire fight's mana pool
+            Stats.ManaRestoreFromMaxManaPerSecond
+                = Math.Max(
+                    Stats.ManaRestoreFromMaxManaPerSecond,
+                    .002f
+                        * Spell.CalcUprate(
+                            Talents.ImprovedSoulLeech * .5f,
+                            15f,
+                            Spell.GetCastTime(
+                                CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                                1.5f,
+                                Haste)));
+            float timeRemaining = Options.Duration;
+            float manaRemaining
+                = Stats.Mana
+                    + Stats.ManaRestore
+                    + timeRemaining
+                        * (Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana
+                            + Stats.Mp5 / 5f);
+            #endregion
+
             #region Calculate NumCasts for each spell
             float lag = Options.Latency;
             foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
@@ -447,6 +457,7 @@ namespace Rawr.WarlockTmp {
             #endregion
 
             #region Calculate damage done for each spell
+            LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
             float spellPower
                 = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
             float damageDone = 0f;
