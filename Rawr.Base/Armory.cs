@@ -571,7 +571,17 @@ namespace Rawr
                 #region Stats
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAttackPower")) { stats.AttackPower = int.Parse(node.InnerText); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
+				// NOTE: for items w/ bonus armor, while they don't give us the value of that bonus armor,
+                // they do note that it IS bonus armor w/ the attribute armorBonus="1" (vs. armorBonus="0")
+                // this help out to determine if we even need to do the bonus armor work below.
+                // flag for if the armor value contains Bonus Armor.
+                bool bBonusArmor = false;
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) 
+                { 
+                    stats.Armor = int.Parse(node.InnerText);
+                    XmlNode nodeAttribute = node.Attributes.GetNamedItem("armorBonus");
+                    bBonusArmor = (int.Parse(nodeAttribute.Value) > 0);
+                }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusParryRating")) { stats.ParryRating = int.Parse(node.InnerText); }
@@ -604,7 +614,12 @@ namespace Rawr
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
 
-				DetermineBaseBonusArmor(stats, slot, type, id);
+                // With WoWArmory providing the armorBonus bit in the XML, we only need to call this function
+                // when that bit is set to true.
+                // Unfortunately, it still only tells us that we need to do this work,
+                // not what the value of BonusArmor vs. Armor actually is.
+                if (bBonusArmor)
+    				DetermineBaseBonusArmor(stats, slot, type, id);
                 #endregion
 
                 #region Special Equip Lines
@@ -1086,6 +1101,13 @@ namespace Rawr
 			}
 		}
 
+        /// <summary>
+        /// Call this when the armory has set armorBonus="1"
+        /// </summary>
+        /// <param name="stats">in/out stats object that contains the armor values.</param>
+        /// <param name="slot"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
 		private static void DetermineBaseBonusArmor(Stats stats, ItemSlot slot, ItemType type, int id)
 		{
 			float totalArmor = stats.Armor;
@@ -1095,14 +1117,69 @@ namespace Rawr
 				(slot == ItemSlot.OffHand && type != ItemType.Shield) || slot == ItemSlot.OneHand ||
 				slot == ItemSlot.Trinket || slot == ItemSlot.TwoHand)
 				bonusArmor = totalArmor;
-			else if (id == 37084) //Flowing Cloak of Command
-				bonusArmor = 364;
-			else if (id == 39225) //Cloak of Armed Strife
-				bonusArmor = 336;
-			else if (id == 40252) //Cloak of the Shadowed Sun
-				bonusArmor = 336;
-			else if (id == 45267) //Saronite Plated Legguards
-				bonusArmor = 826;
+			else 
+                // Specific Items.
+                // Changed this to a switch statement since this list is going to get LOONNNGGG
+                switch (id)
+                {
+                    case (41190):  //Legplates of Conquest
+                        bonusArmor = 138; break;
+                    case (45267):  //Saronite Plated Legguards
+                        bonusArmor = 826; break;
+                    case (50968):  //Cataclysmic Chestguard
+                        bonusArmor = 1176; break;
+                    case (50802):  // Gargoyle Spit Bracers
+                        bonusArmor = 630; break;
+                    case (51901):  // Gargoyle Spit Bracers heroic
+                        bonusArmor = 714; break;
+                    case (49904):  // Pillars of Might
+                        bonusArmor = 1190; break;
+                    case (50991):  // Verdigris Chain Belt
+                        bonusArmor = 658; break;
+                    case (50978):  // Gauntlets of the Kraken
+                        bonusArmor = 1008; break;
+
+                    #region cloaks
+                    case (41238): // Cloak of Tormented Skies
+                        bonusArmor = 210; break;
+                    case (37084): // Flowing Cloak of Command
+                        bonusArmor = 364; break;
+                    case (39225):  //Cloak of Armed Strife
+                        bonusArmor = 336; break;
+                    case (40252):  //Cloak of Shadowed Sun
+                        bonusArmor = 336; break;
+                    case (50466):  //Sentinel's Winter Cloaks
+                        bonusArmor = 560; break;
+                    #endregion 
+                    #region Set Chest
+                    case (50864):  //Lightsworn Chestguard
+                    case (50857):  //Scourgelord Chestguard
+                    case (50850):  //Ymirjar Lord's Breastplate
+                        bonusArmor = 1064; break;
+                    case (51174):  // Sanctified Lightsworn Chestguard (pally)
+                    case (51134):  // Sanctified Scourgelord Chestguard (DK)
+                    case (51219):  // Sanctified Ymirjar Lord's Breastplate (Warrior)
+                        bonusArmor = 1190; break;
+                    case (51265):  // Sanctified Lightsworn Chestguard Heroic
+                    case (51305):  // Sanctified Scourgelord Chestguard Heroic
+                    case (51220):  // Sanctified Ymirjar Lord's Breastplate Heroic
+                        bonusArmor = 1344; break;
+                    #endregion
+                    #region Set Hands
+                    case (50863):  //Lightsworn Handguards
+                    case (50856):  //Scourgelord Handguards
+                    case (50849):  //Ymirjar Lord's Handguards
+                        bonusArmor = 882; break;
+                    case (51132):  // Sanctified Scourgelord Handguards
+                    case (51172):  // Sanctified Lightsworn Handguards
+                    case (51217):  // Sanctified Ymirjar Lord's Handguards
+                        bonusArmor = 1008; break;
+                    case (51267):  //Sanctified Lightsworn Handguards Heroic
+                    case (51307):  // Sanctified Scourgelord Handguards Heroic
+                    case (51222):  // Sanctified Ymirjar Lord's Handguards Heroic
+                        bonusArmor = 1148; break;
+                    #endregion
+                }
 
 			stats.BonusArmor = bonusArmor;
 			stats.Armor = totalArmor - bonusArmor;

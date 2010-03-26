@@ -1199,10 +1199,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <param name="s"></param>
         private void AccumulateFrostPresence(Stats s)
         {
-            s.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
-            // Patch 3.2: Replace 10% Health w/ 6% Stamina
-            s.BonusStaminaMultiplier += .08f; // Bonus 8% Stamina
-            s.DamageTakenMultiplier -= .08f;// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
+            s.BaseArmorMultiplier = AddStatMultiplierStat(s.BaseArmorMultiplier, .6f); // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
+            s.BonusStaminaMultiplier = AddStatMultiplierStat(s.BonusStaminaMultiplier, .08f); // Bonus 8% Stamina
+            s.DamageTakenMultiplier = AddStatMultiplierStat(s.DamageTakenMultiplier, .08f);// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
 //            s.ThreatIncreaseMultiplier += .45f; // Pulling this out since the threat bonus is normalized at 2.0735 as per multiple 
             // Tankspot and EJ conversations.
         }
@@ -1452,8 +1451,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Reducing duration of all slowing effects by 6% per point.  
             if (character.DeathKnightTalents.Toughness > 0)
             {
-                FullCharacterStats.BaseArmorMultiplier += (.02f * character.DeathKnightTalents.Toughness); // Patch 3.2
-
+                FullCharacterStats.BaseArmorMultiplier = AddStatMultiplierStat(FullCharacterStats.BaseArmorMultiplier, (.02f * character.DeathKnightTalents.Toughness)); // Patch 3.2
             }
 
             // Icy Reach
@@ -2249,6 +2247,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (fDamFrequency > 0)
                 return fPerUnitDamage / fDamFrequency;
             return 0f;
+        }
+ 
+        private float AddStatMultiplierStat(float statMultiplier, float newValue)
+        {
+            float updatedStatModifier = ((1 + statMultiplier) * (1 + newValue)) - 1f;
+            return updatedStatModifier;
         }
 
         private float GetParryHastedDPS(float fParryChance, float fCharacterShotCount, float fBossAverageAttackSpeed, float fRotDuration, float fPerShotPhysical)
