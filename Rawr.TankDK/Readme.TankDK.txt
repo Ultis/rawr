@@ -3,6 +3,11 @@
 Currently targeting: 
 * Wow version 3.3.3
 
+2.3.14:
+* No Defect: Fix a couple UI related issues. 
+* Defect 16902: Update Bonus Armor in the Armory parser. Update the way I was handling new additional armor multipliers. The stats object is correct, but just my implementation was flawed. 
+* Defect 15770: Fix for the blood funny business in RSVs.  I believe that we should finally see the RSVs settle down for the Blood tree. 
+
 2.3.13:
 * Defect 16792: Crash when trying to save - Fixed by Jothay.
 * Defect 16745: T9_2Piece now properly evalutated.
