@@ -114,6 +114,88 @@ namespace Rawr.Moonkin
 						PrismaticId = 39998,
 						MetaId = 41285
 					},
+					// Red = Runed Scarlet Ruby
+					// Blue = Purified Twilight Opal (spirit/spell power)
+                    // Yellow = Reckless Monarch Topaz (spell power/haste)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 40051,
+						BlueId = 40026,
+						PrismaticId = 39998,
+						MetaId = 41285
+					},
+					// All sockets but yellow = Runed Scarlet Ruby
+                    // Yellow = Reckless Monarch Topaz (spell power/haste)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 40051,
+						BlueId = 39998,
+						PrismaticId = 39998,
+						MetaId = 41285
+					},
+					// Red = Runed Scarlet Ruby
+					// Blue = Purified Twilight Opal (spirit/spell power)
+                    // Yellow = Veiled Monarch Topaz (spell power/hit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 40049,
+						BlueId = 40026,
+						PrismaticId = 39998,
+						MetaId = 41285
+					},
+					// All sockets but yellow = Runed Scarlet Ruby
+                    // Yellow = Veiled Monarch Topaz (spell power/hit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 40049,
+						BlueId = 39998,
+						PrismaticId = 39998,
+						MetaId = 41285
+					},
+					// Red = Runed Scarlet Ruby
+					// Blue = Purified Twilight Opal (spirit/spell power)
+                    // Yellow = Potent Monarch Topaz (spell power/crit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 40048,
+						BlueId = 40026,
+						PrismaticId = 39998,
+						MetaId = 41285
+					},
+					// Rare gems
+					// All sockets but yellow = Runed Scarlet Ruby
+                    // Yellow = Potent Monarch Topaz (spell power/crit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 40048,
+						BlueId = 39998,
+						PrismaticId = 39998,
+						MetaId = 41285
+					},
 					// Epic gems
 					// All but blue = Runed Cardinal Ruby
 					// Blue = Purified Dreadstone (spirit/spell power)
@@ -138,6 +220,93 @@ namespace Rawr.Moonkin
 						Group = "Epic",
 						RedId = 40113,
 						YellowId = 40113,
+						BlueId = 40113,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// Red = Runed Cardinal Ruby
+					// Blue = Purified Dreadstone (spirit/spell power)
+                    // Yellow = Reckless Ametrine (spell power/haste)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40155,
+						BlueId = 40133,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// All sockets but yellow = Runed Cardinal Ruby
+                    // Yellow = Reckless Ametrine (spell power/haste)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40155,
+						BlueId = 40113,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// Red = Runed Cardinal Ruby
+					// Blue = Purified Dreadstone (spirit/spell power)
+                    // Yellow = Veiled Ametrine (spell power/hit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40153,
+						BlueId = 40133,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// All sockets but yellow = Runed Cardinal Ruby
+                    // Yellow = Veiled Ametrine (spell power/hit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40153,
+						BlueId = 40113,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// Red = Runed Cardinal Ruby
+					// Blue = Purified Dreadstone (spirit/spell power)
+                    // Yellow = Potent Ametrine (spell power/crit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40152,
+						BlueId = 40133,
+						PrismaticId = 40113,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// All sockets but yellow = Runed Cardinal Ruby
+                    // Yellow = Potent Ametrine (spell power/crit)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Epic",
+						RedId = 40113,
+						YellowId = 40152,
 						BlueId = 40113,
 						PrismaticId = 40113,
 						MetaId = 41285,
