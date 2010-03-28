@@ -157,16 +157,16 @@ namespace Rawr.UI
                 else if (Gem1Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = ItemSlot.Yellow;
                 else if (Gem1Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
                 else CurrentItem.SocketColor1 = ItemSlot.None;
-                if (Gem2Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
-                else if (Gem2Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
-                else if (Gem2Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = ItemSlot.Yellow;
-                else if (Gem2Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
-                else CurrentItem.SocketColor1 = ItemSlot.None;
-                if (Gem3Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
-                else if (Gem3Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
-                else if (Gem3Combo.SelectedIndex == 3) CurrentItem.SocketColor1 = ItemSlot.Yellow;
-                else if (Gem3Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
-                else CurrentItem.SocketColor1 = ItemSlot.None;
+                if (Gem2Combo.SelectedIndex == 1) CurrentItem.SocketColor2 = ItemSlot.Meta;
+                else if (Gem2Combo.SelectedIndex == 2) CurrentItem.SocketColor2 = ItemSlot.Red;
+                else if (Gem2Combo.SelectedIndex == 3) CurrentItem.SocketColor2 = ItemSlot.Yellow;
+                else if (Gem2Combo.SelectedIndex == 4) CurrentItem.SocketColor2 = ItemSlot.Blue;
+                else CurrentItem.SocketColor2 = ItemSlot.None;
+                if (Gem3Combo.SelectedIndex == 1) CurrentItem.SocketColor3 = ItemSlot.Meta;
+                else if (Gem3Combo.SelectedIndex == 2) CurrentItem.SocketColor3 = ItemSlot.Red;
+                else if (Gem3Combo.SelectedIndex == 3) CurrentItem.SocketColor3 = ItemSlot.Yellow;
+                else if (Gem3Combo.SelectedIndex == 4) CurrentItem.SocketColor3 = ItemSlot.Blue;
+                else CurrentItem.SocketColor3 = ItemSlot.None;
 
                 foreach (PropertyInfo info in Stats.PropertyInfoCache)
                 {
