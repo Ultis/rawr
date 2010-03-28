@@ -67,6 +67,11 @@
                 <ComboBoxItem Content="Refine Types of Items Listed..."/>
                 <ComboBoxItem Content="Edit Item Filters..."/>
                 <ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
+                <ComboBoxItem Content="Reset Item Cost"/>
+                <ComboBoxItem Content="Load Item Cost..."/>
+                <ComboBoxItem Content="Save Item Cost..."/>
+                <ComboBoxItem Content="Load Emblem of Frost Cost"/>
+                <ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
                 <ComboBoxItem Content="Optimizer..."/>
                 <ComboBoxItem Content="Batch Tools..."/>
             </ComboBox>

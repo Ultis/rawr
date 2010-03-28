@@ -42,7 +42,7 @@ namespace Rawr.UI
             Items.Add(new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Talent Specs", "Glyphs"));
             Items.Add(new ChartPickerItem("Equipped", "Gear", "Enchants", "Buff"));
             Items.Add(new ChartPickerItem("Available", "Gear", "Enchants"));
-            Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Enchants"));
+            Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Gear / Cost", "Enchants"));
             Items.Add(new ChartPickerItem("Stat Values", "Relative Stat Values"));
             //new ChartPickerItem("{0} Specific")
 

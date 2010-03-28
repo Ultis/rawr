@@ -505,11 +505,62 @@ namespace Rawr.UI
                     else if (newIndex == 2) ShowGemmingTemplates();
                     else if (newIndex == 3) ShowItemRefinement();
                     else if (newIndex == 4) ShowItemFilters();
-                    else if (newIndex == 6) ShowOptimizer();
-                    else if (newIndex == 7) ShowBatchTools();
+                    else if (newIndex == 6) ResetItemCost();
+                    else if (newIndex == 7) LoadItemCost();
+                    else if (newIndex == 8) SaveItemCost();
+                    else if (newIndex == 9) LoadEmblemOfFrostCost();
+                    else if (newIndex == 11) ShowOptimizer();
+                    else if (newIndex == 12) ShowBatchTools();
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
+        }
+
+        private void ResetItemCost()
+        {
+            ItemCache.ResetItemCost();
+        }
+
+        private void LoadItemCost()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+#if !SILVERLIGHT
+            dialog.DefaultExt = ".cost.xml";
+#endif
+            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+#if SILVERLIGHT
+                using (StreamReader reader = dialog.File.OpenText())
+#else
+                using (StreamReader reader = new StreamReader(dialog.OpenFile()))
+#endif
+                {
+                    ItemCache.LoadItemCost(reader);
+                }
+            }
+        }
+
+        private void SaveItemCost()
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.DefaultExt = ".cost.xml";
+            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+                this.Cursor = Cursors.Wait;
+                using (StreamWriter writer = new StreamWriter(dialog.OpenFile()))
+                {
+                    ItemCache.SaveItemCost(writer);
+                }
+                this.Cursor = Cursors.Arrow;
+            }
+        }
+
+        private void LoadEmblemOfFrostCost()
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Frost");
         }
 
         private void ShowItemFilters()

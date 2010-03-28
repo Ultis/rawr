@@ -151,6 +151,7 @@ namespace Rawr.UI
                 CurrentItem.Slot = (ItemSlot)SlotCombo.SelectedIndex;
                 CurrentItem.Quality = (ItemQuality)QualityCombo.SelectedIndex;
                 CurrentItem.DamageType = (ItemDamageType)DamageTypeComboBox.SelectedIndex;
+                CurrentItem.Cost = float.Parse(CostText.Text);
 
                 if (Gem1Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
                 else if (Gem1Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;

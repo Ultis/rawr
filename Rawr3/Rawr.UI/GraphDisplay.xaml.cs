@@ -532,102 +532,120 @@ namespace Rawr.UI
             SetGraphControl(ComparisonGraph);
             if (subgraph == "Gear")
             {
-                List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-                Dictionary<ItemSlot, CharacterSlot> slotMap = new Dictionary<ItemSlot, CharacterSlot>();
-                if (Character != null)
+                UpdateGraphDirectUpgradesGear(false);
+            }
+            else if (subgraph == "Gear / Cost")
+            {
+                UpdateGraphDirectUpgradesGear(true);
+            }
+            else if (subgraph == "Enchants")
+            {
+                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
+                calc.Name = "Chart Not Yet Implemented";
+                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
+            }
+        }
+
+        private void UpdateGraphDirectUpgradesGear(bool divideByCost)
+        {
+            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+            Dictionary<ItemSlot, CharacterSlot> slotMap = new Dictionary<ItemSlot, CharacterSlot>();
+            if (Character != null)
+            {
+                Dictionary<string, ItemInstance> items = new Dictionary<string, ItemInstance>();
+
+                float Finger1 = (Character[CharacterSlot.Finger1] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Finger1], Character, CharacterSlot.Finger1).OverallPoints);
+                float Finger2 = (Character[CharacterSlot.Finger2] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Finger2], Character, CharacterSlot.Finger2).OverallPoints);
+
+                float Trinket1 = (Character[CharacterSlot.Trinket1] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Trinket1], Character, CharacterSlot.Trinket1).OverallPoints);
+                float Trinket2 = (Character[CharacterSlot.Trinket2] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.Trinket2], Character, CharacterSlot.Trinket2).OverallPoints);
+
+                if (Finger2 < Finger1)
                 {
-                    Dictionary<string, ItemInstance> items = new Dictionary<string, ItemInstance>();
+                    slotMap[ItemSlot.Finger] = CharacterSlot.Finger2;
+                }
 
-                    float Finger1 = (Character[CharacterSlot.Finger1] == null ? 0 : Calculations.GetItemCalculations(
-                        Character[CharacterSlot.Finger1], Character, CharacterSlot.Finger1).OverallPoints);
-                    float Finger2 = (Character[CharacterSlot.Finger2] == null ? 0 : Calculations.GetItemCalculations(
-                        Character[CharacterSlot.Finger2], Character, CharacterSlot.Finger2).OverallPoints);
+                if (Trinket2 < Trinket1)
+                {
+                    slotMap[ItemSlot.Trinket] = CharacterSlot.Trinket2;
+                }
 
-                    float Trinket1 = (Character[CharacterSlot.Trinket1] == null ? 0 : Calculations.GetItemCalculations(
-                        Character[CharacterSlot.Trinket1], Character, CharacterSlot.Trinket1).OverallPoints);
-                    float Trinket2 = (Character[CharacterSlot.Trinket2] == null ? 0 : Calculations.GetItemCalculations(
-                        Character[CharacterSlot.Trinket2], Character, CharacterSlot.Trinket2).OverallPoints);
+                float MainHand = (Character[CharacterSlot.MainHand] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.MainHand], Character, CharacterSlot.MainHand).OverallPoints);
+                float OffHand = (Character[CharacterSlot.OffHand] == null ? 0 : Calculations.GetItemCalculations(
+                    Character[CharacterSlot.OffHand], Character, CharacterSlot.OffHand).OverallPoints);
 
-                    if (Finger2 < Finger1)
+                if (MainHand > OffHand)
+                {
+                    slotMap[ItemSlot.OneHand] = CharacterSlot.OffHand;
+
+                }
+
+                foreach (KeyValuePair<ItemSlot, CharacterSlot> kvp in Item.DefaultSlotMap)
+                {
+                    try
                     {
-                        slotMap[ItemSlot.Finger] = CharacterSlot.Finger2;
-                    }
+                        ItemSlot iSlot = kvp.Key;
+                        CharacterSlot slot;
 
-                    if (Trinket2 < Trinket1)
-                    {
-                        slotMap[ItemSlot.Trinket] = CharacterSlot.Trinket2;
-                    }
-
-                    float MainHand = (Character[CharacterSlot.MainHand] == null ? 0 : Calculations.GetItemCalculations(
-                        Character[CharacterSlot.MainHand], Character, CharacterSlot.MainHand).OverallPoints);
-                    float OffHand = (Character[CharacterSlot.OffHand] == null ? 0 : Calculations.GetItemCalculations(
-                        Character[CharacterSlot.OffHand], Character, CharacterSlot.OffHand).OverallPoints);
-
-                    if (MainHand > OffHand)
-                    {
-                        slotMap[ItemSlot.OneHand] = CharacterSlot.OffHand;
-
-                    }
-
-                    foreach (KeyValuePair<ItemSlot, CharacterSlot> kvp in Item.DefaultSlotMap)
-                    {
-                        try
+                        if (slotMap.ContainsKey(iSlot))
                         {
-                            ItemSlot iSlot = kvp.Key;
-                            CharacterSlot slot;
-
-                            if (slotMap.ContainsKey(iSlot))
-                            {
-                                slot = slotMap[iSlot];
-                            }
+                            slot = slotMap[iSlot];
+                        }
+                        else
+                        {
+                            slot = kvp.Value;
+                        }
+                        if (slot != CharacterSlot.None)
+                        {
+                            ComparisonCalculationBase slotCalc;
+                            ItemInstance currentItem = Character[slot];
+                            if (currentItem == null)
+                                slotCalc = Calculations.CreateNewComparisonCalculation();
                             else
-                            {
-                                slot = kvp.Value;
-                            }
-                            if (slot != CharacterSlot.None)
-                            {
-                                ComparisonCalculationBase slotCalc;
-                                ItemInstance currentItem = Character[slot];
-                                if (currentItem == null)
-                                    slotCalc = Calculations.CreateNewComparisonCalculation();
-                                else
-                                    slotCalc = Calculations.GetItemCalculations(currentItem, Character, slot);
+                                slotCalc = Calculations.GetItemCalculations(currentItem, Character, slot);
 
-                                foreach (ItemInstance item in Character.GetRelevantItemInstances(slot))
+                            foreach (ItemInstance item in Character.GetRelevantItemInstances(slot))
+                            {
+                                if (!items.ContainsKey(item.GemmedId) && (currentItem == null || currentItem.GemmedId != item.GemmedId))
                                 {
-                                    if (!items.ContainsKey(item.GemmedId) && (currentItem == null || currentItem.GemmedId != item.GemmedId))
+                                    if (currentItem != null && currentItem.Item.Unique)
                                     {
-                                        if (currentItem != null && currentItem.Item.Unique)
+                                        CharacterSlot otherSlot = CharacterSlot.None;
+                                        switch (slot)
                                         {
-                                            CharacterSlot otherSlot = CharacterSlot.None;
-                                            switch (slot)
-                                            {
-                                                case CharacterSlot.Finger1:
-                                                    otherSlot = CharacterSlot.Finger2;
-                                                    break;
-                                                case CharacterSlot.Finger2:
-                                                    otherSlot = CharacterSlot.Finger1;
-                                                    break;
-                                                case CharacterSlot.Trinket1:
-                                                    otherSlot = CharacterSlot.Trinket2;
-                                                    break;
-                                                case CharacterSlot.Trinket2:
-                                                    otherSlot = CharacterSlot.Trinket1;
-                                                    break;
-                                                case CharacterSlot.MainHand:
-                                                    otherSlot = CharacterSlot.OffHand;
-                                                    break;
-                                                case CharacterSlot.OffHand:
-                                                    otherSlot = CharacterSlot.MainHand;
-                                                    break;
-                                            }
-                                            if (otherSlot != CharacterSlot.None && Character[otherSlot] != null && Character[otherSlot].Id == item.Id)
-                                            {
-                                                continue;
-                                            }
-
+                                            case CharacterSlot.Finger1:
+                                                otherSlot = CharacterSlot.Finger2;
+                                                break;
+                                            case CharacterSlot.Finger2:
+                                                otherSlot = CharacterSlot.Finger1;
+                                                break;
+                                            case CharacterSlot.Trinket1:
+                                                otherSlot = CharacterSlot.Trinket2;
+                                                break;
+                                            case CharacterSlot.Trinket2:
+                                                otherSlot = CharacterSlot.Trinket1;
+                                                break;
+                                            case CharacterSlot.MainHand:
+                                                otherSlot = CharacterSlot.OffHand;
+                                                break;
+                                            case CharacterSlot.OffHand:
+                                                otherSlot = CharacterSlot.MainHand;
+                                                break;
+                                        }
+                                        if (otherSlot != CharacterSlot.None && Character[otherSlot] != null && Character[otherSlot].Id == item.Id)
+                                        {
+                                            continue;
                                         }
 
+                                    }
+
+                                    if (!divideByCost || item.Item.Cost > 0.0f)
+                                    {
                                         ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, slot);
                                         //bool include = false;
                                         //for (int i = 0; i < itemCalc.SubPoints.Length; i++)
@@ -645,41 +663,42 @@ namespace Rawr.UI
                                         if (difference > 0)
                                         {
                                             itemCalc.SubPoints = new float[itemCalc.SubPoints.Length];
-                                            itemCalc.OverallPoints = difference;
+                                            if (divideByCost)
+                                            {
+                                                itemCalc.OverallPoints = difference / item.Item.Cost;
+                                            }
+                                            else
+                                            {
+                                                itemCalc.OverallPoints = difference;
+                                            }
                                             itemCalculations.Add(itemCalc);
                                         }
-
-                                        items[item.GemmedId] = item;
                                     }
+
+                                    items[item.GemmedId] = item;
                                 }
                             }
+                        }
 
-                        }
-                        catch (Exception)
-                        {
-                        }
+                    }
+                    catch (Exception)
+                    {
                     }
                 }
-                //ComparisonGraph.RoundValues = true;
-                //ComparisonGraph.CustomRendered = false;
-                //ComparisonGraph.DisplayMode = ComparisonGraph.GraphDisplayMode.Overall;
-                //ComparisonGraph.ItemCalculations = FilterTopXGemmings(itemCalculations);
-                //ComparisonGraph.EquipSlot = CharacterSlot.AutoSelect;
-                //ComparisonGraph.SlotMap = slotMap;
-                //_characterSlot = CharacterSlot.None;
+            }
+            //ComparisonGraph.RoundValues = true;
+            //ComparisonGraph.CustomRendered = false;
+            //ComparisonGraph.DisplayMode = ComparisonGraph.GraphDisplayMode.Overall;
+            //ComparisonGraph.ItemCalculations = FilterTopXGemmings(itemCalculations);
+            //ComparisonGraph.EquipSlot = CharacterSlot.AutoSelect;
+            //ComparisonGraph.SlotMap = slotMap;
+            //_characterSlot = CharacterSlot.None;
 
-                //Dictionary<string, Color> overall = new Dictionary<string,Color>();
-                //overall.Add("Overall", Colors.Purple);
-                //ComparisonGraph.LegendItems = overall;
-                ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
-                ComparisonGraph.DisplayCalcs(FilterTopXGemmings(itemCalculations));
-            }
-            else if (subgraph == "Enchants")
-            {
-                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
-                calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
-            }
+            //Dictionary<string, Color> overall = new Dictionary<string,Color>();
+            //overall.Add("Overall", Colors.Purple);
+            //ComparisonGraph.LegendItems = overall;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
+            ComparisonGraph.DisplayCalcs(FilterTopXGemmings(itemCalculations));
         }
 
         private void UpdateGraphStatValues(string subgraph)
