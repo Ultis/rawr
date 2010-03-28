@@ -53,6 +53,37 @@ namespace Rawr.UI
             }
         }
 
+        public int CompareItemCalculations(ComparisonCalculationBase a, ComparisonCalculationBase b)
+        {
+            if (Sort == ComparisonSort.Overall)
+            {
+                if (b.OverallPoints != a.OverallPoints)
+                    return b.OverallPoints.CompareTo(a.OverallPoints);
+                if (b.Equipped != a.Equipped)
+                    return b.Equipped.CompareTo(a.Equipped);
+                return a.Name.CompareTo(b.Name);
+            }
+            else if (Sort == ComparisonSort.Alphabetical)
+            {
+                if (a.Name != b.Name)
+                    return a.Name.CompareTo(b.Name);
+                if (b.OverallPoints != a.OverallPoints)
+                    return b.OverallPoints.CompareTo(a.OverallPoints);
+                return b.Equipped.CompareTo(a.Equipped);
+            }
+            else
+            {
+                int subPointCompare = b.SubPoints[(int)Sort].CompareTo(a.SubPoints[(int)Sort]);
+                if (subPointCompare != 0)
+                    return subPointCompare;
+                if (b.OverallPoints != a.OverallPoints)
+                    return b.OverallPoints.CompareTo(a.OverallPoints);
+                if (b.Equipped != a.Equipped)
+                    return b.Equipped.CompareTo(a.Equipped);
+                return a.Name.CompareTo(b.Name);
+            }
+        }
+
         private DisplayMode mode;
         public DisplayMode Mode
         {

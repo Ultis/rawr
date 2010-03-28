@@ -25,129 +25,57 @@ namespace Rawr.Mage
             }
         }
 
-        private class TextBoxWriter : TextWriter
-        {
-            public TextBox TextBox { get; set; }
-            private StringBuilder sb = new StringBuilder();
-            private IAsyncResult updateEvent = null;
-
-            public override Encoding Encoding
-            {
-                get { return Encoding.Default; }
-            }
-
-            public void Clear()
-            {
-                sb.Length = 0;
-            }
-
-            public void UpdateTextBox()
-            {
-                if (TextBox.Visible)
-                {
-                    if (TextBox.InvokeRequired)
-                    {
-                        // if the last update didn't go through yet then there is no point in calling again
-                        // add synchronization mechanisms if needed
-                        if (updateEvent == null || updateEvent.IsCompleted)                            
-                        {
-                            updateEvent = TextBox.BeginInvoke((MethodInvoker)delegate
-                            {
-                                TextBox.Text = sb.ToString();
-                                TextBox.Select(TextBox.Text.Length, 0);
-                                TextBox.ScrollToCaret();
-                            });
-                        }
-                    }
-                    else
-                    {
-                        updateEvent = null;
-                        TextBox.Text = sb.ToString();
-                        TextBox.Select(TextBox.Text.Length, 0);
-                        TextBox.ScrollToCaret();
-                    }
-                }
-            }
-
-            public override void Write(char value)
-            {
-                if (SolverLogForm.Instance.advancedSolver != null)
-                {
-                    sb.Append(value);
-                    UpdateTextBox();
-                }
-            }
-
-            public override void WriteLine(string value)
-            {
-                if (SolverLogForm.Instance.advancedSolver != null)
-                {
-                    sb.AppendLine(value);
-                    UpdateTextBox();
-                }
-            }
-
-            public override void Write(string value)
-            {
-                if (SolverLogForm.Instance.advancedSolver != null)
-                {
-                    sb.Append(value);
-                    UpdateTextBox();
-                }
-            }
-        }
-
-        private TextBoxWriter writer;
-
         public SolverLogForm()
         {
             InitializeComponent();
 
-            Trace.Listeners.Add(new TextWriterTraceListener(writer = new TextBoxWriter() { TextBox = textBoxLog }));
+            CalculationsMage.AdvancedSolverChanged += new EventHandler(CalculationsMage_AdvancedSolverChanged);
+            CalculationsMage.AdvancedSolverLogUpdated += new EventHandler(CalculationsMage_AdvancedSolverLogUpdated);
         }
 
-        private Solver advancedSolver;
-        private object solverLock = new object();
-
-        public bool IsSolverEnabled(Solver solver)
+        void CalculationsMage_AdvancedSolverLogUpdated(object sender, EventArgs e)
         {
-            lock (solverLock)
-            {
-                return solver == advancedSolver;
-            }
+            UpdateTextBox();
         }
 
-        public void EnableSolver(Solver solver)
-        {
-            lock (solverLock)
-            {
-                advancedSolver = solver;
-                writer.Clear();
-            }
-            UpdateCancelButton();
-        }
+        private IAsyncResult updateEvent = null;
 
-        public void DisableSolver(Solver solver)
+        public void UpdateTextBox()
         {
-            lock (solverLock)
+            if (textBoxLog.Visible)
             {
-                if (advancedSolver == solver)
+                if (textBoxLog.InvokeRequired)
                 {
-                    advancedSolver = null;
+                    // if the last update didn't go through yet then there is no point in calling again
+                    // add synchronization mechanisms if needed
+                    if (updateEvent == null || updateEvent.IsCompleted)
+                    {
+                        updateEvent = textBoxLog.BeginInvoke((MethodInvoker)delegate
+                        {
+                            textBoxLog.Text = CalculationsMage.AdvancedSolverLog;
+                            textBoxLog.Select(textBoxLog.Text.Length, 0);
+                            textBoxLog.ScrollToCaret();
+                        });
+                    }
+                }
+                else
+                {
+                    updateEvent = null;
+                    textBoxLog.Text = CalculationsMage.AdvancedSolverLog;
+                    textBoxLog.Select(textBoxLog.Text.Length, 0);
+                    textBoxLog.ScrollToCaret();
                 }
             }
+        }
+
+        void CalculationsMage_AdvancedSolverChanged(object sender, EventArgs e)
+        {
             UpdateCancelButton();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            lock (solverLock)
-            {
-                if (advancedSolver != null)
-                {
-                    advancedSolver.CancelAsync();
-                }
-            }
+            CalculationsMage.CancelAsync();
         }
 
         private void SolverLogForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -167,12 +95,12 @@ namespace Rawr.Mage
                 {
                     Invoke((MethodInvoker)delegate
                     {
-                        buttonCancel.Enabled = (advancedSolver != null);
+                        buttonCancel.Enabled = !CalculationsMage.IsSolverEnabled(null);
                     });
                 }
                 else
                 {
-                    buttonCancel.Enabled = (advancedSolver != null);
+                    buttonCancel.Enabled = !CalculationsMage.IsSolverEnabled(null);
                 }
             }
         }
@@ -181,7 +109,7 @@ namespace Rawr.Mage
         {
             if (Visible)
             {
-                writer.UpdateTextBox();
+                UpdateTextBox();
                 UpdateCancelButton();
             }
         }

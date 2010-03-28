@@ -768,6 +768,10 @@ namespace Rawr
 				subPoints[i] = characterStatsWithNewItem.SubPoints[i] - characterStatsWithSlotEmpty.SubPoints[i];
 			}
 			itemCalc.SubPoints = subPoints;
+            if (item.Id == 50661 && item.Gem2Id == 40155)
+            {
+                item = item;
+            }
 
 			characterStatsWithNewItem.ToString();
 

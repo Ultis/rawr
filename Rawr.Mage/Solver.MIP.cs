@@ -199,7 +199,7 @@ namespace Rawr.Mage
 
             for (int i = 0; i < 10; i++)
             {
-                System.Diagnostics.Trace.WriteLine("Error range " + i + ": " + depthCount[i]);
+                CalculationsMage.Log(this, "Error range " + i + ": " + depthCount[i]);
             }
             currentNode = null;
         }
@@ -280,9 +280,7 @@ namespace Rawr.Mage
                     if (maxValue < upperBound - 0.00001)
                     {
                         upperBound = maxValue;
-#if !SILVERLIGHT
-                        System.Diagnostics.Trace.WriteLine("Upper bound lowered to " + upperBound + " at round " + round);
-#endif
+                        CalculationsMage.Log(this, "Upper bound lowered to " + upperBound + " at round " + round);
                     }
                     // the node was already probed, so at the very least we have the child nodes
                     // probe each child and add them to leaf nodes
@@ -303,9 +301,7 @@ namespace Rawr.Mage
                 }
             } while (round < sizeLimit && leafNodes.Count > 0 && !cancellationPending);
 
-#if !SILVERLIGHT
-            if (round < sizeLimit && !cancellationPending) System.Diagnostics.Trace.WriteLine("Full search complete at round " + round);
-#endif
+            if (round < sizeLimit && !cancellationPending) CalculationsMage.Log(this, "Full search complete at round " + round);
 
             if (leafNodes.Count == 0 && incumbent != null)
             {
@@ -357,16 +353,12 @@ namespace Rawr.Mage
                         if (currentNode.Depth < highestBacktrack)
                         {
                             highestBacktrack = currentNode.Depth;
-#if !SILVERLIGHT
-                            System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
-#endif
+                            CalculationsMage.Log(this, "Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
                         }
                     } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                     if (currentNode.Index >= currentNode.Children.Count)
                     {
-#if !SILVERLIGHT
-                        System.Diagnostics.Trace.WriteLine("Full search complete at round = " + round);
-#endif
+                        CalculationsMage.Log(this, "Full search complete at round = " + round);
                         upperBound = lowerBound;
                         break; // we explored the whole search space
                     }
@@ -397,9 +389,7 @@ namespace Rawr.Mage
                                     if (currentNode.Depth < highestBacktrack)
                                     {
                                         highestBacktrack = currentNode.Depth;
-#if !SILVERLIGHT
-                                        System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
-#endif
+                                        CalculationsMage.Log(this, "Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
                                     }
                                 } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                             }
@@ -459,9 +449,7 @@ namespace Rawr.Mage
                                         if (currentNode.Depth < highestBacktrack)
                                         {
                                             highestBacktrack = currentNode.Depth;
-#if !SILVERLIGHT
-                                            System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
-#endif
+                                            CalculationsMage.Log(this, "Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
                                         }
                                     } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                                 }
@@ -490,9 +478,7 @@ namespace Rawr.Mage
                                     if (currentNode.Depth < highestBacktrack)
                                     {
                                         highestBacktrack = currentNode.Depth;
-#if !SILVERLIGHT
-                                        System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
-#endif
+                                        CalculationsMage.Log(this, "Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
                                     }
                                 } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                             }
@@ -604,9 +590,7 @@ namespace Rawr.Mage
                         // we found a new lower bound
                         lowerBound = value;
                         incumbent = lp;
-#if !SILVERLIGHT
-                        System.Diagnostics.Trace.WriteLine("Probe value = " + lowerBound + ", root = " + node.Value + ", round = " + round);
-#endif
+                        CalculationsMage.Log(this, "Probe value = " + lowerBound + ", root = " + node.Value + ", round = " + round);
                         currentNode.ProbeValue = value;
                         while (currentNode != node)
                         {
@@ -666,18 +650,16 @@ namespace Rawr.Mage
                 if (lp.Value < upperBound - 0.00001)
                 {
                     upperBound = lp.Value;
-#if !SILVERLIGHT
-                    System.Diagnostics.Trace.WriteLine("Upper bound lowered to " + upperBound + " at round " + heap.Count);
-#endif
+                    CalculationsMage.Log(this, "Upper bound lowered to " + upperBound + " at round " + heap.Count);
                 }
                 // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                 // if this one is valid than all others are sub-optimal
                 // validate all segments for each cooldown
                 solution = lp.Solve();
-                /*System.Diagnostics.Trace.WriteLine("Solution basis (value = " + lp.Value + "):");
+                /*CalculationsMage.Log(this, "Solution basis (value = " + lp.Value + "):");
                 for (int index = 0; index < lpCols; index++)
                 {
-                    if (solution[index] > 0.000001) System.Diagnostics.Trace.WriteLine(index);
+                    if (solution[index] > 0.000001) CalculationsMage.Log(this, index);
                 }*/
                 if (heap.Count > maxHeap)
                 {
@@ -690,9 +672,7 @@ namespace Rawr.Mage
             } while (heap.Count > 0 && !valid && !cancellationPending);
             if (valid)
             {
-#if !SILVERLIGHT
-                System.Diagnostics.Trace.WriteLine("Full search complete at round = " + heap.Count);
-#endif
+                CalculationsMage.Log(this, "Full search complete at round = " + heap.Count);
                 lowerBound = upperBound;
             }
             heap = null;

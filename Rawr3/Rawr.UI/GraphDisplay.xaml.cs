@@ -717,14 +717,8 @@ namespace Rawr.UI
             List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
             int maxGemmings = Properties.GeneralSettings.Default.CountGemmingsShown;
 
-            IOrderedEnumerable<ComparisonCalculationBase> orderedCalcs;
-            if (ComparisonGraph.Sort == ComparisonSort.Alphabetical)
-                orderedCalcs = listItemCalculations.OrderBy(calc => calc == null ? "" : calc.Name);
-            else if (ComparisonGraph.Sort == ComparisonSort.Overall)
-                orderedCalcs = listItemCalculations.OrderByDescending(calc => calc == null ? 0 : calc.OverallPoints);
-            else
-                orderedCalcs = listItemCalculations.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)ComparisonGraph.Sort]);
-
+            listItemCalculations.Sort(ComparisonGraph.CompareItemCalculations);
+            
             Dictionary<int, int> countItem = new Dictionary<int, int>();
             foreach (ComparisonCalculationBase itemCalculation in listItemCalculations)
             {

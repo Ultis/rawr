@@ -2575,11 +2575,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-#if !RAWR3
-            } while (i >= 0 && SolverLogForm.Instance.IsSolverEnabled(solver));
-#else
-            } while (i >= 0);
-#endif
+            } while (i >= 0 && CalculationsMage.IsSolverEnabled(solver));
         }
 
         private void SortGroups_AddRemainingItems(List<SequenceItem> constructionList, List<double> constructionTime, List<SequenceItem> remainingList)

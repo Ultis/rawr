@@ -54,6 +54,157 @@ namespace Rawr
             return FindIndex(source, match) != -1;
         }
 
+        private class CastListImpl<T> : IList<T>
+        {
+            private System.Collections.IList list;
+
+            public CastListImpl(System.Collections.IList source)
+            {
+                list = source;
+            }
+
+            #region IList<T> Members
+
+            int IList<T>.IndexOf(T item)
+            {
+                return list.IndexOf(item);
+            }
+
+            void IList<T>.Insert(int index, T item)
+            {
+                list.Insert(index, item);
+            }
+
+            void IList<T>.RemoveAt(int index)
+            {
+                list.RemoveAt(index);
+            }
+
+            T IList<T>.this[int index]
+            {
+                get
+                {
+                    return (T)list[index];
+                }
+                set
+                {
+                    list[index] = value;
+                }
+            }
+
+            #endregion
+
+            #region ICollection<T> Members
+
+            void ICollection<T>.Add(T item)
+            {
+                list.Add(item);
+            }
+
+            void ICollection<T>.Clear()
+            {
+                list.Clear();
+            }
+
+            bool ICollection<T>.Contains(T item)
+            {
+                return list.Contains(item);
+            }
+
+            void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+            {
+                list.CopyTo(array, arrayIndex);
+            }
+
+            int ICollection<T>.Count
+            {
+                get { return list.Count; }
+            }
+
+            bool ICollection<T>.IsReadOnly
+            {
+                get { return list.IsReadOnly; }
+            }
+
+            bool ICollection<T>.Remove(T item)
+            {
+                list.Remove(item);
+                return true;
+            }
+
+            #endregion
+
+            #region IEnumerable<T> Members
+
+            private class CastEnumerator : IEnumerator<T>
+            {
+                private System.Collections.IEnumerator enumerator;
+
+                public CastEnumerator(System.Collections.IEnumerator source)
+                {
+                    enumerator = source;
+                }
+
+                #region IEnumerator<T> Members
+
+                T IEnumerator<T>.Current
+                {
+                    get { return (T)enumerator.Current; }
+                }
+
+                #endregion
+
+                #region IDisposable Members
+
+                void IDisposable.Dispose()
+                {
+                    enumerator = null;
+                }
+
+                #endregion
+
+                #region IEnumerator Members
+
+                object System.Collections.IEnumerator.Current
+                {
+                    get { return enumerator.Current; }
+                }
+
+                bool System.Collections.IEnumerator.MoveNext()
+                {
+                    return enumerator.MoveNext();
+                }
+
+                void System.Collections.IEnumerator.Reset()
+                {
+                    enumerator.Reset();
+                }
+
+                #endregion
+            }
+
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                return new CastEnumerator(list.GetEnumerator());
+            }
+
+            #endregion
+
+            #region IEnumerable Members
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return list.GetEnumerator();
+            }
+
+            #endregion
+        }
+
+        public static IList<T> CastList<T>(this System.Collections.IList source)
+        {
+            return new CastListImpl<T>(source);
+        }
+
         public static int FindIndex<T>(this IList<T> source, Predicate<T> match)
         {
             return FindIndex(source, 0, source.Count, match);

@@ -862,9 +862,7 @@ namespace Rawr.Mage
 
             sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);
-#if !RAWR3
-            if (displaySolver == null || SolverLogForm.Instance.IsSolverEnabled(displaySolver))
-#endif
+            if (displaySolver == null || CalculationsMage.IsSolverEnabled(displaySolver))
             {
                 CalculationOptions.SequenceReconstruction = sequence;
             }
@@ -984,13 +982,6 @@ namespace Rawr.Mage
         {
             if (RequiresAsynchronousDisplayCalculation)
             {
-#if RAWR3
-                Dictionary<string, string> ret; // = GetCharacterDisplayCalculationValuesInternal(false);
-                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
-                CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
-                ret = smp.GetCharacterDisplayCalculationValuesInternal(true);
-                ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
-#else
                 Dictionary<string, string> ret = GetCharacterDisplayCalculationValuesInternal(false);
                 ret["Dps"] = "...";
                 ret["Total Damage"] = "...";
@@ -1000,9 +991,8 @@ namespace Rawr.Mage
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
                 displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
-                SolverLogForm.Instance.EnableSolver(displaySolver);
+                CalculationsMage.EnableSolver(displaySolver);
                 CalculationOptions.SequenceReconstruction = null;
-#endif
                 return ret;
             }
             else
@@ -1031,9 +1021,7 @@ namespace Rawr.Mage
             CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
             smp.displaySolver = displaySolver;
             Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal(true);
-#if !RAWR3
-            SolverLogForm.Instance.DisableSolver(displaySolver);
-#endif
+            CalculationsMage.DisableSolver(displaySolver);
             ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
             return ret;
         }

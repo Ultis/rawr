@@ -134,7 +134,7 @@
     			<local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" Width="70" HorizontalAlignment="Center" Margin="8,0,8,0"/>
     			<local:ItemButtonWithEnchant x:Name="RangedButton" HorizontalAlignment="Center" d:LayoutOverrides="Width, Height" Margin="8,0,8,0"/>
     		</StackPanel>
-    		<controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Top">
+    		<controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Stretch">
     			<controls:TabItem x:Name="StatsTab" Header="Stats">
     				<Grid>
     					<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Name:" TextWrapping="Wrap"/>

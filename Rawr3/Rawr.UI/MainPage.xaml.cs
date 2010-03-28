@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 #endif
 using Rawr;
+using System.Threading;
 
 namespace Rawr.UI
 {
@@ -152,14 +153,58 @@ namespace Rawr.UI
             }
         }
 
+        private class AsyncCalculationResult
+        {
+            public CharacterCalculationsBase Calculations;
+            public Dictionary<string, string> DisplayCalculationValues;
+        }
+
+        CharacterCalculationsBase referenceCalculation;
+        SendOrPostCallback asyncCalculationCompleted;
+        AsyncOperation asyncCalculation;
+
+        private void AsyncCalculationStart(CharacterCalculationsBase calculations, AsyncOperation asyncCalculation)
+        {
+            Dictionary<string, string> result = calculations.GetAsynchronousCharacterDisplayCalculationValues();
+            asyncCalculation.PostOperationCompleted(asyncCalculationCompleted, new AsyncCalculationResult() { Calculations = calculations, DisplayCalculationValues = result });
+        }
+
+        private void AsyncCalculationCompleted(object arg)
+        {
+            AsyncCalculationResult result = (AsyncCalculationResult)arg;
+            if (result.DisplayCalculationValues != null && result.Calculations == referenceCalculation)
+            {
+                CalculationDisplay.SetCalculations(result.DisplayCalculationValues);
+                // refresh chart
+                ComparisonGraph.UpdateGraph();
+                asyncCalculation = null;
+            }
+        }
+
         public void character_CalculationsInvalidated(object sender, EventArgs e)
 		{
 #if DEBUG
 			DateTime start = DateTime.Now;
 #endif
             this.Cursor = Cursors.Wait;
-            CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(character, null, true, true, true);
-            CalculationDisplay.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
+            if (asyncCalculation != null)
+            {
+                CharacterCalculationsBase oldCalcs = referenceCalculation;
+                referenceCalculation = null;
+                oldCalcs.CancelAsynchronousCharacterDisplayCalculation();
+                asyncCalculation = null;
+            }
+            //_unsavedChanges = true;
+            referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
+            CalculationDisplay.SetCalculations(referenceCalculation.GetCharacterDisplayCalculationValues());
+            if (referenceCalculation.RequiresAsynchronousDisplayCalculation)
+            {
+                asyncCalculation = AsyncOperationManager.CreateOperation(null);
+                ThreadPool.QueueUserWorkItem(delegate
+                {
+                    AsyncCalculationStart(referenceCalculation, asyncCalculation);
+                });
+            }
             this.Cursor = Cursors.Arrow;
 #if DEBUG
 			System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
@@ -171,6 +216,8 @@ namespace Rawr.UI
             Instance = this;
             InitializeComponent();
 			if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
+
+            asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
 
             Tooltip = ItemTooltip;
 

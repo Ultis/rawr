@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Drawing;
 #endif
 using System.Globalization;
+using System.Threading;
 
 namespace Rawr.Mage
 {
@@ -377,6 +378,69 @@ namespace Rawr.Mage
 			}
 
 			return sb.ToString();
+        }
+
+        private static Solver advancedSolver;
+        private static StringBuilder advancedSolverLog = new StringBuilder();
+
+        public static event EventHandler AdvancedSolverChanged;
+        public static event EventHandler AdvancedSolverLogUpdated;
+
+        public static string AdvancedSolverLog
+        {
+            get
+            {
+                return advancedSolverLog.ToString();
+            }
+        }
+
+        public static void CancelAsync()
+        {
+            Solver solver = advancedSolver;
+            if (solver != null)
+            {
+                solver.CancelAsync();
+            }
+        }
+
+        public static void Log(Solver solver, string line)
+        {
+            if (solver == advancedSolver)
+            {
+                advancedSolverLog.AppendLine(line);
+                if (AdvancedSolverLogUpdated != null)
+                {
+                    AdvancedSolverLogUpdated(null, EventArgs.Empty);
+                }
+            }
+        }
+
+        public static bool IsSolverEnabled(Solver solver)
+        {
+            return solver == advancedSolver;
+        }
+
+        public static void EnableSolver(Solver solver)
+        {
+            advancedSolver = solver;
+            advancedSolverLog.Length = 0;
+            if (AdvancedSolverChanged != null)
+            {
+                AdvancedSolverChanged(null, EventArgs.Empty);
+            }
+            if (AdvancedSolverLogUpdated != null)
+            {
+                AdvancedSolverLogUpdated(null, EventArgs.Empty);
+            }
+        }
+
+        public static void DisableSolver(Solver solver)
+        {
+            Interlocked.CompareExchange(ref advancedSolver, null, solver);
+            if (AdvancedSolverChanged != null)
+            {
+                AdvancedSolverChanged(null, EventArgs.Empty);
+            }
         }
 
 		public override CharacterClass TargetClass { get { return CharacterClass.Mage; } }
