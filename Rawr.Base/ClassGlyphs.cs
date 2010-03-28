@@ -31,7 +31,7 @@ namespace Rawr
         private bool[] _glyphData = new bool[19];
         public override bool[] GlyphData { get { return _glyphData; } }
 
-        [GlyphData(0, "Glyph of Fireball", true, @"Increases the critical strike chance of Fireball by 5%, but removes the damage over time effect.")]
+        [GlyphData(0, "Glyph of Fireball", true, @"Reduces the casting time of your Fireball spell by 0.15 sec, but removes the damage over time effect.")]
         public bool GlyphOfFireball { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
         [GlyphData(1, "Glyph of Frostfire", true, @"Increases the initial damage dealt by Frostfire Bolt by 2% and its critical strike chance by 2%.")]
         public bool GlyphOfFrostfire { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
