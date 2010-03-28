@@ -255,16 +255,12 @@ namespace Rawr.Moonkin
                 _relevantGlyphs.Add("Glyph of Moonfire");
                 _relevantGlyphs.Add("Glyph of Starfire");
                 _relevantGlyphs.Add("Glyph of Starfall");
+                _relevantGlyphs.Add("Glyph of Focus");
             }
             return _relevantGlyphs;
         }
 
-        //public static float hitRatingConversionFactor = 100 * (8.0f * (82 / 52.0f) * (131 / 63.0f));
-        //public static float critRatingConversionFactor = 100 * (14.0f * (82 / 52.0f) * (131 / 63.0f));
-        //public static float hasteRatingConversionFactor = 100 * (10 * (82 / 52.0f) * (131 / 63.0f));
-        //public static float intPerCritPercent = 166.0f + (2 / 3.0f);
         public static float BaseMana = 3496.0f;
-        //public static float ManaRegenConstant = 0.005575f * 0.6f;
 #if RAWR3
         private Dictionary<string, System.Windows.Media.Color> subColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
