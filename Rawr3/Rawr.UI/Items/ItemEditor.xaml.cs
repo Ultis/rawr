@@ -52,9 +52,16 @@ namespace Rawr.UI
                 else Gem3Combo.SelectedIndex = 0;
                 
                 foreach (CheckBox cb in ClassCheckBoxes.Values) cb.IsChecked = false;
-                if (currentItem.RequiredClasses != null)
+                if (!string.IsNullOrEmpty(currentItem.RequiredClasses))
                 {
-                    foreach (string c in currentItem.RequiredClasses.Split('|')) ClassCheckBoxes[c].IsChecked = true;
+                    foreach (string c in currentItem.RequiredClasses.Split('|'))
+                    {
+                        CheckBox checkBox;
+                        if (ClassCheckBoxes.TryGetValue(c, out checkBox))
+                        {
+                            checkBox.IsChecked = true;
+                        }
+                    }
                 }
 
                 var nonZeroStats = currentItem.SocketBonus.Values(x => x != 0);
