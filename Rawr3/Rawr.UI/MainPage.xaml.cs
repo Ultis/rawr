@@ -25,14 +25,6 @@ namespace Rawr.UI
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
 
-        public ComboBox WindowsComboBox
-        {
-            get
-            {
-                return WindowsMenu;
-            }
-        }
-
         private Status status;
         public Status Status
         {
@@ -311,35 +303,6 @@ namespace Rawr.UI
 			MessageBox.Show(ts.ToString());
 		}
 
-		private void NewCharacter()
-        {
-            Character c = new Character();
-            c.CurrentModel = Character.CurrentModel;
-            c.Class = Character.Class;
-            c.Race = Character.Race;
-            Character = c;
-        }
-
-        private void OpenCharacter()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "character file (*.xml)|*.xml";
-            if (ofd.ShowDialog().GetValueOrDefault(false))
-            {
-#if SILVERLIGHT
-                using (StreamReader reader = ofd.File.OpenText())
-#else
-                using (StreamReader reader = new StreamReader(ofd.OpenFile()))
-#endif
-                {
-                    // TODO: we'll have to expand this considerably to get to Rawr2 functionality                    
-                    Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
-                    EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
-                    Character = loadedCharacter;
-                }
-            }
-        }
-
         private void EnsureItemsLoaded(string[] ids)
         {
             List<Item> items = new List<Item>();
@@ -371,23 +334,6 @@ namespace Rawr.UI
         {
             Status.Close();
             Character = character;
-        }
-
-        private void SaveCharacter()
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "character file (*.xml)|*.xml";
-            if (sfd.ShowDialog().GetValueOrDefault(false))
-            {
-                Character.Save(sfd.OpenFile());
-            }
-        }
-
-        private void LoadFromArmory()
-        {
-            ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
-            armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
-            armoryLoad.Show();
         }
 
 		public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
@@ -429,21 +375,8 @@ namespace Rawr.UI
             Status = null;
         }
 
-        private void ShowItemRefinement()
-        {
-            new RelevantItemRefinement().Show();
-        }
-
-        private void ShowItemEditor()
-        {
-            ItemSearch.Show();
-        }
-
-        private void ShowGemmingTemplates()
-        {
-            new GemmingTemplates(Character).Show();
-        }
-
+        #region Menus
+#if SILVERLIGHT
         private void FileMenu_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (FileMenu != null)
@@ -453,28 +386,38 @@ namespace Rawr.UI
                 {
                     FileMenu.IsDropDownOpen = false;
                     FileMenu.SelectedIndex = 0;
-                    if (newIndex == 1) NewCharacter();
-                    else if (newIndex == 2) OpenCharacter();
-                    else if (newIndex == 3) SaveCharacter();
-                    else if (newIndex == 4) OpenSavedUpgradeList();
-                    else if (newIndex == 6) LoadFromArmory();
-                    //else if (newIndex == 7) LoadFromProfiler(0;
+                    if (newIndex == 1) NewCharacter(null, null);
+                    else if (newIndex == 2) OpenCharacter(null, null);
+                    else if (newIndex == 3) SaveCharacter(null, null);
+                    else if (newIndex == 4) OpenSavedUpgradeList(null, null);
+                    else if (newIndex == 6) LoadFromArmory(null, null);
+                    //else if (newIndex == 7) LoadFromCharacterProfiler(0;
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
         }
 
-        private void OpenSavedUpgradeList()
+        private void ToolsMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Rawr Upgrade List Files|*.xml";
-            if (ofd.ShowDialog().GetValueOrDefault())
+            if (ToolsMenu != null)
             {
-#if SILVERLIGHT
-                new UpgradesComparison(ofd.File.OpenText()).Show();
-#else
-                new UpgradesComparison(new StreamReader(ofd.OpenFile())).Show();
-#endif
+                int newIndex = ToolsMenu.SelectedIndex;
+                if (newIndex > 0)
+                {
+                    ToolsMenu.IsDropDownOpen = false;
+                    ToolsMenu.SelectedIndex = 0;
+                    if (newIndex == 1) ShowItemEditor(null, null);
+                    else if (newIndex == 2) ShowGemmingTemplates(null, null);
+                    else if (newIndex == 3) ShowItemRefinement(null, null);
+                    else if (newIndex == 4) ShowItemFilters(null, null);
+                    else if (newIndex == 6) ResetItemCost(null, null);
+                    else if (newIndex == 7) LoadItemCost(null, null);
+                    else if (newIndex == 8) SaveItemCost(null, null);
+                    else if (newIndex == 9) LoadEmblemOfFrostCost(null, null);
+                    else if (newIndex == 11) ShowOptimizer(null, null);
+                    else if (newIndex == 12) ShowBatchTools(null, null);
+                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
+                }
             }
         }
 
@@ -492,36 +435,140 @@ namespace Rawr.UI
             }
         }
 
-        private void ToolsMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OptionsMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ToolsMenu != null)
+            if (OptionsMenu != null)
             {
-                int newIndex = ToolsMenu.SelectedIndex;
+                int newIndex = OptionsMenu.SelectedIndex;
                 if (newIndex > 0)
                 {
-                    ToolsMenu.IsDropDownOpen = false;
-                    ToolsMenu.SelectedIndex = 0;
-                    if (newIndex == 1) ShowItemEditor();
-                    else if (newIndex == 2) ShowGemmingTemplates();
-                    else if (newIndex == 3) ShowItemRefinement();
-                    else if (newIndex == 4) ShowItemFilters();
-                    else if (newIndex == 6) ResetItemCost();
-                    else if (newIndex == 7) LoadItemCost();
-                    else if (newIndex == 8) SaveItemCost();
-                    else if (newIndex == 9) LoadEmblemOfFrostCost();
-                    else if (newIndex == 11) ShowOptimizer();
-                    else if (newIndex == 12) ShowBatchTools();
+                    OptionsMenu.IsDropDownOpen = false;
+					OptionsMenu.SelectedIndex = 0;
+                    if (newIndex == 1) ShowOptions(null, null);
+                    else if (newIndex == 3) ResetItemCache(null, null);
+                    else if (newIndex == 4) ResetAllCaches(null, null);
+                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
+                }
+            }
+
+        }
+
+        private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (HelpMenu != null)
+            {
+                int newIndex = HelpMenu.SelectedIndex;
+                if (newIndex > 0)
+                {
+                    HelpMenu.IsDropDownOpen = false;
+                    HelpMenu.SelectedIndex = 0;
+                    if (newIndex == 1) ShowHelp("http://rawr.codeplex.com/documentation");
+                    else if (newIndex == 2) ShowHelp("http://www.youtube.com/watch?v=OjRM5SUoOoQ");
+                    else if (newIndex == 3) ShowHelp("http://rawr.codeplex.com/wikipage?title=Gemmings");
+                    else if (newIndex == 4) ShowHelp("http://rawr.codeplex.com/wikipage?title=GearOptimization");
+                    else if (newIndex == 5) ShowHelp("http://rawr.codeplex.com/wikipage?title=ItemFiltering");
+                    else if (newIndex == 7) ShowHelp("http://rawr.codeplex.com/");
+                    else if (newIndex == 8) ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
         }
+#endif
 
-        private void ResetItemCost()
+        #region File Menu
+        private void NewCharacter(object sender, RoutedEventArgs args)
+        {
+            Character c = new Character();
+            c.CurrentModel = Character.CurrentModel;
+            c.Class = Character.Class;
+            c.Race = Character.Race;
+            Character = c;
+        }
+
+        private void OpenCharacter(object sender, RoutedEventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "character file (*.xml)|*.xml";
+            if (ofd.ShowDialog().GetValueOrDefault(false))
+            {
+#if SILVERLIGHT
+                using (StreamReader reader = ofd.File.OpenText())
+#else
+                using (StreamReader reader = new StreamReader(ofd.OpenFile()))
+#endif
+                {
+                    // TODO: we'll have to expand this considerably to get to Rawr2 functionality                    
+                    Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
+                    EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
+                    Character = loadedCharacter;
+                }
+            }
+        }
+
+        private void SaveCharacter(object sender, RoutedEventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "character file (*.xml)|*.xml";
+            if (sfd.ShowDialog().GetValueOrDefault(false))
+            {
+                Character.Save(sfd.OpenFile());
+            }
+        }
+
+        private void OpenSavedUpgradeList(object sender, RoutedEventArgs args)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Rawr Upgrade List Files|*.xml";
+            if (ofd.ShowDialog().GetValueOrDefault())
+            {
+#if SILVERLIGHT
+                new UpgradesComparison(ofd.File.OpenText()).Show();
+#else
+                new UpgradesComparison(new StreamReader(ofd.OpenFile())).Show();
+#endif
+            }
+        }
+
+        private void LoadFromArmory(object sender, RoutedEventArgs args)
+        {
+            ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
+            armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
+            armoryLoad.Show();
+        }
+
+        private void LoadFromCharacterProfiler(object sender, RoutedEventArgs args)
+        {
+            // TODO
+        }
+        #endregion
+
+        #region Tools Menu
+        private void ShowItemEditor(object sender, RoutedEventArgs args)
+        {
+            ItemSearch.Show();
+        }
+
+        private void ShowGemmingTemplates(object sender, RoutedEventArgs args)
+        {
+            new GemmingTemplates(Character).Show();
+        }
+
+        private void ShowItemRefinement(object sender, RoutedEventArgs args)
+        {
+            new RelevantItemRefinement().Show();
+        }
+
+        private void ShowItemFilters(object sender, RoutedEventArgs args)
+        {
+            new EditItemFilter().Show();
+        }
+
+        private void ResetItemCost(object sender, RoutedEventArgs args)
         {
             ItemCache.ResetItemCost();
         }
 
-        private void LoadItemCost()
+        private void LoadItemCost(object sender, RoutedEventArgs args)
         {
             OpenFileDialog dialog = new OpenFileDialog();
 #if !SILVERLIGHT
@@ -542,7 +589,7 @@ namespace Rawr.UI
             }
         }
 
-        private void SaveItemCost()
+        private void SaveItemCost(object sender, RoutedEventArgs args)
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".cost.xml";
@@ -558,22 +605,17 @@ namespace Rawr.UI
             }
         }
 
-        private void LoadEmblemOfFrostCost()
+        private void LoadEmblemOfFrostCost(object sender, RoutedEventArgs args)
         {
             ItemCache.LoadTokenItemCost("Emblem of Frost");
         }
 
-        private void ShowItemFilters()
-        {
-            new EditItemFilter().Show();
-        }
-
-        private void ShowOptimizer()
+        private void ShowOptimizer(object sender, RoutedEventArgs args)
         {
             new OptimizeWindow(Character).Show();
         }
 
-        private void ShowBatchTools()
+        private void ShowBatchTools(object sender, RoutedEventArgs args)
         {
 #if SILVERLIGHT
             // in silverlight we want to reuse current batch tools
@@ -589,72 +631,29 @@ namespace Rawr.UI
             App.Current.OpenNewWindow("Batch Tools", new BatchTools());
 #endif
         }
+        #endregion
 
-        private void ShowHelp(string uri)
-        {
-#if SILVERLIGHT
-            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri(uri, UriKind.Absolute), "_blank");
-#else
-            // TODO browser in wpf
-#endif
-        }
+        #region Import Menu
+        #endregion
 
-        private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (HelpMenu != null)
-            {
-                int newIndex = HelpMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    HelpMenu.IsDropDownOpen = false;
-                    HelpMenu.SelectedIndex = 0;
-                    if (newIndex == 1) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Help");
-                    else if (newIndex == 2) ShowHelp("http://www.youtube.com/watch?v=OjRM5SUoOoQ");
-                    else if (newIndex == 3) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Gemmings");
-                    else if (newIndex == 4) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=GearOptimization");
-                    else if (newIndex == 5) ShowHelp("http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering");
-                    else if (newIndex == 7) ShowHelp("http://rawr.codeplex.com/");
-                    else if (newIndex == 8) ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
-                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-        }
-
-        private void OptionsMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (OptionsMenu != null)
-            {
-                int newIndex = OptionsMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    OptionsMenu.IsDropDownOpen = false;
-					OptionsMenu.SelectedIndex = 0;
-                    if (newIndex == 1) ShowOptions();
-                    else if (newIndex == 3) ResetItemCache();
-                    else if (newIndex == 4) ResetAllCaches();
-                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-
-        }
-
-        private void ShowOptions()
+        #region Options Menu
+        private void ShowOptions(object sender, RoutedEventArgs e)
         {
             new OptionsDialog().Show();
         }
 
-		private void ResetAllCaches()
-		{
-			ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload all caches?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
-				new EventHandler(ResetAllCaches_Confirmation));
-		}
+        private void ResetAllCaches(object sender, RoutedEventArgs e)
+        {
+            ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload all caches?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
+                new EventHandler(ResetAllCaches_Confirmation));
+        }
 
-		private void ResetAllCaches_Confirmation(object sender, EventArgs e)
-		{
-			if (((ConfirmationWindow)sender).DialogResult == true)
-			{
-				Character = new Character();
-				new FileUtils(new string[] {
+        private void ResetAllCaches_Confirmation(object sender, EventArgs e)
+        {
+            if (((ConfirmationWindow)sender).DialogResult == true)
+            {
+                Character = new Character();
+                new FileUtils(new string[] {
 					"BuffCache.xml", 
 					"EnchantCache.xml",
 					"ItemCache.xml",
@@ -663,39 +662,87 @@ namespace Rawr.UI
 					"ItemSource.xml",
 					"ItemFilter.xml",
 					"Settings.xml"}).Delete();
-				LoadScreen ls = new LoadScreen();
-				(App.Current.RootVisual as Grid).Children.Add(ls);
-				this.Visibility = Visibility.Collapsed;
-				ls.StartLoading(new EventHandler(ResetCaches_Finished));
-				Character = new Character();
-			}
-		}
-		
-		private void ResetItemCache()
-		{
-			ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload the item cache?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
-				new EventHandler(ResetItemCaches_Confirmation));
-		}
+                LoadScreen ls = new LoadScreen();
+                (App.Current.RootVisual as Grid).Children.Add(ls);
+                this.Visibility = Visibility.Collapsed;
+                ls.StartLoading(new EventHandler(ResetCaches_Finished));
+                Character = new Character();
+            }
+        }
 
-		private void ResetItemCaches_Confirmation(object sender, EventArgs e)
-		{
-			if (((ConfirmationWindow)sender).DialogResult == true)
-			{
-				Character = new Character();
-				new FileUtils("ItemCache.xml").Delete();
-				LoadScreen ls = new LoadScreen();
-				(App.Current.RootVisual as Grid).Children.Add(ls);
-				this.Visibility = Visibility.Collapsed;
-				ls.StartLoading(new EventHandler(ResetCaches_Finished));
-				Character = new Character();
-			}
-		}
+        private void ResetItemCache(object sender, RoutedEventArgs e)
+        {
+            ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload the item cache?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
+                new EventHandler(ResetItemCaches_Confirmation));
+        }
 
-		private void ResetCaches_Finished(object sender, EventArgs e)
-		{
-			(App.Current.RootVisual as Grid).Children.Remove(sender as LoadScreen);
-			this.Visibility = Visibility.Visible;
-		}
+        private void ResetItemCaches_Confirmation(object sender, EventArgs e)
+        {
+            if (((ConfirmationWindow)sender).DialogResult == true)
+            {
+                Character = new Character();
+                new FileUtils("ItemCache.xml").Delete();
+                LoadScreen ls = new LoadScreen();
+                (App.Current.RootVisual as Grid).Children.Add(ls);
+                this.Visibility = Visibility.Collapsed;
+                ls.StartLoading(new EventHandler(ResetCaches_Finished));
+                Character = new Character();
+            }
+        }
+
+        private void ResetCaches_Finished(object sender, EventArgs e)
+        {
+            (App.Current.RootVisual as Grid).Children.Remove(sender as LoadScreen);
+            this.Visibility = Visibility.Visible;
+        }
+        #endregion
+
+        #region Help Menu
+        private void ShowHelp(string uri)
+        {
+#if SILVERLIGHT
+            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri(uri, UriKind.Absolute), "_blank");
+#else
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(uri));
+#endif
+        }
+
+        private void ShowRawrHelpPage(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://rawr.codeplex.com/documentation");
+        }
+
+        private void ShowTourOfRawr(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://www.youtube.com/watch?v=OjRM5SUoOoQ");
+        }
+
+        private void ShowGemmingsHelp(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://rawr.codeplex.com/wikipage?title=Gemmings");
+        }
+
+        private void ShowGearOptimizationHelp(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://rawr.codeplex.com/wikipage?title=GearOptimization");
+        }
+
+        private void ShowItemFilteringHelp(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://rawr.codeplex.com/wikipage?title=ItemFiltering");
+        }
+
+        private void ShowRawrWebsite(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://rawr.codeplex.com/");
+        }
+
+        private void ShowDonate(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
+        }
+        #endregion
+        #endregion
 
         private void character_ClassChanged(object sender, EventArgs e)
         {

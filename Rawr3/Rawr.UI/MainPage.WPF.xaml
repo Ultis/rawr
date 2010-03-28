@@ -49,6 +49,7 @@
 				</LinearGradientBrush>
 			</Rectangle.Fill>
     	</Rectangle>
+        <!--IFSL
     	<StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
 			<ComboBox x:Name="FileMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="FileMenu_SelectionChanged">
 				<ComboBoxItem Content="File" Visibility="Collapsed"/>
@@ -109,6 +110,62 @@
                 <ComboBoxItem Content="Donate"/>
             </ComboBox>
         </StackPanel>
+        ENDIFSL-->
+        <!--IFWPF-->
+        <Menu Margin="0,4,0,0" VerticalAlignment="Stretch" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0">
+            <MenuItem x:Name="FileMenu" Header="File" HorizontalAlignment="Left" Margin="4,0,4,0">
+                <MenuItem Header="New" Click="NewCharacter"/>
+                <MenuItem Header="Open" Click="OpenCharacter"/>
+                <MenuItem Header="Save" Click="SaveCharacter"/>
+                <MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
+                <Separator/>
+                <MenuItem Header="Load from Armory" Click="LoadFromArmory"/>
+                <MenuItem Header="Load from Character Profiler" Click="LoadFromCharacterProfiler"/>
+            </MenuItem>
+            <MenuItem x:Name="ToolsMenu" Header="Tools" HorizontalAlignment="Left" Margin="4,0,4,0">
+                <MenuItem Header="Edit Items..." Click="ShowItemEditor"/>
+                <MenuItem Header="Edit Gemming Templates..." Click="ShowGemmingTemplates"/>
+                <MenuItem Header="Refine Types of Items Listed..." Click="ShowItemRefinement"/>
+                <MenuItem Header="Edit Item Filters..." Click="ShowItemFilters"/>
+                <MenuItem Header="Item Cost">
+                    <MenuItem Header="Reset" Click="ResetItemCost"/>
+                    <MenuItem Header="Load..." Click="LoadItemCost"/>
+                    <MenuItem Header="Save..." Click="SaveItemCost"/>
+                    <MenuItem Header="Load Emblem of Frost" Click="LoadEmblemOfFrostCost"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Optimizer..." Click="ShowOptimizer"/>
+                <MenuItem Header="Batch Tools..." Click="ShowBatchTools"/>
+            </MenuItem>
+            <MenuItem x:Name="ImportMenu" Header="Import" HorizontalAlignment="Left" Margin="4,0,4,0">
+                <MenuItem Header="Reload Current Character from Armory"/>
+                <MenuItem Header="Reload Current Character from Character Profiler"/>
+                <Separator/>
+                <MenuItem Header="Load Possible Upgrades from Armory"/>
+                <MenuItem Header="Load Possible Upgrades from Wowhead"/>
+                <MenuItem Header="Update Item Cache from Armory"/>
+                <MenuItem Header="Update Item Cache from Wowhead"/>
+                <MenuItem Header="Load Items From Wowhead Filter"/>
+            </MenuItem>
+            <MenuItem x:Name="OptionsMenu" Header="Options" HorizontalAlignment="Left" Margin="4,0,4,0">
+                <MenuItem Header="Edit Options..." Click="ShowOptions"/>
+                <Separator/>
+                <MenuItem Header="Reset Item Cache" Click="ResetItemCache"/>
+                <MenuItem Header="Reset All Caches" Click="ResetAllCaches"/>
+                <MenuItem Header="Manually Edit a Cache..."/>
+            </MenuItem>
+            <MenuItem x:Name="HelpMenu" Header="Help" HorizontalAlignment="Left" Margin="4,0,4,0">
+                <MenuItem Header="Rawr Help Page" Click="ShowRawrHelpPage"/>
+                <MenuItem Header="Tour of Rawr" Click="ShowTourOfRawr"/>
+                <MenuItem Header="Gemmings" Click="ShowGemmingsHelp"/>
+                <MenuItem Header="Gear Optimization" Click="ShowGearOptimizationHelp"/>
+                <MenuItem Header="Item Filtering" Click="ShowItemFilteringHelp"/>
+                <Separator/>
+                <MenuItem Header="Rawr Website" Click="ShowRawrWebsite"/>
+                <MenuItem Header="Donate" Click="ShowDonate"/>
+            </MenuItem>
+       </Menu>
+        <!--ENDIFWPF-->
     	<toolkit:WrapPanel VerticalAlignment="Top" Margin="4,8,4,0" Grid.Row="1" Orientation="Vertical">
     		<local:ItemButtonWithEnchant x:Name="HeadButton" d:LayoutOverrides="Height" Margin="4,0,0,4"/>
     		<local:ItemButton x:Name="NeckButton" d:LayoutOverrides="Height" Margin="4,0,0,4"/>

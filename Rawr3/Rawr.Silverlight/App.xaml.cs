@@ -52,8 +52,8 @@ namespace Rawr.Silverlight
             Grid g = RootVisual as Grid;
             g.Children.RemoveAt(0);
 			_mainPage = new MainPage();
-            _mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = "Character", Tag = _mainPage });
-            _mainPage.WindowsComboBox.SelectionChanged += new SelectionChangedEventHandler(WindowsComboBox_SelectionChanged);
+            //_mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = "Character", Tag = _mainPage });
+            //_mainPage.WindowsComboBox.SelectionChanged += new SelectionChangedEventHandler(WindowsComboBox_SelectionChanged);
             _windows[_mainPage] = "Character";
             g.Children.Add(_mainPage);
 			ProcessBookmark();
@@ -61,7 +61,7 @@ namespace Rawr.Silverlight
 			this.CheckAndDownloadUpdateAsync();
 		}
 
-        void WindowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*void WindowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_mainPage.WindowsComboBox != null)
             {
@@ -74,7 +74,7 @@ namespace Rawr.Silverlight
                     ShowWindow(window);
                 }
             }
-        }
+        }*/
 
 		private void ProcessBookmark()
 		{
@@ -167,7 +167,7 @@ namespace Rawr.Silverlight
         public override void OpenNewWindow(string title, Control control)
         {
             _windows[control] = title;
-            _mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = title, Tag = control });
+            //_mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = title, Tag = control });
             ShowWindow(control);
         }
 
