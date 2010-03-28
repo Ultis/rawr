@@ -235,8 +235,10 @@
                 </controls:TabItem>
     		</controls:TabControl>
     	</toolkit:DockPanel>
-      <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="b5" Foreground="#99999999" Grid.ColumnSpan="4" Margin="0,4,280,4"/>
-      <Button x:Name="PerformanceTestButton" HorizontalAlignment="Right" Content="Test Calculation Performance" Margin="0,4,100,4" Grid.Column="0" Click="PerformanceTest" Grid.ColumnSpan="4"/>
-      <Button x:Name="OfflineInstallButton" HorizontalAlignment="Right" Content="Install Offline" Margin="0,4,8,4" Grid.Column="0" Click="InstallOffline" Grid.ColumnSpan="4"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
+            <TextBlock VerticalAlignment="Center" Text="b5" Foreground="#99999999" Margin="0,4,8,4"/>
+            <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="0,4,8,4" Click="PerformanceTest"/>
+           <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="0,4,8,4" Click="InstallOffline"/>
+         </StackPanel>
     </Grid>
 </UserControl>
