@@ -254,51 +254,57 @@ namespace Rawr
             // items that aren't at least Epic quality
             if (filter && (int)item.Quality < 2) { return null; }
 
-			#region Item Binding
+            #region Item Binding
 
-			// 06.jan.2010: Bind status check
-			if (htmlTooltip.Contains("Binds when picked up"))
-				item.Bind = BindsOn.BoP;
-			else
-				if (htmlTooltip.Contains("Binds when equipped"))
-					item.Bind = BindsOn.BoE;
-				else
-					if (htmlTooltip.Contains("Binds to account"))
-						item.Bind = BindsOn.BoA;
-					else
-						if (htmlTooltip.Contains("Binds when used"))
-							item.Bind = BindsOn.BoU;
+            // 06.jan.2010: Bind status check
+            if (htmlTooltip.Contains("Binds when picked up"))
+                item.Bind = BindsOn.BoP;
+            else
+                if (htmlTooltip.Contains("Binds when equipped"))
+                    item.Bind = BindsOn.BoE;
+                else
+                    if (htmlTooltip.Contains("Binds to account"))
+                        item.Bind = BindsOn.BoA;
+                    else
+                        if (htmlTooltip.Contains("Binds when used"))
+                            item.Bind = BindsOn.BoU;
 
 
-			#endregion
+            #endregion
 
             #region Get json & jsonequip ready for processing
             // Remove Id as we've already processed it
-            json1 = json1.Replace("id:" + item.Id.ToString() + ",", "");
+            json1 = json1.Replace("\"id\":" + item.Id.ToString() + ",", "");
             // Remove Name as we've already processed it
             {
-                json1 = json1.Replace(item.Name.Replace("'", "\\'"), "NAME");
-                int end = json1.IndexOf(",") + 1;
-                json1 = json1.Remove(0, end);
+                //"name":"3Vambraces of the Frost Wyrm Queen",
+                json1 = json1.Replace(item.Name, "NAME");
+                //"name":"3NAME",
+                int start = json1.IndexOf("NAME") - 9;
+                json1 = json1.Remove(start, "\"name\":\"3NAME\",".Length);
             }
             // Remove Level Requirement, if you aren't 80+ you shouldn't be using Rawr
             {
-                int start = json1.IndexOf(",reqlevel:");
-                if (start != -1) {
-                    int count = (",reqlevel:").Length;
-                    if (start + count < json1.Length) {
+                int start = json1.IndexOf(",\"reqlevel\":");
+                if (start != -1)
+                {
+                    int count = (",\"reqlevel\":").Length;
+                    if (start + count < json1.Length)
+                    {
                         string Short = json1.Substring(start + count);
-                        if (Short.IndexOf(",") != -1) {
+                        if (Short.IndexOf(",") != -1)
+                        {
                             count += Short.IndexOf(",");
                         }
                     }
                     json1 = json1.Remove(start, count);
                 }
             }
-            {   
-                int start = json2.IndexOf(",reqlevel:");
-                if (start != -1) {
-                    int count = (",reqlevel:").Length;
+            {
+                int start = json2.IndexOf(",\"reqlevel\":");
+                if (start != -1)
+                {
+                    int count = (",\"reqlevel\":").Length;
                     if (start + count < json2.Length)
                     {
                         string Short = json2.Substring(start + count);
@@ -312,41 +318,77 @@ namespace Rawr
             }
             // Change the reference for subclass so it combines with
             // class, as that is how we are handling it
-            json1 = json1.Replace(",subclass:", ".");
+            {
+                string subclass = "";
+                int start = json1.IndexOf(",\"subclass\":");
+                if (start != -1)
+                {
+                    int count = (",\"subclass\":").Length;
+                    if (start + count < json1.Length)
+                    {
+                        string Short = json1.Substring(start + count);
+                        int end = Short.IndexOf(",");
+                        if (end == -1)
+                        {
+                            end = Short.Length;
+                        }
+                        subclass = Short.Substring(0, end);
+                        count += end;
+                    }
+                    json1 = json1.Remove(start, count);
+                    start = json1.IndexOf("\"classs\":");
+                    if (start != -1)
+                    {
+                        start += "\"classs\":".Length;
+                        int end = json1.IndexOf(",", start);
+                        if (end == -1)
+                        {
+                            end = json1.Length;
+                        }
+                        json1 = json1.Insert(end, "." + subclass);
+                    }
+                }
+                //json1 = json1.Replace(",\"subclass\":", ".");
+            }
             // Remove the Heroic flag from the Item as we don't care
-            json1 = json1.Replace(",heroic:1","");
+            json1 = json1.Replace(",\"heroic\":1", "");
             // Pull the Source string into a variable then remove it from json
-            if (json1.Contains("source:[")) {
-                source = json1.Substring(json1.IndexOf("source:[") + "source:[".Length);
+            if (json1.Contains("\"source\":["))
+            {
+                source = json1.Substring(json1.IndexOf("\"source\":[") + "\"source\":[".Length);
                 source = source.Substring(0, source.IndexOf("]"));
-                json1 = json1.Replace(string.Format("source:[{0}]", source), "source:[SOURCE]");
+                json1 = json1.Replace(string.Format("\"source\":[{0}]", source), "\"source\":[SOURCE]");
             }
             // Pull the SourceMore string into a variable then remove it from json
-            if (json1.Contains("sourcemore:[{")) {
-                sourcemore = json1.Substring(json1.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
+            if (json1.Contains("\"sourcemore\":[{"))
+            {
+                sourcemore = json1.Substring(json1.IndexOf("\"sourcemore\":[{") + "\"sourcemore\":[{".Length);
                 sourcemore = sourcemore.Substring(0, sourcemore.IndexOf("}]"));
                 json1 = json1.Replace(sourcemore, "SOURCEMORE");
             }
             // Pull Faction Info
-            if (json2.Contains("reqfaction:")) { //,reqfaction:1073,reqrep:6
-                int start = json2.IndexOf("reqfaction:") + "reqfaction:".Length;
+            if (json2.Contains("\"reqfaction\":"))
+            { //,reqfaction:1073,reqrep:6
+                int start = json2.IndexOf("\"reqfaction\":") + "\"reqfaction\":".Length;
                 int end = json2.IndexOf(",", start + 1);
                 repSource = json2.Substring(start, end - start);
-                json2 = json2.Replace(",reqfaction:" + repSource, "");
+                json2 = json2.Replace(",\"reqfaction\":" + repSource, "");
             }
-            if (json2.Contains("reqrep:")) { //,reqfaction:1073,reqrep:6
-                int start = json2.IndexOf("reqrep:") + "reqrep:".Length;
+            if (json2.Contains("\"reqrep\":"))
+            { //,reqfaction:1073,reqrep:6
+                int start = json2.IndexOf("\"reqrep\":") + "\"reqrep\":".Length;
                 int end = json2.IndexOf(",", start);
                 repLevel = end != -1 ? json2.Substring(start, end - start) : json2.Substring(start);
-                json2 = json2.Replace(",reqrep:" + repLevel, "");
+                json2 = json2.Replace(",\"reqrep\":" + repLevel, "");
             }
             // Remove Durability as we don't use that in Rawr
             {
-                int start = json2.IndexOf(",dura:");
+                int start = json2.IndexOf(",\"dura\":");
                 int end = json2.IndexOf(",", start + 1);
-                if (start != -1) {
-                    if(end ==-1){json2 = json2.Remove(start);}
-                    else{json2 = json2.Remove(start, end - start);}
+                if (start != -1)
+                {
+                    if (end == -1) { json2 = json2.Remove(start); }
+                    else { json2 = json2.Remove(start, end - start); }
                 }
             }
             #endregion
@@ -371,7 +413,8 @@ namespace Rawr
             if (item.Slot == ItemSlot.None) return null;
 
             #region Item Source
-            if (!string.IsNullOrEmpty(source)) {
+            if (!string.IsNullOrEmpty(source))
+            {
                 #region We have Source Data
                 string[] sourceKeys = source.Split(',');
                 string[] sourcemoreKeys = sourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
@@ -395,24 +438,40 @@ namespace Rawr
                 }
 
                 string n = string.Empty;
-                if (sourcemore.Contains("n:'"))
+                if (sourcemore.Contains("\"n\":\""))
                 {
-                    n = sourcemore.Substring(sourcemore.IndexOf("n:'") + "n:'".Length);
-                    if (n.Contains("',")) {
-                        n = n.Substring(0, n.IndexOf("',"));
-                    } else {
-                        n = n.Substring(0, n.LastIndexOf("'"));
+                    n = sourcemore.Substring(sourcemore.IndexOf("\"n\":\"") + "\"n\":\"".Length);
+                    if (n.Contains("\","))
+                    {
+                        n = n.Substring(0, n.IndexOf("\","));
                     }
-                    if (!string.IsNullOrEmpty(n)) {
+                    else
+                    {
+                        n = n.Substring(0, n.LastIndexOf("\""));
+                    }
+                    if (!string.IsNullOrEmpty(n))
+                    {
                         sourcemore = sourcemore.Replace(n, "N");
-                        sourcemore = sourcemore.Remove(sourcemore.IndexOf(",n:'N'"), (",n:'N'").Length);
+                        int index = sourcemore.IndexOf("\"n\":\"N\"");
+                        int count = (",\"n\":\"N\"").Length;
+                        if (index > 0)
+                        {
+                            index--;
+                            count++;
+                        }
+                        else if (index + count < sourcemore.Length)
+                        {
+                            count++;
+                        }
+                        sourcemore = sourcemore.Remove(index, count);
                     }
 
                     n = n.Replace("\\'", "'");
                 }
 
                 string itemId = item.Id.ToString();
-                if (source == "2" && string.IsNullOrEmpty(sourcemore)) {
+                if (source == "2" && string.IsNullOrEmpty(sourcemore))
+                {
                     #region Didn't work
                     /*// We don't have SourceMore data so let's see if the web page has what we need
                     // If not, call it a World Drop
@@ -541,11 +600,13 @@ namespace Rawr
                     /*} catch (Exception ex) {
                         Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error getting drop data from wowhead",
                             ex.Message, "GetItem(...)", "", ex.StackTrace);*/
-                        // World Drop dat crap, until we can find a better solution
-                        WorldDrop locInfo = new WorldDrop();
-                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                    // World Drop dat crap, until we can find a better solution
+                    WorldDrop locInfo = new WorldDrop();
+                    LocationFactory.Add(item.Id.ToString(), locInfo);
                     /*}*/
-                } else if (source == "5") {
+                }
+                else if (source == "5")
+                {
                     // if we only have vendor information then we will want to download
                     // the normal html page and scrape the currency information
                     // and in case it is a token, link it to the boss/zone where the token drops
@@ -555,7 +616,8 @@ namespace Rawr
                     string[] tokenNames = { null, null };
                     int cost = 0;
                     #region Try to get the Token Names and individual costs
-                    try {
+                    try
+                    {
                         XmlDocument rawHtmlDoc = wrw.DownloadItemHtmlWowhead(query);
                         if (rawHtmlDoc != null)
                         {
@@ -601,12 +663,14 @@ namespace Rawr
                                 }
                             }
                         }
-                    } catch { }
+                    }
+                    catch { }
                     #endregion
                     for (int i = 0; i < 2; i++)
                     {
                         if (i == 1 && tokenIds[i] == null) { continue; } // break out if we're one 2 and there's only 1 or for some reason there's 0
-                        if (tokenIds[i] != null && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenNames[i])) {
+                        if (tokenIds[i] != null && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
+                        {
                             #region It's a PvP Token: Mark of Honor/Venture Coin
                             ItemLocation locInfo = new PvpItem()
                             {
@@ -615,7 +679,9 @@ namespace Rawr
                             };
                             LocationFactory.Add(item.Id.ToString(), locInfo);
                             #endregion
-                        } else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenNames[i])) {
+                        }
+                        else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
+                        {
                             #region It's a PvE Token that we've seen before and it's from a Vendor
                             VendorItem locInfo = new VendorItem()
                             {
@@ -631,7 +697,7 @@ namespace Rawr
                                     string[] keyvalsplit = keyval.Split(':');
                                     string key = keyvalsplit[0];
                                     string val = keyvalsplit[1];
-                                    switch (key)
+                                    switch (key.Trim('"'))
                                     {
                                         case "z":       // Zone
                                             locInfo.VendorArea = GetZoneName(val);
@@ -639,20 +705,26 @@ namespace Rawr
                                     }
                                 }
                             }
-                            if (i == 1) {
+                            if (i == 1)
+                            {
                                 LocationFactory.Add(item.Id.ToString(), new VendorItem[] { (VendorItem)item.LocationInfo[0], locInfo }, true);
-                            } else {
+                            }
+                            else
+                            {
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
                             }
                             #endregion
-                        } else if (tokenIds[i] != null) {
+                        }
+                        else if (tokenIds[i] != null)
+                        {
                             #region It's a PvE Token that is not from a Vendor
                             // ok now let's see what info we can get about this token
                             string boss = null;
                             string area = null;
                             bool heroic = false;
                             bool container = false;
-                            if (!_tokenDropMap.ContainsKey(tokenIds[i])) {
+                            if (!_tokenDropMap.ContainsKey(tokenIds[i]))
+                            {
                                 #region We *really* haven't seen this before so we need to pull the data
                                 XmlDocument docToken = wrw.DownloadItemWowhead(site, tokenIds[i]);
 
@@ -661,18 +733,21 @@ namespace Rawr
                                 string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
 
                                 string tokenSource = string.Empty;
-                                if (tokenJson.Contains("source:[")) {
-                                    tokenSource = tokenJson.Substring(tokenJson.IndexOf("source:[") + "source:[".Length);
+                                if (tokenJson.Contains("\"source\":["))
+                                {
+                                    tokenSource = tokenJson.Substring(tokenJson.IndexOf("\"source\":[") + "\"source\":[".Length);
                                     tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
                                 }
 
                                 string tokenSourcemore = string.Empty;
-                                if (tokenJson.Contains("sourcemore:[{")) {
-                                    tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
+                                if (tokenJson.Contains("\"sourcemore\":[{"))
+                                {
+                                    tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("\"sourcemore\":[{") + "\"sourcemore\":[{".Length);
                                     tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
                                 }
 
-                                if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore)) {
+                                if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
+                                {
                                     string[] tokenSourceKeys = tokenSource.Split(',');
                                     string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -681,23 +756,28 @@ namespace Rawr
                                     tokenSourcemore = tokenSourcemoreKeys[0];
 
                                     int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
-                                    if (dropIndex >= 0) {
+                                    if (dropIndex >= 0)
+                                    {
                                         tokenSource = tokenSourceKeys[dropIndex];
                                         tokenSourcemore = tokenSourcemoreKeys[dropIndex];
                                     }
 
-                                    if (tokenSource == "2") {
-                                        foreach (string kv in tokenSourcemore.Split(',')) {
-                                            if (!string.IsNullOrEmpty(kv)) {
+                                    if (tokenSource == "2")
+                                    {
+                                        foreach (string kv in tokenSourcemore.Split(','))
+                                        {
+                                            if (!string.IsNullOrEmpty(kv))
+                                            {
                                                 string[] keyvalsplit = kv.Split(':');
                                                 string key = keyvalsplit[0];
                                                 string val = keyvalsplit[1];
-                                                switch (key) {
+                                                switch (key.Trim('"'))
+                                                {
                                                     case "t":
                                                         container = val == "2" || val == "3";
                                                         break;
                                                     case "n":       // NPC 'Name'
-                                                        boss = val.Replace("\\'", "'").Trim('\'');
+                                                        boss = val.Replace("\\'", "'").Trim('"');
                                                         break;
                                                     case "z":       // Zone
                                                         area = GetZoneName(val);
@@ -713,7 +793,9 @@ namespace Rawr
                                 if (boss == null) { boss = "Unknown Boss (Wowhead lacks data)"; }
                                 _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
                                 #endregion
-                            } else {
+                            }
+                            else
+                            {
                                 #region We've seen this before so just use that data
                                 TokenDropInfo info = _tokenDropMap[tokenIds[i]];
                                 boss = info.Boss;
@@ -723,9 +805,11 @@ namespace Rawr
                                 container = info.Container;
                                 #endregion
                             }
-                            if (area != null) {
+                            if (area != null)
+                            {
                                 #region This is a Dropped Token, so assign it to where it drops from
-                                if (container) {
+                                if (container)
+                                {
                                     ItemLocation locInfo = new ContainerItem()
                                     {
                                         Area = area,
@@ -733,7 +817,9 @@ namespace Rawr
                                         Heroic = heroic
                                     };
                                     LocationFactory.Add(item.Id.ToString(), locInfo);
-                                } else {
+                                }
+                                else
+                                {
                                     ItemLocation locInfo = new StaticDrop()
                                     {
                                         Area = area,
@@ -743,7 +829,9 @@ namespace Rawr
                                     LocationFactory.Add(item.Id.ToString(), locInfo);
                                 }
                                 #endregion
-                            } else {
+                            }
+                            else
+                            {
                                 #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
                                 VendorItem locInfo = new VendorItem()
                                 {
@@ -759,7 +847,7 @@ namespace Rawr
                                         string[] keyvalsplit = keyval.Split(':');
                                         string key = keyvalsplit[0];
                                         string val = keyvalsplit[1];
-                                        switch (key)
+                                        switch (key.Trim('"'))
                                         {
                                             case "z":       // Zone
                                                 locInfo.VendorArea = GetZoneName(val);
@@ -771,9 +859,12 @@ namespace Rawr
                                 #endregion
                             }
                             #endregion
-                        } else {
+                        }
+                        else
+                        {
                             #region There is no token so this is a normal vendor item
-                            if (!string.IsNullOrEmpty(repSource) && !string.IsNullOrEmpty(repLevel)) {
+                            if (!string.IsNullOrEmpty(repSource) && !string.IsNullOrEmpty(repLevel))
+                            {
                                 string[] repInfo = GetItemFactionVendorInfo(repSource, repLevel);
                                 FactionItem locInfo = new FactionItem()
                                 {
@@ -782,7 +873,9 @@ namespace Rawr
                                     Cost = cost,
                                 };
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
-                            } else {
+                            }
+                            else
+                            {
                                 VendorItem locInfo = new VendorItem()
                                 {
                                     Cost = cost,
@@ -795,7 +888,7 @@ namespace Rawr
                                         string[] keyvalsplit = keyval.Split(':');
                                         string key = keyvalsplit[0];
                                         string val = keyvalsplit[1];
-                                        switch (key)
+                                        switch (key.Trim('"'))
                                         {
                                             case "z":       // Zone
                                                 locInfo.VendorArea = GetZoneName(val);
@@ -809,26 +902,54 @@ namespace Rawr
                         }
                     }
                     #endregion
-                } else {
+                }
+                else
+                {
                     #region Process any other Sources
-                    foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(',')) {
-                        if (!string.IsNullOrEmpty(keyval)) {
+                    hasdd = false;
+                    foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
+                    {
+                        if (!string.IsNullOrEmpty(keyval))
+                        {
                             string[] keyvalsplit = keyval.Split(':');
                             string key = keyvalsplit[0];
                             string val = keyvalsplit[1];
                             ProcessKeyValue(item, key, val);
                         }
                     }
+                    if (hasdd)
+                    {
+                        ItemLocation locationDifficulty = item.LocationInfo[0];
+                        if (locationDifficulty is StaticDrop)
+                        {
+                            (locationDifficulty as StaticDrop).Heroic = ddheroic;
+                            (locationDifficulty as StaticDrop).Area += ddarea;
+                        }
+                        else if (locationDifficulty is ContainerItem)
+                        {
+                            (locationDifficulty as ContainerItem).Heroic = ddheroic;
+                            (locationDifficulty as ContainerItem).Area += ddarea;
+                        }
+                        else if (locationDifficulty is WorldDrop)
+                        {
+                            (locationDifficulty as WorldDrop).Heroic = ddheroic;
+                            (locationDifficulty as WorldDrop).Location += ddarea;
+                        }
+                    }
                     if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
                     #endregion
                 }
                 #endregion
-            } else if(item.Stats.Resilience > 0){
+            }
+            else if (item.Stats.Resilience > 0)
+            {
                 // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
                 PvpItem locInfo = new PvpItem();
                 //locInfo.
                 LocationFactory.Add(item.Id.ToString(), locInfo);
-            } else {
+            }
+            else
+            {
                 // We DON'T have Source Data
                 // Since we are doing nothing, the ItemSource cache doesn't change
                 // Therefore the original ItemSource persists, if it's there
@@ -861,7 +982,8 @@ namespace Rawr
             #endregion
 
             // If it's Craftable and Bings on Pickup, mark it as such
-            if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
+            if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP))
+            {
                 (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
             }
 
@@ -874,7 +996,8 @@ namespace Rawr
                 string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
 
                 // Remove Comments
-                while (line.Contains("<!--")) {
+                while (line.Contains("<!--"))
+                {
                     int start = line.IndexOf("<!--");
                     int end = line.IndexOf("-->");
                     string toRemove = line.Substring(start, end - start + 3);
@@ -884,7 +1007,8 @@ namespace Rawr
                 while (line.Contains("nbsp;")) { line = line.Replace("nbsp;", " "); }
                 // Remove the Spell Links
                 // Later we will instead USE the spell links but we aren't set up for that right now
-                while (line.Contains("<a")) {
+                while (line.Contains("<a"))
+                {
                     int start = line.IndexOf("<a");
                     int end = line.IndexOf(">");
                     string toRemove = line.Substring(start, end - start + 1);
@@ -892,7 +1016,8 @@ namespace Rawr
                 }
                 while (line.Contains("</a>")) { line = line.Replace("</a>", ""); }
                 // Remove the Small tags, we don't use those
-                while (line.Contains("<small")) {
+                while (line.Contains("<small"))
+                {
                     int start = line.IndexOf("<small>");
                     int end = line.IndexOf("</small>");
                     string toRemove = line.Substring(start, end - start + "</small>".Length);
@@ -905,13 +1030,18 @@ namespace Rawr
                 while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
 
                 // Now Process it
-                if (line.StartsWith("Equip: ")) {
+                if (line.StartsWith("Equip: "))
+                {
                     string equipLine = line.Substring("Equip: ".Length);
                     equipLines.Add(equipLine);
-                } else if (line.StartsWith("Chance on hit: ")) {
+                }
+                else if (line.StartsWith("Chance on hit: "))
+                {
                     string chanceLine = line.Substring("Chance on hit: ".Length);
                     equipLines.Add(chanceLine);
-                } else if (line.StartsWith("Use: ")) {
+                }
+                else if (line.StartsWith("Use: "))
+                {
                     string useLine = line.Substring("Use: ".Length);
                     useLines.Add(useLine);
                 }
@@ -991,11 +1121,15 @@ namespace Rawr
             return item;
         }
 
+        private static bool hasdd;
+        private static bool ddheroic;
+        private static string ddarea;
+
 		private static List<string> _unhandledKeys = new List<string>();
         private static List<string> _unhandledSocketBonus = new List<string>();
 		private static bool ProcessKeyValue(Item item, string key, string value)
 		{
-			switch (key)
+			switch (key.Trim('"'))
             {
                 #region Item Info/Stat Keys
                 case "id": //ID's are parsed out of the main data, not the json
@@ -1412,25 +1546,10 @@ namespace Rawr
 					// -1 = Normal Dungeon,  -2 = Heroic Dungeon
 					//  1 = Normal Raid (10), 2 = Normal Raid (25)
 					//  3 = Heroic Raid (10), 4 = Heroic Raid (25)
-					bool heroic = (value == "-2" || value == "3" || value == "4");
-					string areaAppend = (value == "1" || value == "3" ) ? " (10)" :
+                    hasdd = true;
+					ddheroic = (value == "-2" || value == "3" || value == "4");
+					ddarea = (value == "1" || value == "3" ) ? " (10)" :
 						( (value == "2" || value == "4") ? " (25)" : string.Empty  );
-					ItemLocation locationDifficulty = item.LocationInfo[0];
-					if (locationDifficulty is StaticDrop)
-					{
-						(locationDifficulty as StaticDrop).Heroic = heroic;
-						(locationDifficulty as StaticDrop).Area += areaAppend;
-					}
-					else if (locationDifficulty is ContainerItem)
-					{
-						(locationDifficulty as ContainerItem).Heroic = heroic;
-						(locationDifficulty as ContainerItem).Area += areaAppend;
-					}
-					else if (locationDifficulty is WorldDrop)
-					{
-						(locationDifficulty as WorldDrop).Heroic = heroic;
-						(locationDifficulty as WorldDrop).Location += areaAppend;
-					}
                     break;
 
 				case "s":
