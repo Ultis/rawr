@@ -80,7 +80,7 @@ namespace Rawr.Moonkin
 
             retVal.Add("Selected Spell Breakdown", sb.ToString());
             retVal.Add("Burst Rotation", BurstDPSRotation.Name);
-            retVal.Add("Burst DPS", String.Format("{0:F2}", BurstDPSRotation.RotationData.DPS));
+            retVal.Add("Burst DPS", String.Format("{0:F2}", BurstDPSRotation.RotationData.BurstDPS));
             retVal.Add("Burst Time To OOM", String.Format(BurstDPSRotation.RotationData.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", BurstDPSRotation.RotationData.TimeToOOM.Minutes, BurstDPSRotation.RotationData.TimeToOOM.Seconds));
             retVal.Add("Burst Cycle Length", String.Format("{0:F1} s", BurstDPSRotation.Duration));
 
