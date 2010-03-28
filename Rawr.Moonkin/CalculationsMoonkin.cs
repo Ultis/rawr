@@ -466,9 +466,9 @@ namespace Rawr.Moonkin
                 {
                     Health = 7416f,
                     Mana = 3496f,
-                    Stamina = 100f,
-                    Agility = 77f,
-                    Intellect = 138f,
+                    Stamina = 99f,
+                    Agility = 78f,
+                    Intellect = 139f,
                     Spirit = 161f
                 };
             
