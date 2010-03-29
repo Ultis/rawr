@@ -211,8 +211,8 @@ namespace Rawr.UI
             }
             RootLayout.Visibility = Visibility.Visible;
 
-            ItemName.Text = actualItem.Name;
-            ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem.Quality));
+            ItemName.Text = actualItem != null ? actualItem.Name : "";
+            ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem != null ? actualItem.Quality : ItemQuality.Common));
             /*if (actualItem.ItemLevel > 0) {
                 string s = "";
                 if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
@@ -232,22 +232,24 @@ namespace Rawr.UI
  
 			var liTypes = new List<string>();
 
-            //if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
-				if (actualItem.ItemLevel > 0)
-					liTypes.Add( string.Format("[{0}]", actualItem.ItemLevel) );
+            if (actualItem != null)
+            {
+                //if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
+                if (actualItem.ItemLevel > 0)
+                    liTypes.Add(string.Format("[{0}]", actualItem.ItemLevel));
 
-				liTypes.Add( string.Format("[{0}]", actualItem.Id) );
+                liTypes.Add(string.Format("[{0}]", actualItem.Id));
 
-			    if (actualItem.Bind != BindsOn.None)
-					liTypes.Add( string.Format("[{0}]", actualItem.Bind) );
+                if (actualItem.Bind != BindsOn.None)
+                    liTypes.Add(string.Format("[{0}]", actualItem.Bind));
 
-				if (!string.IsNullOrEmpty(actualItem.SlotString))
-					liTypes.Add( string.Format("[{0}]", actualItem.SlotString) );
+                if (!string.IsNullOrEmpty(actualItem.SlotString))
+                    liTypes.Add(string.Format("[{0}]", actualItem.SlotString));
 
-				if (actualItem.Type != ItemType.None)
-					liTypes.Add( string.Format("[{0}]", actualItem.Type) );
-			//}
-
+                if (actualItem.Type != ItemType.None)
+                    liTypes.Add(string.Format("[{0}]", actualItem.Type));
+                //}
+            }
 			List2Panel(TypesPanel, liTypes, new SolidColorBrush(Colors.Gray) );
 			
 			#endregion // Displaying Item Types
@@ -255,28 +257,31 @@ namespace Rawr.UI
 			#region Displaying Item Stats
 			List<string> statsList = new List<string>();
 
-            Stats relevantStats = Calculations.GetRelevantStats(actualItem.Stats);
-            var positiveStats = relevantStats.Values(x => x != 0);
-            foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
+            if (actualItem != null)
             {
-                float value = positiveStats[info];
-                if (Stats.IsPercentage(info)) value *= 100;
-                value = (float)Math.Round(value * 100f) / 100f;
-                string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
-                statsList.Add(text);
-            }
-            if (actualItem.DPS > 0)
-            {
-                float dps = (float)Math.Round(actualItem.DPS * 100f) / 100f;
-                string text = dps + " DPS";
-                statsList.Add(text);
-                text = actualItem.Speed + " Speed";
-                statsList.Add(text);
-            }
-            foreach (SpecialEffect effect in relevantStats.SpecialEffects())
-            {
-                string text = effect.ToString();
-                statsList.Add(text);
+                Stats relevantStats = Calculations.GetRelevantStats(actualItem.Stats);
+                var positiveStats = relevantStats.Values(x => x != 0);
+                foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
+                {
+                    float value = positiveStats[info];
+                    if (Stats.IsPercentage(info)) value *= 100;
+                    value = (float)Math.Round(value * 100f) / 100f;
+                    string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
+                    statsList.Add(text);
+                }
+                if (actualItem.DPS > 0)
+                {
+                    float dps = (float)Math.Round(actualItem.DPS * 100f) / 100f;
+                    string text = dps + " DPS";
+                    statsList.Add(text);
+                    text = actualItem.Speed + " Speed";
+                    statsList.Add(text);
+                }
+                foreach (SpecialEffect effect in relevantStats.SpecialEffects())
+                {
+                    string text = effect.ToString();
+                    statsList.Add(text);
+                }
             }
             /*StatPanel.Children.Clear();
             if (statsList.Count == 0) StatPanel.Visibility = Visibility.Collapsed;
@@ -298,7 +303,7 @@ namespace Rawr.UI
 
             #region Setting Up Gems
             bool hasGems = false;
-            if (actualItem.SocketColor1 == ItemSlot.None)
+            if (actualItem == null || actualItem.SocketColor1 == ItemSlot.None)
             {
                 GemColor1.Visibility = Visibility.Collapsed;
                 GemImage1.Visibility = Visibility.Collapsed;
@@ -316,7 +321,7 @@ namespace Rawr.UI
                 GemStat1.Children.Clear();
                 hasGems = true;
             }
-            if (actualItem.SocketColor2 == ItemSlot.None)
+            if (actualItem == null || actualItem.SocketColor2 == ItemSlot.None)
             {
                 GemColor2.Visibility = Visibility.Collapsed;
                 GemImage2.Visibility = Visibility.Collapsed;
@@ -334,7 +339,7 @@ namespace Rawr.UI
                 GemStat2.Children.Clear();
                 hasGems = true;
             }
-            if (actualItem.SocketColor3 == ItemSlot.None)
+            if (actualItem == null || actualItem.SocketColor3 == ItemSlot.None)
             {
                 GemColor3.Visibility = Visibility.Collapsed;
                 GemImage3.Visibility = Visibility.Collapsed;
@@ -434,16 +439,16 @@ namespace Rawr.UI
                         GemStat3.Children.Add(t);
                     }
                 }
-                if (!Item.GemMatchesSlot(itemInstance.Gem1, actualItem.SocketColor1) ||
+                if (actualItem != null && (!Item.GemMatchesSlot(itemInstance.Gem1, actualItem.SocketColor1) ||
                                     !Item.GemMatchesSlot(itemInstance.Gem2, actualItem.SocketColor2) ||
-                                    !Item.GemMatchesSlot(itemInstance.Gem3, actualItem.SocketColor3))
+                                    !Item.GemMatchesSlot(itemInstance.Gem3, actualItem.SocketColor3)))
                     SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Gray);
                 else SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Black);
             }
             #endregion
 
             #region Location Section
-            if (actualItem.Id > 0 && actualItem.Id < 100000)
+            if (actualItem != null && actualItem.Id > 0 && actualItem.Id < 100000)
             {
                 LocationLabel.Text = actualItem.LocationInfo[0].Description;
                 if(actualItem.LocationInfo[1] != null) LocationLabel.Text += " and" + actualItem.LocationInfo[1].Description.Replace("Purchasable with","");
