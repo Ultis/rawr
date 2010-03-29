@@ -7,6 +7,38 @@ namespace Rawr.Moonkin
 	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", CharacterClass.Druid)]
 	public class CalculationsMoonkin : CalculationsBase
     {
+        /// <summary>
+        /// Set default buffs.
+        /// </summary>
+        /// <param name="character">The Character to set buffs for.</param>
+        public override void SetDefaults(Character character)
+        {
+            character.ActiveBuffsAdd(("Sanctified Retribution"));
+            character.ActiveBuffsAdd(("Improved Moonkin Form"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Judgements of the Wise"));
+            character.ActiveBuffsAdd(("Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Improved Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Moonkin Form"));
+            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Divine Spirit"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Heart of the Crusader"));
+            character.ActiveBuffsAdd(("Judgement of Wisdom"));
+            character.ActiveBuffsAdd(("Improved Scorch"));
+            character.ActiveBuffsAdd(("Earth and Moon"));
+            character.ActiveBuffsAdd(("Faerie Fire"));
+            character.ActiveBuffsAdd(("Improved Faerie Fire"));
+            character.ActiveBuffsAdd(("Sunder Armor"));
+            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
+            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            character.ActiveBuffsAdd(("Fish Feast"));
+        }
         private string[] _optimizableCalculationLabels = null;
         /// <summary>
         /// Labels of the stats available to the Optimizer 
