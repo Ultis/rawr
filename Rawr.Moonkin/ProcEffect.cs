@@ -53,8 +53,8 @@ namespace Rawr.Moonkin
                     return e.Stats.ShadowDamage * specialDamageModifier * procsPerSecond;
                 };
             }
-            // Lightning Capacitor, Thunder Capacitor, Reign of the Unliving/Undead
-            else if (effect.Stats.NatureDamage > 0 || effect.Stats.FireDamage > 0)
+            // Lightning Capacitor, Thunder Capacitor, Reign of the Unliving/Undead, Nibelung
+            else if (effect.Stats.NatureDamage > 0 || effect.Stats.FireDamage > 0 || effect.Stats.ValkyrDamage > 0)
             {
                 if (effect.Stats.NatureDamage > 0)
                 {
@@ -65,13 +65,22 @@ namespace Rawr.Moonkin
                         return Effect.Stats.NatureDamage * specialDamageModifier * procsPerSecond;
                     };
                 }
-                else
+                else if (effect.Stats.FireDamage > 0)
                 {
                     CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                     {
                         float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusFireDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
                         float procsPerSecond = Effect.GetAverageProcsPerSecond(r.Duration / (r.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
                         return Effect.Stats.FireDamage * specialDamageModifier * procsPerSecond;
+                    };
+                }
+                else
+                {
+                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float procsPerSecond = Effect.GetAverageProcsPerSecond(r.Duration / (r.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
+                        return Effect.Stats.ValkyrDamage * specialDamageModifier * procsPerSecond;
                     };
                 }
             }

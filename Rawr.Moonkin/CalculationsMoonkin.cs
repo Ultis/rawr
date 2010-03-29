@@ -1135,7 +1135,8 @@ namespace Rawr.Moonkin
                         effect.Stats.Spirit > 0 ||
                         effect.Stats.Mp5 > 0 ||
                         effect.Stats.BonusArcaneDamageMultiplier > 0 ||
-                        effect.Stats.BonusNatureDamageMultiplier > 0)
+                        effect.Stats.BonusNatureDamageMultiplier > 0 ||
+                        effect.Stats.ValkyrDamage > 0)
                     {
                         s.AddSpecialEffect(effect);
                     }
@@ -1183,7 +1184,8 @@ namespace Rawr.Moonkin
                         effect.Stats.Spirit > 0 ||
                         effect.Stats.Mp5 > 0 ||
                         effect.Stats.BonusArcaneDamageMultiplier > 0 ||
-                        effect.Stats.BonusNatureDamageMultiplier > 0)
+                        effect.Stats.BonusNatureDamageMultiplier > 0 ||
+                        effect.Stats.ValkyrDamage > 0)
                     {
                         return true;
                     }
