@@ -376,7 +376,7 @@ namespace Rawr
                                 SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
                                 if (locationSize.Width > 300) {
                                     extraLocation += (int)locationSize.Height;
-                                    int index = location.IndexOf(" in ", 20);
+                                    int index = (location.Length > 20) ? location.IndexOf(" in ", 20) : -1;
                                     index = (index == -1 ? location.IndexOf(" and ") : index);
                                     index = (index == -1 ? -1 : index + 4);
                                     if (index != -1) { location = location.Insert(index, "\r\n    "); }
@@ -529,7 +529,11 @@ namespace Rawr
                                     yPos += yGrid.step;
                                 }
                                 // Force stats that are in the 1st column that would STILL fall off to Text Wrap
-                                if (xPos + width > xGrid.end && xPos == xGrid.initial) { text = text.Insert(text.IndexOf(" ", 47) + 1, "\r\n   "); }
+                                if (xPos + width > xGrid.end && xPos == xGrid.initial) 
+                                {
+                                    int index = (text.Length > 47) ? (text.IndexOf(" ", 47) + 1) : text.Length;
+                                    text = text.Insert(index, "\r\n   "); 
+                                }
                                 g.DrawString(text, _fontStats, SystemBrushes.InfoText, xPos, yPos);
                                 if (xPos + width > xGrid.end && xPos == xGrid.initial) { yPos += yGrid.step; }
                                 // once we write on a line store where the next line would be
@@ -823,7 +827,7 @@ namespace Rawr
                             lastIndex = lastIndex + sub.IndexOf("\r\n") + 2;
                             continue;
                         }
-                        nextIndex = Desc.IndexOf(" ", lastIndex + widthCharCount);
+                        nextIndex = (Desc.Length > lastIndex + widthCharCount) ? Desc.IndexOf(" ", lastIndex + widthCharCount) : -1;
                         if (nextIndex > 0) {
                             Desc = Desc.Insert(nextIndex + 1, "\r\n");
                             lastIndex = nextIndex + 1;
