@@ -959,17 +959,17 @@ namespace Rawr.Moonkin
                     ComparisonCalculationMoonkin mf = new ComparisonCalculationMoonkin() { Name = "Moonfire" };
                     ComparisonCalculationMoonkin iSw = new ComparisonCalculationMoonkin() { Name = "Insect Swarm " };
                     ComparisonCalculationMoonkin wr = new ComparisonCalculationMoonkin() { Name = "Wrath" };
-                    sf.DamagePoints = calcsBase.SelectedRotation.Solver.Starfire.DamagePerHit / calcsBase.SelectedRotation.Solver.Starfire.CastTime;
-                    sf.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.Starfire.DamagePerHit / calcsBase.BurstDPSRotation.Solver.Starfire.CastTime;
+                    sf.DamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
+                    sf.RawDamagePoints = calcsBase.BurstDPSRotation.StarfireAvgHit / calcsBase.BurstDPSRotation.StarfireAvgCast;
                     sf.OverallPoints = sf.DamagePoints + sf.RawDamagePoints;
-                    mf.DamagePoints = (calcsBase.SelectedRotation.Solver.Moonfire.DamagePerHit + calcsBase.SelectedRotation.Solver.Moonfire.DotEffect.DamagePerHit) / calcsBase.SelectedRotation.Solver.Moonfire.CastTime;
-                    mf.RawDamagePoints = (calcsBase.BurstDPSRotation.Solver.Moonfire.DamagePerHit + calcsBase.BurstDPSRotation.Solver.Moonfire.DotEffect.DamagePerHit) / calcsBase.BurstDPSRotation.Solver.Moonfire.CastTime;
+                    mf.DamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.Solver.Moonfire.CastTime;
+                    mf.RawDamagePoints = calcsBase.BurstDPSRotation.MoonfireAvgHit / calcsBase.BurstDPSRotation.Solver.Moonfire.CastTime;
                     mf.OverallPoints = mf.DamagePoints + mf.RawDamagePoints;
-                    iSw.DamagePoints = calcsBase.SelectedRotation.Solver.InsectSwarm.DotEffect.DamagePerHit / calcsBase.SelectedRotation.Solver.InsectSwarm.CastTime;
-                    iSw.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.InsectSwarm.DotEffect.DamagePerHit / calcsBase.BurstDPSRotation.Solver.InsectSwarm.CastTime;
+                    iSw.DamagePoints = calcsBase.SelectedRotation.InsectSwarmAvgHit / calcsBase.SelectedRotation.Solver.InsectSwarm.CastTime;
+                    iSw.RawDamagePoints = calcsBase.BurstDPSRotation.InsectSwarmAvgHit / calcsBase.BurstDPSRotation.Solver.InsectSwarm.CastTime;
                     iSw.OverallPoints = iSw.DamagePoints + iSw.RawDamagePoints;
-                    wr.DamagePoints = calcsBase.SelectedRotation.Solver.Wrath.DamagePerHit / calcsBase.SelectedRotation.Solver.Wrath.CastTime;
-                    wr.RawDamagePoints = calcsBase.BurstDPSRotation.Solver.Wrath.DamagePerHit / calcsBase.BurstDPSRotation.Solver.Wrath.CastTime;
+                    wr.DamagePoints = calcsBase.SelectedRotation.WrathAvgHit / calcsBase.SelectedRotation.WrathAvgCast;
+                    wr.RawDamagePoints = calcsBase.BurstDPSRotation.WrathAvgHit / calcsBase.BurstDPSRotation.WrathAvgCast;
                     wr.OverallPoints = wr.DamagePoints + wr.RawDamagePoints;
                     return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr };
             }

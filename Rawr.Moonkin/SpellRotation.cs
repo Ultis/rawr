@@ -27,10 +27,16 @@ namespace Rawr.Moonkin
         public float CastCount { get; set; }
         public float DotTicks { get; set; }
         public float WrathCount { get; set; }
+        public float WrathAvgHit { get; set; }
+        public float WrathAvgCast { get; set; }
         public float StarfireCount { get; set; }
+        public float StarfireAvgHit { get; set; }
+        public float StarfireAvgCast { get; set; }
         public float InsectSwarmTicks { get; set; }
+        public float InsectSwarmAvgHit { get; set; }
         public float MoonfireCasts { get; set; }
         public float MoonfireTicks { get; set; }
+        public float MoonfireAvgHit { get; set; }
 
         // Calculate damage and casting time for a single, direct-damage spell.
         private void DoMainNuke(DruidTalents talents, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)

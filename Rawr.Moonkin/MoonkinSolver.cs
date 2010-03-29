@@ -241,6 +241,7 @@ namespace Rawr.Moonkin
                 rot.Solver = this;
                 float accumulatedDamage = 0.0f;
                 float totalUpTime = 0.0f;
+                float[] spellDetails = new float[6];
                 List<ProcEffect> activatedEffects = new List<ProcEffect>();
                 // Calculate damage and mana contributions for non-stat-boosting trinkets
                 // Separate stat-boosting proc trinkets into their own list
@@ -267,6 +268,7 @@ namespace Rawr.Moonkin
                 int sign = 1;
                 Dictionary<int, float> cachedDamages = new Dictionary<int, float>();
                 Dictionary<int, float> cachedUptimes = new Dictionary<int, float>();
+                Dictionary<int, float[]> cachedDetails = new Dictionary<int, float[]>();
                 // Iterate over the entire set of trinket combinations (each trinket by itself, 2 at a time, ...)
                 for (int i = 1; i <= activatedEffects.Count; ++i)
                 {
@@ -287,6 +289,12 @@ namespace Rawr.Moonkin
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
                         float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
+                        spellDetails[0] = Starfire.DamagePerHit;
+                        spellDetails[1] = Wrath.DamagePerHit;
+                        spellDetails[2] = Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
+                        spellDetails[3] = InsectSwarm.DotEffect.DamagePerHit;
+                        spellDetails[4] = Starfire.CastTime;
+                        spellDetails[5] = Wrath.CastTime;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -321,18 +329,34 @@ namespace Rawr.Moonkin
                         // Cache the results to be calculated later
                         cachedUptimes[pairs] = tempUpTime;
                         cachedDamages[pairs] = tempDPS;
+                        cachedDetails[pairs] = new float[6];
+                        Array.Copy(spellDetails, cachedDetails[pairs], 6);
                         totalUpTime += sign * tempUpTime;
                     }
                     sign = -sign;
                 }
                 float accumulatedDPS = 0.0f;
+                for (int i = 0; i < 6; ++i)
+                {
+                    spellDetails[i] = 0.0f;
+                }
                 // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
                 foreach (KeyValuePair<int, float> kvp in cachedUptimes)
                 {
                     accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
+                    for (int i = 0; i < 6; ++i)
+                    {
+                        spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
+                    }
                 }
                 float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
+                spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
+                spellDetails[1] += (1 - totalUpTime) * Wrath.DamagePerHit;
+                spellDetails[2] += (1 - totalUpTime) * Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
+                spellDetails[3] += (1 - totalUpTime) * InsectSwarm.DotEffect.DamagePerHit;
+                spellDetails[4] += (1 - totalUpTime) * Starfire.CastTime;
+                spellDetails[5] += (1 - totalUpTime) * Wrath.CastTime;
 
                 accumulatedDamage += accumulatedDPS * rot.Duration;
 
@@ -349,6 +373,12 @@ namespace Rawr.Moonkin
                 sustainedDPS += trinketDPS + treeDPS + starfallDPS;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.DPS = sustainedDPS;
+                rot.StarfireAvgHit = spellDetails[0];
+                rot.WrathAvgHit = spellDetails[1];
+                rot.MoonfireAvgHit = spellDetails[2];
+                rot.InsectSwarmAvgHit = spellDetails[3];
+                rot.StarfireAvgCast = spellDetails[4];
+                rot.WrathAvgCast = spellDetails[5];
 
                 // Update the sustained DPS rotation if any one of the following three cases is true:
                 // 1) No user rotation is selected and sustained DPS is maximum
