@@ -491,7 +491,7 @@ namespace Rawr.ShadowPriest
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            Stats statsTalents = new Stats()
+            Stats statsTotal = new Stats()
             {
                 BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
                 BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
@@ -502,7 +502,9 @@ namespace Rawr.ShadowPriest
                 SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
             };
 
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
+            statsTotal.Accumulate(statsBaseGear);
+            statsTotal.Accumulate(statsBuffs);
+            statsTotal.Accumulate(statsRace);
 
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));

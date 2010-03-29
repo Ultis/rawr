@@ -521,6 +521,64 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Computes average factor given the frequency of triggers
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <returns></returns>
+        public float GetAverageFactor(float triggerInterval, float triggerChance)
+        {
+            return GetAverageFactor(triggerInterval, triggerChance, 3.0f, 0.0f, 1.0f);
+        }
+
+        /// <summary>
+        /// Computes average factor given the frequency of triggers
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <returns></returns>
+        public float GetAverageFactor(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            return GetAverageFactor(triggerInterval, triggerChance, attackSpeed, fightDuration, 1.0f);
+        }
+
+        /// <summary>
+        /// Computes average factor given the frequency of triggers
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        /// <param name="scale">Scale value of effect, used for secondary effects</param>
+        /// <returns></returns>
+        public float GetAverageFactor(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration, float scale)
+        {
+            float factor;
+            if (MaxStack > 1)
+            {
+                factor = GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else if (Duration == 0f)
+            {
+                factor = GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            else
+            {
+                factor = GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+            }
+            factor *= scale;
+            return factor;
+        }
+
+        /// <summary>
         /// Computes average stack size given the frequency of triggers.
         /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>

@@ -114,7 +114,7 @@ namespace Rawr.ShadowPriest
             Twinkets.Spirit = (float)Math.Round(Twinkets.Spirit * (1 + playerStats.BonusSpiritMultiplier));
             Twinkets.Intellect = (float)Math.Round(Twinkets.Intellect * (1 + playerStats.BonusIntellectMultiplier));
             Twinkets.SpellPower += (float)Math.Round(Twinkets.Spirit * playerStats.SpellDamageFromSpiritPercentage);
-            playerStats += Twinkets;
+            playerStats.Accumulate(Twinkets);
 
             CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
 
@@ -840,9 +840,10 @@ namespace Rawr.ShadowPriest
             : base(BasicStats, character)
         {
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
+            float baseMana = BaseStats.GetBaseStats(character).Mana;
             foreach (string spellname in CalculationOptions.SpellPriority)
             {
-                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, CalculationOptions.PTR);
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, baseMana, CalculationOptions.PTR);
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
@@ -1032,23 +1033,24 @@ namespace Rawr.ShadowPriest
             // Deal with Twinkets
             foreach (SpecialEffect se in simStats.SpecialEffects())
             {
-                if (se.Stats.SpellPower > 0)
+                float SpellPower = se.Stats.SpellPower;
+                if (SpellPower > 0)
                 {
                     if (se.Trigger == Trigger.SpellCast
                         || se.Trigger == Trigger.DamageSpellCast)
-                        simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                        simStats.SpellPower += se.GetAverageFactor(1f / CastsPerSecond, 1f) * SpellPower;
                     else if (se.Trigger == Trigger.SpellHit
                         || se.Trigger == Trigger.DamageSpellHit)
-                        simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, ShadowHitChance / 100f, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                        simStats.SpellPower += se.GetAverageFactor(1f / CastsPerSecond, ShadowHitChance / 100f) * SpellPower;
                     else if (se.Trigger == Trigger.SpellCrit
                         || se.Trigger == Trigger.DamageSpellCrit)
-                        simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).SpellPower;
+                        simStats.SpellPower += se.GetAverageFactor(1f / CastsPerSecond, simStats.SpellCrit) * SpellPower;
                     else if (se.Trigger == Trigger.DoTTick)
                     {
                         int dots = 0;
                         foreach (Spell spell in SpellPriority)
                             if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                        simStats.SpellPower += se.GetAverageStats((float)dots / 3, 1f).SpellPower;
+                        simStats.SpellPower += se.GetAverageFactor((float)dots / 3, 1f) * SpellPower;
                     }
                 }
             }
@@ -1252,7 +1254,7 @@ namespace Rawr.ShadowPriest
             regen += tmpregen;
             if (seSpiritTap != null)
             {
-                tmpregen = SpiritRegen * seSpiritTap.GetAverageStats(1f / CritsPerSecond, 1f).SpellCombatManaRegeneration;
+                tmpregen = SpiritRegen * seSpiritTap.GetAverageUptime(1f / CritsPerSecond, 1f) * seSpiritTap.Stats.SpellCombatManaRegeneration;
                 if (tmpregen > 0f)
                 {
                     ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
@@ -1282,23 +1284,25 @@ namespace Rawr.ShadowPriest
             }
             foreach (SpecialEffect se in simStats.SpecialEffects())
             {
-                if (se.Stats.ManaRestore > 0 || se.Stats.Mp5 > 0)
+                float ManaRestore = se.Stats.ManaRestore;
+                float Mp5 = se.Stats.Mp5;
+                if (ManaRestore > 0 || Mp5 > 0)
                 {
                     if (se.Trigger == Trigger.Use)
-                        tmpregen = se.GetAverageStats().ManaRestore
-                            + se.GetAverageStats().Mp5 / 5;
+                        tmpregen = se.GetAverageUptime(se.Cooldown, 1f)
+                            * (ManaRestore + Mp5 / 5);
                     else if (se.Trigger == Trigger.SpellCast
                         || se.Trigger == Trigger.DamageSpellCast)
-                        tmpregen = se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60).ManaRestore
-                            + se.GetAverageStats(1f / CastsPerSecond, 1f, 0f, CalculationOptions.FightLength * 60f).Mp5 / 5;
+                        tmpregen = se.GetAverageUptime(1f / CastsPerSecond, 1f)
+                            * (ManaRestore + Mp5 / 5);
                     else if (se.Trigger == Trigger.SpellHit
                         || se.Trigger == Trigger.DamageSpellHit)
-                        tmpregen = se.GetAverageStats(1f / CastsPerSecond, ShadowHitChance / 100f, 0f, CalculationOptions.FightLength * 60).ManaRestore
-                            + se.GetAverageStats(1f / CastsPerSecond, ShadowHitChance / 100f, 0f, CalculationOptions.FightLength * 60).Mp5 / 5;
+                        tmpregen = se.GetAverageUptime(1f / CastsPerSecond, ShadowHitChance / 100f)
+                            * (ManaRestore + Mp5 / 5);
                     else if (se.Trigger == Trigger.SpellCrit
                         || se.Trigger == Trigger.DamageSpellCrit)
-                        tmpregen = se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).ManaRestore
-                            + se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).Mp5 / 5;
+                        tmpregen = se.GetAverageUptime(1f / CastsPerSecond, simStats.SpellCrit)
+                            * (ManaRestore + Mp5 / 5);
                     else
                         tmpregen = 0;
                     if (tmpregen > 0)
@@ -1490,9 +1494,10 @@ namespace Rawr.ShadowPriest
             SpellPriority = new List<Spell>(Spell.HolySpellList.Count);
             SpellComparerDpCT _scDpCT = new SpellComparerDpCT();
             SpellComparerDpM _scDpM = new SpellComparerDpM();
+            float baseMana = BaseStats.GetBaseStats(character).Mana;
             foreach (string spellname in Spell.HolySpellList)
             {
-                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, CalculationOptions.PTR);
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, baseMana, CalculationOptions.PTR);
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
