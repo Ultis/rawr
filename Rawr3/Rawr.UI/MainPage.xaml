@@ -33,24 +33,24 @@
     		</LinearGradientBrush>
     	</Grid.Background>
         <local:ItemTooltip x:Name="ItemTooltip"/>
-        <Rectangle VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="-1,-1,-1,0">
-			<Rectangle.Stroke>
-				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-					<GradientStop Color="#FFA3AEB9"/>
-					<GradientStop Color="#FF8399A9" Offset="0.375"/>
-					<GradientStop Color="#FF718597" Offset="0.375"/>
-					<GradientStop Color="#FF617584" Offset="1"/>
-				</LinearGradientBrush>
-			</Rectangle.Stroke>
-			<Rectangle.Fill>
-				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-					<GradientStop Color="#FFDEDEDE" Offset="1"/>
-					<GradientStop Color="#FFFFFFFF" Offset="0"/>
-				</LinearGradientBrush>
-			</Rectangle.Fill>
-    	</Rectangle>
         <!--IFSL-->
-    	<StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+        <Rectangle VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="-1,-1,-1,0">
+            <Rectangle.Stroke>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA3AEB9"/>
+                    <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Stroke>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFDEDEDE" Offset="1"/>
+                    <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
 			<ComboBox x:Name="FileMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="FileMenu_SelectionChanged">
 				<ComboBoxItem Content="File" Visibility="Collapsed"/>
 				<ComboBoxItem Content="New"/>

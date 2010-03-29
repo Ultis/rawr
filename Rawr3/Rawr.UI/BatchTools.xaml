@@ -25,14 +25,28 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
+        <!--IFSL-->
+        <Rectangle VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="-1,-1,-1,0">
+            <Rectangle.Stroke>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA3AEB9"/>
+                    <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Stroke>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFDEDEDE" Offset="1"/>
+                    <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
         <StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
             <ComboBox x:Name="FileMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="FileMenu_SelectionChanged">
                 <ComboBoxItem Content="File" Visibility="Collapsed"/>
                 <ComboBoxItem Content="New"/>
                 <ComboBoxItem Content="Import"/>
-                <ComboBoxItem Content="Open"/>
-                <ComboBoxItem Content="Save"/>
-                <ComboBoxItem Content="Save As..."/>
                 <ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
                 <ComboBoxItem Content="Exit"/>
             </ComboBox>
@@ -46,11 +60,35 @@
                 <ComboBoxItem Content="Build Batch Upgrade List"/>
                 <ComboBoxItem Content="Progressive Optimize"/>
                 <ComboBoxItem Content="Build Progressive Upgrade List"/>
-                <ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
-                <ComboBoxItem Content="Save Characters"/>
-                <ComboBoxItem Content="Save Characters As Copy"/>
             </ComboBox>
         </StackPanel>
+        <!--ENDIFSL-->
+        <!--IFWPF
+        <Menu VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0">
+            <MenuItem Header="File" Margin="4,0,4,0">
+                <MenuItem Header="New" Click="New"/>
+                <MenuItem Header="Import" Click="Import"/>
+                <MenuItem Header="Open" Click="Open"/>
+                <MenuItem Header="Save" Click="Save"/>
+                <MenuItem Header="Save As..." Click="SaveAs"/>
+                <Separator/>
+                <MenuItem Header="Exit" Click="Close"/>
+            </MenuItem>
+            <MenuItem Header="Tools" Margin="4,0,4,0">
+                <MenuItem Header="Set Available Items" Click="SetAvailableItems"/>
+                <MenuItem Header="Replace Unavailable" Click="ReplaceUnavailable"/>
+                <MenuItem Header="Optimize" Click="Optimize"/>
+                <MenuItem Header="Build Upgrade List" Click="BuildUpgradeList"/>
+                <MenuItem Header="Batch Optimize" Click="BatchOptimize"/>
+                <MenuItem Header="Build Batch Upgrade List" Click="BuildBatchUpgradeList"/>
+                <MenuItem Header="Progressive Optimize" Click="ProgressiveOptimize"/>
+                <MenuItem Header="Build Progressive Upgrade List" Click="BuildProgressiveUpgradeList"/>
+                <Separator/>
+                <MenuItem Header="Save Characters" Click="SaveCharacters"/>
+                <MenuItem Header="Save Characters As Copy" Click="SaveCharactersAs"/>
+            </MenuItem>
+        </Menu>
+        ENDIFWPF-->
         <Grid Grid.Column="1" Grid.Row="1">
             <StackPanel Orientation="Vertical">
                 <dataInput:Label Margin="4,4,4,4" Content="Thoroughness"/>

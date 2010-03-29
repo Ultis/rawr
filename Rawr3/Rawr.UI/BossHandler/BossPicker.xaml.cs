@@ -91,7 +91,7 @@ namespace Rawr.UI
         // recalling them, doesn't do anything right now
         public bool HasCustomBoss { get; private set; }
 
-        private bool updating;
+        //private bool updating;
         private void UpdateSavedBosses()
         {
             /*SavedTalentSpecList savedSpecs = SavedTalentSpec.SpecsFor(Character.Class);

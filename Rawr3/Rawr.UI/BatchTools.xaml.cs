@@ -46,16 +46,6 @@ namespace Rawr.UI
             batchTools.StatusUpdated += new EventHandler(batchTools_StatusUpdated);
             batchTools.UpgradeListCompleted += new EventHandler(batchTools_UpgradeListCompleted);
 
-            // Silverlight does not support load/save functionality for batch tools
-#if SILVERLIGHT
-            ((ComboBoxItem)FileMenu.Items[3]).Visibility = Visibility.Collapsed;
-            ((ComboBoxItem)FileMenu.Items[4]).Visibility = Visibility.Collapsed;
-            ((ComboBoxItem)FileMenu.Items[5]).Visibility = Visibility.Collapsed;
-            ((ComboBoxItem)ToolsMenu.Items[8]).Visibility = Visibility.Collapsed;
-            ((ComboBoxItem)ToolsMenu.Items[9]).Visibility = Visibility.Collapsed;
-            ((ComboBoxItem)ToolsMenu.Items[10]).Visibility = Visibility.Collapsed;
-#endif
-
             DataContext = batchTools;
 
             Instance = this;
@@ -78,6 +68,7 @@ namespace Rawr.UI
             ButtonCancel.IsEnabled = false;
         }
 
+#if SILVERLIGHT
         private void FileMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FileMenu != null)
@@ -90,22 +81,13 @@ namespace Rawr.UI
                     switch (newIndex)
                     {
                         case 1:
-                            New();
+                            New(null, null);
                             break;
                         case 2:
-                            Import();
-                            break;
-                        case 3:
-                            Open();
+                            Import(null, null);
                             break;
                         case 4:
-                            Save();
-                            break;
-                        case 5:
-                            SaveAs();
-                            break;
-                        case 7:
-                            Close();
+                            Close(null, null);
                             break;
                         default:
                             new ErrorWindow() { Message = "Not yet implemented." }.Show();
@@ -127,7 +109,7 @@ namespace Rawr.UI
                     switch (newIndex)
                     {
                         case 1:
-                            //batchTools.SetAvailableGear();
+                            batchTools.SetAvailableGear(MainPage.Instance.Character.AvailableItems);
                             break;
                         case 2:
                             batchTools.ReplaceUnavailableGear();
@@ -172,6 +154,7 @@ namespace Rawr.UI
                 }
             }
         }
+#endif
 
         private bool PromptToSaveBeforeClosing()
         {
@@ -182,7 +165,7 @@ namespace Rawr.UI
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        Save();
+                        Save(null, null);
                         return !string.IsNullOrEmpty(_filePath);
                     default:
                         return true;
@@ -192,7 +175,7 @@ namespace Rawr.UI
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        Save();
+                        Save(null, null);
                         return !string.IsNullOrEmpty(_filePath);
                     case MessageBoxResult.No:
                         return true;
@@ -237,7 +220,8 @@ namespace Rawr.UI
             return relativePath.ToString();
         }
 
-        private void New()
+        #region File Menu
+        private void New(object sender, RoutedEventArgs e)
         {
             if (PromptToSaveBeforeClosing())
             {
@@ -247,7 +231,7 @@ namespace Rawr.UI
             }
         }
 
-        private void Import()
+        private void Import(object sender, RoutedEventArgs e)
         {
             if (PromptToSaveBeforeClosing())
             {
@@ -282,7 +266,7 @@ namespace Rawr.UI
             }
         }
 
-        private void Open()
+        private void Open(object sender, RoutedEventArgs e)
         {
             if (PromptToSaveBeforeClosing())
             {
@@ -304,7 +288,7 @@ namespace Rawr.UI
             }
         }
 
-        private void Save()
+        private void Save(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_filePath))
             {
@@ -314,11 +298,11 @@ namespace Rawr.UI
             }
             else
             {
-                SaveAs();
+                SaveAs(sender, e);
             }
         }
 
-        private void SaveAs()
+        private void SaveAs(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".xml";
@@ -336,12 +320,74 @@ namespace Rawr.UI
             }
         }
 
-        public void Close()
+        public void Close(object sender, RoutedEventArgs e)
         {
             Instance = null;
             MainPage.Instance.UnloadBatchCharacter();
             App.Current.CloseWindow(this);
         }
+        #endregion
+
+        #region Tools Menu
+        private void SetAvailableItems(object sender, RoutedEventArgs e)
+        {
+            batchTools.SetAvailableGear(MainPage.Instance.Character.AvailableItems);
+        }
+
+        private void ReplaceUnavailable(object sender, RoutedEventArgs e)
+        {
+            batchTools.ReplaceUnavailableGear();
+        }
+
+        private void Optimize(object sender, RoutedEventArgs e)
+        {
+            ButtonCancel.IsEnabled = true;
+            batchTools.Optimize();
+        }
+
+        private void BuildUpgradeList(object sender, RoutedEventArgs e)
+        {
+            ButtonCancel.IsEnabled = true;
+            batchTools.SingleItemUpgrade = batchTools.GetSingleItemUpgrade(SingleItemUpgrade.Text);
+            batchTools.BuildUpgradeList();
+        }
+
+        private void BatchOptimize(object sender, RoutedEventArgs e)
+        {
+            ButtonCancel.IsEnabled = true;
+            batchTools.BatchOptimize();
+        }
+
+        private void BuildBatchUpgradeList(object sender, RoutedEventArgs e)
+        {
+            ButtonCancel.IsEnabled = true;
+            batchTools.SingleItemUpgrade = batchTools.GetSingleItemUpgrade(SingleItemUpgrade.Text);
+            batchTools.BuildBatchUpgradeList();
+        }
+
+        private void ProgressiveOptimize(object sender, RoutedEventArgs e)
+        {
+            ButtonCancel.IsEnabled = true;
+            batchTools.ProgressiveOptimize();
+        }
+
+        private void BuildProgressiveUpgradeList(object sender, RoutedEventArgs e)
+        {
+            ButtonCancel.IsEnabled = true;
+            batchTools.SingleItemUpgrade = batchTools.GetSingleItemUpgrade(SingleItemUpgrade.Text);
+            batchTools.BuildProgressiveUpgradeList();
+        }
+
+        private void SaveCharacters(object sender, RoutedEventArgs e)
+        {
+            batchTools.SaveCharacters();
+        }
+
+        private void SaveCharactersAs(object sender, RoutedEventArgs e)
+        {
+            batchTools.SaveCharactersAsCopy();
+        }
+        #endregion
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

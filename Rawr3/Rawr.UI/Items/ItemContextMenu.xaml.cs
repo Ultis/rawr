@@ -10,10 +10,19 @@ using System.Windows.Shapes;
 
 namespace Rawr.UI
 {
+#if SILVERLIGHT
 	public partial class ItemContextMenu : UserControl
+#else
+    public partial class ItemContextMenu : ContextMenu
+#endif
 	{
-
-        public bool IsShown { get { return ContextPopup.IsOpen; } }
+#if SILVERLIGHT
+        public bool IsOpen 
+        { 
+            get { return ContextPopup.IsOpen; }
+            set { ContextPopup.IsOpen = value; }
+        }
+#endif
 
         public CharacterSlot Slot { get; set; }
 
@@ -21,9 +30,12 @@ namespace Rawr.UI
         public Character Character
         {
             get { return character; }
-            set { character = value; Hide(); }
+            set 
+            { 
+                character = value;
+                IsOpen = false;
+            }
         }
-
 
         private ItemInstance selectedItemInstance;
         public ItemInstance SelectedItemInstance
@@ -37,7 +49,11 @@ namespace Rawr.UI
                     if (Character.CustomItemInstances.Contains(selectedItemInstance)) ContextDeleteCustom.Visibility = Visibility.Visible;
                     else ContextDeleteCustom.Visibility = Visibility.Collapsed;
 
+#if SILVERLIGHT
                     ContextItemName.Content = selectedItemInstance.Item.Name;
+#else
+                    ContextItemName.Header = selectedItemInstance.Item.Name;
+#endif
                 }
             }
         }
@@ -48,9 +64,10 @@ namespace Rawr.UI
 			InitializeComponent();
 		}
 
+#if SILVERLIGHT
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }
         public void Show(UIElement relativeTo, double offsetX, double offsetY)
-        {
+        {            
             ContextList.SelectedIndex = -1;
 
             GeneralTransform gt = relativeTo.TransformToVisual((UIElement)this.Parent);
@@ -72,11 +89,6 @@ namespace Rawr.UI
             ContextList.Focus();
         }
 
-        public void Hide()
-        {
-            ContextPopup.IsOpen = false;
-        }
-
         private void Popup_LostFocus(object sender, RoutedEventArgs e)
         {
             FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
@@ -84,7 +96,7 @@ namespace Rawr.UI
             while (parent != null && parent != ContextGrid) parent = VisualTreeHelper.GetParent(parent);
             if (parent == null)
             {
-                Hide();
+                IsOpen = false;
             }
         }
 
@@ -103,11 +115,7 @@ namespace Rawr.UI
                 }
                 else if (contextItem == ContextOpenWowhead)
                 {
-#if SILVERLIGHT
                     System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + SelectedItemInstance.Id), "_blank");
-#else
-                    // TODO open browser in WPF
-#endif
                 }
                 else if (contextItem == ContextAddCustom)
                 {
@@ -134,8 +142,58 @@ namespace Rawr.UI
                     optimizer.Show();
                     optimizer.EvaluateUpgrades(SelectedItemInstance.Item);
                 }
-                Hide();
+                IsOpen = false;
             }
+        }
+#endif
+
+        private void EditItem(object sender, RoutedEventArgs e)
+        {
+            new ItemEditor() { CurrentItem = SelectedItemInstance.Item }.Show();
+        }
+
+        private void OpenInWowhead(object sender, RoutedEventArgs e)
+        {
+#if SILVERLIGHT
+            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + SelectedItemInstance.Id), "_blank");
+#else
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + SelectedItemInstance.Id));
+#endif
+        }
+
+        private void RefreshItemFromArmory(object sender, RoutedEventArgs e)
+        {
+            Item.LoadFromId(SelectedItemInstance.Id, true, true, false);
+        }
+
+        private void RefreshItemFromWowhead(object sender, RoutedEventArgs e)
+        {
+            Item.LoadFromId(SelectedItemInstance.Id, true, true, true);
+        }
+
+        private void EquipItem(object sender, RoutedEventArgs e)
+        {
+            Character[Slot] = SelectedItemInstance;
+        }
+
+        private void AddCustomGemming(object sender, RoutedEventArgs e)
+        {
+            CustomItemInstance custom = new CustomItemInstance(Character, SelectedItemInstance);
+            custom.Closed += new EventHandler(custom_Closed);
+            custom.Show();
+        }
+
+        private void DeleteCustomGemming(object sender, RoutedEventArgs e)
+        {
+            Character.CustomItemInstances.Remove(selectedItemInstance);
+            ItemCache.OnItemsChanged();
+        }
+
+        private void EvaluateUpgrade(object sender, RoutedEventArgs e)
+        {
+            OptimizeWindow optimizer = new OptimizeWindow(Character);
+            optimizer.Show();
+            optimizer.EvaluateUpgrades(SelectedItemInstance.Item);
         }
 
         private void custom_Closed(object sender, EventArgs e)
@@ -146,5 +204,5 @@ namespace Rawr.UI
 
             }
         }
-	}
+    }
 }
