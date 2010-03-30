@@ -413,6 +413,11 @@ namespace Rawr
 		/// </summary>
 		public virtual bool SupportsMultithreading { get { return true; } }
 
+        /// <summary>
+        /// Maximum parallel threads of execution supported. Return -1 to indicate that there is no limit imposed.
+        /// </summary>
+        public virtual int MaxDegreeOfParallelism { get { return -1; } }
+
 		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
 		protected CharacterSlot _cachedSlot = CharacterSlot.Shirt;
 		protected Character _cachedCharacter = null;

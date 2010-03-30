@@ -234,23 +234,59 @@ namespace Rawr.Optimizer
         private void GetThreadPoolValuation(object state)
         {
             int i = Interlocked.Increment(ref threadPoolStarted) - 1;
-            TValuation valuation = GetValuation(population[i]);
-            values[i] = GetOptimizationValue(population[i], valuation);
-            lock (bestValueLock)
+            if (i >= threadPoolSize)
             {
-                if (values[i] > this.bestValue)
+                // everything is queued up already, drop out
+                if (Interlocked.Decrement(ref startedThreads) == 0)
                 {
-                    this.bestValue = values[i];
-                    this.bestValuation = valuation;
-                    bestIndividual = population[i];
-                    noImprove = -1;
-                    //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
+                    valuationsComplete.Set();
                 }
+                return;
             }
-            if (Interlocked.Increment(ref threadPoolComplete) == threadPoolSize)
+            remainingThreadsToSpawn--; // these are called in sequence, no need for synchronization
+            if (remainingThreadsToSpawn > 0)
             {
-                valuationsComplete.Set();
-            }
+                Interlocked.Increment(ref startedThreads);
+                ThreadPool.QueueUserWorkItem(GetThreadPoolValuation);
+            }            
+            do
+            {
+                TValuation valuation = GetValuation(population[i]);
+                values[i] = GetOptimizationValue(population[i], valuation);
+                lock (bestValueLock)
+                {
+                    if (values[i] > this.bestValue)
+                    {
+                        this.bestValue = values[i];
+                        this.bestValuation = valuation;
+                        bestIndividual = population[i];
+                        noImprove = -1;
+                        //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
+                    }
+                }
+                if (Interlocked.Increment(ref threadPoolComplete) == threadPoolSize)
+                {
+                    // all work is done, check if we're the last worker
+                    if (Interlocked.Decrement(ref startedThreads) == 0)
+                    {
+                        valuationsComplete.Set();
+                    }
+                    return;
+                }
+                // try to get more work
+                i = Interlocked.Increment(ref threadPoolStarted) - 1;
+                if (i >= threadPoolSize)
+                {
+                    // all work was already grabbed, go out
+                    if (Interlocked.Decrement(ref startedThreads) == 0)
+                    {
+                        // we're certain everyone is done, if someone was still processing
+                        // they wouldn't have decremented their startedThreads yet
+                        valuationsComplete.Set();
+                    }
+                    return;
+                }
+            } while (true);
         }
 
 		private TIndividual OptimizeGA(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
@@ -331,10 +367,11 @@ namespace Rawr.Optimizer
                         threadPoolStarted = 0;
                         threadPoolComplete = 0;
                         threadPoolSize = popSize;
-                        for (int i = 0; i < popSize; i++)
-                        {
-                            ThreadPool.QueueUserWorkItem(GetThreadPoolValuation);
-                        }
+                        remainingThreadsToSpawn = EffectiveMaxConcurrencyLevel;
+
+                        startedThreads = 1;
+                        GetThreadPoolValuation(null);
+
                         valuationsComplete.WaitOne();
                     }
                     else
@@ -511,7 +548,7 @@ namespace Rawr.Optimizer
                 }
                 else
                 {
-                    results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
+                    results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, null, out directValuation);
                     if (results.Key > this.bestValue)
                     {
                         this.bestValue = results.Key;
@@ -525,62 +562,154 @@ namespace Rawr.Optimizer
             }
         }
 
+        protected virtual int EffectiveMaxConcurrencyLevel
+        {
+            get
+            {
+                return Environment.ProcessorCount;
+            }
+        }
+
         protected object directValuationLock = new object();
         protected TIndividual bestDirectIndividual;
         protected TValuation bestDirectValuation;
         protected float bestDirectValue;
         protected int directValuationsComplete;
-        protected int directValuationsQueued;
+        protected int directValuationsIndex;
+        protected int directValuationsSlot;
         protected bool directValuationFoundUpgrade;
+        protected List<TItem> directValuationsList;
+        protected TItem[] directValuationsTemplate;
+        protected int remainingThreadsToSpawn;
+        protected int startedThreads;
 
-        protected virtual void ThreadPoolDirectUpgradeValuation(object state)
+        protected virtual void ThreadPoolDirectUpgradeValuation(object ignore)
         {
-            TIndividual swappedIndividual = (TIndividual)state;
-            TValuation valuation;
-            float value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
+            TIndividual swappedIndividual = null;
+            float value = 0;
+            TValuation valuation = default(TValuation);
+            // get initial work item
             lock (directValuationLock)
             {
-                directValuationsComplete++;
-                if (value > bestDirectValue)
+                if (directValuationsIndex >= directValuationsList.Count)
                 {
-                    bestDirectValue = value;
-                    bestDirectValuation = valuation;
-                    bestDirectIndividual = swappedIndividual;
-                    directValuationFoundUpgrade = true;
+                    // everything is queued up already, drop out
+                    startedThreads--;
+                    if (startedThreads == 0)
+                    {
+                        Monitor.Pulse(directValuationLock);
+                    }
+                    return;
                 }
-                if (directValuationsComplete >= directValuationsQueued) Monitor.Pulse(directValuationLock);
+                remainingThreadsToSpawn--;
+                if (remainingThreadsToSpawn > 0)
+                {
+                    startedThreads++;
+                    ThreadPool.QueueUserWorkItem(ThreadPoolDirectUpgradeValuation);
+                }
+                directValuationsTemplate[directValuationsSlot] = directValuationsList[directValuationsIndex++];
+                if (IsIndividualValid(directValuationsTemplate))
+                {
+                    swappedIndividual = GenerateIndividual(directValuationsTemplate);
+                }
             }
+
+            do
+            {
+                if (swappedIndividual != null)
+                {
+                    value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
+                }
+
+                lock (directValuationLock)
+                {
+                    directValuationsComplete++;
+                    if (swappedIndividual != null && value > bestDirectValue)
+                    {
+                        bestDirectValue = value;
+                        bestDirectValuation = valuation;
+                        bestDirectIndividual = swappedIndividual;
+                        directValuationFoundUpgrade = true;
+                    }
+                    if (directValuationsComplete >= directValuationsList.Count)
+                    {
+                        startedThreads--;
+                        if (startedThreads == 0)
+                        {
+                            Monitor.Pulse(directValuationLock);
+                        }
+                        return;
+                    }
+                    // get more work
+                    if (directValuationsIndex < directValuationsList.Count)
+                    {
+                        directValuationsTemplate[directValuationsSlot] = directValuationsList[directValuationsIndex++];
+                        if (IsIndividualValid(directValuationsTemplate))
+                        {
+                            swappedIndividual = GenerateIndividual(directValuationsTemplate);
+                        }
+                        else
+                        {
+                            swappedIndividual = null;
+                        }
+                    }
+                    else
+                    {
+                        // everything is queued up already
+                        startedThreads--;
+                        return;
+                    }
+                }
+            } while (true);
         }
 
-
-		protected virtual KeyValuePair<float, TIndividual> LookForDirectItemUpgrades(List<TItem> items, int slot, float best, TIndividual bestIndividual, out TValuation bestValuation)
+		protected virtual KeyValuePair<float, TIndividual> LookForDirectItemUpgrades(List<TItem> items, int slot, float best, TIndividual bestIndividual, TItem[] itemList, out TValuation bestValuation)
 		{
-			TIndividual swappedIndividual;
             bestValuation = default(TValuation);
 			float value;
 			bool foundUpgrade = false;
-            TItem[] itemList = (TItem[])GetItems(bestIndividual).Clone();
+            if (itemList == null)
+            {
+                itemList = (TItem[])GetItems(bestIndividual).Clone();
+            }
             if (ThreadPoolValuation)
             {
                 bestDirectValue = best;
                 directValuationFoundUpgrade = false;
-                directValuationsQueued = 0;
+                directValuationsIndex = 0;
                 directValuationsComplete = 0;
-            }
-            TItem baseItem = itemList[slot];
-            foreach (TItem item in items)
-            {
-                itemList[slot] = item;
-                if (IsIndividualValid(itemList))
+                directValuationsList = items;
+                directValuationsTemplate = itemList;
+                directValuationsSlot = slot;
+                remainingThreadsToSpawn = EffectiveMaxConcurrencyLevel;
+
+                startedThreads = 1;
+                ThreadPoolDirectUpgradeValuation(null);
+
+                lock (directValuationLock)
                 {
-                    swappedIndividual = GenerateIndividual(itemList);
-                    if (ThreadPoolValuation)
+                    while (directValuationsComplete < directValuationsList.Count || startedThreads > 0) Monitor.Wait(directValuationLock);
+                    if (directValuationFoundUpgrade)
                     {
-                        directValuationsQueued++;
-                        ThreadPool.QueueUserWorkItem(ThreadPoolDirectUpgradeValuation, swappedIndividual);
+                        best = bestDirectValue;
+                        bestValuation = bestDirectValuation;
+                        bestIndividual = bestDirectIndividual;
+                        foundUpgrade = true;
                     }
-                    else
+                    bestDirectIndividual = null;
+                    bestDirectValuation = default(TValuation);
+                    directValuationsList = null;
+                    directValuationsTemplate = null;
+                }
+            }
+            else
+            {
+                foreach (TItem item in items)
+                {
+                    itemList[slot] = item;
+                    if (IsIndividualValid(itemList))
                     {
+                        TIndividual swappedIndividual = GenerateIndividual(itemList);
                         TValuation valuation;
                         value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
                         if (value > best)
@@ -591,22 +720,6 @@ namespace Rawr.Optimizer
                             foundUpgrade = true;
                         }
                     }
-                }
-            }
-            if (ThreadPoolValuation)
-            {
-                lock (directValuationLock)
-                {
-                    while (directValuationsComplete < directValuationsQueued) Monitor.Wait(directValuationLock);
-                    if (directValuationFoundUpgrade)
-                    {
-                        best = bestDirectValue;
-                        bestValuation = bestDirectValuation;
-                        bestIndividual = bestDirectIndividual;
-                        foundUpgrade = true;
-                    }
-                    bestDirectIndividual = null;
-                    bestDirectValuation = default(TValuation);
                 }
             }
 			if (foundUpgrade)

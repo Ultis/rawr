@@ -443,6 +443,14 @@ namespace Rawr.Mage
             }
         }
 
+        public override int MaxDegreeOfParallelism
+        {
+            get
+            {
+                return ArrayPool.MaximumPoolSize;
+            }
+        }
+
 		public override CharacterClass TargetClass { get { return CharacterClass.Mage; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
@@ -544,12 +552,13 @@ namespace Rawr.Mage
         public static readonly Buff MageArmorBuff = Buff.GetBuffByName("Mage Armor");
         public static readonly Buff IceArmorBuff = Buff.GetBuffByName("Ice Armor");
 
-        public void AccumulateRawStats(Stats stats, Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)
+        public void AccumulateRawStats(Stats stats, Character character, Item additionalItem, CalculationOptionsMage calculationOptions, out List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)
         {
             AccumulateItemStats(stats, character, additionalItem);
 
-            activeBuffs = new List<Buff>();
-            activeBuffs.AddRange(character.ActiveBuffs);
+            bool activeBuffsCloned = false;
+            activeBuffs = character.ActiveBuffs;
+            autoActivatedBuffs = null;
 
             if (!character.DisableBuffAutoActivation)
             {
@@ -560,6 +569,12 @@ namespace Rawr.Mage
                     {
                         if (!character.ActiveBuffs.Contains(ImprovedScorchBuff) && !character.ActiveBuffs.Contains(WintersChillBuff))
                         {
+                            if (!activeBuffsCloned)
+                            {
+                                activeBuffs = new List<Buff>(character.ActiveBuffs);
+                                autoActivatedBuffs = new List<Buff>();
+                                activeBuffsCloned = true;
+                            }
                             activeBuffs.Add(ImprovedScorchBuff);
                             autoActivatedBuffs.Add(ImprovedScorchBuff);
                             RemoveConflictingBuffs(activeBuffs, ImprovedScorchBuff);
@@ -570,6 +585,12 @@ namespace Rawr.Mage
                 {
                     if (!character.ActiveBuffs.Contains(WintersChillBuff) && !character.ActiveBuffs.Contains(ImprovedScorchBuff))
                     {
+                        if (!activeBuffsCloned)
+                        {
+                            activeBuffs = new List<Buff>(character.ActiveBuffs);
+                            autoActivatedBuffs = new List<Buff>();
+                            activeBuffsCloned = true;
+                        }
                         activeBuffs.Add(WintersChillBuff);
                         autoActivatedBuffs.Add(WintersChillBuff);
                         RemoveConflictingBuffs(activeBuffs, WintersChillBuff);
@@ -592,6 +613,12 @@ namespace Rawr.Mage
                     }
                     if (!character.ActiveBuffs.Contains(armorBuff))
                     {
+                        if (!activeBuffsCloned)
+                        {
+                            activeBuffs = new List<Buff>(character.ActiveBuffs);
+                            autoActivatedBuffs = new List<Buff>();
+                            activeBuffsCloned = true;
+                        }
                         activeBuffs.Add(armorBuff);
                         autoActivatedBuffs.Add(armorBuff);
                         RemoveConflictingBuffs(activeBuffs, armorBuff);
@@ -616,8 +643,9 @@ namespace Rawr.Mage
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             List<Buff> ignore;
+            List<Buff> ignore2;
             Stats stats = new Stats();
-            AccumulateRawStats(stats, character, additionalItem, calculationOptions, new List<Buff>(), null, out ignore);
+            AccumulateRawStats(stats, character, additionalItem, calculationOptions, out ignore2, null, out ignore);
             return GetCharacterStats(character, additionalItem, stats, calculationOptions);
         }
 

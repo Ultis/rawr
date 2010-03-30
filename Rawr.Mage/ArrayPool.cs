@@ -336,23 +336,17 @@ namespace Rawr.Mage
         private static List<ArraySet> pool = new List<ArraySet>();
 
         private static int createdArraySets = 0;
-        private static int maximumPoolSize = 2;
+        private static int maximumPoolSize = Environment.ProcessorCount;
 
         public static int MaximumPoolSize
         {
             get
             {
-                lock (pool)
-                {
-                    return maximumPoolSize;
-                }
+                return maximumPoolSize;
             }
             set
             {
-                lock (pool)
-                {
-                    maximumPoolSize = value;
-                }
+                maximumPoolSize = value;
             }
         }
 

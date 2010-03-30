@@ -790,9 +790,9 @@ namespace Rawr.Mage
                     rawStats.Clear();
                 }
             }
-            List<Buff> autoActivatedBuffs = new List<Buff>();
+            List<Buff> autoActivatedBuffs;
             List<Buff> activeBuffs;
-            calculations.AccumulateRawStats(rawStats, character, additionalItem, calculationOptions, autoActivatedBuffs, armor, out activeBuffs);
+            calculations.AccumulateRawStats(rawStats, character, additionalItem, calculationOptions, out autoActivatedBuffs, armor, out activeBuffs);
             baseStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
             calculationResult = new CharacterCalculationsMage();
@@ -860,7 +860,10 @@ namespace Rawr.Mage
 
             CalculateBaseStateStats(baseStats);
 
-            calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
+            if (autoActivatedBuffs != null)
+            {
+                calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
+            }
             calculationResult.MageArmor = armor;
 
             return calculationResult;

@@ -20,7 +20,7 @@ namespace Rawr.Mage
             }
             if (Properties.Settings.Default.MaxThreads < 1)
             {
-                Properties.Settings.Default.MaxThreads = 2;
+                Properties.Settings.Default.MaxThreads = Environment.ProcessorCount;
                 Properties.Settings.Default.Save();
             }
             numericUpDownMaxThreads.Value = Properties.Settings.Default.MaxThreads;
