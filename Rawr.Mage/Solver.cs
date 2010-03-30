@@ -185,20 +185,20 @@ namespace Rawr.Mage
         private int rowTargetDamage = -1;
         //private int rowSegmentMoltenFury = -1;
         //private int rowSegmentHeroism = -1;
-        private List<SegmentConstraint> rowSegmentArcanePower = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentPowerInfusion = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentIcyVeins = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentWaterElemental = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentSummonWaterElemental = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentMirrorImage = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentSummonMirrorImage = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentCombustion = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentBerserking = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentFlameCap = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentManaGem = new List<SegmentConstraint>();
+        private List<SegmentConstraint> rowSegmentArcanePower;
+        private List<SegmentConstraint> rowSegmentPowerInfusion;
+        private List<SegmentConstraint> rowSegmentIcyVeins;
+        private List<SegmentConstraint> rowSegmentWaterElemental;
+        private List<SegmentConstraint> rowSegmentSummonWaterElemental;
+        private List<SegmentConstraint> rowSegmentMirrorImage;
+        private List<SegmentConstraint> rowSegmentSummonMirrorImage;
+        private List<SegmentConstraint> rowSegmentCombustion;
+        private List<SegmentConstraint> rowSegmentBerserking;
+        private List<SegmentConstraint> rowSegmentFlameCap;
+        private List<SegmentConstraint> rowSegmentManaGem;
         //private int rowSegmentPotion = -1;
-        private List<SegmentConstraint> rowSegmentManaGemEffect = new List<SegmentConstraint>();
-        private List<SegmentConstraint> rowSegmentEvocation = new List<SegmentConstraint>();
+        private List<SegmentConstraint> rowSegmentManaGemEffect;
+        private List<SegmentConstraint> rowSegmentEvocation;
         private int rowSegment = -1;
         private int rowSegmentManaOverflow = -1;
         private int rowSegmentManaUnderflow = -1;
@@ -719,9 +719,10 @@ namespace Rawr.Mage
 
         public CharacterCalculationsMage GetCharacterCalculations(Item additionalItem, CalculationsMage calculations)
         {
+            ArraySet arraySet = ArrayPool.RequestArraySet(!useIncrementalOptimizations && needsDisplayCalculations && segmentCooldowns);
             Stats rawStats;
             Stats baseStats;
-            InitializeCalculationResult(additionalItem, calculations, out rawStats, out baseStats);
+            InitializeCalculationResult(arraySet, additionalItem, calculations, out rawStats, out baseStats);
 
             spellList = GetSpellList();
 
@@ -770,11 +771,28 @@ namespace Rawr.Mage
             return calculationResult;
         }
 
-        public CharacterCalculationsMage InitializeCalculationResult(Item additionalItem, CalculationsMage calculations, out Stats rawStats, out Stats baseStats)
+        public CharacterCalculationsMage InitializeCalculationResult(ArraySet arraySet, Item additionalItem, CalculationsMage calculations, out Stats rawStats, out Stats baseStats)
         {
+            if (needsDisplayCalculations || arraySet == null)
+            {
+                rawStats = new Stats();
+            }
+            else
+            {
+                rawStats = arraySet.accumulator;
+                if (rawStats == null)
+                {
+                    rawStats = new Stats();
+                    arraySet.accumulator = rawStats;
+                }
+                else
+                {
+                    rawStats.Clear();
+                }
+            }
             List<Buff> autoActivatedBuffs = new List<Buff>();
             List<Buff> activeBuffs;
-            rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor, out activeBuffs);
+            calculations.AccumulateRawStats(rawStats, character, additionalItem, calculationOptions, autoActivatedBuffs, armor, out activeBuffs);
             baseStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
             calculationResult = new CharacterCalculationsMage();
@@ -785,6 +803,7 @@ namespace Rawr.Mage
             calculationResult.MageTalents = talents;
             calculationResult.ActiveBuffs = activeBuffs;
             calculationResult.NeedsDisplayCalculations = needsDisplayCalculations;
+            calculationResult.ArraySet = arraySet;
 
             evocationAvailable = calculationOptions.EvocationEnabled && !calculationOptions.EffectDisableManaSources;
             manaPotionAvailable = calculationOptions.ManaPotionEnabled && !calculationOptions.EffectDisableManaSources;
@@ -1595,8 +1614,7 @@ namespace Rawr.Mage
 
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateIndexList.Count * (1 + (calculationOptions.UseFireWard ? 1 : 0) + (calculationOptions.UseFrostWard ? 1 : 0))) * segmentList.Count, calculationResult, segmentList.Count);
-            calculationResult.ArraySet = lp.ArraySet;
+            lp = new SolverLP(calculationResult.ArraySet, rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateIndexList.Count * (1 + (calculationOptions.UseFireWard ? 1 : 0) + (calculationOptions.UseFrostWard ? 1 : 0))) * segmentList.Count, calculationResult, segmentList.Count);
 
             stateList = GetStateList(stateIndexList);
 
@@ -3373,7 +3391,7 @@ namespace Rawr.Mage
                 // ap
                 if (arcanePowerAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentArcanePower;
+                    List<SegmentConstraint> list = rowSegmentArcanePower = new List<SegmentConstraint>();
                     double cool = calculationResult.ArcanePowerCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3388,7 +3406,7 @@ namespace Rawr.Mage
                 // pi
                 if (powerInfusionAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentPowerInfusion;
+                    List<SegmentConstraint> list = rowSegmentPowerInfusion = new List<SegmentConstraint>();
                     double cool = calculationResult.PowerInfusionCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3403,7 +3421,7 @@ namespace Rawr.Mage
                 // iv
                 if (icyVeinsAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentIcyVeins;
+                    List<SegmentConstraint> list = rowSegmentIcyVeins = new List<SegmentConstraint>();
                     double cool = calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3418,7 +3436,7 @@ namespace Rawr.Mage
                 // combustion
                 if (combustionAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentCombustion;
+                    List<SegmentConstraint> list = rowSegmentCombustion = new List<SegmentConstraint>();
                     double cool = calculationResult.CombustionCooldown + 15;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3433,7 +3451,7 @@ namespace Rawr.Mage
                 // berserking
                 if (berserkingAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentBerserking;
+                    List<SegmentConstraint> list = rowSegmentBerserking = new List<SegmentConstraint>();
                     double cool = 120;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3447,7 +3465,7 @@ namespace Rawr.Mage
                 }
                 if (waterElementalAvailable && !talents.GlyphOfEternalWater)
                 {
-                    List<SegmentConstraint> list = rowSegmentWaterElemental;
+                    List<SegmentConstraint> list = rowSegmentWaterElemental = new List<SegmentConstraint>();
                     double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3458,7 +3476,7 @@ namespace Rawr.Mage
                             list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                         }
                     }
-                    list = rowSegmentSummonWaterElemental;
+                    list = rowSegmentSummonWaterElemental = new List<SegmentConstraint>();
                     cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3472,7 +3490,7 @@ namespace Rawr.Mage
                 }
                 if (mirrorImageAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentMirrorImage;
+                    List<SegmentConstraint> list = rowSegmentMirrorImage = new List<SegmentConstraint>();
                     double cool = calculationResult.MirrorImageCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3483,7 +3501,7 @@ namespace Rawr.Mage
                             list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                         }
                     }
-                    list = rowSegmentSummonMirrorImage;
+                    list = rowSegmentSummonMirrorImage = new List<SegmentConstraint>();
                     cool = calculationResult.MirrorImageCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3498,7 +3516,7 @@ namespace Rawr.Mage
                 // flamecap & mana gem
                 if (flameCapAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentFlameCap;
+                    List<SegmentConstraint> list = rowSegmentFlameCap = new List<SegmentConstraint>();
                     double cool = 180;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3512,7 +3530,7 @@ namespace Rawr.Mage
                 }
                 if (calculationOptions.ManaGemEnabled)
                 {
-                    List<SegmentConstraint> list = rowSegmentManaGem;
+                    List<SegmentConstraint> list = rowSegmentManaGem = new List<SegmentConstraint>();
                     double cool = 120;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3552,7 +3570,7 @@ namespace Rawr.Mage
                 // mana gem effect
                 if (manaGemEffectAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentManaGemEffect;
+                    List<SegmentConstraint> list = rowSegmentManaGemEffect = new List<SegmentConstraint>();
                     double cool = 120.0;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
@@ -3566,7 +3584,7 @@ namespace Rawr.Mage
                 }
                 if (evocationAvailable)
                 {
-                    List<SegmentConstraint> list = rowSegmentEvocation;
+                    List<SegmentConstraint> list = rowSegmentEvocation = new List<SegmentConstraint>();
                     double cool = calculationResult.EvocationCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {

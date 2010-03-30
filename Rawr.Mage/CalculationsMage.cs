@@ -544,9 +544,8 @@ namespace Rawr.Mage
         public static readonly Buff MageArmorBuff = Buff.GetBuffByName("Mage Armor");
         public static readonly Buff IceArmorBuff = Buff.GetBuffByName("Ice Armor");
 
-        public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)
+        public void AccumulateRawStats(Stats stats, Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)
         {
-            Stats stats = new Stats();
             AccumulateItemStats(stats, character, additionalItem);
 
             activeBuffs = new List<Buff>();
@@ -610,8 +609,6 @@ namespace Rawr.Mage
                     stats.Accumulate(effect.Stats, effect.MaxStack);
                 }                
             }
-
-            return stats;
         }
 
         // required by base class, but never used
@@ -619,7 +616,9 @@ namespace Rawr.Mage
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             List<Buff> ignore;
-            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<Buff>(), null, out ignore), calculationOptions);
+            Stats stats = new Stats();
+            AccumulateRawStats(stats, character, additionalItem, calculationOptions, new List<Buff>(), null, out ignore);
+            return GetCharacterStats(character, additionalItem, stats, calculationOptions);
         }
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)

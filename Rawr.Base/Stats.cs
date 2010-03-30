@@ -617,6 +617,15 @@ namespace Rawr {
         internal int _sparseInverseMultiplicativeCount;
         internal int _sparseNoStackCount;
 
+        public void Clear()
+        {
+            Array.Clear(_rawAdditiveData, 0, _rawAdditiveData.Length);
+            Array.Clear(_rawMultiplicativeData, 0, _rawMultiplicativeData.Length);
+            Array.Clear(_rawInverseMultiplicativeData, 0, _rawInverseMultiplicativeData.Length);
+            Array.Clear(_rawNoStackData, 0, _rawNoStackData.Length);
+            _rawSpecialEffectDataSize = 0;
+        }
+
         public void InvalidateSparseData() {
             //_sparseData = null;
             _sparseIndices = null;

@@ -1096,7 +1096,7 @@ namespace Rawr.Mage
 
             int size = StateList.Count + 1;
 
-            ArraySet arraySet = ArrayPool.RequestArraySet(size, size);
+            ArraySet arraySet = ArrayPool.RequestArraySet(false);
             try
             {
 

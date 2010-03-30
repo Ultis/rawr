@@ -217,7 +217,7 @@ namespace Rawr.Mage
             Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
             Stats rawStats;
             Stats baseStats;
-            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
+            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, null, calculations, out rawStats, out baseStats);
             calculationResult.NeedsDisplayCalculations = true;
             CastingState baseState = new CastingState(calculationResult, 0, false, 0);
 

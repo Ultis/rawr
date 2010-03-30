@@ -122,7 +122,7 @@ namespace Rawr.Mage
             Solver solver = new Solver(character, calculationOptions, false, false, 0, armor, false, false, false, false);
             Stats rawStats;
             Stats baseStats;
-            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
+            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, null, calculations, out rawStats, out baseStats);
 
             switch (comboBoxCycleGenerator.Text)
             {

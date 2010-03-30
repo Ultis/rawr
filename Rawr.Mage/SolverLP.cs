@@ -87,9 +87,9 @@ namespace Rawr.Mage
             return clone;
         }
 
-        public SolverLP(int baseRows, int maximumColumns, CharacterCalculationsMage calculations, int segments)
+        public SolverLP(ArraySet arraySet, int baseRows, int maximumColumns, CharacterCalculationsMage calculations, int segments)
         {
-            arraySet = ArrayPool.RequestArraySet(baseRows, maximumColumns);
+            this.arraySet = arraySet;
             if (baseRows > arraySet.maxSolverRows || maximumColumns > arraySet.maxSolverCols)
             {
                 arraySet.maxSolverRows = Math.Max(baseRows, arraySet.maxSolverRows);

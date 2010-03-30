@@ -1412,7 +1412,7 @@ namespace Rawr //O O . .
                 yellowGemCount = 0;
                 blueGemCount = 0;
                 jewelersGemCount = 0;
-                Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
+                Dictionary<int, bool> uniqueMap = null;
                 gemRequirementsInvalid = 0;
                 nonjewelerGemRequirementsInvalid = 0;
                 for (int slot = 0; slot < OptimizableSlotCount; slot++)
@@ -1432,6 +1432,10 @@ namespace Rawr //O O . .
                                 if (gem.IsJewelersGem) jewelersGemCount++;
                                 else if (gem.Unique) // needs else, it seems jewelers gems are marked as unique
                                 {
+                                    if (uniqueMap == null)
+                                    {
+                                        uniqueMap = new Dictionary<int, bool>(); // this is a rare case, only create dictionary when really needed
+                                    }
                                     if (uniqueMap.ContainsKey(gem.Id))
                                     {
                                         gemRequirementsInvalid++;

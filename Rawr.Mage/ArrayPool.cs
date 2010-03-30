@@ -92,6 +92,8 @@ namespace Rawr.Mage
         public double[] rowScale;
         public double[] columnScale;
 
+        public Stats accumulator;
+
         public Spell[] spellPool;
         public int spellIndex;
 
@@ -354,7 +356,7 @@ namespace Rawr.Mage
             }
         }
 
-        public static ArraySet RequestArraySet(int rows, int cols)
+        public static ArraySet RequestArraySet(bool largeArraysHint)
         {
             lock (pool)
             {
@@ -368,17 +370,14 @@ namespace Rawr.Mage
                     while (pool.Count == 0) Monitor.Wait(pool);
                 }
                 // find desirable size
-                int bestIndex = -1;
-                int desiredSize = rows * cols;
-                bool haveMatch = false;
-                for (int i = 0; i < pool.Count; i++)
+                int bestIndex = 0;
+                if (largeArraysHint)
                 {
-                    if (bestIndex == -1 || (!haveMatch && pool[i].MaxSize > pool[bestIndex].MaxSize) || (haveMatch && pool[i].MaxSize >= desiredSize && pool[i].MaxSize < pool[bestIndex].MaxSize))
+                    for (int i = 1; i < pool.Count; i++)
                     {
-                        bestIndex = i;
-                        if (pool[i].MaxSize >= desiredSize)
+                        if (pool[i].MaxSize > pool[bestIndex].MaxSize)
                         {
-                            haveMatch = true;
+                            bestIndex = i;
                         }
                     }
                 }
