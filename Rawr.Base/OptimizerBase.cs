@@ -87,7 +87,9 @@ namespace Rawr.Optimizer
                 Random r = _rand;
                 if (r == null)
                 {
-                    _rand = r = new Random(_randSeed.Next());
+                    int seed;
+                    lock (_randSeed) seed = _randSeed.Next();
+                    _rand = r = new Random(seed);
                 }
                 return r;
             }
