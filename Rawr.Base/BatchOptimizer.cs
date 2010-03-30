@@ -850,7 +850,7 @@ namespace Rawr.Optimizer
         {
             bool successful;
             BatchIndividual mutant = null;
-            if (rand.NextDouble() < 0.9)
+            if (Rnd.NextDouble() < 0.9)
             {
                 return base.BuildMutantIndividual(parent);
             }
@@ -890,7 +890,7 @@ namespace Rawr.Optimizer
             Character character;
             GemInformation mutation1 = new GemInformation();
             GemInformation mutation2 = new GemInformation();
-
+            Random rand = Rnd;
             int tries = 0;
             do
             {
@@ -1178,11 +1178,11 @@ namespace Rawr.Optimizer
                     if (slot <= itemList.Count && (father.UsedCount[slot] > 0 || mother.UsedCount[slot] > 0))
                     {
                         double chance = father.UsedCount[slot] / (father.UsedCount[slot] + mother.UsedCount[slot]);
-                        return rand.NextDouble() < chance ? GetItem(father, slot) : GetItem(mother, slot);
+                        return Rnd.NextDouble() < chance ? GetItem(father, slot) : GetItem(mother, slot);
                     }
                     else
                     {
-                        return rand.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
+                        return Rnd.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                     }
                 });
         }

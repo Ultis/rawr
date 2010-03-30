@@ -75,7 +75,23 @@ namespace Rawr.Optimizer
 
         protected abstract void ReportProgress(int progressPercentage, float bestValue);
 
-		protected Random rand;
+        private static Random _randSeed = new Random();
+
+        [ThreadStatic]
+		private static Random _rand;
+
+        protected Random Rnd
+        {
+            get
+            {
+                Random r = _rand;
+                if (r == null)
+                {
+                    _rand = r = new Random(_randSeed.Next());
+                }
+                return r;
+            }
+        }
 
         protected TIndividual Optimize(out float bestValue)
         {
@@ -125,7 +141,7 @@ namespace Rawr.Optimizer
             bestValuation = default(TValuation);
             injected = false;
 
-            rand = new Random();
+            Random rand = Rnd;
 
             TIndividual currentIndividual = BuildRandomIndividual();
             double currentValue = GetOptimizationValue(currentIndividual);
@@ -225,6 +241,15 @@ namespace Rawr.Optimizer
 
         protected TIndividual[] population;
         private float[] values;
+        int islandSize;
+        int popSize;
+        TIndividual[] individualIsland;
+        int[] islandNoImprove;
+        int islandStagnationLimit;
+        int islandCount;
+        TIndividual[] popCopy;
+        float[] share;
+
         private object bestValueLock = new object();
         private AutoResetEvent valuationsComplete = new AutoResetEvent(false);
         private int threadPoolStarted;
@@ -289,6 +314,112 @@ namespace Rawr.Optimizer
             } while (true);
         }
 
+        private void ThreadPoolGeneratePopulation(object state)
+        {
+            Random rand = Rnd;
+            int i = Interlocked.Increment(ref threadPoolStarted) - 1;
+            if (i >= threadPoolSize)
+            {
+                // everything is queued up already, drop out
+                if (Interlocked.Decrement(ref startedThreads) == 0)
+                {
+                    valuationsComplete.Set();
+                }
+                return;
+            }
+            remainingThreadsToSpawn--; // these are called in sequence, no need for synchronization
+            if (remainingThreadsToSpawn > 0)
+            {
+                Interlocked.Increment(ref startedThreads);
+                ThreadPool.QueueUserWorkItem(ThreadPoolGeneratePopulation);
+            }
+            do
+            {
+                // do work with index i
+                int island = i / islandSize;
+                if (i % islandSize == 0)
+                {
+                    if (individualIsland[island] == null)
+                    {
+                        population[i] = BuildRandomIndividual();
+                        //population[i].Geneology = "Random";
+                    }
+                    else
+                    {
+                        population[i] = individualIsland[island];
+                    }
+                }
+                else if (rand.NextDouble() < 0.05d)
+                {
+                    //completely random
+                    population[i] = BuildRandomIndividual();
+                    //population[i].Geneology = "Random";
+                }
+                else if (rand.NextDouble() < 0.4d)
+                {
+                    int transplant = island;
+                    if (islandNoImprove[island] > islandStagnationLimit) transplant = rand.Next(islandCount);
+                    //crossover
+                    float s = (float)rand.NextDouble();
+                    float sum = 0;
+                    int i1, i2;
+                    for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
+                    {
+                        sum += share[i1];
+                        if (sum >= s) break;
+                    }
+                    s = (float)rand.NextDouble();
+                    sum = 0;
+                    for (i2 = island * islandSize; i2 < Math.Min(popSize, (island + 1) * islandSize) - 1; i2++)
+                    {
+                        sum += share[i2];
+                        if (sum >= s) break;
+                    }
+                    population[i] = BuildChildIndividual(popCopy[i1], popCopy[i2]);
+                    //population[i].Geneology = "Crossover(" + values[i1] + ", " + values[i2] + ")";
+                }
+                else
+                {
+                    int transplant = island;
+                    if (islandNoImprove[island] > islandStagnationLimit && rand.NextDouble() < 1.0 / islandSize) transplant = rand.Next(islandCount);
+                    //mutate
+                    float s = (float)rand.NextDouble();
+                    float sum = 0;
+                    int i1;
+                    for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
+                    {
+                        sum += share[i1];
+                        if (sum >= s) break;
+                    }
+                    population[i] = BuildMutantIndividual(popCopy[i1]);
+                    //population[i].Geneology = "Mutation(" + values[i1] + ")";
+                }
+                // end work with index i
+                if (Interlocked.Increment(ref threadPoolComplete) == threadPoolSize)
+                {
+                    // all work is done, check if we're the last worker
+                    if (Interlocked.Decrement(ref startedThreads) == 0)
+                    {
+                        valuationsComplete.Set();
+                    }
+                    return;
+                }
+                // try to get more work
+                i = Interlocked.Increment(ref threadPoolStarted) - 1;
+                if (i >= threadPoolSize)
+                {
+                    // all work was already grabbed, go out
+                    if (Interlocked.Decrement(ref startedThreads) == 0)
+                    {
+                        // we're certain everyone is done, if someone was still processing
+                        // they wouldn't have decremented their startedThreads yet
+                        valuationsComplete.Set();
+                    }
+                    return;
+                }
+            } while (true);
+        }
+
 		private TIndividual OptimizeGA(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
 		{
 			//Begin Genetic
@@ -302,27 +433,27 @@ namespace Rawr.Optimizer
                 injectIndividual = null;
             }
 
-			int popSize = _thoroughness;
-            int islandSize = 20;
-            int islandStagnationLimit = 50;
-            int islandCount = (popSize - 1) / islandSize + 1;
+			popSize = _thoroughness;
+            islandSize = 20;
+            islandStagnationLimit = 50;
+            islandCount = (popSize - 1) / islandSize + 1;
 			int cycleLimit = _thoroughness;
             population = new TIndividual[popSize];
-            TIndividual[] popCopy = new TIndividual[popSize];
+            popCopy = new TIndividual[popSize];
 			values = new float[popSize];
             float[] minIsland = new float[islandCount];
             float[] maxIsland = new float[islandCount];
             float[] bestIsland = new float[islandCount];
-            TIndividual[] individualIsland = new TIndividual[islandCount];
-            int[] islandNoImprove = new int[islandCount];
+            individualIsland = new TIndividual[islandCount];
+            islandNoImprove = new int[islandCount];
             for (int i = 0; i < islandCount; i++)
             {
                 bestIsland[i] = -10000000;
             }
-            float[] share = new float[popSize];
+            share = new float[popSize];
 			float s, sum;
             bestIndividual = null;
-			rand = new Random();
+			Random rand = Rnd;
 
 			if (_thoroughness > 1)
 			{
@@ -392,7 +523,7 @@ namespace Rawr.Optimizer
                     }
 				    for (int i = 0; i < popSize; i++)
 				    {
-                        int island = i / islandSize;
+                        int island = i / islandSize;                        
                         if (values[i] < minIsland[island]) minIsland[island] = values[i];
                         if (values[i] > maxIsland[island]) maxIsland[island] = values[i];
                         if (values[i] > bestIsland[island])
@@ -439,65 +570,80 @@ namespace Rawr.Optimizer
                 if (_thoroughness > 1 && noImprove < cycleLimit)
 				{
 					population.CopyTo(popCopy, 0);
-					for (int i = 0; i < popSize; i++)
-					{
-                        int island = i / islandSize;
-                        if (i % islandSize == 0)
+                    if (ThreadPoolValuation)
+                    {
+                        threadPoolStarted = 0;
+                        threadPoolComplete = 0;
+                        threadPoolSize = popSize;
+                        remainingThreadsToSpawn = EffectiveMaxConcurrencyLevel;
+
+                        startedThreads = 1;
+                        ThreadPoolGeneratePopulation(null);
+
+                        valuationsComplete.WaitOne();
+                    }
+                    else
+                    {
+                        for (int i = 0; i < popSize; i++)
                         {
-                            if (individualIsland[island] == null)
+                            int island = i / islandSize;
+                            if (i % islandSize == 0)
                             {
+                                if (individualIsland[island] == null)
+                                {
+                                    population[i] = BuildRandomIndividual();
+                                    //population[i].Geneology = "Random";
+                                }
+                                else
+                                {
+                                    population[i] = individualIsland[island];
+                                }
+                            }
+                            else if (rand.NextDouble() < 0.05d)
+                            {
+                                //completely random
                                 population[i] = BuildRandomIndividual();
                                 //population[i].Geneology = "Random";
                             }
+                            else if (rand.NextDouble() < 0.4d)
+                            {
+                                int transplant = island;
+                                if (islandNoImprove[island] > islandStagnationLimit) transplant = rand.Next(islandCount);
+                                //crossover
+                                s = (float)rand.NextDouble();
+                                sum = 0;
+                                for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
+                                {
+                                    sum += share[i1];
+                                    if (sum >= s) break;
+                                }
+                                s = (float)rand.NextDouble();
+                                sum = 0;
+                                for (i2 = island * islandSize; i2 < Math.Min(popSize, (island + 1) * islandSize) - 1; i2++)
+                                {
+                                    sum += share[i2];
+                                    if (sum >= s) break;
+                                }
+                                population[i] = BuildChildIndividual(popCopy[i1], popCopy[i2]);
+                                //population[i].Geneology = "Crossover(" + values[i1] + ", " + values[i2] + ")";
+                            }
                             else
                             {
-                                population[i] = individualIsland[island];
+                                int transplant = island;
+                                if (islandNoImprove[island] > islandStagnationLimit && rand.NextDouble() < 1.0 / islandSize) transplant = rand.Next(islandCount);
+                                //mutate
+                                s = (float)rand.NextDouble();
+                                sum = 0;
+                                for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
+                                {
+                                    sum += share[i1];
+                                    if (sum >= s) break;
+                                }
+                                population[i] = BuildMutantIndividual(popCopy[i1]);
+                                //population[i].Geneology = "Mutation(" + values[i1] + ")";
                             }
                         }
-                        else if (rand.NextDouble() < 0.05d)
-                        {
-                            //completely random
-                            population[i] = BuildRandomIndividual();
-                            //population[i].Geneology = "Random";
-                        }
-                        else if (rand.NextDouble() < 0.4d)
-                        {
-                            int transplant = island;
-                            if (islandNoImprove[island] > islandStagnationLimit) transplant = rand.Next(islandCount);
-                            //crossover
-                            s = (float)rand.NextDouble();
-                            sum = 0;
-                            for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
-                            {
-                                sum += share[i1];
-                                if (sum >= s) break;
-                            }
-                            s = (float)rand.NextDouble();
-                            sum = 0;
-                            for (i2 = island * islandSize; i2 < Math.Min(popSize, (island + 1) * islandSize) - 1; i2++)
-                            {
-                                sum += share[i2];
-                                if (sum >= s) break;
-                            }
-                            population[i] = BuildChildIndividual(popCopy[i1], popCopy[i2]);
-                            //population[i].Geneology = "Crossover(" + values[i1] + ", " + values[i2] + ")";
-                        }
-                        else
-                        {
-                            int transplant = island;
-                            if (islandNoImprove[island] > islandStagnationLimit && rand.NextDouble() < 1.0 / islandSize) transplant = rand.Next(islandCount);
-                            //mutate
-                            s = (float)rand.NextDouble();
-                            sum = 0;
-                            for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
-                            {
-                                sum += share[i1];
-                                if (sum >= s) break;
-                            }
-                            population[i] = BuildMutantIndividual(popCopy[i1]);
-                            //population[i].Geneology = "Mutation(" + values[i1] + ")";
-                        }
-					}
+                    }
 				}
                 else if (_thoroughness > 1 && injectIndividual != null && !injected && injectValue > this.bestValue)
                 {
@@ -526,6 +672,10 @@ namespace Rawr.Optimizer
             values = null;
             bestIndividual = null;
             this.bestValuation = default(TValuation);
+            individualIsland = null;
+            islandNoImprove = null;
+            popCopy = null;
+            share = null;
 
             return PostProcess(ret);
 		}
@@ -738,7 +888,7 @@ namespace Rawr.Optimizer
             List<TItem> list = slotItems[slot];
             int count = list.Count;
             if (count == 0) return default(TItem);
-            return list[rand.Next(count)];
+            return list[Rnd.Next(count)];
         }
 
         protected virtual bool IsIndividualValid(TItem[] items)
@@ -804,7 +954,7 @@ namespace Rawr.Optimizer
             return GeneratorBuildIndividual(
                 delegate(int slot, TItem[] items)
                 {
-                    return rand.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
+                    return Rnd.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                 });
 		}
 
@@ -842,7 +992,7 @@ namespace Rawr.Optimizer
             {
                 item[slot] = GetItem(parent, slot);
             }
-
+            Random rand = Rnd;
             double r = rand.NextDouble();
             bool successfull = false;
 
@@ -871,6 +1021,7 @@ namespace Rawr.Optimizer
 
 		protected virtual TIndividual BuildMutantIndividual(TIndividual parent)
 		{
+            Random rand = Rnd;
 			int targetMutations = 2;
 			while (targetMutations < 32 && rand.NextDouble() < 0.75d) targetMutations++;
 			double mutationChance = (double)targetMutations / 32d;
@@ -878,7 +1029,7 @@ namespace Rawr.Optimizer
             return GeneratorBuildIndividual(
                 delegate(int slot, TItem[] items)
                 {
-                    if (rand.NextDouble() < mutationChance)
+                    if (Rnd.NextDouble() < mutationChance)
                     {
                         return GetRandomItem(slot, items);
                     }

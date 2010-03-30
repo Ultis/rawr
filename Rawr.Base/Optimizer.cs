@@ -2151,7 +2151,7 @@ namespace Rawr.Optimizer
             }
             else if (lockedSlot == (CharacterSlot)slot)
             {
-                return lockedItems[rand.Next(lockedItems.Count)];
+                return lockedItems[Rnd.Next(lockedItems.Count)];
             }
             else
             {
@@ -2173,6 +2173,7 @@ namespace Rawr.Optimizer
                 int max = 3 - min; // we can use at most this many if we want to be possible to be feasible
                 ItemInstance result = null;
                 int count = 0;
+                Random rand = Rnd;
                 do
                 {
                     KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot][rand.Next(slotItemsRandom[slot].Count)];
@@ -2234,12 +2235,12 @@ namespace Rawr.Optimizer
                         }
                         else
                         {
-                            return rand.NextDouble() < 0.5d ? f : m;
+                            return Rnd.NextDouble() < 0.5d ? f : m;
                         }
                     }
                     else
                     {
-                        return rand.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
+                        return Rnd.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                     }
                 });
         }
@@ -2292,6 +2293,7 @@ namespace Rawr.Optimizer
                 }
             }
 
+            Random rand = Rnd;
             if (locationList.Count > 0)
             {
                 int numberMutations = rand.Next(1, 2);
@@ -2351,6 +2353,7 @@ namespace Rawr.Optimizer
                 }
             }
 
+            Random rand = Rnd;
             if (locationList.Count > 1)
             {
                 GemInformation mutation1;
@@ -2415,6 +2418,7 @@ namespace Rawr.Optimizer
         {
             bool successful;
             OptimizerCharacter mutant = null;
+            Random rand = Rnd;
             if (optimizeTalents && mutateTalents && rand.NextDouble() < 0.5)
             {
                 return BuildMutateTalentsCharacter(parent);
@@ -2470,6 +2474,7 @@ namespace Rawr.Optimizer
             }
             // add the talent somewhere
             bool talentAdded = false;
+            Random rand = Rnd;
             do
             {
                 int index = rand.Next(talentItemCount);
@@ -3489,7 +3494,7 @@ namespace Rawr.Optimizer
             int characterSlot = slot / 5;
             if (lockedSlot == (CharacterSlot)characterSlot)
             {
-                ItemInstance itemInstance = lockedItems[rand.Next(lockedItems.Count)];
+                ItemInstance itemInstance = lockedItems[Rnd.Next(lockedItems.Count)];
                 switch (slot % 5)
                 {
                     case 0:
@@ -3516,7 +3521,7 @@ namespace Rawr.Optimizer
                         if (item != null)
                         {
                             List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[rand.Next(list.Count)].Gem1;
+                            return list[Rnd.Next(list.Count)].Gem1;
                         }
                         else
                         {
@@ -3527,7 +3532,7 @@ namespace Rawr.Optimizer
                         if (item != null)
                         {
                             List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[rand.Next(list.Count)].Gem2;
+                            return list[Rnd.Next(list.Count)].Gem2;
                         }
                         else
                         {
@@ -3538,7 +3543,7 @@ namespace Rawr.Optimizer
                         if (item != null)
                         {
                             List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[rand.Next(list.Count)].Gem3;
+                            return list[Rnd.Next(list.Count)].Gem3;
                         }
                         else
                         {
@@ -3549,7 +3554,7 @@ namespace Rawr.Optimizer
                         if (item != null)
                         {
                             List<ItemInstance> list = item.AvailabilityInformation.ItemList;
-                            return list[rand.Next(list.Count)].Enchant;
+                            return list[Rnd.Next(list.Count)].Enchant;
                         }
                         else
                         {
