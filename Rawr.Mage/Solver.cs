@@ -828,23 +828,23 @@ namespace Rawr.Mage
             {
                 if (calculationOptions.PlayerLevel < 77)
                 {
-                    calculationResult.ManaGemValue = 2400.0;
-                    calculationResult.MaxManaGemValue = 2460.0;
+                    calculationResult.ManaGemValue = 2400.0f;
+                    calculationResult.MaxManaGemValue = 2460.0f;
                 }
                 else
                 {
-                    calculationResult.ManaGemValue = 3415.0;
-                    calculationResult.MaxManaGemValue = 3500.0;
+                    calculationResult.ManaGemValue = 3415.0f;
+                    calculationResult.MaxManaGemValue = 3500.0f;
                 }
                 if (calculationOptions.PlayerLevel <= 70)
                 {
-                    calculationResult.ManaPotionValue = 2400.0;
-                    calculationResult.MaxManaPotionValue = 3000.0;
+                    calculationResult.ManaPotionValue = 2400.0f;
+                    calculationResult.MaxManaPotionValue = 3000.0f;
                 }
                 else
                 {
-                    calculationResult.ManaPotionValue = 4300.0;
-                    calculationResult.MaxManaPotionValue = 4400.0;
+                    calculationResult.ManaPotionValue = 4300.0f;
+                    calculationResult.MaxManaPotionValue = 4400.0f;
                 }
             }
 
@@ -989,31 +989,31 @@ namespace Rawr.Mage
         {
             cooldownList = new List<EffectCooldown>();
 
-            calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
-            calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
-            calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
-            calculationResult.ArcanePowerDuration = 15.0 + (talents.GlyphOfArcanePower ? 3.0 : 0.0);
-            calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
-            calculationResult.WaterElementalCooldown = (180.0 - (talents.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
+            calculationResult.EvocationCooldown = (240.0f - 60.0f * talents.ArcaneFlows);
+            calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1f * talents.ColdAsIce);
+            calculationResult.ArcanePowerCooldown = 120.0f * (1 - 0.15f * talents.ArcaneFlows);
+            calculationResult.ArcanePowerDuration = 15.0f + (talents.GlyphOfArcanePower ? 3.0f : 0.0f);
+            calculationResult.IcyVeinsCooldown = 180.0f * (1 - 0.07f * talents.IceFloes + (talents.IceFloes == 3 ? 0.01f : 0.00f));
+            calculationResult.WaterElementalCooldown = (180.0f - (talents.GlyphOfWaterElemental ? 30.0f : 0.0f)) * (1 - 0.1f * talents.ColdAsIce);
             if (talents.GlyphOfEternalWater)
             {
-                calculationResult.WaterElementalDuration = double.PositiveInfinity;
+                calculationResult.WaterElementalDuration = float.PositiveInfinity;
             }
             else
             {
-                calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.EnduringWinter;
+                calculationResult.WaterElementalDuration = 45.0f + 5.0f * talents.EnduringWinter;
             }
-            calculationResult.PowerInfusionDuration = 15.0;
-            calculationResult.PowerInfusionCooldown = 120.0;
-            calculationResult.MirrorImageDuration = 30.0;
-            calculationResult.MirrorImageCooldown = 180.0;
-            calculationResult.CombustionCooldown = 120.0;
+            calculationResult.PowerInfusionDuration = 15.0f;
+            calculationResult.PowerInfusionCooldown = 120.0f;
+            calculationResult.MirrorImageDuration = 30.0f;
+            calculationResult.MirrorImageCooldown = 180.0f;
+            calculationResult.CombustionCooldown = 120.0f;
 
             if (evocationAvailable)
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.EvocationCooldown,
+                    Cooldown = calculationResult.EvocationCooldown,
                     Mask = (int)StandardEffect.Evocation,
                     Name = "Evocation",
                     StandardEffect = StandardEffect.Evocation,
@@ -1024,8 +1024,8 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.PowerInfusionCooldown,
-                    Duration = (float)calculationResult.PowerInfusionDuration,
+                    Cooldown = calculationResult.PowerInfusionCooldown,
+                    Duration = calculationResult.PowerInfusionDuration,
                     AutomaticConstraints = true,
                     AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.PowerInfusion,
@@ -1052,8 +1052,8 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.ArcanePowerCooldown,
-                    Duration = (float)calculationResult.ArcanePowerDuration,
+                    Cooldown = calculationResult.ArcanePowerCooldown,
+                    Duration = calculationResult.ArcanePowerDuration,
                     AutomaticConstraints = true,
                     AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.ArcanePower,
@@ -1066,7 +1066,7 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.CombustionCooldown,
+                    Cooldown = calculationResult.CombustionCooldown,
                     Mask = (int)StandardEffect.Combustion,
                     Name = "Combustion",
                     StandardEffect = StandardEffect.Combustion,
@@ -1133,7 +1133,7 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.IcyVeinsCooldown,
+                    Cooldown = calculationResult.IcyVeinsCooldown,
                     Duration = 20.0f,
                     AutomaticConstraints = (talents.ColdSnap == 0),
                     AutomaticStackingConstraints = (talents.ColdSnap == 0),
@@ -1161,8 +1161,8 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.WaterElementalCooldown,
-                    Duration = (float)calculationResult.WaterElementalDuration,
+                    Cooldown = calculationResult.WaterElementalCooldown,
+                    Duration = calculationResult.WaterElementalDuration,
                     Mask = (int)StandardEffect.WaterElemental,
                     Name = "Water Elemental",
                     StandardEffect = StandardEffect.WaterElemental,
@@ -1173,8 +1173,8 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
-                    Cooldown = (float)calculationResult.MirrorImageCooldown,
-                    Duration = (float)calculationResult.MirrorImageDuration,
+                    Cooldown = calculationResult.MirrorImageCooldown,
+                    Duration = calculationResult.MirrorImageDuration,
                     Mask = (int)StandardEffect.MirrorImage,
                     Name = "Mirror Image",
                     StandardEffect = StandardEffect.MirrorImage,
@@ -1500,23 +1500,23 @@ namespace Rawr.Mage
             calculationResult.BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * talents.NetherwindPresence) * calculationOptions.EffectHasteMultiplier;
             calculationResult.BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / calculationResult.BaseCastingSpeed);
 
-            calculationResult.IncomingDamageAmpMelee = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.Dodge) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpPhysical = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpArcane = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ArcaneResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpFire = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FireResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpFrost = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FrostResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpNature = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.NatureResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpShadow = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ShadowResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
-            calculationResult.IncomingDamageAmpHoly = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpMelee = (1 - 0.02f * talents.PrismaticCloak) * (1 - 0.01f * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.Dodge) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpPhysical = (1 - 0.02f * talents.PrismaticCloak) * (1 - 0.01f * talents.ArcticWinds) * (1 - calculationResult.MeleeMitigation) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpArcane = (1 - 0.02f * talents.PrismaticCloak) * (1 + 0.01f * talents.PlayingWithFire) * (1 - 0.02f * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ArcaneResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpFire = (1 - 0.02f * talents.PrismaticCloak) * (1 + 0.01f * talents.PlayingWithFire) * (1 - 0.02f * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FireResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpFrost = (1 - 0.02f * talents.PrismaticCloak) * (1 + 0.01f * talents.PlayingWithFire) * (1 - 0.02f * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FrostResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpNature = (1 - 0.02f * talents.PrismaticCloak) * (1 + 0.01f * talents.PlayingWithFire) * (1 - 0.02f * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.NatureResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpShadow = (1 - 0.02f * talents.PrismaticCloak) * (1 + 0.01f * talents.PlayingWithFire) * (1 - 0.02f * talents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ShadowResistance, 0)) * (1 - calculationResult.DamageTakenReduction);
+            calculationResult.IncomingDamageAmpHoly = (1 - 0.02f * talents.PrismaticCloak) * (1 + 0.01f * talents.PlayingWithFire) * (1 - 0.02f * talents.FrozenCore) * (1 - calculationResult.DamageTakenReduction);
 
-            calculationResult.IncomingDamageDpsMelee = calculationResult.IncomingDamageAmpMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculationResult.PhysicalCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.MeleeDot);
-            calculationResult.IncomingDamageDpsPhysical = calculationResult.IncomingDamageAmpPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0 - calculationResult.PhysicalCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot);
-            calculationResult.IncomingDamageDpsArcane = calculationResult.IncomingDamageAmpArcane * (calculationOptions.ArcaneDps * (1 + Math.Max(0, calculationOptions.ArcaneCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.ArcaneDot);
-            calculationResult.IncomingDamageDpsFire = calculationResult.IncomingDamageAmpFire * (calculationOptions.FireDps * (1 + Math.Max(0, calculationOptions.FireCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.FireDot);
-            calculationResult.IncomingDamageDpsFrost = calculationResult.IncomingDamageAmpFrost * (calculationOptions.FrostDps * (1 + Math.Max(0, calculationOptions.FrostCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.FrostDot);
-            calculationResult.IncomingDamageDpsNature = calculationResult.IncomingDamageAmpNature * (calculationOptions.NatureDps * (1 + Math.Max(0, calculationOptions.NatureCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.NatureDot);
-            calculationResult.IncomingDamageDpsShadow = calculationResult.IncomingDamageAmpShadow * (calculationOptions.ShadowDps * (1 + Math.Max(0, calculationOptions.ShadowCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.ShadowDot);
-            calculationResult.IncomingDamageDpsHoly = calculationResult.IncomingDamageAmpHoly * (calculationOptions.HolyDps * (1 + Math.Max(0, calculationOptions.HolyCrit / 100.0 - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.HolyDot);
+            calculationResult.IncomingDamageDpsMelee = calculationResult.IncomingDamageAmpMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0f - calculationResult.PhysicalCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.MeleeDot);
+            calculationResult.IncomingDamageDpsPhysical = calculationResult.IncomingDamageAmpPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0f - calculationResult.PhysicalCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot);
+            calculationResult.IncomingDamageDpsArcane = calculationResult.IncomingDamageAmpArcane * (calculationOptions.ArcaneDps * (1 + Math.Max(0, calculationOptions.ArcaneCrit / 100.0f - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.ArcaneDot);
+            calculationResult.IncomingDamageDpsFire = calculationResult.IncomingDamageAmpFire * (calculationOptions.FireDps * (1 + Math.Max(0, calculationOptions.FireCrit / 100.0f - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.FireDot);
+            calculationResult.IncomingDamageDpsFrost = calculationResult.IncomingDamageAmpFrost * (calculationOptions.FrostDps * (1 + Math.Max(0, calculationOptions.FrostCrit / 100.0f - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.FrostDot);
+            calculationResult.IncomingDamageDpsNature = calculationResult.IncomingDamageAmpNature * (calculationOptions.NatureDps * (1 + Math.Max(0, calculationOptions.NatureCrit / 100.0f - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.NatureDot);
+            calculationResult.IncomingDamageDpsShadow = calculationResult.IncomingDamageAmpShadow * (calculationOptions.ShadowDps * (1 + Math.Max(0, calculationOptions.ShadowCrit / 100.0f - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.ShadowDot);
+            calculationResult.IncomingDamageDpsHoly = calculationResult.IncomingDamageAmpHoly * (calculationOptions.HolyDps * (1 + Math.Max(0, calculationOptions.HolyCrit / 100.0f - calculationResult.SpellCritReduction) * (2 * (1 - calculationResult.CritDamageReduction) - 1)) + calculationOptions.HolyDot);
 
             calculationResult.IncomingDamageDps = calculationResult.IncomingDamageDpsMelee + calculationResult.IncomingDamageDpsPhysical + calculationResult.IncomingDamageDpsArcane + calculationResult.IncomingDamageDpsFire + calculationResult.IncomingDamageDpsFrost + calculationResult.IncomingDamageDpsShadow + calculationResult.IncomingDamageDpsNature + calculationResult.IncomingDamageDpsHoly;
             //float incanterSpellPower = Math.Min((float)Math.Min(calculationOptions.AbsorptionPerSecond, calculationResult.IncomingDamageDps) * 0.05f * talents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
@@ -1690,7 +1690,6 @@ namespace Rawr.Mage
                 {
                     column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
-                    if (segment == 0) calculationResult.ColumnIdleRegen = column;
                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = calculationResult.BaseState, Dps = dps, Mps = mps, Tps = tps });
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                     lp.SetElementUnsafe(rowManaRegen, column, mps);
@@ -1726,7 +1725,6 @@ namespace Rawr.Mage
                         {
                             column = lp.AddColumnUnsafe();
                             lp.SetColumnUpperBound(column, (wandSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
-                            if (segment == 0) calculationResult.ColumnWand = column;
                             if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = calculationResult.BaseState, Dps = dps, Mps = mps, Tps = tps });
                             lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                             lp.SetElementUnsafe(rowManaRegen, column, mps);
@@ -1756,7 +1754,6 @@ namespace Rawr.Mage
                 }
                 #endregion
                 #region Evocation
-                calculationResult.EvocationStats = calculationResult.BaseStats;
                 if (evocationAvailable)
                 {
                     CastingState evoBaseState = calculationResult.BaseState;
@@ -1765,55 +1762,16 @@ namespace Rawr.Mage
                         evoBaseState = calculationResult.BaseState.Tier10TwoPieceState;
                     }
                     int evocationSegments = (restrictManaUse) ? segmentList.Count : 1;
-                    double evocationDuration = (8f + baseStats.EvocationExtension) / evoBaseState.CastingSpeed;
+                    float evocationDuration = (8f + baseStats.EvocationExtension) / evoBaseState.CastingSpeed;
                     calculationResult.EvocationDuration = evocationDuration;
-                    calculationResult.EvocationDurationIV = evocationDuration / 1.2;
-                    calculationResult.EvocationDurationHero = evocationDuration / 1.3;
-                    calculationResult.EvocationDurationIVHero = evocationDuration / 1.2 / 1.3;
+                    calculationResult.EvocationDurationIV = evocationDuration / 1.2f;
+                    calculationResult.EvocationDurationHero = evocationDuration / 1.3f;
+                    calculationResult.EvocationDurationIVHero = evocationDuration / 1.2f / 1.3f;
                     float evocationMana = baseStats.Mana;
                     calculationResult.EvocationRegen = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed;
-                    calculationResult.EvocationRegenIV = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2;
-                    calculationResult.EvocationRegenHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.3;
-                    calculationResult.EvocationRegenIVHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2 * 1.3;
-                    if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
-                    {
-                        Stats evocationRawStats = rawStats.Clone();
-                        if (character.MainHand != null)
-                        {
-                            evocationRawStats.Intellect -= character.MainHand.GetTotalStats().Intellect;
-                            evocationRawStats.Spirit -= character.MainHand.GetTotalStats().Spirit;
-                        }
-                        if (character.OffHand != null)
-                        {
-                            evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
-                            evocationRawStats.Spirit -= character.OffHand.GetTotalStats().Spirit;
-                        }
-                        if (character.Ranged != null)
-                        {
-                            evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
-                            evocationRawStats.Spirit -= character.Ranged.GetTotalStats().Spirit;
-                        }
-                        if (character.MainHandEnchant != null)
-                        {
-                            evocationRawStats.Intellect -= character.MainHandEnchant.Stats.Intellect;
-                            evocationRawStats.Spirit -= character.MainHandEnchant.Stats.Spirit;
-                        }
-                        evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
-                        evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
-                        Stats evocationStats = calculations.GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                        float spiritFactor = 0.003345f;
-                        double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * spiritFactor * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + 15732 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + evocationStats.ManaRestoreFromMaxManaPerSecond * evocationStats.Mana);
-                        double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * evoBaseState.CastingSpeed;
-                        if (evocationRegen > calculationResult.EvocationRegen)
-                        {
-                            calculationResult.EvocationStats = evocationStats;
-                            evocationMana = evocationStats.Mana;
-                            calculationResult.EvocationRegen = evocationRegen;
-                            calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2;
-                            calculationResult.EvocationRegenHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.3;
-                            calculationResult.EvocationRegenIVHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2 * 1.3;
-                        }
-                    }
+                    calculationResult.EvocationRegenIV = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2f;
+                    calculationResult.EvocationRegenHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.3f;
+                    calculationResult.EvocationRegenIVHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2f * 1.3f;
                     if (calculationResult.EvocationRegen * evocationDuration > baseStats.Mana)
                     {
                         evocationDuration = baseStats.Mana / calculationResult.EvocationRegen;
@@ -1828,11 +1786,11 @@ namespace Rawr.Mage
                     }
                     else if (segmentCooldowns && advancedConstraintsLevel >= 3)
                     {
-                        calculationResult.MaxEvocation = Math.Max(1, 1 + Math.Floor((calculationOptions.FightDuration - evocationDuration) / calculationResult.EvocationCooldown));
+                        calculationResult.MaxEvocation = Math.Max(1, 1 + (float)Math.Floor((calculationOptions.FightDuration - evocationDuration) / calculationResult.EvocationCooldown));
                     }
                     else
                     {
-                        calculationResult.MaxEvocation = Math.Max(1, 1 + Math.Floor((calculationOptions.FightDuration - 90f) / calculationResult.EvocationCooldown));
+                        calculationResult.MaxEvocation = Math.Max(1, 1 + (float)Math.Floor((calculationOptions.FightDuration - 90f) / calculationResult.EvocationCooldown));
                     }
                     int mask = 0;
                     if (waterElementalAvailable && talents.GlyphOfEternalWater)
@@ -1878,7 +1836,6 @@ namespace Rawr.Mage
                             if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
                             column = lp.AddColumnUnsafe();
                             lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
-                            if (calculationResult.ColumnEvocation == -1) calculationResult.ColumnEvocation = column;
                             lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegen);
                             lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegen);
                             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -2215,13 +2172,12 @@ namespace Rawr.Mage
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
                         lp.SetColumnUpperBound(column, (manaPotionSegments > 1) ? 1.0 : calculationResult.MaxManaPotion);
-                        if (segment == 0) calculationResult.ColumnManaPotion = column;
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                         lp.SetElementUnsafe(rowManaRegen, column, mps);
                         lp.SetElementUnsafe(rowPotion, column, 1.0);
                         lp.SetElementUnsafe(rowManaPotion, column, 1.0);
                         lp.SetElementUnsafe(rowThreat, column, tps);
-                        calculationResult.ManaPotionTps = tps;
+                        calculationResult.ManaPotionTps = (float)tps;
                         //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
                         /*if (segmentCooldowns && effectPotionAvailable)
@@ -2275,7 +2231,6 @@ namespace Rawr.Mage
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
                         lp.SetColumnUpperBound(column, (manaGemSegments > 1) ? 1.0 : calculationResult.MaxManaGem);
-                        if (segment == 0) calculationResult.ColumnManaGem = column;
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaGem, column, 1.0);
@@ -2283,7 +2238,7 @@ namespace Rawr.Mage
                         //lp.SetElementUnsafe(rowFlameCap, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemEffectActivation, column, -1.0);
                         lp.SetElementUnsafe(rowThreat, column, tps);
-                        calculationResult.ManaGemTps = tps;
+                        calculationResult.ManaGemTps = (float)tps;
                         //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
                         if (segmentCooldowns)
@@ -2342,7 +2297,6 @@ namespace Rawr.Mage
                             if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state, Dps = dps, Mps = mps, Tps = tps });
                             column = lp.AddColumnUnsafe();
                             if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseGlobalCooldown);
-                            if (segment == 0 && state == states[0]) calculationResult.ColumnSummonWaterElemental = column;
                             lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                             lp.SetElementUnsafe(rowManaRegen, column, mps);
                             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -2448,7 +2402,7 @@ namespace Rawr.Mage
                     dps = 0.0f;
                     mps = 0.0f;
                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Drinking, Dps = dps, Mps = mps, Tps = tps });
-                    calculationResult.ColumnDrinking = column = lp.AddColumnUnsafe();
+                    column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, maxDrinkingTime);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                     lp.SetElementUnsafe(rowManaRegen, column, mps);
@@ -2470,7 +2424,7 @@ namespace Rawr.Mage
                 if (needsTimeExtension)
                 {
                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.TimeExtension });
-                    calculationResult.ColumnTimeExtension = column = lp.AddColumnUnsafe();
+                    column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, calculationOptions.FightDuration);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
@@ -2498,7 +2452,7 @@ namespace Rawr.Mage
                 if (afterFightRegen)
                 {
                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.AfterFightRegen });
-                    calculationResult.ColumnAfterFightRegen = column = lp.AddColumnUnsafe();
+                    column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, calculationOptions.FightDuration);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
@@ -2513,7 +2467,6 @@ namespace Rawr.Mage
                     {
                         if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment });
                         column = lp.AddColumnUnsafe();
-                        if (segment == 0) calculationResult.ColumnManaOverflow = column;
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
                         lp.SetElementUnsafe(rowManaRegen, column, 1.0);
                         for (int ss = segment; ss < segmentList.Count - 1; ss++)

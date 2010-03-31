@@ -364,9 +364,10 @@ namespace Rawr.Mage
                     while (pool.Count == 0) Monitor.Wait(pool);
                 }
                 // find desirable size
-                int bestIndex = 0;
+                int bestIndex;
                 if (largeArraysHint)
                 {
+                    bestIndex = 0;
                     for (int i = 1; i < pool.Count; i++)
                     {
                         if (pool[i].MaxSize > pool[bestIndex].MaxSize)
@@ -374,6 +375,10 @@ namespace Rawr.Mage
                             bestIndex = i;
                         }
                     }
+                }
+                else
+                {
+                    bestIndex = pool.Count - 1;
                 }
                 ArraySet result = pool[bestIndex];
                 result.spellIndex = 0;

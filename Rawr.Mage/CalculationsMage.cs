@@ -858,10 +858,6 @@ namespace Rawr.Mage
             }
         
             Stats statsTotal = rawStats;
-            if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0) // we'll need raw stats to calculate evocation stats
-            {
-                statsTotal = rawStats.Clone();
-            }
 
             float statsTalentBonusSpiritMultiplier = 0.0f;
             if (talents.StudentOfTheMind > 0)

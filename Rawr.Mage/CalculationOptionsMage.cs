@@ -300,20 +300,6 @@ namespace Rawr.Mage
             set { _InterruptFrequency = value; OnPropertyChanged("InterruptFrequency"); }
         }
 
-        private float _EvocationWeapon;
-        public float EvocationWeapon
-        {
-            get { return _EvocationWeapon; }
-            set { _EvocationWeapon = value; OnPropertyChanged("EvocationWeapon"); }
-        }
-
-        private float _EvocationSpirit;
-        public float EvocationSpirit
-        {
-            get { return _EvocationSpirit; }
-            set { _EvocationSpirit = value; OnPropertyChanged("EvocationSpirit"); }
-        }
-
         private float _AoeDuration;
         public float AoeDuration
         {
@@ -1199,7 +1185,6 @@ namespace Rawr.Mage
             FlameCap = false;
             DpsTime = 1;
             InterruptFrequency = 0;
-            EvocationWeapon = 0;
             AoeDuration = 0;
             SmartOptimization = false;
             DrumsOfBattle = false;
@@ -1210,7 +1195,6 @@ namespace Rawr.Mage
             Innervate = 0;
             ManaTide = 0;
             Fragmentation = 0;
-            EvocationSpirit = 0;
             SurvivabilityRating = 0.0001f;
             Aldor = true;
             EvocationEnabled = true;

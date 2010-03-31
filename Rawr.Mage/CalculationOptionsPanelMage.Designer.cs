@@ -43,10 +43,6 @@
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
-            this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label129 = new System.Windows.Forms.Label();
             this.checkBoxEnable2T10Evocation = new System.Windows.Forms.CheckBox();
@@ -421,10 +417,6 @@
             this.tabPage1.Controls.Add(this.label80);
             this.tabPage1.Controls.Add(this.comboBoxFaction);
             this.tabPage1.Controls.Add(this.label35);
-            this.tabPage1.Controls.Add(this.textBoxEvocationSpirit);
-            this.tabPage1.Controls.Add(this.label33);
-            this.tabPage1.Controls.Add(this.textBoxEvocationWeapon);
-            this.tabPage1.Controls.Add(this.label21);
             this.tabPage1.Location = new System.Drawing.Point(4, 40);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
@@ -436,7 +428,7 @@
             // textBoxChannelLatency
             // 
             this.textBoxChannelLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyChannel", true));
-            this.textBoxChannelLatency.Location = new System.Drawing.Point(111, 184);
+            this.textBoxChannelLatency.Location = new System.Drawing.Point(111, 132);
             this.textBoxChannelLatency.Name = "textBoxChannelLatency";
             this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxChannelLatency.TabIndex = 159;
@@ -449,7 +441,7 @@
             // label89
             // 
             this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(0, 187);
+            this.label89.Location = new System.Drawing.Point(0, 135);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(97, 13);
             this.label89.TabIndex = 158;
@@ -460,7 +452,7 @@
             // textBoxGCDLatency
             // 
             this.textBoxGCDLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyGCD", true));
-            this.textBoxGCDLatency.Location = new System.Drawing.Point(111, 158);
+            this.textBoxGCDLatency.Location = new System.Drawing.Point(111, 106);
             this.textBoxGCDLatency.Name = "textBoxGCDLatency";
             this.textBoxGCDLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxGCDLatency.TabIndex = 157;
@@ -468,7 +460,7 @@
             // label88
             // 
             this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(0, 161);
+            this.label88.Location = new System.Drawing.Point(0, 109);
             this.label88.Name = "label88";
             this.label88.Size = new System.Drawing.Size(81, 13);
             this.label88.TabIndex = 156;
@@ -479,7 +471,7 @@
             // textBoxCastLatency
             // 
             this.textBoxCastLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LatencyCast", true));
-            this.textBoxCastLatency.Location = new System.Drawing.Point(111, 132);
+            this.textBoxCastLatency.Location = new System.Drawing.Point(111, 80);
             this.textBoxCastLatency.Name = "textBoxCastLatency";
             this.textBoxCastLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxCastLatency.TabIndex = 155;
@@ -487,7 +479,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 135);
+            this.label3.Location = new System.Drawing.Point(0, 83);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(79, 13);
             this.label3.TabIndex = 154;
@@ -512,7 +504,7 @@
             "78",
             "79",
             "80"});
-            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(111, 85);
+            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(111, 33);
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
@@ -520,7 +512,7 @@
             // label80
             // 
             this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(-1, 88);
+            this.label80.Location = new System.Drawing.Point(-1, 36);
             this.label80.Name = "label80";
             this.label80.Size = new System.Drawing.Size(71, 13);
             this.label80.TabIndex = 152;
@@ -547,44 +539,6 @@
             this.label35.Size = new System.Drawing.Size(91, 13);
             this.label35.TabIndex = 150;
             this.label35.Text = "Shattrath Faction:";
-            // 
-            // textBoxEvocationSpirit
-            // 
-            this.textBoxEvocationSpirit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EvocationSpirit", true));
-            this.textBoxEvocationSpirit.Location = new System.Drawing.Point(111, 59);
-            this.textBoxEvocationSpirit.Name = "textBoxEvocationSpirit";
-            this.textBoxEvocationSpirit.Size = new System.Drawing.Size(75, 20);
-            this.textBoxEvocationSpirit.TabIndex = 147;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(-1, 62);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(106, 13);
-            this.label33.TabIndex = 146;
-            this.label33.Text = "Evo. Weapons Spi: *";
-            this.toolTipMage.SetToolTip(this.label33, "Value of spirit on weapons you swap in for evocation (main hand, off-hand, wand)." +
-                    " Set to 0 to disable evocation swapping.");
-            // 
-            // textBoxEvocationWeapon
-            // 
-            this.textBoxEvocationWeapon.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EvocationWeapon", true));
-            this.textBoxEvocationWeapon.Location = new System.Drawing.Point(111, 33);
-            this.textBoxEvocationWeapon.Name = "textBoxEvocationWeapon";
-            this.textBoxEvocationWeapon.Size = new System.Drawing.Size(75, 20);
-            this.textBoxEvocationWeapon.TabIndex = 121;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(-1, 36);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(103, 13);
-            this.label21.TabIndex = 120;
-            this.label21.Text = "Evo. Weapons Int: *";
-            this.toolTipMage.SetToolTip(this.label21, "Value of intellect on weapons you swap in for evocation (main hand, off-hand, wan" +
-                    "d). Set to 0 to disable evocation swapping.");
             // 
             // tabPage2
             // 
@@ -3953,10 +3907,6 @@
         private System.Windows.Forms.ToolTip toolTipMage;
         private System.Windows.Forms.ComboBox comboBoxFaction;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.TextBox textBoxEvocationSpirit;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.TextBox textBoxEvocationWeapon;
-        private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.ComboBox comboBoxHeroismControl;

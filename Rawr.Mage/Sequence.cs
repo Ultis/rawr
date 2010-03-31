@@ -11,6 +11,9 @@ namespace Rawr.Mage.SequenceReconstruction
     {
         internal List<SequenceItem> sequence = new List<SequenceItem>();
 
+        internal int ColumnManaGem;
+        internal int ColumnManaPotion;
+
         public void Add(SequenceItem item)
         {
             sequence.Add(item);
@@ -2718,7 +2721,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 maxTps = SequenceItem.Calculations.CalculationOptions.TpsLimit;
             }
-            if (sequence[0].Index == SequenceItem.Calculations.ColumnDrinking)
+            if (sequence[0].VariableType == VariableType.Drinking)
             {
                 time += sequence[0].Duration;
             }
@@ -3204,7 +3207,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 goto Retry;
                             }
                             // insert gem
-                            InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), t);
+                            InsertIndex(ColumnManaGem, Math.Min(1.0, gemTime), t);
                             time = Math.Min(t + 0.01, t + d / 2); // block activation from moving
                             nextGem = t + 120;
                             gemTime -= 1.0;
@@ -3228,7 +3231,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         oomtime = double.PositiveInfinity;
                         goto Retry;
                     }
-                    InsertIndex(SequenceItem.Calculations.ColumnManaPotion, Math.Min(1.0, potTime), pot);
+                    InsertIndex(ColumnManaPotion, Math.Min(1.0, potTime), pot);
                     ComputeTimestamps();
                     time = pot;
                     nextPot = pot + 120;
@@ -3249,7 +3252,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         oomtime = double.PositiveInfinity;
                         goto Retry;
                     }
-                    InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), gem);
+                    InsertIndex(ColumnManaGem, Math.Min(1.0, gemTime), gem);
                     ComputeTimestamps();
                     time = gem;
                     nextGem = gem + 120;
@@ -4338,10 +4341,10 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     label = "Conjure Mana Gem";
                 }
-                else if (type == VariableType.Ward)
+                /*else if (type == VariableType.Ward)
                 {
                     label = SequenceItem.Calculations.Ward.Name;
-                }
+                }*/
                 else if (type == VariableType.Spell)
                 {
                     label = cycle.Name;

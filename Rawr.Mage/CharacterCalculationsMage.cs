@@ -28,7 +28,7 @@ namespace Rawr.Mage
         SummonWaterElemental,
         SummonMirrorImage,
         ConjureManaGem,
-        Ward
+        //Ward
     }
 
     public class SolutionVariable
@@ -88,7 +88,7 @@ namespace Rawr.Mage
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[2];
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -113,55 +113,50 @@ namespace Rawr.Mage
 
         public CalculationsMage Calculations { get; set; }
         public Stats BaseStats { get; set; }
-        public Stats EvocationStats { get; set; }
         public CastingState BaseState { get; set; }
         public CalculationOptionsMage CalculationOptions { get; set; }
         public MageTalents MageTalents { get; set; }
 
         public Character Character { get; set; }
 
-        //public bool WaterElemental { get; set; }
-        //public float WaterElementalDps { get; set; }
-        //public float WaterElementalDuration { get; set; }
-        //public float WaterElementalDamage { get; set; }
-
         public float StartingMana { get; set; }
 
         public string MageArmor { get; set; }
 
         public bool ManaGemEffect { get; set; }
-        public double EvocationDuration;
-        public double EvocationRegen;
-        public double EvocationDurationIV;
-        public double EvocationRegenIV;
-        public double EvocationDurationHero;
-        public double EvocationRegenHero;
-        public double EvocationDurationIVHero;
-        public double EvocationRegenIVHero;
-        //public double ManaPotionTime = 0.1f;
+
+        public float EvocationDuration;
+        public float EvocationRegen;
+        public float EvocationDurationIV;
+        public float EvocationRegenIV;
+        public float EvocationDurationHero;
+        public float EvocationRegenHero;
+        public float EvocationDurationIVHero;
+        public float EvocationRegenIVHero;
+
         public int MaxManaPotion;
         public int MaxManaGem;
-        public double MaxEvocation;
-        public double ManaGemTps;
-        public double ManaPotionTps;
-        public double ManaGemValue;
-        public double MaxManaGemValue;
-        public double ManaPotionValue;
-        public double MaxManaPotionValue;
+        public float MaxEvocation;
+        public float ManaGemTps;
+        public float ManaPotionTps;
+        public float ManaGemValue;
+        public float MaxManaGemValue;
+        public float ManaPotionValue;
+        public float MaxManaPotionValue;
 
-        public double CombustionCooldown;
-        public double PowerInfusionDuration;
-        public double PowerInfusionCooldown;
-        public double MirrorImageDuration;
-        public double MirrorImageCooldown;
-        public double IcyVeinsCooldown;
-        public double ColdsnapCooldown;
-        public double ArcanePowerCooldown;
-        public double ArcanePowerDuration;
-        public double WaterElementalCooldown;
-        public double WaterElementalDuration;
-        public double EvocationCooldown;
-        public double ManaGemEffectDuration;
+        public float CombustionCooldown;
+        public float PowerInfusionDuration;
+        public float PowerInfusionCooldown;
+        public float MirrorImageDuration;
+        public float MirrorImageCooldown;
+        public float IcyVeinsCooldown;
+        public float ColdsnapCooldown;
+        public float ArcanePowerCooldown;
+        public float ArcanePowerDuration;
+        public float WaterElementalCooldown;
+        public float WaterElementalDuration;
+        public float EvocationCooldown;
+        public float ManaGemEffectDuration;
 
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
@@ -193,18 +188,6 @@ namespace Rawr.Mage
         }
 
         public ArraySet ArraySet { get; set; }
-
-        public int ColumnIdleRegen = -1;
-        public int ColumnWand = -1;
-        public int ColumnEvocation = -1;
-        public int ColumnManaGem = -1;
-        public int ColumnManaPotion = -1;
-        public int ColumnDrumsOfBattle = -1;
-        public int ColumnDrinking = -1;
-        public int ColumnTimeExtension = -1;
-        public int ColumnAfterFightRegen = -1;
-        public int ColumnManaOverflow = -1;
-        public int ColumnSummonWaterElemental = -1;
 
         public Cycle ConjureManaGem { get; set; }
         public int MaxConjureManaGem { get; set; }
@@ -315,25 +298,25 @@ namespace Rawr.Mage
         public float BaseCastingSpeed { get; set; }
         public float BaseGlobalCooldown { get; set; }
 
-        public double IncomingDamageAmpMelee { get; set; }
-        public double IncomingDamageAmpPhysical { get; set; }
-        public double IncomingDamageAmpArcane { get; set; }
-        public double IncomingDamageAmpFire { get; set; }
-        public double IncomingDamageAmpFrost { get; set; }
-        public double IncomingDamageAmpNature { get; set; }
-        public double IncomingDamageAmpShadow { get; set; }
-        public double IncomingDamageAmpHoly { get; set; }
+        public float IncomingDamageAmpMelee { get; set; }
+        public float IncomingDamageAmpPhysical { get; set; }
+        public float IncomingDamageAmpArcane { get; set; }
+        public float IncomingDamageAmpFire { get; set; }
+        public float IncomingDamageAmpFrost { get; set; }
+        public float IncomingDamageAmpNature { get; set; }
+        public float IncomingDamageAmpShadow { get; set; }
+        public float IncomingDamageAmpHoly { get; set; }
 
-        public double IncomingDamageDpsMelee { get; set; }
-        public double IncomingDamageDpsPhysical { get; set; }
-        public double IncomingDamageDpsArcane { get; set; }
-        public double IncomingDamageDpsFire { get; set; }
-        public double IncomingDamageDpsFrost { get; set; }
-        public double IncomingDamageDpsNature { get; set; }
-        public double IncomingDamageDpsShadow { get; set; }
-        public double IncomingDamageDpsHoly { get; set; }
+        public float IncomingDamageDpsMelee { get; set; }
+        public float IncomingDamageDpsPhysical { get; set; }
+        public float IncomingDamageDpsArcane { get; set; }
+        public float IncomingDamageDpsFire { get; set; }
+        public float IncomingDamageDpsFrost { get; set; }
+        public float IncomingDamageDpsNature { get; set; }
+        public float IncomingDamageDpsShadow { get; set; }
+        public float IncomingDamageDpsHoly { get; set; }
 
-        public double IncomingDamageDps { get; set; }
+        public float IncomingDamageDps { get; set; }
 
         #endregion
 
@@ -860,7 +843,7 @@ namespace Rawr.Mage
                 sequence.RepositionManaConsumption();
             }
 
-            sequence.RemoveIndex(ColumnTimeExtension);
+            sequence.RemoveIndex(VariableType.TimeExtension);
             sequence.Compact(true);
             if (displaySolver == null || CalculationsMage.IsSolverEnabled(displaySolver))
             {
@@ -890,6 +873,40 @@ namespace Rawr.Mage
 
             double totalTime = 0.0;
             double totalGem = 0.0;
+            int columnIdleRegen = 0;
+            int columnManaOverflow = -1;
+            for (int i = 0; i < SolutionVariable.Count; i++)
+            {
+                if (SolutionVariable[i].Type == VariableType.IdleRegen)
+                {
+                    columnIdleRegen = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < SolutionVariable.Count; i++)
+            {
+                if (SolutionVariable[i].Type == VariableType.ManaGem)
+                {
+                    sequence.ColumnManaGem = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < SolutionVariable.Count; i++)
+            {
+                if (SolutionVariable[i].Type == VariableType.ManaPotion)
+                {
+                    sequence.ColumnManaPotion = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < SolutionVariable.Count; i++)
+            {
+                if (SolutionVariable[i].Type == VariableType.ManaOverflow)
+                {
+                    columnManaOverflow = i;
+                    break;
+                }
+            }
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01 && SolutionVariable[i].Type != VariableType.ManaOverflow)
@@ -903,7 +920,7 @@ namespace Rawr.Mage
             }
             if (CalculationOptions.TargetDamage == 0.0 && totalTime < CalculationOptions.FightDuration - 0.00001)
             {
-                sequence.Add(new SequenceItem(ColumnIdleRegen, CalculationOptions.FightDuration - totalTime));
+                sequence.Add(new SequenceItem(columnIdleRegen, CalculationOptions.FightDuration - totalTime));
             }
 
             // evaluate sequence
@@ -930,7 +947,7 @@ namespace Rawr.Mage
                 sequence.GroupSpecialEffect(cooldown);
             }
             List<SequenceGroup> list = sequence.GroupManaGemEffect();
-            if (list != null && ManaGemEffect && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
+            if (list != null && ManaGemEffect && CalculationOptions.DisplaySegmentCooldowns && columnManaOverflow != -1)
             {
                 float manaBurn = 0;
                 for (int i = 0; i < SolutionVariable.Count; i++)
@@ -946,7 +963,7 @@ namespace Rawr.Mage
                     }
                 }
 
-                double overflow = Solution[ColumnManaOverflow];
+                double overflow = Solution[columnManaOverflow];
                 double tmin = 0;
                 if (manaBurn > 0) tmin = (ManaGemValue * (1 + BaseStats.BonusManaGem) - overflow) / manaBurn;
 
@@ -1248,27 +1265,27 @@ namespace Rawr.Mage
                             break;
                         case VariableType.Evocation:
                             evocation += Solution[i];
-                            //double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * spiritFactor * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration);
-                            //double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
+                            //double evoManaRegen5SR = ((0.001f + BaseStats.Spirit * spiritFactor * (float)Math.Sqrt(BaseStats.Intellect)) * BaseStats.SpellCombatManaRegeneration + BaseStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration);
+                            //double evocationRegen = evoManaRegen5SR + 0.15f * BaseStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
                             //calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
                             //calculationResult.EvocationRegenHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3;
                             //calculationResult.EvocationRegenIVHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3;
-                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
-                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + BaseStats.Spirit * spiritFactor * (float)Math.Sqrt(BaseStats.Intellect)) * BaseStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
-                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * BaseStats.Mana / 2f * evoBaseState.CastingSpeed;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.EvocationIV:
                             evocationIV += Solution[i];
-                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
-                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + BaseStats.Spirit * spiritFactor * (float)Math.Sqrt(BaseStats.Intellect)) * BaseStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
-                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed * 1.2f;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * BaseStats.Mana / 2f * evoBaseState.CastingSpeed * 1.2f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins))
@@ -1283,12 +1300,12 @@ namespace Rawr.Mage
                             break;
                         case VariableType.EvocationHero:
                             evocationHero += Solution[i];
-                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
-                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + BaseStats.Spirit * spiritFactor * (float)Math.Sqrt(BaseStats.Intellect)) * BaseStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
-                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed * 1.3f;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * BaseStats.Mana / 2f * evoBaseState.CastingSpeed * 1.3f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.Heroism))
@@ -1303,12 +1320,12 @@ namespace Rawr.Mage
                             break;
                         case VariableType.EvocationIVHero:
                             evocationIVHero += Solution[i];
-                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
-                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + BaseStats.Spirit * spiritFactor * (float)Math.Sqrt(BaseStats.Intellect)) * BaseStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
                             ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
-                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
-                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * evoBaseState.CastingSpeed * 1.2f * 1.3f;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * BaseStats.Mana / 2f * evoBaseState.CastingSpeed * 1.2f * 1.3f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism))
@@ -1427,13 +1444,13 @@ namespace Rawr.Mage
                             smg.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SegmentList[SolutionVariable[i].Segment]));
                             break;
-                        case VariableType.Ward:
+                        /*case VariableType.Ward:
                             ward += Solution[i];
                             Cycle sward = SolutionVariable[i].Cycle;
                             sward.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             sward.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", Ward.Name, Solution[i] / Ward.CastTime, SegmentList[SolutionVariable[i].Segment]));
-                            break;
+                            break;*/
                         case VariableType.Wand:
                         case VariableType.Spell:
                             double value;

@@ -4404,7 +4404,7 @@ namespace Rawr.Mage
             return result;
         }
 
-        private bool ValidateFlamecap()
+        /*private bool ValidateFlamecap()
         {
             int cooldown = (int)StandardEffect.FlameCap;
             //double effectDuration = 60.0;
@@ -4616,9 +4616,9 @@ namespace Rawr.Mage
                         return false;
                     }
                 }
-            }*/
+            }
             return valid;
-        }
+        }*/
 
         private bool ValidateManaGemEffect()
         {
