@@ -280,6 +280,7 @@ namespace Rawr.Mage
                 ExtendInstanceArrays();
             }
             arraySet._cost[cols] = 0.0;
+            _lb[cols] = 0.0; // we can reuse dirty arrays, initialize only when needed
             _ub[cols] = double.PositiveInfinity;
             _flags[cols] = flagNLB | flagLB;
             cols++;
@@ -383,9 +384,10 @@ namespace Rawr.Mage
                     _lb = arraySet._lb;
                     _ub = arraySet._ub;
                     _flags = arraySet._flags;
-                    Array.Clear(_lb, 0, _lb.Length);
-                    Array.Clear(_ub, 0, _lb.Length);
-                    Array.Clear(_flags, 0, _lb.Length);
+                    // do not clear, initialize on each new column instead
+                    //Array.Clear(_lb, 0, _lb.Length);
+                    //Array.Clear(_ub, 0, _lb.Length);
+                    //Array.Clear(_flags, 0, _lb.Length);
                     maxSize = _lb.Length;
                 }
                 else

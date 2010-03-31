@@ -5388,8 +5388,16 @@ namespace Rawr {
             if (data._rawSpecialEffectDataSize > 0)
             {
                 EnsureSpecialEffectCapacity(_rawSpecialEffectDataSize + data._rawSpecialEffectDataSize);
-                Array.Copy(data._rawSpecialEffectData, 0, _rawSpecialEffectData, _rawSpecialEffectDataSize, data._rawSpecialEffectDataSize);
-                _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
+                if (data._rawSpecialEffectDataSize == 1)
+                {
+                    // special case for majority case
+                    _rawSpecialEffectData[_rawSpecialEffectDataSize++] = data._rawSpecialEffectData[0];
+                }
+                else
+                {
+                    Array.Copy(data._rawSpecialEffectData, 0, _rawSpecialEffectData, _rawSpecialEffectDataSize, data._rawSpecialEffectDataSize);
+                    _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
+                }
             }
         }
 #endif

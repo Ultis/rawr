@@ -17,6 +17,8 @@ namespace Rawr
             protected const int intervalN = 100;
             protected float fightDuration;
             protected bool discretizationCorrection;
+            protected float procFactor;
+            protected float intervalFactor;
 
             public Interpolator(float fightDuration, bool discretizationCorrection)
             {
@@ -60,14 +62,18 @@ namespace Rawr
                     }
                     if (updateGrid)
                     {
+                        procFactor = procChanceN / (procChanceMax - procChanceMin);
+                        intervalFactor = intervalN / (intervalMax - intervalMin);
                         UpdateGrid();
                     }
-                    float p = (procChance - procChanceMin) / (procChanceMax - procChanceMin);
-                    float x = p * procChanceN;
+                    //float p = (procChance - procChanceMin) / (procChanceMax - procChanceMin);
+                    //float x = p * procChanceN;
+                    float x = (procChance - procChanceMin) * procFactor;
                     int i = (int)x;
                     x -= i;
-                    float ivl = (interval - intervalMin) / (intervalMax - intervalMin);
-                    float y = ivl * intervalN;
+                    //float ivl = (interval - intervalMin) / (intervalMax - intervalMin);
+                    //float y = ivl * intervalN;
+                    float y = (interval - intervalMin) * intervalFactor;
                     int j = (int)y;
                     y -= j;
                     if (i >= procChanceN)
