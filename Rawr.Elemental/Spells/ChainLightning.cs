@@ -42,8 +42,8 @@ public class ChainLightning : Spell, ILightningOverload
             manaCost *= 1f - .02f * args.Talents.Convection;
             totalCoef += .01f * args.Talents.Concussion;
             crit += .05f * args.Talents.CallOfThunder;
-            spCoef += .03f * args.Talents.Shamanism;
-            loCoef += .03f * args.Talents.Shamanism;
+            spCoef += .04f * args.Talents.Shamanism;
+            loCoef += .04f * args.Talents.Shamanism;
             castTime -= .1f * args.Talents.LightningMastery;
             cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[args.Talents.StormEarthAndFire];
             crit += .01f * args.Talents.TidalMastery;

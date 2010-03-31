@@ -37,7 +37,7 @@ namespace Rawr.Elemental.Spells
             totalCoef += .02f * args.Talents.CallOfFlame;
             totalCoef += args.Stats.BonusLavaBurstDamageMultiplier; // t9 4 piece
             castTime -= .1f * args.Talents.LightningMastery;
-            spCoef += .04f * args.Talents.Shamanism;
+            spCoef += .05f * args.Talents.Shamanism;
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[args.Talents.LavaFlows];
             critModifier += args.Stats.BonusLavaBurstCritDamage / 100f; // t7 4 piece
             baseMinDamage += args.Stats.LavaBurstBonus; // Totem (relic)

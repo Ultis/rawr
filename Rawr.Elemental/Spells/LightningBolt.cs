@@ -30,8 +30,8 @@ namespace Rawr.Elemental.Spells
             manaCost *= 1f - .02f * args.Talents.Convection;
             totalCoef += .01f * args.Talents.Concussion;
             crit += .05f * args.Talents.CallOfThunder;
-            spCoef += .03f * args.Talents.Shamanism;
-            loCoef += .03f * args.Talents.Shamanism;
+            spCoef += .04f * args.Talents.Shamanism;
+            loCoef += .04f * args.Talents.Shamanism;
             crit += .05f * args.Talents.TidalMastery;
             manaCost *= 1 - args.Stats.LightningBoltCostReduction / 100f; // T7 2 piece
             spellPower += args.Stats.SpellNatureDamageRating; // Nature SP
