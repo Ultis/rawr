@@ -30,7 +30,7 @@ namespace Rawr.Mage
         public int MaxSegment;
     }
 
-    public struct StackingConstraint
+    public class StackingConstraint
     {
         public int Row;
         public EffectCooldown Effect1;
@@ -72,7 +72,7 @@ namespace Rawr.Mage
         private List<SolutionVariable> solutionVariable;
         private StackingConstraint[] rowStackingConstraint;
 
-        private CastingState[] stateList;
+        private List<CastingState> stateList;
         private List<CycleId> spellList;
 
         private SolverLP lp;
@@ -725,8 +725,9 @@ namespace Rawr.Mage
             InitializeCalculationResult(arraySet, additionalItem, calculations, out rawStats, out baseStats);
 
             spellList = GetSpellList();
+            stateList = GetStateList();
 
-            ConstructProblem(additionalItem, calculations, rawStats, baseStats, GetStateList());
+            ConstructProblem(additionalItem, calculations, rawStats, baseStats);
 
             if (requiresMIP)
             {
@@ -1576,9 +1577,9 @@ namespace Rawr.Mage
 
         // rawStats is only valid for calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0, otherwise it is the same as baseStats
 #if SILVERLIGHT
-        private void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, List<int> stateIndexList)
+        private void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats)
 #else
-        private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats, List<int> stateIndexList)
+        private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats baseStats)
 #endif
         {
             ConstructSegments();
@@ -1587,8 +1588,6 @@ namespace Rawr.Mage
 
             //segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
             segmentColumn = new int[segmentList.Count + 1];
-
-            calculationResult.BaseState = CastingState.New(calculationResult, 0, false, 0);
 
             calculationResult.StartingMana = Math.Min(baseStats.Mana, calculationResult.BaseState.ManaRegenDrinking * calculationOptions.DrinkingTime);
             double maxDrinkingTime = Math.Min(30, (baseStats.Mana - calculationResult.StartingMana) / calculationResult.BaseState.ManaRegenDrinking);
@@ -1617,9 +1616,7 @@ namespace Rawr.Mage
 
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(calculationResult.ArraySet, rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateIndexList.Count * (1 + (calculationOptions.UseFireWard ? 1 : 0) + (calculationOptions.UseFrostWard ? 1 : 0))) * segmentList.Count, calculationResult, segmentList.Count);
-
-            stateList = GetStateList(stateIndexList);
+            lp = new SolverLP(calculationResult.ArraySet, rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (calculationOptions.UseFireWard ? 1 : 0) + (calculationOptions.UseFrostWard ? 1 : 0))) * segmentList.Count, calculationResult, segmentList.Count);
 
             SetCalculationReuseReferences();
             AddWardStates();
@@ -2274,7 +2271,7 @@ namespace Rawr.Mage
                     List<CastingState> states = new List<CastingState>();
                     bool found = false;
                     // WE = 0x100
-                    for (int i = 0; i < stateList.Length; i++)
+                    for (int i = 0; i < stateList.Count; i++)
                     {
                         if (stateList[i].Effects == (int)StandardEffect.WaterElemental)
                         {
@@ -2339,7 +2336,7 @@ namespace Rawr.Mage
                     mps = (int)(0.10 * SpellTemplate.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseGlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
                     List<CastingState> states = new List<CastingState>();
                     bool found = false;
-                    for (int i = 0; i < stateList.Length; i++)
+                    for (int i = 0; i < stateList.Count; i++)
                     {
                         if (stateList[i].Effects == (int)StandardEffect.MirrorImage)
                         {
@@ -2571,17 +2568,18 @@ namespace Rawr.Mage
                     int lastSegment = -1;
                     for (int index = 0; index < calculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
-                        for (int buffset = 0; buffset < stateList.Length; buffset++)
+                        for (int buffset = 0; buffset < stateList.Count; buffset++)
                         {
-                            if ((stateList[buffset].Effects & (int)StandardEffect.NonItemBasedMask) == calculationOptions.IncrementalSetStateIndexes[index])
+                            CastingState state = stateList[buffset];
+                            if ((state.Effects & (int)StandardEffect.NonItemBasedMask) == calculationOptions.IncrementalSetStateIndexes[index])
                             {
-                                if (calculationOptions.CooldownRestrictionsValid(segmentList[calculationOptions.IncrementalSetSegments[index]], stateList[buffset]))
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[calculationOptions.IncrementalSetSegments[index]], state))
                                 {
                                     float mult = segmentCooldowns ? calculationOptions.GetDamageMultiplier(segmentList[calculationOptions.IncrementalSetSegments[index]]) : 1.0f;
                                     if (mult > 0)
                                     {
                                         column = lp.AddColumnUnsafe();
-                                        Cycle c = stateList[buffset].GetCycle(calculationOptions.IncrementalSetSpells[index]);
+                                        Cycle c = state.GetCycle(calculationOptions.IncrementalSetSpells[index]);
                                         int seg = calculationOptions.IncrementalSetSegments[index];
                                         if (seg != lastSegment)
                                         {
@@ -2590,8 +2588,8 @@ namespace Rawr.Mage
                                                 segmentColumn[++lastSegment] = column;
                                             }
                                         }
-                                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
-                                        SetSpellColumn(minimizeTime, seg, stateList[buffset], column, c, mult);
+                                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
+                                        SetSpellColumn(minimizeTime, seg, state, column, c, mult);
                                     }
                                 }
                             }
@@ -2613,9 +2611,10 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
                         segmentColumn[seg] = column + 1;
-                        for (int buffset = 0; buffset < stateList.Length; buffset++)
+                        for (int buffset = 0; buffset < stateList.Count; buffset++)
                         {
-                            if (calculationOptions.CooldownRestrictionsValid(segmentList[seg], stateList[buffset]))
+                            CastingState state = stateList[buffset];
+                            if (calculationOptions.CooldownRestrictionsValid(segmentList[seg], state))
                             {
                                 float mult = segmentCooldowns ? calculationOptions.GetDamageMultiplier(segmentList[seg]) : 1.0f;
                                 if (mult > 0)
@@ -2623,11 +2622,11 @@ namespace Rawr.Mage
                                     placed.Clear();
                                     for (int spell = 0; spell < spellList.Count; spell++)
                                     {
-                                        if (segmentCooldowns && moltenFuryAvailable && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
-                                        if (segmentCooldowns && moltenFuryAvailable && !stateList[buffset].MoltenFury && seg >= firstMoltenFurySegment) continue;
-                                        if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
-                                        if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstHeroismSegment) continue;
-                                        Cycle c = stateList[buffset].GetCycle(spellList[spell]);
+                                        if (segmentCooldowns && moltenFuryAvailable && state.MoltenFury && seg < firstMoltenFurySegment) continue;
+                                        if (segmentCooldowns && moltenFuryAvailable && !state.MoltenFury && seg >= firstMoltenFurySegment) continue;
+                                        if (!segmentNonCooldowns && state == calculationResult.BaseState && seg != 0) continue;
+                                        if (segmentCooldowns && calculationOptions.HeroismControl == 3 && state.Heroism && seg < firstHeroismSegment) continue;
+                                        Cycle c = state.GetCycle(spellList[spell]);
                                         bool skip = false;
                                         foreach (Cycle s2 in placed)
                                         {
@@ -2639,12 +2638,12 @@ namespace Rawr.Mage
                                                 break;
                                             }
                                         }
-                                        if (!skip && (c.AffectedByFlameCap || !stateList[buffset].FlameCap))
+                                        if (!skip && (c.AffectedByFlameCap || !state.FlameCap))
                                         {
                                             placed.Add(c);
                                             column = lp.AddColumnUnsafe();
-                                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
-                                            SetSpellColumn(minimizeTime, seg, stateList[buffset], column, c, mult);
+                                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
+                                            SetSpellColumn(minimizeTime, seg, state, column, c, mult);
                                         }
                                     }
                                 }
@@ -2679,7 +2678,7 @@ namespace Rawr.Mage
                 recalcCastTime |= (int)StandardEffect.MirrorImage; // for this it's actually identical, potential for further optimization
             }
             // states will be calculated in forward manner, see if some can reuse previous states
-            for (int i = 0; i < stateList.Length; i++)
+            for (int i = 0; i < stateList.Count; i++)
             {
                 CastingState si = stateList[i];
                 for (int j = 0; j < i; j++)
@@ -2720,7 +2719,7 @@ namespace Rawr.Mage
                         newStates.Add(s);
                     }
                 }
-                stateList = newStates.ToArray();
+                stateList = newStates;
             }
         }
 
@@ -3275,7 +3274,7 @@ namespace Rawr.Mage
             }
             rowDpsTime = rowCount++;
 
-            List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>();
+            List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>(8); // most common observed case has more than 4 stacking constraints, so avoid resizing, specially if using struct
             for (int i = 0; i < cooldownList.Count; i++)
             {
                 EffectCooldown cooli = cooldownList[i];
@@ -4078,27 +4077,11 @@ namespace Rawr.Mage
             return u != 0;
         }
 
-        private CastingState[] GetStateList(List<int> stateIndexList)
+        private List<CastingState> GetStateList()
         {
-            CastingState[] list = new CastingState[stateIndexList.Count];
-            for (int i = 0; i < list.Length; i++)
-            {
-                int index = stateIndexList[i];
-                if (index == 0)
-                {
-                    list[i] = calculationResult.BaseState;
-                }
-                else
-                {
-                    list[i] = CastingState.New(calculationResult, index, false, 0);
-                }
-            }
-            return list;
-        }
+            calculationResult.BaseState = CastingState.New(calculationResult, 0, false, 0);
 
-        private List<int> GetStateList()
-        {
-            List<int> list = new List<int>();
+            List<CastingState> list = new List<CastingState>();
 
             if (useIncrementalOptimizations)
             {
@@ -4127,7 +4110,14 @@ namespace Rawr.Mage
                             {
                                 if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (combinedIndex == (int)StandardEffect.Heroism && index == 0)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                 {
-                                    list.Add(combinedIndex);
+                                    if (combinedIndex == 0)
+                                    {
+                                        list.Add(calculationResult.BaseState);
+                                    }
+                                    else
+                                    {
+                                        list.Add(CastingState.New(calculationResult, combinedIndex, false, 0));
+                                    }
                                 }
                             }
                         }
@@ -4155,7 +4145,14 @@ namespace Rawr.Mage
                             bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
                             if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == (int)StandardEffect.Heroism)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                             {
-                                list.Add(incrementalSetIndex);
+                                if (incrementalSetIndex == 0)
+                                {
+                                    list.Add(calculationResult.BaseState);
+                                }
+                                else
+                                {
+                                    list.Add(CastingState.New(calculationResult, incrementalSetIndex, false, 0));
+                                }
                             }
                         }
                     }

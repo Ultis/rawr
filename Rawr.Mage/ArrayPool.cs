@@ -336,6 +336,7 @@ namespace Rawr.Mage
         private static List<ArraySet> pool = new List<ArraySet>();
 
         private static int createdArraySets = 0;
+        private static int waiters = 0;
         private static int maximumPoolSize = Environment.ProcessorCount;
 
         public static int MaximumPoolSize
@@ -354,14 +355,22 @@ namespace Rawr.Mage
         {
             lock (pool)
             {
-                if (pool.Count == 0 && createdArraySets < maximumPoolSize)
+                if (pool.Count == 0)
                 {
-                    pool.Add(new ArraySet());
-                    createdArraySets++;
-                }
-                else
-                {
-                    while (pool.Count == 0) Monitor.Wait(pool);
+                    if (createdArraySets < maximumPoolSize)
+                    {
+                        pool.Add(new ArraySet());
+                        createdArraySets++;
+                    }
+                    else
+                    {
+                        do
+                        {
+                            waiters++;
+                            Monitor.Wait(pool);
+                            waiters--;
+                        } while (pool.Count == 0);
+                    }
                 }
                 // find desirable size
                 int bestIndex;
@@ -400,7 +409,10 @@ namespace Rawr.Mage
                 else
                 {
                     pool.Add(arraySet);
-                    Monitor.Pulse(pool);
+                    if (waiters > 0)
+                    {
+                        Monitor.Pulse(pool);
+                    }
                 }
             }
         }
