@@ -1991,7 +1991,8 @@ namespace Rawr //O O . .
         {
 			SerializeCalculationOptions();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
-            ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
+            if(ArmoryPets!=null)
+                ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
 
 			using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {

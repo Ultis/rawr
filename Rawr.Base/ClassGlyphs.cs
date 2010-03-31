@@ -333,7 +333,7 @@ namespace Rawr
         public bool GlyphofShocking { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
         [GlyphData(3, "Glyph of Lightning Shield", true, @"Increases the damage from Lightning Shield by 20%.")]
         public bool GlyphofLightningShield { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
-        [GlyphData(4, "Glyph of Flame Shock", true, @"The periodic damage dealt by your Flame Shock can now be critical strikes.")]
+        [GlyphData(4, "Glyph of Flame Shock", true, @"Increases the critical strike damage bonus of your Flame Shock damage by 60%.")]
         public bool GlyphofFlameShock { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
         [GlyphData(5, "Glyph of Flametongue Weapon", true, @"Increases spell critical strike chance by 2% while Flametongue Weapon is active.")]
         public bool GlyphofFlametongueWeapon { get { return _glyphData[5]; } set { _glyphData[5] = value; } }

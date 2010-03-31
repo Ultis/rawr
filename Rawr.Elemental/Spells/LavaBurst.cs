@@ -5,6 +5,8 @@ namespace Rawr.Elemental.Spells
     public class LavaBurst : Spell
     {
         private float fs = 0f;
+        private bool elementalT10 = false;
+
         public LavaBurst() : base()
         {
         }
@@ -44,7 +46,7 @@ namespace Rawr.Elemental.Spells
             if (args.Talents.GlyphofLava)
                 spCoef += .1f;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
-            if (args.Stats.Elemental4T10 > 0) cooldown -= 1.5f;
+            if (args.Stats.Elemental4T10 > 0) elementalT10 = true;
 
             base.Initialize(args);
 
@@ -71,6 +73,14 @@ namespace Rawr.Elemental.Spells
             LavaBurst C = (LavaBurst)A.MemberwiseClone();
             multiply(A, b, C);
             return C;
+        }
+
+        /// <summary>
+        /// Adds the closest amount of hasted FS ticks to 6s to the already running FS.
+        /// </summary>
+        public bool ElementalT10
+        {
+            get { return elementalT10; }
         }
 
     }

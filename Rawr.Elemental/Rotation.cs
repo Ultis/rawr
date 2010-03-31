@@ -156,33 +156,7 @@ namespace Rawr.Elemental
         {
             if (LB == null || FS == null || LvBFS == null || LvB == null)
                 return;
-
-            Spell[][] sp = new Spell[4][];
-            float[] dps = new float[4];
-            
-            CalculateRotation(false, false);
-            sp[0] = new Spell[spells.Count];
-            spells.CopyTo(sp[0]);
-            dps[0] = DPS;
-            CalculateRotation(true, false);
-            sp[1] = new Spell[spells.Count];
-            spells.CopyTo(sp[1]);
-            dps[1] = DPS;
-            CalculateRotation(false, true);
-            sp[2] = new Spell[spells.Count];
-            spells.CopyTo(sp[2]);
-            dps[2] = DPS;
             CalculateRotation(true, true);
-            sp[3] = new Spell[spells.Count];
-            spells.CopyTo(sp[3]);
-            dps[3] = DPS;
-
-            float sdps = 0;
-            int pos = 0;
-            for (int i = 0; i < dps.Length; i++)
-                if (sdps < dps[i])
-                    pos = i;
-            spells = new List<Spell>(sp[pos]);
         }
 
         /// <summary>
@@ -204,6 +178,10 @@ namespace Rawr.Elemental
                     {
                         AddSpell(LvBFS);
                         LvBreadyAt = GetTime() + LvBFS.Cooldown;
+                        if (LvBFS.ElementalT10 && GetTime() <= FSdropsAt)
+                        {
+                            FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(6);
+                        }
                     }
                     else if (FSdropsAt == 0) //the first FS
                     {

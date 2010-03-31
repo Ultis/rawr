@@ -526,7 +526,6 @@ namespace Rawr {
         ManacostReduceWithin15OnUse1Min,
         ShieldFromHealed,
         RighteousVengeanceCanCrit,
-        FlameShockDoTCanCrit,
         DeathbringerProc,
         BattlemasterHealth,
         ZodProc,
@@ -3394,15 +3393,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Flame Shock DoT Can Crit")]
-        [Category("Elemental")]
-        public float FlameShockDoTCanCrit
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.FlameShockDoTCanCrit]; }
-            set { _rawNoStackData[(int)NonStackingStat.FlameShockDoTCanCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

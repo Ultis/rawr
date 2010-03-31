@@ -81,11 +81,6 @@ namespace Rawr.Elemental
             float damage;
             Stats procStats;
 
-            #region Stat changing glyphs
-            if (talents.GlyphofFlameShock)
-                stats.FlameShockDoTCanCrit = 1f;
-            #endregion
-
             // WITHOUT PROCS
             e = new Estimation(stats, new Stats{}, talents, calcOpts);
             rot = e.getPriorityRotation(calcOpts.rotationType);

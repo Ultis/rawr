@@ -4294,7 +4294,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Garb",
-                Stats = { FlameShockDoTCanCrit = 1f },
+                Stats = { BonusFlameShockDoTDamage = .2f },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });

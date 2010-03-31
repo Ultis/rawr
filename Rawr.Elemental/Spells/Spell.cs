@@ -24,6 +24,8 @@ namespace Rawr.Elemental.Spells
         protected float dotBaseCoef = 1f;
         protected float dotSpCoef = 0f;
         protected float dotCanCrit = 0f;
+        protected float dotCritModifier = 1f;
+
         protected float spellPower = 0f;
 
         protected float latencyGcd = .15f;
@@ -202,10 +204,18 @@ namespace Rawr.Elemental.Spells
         { get { return spellPower * spCoef * totalCoef; } }
 
         public float PeriodicTick
-        { get { return (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance); } }
+        { get { return (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * dotCritModifier * CritChance); } }
 
         public float PeriodicTicks
-        { get { return periodicTicks; } }
+        { 
+            get { return periodicTicks; }
+            set
+            {
+                periodicTicks = value;
+                if (periodicTicks < 0)
+                    periodicTicks = 0;
+            }
+        }
 
         public float PeriodicDamage()
         {
@@ -272,6 +282,8 @@ namespace Rawr.Elemental.Spells
             latencyCast = args.LatencyCast;
             critModifier += .2f * args.Talents.ElementalFury;
             critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
+            dotCritModifier += .2f * args.Talents.ElementalFury;
+            dotCritModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
             //critModifier += 1f;
             spellPower += args.Stats.SpellPower;
             crit += args.Stats.SpellCrit;
@@ -281,6 +293,12 @@ namespace Rawr.Elemental.Spells
             manaCost = (float)Math.Floor(manaCost);
             //base resistance by level
             totalCoef *= 1f - StatConversion.GetAverageResistance(80, 83, 0, 0);
+        }
+
+        public void ApplyDotHaste(ISpellArgs args)
+        {
+            float Speed = (1f + args.Stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(args.Stats.HasteRating));
+            periodicTickTime = (float)Math.Round(periodicTickTime / Speed, 4);
         }
 
         public void ApplyEM(float modifier)
