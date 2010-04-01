@@ -27,6 +27,7 @@ namespace Rawr.WarlockTmp {
         public float Latency { get; set; }
         public float ManaPotSize { get; set; }
         public float Replenishment { get; set; }
+        public string Filler { get; set; }
         public List<string> SpellPriority { get; set; }
 
         #endregion
@@ -35,9 +36,11 @@ namespace Rawr.WarlockTmp {
         #region constructors
 
         public CalculationOptionsWarlock() {
+
             Pet = "None";
             TargetLevel = 83;
             Duration = 300;
+            Filler = "Shadow Bolt";
             SpellPriority = new List<String>();
         }
 

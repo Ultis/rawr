@@ -23,17 +23,21 @@ namespace Rawr.WarlockTmp {
 
         private void RefreshRotationPanel() {
 
-            rotationSpellCombo.Items.Clear();
-            foreach (String spell in Spell.ALL_SPELLS) {
-                if (!_options.SpellPriority.Contains(spell)) {
-                    rotationSpellCombo.Items.Add(spell);
+            rotationMenu.Items.Clear();
+            foreach (string spell in Spell.ALL_SPELLS) {
+                if (!_options.SpellPriority.Contains(spell)
+                    && !fillerCombo.Items.Contains(spell)) {
+
+                    rotationMenu.Items.Add(spell);
                 }
             }
 
             rotationList.Items.Clear();
-            foreach (String spell in _options.SpellPriority) {
+            foreach (string spell in _options.SpellPriority) {
                 rotationList.Items.Add(spell);
             }
+
+            fillerCombo.SelectedItem = _options.Filler;
 
             RefreshRotationButtons();
         }
@@ -43,9 +47,7 @@ namespace Rawr.WarlockTmp {
             int itemCount = rotationList.Items.Count;
             int curIndex = rotationList.SelectedIndex;
 
-            rotationAddButton.Enabled
-                = rotationSpellCombo.Items.Contains(
-                    rotationSpellCombo.Text);
+            rotationAddButton.Enabled = rotationMenu.SelectedIndex >= 0;
             rotationUpButton.Enabled = curIndex > 0;
             rotationDownButton.Enabled
                 = curIndex >= 0 && curIndex < itemCount - 1;
@@ -187,8 +189,7 @@ namespace Rawr.WarlockTmp {
             }
 
             _ignoreEvents = true;
-            _options.SpellPriority.Add(rotationSpellCombo.Text);
-            //rotationSpellCombo.Text = string.Empty;
+            _options.SpellPriority.Add((string) rotationMenu.SelectedItem);
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
             _ignoreEvents = false;
@@ -232,12 +233,16 @@ namespace Rawr.WarlockTmp {
 
         private void rotationClearButton_Click(object sender, EventArgs e) {
 
+            if (_ignoreEvents) {
+                return;
+            }
+
             _options.SpellPriority.Clear();
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
 
-        private void rotationSpellCombo_SelectedIndexChanged(
+        private void rotationMenu_SelectedIndexChanged(
             object sender, EventArgs e) {
 
             if (_ignoreEvents) {
@@ -245,7 +250,6 @@ namespace Rawr.WarlockTmp {
             }
 
             RefreshRotationButtons();
-            Character.OnCalculationsInvalidated();
         }
 
         private void rotationList_SelectedIndexChanged(
@@ -256,6 +260,17 @@ namespace Rawr.WarlockTmp {
             }
 
             RefreshRotationButtons();
+        }
+
+        private void fillerCombo_SelectedIndexChanged(
+            object sender, EventArgs e) {
+
+            if (_ignoreEvents) {
+                return;
+            }
+
+            _options.Filler = (string) fillerCombo.SelectedItem;
+            Character.OnCalculationsInvalidated();
         }
 
         #endregion

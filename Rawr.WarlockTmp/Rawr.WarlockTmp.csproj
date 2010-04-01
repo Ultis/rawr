@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="CalculationOptionsWarlock.cs" />
     <Compile Include="CalculationsWarlock.cs" />
+    <Compile Include="CastingState.cs" />
     <Compile Include="CharacterCalculationsWarlock.cs" />
     <Compile Include="ComparisonCalculationWarlock.cs" />
     <Compile Include="Pets.cs" />

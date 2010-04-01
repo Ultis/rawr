@@ -30,7 +30,9 @@ namespace Rawr.WarlockTmp {
 
         public float BaseMana { get; private set; }
         public float HitChance { get; private set; }
+        public float AvgTimeUsed { get; private set; }
 
+        public List<Spell> Priorities { get; private set; }
         public Dictionary<string, Spell> Spells { get; private set; }
         public Dictionary<string, Spell> CastSpells { get; private set; }
 
@@ -233,14 +235,147 @@ namespace Rawr.WarlockTmp {
                 return 0f;
             }
 
-            #region Calculate all the possible haste values
+            CalcHasteProcs();
+            AvgTimeUsed
+                = Spell.GetTimeUsed(
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    0f,
+                    Haste,
+                    Options.Latency);
+
+            #region Calculate the entire fight's mana pool
+            Stats.ManaRestoreFromMaxManaPerSecond
+                = Math.Max(
+                    Stats.ManaRestoreFromMaxManaPerSecond,
+                    .002f
+                        * Spell.CalcUprate(
+                            Talents.ImprovedSoulLeech * .5f,
+                            15f,
+                            AvgTimeUsed));
+            float timeRemaining = Options.Duration;
+            float manaRemaining
+                = Stats.Mana
+                    + Stats.ManaRestore
+                    + timeRemaining
+                        * (Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana
+                            + Stats.Mp5 / 5f);
+            #endregion
+
+            #region Calculate NumCasts for each spell
+            Priorities = new List<Spell>();
+            foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
+                Spell spell = GetSpell(spellName);
+                if (spell.IsCastable()) {
+                    Priorities.Add(spell);
+                    CastSpells.Add(spellName, spell);
+                }
+            }
+            RecordCollisionDelays(new CastingState(this));
+            foreach (Spell spell in Priorities) {
+                float numCasts = spell.GetNumCasts();
+                timeRemaining -= spell.GetAvgTimeUsed() * numCasts;
+                manaRemaining -= spell.ManaCost * numCasts;
+            }
+            LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
+            Spell filler = GetSpell(Options.Filler);
+            timeRemaining
+                -= lifeTap.GetAvgTimeUsed()
+                    * lifeTap.AddCastsForRegen(
+                        timeRemaining, manaRemaining, filler);
+            filler.Spam(timeRemaining);
+            CastSpells.Add(Options.Filler, filler);
+            #endregion
+
+            #region Calculate spell modifiers
+            SpellModifiers = new SpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusDamageMultiplier);
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Talents.Malediction * .01f);
+            SpellModifiers.AddMultiplicativeDirectMultiplier(
+                Talents.DemonicPact * .01f);
+            // The spellstone bonus is added in individual spells, since it
+            // doesn't actually affect Curse of Agony.
+            SpellModifiers.AddAdditiveDirectMultiplier(
+                Stats.WarlockFirestoneDirectDamageMultiplier);
+            SpellModifiers.AddCritChance(Stats.SpellCrit);
+            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
+            if (CastSpells.ContainsKey("Metamorphosis")) {
+                SpellModifiers.AddMultiplicativeMultiplier(
+                    ((Metamorphosis) CastSpells["Metamorphosis"])
+                        .GetAvgBonusMultiplier());
+            }
+            if (CastSpells.ContainsKey("Curse Of The Elements")) {
+
+                // If the raid is already providing this debuff, the curse will
+                // not actually end up casting, so this will not double-count
+                // the debuff.
+                SpellModifiers.AddMultiplicativeMultiplier(.13f);
+            }
+            if (Talents.ImprovedShadowBolt > 0
+                && Stats.SpellCritOnTarget < .05f) {
+
+                // If the 5% crit debuff is not already being maintained by
+                // somebody else (i.e. it's not selected in the buffs tab), we
+                // may supply it via Improved Shadow Bolt.
+                float casts = 0f;
+                if (CastSpells.ContainsKey("Shadow Bolt")) {
+                    casts += CastSpells["Shadow Bolt"].GetNumCasts();
+                }
+                if (CastSpells.ContainsKey("Shadow Bolt (Instant)")) {
+                    casts += CastSpells["Shadow Bolt (Instant)"].GetNumCasts();
+                }
+                float uprate = Spell.CalcUprate(
+                    Talents.ImprovedShadowBolt * .2f, // proc rate
+                    30f, // duration
+                    Options.Duration / casts); // trigger period
+                float benefit = .05f - Stats.SpellCritOnTarget;
+                SpellModifiers.AddCritChance(benefit * uprate);
+            }
+            #endregion
+
+            #region Calculate damage done for each spell
+            float spellPower
+                = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
+            float damageDone = 0f;
+            Spell conflagrate = null;
+            foreach (KeyValuePair<string, Spell> pair in CastSpells) {
+                Spell spell = pair.Value;
+                if (pair.Key.Equals("Conflagrate")) {
+                    conflagrate = spell;
+                    continue; // save until we're sure immolate is done
+                }
+                spell.SetDamageStats(spellPower);
+                damageDone += spell.GetNumCasts() * spell.AvgDamagePerCast;
+            }
+            if (conflagrate != null) {
+                conflagrate.SetDamageStats(spellPower);
+                damageDone
+                    += conflagrate.GetNumCasts() * conflagrate.AvgDamagePerCast;
+            }
+            #endregion
+
+            return damageDone / Options.Duration;
+        }
+
+        private float CalcPetDps() {
+
+            return 0f;
+        }
+
+        private void CalcHasteProcs() {
+
+            // the trigger rates are all guestimates at this point, since the
+            // real values depend on haste (which obviously has not been
+            // finalized yet)
+
+            // this method currently calculates non-haste procs, too. future
+            // plans are to move them after casting stats are set, so the
+            // triggers can be accurate
+
             float nonProcHaste
                 = 1 + Stats.SpellHaste
                     + StatConversion.GetSpellHasteFromRating(Stats.HasteRating);
-
-            // the trigger rates are all guestimates at this point, since the
-            // real values depend on haste, this is set-up work to determine
-            // haste!
 
             Dictionary<Trigger, float> periods
                 = new Dictionary<Trigger, float>();
@@ -254,7 +389,8 @@ namespace Rawr.WarlockTmp {
                 = periods[Trigger.DamageSpellHit]
                 = periods[Trigger.DamageSpellCrit]
                 = periods[Trigger.DamageSpellCast]
-                = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste;
+                = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste
+                    + Options.Latency;
             periods[Trigger.DoTTick] = 1.5f;
             periods[Trigger.DamageDone]
                 = periods[Trigger.DamageOrHealingDone]
@@ -367,124 +503,40 @@ namespace Rawr.WarlockTmp {
                                     ratings[r].Value + Stats.HasteRating));
                 }
             }
-            #endregion
-
-            #region Calculate the entire fight's mana pool
-            Stats.ManaRestoreFromMaxManaPerSecond
-                = Math.Max(
-                    Stats.ManaRestoreFromMaxManaPerSecond,
-                    .002f
-                        * Spell.CalcUprate(
-                            Talents.ImprovedSoulLeech * .5f,
-                            15f,
-                            Spell.GetCastTime(
-                                CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                                1.5f,
-                                Haste)));
-            float timeRemaining = Options.Duration;
-            float manaRemaining
-                = Stats.Mana
-                    + Stats.ManaRestore
-                    + timeRemaining
-                        * (Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana
-                            + Stats.Mp5 / 5f);
-            #endregion
-
-            #region Calculate NumCasts for each spell
-            float lag = Options.Latency;
-            foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
-                Spell spell = GetSpell(spellName);
-                if (!spell.IsCastable()) {
-                    continue;
-                }
-
-                spell.SetCastingStats(timeRemaining, manaRemaining);
-                CastSpells.Add(spellName, spell);
-                timeRemaining -= (spell.GetCastTime() + lag) * spell.NumCasts;
-                manaRemaining -= spell.ManaCost * spell.NumCasts;
-                if (timeRemaining <= .0001) {
-                    break;
-                }
-            }
-            #endregion
-
-            #region Calculate spell modifiers
-            SpellModifiers = new SpellModifiers();
-            SpellModifiers.AddMultiplicativeMultiplier(
-                Stats.BonusDamageMultiplier);
-            SpellModifiers.AddMultiplicativeMultiplier(
-                Talents.Malediction * .01f);
-            SpellModifiers.AddMultiplicativeDirectMultiplier(
-                Talents.DemonicPact * .01f);
-            // The spellstone bonus is added in individual spells, since it
-            // doesn't actually affect Curse of Agony.
-            SpellModifiers.AddAdditiveDirectMultiplier(
-                Stats.WarlockFirestoneDirectDamageMultiplier);
-            SpellModifiers.AddCritChance(Stats.SpellCrit);
-            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
-            if (CastSpells.ContainsKey("Metamorphosis")) {
-                SpellModifiers.AddMultiplicativeMultiplier(
-                    ((Metamorphosis) CastSpells["Metamorphosis"])
-                        .GetAvgBonusMultiplier());
-            }
-            if (CastSpells.ContainsKey("Curse Of The Elements")) {
-
-                // If the raid is already providing this debuff, the curse will
-                // not actually end up casting, so this will not double-count
-                // the debuff.
-                SpellModifiers.AddMultiplicativeMultiplier(.13f);
-            }
-            if (Talents.ImprovedShadowBolt > 0
-                && Stats.SpellCritOnTarget < .05f) {
-
-                // If the 5% crit debuff is not already being maintained by
-                // somebody else (i.e. it's not selected in the buffs tab), we
-                // may supply it via Improved Shadow Bolt.
-                float casts = 0f;
-                if (CastSpells.ContainsKey("Shadow Bolt")) {
-                    casts += CastSpells["Shadow Bolt"].NumCasts;
-                }
-                if (CastSpells.ContainsKey("Shadow Bolt (Instant)")) {
-                    casts += CastSpells["Shadow Bolt (Instant)"].NumCasts;
-                }
-                float uprate = Spell.CalcUprate(
-                    Talents.ImprovedShadowBolt * .2f, // proc rate
-                    30f, // duration
-                    Options.Duration / casts); // trigger period
-                float benefit = .05f - Stats.SpellCritOnTarget;
-                SpellModifiers.AddCritChance(benefit * uprate);
-            }
-            #endregion
-
-            #region Calculate damage done for each spell
-            LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
-            float spellPower
-                = Stats.SpellPower + lifeTap.GetAvgBonusSpellPower();
-            float damageDone = 0f;
-            Spell conflagrate = null;
-            foreach (KeyValuePair<string, Spell> pair in CastSpells) {
-                Spell spell = pair.Value;
-                if (pair.Key.Equals("Conflagrate")) {
-                    conflagrate = spell;
-                    continue; // save until we're sure immolate is done
-                }
-                spell.SetDamageStats(spellPower);
-                damageDone += spell.NumCasts * spell.AvgDamagePerCast;
-            }
-            if (conflagrate != null) {
-                conflagrate.SetDamageStats(spellPower);
-                damageDone
-                    += conflagrate.NumCasts * conflagrate.AvgDamagePerCast;
-            }
-            #endregion
-
-            return damageDone / Options.Duration;
         }
 
-        private float CalcPetDps() {
+        // This technique assumes that if you pick a random time during filler
+        // spell(s) or downtime, the "cooldowns" remaining on the rest of your
+        // spells are all equally likely to be at any value. This is unrealistic
+        // (e.g. it's impossible for them all to be at their full value), but
+        // for some classes is a reasonable approximation.
+        private void RecordCollisionDelays(CastingState state) {
 
-            return 0f;
-        }
+		    float pRemaining = 1f;
+		    foreach (Spell spell in Priorities) {
+			    float p = spell.GetQueueProbability(state);
+			    if (p == 0f) {
+				    continue;
+			    }
+
+			    spell.RecordCollisionDelay(state, p * pRemaining);
+			    List<CastingState> nextStates =
+				    spell.GetStatesAfterCast(state, p * pRemaining);
+			    foreach (CastingState nextState in nextStates) {
+				    if (nextState.Probability > .001f) {
+
+					    // Only calculate if the probabilty of the state is large
+					    // enough to make any difference at all.
+					    RecordCollisionDelays(nextState);
+				    }
+			    }
+			    if (p == 1f) {
+				    return;
+			    }
+
+			    pRemaining *= 1f - p;
+		    }
+	    }
 
         #endregion
 
@@ -529,16 +581,6 @@ namespace Rawr.WarlockTmp {
                 return "Conflagrate may only appear after Immolate.";
             }
 
-            int spammed = spellPriority.IndexOf("Shadow Bolt");
-            if (spammed == -1) {
-                spammed = spellPriority.IndexOf("Incinerate");
-            }
-            if (spammed == -1) {
-                return "You have not included a spammable spell.";
-            }
-            if (spammed != spellPriority.Count - 1) {
-                return "No spell may appear after a spammable spell.";
-            }
             return null;
         }
 
@@ -551,10 +593,9 @@ namespace Rawr.WarlockTmp {
         public List<string> PrepForCalcs(List<string> spellPriority) {
 
             List<string> forCalcs = new List<string>(spellPriority);
-            if (forCalcs.Contains("Shadow Bolt")
+            if (Options.Filler.Equals("Shadow Bolt")
                 && !forCalcs.Contains("Shadow Bolt (Instant)")
-                && ShadowBolt_Instant.MightCast(
-                    Talents, forCalcs.Contains("Corruption"))) {
+                && ShadowBolt_Instant.MightCast(Talents, forCalcs)) {
 
                 forCalcs.Insert(forCalcs.Count - 1, "Shadow Bolt (Instant)");
             }
