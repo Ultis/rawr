@@ -1504,7 +1504,14 @@ namespace Rawr.Mage
                     if (m > 4)
                     {
                         n = m;
-                        K0 = (float)Math.Pow(MBI, n);
+                        if (n == 5)
+                        {
+                            K0 = MBI3 * MBI2;
+                        }
+                        else
+                        {
+                            K0 = (float)Math.Pow(MBI, n);
+                        }
                     }
                     else
                     {
