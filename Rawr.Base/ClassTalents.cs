@@ -4361,14 +4361,14 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases the critical strike damage bonus of your Lava Burst spell by an additional 24%, and when your Flame Shock is dispelled your spell casting speed is increased by 30% for 6 sec.",}, "spell_shaman_lavaflow")]
         public int LavaFlows { get { return _data[22]; } set { _data[22] = value; } }
         /// <summary>
-        /// Your Lightning Bolt and Chain Lightning spells gain an additional [3 * Pts]% and your Lava Burst gains an additional [4 * Pts]% of your bonus damage effects.
+        /// Your Lightning Bolt and Chain Lightning spells gain an additional [4 * Pts]% and your Lava Burst gains an additional [5 * Pts]% of your bonus damage effects.
         /// </summary>
         [TalentData(23, "Shamanism", 5, 0, 2, 10, -1, new[] {
-@"Your Lightning Bolt and Chain Lightning spells gain an additional 3% and your Lava Burst gains an additional 4% of your bonus damage effects.",
-@"Your Lightning Bolt and Chain Lightning spells gain an additional 6% and your Lava Burst gains an additional 8% of your bonus damage effects.",
-@"Your Lightning Bolt and Chain Lightning spells gain an additional 9% and your Lava Burst gains an additional 12% of your bonus damage effects.",
-@"Your Lightning Bolt and Chain Lightning spells gain an additional 12% and your Lava Burst gains an additional 16% of your bonus damage effects.",
-@"Your Lightning Bolt and Chain Lightning spells gain an additional 15% and your Lava Burst gains an additional 20% of your bonus damage effects.",}, "spell_unused2")]
+@"Your Lightning Bolt and Chain Lightning spells gain an additional 4% and your Lava Burst gains an additional 5% of your bonus damage effects.",
+@"Your Lightning Bolt and Chain Lightning spells gain an additional 8% and your Lava Burst gains an additional 10% of your bonus damage effects.",
+@"Your Lightning Bolt and Chain Lightning spells gain an additional 12% and your Lava Burst gains an additional 15% of your bonus damage effects.",
+@"Your Lightning Bolt and Chain Lightning spells gain an additional 16% and your Lava Burst gains an additional 20% of your bonus damage effects.",
+@"Your Lightning Bolt and Chain Lightning spells gain an additional 20% and your Lava Burst gains an additional 25% of your bonus damage effects.",}, "spell_unused2")]
         public int Shamanism { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
         /// You call down a bolt of lightning, energizing you and damaging nearby enemies within 10 yards. Restores 8% mana to you and deals 551 to 629 Nature damage to all nearby enemies, knocking them back 20 yards. This spell is usable while stunned.
