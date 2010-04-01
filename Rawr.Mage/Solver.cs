@@ -4081,14 +4081,16 @@ namespace Rawr.Mage
         {
             calculationResult.BaseState = CastingState.New(calculationResult, 0, false, 0);
 
-            List<CastingState> list = new List<CastingState>();
+            List<CastingState> list;
 
             if (useIncrementalOptimizations)
             {
-                for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedStates.Length; incrementalSortedIndex++)
+                int[] sortedStates = calculationOptions.IncrementalSetSortedStates;
+                list = new List<CastingState>(2 * sortedStates.Length);
+                for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
                 {
                     // incremental index is filtered by non-item based cooldowns
-                    int incrementalSetIndex = calculationOptions.IncrementalSetSortedStates[incrementalSortedIndex];                    
+                    int incrementalSetIndex = sortedStates[incrementalSortedIndex];                    
                     bool mf = (incrementalSetIndex & (int)StandardEffect.MoltenFury) != 0;
                     bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
                     int itemBasedMax = 1 << calculationResult.ItemBasedEffectCooldowns.Length;
@@ -4126,6 +4128,7 @@ namespace Rawr.Mage
             }
             else
             {
+                list = new List<CastingState>(64);
                 for (int incrementalSetIndex = 0; incrementalSetIndex <= availableCooldownMask; incrementalSetIndex++)
                 {
                     if (((incrementalSetIndex) & availableCooldownMask) == (incrementalSetIndex)) // make sure all are available

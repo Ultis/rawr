@@ -212,10 +212,11 @@ namespace Rawr.Mage
         private float speed;
 
         public WandTemplate(CharacterCalculationsMage calculations, MagicSchool school, int minDamage, int maxDamage, float speed)
-            : base("Wand", false, false, false, 0, 30, 0, 0, school, minDamage, maxDamage, 0, 1, 0, 0, 0, 0)
         {
+            Name = "Wand";
             // Tested: affected by Arcane Instability, affected by Chaotic meta, not affected by Arcane Power
-            Calculate(calculations);
+            InitializeEffectDamage(calculations, school, minDamage, maxDamage);
+            Range = 30;
             this.speed = speed;
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = (1 + 0.01f * calculations.MageTalents.ArcaneInstability) * (1 + 0.01f * calculations.MageTalents.PlayingWithFire) * (1 + calculations.BaseStats.BonusDamageMultiplier);
@@ -291,9 +292,10 @@ namespace Rawr.Mage
         }
 
         public FireBlastTemplate(CharacterCalculationsMage calculations)
-            : base("Fire Blast", false, true, false, 20, 0, 8, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Fire Blast";
+            InitializeCastTime(false, true, 0, 8);
+            InitializeDamage(calculations, false, 20, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             Cooldown -= 1.0f * calculations.MageTalents.ImprovedFireBlast;
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
@@ -333,9 +335,10 @@ namespace Rawr.Mage
         }
 
         public ScorchTemplate(CharacterCalculationsMage calculations)
-            : base("Scorch", false, false, false, 30, 1.5f, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Scorch";
+            InitializeCastTime(false, false, 1.5f, 0);
+            InitializeDamage(calculations, false, 30, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             BaseCritRate += 0.02f * calculations.MageTalents.Incineration;
             BaseCritRate += 0.01f * calculations.MageTalents.ImprovedScorch;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
@@ -377,9 +380,10 @@ namespace Rawr.Mage
         }
 
         public FlamestrikeTemplate(CharacterCalculationsMage calculations)
-            : base("Flamestrike", false, false, true, 30, 2, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 1, 1, 8f)
         {
-            Calculate(calculations);
+            Name = "Flamestrike";
+            InitializeCastTime(false, false, 2, 0);
+            InitializeDamage(calculations, true, 30, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 1, 1, 8f);
             DotTickInterval = 2;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
@@ -408,9 +412,10 @@ namespace Rawr.Mage
         }
 
         public ConjureManaGemTemplate(CharacterCalculationsMage calculations)
-            : base("Conjure Mana Gem", false, false, false, 0, 3, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
         {
-            Calculate(calculations);
+            Name = "Conjure Mana Gem";
+            InitializeCastTime(false, false, 3, 0);
+            InitializeDamage(calculations, false, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1, 0);
         }
     }
 
@@ -458,9 +463,10 @@ namespace Rawr.Mage
         }
 
         public FireWardTemplate(CharacterCalculationsMage calculations)
-            : base("Fire Ward", false, true, false, 0, 0, 30, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
         {
-            Calculate(calculations);
+            Name = "Fire Ward";
+            InitializeCastTime(false, true, 0, 30);
+            InitializeDamage(calculations, false, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1, 0);
         }
     }
 
@@ -503,9 +509,10 @@ namespace Rawr.Mage
         }
 
         public FrostWardTemplate(CharacterCalculationsMage calculations)
-            : base("Frost Ward", false, true, false, 0, 0, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1)
         {
-            Calculate(calculations);
+            Name = "Frost Ward";
+            InitializeCastTime(false, true, 0, 30);
+            InitializeDamage(calculations, false, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 0, 1, 0);
         }
     }
 
@@ -532,9 +539,10 @@ namespace Rawr.Mage
         }
 
         public FrostNovaTemplate(CharacterCalculationsMage calculations)
-            : base("Frost Nova", false, true, true, 0, 0, 25, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Frost Nova";
+            InitializeCastTime(false, true, 0, 25);
+            InitializeDamage(calculations, true, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions));
         }
     }
 
@@ -597,9 +605,10 @@ namespace Rawr.Mage
         }
 
         public FrostboltTemplate(CharacterCalculationsMage calculations)
-            : base("Frostbolt", false, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Frostbolt";
+            InitializeCastTime(false, false, 3, 0);
+            InitializeDamage(calculations, false, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions));
             if (calculations.MageTalents.GlyphOfFrostbolt)
             {
                 BaseDirectDamageModifier *= 1.05f;
@@ -643,9 +652,10 @@ namespace Rawr.Mage
 
         // 30 sec cooldown!!!
         public DeepFreezeTemplate(CharacterCalculationsMage calculations)
-            : base("Deep Freeze", false, true, false, 30, 0, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Deep Freeze";
+            InitializeCastTime(false, true, 0, 30);
+            InitializeDamage(calculations, false, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions));
             if (calculations.MageTalents.GlyphOfDeepFreeze)
             {
                 Range += 10f;
@@ -714,9 +724,10 @@ namespace Rawr.Mage
         float tormentTheWeak;
 
         public FireballTemplate(CharacterCalculationsMage calculations)
-            : base("Fireball", false, false, false, 35, 3.5f, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Fireball";
+            InitializeCastTime(false, false, 3.5f, 0);
+            InitializeDamage(calculations, false, 35, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             if (calculations.MageTalents.GlyphOfFireball)
             {
                 BasePeriodicDamage = 0.0f;
@@ -777,9 +788,10 @@ namespace Rawr.Mage
         }
 
         public FrostfireBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Frostfire Bolt", false, false, false, 40, 3.0f, 0, MagicSchool.FrostFire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Frostfire Bolt";
+            InitializeCastTime(false, false, 3.0f, 0);
+            InitializeDamage(calculations, false, 40, MagicSchool.FrostFire, GetMaxRankSpellData(calculations.CalculationOptions));
             if (calculations.MageTalents.GlyphOfFrostfire)
             {
                 BaseCritRate += 0.02f;
@@ -841,9 +853,10 @@ namespace Rawr.Mage
         float tormentTheWeak;
 
         public PyroblastTemplate(CharacterCalculationsMage calculations)
-            : base("Pyroblast", false, false, false, 35, 5f, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Pyroblast";
+            InitializeCastTime(false, false, 5f, 0);
+            InitializeDamage(calculations, false, 35, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             DotDuration = 12;
             DotTickInterval = 3;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
@@ -899,9 +912,10 @@ namespace Rawr.Mage
         }
 
         public LivingBombTemplate(CharacterCalculationsMage calculations)
-            : base("Living Bomb", false, true, false, 35, 0f, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Living Bomb";
+            InitializeCastTime(false, true, 0f, 0f);
+            InitializeDamage(calculations, false, 35, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             DotDuration = 12;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier -= 0.02f * calculations.MageTalents.FirePower; // Living Bomb dot does not benefit from Fire Power
@@ -933,9 +947,10 @@ namespace Rawr.Mage
         }
 
         public SlowTemplate(CharacterCalculationsMage calculations)
-            : base("Slow", false, true, false, 30, 0f, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Slow";
+            InitializeCastTime(false, true, 0f, 0f);
+            InitializeDamage(calculations, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions));
         }
     }
 
@@ -968,9 +983,10 @@ namespace Rawr.Mage
         }
 
         public ConeOfColdTemplate(CharacterCalculationsMage calculations)
-            : base("Cone of Cold", false, true, true, 0, 0, 10, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Cone of Cold";
+            InitializeCastTime(false, true, 0, 10);
+            InitializeDamage(calculations, true, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions));
             Cooldown *= (1 - 0.07f * calculations.MageTalents.IceFloes + (calculations.MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
             int ImprovedConeOfCold = calculations.MageTalents.ImprovedConeOfCold;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
@@ -1021,9 +1037,10 @@ namespace Rawr.Mage
         }
 
         public IceLanceTemplate(CharacterCalculationsMage calculations)
-            : base("Ice Lance", false, true, false, 30, 0, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Ice Lance";
+            InitializeCastTime(false, true, 0, 0);
+            InitializeDamage(calculations, false, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions));
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             BaseSpellModifier *= (1 + 0.01f * calculations.MageTalents.ChilledToTheBone);
         }
@@ -1065,9 +1082,10 @@ namespace Rawr.Mage
         private float tormentTheWeak;
 
         public ArcaneBarrageTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Barrage", false, true, false, 30, 0, 3, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Arcane Barrage";
+            InitializeCastTime(false, true, 0, 3);
+            InitializeDamage(calculations, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions));
             tormentTheWeak = 0.04f * calculations.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = calculations.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
             if (calculations.MageTalents.GlyphOfArcaneBarrage)
@@ -1197,12 +1215,12 @@ namespace Rawr.Mage
         private float tormentTheWeak;
 
         public ArcaneBlastTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Blast", false, false, false, 30, 2.5f, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions))
         {
+            Name = "Arcane Blast";
+            InitializeCastTime(false, false, 2.5f, 0);
+            InitializeDamage(calculations, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions));
             Stats baseStats = calculations.BaseStats;
             MageTalents mageTalents = calculations.MageTalents;
-            CalculationOptionsMage calculationOptions = calculations.CalculationOptions;
-            Calculate(calculations);
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
             BaseCostModifier += baseStats.ArcaneBlastBonus;
             BaseCritRate += 0.05f * calculations.BaseStats.Mage4T9;
@@ -1393,10 +1411,11 @@ namespace Rawr.Mage
         float arcaneBlastDamageMultiplier;        
 
         public ArcaneMissilesTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Missiles", true, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 5, 6)
         {
+            Name = "Arcane Missiles";
+            InitializeCastTime(true, false, 5, 0);
+            InitializeDamage(calculations, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 5, 6, 0);
             CastProcs2 = 1;
-            base.Calculate(calculations);
             if (calculations.MageTalents.GlyphOfArcaneMissiles)
             {
                 CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * calculations.MageTalents.SpellPower + 0.1f * calculations.MageTalents.Burnout + calculations.BaseStats.CritBonusDamage + 0.25f));
@@ -1435,9 +1454,10 @@ namespace Rawr.Mage
         }
 
         public ArcaneExplosionTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Explosion", false, true, true, 0, 0, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Arcane Explosion";
+            InitializeCastTime(false, true, 0, 0);
+            InitializeDamage(calculations, true, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions));
             if (calculations.MageTalents.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
@@ -1468,9 +1488,10 @@ namespace Rawr.Mage
         }
 
         public BlastWaveTemplate(CharacterCalculationsMage calculations)
-            : base("Blast Wave", false, true, true, 0, 0, 30, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Blast Wave";
+            InitializeCastTime(false, true, 0, 30);
+            InitializeDamage(calculations, true, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             BaseAdditiveSpellModifier += 0.02f * calculations.MageTalents.SpellImpact;
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
@@ -1500,9 +1521,10 @@ namespace Rawr.Mage
         }
 
         public DragonsBreathTemplate(CharacterCalculationsMage calculations)
-            : base("Dragon's Breath", false, true, true, 0, 0, 20, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions))
         {
-            Calculate(calculations);
+            Name = "Dragon's Breath";
+            InitializeCastTime(false, true, 0, 20);
+            InitializeDamage(calculations, true, 0, MagicSchool.Fire, GetMaxRankSpellData(calculations.CalculationOptions));
             BaseCritRate += 0.02f * calculations.MageTalents.WorldInFlames;
         }
     }
@@ -1530,9 +1552,10 @@ namespace Rawr.Mage
         }
 
         public BlizzardTemplate(CharacterCalculationsMage calculations)
-            : base("Blizzard", true, false, true, 30, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 4, 1)
         {
-            Calculate(calculations);
+            Name = "Blizzard";
+            InitializeCastTime(true, false, 8, 0);
+            InitializeDamage(calculations, true, 30, MagicSchool.Frost, GetMaxRankSpellData(calculations.CalculationOptions), 4, 1, 0);
             if (calculations.MageTalents.ImprovedBlizzard > 0)
             {
                 float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
@@ -1548,9 +1571,9 @@ namespace Rawr.Mage
     public class LightningBoltTemplate : SpellTemplate
     {
         public LightningBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Lightning Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Lightning Bolt";
+            InitializeEffectDamage(calculations, MagicSchool.Nature, 694, 806);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
         }
     }
@@ -1559,9 +1582,9 @@ namespace Rawr.Mage
     public class ThunderBoltTemplate : SpellTemplate
     {
         public ThunderBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Lightning Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Nature, 1181, 1371, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Lightning Bolt";
+            InitializeEffectDamage(calculations, MagicSchool.Nature, 1181, 1371);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
         }
     }
@@ -1570,9 +1593,9 @@ namespace Rawr.Mage
     public class ArcaneBoltTemplate : SpellTemplate
     {
         public ArcaneBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Arcane, 333, 367, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Arcane Bolt";
+            InitializeEffectDamage(calculations, MagicSchool.Arcane, 333, 367);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
         }
     }
@@ -1581,9 +1604,9 @@ namespace Rawr.Mage
     public class PendulumOfTelluricCurrentsTemplate : SpellTemplate
     {
         public PendulumOfTelluricCurrentsTemplate(CharacterCalculationsMage calculations)
-            : base("Pendulum of Telluric Currents", false, true, false, 0, 0, 0, 0, MagicSchool.Shadow, 1168, 1752, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Pendulum of Telluric Currents";
+            InitializeEffectDamage(calculations, MagicSchool.Shadow, 1168, 1752);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
         }
     }
@@ -1592,9 +1615,9 @@ namespace Rawr.Mage
     public class LightweaveBoltTemplate : SpellTemplate
     {
         public LightweaveBoltTemplate(CharacterCalculationsMage calculations)
-            : base("Lightweave Bolt", false, true, false, 0, 0, 0, 0, MagicSchool.Holy, 1000, 1200, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Lightweave Bolt";
+            InitializeEffectDamage(calculations, MagicSchool.Holy, 1000, 1200);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
         }
     }
@@ -1602,9 +1625,9 @@ namespace Rawr.Mage
     public class ArcaneDamageTemplate : SpellTemplate
     {
         public ArcaneDamageTemplate(CharacterCalculationsMage calculations)
-            : base("Arcane Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Arcane, 1, 1, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Arcane Damage";
+            InitializeEffectDamage(calculations, MagicSchool.Arcane, 1, 1);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusArcaneDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
@@ -1614,9 +1637,9 @@ namespace Rawr.Mage
     public class FireDamageTemplate : SpellTemplate
     {
         public FireDamageTemplate(CharacterCalculationsMage calculations)
-            : base("Fire Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Fire, 1, 1, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Fire Damage";
+            InitializeEffectDamage(calculations, MagicSchool.Fire, 1, 1);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusFireDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
@@ -1626,9 +1649,9 @@ namespace Rawr.Mage
     public class FrostDamageTemplate : SpellTemplate
     {
         public FrostDamageTemplate(CharacterCalculationsMage calculations)
-            : base("Frost Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Frost, 1, 1, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Frost Damage";
+            InitializeEffectDamage(calculations, MagicSchool.Frost, 1, 1);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusFrostDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
@@ -1638,9 +1661,9 @@ namespace Rawr.Mage
     public class ShadowDamageTemplate : SpellTemplate
     {
         public ShadowDamageTemplate(CharacterCalculationsMage calculations)
-            : base("Shadow Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Shadow, 1, 1, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Shadow Damage";
+            InitializeEffectDamage(calculations, MagicSchool.Shadow, 1, 1);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusShadowDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
@@ -1650,9 +1673,9 @@ namespace Rawr.Mage
     public class NatureDamageTemplate : SpellTemplate
     {
         public NatureDamageTemplate(CharacterCalculationsMage calculations)
-            : base("Nature Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Nature, 1, 1, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Nature Damage";
+            InitializeEffectDamage(calculations, MagicSchool.Nature, 1, 1);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusNatureDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
@@ -1662,9 +1685,9 @@ namespace Rawr.Mage
     public class HolyDamageTemplate : SpellTemplate
     {
         public HolyDamageTemplate(CharacterCalculationsMage calculations)
-            : base("Holy Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Holy, 1, 1, 0, 0, 0, 0, 0, 0)
         {
-            Calculate(calculations);
+            Name = "Holy Damage";
+            InitializeEffectDamage(calculations, MagicSchool.Holy, 1, 1);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusHolyDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;

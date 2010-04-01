@@ -94,64 +94,60 @@ namespace Rawr.Mage
         }
 
         protected SpellTemplate() { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, 1, 1, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, 0) { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, hitProcs, castProcs, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, 0) { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs, float dotDuration) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, hitProcs, castProcs, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, dotDuration) { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient, 0, 0) { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0) { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs) : this(name, channeled, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, hitProcs, castProcs, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0) { }
-        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs, float spellDamageCoefficient, float dotDamageCoefficient, float dotDuration)
+
+        public void InitializeCastTime(bool channeled, bool instant, float castTime, float cooldown)
         {
-            Name = name;
             Channeled = channeled;
             Instant = instant;
-            AreaEffect = areaEffect;
-            BaseCost = cost;
             BaseCastTime = castTime;
             BaseUntalentedCastTime = instant ? 1.5f : castTime;
             BaseCooldown = cooldown;
-            Range = range;
-            MagicSchool = magicSchool;
-            BaseMinDamage = minDamage;
-            BaseMaxDamage = maxDamage;
-            BasePeriodicDamage = periodicDamage;
-            SpellDamageCoefficient = spellDamageCoefficient;
-            Ticks = hitProcs;
-            CastProcs = castProcs;
-            CastProcs2 = castProcs;
-            DotDamageCoefficient = dotDamageCoefficient;
-            DotDuration = dotDuration;
+            Cooldown = cooldown;
         }
 
-        public virtual void Calculate(CharacterCalculationsMage calculations)
+        public void InitializeDamage(CharacterCalculationsMage calculations, bool areaEffect, int range, MagicSchool magicSchool, SpellData spellData) 
+        {
+            InitializeDamage(calculations, areaEffect, range, magicSchool, spellData, 1, 1, 0);
+        }
+
+        public void InitializeDamage(CharacterCalculationsMage calculations, bool areaEffect, int range, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs, float dotDuration)
         {
             Stats baseStats = calculations.BaseStats;
             MageTalents mageTalents = calculations.MageTalents;
             CalculationOptionsMage calculationOptions = calculations.CalculationOptions;
 
-            Cooldown = BaseCooldown;
-            BaseCost -= (int)calculations.BaseStats.SpellsManaReduction;
+            AreaEffect = areaEffect;
+            BaseCost = spellData.Cost - (int)baseStats.SpellsManaReduction;
+            MagicSchool = magicSchool;
+            BaseMinDamage = spellData.MinDamage;
+            BaseMaxDamage = spellData.MaxDamage;
+            BasePeriodicDamage = spellData.PeriodicDamage;
+            SpellDamageCoefficient = spellData.SpellDamageCoefficient;
+            Ticks = hitProcs;
+            CastProcs = castProcs;
+            CastProcs2 = castProcs;
+            DotDamageCoefficient = spellData.DotDamageCoefficient;
+            DotDuration = dotDuration;
 
             BaseDirectDamageModifier = 1.0f;
             BaseDotDamageModifier = 1.0f;
             BaseCostModifier = 1.0f;
-            BaseCostAmplifier = calculationOptions.EffectCostMultiplier;
-            BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.Precision);
-            if (mageTalents.FrostChanneling > 0) BaseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
-            if (MagicSchool == MagicSchool.Arcane) BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) BaseInterruptProtection += 0.35f * mageTalents.BurningSoul;
-            if (Range != 0)
+
+            float baseCostAmplifier = calculationOptions.EffectCostMultiplier;
+            baseCostAmplifier *= (1.0f - 0.01f * mageTalents.Precision);
+            if (mageTalents.FrostChanneling > 0) baseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
+            if (MagicSchool == MagicSchool.Arcane) baseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
+            BaseCostAmplifier = baseCostAmplifier;
+
+            float baseInterruptProtection = baseStats.InterruptProtection;
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
             {
-                if (MagicSchool == MagicSchool.Arcane) Range += mageTalents.MagicAttunement * 3;
-                if (MagicSchool == MagicSchool.Fire) Range += mageTalents.FlameThrowing * 3;
-                if (MagicSchool == MagicSchool.Frost) Range *= (1 + mageTalents.ArcticReach * 0.1f);
+                baseInterruptProtection += 0.35f * mageTalents.BurningSoul;
+                AffectedByFlameCap = true;
             }
-            BaseInterruptProtection += baseStats.InterruptProtection;
+            BaseInterruptProtection = baseInterruptProtection;
 
-            int playerLevel = calculationOptions.PlayerLevel;
-            int targetLevel = AreaEffect ? calculationOptions.AoeTargetLevel : calculationOptions.TargetLevel;
-
+            float realResistance;
             switch (MagicSchool)
             {
                 case MagicSchool.Arcane:
@@ -161,7 +157,11 @@ namespace Rawr.Mage
                     CritBonus = calculations.BaseArcaneCritBonus;
                     HitRate = calculations.BaseArcaneHitRate;
                     ThreatMultiplier = calculations.ArcaneThreatMultiplier;
-                    RealResistance = calculationOptions.ArcaneResist;
+                    realResistance = calculationOptions.ArcaneResist;
+                    if (range != 0)
+                    {
+                        Range = range + mageTalents.MagicAttunement * 3;
+                    }
                     break;
                 case MagicSchool.Fire:
                     BaseSpellModifier = calculations.BaseFireSpellModifier;
@@ -170,7 +170,11 @@ namespace Rawr.Mage
                     CritBonus = calculations.BaseFireCritBonus;
                     HitRate = calculations.BaseFireHitRate;
                     ThreatMultiplier = calculations.FireThreatMultiplier;
-                    RealResistance = calculationOptions.FireResist;
+                    realResistance = calculationOptions.FireResist;
+                    if (range != 0)
+                    {
+                        Range = range + mageTalents.FlameThrowing * 3;
+                    }
                     break;
                 case MagicSchool.FrostFire:
                     BaseSpellModifier = calculations.BaseFrostFireSpellModifier;
@@ -181,15 +185,159 @@ namespace Rawr.Mage
                     ThreatMultiplier = calculations.FrostFireThreatMultiplier;
                     if (calculationOptions.FireResist == -1)
                     {
-                        RealResistance = calculationOptions.FrostResist;
+                        realResistance = calculationOptions.FrostResist;
                     }
                     else if (calculationOptions.FrostResist == -1)
                     {
-                        RealResistance = calculationOptions.FireResist;
+                        realResistance = calculationOptions.FireResist;
                     }
                     else
                     {
-                        RealResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
+                        realResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
+                    }
+                    Range = range;
+                    break;
+                case MagicSchool.Frost:
+                    BaseSpellModifier = calculations.BaseFrostSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseFrostAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseFrostCritRate;
+                    CritBonus = calculations.BaseFrostCritBonus;
+                    HitRate = calculations.BaseFrostHitRate;
+                    ThreatMultiplier = calculations.FrostThreatMultiplier;
+                    realResistance = calculationOptions.FrostResist;
+                    Range = range * (1 + mageTalents.ArcticReach * 0.1f);
+                    break;
+                case MagicSchool.Nature:
+                    BaseSpellModifier = calculations.BaseNatureSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseNatureAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseNatureCritRate;
+                    CritBonus = calculations.BaseNatureCritBonus;
+                    HitRate = calculations.BaseNatureHitRate;
+                    ThreatMultiplier = calculations.NatureThreatMultiplier;
+                    realResistance = calculationOptions.NatureResist;
+                    Range = range;
+                    break;
+                case MagicSchool.Shadow:
+                    BaseSpellModifier = calculations.BaseShadowSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseShadowAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseShadowCritRate;
+                    CritBonus = calculations.BaseShadowCritBonus;
+                    HitRate = calculations.BaseShadowHitRate;
+                    ThreatMultiplier = calculations.ShadowThreatMultiplier;
+                    realResistance = calculationOptions.ShadowResist;
+                    Range = range;
+                    break;
+                case MagicSchool.Holy:
+                default:
+                    BaseSpellModifier = calculations.BaseHolySpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseHolyAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseHolyCritRate;
+                    CritBonus = calculations.BaseHolyCritBonus;
+                    HitRate = calculations.BaseHolyHitRate;
+                    ThreatMultiplier = calculations.HolyThreatMultiplier;
+                    realResistance = calculationOptions.HolyResist;
+                    Range = range;
+                    break;
+            }
+
+            int playerLevel = calculationOptions.PlayerLevel;
+            int targetLevel;
+
+            if (areaEffect)
+            {
+                targetLevel = calculationOptions.AoeTargetLevel;
+                float hitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculations.BaseSpellHit;
+                if (MagicSchool == MagicSchool.Arcane) hitRate += 0.01f * mageTalents.ArcaneFocus;
+                if (hitRate > Spell.MaxHitRate) hitRate = Spell.MaxHitRate;
+                HitRate = hitRate;
+            }
+            else
+            {
+                targetLevel = calculationOptions.TargetLevel;
+            }
+
+            RealResistance = realResistance;
+            PartialResistFactor = (realResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, realResistance, baseStats.SpellPenetration));
+        }
+
+        public void InitializeEffectDamage(CharacterCalculationsMage calculations, MagicSchool magicSchool, float minDamage, float maxDamage)
+        {
+            Stats baseStats = calculations.BaseStats;
+            MageTalents mageTalents = calculations.MageTalents;
+            CalculationOptionsMage calculationOptions = calculations.CalculationOptions;
+
+            //AreaEffect = areaEffect;
+            //BaseCost = cost - (int)baseStats.SpellsManaReduction;
+            MagicSchool = magicSchool;
+            BaseMinDamage = minDamage;
+            BaseMaxDamage = maxDamage;
+            //BasePeriodicDamage = periodicDamage;
+            //SpellDamageCoefficient = spellDamageCoefficient;
+            //Ticks = 1;
+            //CastProcs = 0;
+            //CastProcs2 = 0;
+            //DotDamageCoefficient = dotDamageCoefficient;
+            //DotDuration = dotDuration;
+
+            BaseDirectDamageModifier = 1.0f;
+            BaseDotDamageModifier = 1.0f;
+            BaseCostModifier = 1.0f;
+
+            //Range = range;
+            
+            /*float baseCostAmplifier = calculationOptions.EffectCostMultiplier;
+            baseCostAmplifier *= (1.0f - 0.01f * mageTalents.Precision);
+            if (mageTalents.FrostChanneling > 0) baseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
+            if (MagicSchool == MagicSchool.Arcane) baseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
+            BaseCostAmplifier = baseCostAmplifier;*/
+
+            /*float baseInterruptProtection = baseStats.InterruptProtection;
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
+            {
+                baseInterruptProtection += 0.35f * mageTalents.BurningSoul;
+                AffectedByFlameCap = true;
+            }
+            BaseInterruptProtection = baseInterruptProtection;*/
+
+            float realResistance;
+            switch (MagicSchool)
+            {
+                case MagicSchool.Arcane:
+                    BaseSpellModifier = calculations.BaseArcaneSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseArcaneAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseArcaneCritRate;
+                    CritBonus = calculations.BaseArcaneCritBonus;
+                    HitRate = calculations.BaseArcaneHitRate;
+                    ThreatMultiplier = calculations.ArcaneThreatMultiplier;
+                    realResistance = calculationOptions.ArcaneResist;
+                    break;
+                case MagicSchool.Fire:
+                    BaseSpellModifier = calculations.BaseFireSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseFireAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseFireCritRate;
+                    CritBonus = calculations.BaseFireCritBonus;
+                    HitRate = calculations.BaseFireHitRate;
+                    ThreatMultiplier = calculations.FireThreatMultiplier;
+                    realResistance = calculationOptions.FireResist;
+                    break;
+                case MagicSchool.FrostFire:
+                    BaseSpellModifier = calculations.BaseFrostFireSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseFrostFireAdditiveSpellModifier;
+                    BaseCritRate = calculations.BaseFrostFireCritRate;
+                    CritBonus = calculations.BaseFrostFireCritBonus;
+                    HitRate = calculations.BaseFrostFireHitRate;
+                    ThreatMultiplier = calculations.FrostFireThreatMultiplier;
+                    if (calculationOptions.FireResist == -1)
+                    {
+                        realResistance = calculationOptions.FrostResist;
+                    }
+                    else if (calculationOptions.FrostResist == -1)
+                    {
+                        realResistance = calculationOptions.FireResist;
+                    }
+                    else
+                    {
+                        realResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
                     }
                     break;
                 case MagicSchool.Frost:
@@ -199,7 +347,7 @@ namespace Rawr.Mage
                     CritBonus = calculations.BaseFrostCritBonus;
                     HitRate = calculations.BaseFrostHitRate;
                     ThreatMultiplier = calculations.FrostThreatMultiplier;
-                    RealResistance = calculationOptions.FrostResist;
+                    realResistance = calculationOptions.FrostResist;
                     break;
                 case MagicSchool.Nature:
                     BaseSpellModifier = calculations.BaseNatureSpellModifier;
@@ -208,7 +356,7 @@ namespace Rawr.Mage
                     CritBonus = calculations.BaseNatureCritBonus;
                     HitRate = calculations.BaseNatureHitRate;
                     ThreatMultiplier = calculations.NatureThreatMultiplier;
-                    RealResistance = calculationOptions.NatureResist;
+                    realResistance = calculationOptions.NatureResist;
                     break;
                 case MagicSchool.Shadow:
                     BaseSpellModifier = calculations.BaseShadowSpellModifier;
@@ -217,27 +365,38 @@ namespace Rawr.Mage
                     CritBonus = calculations.BaseShadowCritBonus;
                     HitRate = calculations.BaseShadowHitRate;
                     ThreatMultiplier = calculations.ShadowThreatMultiplier;
-                    RealResistance = calculationOptions.ShadowResist;
+                    realResistance = calculationOptions.ShadowResist;
                     break;
                 case MagicSchool.Holy:
+                default:
                     BaseSpellModifier = calculations.BaseHolySpellModifier;
                     BaseAdditiveSpellModifier = calculations.BaseHolyAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseHolyCritRate;
                     CritBonus = calculations.BaseHolyCritBonus;
                     HitRate = calculations.BaseHolyHitRate;
                     ThreatMultiplier = calculations.HolyThreatMultiplier;
-                    RealResistance = calculationOptions.HolyResist;
+                    realResistance = calculationOptions.HolyResist;
                     break;
             }
 
-            if (AreaEffect)
-            {
-                HitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculations.BaseSpellHit;
-                if (MagicSchool == MagicSchool.Arcane) HitRate += 0.01f * mageTalents.ArcaneFocus;
-                if (HitRate > Spell.MaxHitRate) HitRate = Spell.MaxHitRate;
-            }
+            int playerLevel = calculationOptions.PlayerLevel;
+            int targetLevel = calculationOptions.TargetLevel;
 
-            PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, RealResistance, baseStats.SpellPenetration));
+            /*if (areaEffect)
+            {
+                targetLevel = calculationOptions.AoeTargetLevel;
+                float hitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculations.BaseSpellHit;
+                if (MagicSchool == MagicSchool.Arcane) hitRate += 0.01f * mageTalents.ArcaneFocus;
+                if (hitRate > Spell.MaxHitRate) hitRate = Spell.MaxHitRate;
+                HitRate = hitRate;
+            }
+            else
+            {
+                targetLevel = calculationOptions.TargetLevel;
+            }*/
+
+            RealResistance = realResistance;
+            PartialResistFactor = (realResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, realResistance, baseStats.SpellPenetration));
         }
 
         public static float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
