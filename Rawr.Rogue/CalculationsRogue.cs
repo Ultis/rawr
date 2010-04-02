@@ -310,7 +310,7 @@ namespace Rawr.Rogue
             float offHandSpeedNorm = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
 
             float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Rogue);
-            float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating, CharacterClass.Rogue);
+            float spellHitBonus = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Rogue);
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise, CharacterClass.Rogue);
 
             float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
