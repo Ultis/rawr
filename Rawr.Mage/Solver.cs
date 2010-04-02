@@ -1688,6 +1688,10 @@ namespace Rawr.Mage
                 {
                     column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
+                    if (idleRegenSegments == 1 && !needsTimeExtension)
+                    {
+                        lp.SetColumnLowerBound(column, (1 - dpsTime) * calculationOptions.FightDuration);
+                    }
                     if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = calculationResult.BaseState, Dps = dps, Mps = mps, Tps = tps });
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                     lp.SetElementUnsafe(rowManaRegen, column, mps);
@@ -2223,12 +2227,28 @@ namespace Rawr.Mage
                     mps = manaGemRegen;
                     tps = -manaGemRegen * 0.5f * threatFactor;
                     dps = 0.0f;
+                    double upperBound;
+                    if (manaGemSegments > 1)
+                    {
+                        upperBound = 1.0;
+                    }
+                    else
+                    {
+                        if (needsTimeExtension || conjureManaGem)
+                        {
+                            upperBound = calculationResult.MaxManaGem;
+                        }
+                        else
+                        {
+                            upperBound = Math.Min(3, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
+                        }
+                    }
                     for (int segment = 0; segment < manaGemSegments; segment++)
                     {
                         if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment, Dps = dps, Mps = mps, Tps = tps });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
-                        lp.SetColumnUpperBound(column, (manaGemSegments > 1) ? 1.0 : calculationResult.MaxManaGem);
+                        lp.SetColumnUpperBound(column, upperBound);
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaGem, column, 1.0);
@@ -3208,7 +3228,10 @@ namespace Rawr.Mage
             if (manaPotionAvailable && integralMana) rowManaPotion = rowCount++;
             if (calculationOptions.ManaGemEnabled)
             {
-                rowManaGem = rowCount++;
+                if (segmentCooldowns || conjureManaGem || needsTimeExtension)
+                {
+                    rowManaGem = rowCount++;
+                }
                 if (requiresMIP || conjureManaGem)
                 {
                     rowManaGemMax = rowCount++;
@@ -3279,7 +3302,7 @@ namespace Rawr.Mage
                     rowSummonMirrorImageCount = rowCount++;
                 }
             }
-            if (dpsTime < 1)
+            if (dpsTime < 1 && (needsTimeExtension || segmentCooldowns))
             {
                 rowDpsTime = rowCount++;
             }
