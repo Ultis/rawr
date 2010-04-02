@@ -292,7 +292,7 @@ namespace Rawr.WarlockTmp {
             return true;
         }
 
-        public String GetToolTip() {
+        public string GetToolTip() {
 
             float numCasts = GetNumCasts();
             float castTime = GetAvgTimeUsed() - Mommy.Options.Latency;
@@ -300,15 +300,15 @@ namespace Rawr.WarlockTmp {
             string toolTip;
             if (AvgDamagePerCast > 0) {
                 toolTip
-                    = String.Format(
+                    = string.Format(
                         "{0:0.0} dps*",
                         numCasts * AvgDamagePerCast / Mommy.Options.Duration);
             } else {
-                toolTip = String.Format("{0:0.0} casts*", numCasts);
+                toolTip = string.Format("{0:0.0} casts*", numCasts);
             }
             if (AvgDirectHit > 0) {
                 toolTip
-                    += String.Format(
+                    += string.Format(
                         "{0:0.0}\tAverage Hit\r\n"
                             + "{1:0.0}\tAverage Crit\r\n",
                         AvgDirectHit,
@@ -316,7 +316,7 @@ namespace Rawr.WarlockTmp {
             }
             if (AvgTickHit > 0) {
                 toolTip
-                    += String.Format(
+                    += string.Format(
                         "{0:0.0}\tAverage Tick\r\n"
                             + "{1:0.0}\tAverage Tick Crit\r\n"
                             + "{2:0.0}\tTicks Per Cast\r\n",
@@ -325,21 +325,21 @@ namespace Rawr.WarlockTmp {
                         NumTicks);
             }
             toolTip
-                += String.Format(
+                += string.Format(
                     "{0:0.00}s\tCast Time\r\n"
                         + "{1:0.0}\tMana\r\n",
                     castTime,
                     ManaCost);
             if (Cooldown > 0) {
-                toolTip += String.Format("{0:0.0}s\tCooldown\r\n", Cooldown);
+                toolTip += string.Format("{0:0.0}s\tCooldown\r\n", Cooldown);
             }
             toolTip
-                += String.Format(
+                += string.Format(
                     "{0:0.0}s\tBetween Casts (Average)\r\n",
                     Mommy.Options.Duration / numCasts);
             if (AvgDamagePerCast > 0) {
                 toolTip
-                    += String.Format(
+                    += string.Format(
                         "{0:0.0}\tDPC\r\n"
                             + "{1:0.0}\tDPCT\r\n"
                             + "{2:0.0}\tDPM\r\n"
@@ -712,15 +712,23 @@ namespace Rawr.WarlockTmp {
             List<CastingState> states
                 = base.SimulateCast(stateBeforeCast, chanceOfCast);
             Debug.Assert(states.Count == 1);
+
+            bool backdraft = Mommy.Talents.Backdraft > 0;
+            bool immoSynch = !Mommy.Talents.GlyphConflag;
             CastingState stateOnHit = states[0];
-            if (Mommy.Talents.Backdraft > 0) {
+            if (backdraft || immoSynch) {
                 if (Mommy.HitChance < 1f) {
                     CastingState onMiss = new CastingState(stateOnHit);
                     onMiss.Probability *= 1 - Mommy.HitChance;
                     states.Add(onMiss);
                     stateOnHit.Probability *= Mommy.HitChance;
                 }
-                stateOnHit.ExtraState["Backdraft Aura"] = 3;
+                if (backdraft) {
+                    stateOnHit.ExtraState["Backdraft Aura"] = 3;
+                }
+                if (immoSynch) {
+                    stateOnHit.ExtraState["immolation consumed"] = true;
+                }
             }
             return states;
         }
@@ -1005,6 +1013,7 @@ namespace Rawr.WarlockTmp {
             CharacterCalculationsWarlock mommy) {
 
             return mommy.Options.SpellPriority.Contains("Conflagrate")
+                && mommy.Talents.Conflagrate > 0
                 && !mommy.Talents.GlyphConflag;
         }
 
@@ -1033,33 +1042,45 @@ namespace Rawr.WarlockTmp {
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier) {
 
-        //protected override float CalcAvgBackdraftBonus(
-        //    float fullBonus, float avgCast) {
+        public override float GetQueueProbability(CastingState state) {
 
-        //    if (Mommy.Talents.GlyphConflag) {
-        //        return base.CalcAvgBackdraftBonus(fullBonus, avgCast);
-        //    } else {
-        //        // TODO if its possible to have less than 1 charge available
-        //        // this should be reduced.
-        //        return fullBonus;
-        //    }
-        //}
+            if (!IsClippedByConflagrate(Mommy)) {
+                return base.GetQueueProbability(state);
+            }
 
-        //protected override float CalcAvgBackdraftCasts(
-        //    float backdraftPeriod, float backdraftWindow, float avgCast) {
+            if (state.ExtraState.ContainsKey("immolation consumed")
+                && !state.Cooldowns.ContainsKey(this)) {
 
-        //    if (Mommy.Talents.GlyphConflag) {
-        //        return base.CalcAvgBackdraftCasts(
-        //            backdraftPeriod, backdraftWindow, avgCast);
-        //    } else {
-        //        return 1f;
-        //    }
-        //}
+                return 1f;
+            } else {
+                return 0f;
+            }
+        }
 
-        //protected override float GetMaxBackdraftCasts() {
+        public override List<CastingState> SimulateCast(
+            CastingState stateBeforeCast, float chanceOfCast) {
             
-        //    return 1f;
-        //}
+            List<CastingState> states
+                = base.SimulateCast(stateBeforeCast, chanceOfCast);
+            if (IsClippedByConflagrate(Mommy)) {
+                Debug.Assert(
+                    states[0].ExtraState.ContainsKey("immolation consumed"));
+                Debug.Assert(
+                    states[1].ExtraState.ContainsKey("immolation consumed"));
+                Debug.Assert(states[0].Probability > states[1].Probability);
+                states[0].ExtraState.Remove("immolation consumed");
+            }
+            return states;
+        }
+
+        public override float GetNumCasts() {
+
+            if (IsClippedByConflagrate(Mommy)) {
+                return Mommy.CastSpells["Conflagrate"].GetNumCasts();
+            } else {
+                return base.GetNumCasts();
+            }
+        }
     }
 
     public class Incinerate : Spell {

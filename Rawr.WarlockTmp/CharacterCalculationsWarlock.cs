@@ -251,7 +251,7 @@ namespace Rawr.WarlockTmp {
                         * Spell.CalcUprate(
                             Talents.ImprovedSoulLeech * .5f,
                             15f,
-                            AvgTimeUsed));
+                            AvgTimeUsed * 1.1f));
             float timeRemaining = Options.Duration;
             float manaRemaining
                 = Stats.Mana
@@ -536,7 +536,7 @@ namespace Rawr.WarlockTmp {
                 pRemaining *= 1f - p;
             }
 
-            if (true) ; // here for breakpoints
+            //System.Console.WriteLine(state.ToString());
         }
 
         #endregion

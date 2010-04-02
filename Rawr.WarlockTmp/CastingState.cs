@@ -79,5 +79,14 @@ namespace Rawr.WarlockTmp {
                 Cooldowns[key] -= timeAdvance;
             }
         }
+
+        public string ToString() {
+
+            string str = string.Format("{0:0.00000}:", Probability);
+            foreach (Spell spell in Series) {
+                str += " " + spell.GetType().Name;
+            }
+            return str;
+        }
     }
 }
