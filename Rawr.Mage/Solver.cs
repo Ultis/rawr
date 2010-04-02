@@ -1614,6 +1614,15 @@ namespace Rawr.Mage
             if (restrictManaUse) segmentNonCooldowns = true;
             if (restrictThreat) segmentNonCooldowns = true;
 
+            dpsTime = calculationOptions.DpsTime;
+            float silenceTime = calculationOptions.EffectShadowSilenceFrequency * calculationOptions.EffectShadowSilenceDuration * Math.Max(1 - baseStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            if (1 - silenceTime < dpsTime) dpsTime = 1 - silenceTime;
+            if (calculationOptions.MovementFrequency > 0)
+            {
+                float movementShare = calculationOptions.MovementDuration / calculationOptions.MovementFrequency / (1 + baseStats.MovementSpeed);
+                dpsTime -= movementShare;
+            }
+
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
             lp = new SolverLP(calculationResult.ArraySet, rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (calculationOptions.UseFireWard ? 1 : 0) + (calculationOptions.UseFrostWard ? 1 : 0))) * segmentList.Count, calculationResult, segmentList.Count);
@@ -1667,14 +1676,6 @@ namespace Rawr.Mage
                 #endregion
 
                 float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
-                dpsTime = calculationOptions.DpsTime;
-                float silenceTime = calculationOptions.EffectShadowSilenceFrequency * calculationOptions.EffectShadowSilenceDuration * Math.Max(1 - baseStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-                if (1 - silenceTime < dpsTime) dpsTime = 1 - silenceTime;
-                if (calculationOptions.MovementFrequency > 0)
-                {
-                    float movementShare = calculationOptions.MovementDuration / calculationOptions.MovementFrequency / (1 + baseStats.MovementSpeed);
-                    dpsTime -= movementShare;
-                }
 
                 #region Formulate LP
                 #region Idle Regen
@@ -3208,11 +3209,14 @@ namespace Rawr.Mage
             if (calculationOptions.ManaGemEnabled)
             {
                 rowManaGem = rowCount++;
-                rowManaGemMax = rowCount++;
-            }
-            if (conjureManaGem)
-            {
-                rowConjureManaGem = rowCount++;
+                if (requiresMIP || conjureManaGem)
+                {
+                    rowManaGemMax = rowCount++;
+                }
+                if (conjureManaGem)
+                {
+                    rowConjureManaGem = rowCount++;
+                }
             }
             /*if (wardsAvailable)
             {
@@ -3270,9 +3274,15 @@ namespace Rawr.Mage
             if (mirrorImageAvailable)
             {
                 rowSummonMirrorImage = rowCount++;
-                rowSummonMirrorImageCount = rowCount++;
+                if (requiresMIP)
+                {
+                    rowSummonMirrorImageCount = rowCount++;
+                }
             }
-            rowDpsTime = rowCount++;
+            if (dpsTime < 1)
+            {
+                rowDpsTime = rowCount++;
+            }
 
             List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>(8); // most common observed case has more than 4 stacking constraints, so avoid resizing, specially if using struct
             for (int i = 0; i < cooldownList.Count; i++)
