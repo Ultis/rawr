@@ -270,14 +270,14 @@ namespace Rawr.WarlockTmp {
                     CastSpells.Add(spellName, spell);
                 }
             }
-            RecordCollisionDelays(new CastingState(this));
+            Spell filler = GetSpell(Options.Filler);
+            RecordCollisionDelays(new CastingState(this, filler));
             foreach (Spell spell in Priorities) {
                 float numCasts = spell.GetNumCasts();
                 timeRemaining -= spell.GetAvgTimeUsed() * numCasts;
                 manaRemaining -= spell.ManaCost * numCasts;
             }
             LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
-            Spell filler = GetSpell(Options.Filler);
             timeRemaining
                 -= lifeTap.GetAvgTimeUsed()
                     * lifeTap.AddCastsForRegen(
@@ -512,31 +512,32 @@ namespace Rawr.WarlockTmp {
         // for some classes is a reasonable approximation.
         private void RecordCollisionDelays(CastingState state) {
 
-		    float pRemaining = 1f;
-		    foreach (Spell spell in Priorities) {
-			    float p = spell.GetQueueProbability(state);
-			    if (p == 0f) {
-				    continue;
-			    }
+            float pRemaining = 1f;
+            foreach (Spell spell in Priorities) {
+                float p = spell.GetQueueProbability(state);
+                if (p == 0f) {
+                    continue;
+                }
 
-			    spell.RecordCollisionDelay(state, p * pRemaining);
-			    List<CastingState> nextStates =
-				    spell.GetStatesAfterCast(state, p * pRemaining);
-			    foreach (CastingState nextState in nextStates) {
-				    if (nextState.Probability > .001f) {
+                List<CastingState> nextStates =
+                    spell.SimulateCast(state, p * pRemaining);
+                foreach (CastingState nextState in nextStates) {
+                    if (nextState.Probability > .0001f) {
 
-					    // Only calculate if the probabilty of the state is large
-					    // enough to make any difference at all.
-					    RecordCollisionDelays(nextState);
-				    }
-			    }
-			    if (p == 1f) {
-				    return;
-			    }
+                        // Only calculate if the probabilty of the state is
+                        // large enough to make any difference at all.
+                        RecordCollisionDelays(nextState);
+                    }
+                }
+                if (p == 1f) {
+                    return;
+                }
 
-			    pRemaining *= 1f - p;
-		    }
-	    }
+                pRemaining *= 1f - p;
+            }
+
+            if (true) ; // here for breakpoints
+        }
 
         #endregion
 
@@ -569,12 +570,6 @@ namespace Rawr.WarlockTmp {
                 }
             }
 
-            int corr = spellPriority.IndexOf("Corruption");
-            int sbInstant = spellPriority.IndexOf("Shadow Bolt (Instant)");
-            if (sbInstant >= 0 && sbInstant < corr) {
-                return "Shadow Bolt (Instant) may only appear after Corruption.";
-            }
-
             int immo = spellPriority.IndexOf("Immolate");
             int conf = spellPriority.IndexOf("Conflagrate");
             if (conf >= 0 && conf < immo) {
@@ -593,12 +588,23 @@ namespace Rawr.WarlockTmp {
         public List<string> PrepForCalcs(List<string> spellPriority) {
 
             List<string> forCalcs = new List<string>(spellPriority);
+
+            if (Options.SpellPriority.Contains("Conflagrate")
+                && Talents.Backdraft > 0
+                && !Options.SpellPriority.Contains(
+                    "Incinerate (Under Backdraft)")) {
+
+                forCalcs.Insert(
+                    forCalcs.Count - 1, "Incinerate (Under Backdraft)");
+            }
+
             if (Options.Filler.Equals("Shadow Bolt")
                 && !forCalcs.Contains("Shadow Bolt (Instant)")
                 && ShadowBolt_Instant.MightCast(Talents, forCalcs)) {
 
                 forCalcs.Insert(forCalcs.Count - 1, "Shadow Bolt (Instant)");
             }
+
             return forCalcs;
         }
     }

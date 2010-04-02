@@ -72,16 +72,15 @@ namespace Rawr.WarlockTmp {
         public float TickCoefficient { get; protected set; }
         public bool CanTickCrit { get; protected set; }
 
-        // set via constructor but sometimes modified via SetCastingStats()
+        // set via constructor but sometimes modified via RecordCollisionDelay()
         public float Cooldown { get; protected set; }
         public float RecastPeriod { get; protected set; }
         public float NumTicks { get; protected set; }
         public SpellModifiers SpellModifiers { get; protected set; }
 
         // set via RecordCollisionDelay()
-        public List<float> Delays { get; protected set; }
-        public List<float> DelayWeights { get; protected set; }
-        //public float BackdraftMultiplier { get; protected set; }
+        public Dictionary<string, SimulatedStat> SimulatedStats {
+            get; protected set; }
 
         // set via SetDamageStats()
         public float AvgDirectHit { get; protected set; }
@@ -242,8 +241,7 @@ namespace Rawr.WarlockTmp {
             TickCoefficient = tickCoefficient;
             CanTickCrit = canTickCrit;
 
-            Delays = new List<float>();
-            DelayWeights = new List<float>();
+            SimulatedStats = new Dictionary<string, SimulatedStat>();
 
             WarlockTalents talents = mommy.Talents;
             SpellModifiers = new SpellModifiers();
@@ -297,7 +295,7 @@ namespace Rawr.WarlockTmp {
         public String GetToolTip() {
 
             float numCasts = GetNumCasts();
-            float timeUsed = GetTimeUsed(new CastingState(Mommy));
+            float castTime = GetAvgTimeUsed() - Mommy.Options.Latency;
 
             string toolTip;
             if (AvgDamagePerCast > 0) {
@@ -328,9 +326,9 @@ namespace Rawr.WarlockTmp {
             }
             toolTip
                 += String.Format(
-                    "{0:0.0}s\t Used per Cast\r\n"
+                    "{0:0.00}s\tCast Time\r\n"
                         + "{1:0.0}\tMana\r\n",
-                    timeUsed,
+                    castTime,
                     ManaCost);
             if (Cooldown > 0) {
                 toolTip += String.Format("{0:0.0}s\tCooldown\r\n", Cooldown);
@@ -347,7 +345,7 @@ namespace Rawr.WarlockTmp {
                             + "{2:0.0}\tDPM\r\n"
                             + "{3:0.0}\tCasts",
                         AvgDamagePerCast,
-                        AvgDamagePerCast / timeUsed,
+                        AvgDamagePerCast / castTime,
                         AvgDamagePerCast / ManaCost,
                         numCasts);
             }
@@ -363,12 +361,12 @@ namespace Rawr.WarlockTmp {
             NumCasts += timeRemaining / GetAvgTimeUsed();
         }
 
-        public float GetNumCasts() {
+        public virtual float GetNumCasts() {
 
             if (NumCasts == 0) {
+                float delay = SimulatedStats["delay"].GetValue();
                 NumCasts
-                    = Mommy.Options.Duration
-                        / (GetAvgRequeueTime() + GetAvgDelay());
+                    = Mommy.Options.Duration / (GetAvgRequeueTime() + delay);
             }
             return NumCasts;
         }
@@ -378,7 +376,7 @@ namespace Rawr.WarlockTmp {
             return false;
         }
 
-        public float GetQueueProbability(CastingState state) {
+        public virtual float GetQueueProbability(CastingState state) {
 
             if (state.Cooldowns.ContainsKey(this)) {
                 if (state.Cooldowns[this] <= 0) {
@@ -413,35 +411,42 @@ namespace Rawr.WarlockTmp {
             return period;
         }
 
-	    public void RecordCollisionDelay(
-            CastingState state, float chanceOfCast) {
-
-            Delays.Add(state.GetAvgTimeSinceQueued(this));
-		    DelayWeights.Add(chanceOfCast * state.Probability);
-	    }
-
-        public List<CastingState> GetStatesAfterCast(
+	    public virtual List<CastingState> SimulateCast(
             CastingState stateBeforeCast, float chanceOfCast) {
 
-            List<CastingState> results = new List<CastingState>();
+            // record stats about this spellcast
+            float p = chanceOfCast * stateBeforeCast.Probability;
+            float timeUsed = GetTimeUsed(stateBeforeCast);
+            RecordSimulatedStat(
+                "delay", stateBeforeCast.GetAvgTimeSinceQueued(this), p);
+            RecordSimulatedStat("time used", timeUsed, p);
 
-            // the next state if the spell hits
+            // construct the casting state(s) that can result from this cast
+            List<CastingState> results = new List<CastingState>();
             float hitChance = Mommy.HitChance;
             if (IsBinary()) {
                 hitChance -= GetResist();
             }
-            float timeUsed = GetTimeUsed(stateBeforeCast);
             float newCooldown
                 = Cooldown - timeUsed + GetCastTime(stateBeforeCast);
-
-            // the next state if the spell misses (and that matters)
-            if (hitChance < 1f && Cooldown < RecastPeriod) {
+            if (CanMiss && hitChance < 1f && Cooldown < RecastPeriod) {
+                
+                // this spell has a different "cooldown" when it hits ...
                 PopulateNextState(
                     results,
                     stateBeforeCast,
                     timeUsed,
                     RecastPeriod - timeUsed,
                     hitChance * chanceOfCast);
+
+                // ... than when it misses
+                if (newCooldown <= 0) {
+
+                    // ensure at least 1 spell is cast before this one is
+                    // requeued, to allow for travel time + reaction time for
+                    // the player to detect the miss
+                    newCooldown = .0001f;
+                }
                 PopulateNextState(
                     results,
                     stateBeforeCast,
@@ -454,10 +459,19 @@ namespace Rawr.WarlockTmp {
                     stateBeforeCast,
                     timeUsed,
                     Math.Max(newCooldown, RecastPeriod - timeUsed),
-                    1f);
+                    chanceOfCast);
             }
 
             return results;
+        }
+
+        private void RecordSimulatedStat(
+            string statName, float value, float weight) {
+
+            if (!SimulatedStats.ContainsKey(statName)) {
+                SimulatedStats[statName] = new SimulatedStat();
+            }
+            SimulatedStats[statName].AddSample(value, weight);
         }
 
         private void PopulateNextState(
@@ -471,13 +485,28 @@ namespace Rawr.WarlockTmp {
             nextState.Probability *= p;
             nextState.AddSpell(this, timeUsed);
             nextState.Cooldowns[this] = cooldownAfterAdvance;
+
+            if (MySpellTree == SpellTree.Destruction
+                && nextState.ExtraState.ContainsKey("Backdraft Aura")) {
+
+                int nextCharges
+                    = (int) nextState.ExtraState["Backdraft Aura"] - 1;
+                if (nextCharges == 0) {
+                    nextState.ExtraState.Remove("Backdraft Aura");
+                } else {
+                    nextState.ExtraState["Backdraft Aura"] = nextCharges;
+                }
+            }
+
             results.Add(nextState);
         }
 
         private float GetTimeUsed(CastingState state) {
 
-            return GetTimeUsed(
-                BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency);
+            return MaybeApplyBackdraft(
+                GetTimeUsed(
+                    BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency),
+                state);
         }
 
         private float GetCastTime(CastingState state) {
@@ -490,97 +519,34 @@ namespace Rawr.WarlockTmp {
             foreach (WeightedStat h in Mommy.Haste) {
                 avg += h.Chance * BaseCastTime / h.Value;
             }
-            return avg;
+            return MaybeApplyBackdraft(avg, state);
+        }
+
+        private float MaybeApplyBackdraft(float time, CastingState state) {
+
+            if (state != null
+                && state.ExtraState.ContainsKey("Backdraft Aura")
+                && MySpellTree == SpellTree.Destruction) {
+
+                time /= 1f + Mommy.Talents.Backdraft * .1f;
+            }
+            return time;
         }
 
         public float GetAvgTimeUsed() {
 
-            return GetTimeUsed(
-                BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency);
-        }
-
-        public float GetAvgDelay() {
-
-            if (AvgDelay == 0) {
-                AvgDelay = Utilities.GetWeightedSum(Delays, DelayWeights);
+            if (SimulatedStats.ContainsKey("time used")) {
+                return SimulatedStats["time used"].GetValue();
+            } else {
+                return GetTimeUsed(
+                    BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency);
             }
-            return AvgDelay;
         }
 
-        ///// <summary>
-        ///// This works for spells that are just as likely to be cast during
-        ///// backdraft as any other time, and spells that are not affected by
-        ///// backdraft (i.e. GetMaxBackdraftCasts() == 0). Override for other
-        ///// spells.
-        ///// </summary>
-        //protected virtual float CalcAvgBackdraftBonus(
-        //    float fullBonus, float avgCast) {
+        public float GetTotalWeight() {
 
-        //    float maxCasts = GetMaxBackdraftCasts();
-        //    if (maxCasts == 0) {
-        //        return 0;
-        //    }
-
-        //    float lag = Mommy.Options.Latency;
-        //    float backdraftPeriod = Conflagrate.COOLDOWN + avgCast / 2 + lag;
-        //    float backdraftWindow = 3f * (avgCast * (1 - fullBonus) + lag);
-        //    Debug.Assert(backdraftWindow < backdraftPeriod);
-
-        //    float castsRemaining = 3f;
-        //    foreach (KeyValuePair<string, Spell> pair in Mommy.CastSpells) {
-        //        castsRemaining
-        //            -= pair.Value.CalcAvgBackdraftCasts(
-        //                backdraftWindow, backdraftPeriod, avgCast);
-        //    }
-        //    if (castsRemaining < .0001) {
-        //        return 0f;
-        //    }
-
-        //    return Math.Min(
-        //            castsRemaining,
-        //            GetMaxBackdraftCasts())
-        //        * backdraftWindow
-        //        / backdraftPeriod
-        //        * fullBonus;
-        //}
-
-        ///// <summary>
-        ///// The number of times this spell is cast during a single backdraft,
-        ///// factoring in the spell's own cooldown but NOT other spells that may
-        ///// have already consumed charges.
-        ///// </summary>
-        //protected virtual float CalcAvgBackdraftCasts(
-        //    float backdraftWindow, float backdraftPeriod, float avgCast) {
-
-        //    float max = GetMaxBackdraftCasts();
-        //    if (max == 0) {
-        //        return 0f;
-        //    } else if (Cooldown == 0) {
-        //        return max;
-        //    } else {
-        //        Debug.Assert(Cooldown > backdraftWindow);
-        //        float chancePerSpellCast = backdraftWindow / backdraftPeriod;
-        //        float spellCastsPerBackdraft
-        //            = Math.Min(
-        //                max,
-        //                backdraftWindow
-        //                    / (Cooldown + avgCast / 2 + Mommy.Options.Latency));
-        //        return chancePerSpellCast * spellCastsPerBackdraft;
-        //    }
-        //}
-
-        //protected virtual float GetMaxBackdraftCasts() {
-
-        //    if (MySpellTree == SpellTree.Destruction) {
-        //        if (Cooldown == 0) {
-        //            return 3f;
-        //        } else {
-        //            return 1f;
-        //        }
-        //    } else {
-        //        return 0f;
-        //    }
-        //}
+            return SimulatedStats["delay"].GetTotalWeight();
+        }
 
         #endregion
 
@@ -649,6 +615,7 @@ namespace Rawr.WarlockTmp {
         }
 
         #endregion
+
     }
 
     public class ChaosBolt : Spell {
@@ -719,11 +686,6 @@ namespace Rawr.WarlockTmp {
             return Mommy.Talents.Conflagrate > 0;
         }
 
-        //protected override bool CanCollideWith(Spell spell) {
-            
-        //    return Mommy.Talents.GlyphConflag || !(spell is Immolate);
-        //}
-
         protected override void FinalizeSpellModifiers() {
 
             base.FinalizeSpellModifiers();
@@ -744,10 +706,24 @@ namespace Rawr.WarlockTmp {
                     + Mommy.Talents.Aftermath * .03f);
         }
 
-        //protected override float GetMaxBackdraftCasts() {
+        public override List<CastingState> SimulateCast(
+            CastingState stateBeforeCast, float chanceOfCast) {
             
-        //    return 0f;
-        //}
+            List<CastingState> states
+                = base.SimulateCast(stateBeforeCast, chanceOfCast);
+            Debug.Assert(states.Count == 1);
+            CastingState stateOnHit = states[0];
+            if (Mommy.Talents.Backdraft > 0) {
+                if (Mommy.HitChance < 1f) {
+                    CastingState onMiss = new CastingState(stateOnHit);
+                    onMiss.Probability *= 1 - Mommy.HitChance;
+                    states.Add(onMiss);
+                    stateOnHit.Probability *= Mommy.HitChance;
+                }
+                stateOnHit.ExtraState["Backdraft Aura"] = 3;
+            }
+            return states;
+        }
     }
 
     public class Corruption : Spell {
@@ -979,23 +955,20 @@ namespace Rawr.WarlockTmp {
             // the overall uprate.
 
             float uprate;
-            float hitUprate = 0f;
-            float missFollowingHitUprate = 0f;
             float tolerance = 12f - RecastPeriod;
-            float totalWeight = 0f;
-            foreach (float weight in DelayWeights) {
-                totalWeight += weight;
-            }
-            for (int i = Delays.Count; --i >= 0; ) {
-                float probability = DelayWeights[i] / totalWeight;
-                float collisionDelay = Delays[i];
+            SimulatedStat delayStats = SimulatedStats["delay"];
+            SimulatedStat hitUprate = new SimulatedStat();
+            SimulatedStat missFollowingHitUprate = new SimulatedStat();
+            for (int i = delayStats.Values.Count; --i >= 0; ) {
+                float collisionDelay = delayStats.Values[i];
+                float probability = delayStats.Weights[i];
 
                 // CASE 1: this cast hits.
                 // uprate = duration / window
                 // duration = 12
                 // window = RecastPeriod + collisionDelay
                 uprate = Math.Min(1f, 12f / (RecastPeriod + collisionDelay));
-                hitUprate += probability * uprate;
+                hitUprate.AddSample(uprate, probability);
 
                 // CASE 2: this cast misses, previous cast hit.
                 // uprate = leftoverUptime / window
@@ -1003,8 +976,8 @@ namespace Rawr.WarlockTmp {
                 // window = Cooldown + collisionDelay
                 uprate
                     = Math.Max(tolerance - collisionDelay, 0)
-                        / (Cooldown + GetAvgDelay());
-                missFollowingHitUprate += probability * uprate;
+                        / (Cooldown + delayStats.GetValue());
+                missFollowingHitUprate.AddSample(uprate, probability);
 
                 // CASE 3: this cast misses, previous cast missed.
                 // This case will always yeild zero uptime/uprate.
@@ -1014,9 +987,9 @@ namespace Rawr.WarlockTmp {
             float hitChance = Mommy.HitChance;
             float missChance = 1 - hitChance;
             uprate = Utilities.GetWeightedSum(
-                hitUprate,
+                hitUprate.GetValue(),
                 hitChance,
-                missFollowingHitUprate,
+                missFollowingHitUprate.GetValue(),
                 missChance * hitChance,
                 0f,
                 missChance * missChance);
@@ -1113,27 +1086,38 @@ namespace Rawr.WarlockTmp {
         }
     }
 
-    //public class Incinerate_UnderBackdraft : Incinerate {
+    public class Incinerate_UnderBackdraft : Incinerate {
 
-    //    public Incinerate_UnderBackdraft(CharacterCalculationsWarlock mommy)
-    //        : base(mommy) {
+        public Incinerate_UnderBackdraft(CharacterCalculationsWarlock mommy)
+            : base(mommy) { }
 
-    //        float multiplier = 1 - Mommy.Talents.Backdraft * .1f;
-    //        BaseCastTime *= multiplier;
-    //        MinGCD *= multiplier;
-    //    }
+        public override bool IsCastable() {
 
-    //    public override bool IsCastable() {
+            return Mommy.Talents.Backdraft > 0
+                && Mommy.Options.SpellPriority.Contains("Conflagrate")
+                && Mommy.Talents.Conflagrate > 0;
+        }
 
-    //        return Mommy.Talents.Backdraft > 0;
-    //    }
+        public override float GetQueueProbability(CastingState state) {
 
-    //    public override void SetCastingStats(float timeRemaining) {
+            if (state.ExtraState.ContainsKey("Backdraft Aura")) {
+                return 1f;
+            } else {
+                return 0f;
+            }
+        }
 
+        public override float GetNumCasts() {
 
-    //        base.SetCastingStats(timeRemaining);
-    //    }
-    //}
+            if (NumCasts == 0) {
+                Spell conflagrate = Mommy.CastSpells["Conflagrate"];
+                float castsPerConf
+                    = GetTotalWeight() / conflagrate.GetTotalWeight();
+                NumCasts = castsPerConf * conflagrate.GetNumCasts();
+            }
+            return NumCasts;
+        }
+    }
 
     public class LifeTap : Spell {
 
