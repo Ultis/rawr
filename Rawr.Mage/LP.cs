@@ -331,6 +331,7 @@ namespace Rawr.Mage
             }
             int index = arraySet.GetConstraint(name, cols, out newConstraint);
             extraConstraintsUsed[numExtraConstraints - 1] = index;
+            _lb[cols + rows - 1] = 0.0; // don't forget to clear
             _ub[cols + rows - 1] = double.PositiveInfinity;
             _flags[cols + rows - 1] = flagLB | flagB;
             arraySet._cost[cols + rows - 1] = 0.0;
@@ -360,6 +361,7 @@ namespace Rawr.Mage
             for (int i = 0; i < rows; i++)
             {
                 _B[i] = cols + i;
+                _lb[cols + i] = 0.0; // don't forget to clear
                 _ub[cols + i] = double.PositiveInfinity;
                 _flags[cols + i] = flagB | flagLB;
                 arraySet._cost[cols + i] = 0.0;
