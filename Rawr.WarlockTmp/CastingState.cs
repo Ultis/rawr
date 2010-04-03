@@ -20,7 +20,7 @@ namespace Rawr.WarlockTmp {
         public CastingState(CharacterCalculationsWarlock mommy, Spell filler) {
 
             Mommy = mommy;
-            Elapsed = filler.GetAvgTimeUsed() / 2f;
+            Elapsed = filler.GetAvgTimeUsed();
             Probability = 1f;
             Cooldowns = new Dictionary<Spell, float>();
             SeriesPriorities = new List<int>();
@@ -40,21 +40,19 @@ namespace Rawr.WarlockTmp {
             ExtraState = new Dictionary<string, object>(toCopy.ExtraState);
         }
 
-        public float GetAvgTimeSinceQueued(Spell spell) {
+        public float GetMaxTimeQueued(Spell spell) {
 
             if (Cooldowns.ContainsKey(spell)) {
                 Debug.Assert(Cooldowns[spell] <= 0);
                 return -Cooldowns[spell];
             }
 
-            // This method answers the qusetion, "My spell is being cast now, so
-            // how long has it been since it queued up to be cast?"
+            // This method answers the qusetion, "If my spell is being cast now,
+            // how long could it have been since it queued up to be cast?"
             // 
             // We know if there are lower priority spells that have already been
             // cast, it was not queued before that.  So we backtrack until we
-            // find a lower priority spell.  We know it could have come off
-            // cooldown anywhere during that period, so on average, take that
-            // time & divide by 2.
+            // find a lower priority spell.
             // 
             // Lower index == higher priority.
 
@@ -63,10 +61,10 @@ namespace Rawr.WarlockTmp {
             for (int i = SeriesTimes.Count; --i >= 0; ) {
                 t += SeriesTimes[i];
                 if (SeriesPriorities[i] > newPriority) {
-                    return t / 2f;
+                    return t;
                 }
             }
-            return Elapsed / 2f;
+            return Elapsed;
         }
 
         public void AddSpell(Spell spell, float timeAdvance) {

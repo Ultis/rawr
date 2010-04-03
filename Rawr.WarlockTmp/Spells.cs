@@ -80,7 +80,9 @@ namespace Rawr.WarlockTmp {
 
         // set via RecordCollisionDelay()
         public Dictionary<string, SimulatedStat> SimulatedStats {
-            get; protected set; }
+            get;
+            protected set;
+        }
 
         // set via SetDamageStats()
         public float AvgDirectHit { get; protected set; }
@@ -336,7 +338,7 @@ namespace Rawr.WarlockTmp {
             toolTip
                 += string.Format(
                     "{0:0.0}s\tBetween Casts (Average)\r\n",
-                    Mommy.Options.Duration / numCasts);
+                    GetAvgTimeBetweenCasts());
             if (AvgDamagePerCast > 0) {
                 toolTip
                     += string.Format(
@@ -385,11 +387,19 @@ namespace Rawr.WarlockTmp {
                     return 0f;
                 }
             } else {
-                return Math.Min(state.Elapsed / GetAvgRequeueTime(), 1f);
+                float maxQueued = state.GetMaxTimeQueued(this);
+                float unqueuable = state.Elapsed - maxQueued;
+                return Math.Min(
+                    maxQueued / (GetAvgRequeueTime() - unqueuable), 1f);
             }
         }
 
-        private float GetAvgRequeueTime() {
+        public float GetAvgRequeueTime() {
+
+            // TODO this should really not be averaged (for the cases this
+            // method is used).  Instead it should return all possible cooldowns
+            // and their probabilities (and calling methods should be modified
+            // accordingly).
 
             float period = Math.Max(RecastPeriod, Cooldown);
             float hitChance = Mommy.HitChance;
@@ -411,14 +421,14 @@ namespace Rawr.WarlockTmp {
             return period;
         }
 
-	    public virtual List<CastingState> SimulateCast(
+        public virtual List<CastingState> SimulateCast(
             CastingState stateBeforeCast, float chanceOfCast) {
 
             // record stats about this spellcast
             float p = chanceOfCast * stateBeforeCast.Probability;
             float timeUsed = GetTimeUsed(stateBeforeCast);
             RecordSimulatedStat(
-                "delay", stateBeforeCast.GetAvgTimeSinceQueued(this), p);
+                "delay", stateBeforeCast.GetMaxTimeQueued(this) / 2f, p);
             RecordSimulatedStat("time used", timeUsed, p);
 
             // construct the casting state(s) that can result from this cast
@@ -430,7 +440,7 @@ namespace Rawr.WarlockTmp {
             float newCooldown
                 = Cooldown - timeUsed + GetCastTime(stateBeforeCast);
             if (CanMiss && hitChance < 1f && Cooldown < RecastPeriod) {
-                
+
                 // this spell has a different "cooldown" when it hits ...
                 PopulateNextState(
                     results,
@@ -465,7 +475,7 @@ namespace Rawr.WarlockTmp {
             return results;
         }
 
-        private void RecordSimulatedStat(
+        public void RecordSimulatedStat(
             string statName, float value, float weight) {
 
             if (!SimulatedStats.ContainsKey(statName)) {
@@ -501,7 +511,7 @@ namespace Rawr.WarlockTmp {
             results.Add(nextState);
         }
 
-        private float GetTimeUsed(CastingState state) {
+        public float GetTimeUsed(CastingState state) {
 
             return MaybeApplyBackdraft(
                 GetTimeUsed(
@@ -509,7 +519,7 @@ namespace Rawr.WarlockTmp {
                 state);
         }
 
-        private float GetCastTime(CastingState state) {
+        public float GetCastTime(CastingState state) {
 
             if (BaseCastTime == 0f) {
                 return 0f;
@@ -548,6 +558,11 @@ namespace Rawr.WarlockTmp {
             return SimulatedStats["delay"].GetTotalWeight();
         }
 
+        public float GetAvgTimeBetweenCasts() {
+
+            return Mommy.Options.Duration / GetNumCasts();
+        }
+
         #endregion
 
 
@@ -559,10 +574,12 @@ namespace Rawr.WarlockTmp {
 
             AvgDirectHit
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
-                    * SpellModifiers.GetFinalDirectMultiplier();
+                    * SpellModifiers.GetFinalDirectMultiplier()
+                    * (1 - GetResist());
             AvgTickHit
                 = (BaseTickDamage + TickCoefficient * baseSpellPower)
-                    * SpellModifiers.GetFinalTickMultiplier();
+                    * SpellModifiers.GetFinalTickMultiplier()
+                    * (1 - GetResist());
 
             // crit direct damage
             float critChance = SpellModifiers.CritChance;
@@ -592,7 +609,6 @@ namespace Rawr.WarlockTmp {
             // overall damage
             AvgDamagePerCast
                 = Mommy.HitChance
-                    * (1 - GetResist())
                     * (avgDirectDamage + NumTicks * avgTickDamage);
         }
 
@@ -643,6 +659,26 @@ namespace Rawr.WarlockTmp {
         public override bool IsCastable() {
 
             return Mommy.Talents.ChaosBolt > 0;
+        }
+
+        public override List<CastingState> SimulateCast(
+            CastingState stateBeforeCast, float chanceOfCast) {
+
+            if (Mommy.Talents.FireAndBrimstone > 0) {
+                ((Immolate) Mommy.GetSpell("Immolate"))
+                    .RecordUpChance(this, stateBeforeCast);
+            }
+            return base.SimulateCast(stateBeforeCast, chanceOfCast);
+        }
+
+        protected override void FinalizeSpellModifiers() {
+
+            base.FinalizeSpellModifiers();
+            if (Mommy.Talents.FireAndBrimstone > 0) {
+                float uprate = SimulatedStats["immolate up-chance"].GetValue();
+                float fullBonus = Mommy.Talents.FireAndBrimstone * .02f;
+                SpellModifiers.AddMultiplicativeMultiplier(uprate * fullBonus);
+            }
         }
     }
 
@@ -708,7 +744,7 @@ namespace Rawr.WarlockTmp {
 
         public override List<CastingState> SimulateCast(
             CastingState stateBeforeCast, float chanceOfCast) {
-            
+
             List<CastingState> states
                 = base.SimulateCast(stateBeforeCast, chanceOfCast);
             Debug.Assert(states.Count == 1);
@@ -727,7 +763,8 @@ namespace Rawr.WarlockTmp {
                     stateOnHit.ExtraState["Backdraft Aura"] = 3;
                 }
                 if (immoSynch) {
-                    stateOnHit.ExtraState["immolation consumed"] = true;
+                    stateOnHit.Cooldowns[Mommy.GetSpell("Immolate")]
+                        = -GetTimeUsed(stateBeforeCast);
                 }
             }
             return states;
@@ -1009,7 +1046,9 @@ namespace Rawr.WarlockTmp {
 
     public class Immolate : Spell {
 
-        private static bool IsClippedByConflagrate(
+        public const float RECAST_PERIOD = 15f;
+        
+        public static bool IsClippedByConflagrate(
             CharacterCalculationsWarlock mommy) {
 
             return mommy.Options.SpellPriority.Contains("Conflagrate")
@@ -1025,14 +1064,14 @@ namespace Rawr.WarlockTmp {
                 .17f, // percentBaseMana,
                 2f - mommy.Talents.Bane * .1f, // baseCastTime,
                 0f, // cooldown,
-                IsClippedByConflagrate(mommy) ? 10f : 15f, // recastPeriod,
+                RECAST_PERIOD, // recastPeriod,
                 true, // canMiss,
                 460f, // lowDirectDamage,
                 460f, // highDirectDamage,
                 .2f, // directCoefficient,
                 mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
                 785f / 5f, // baseTickDamage,
-                IsClippedByConflagrate(mommy) ? 3f : 5f, // numTicks,
+                5f, // numTicks,
                 .2f, // tickCoefficient,
                 mommy.Stats.WarlockSpellstoneDotDamageMultiplier
                     + (mommy.Talents.GlyphImmolate ? .1f : 0f)
@@ -1044,31 +1083,33 @@ namespace Rawr.WarlockTmp {
 
         public override float GetQueueProbability(CastingState state) {
 
-            if (!IsClippedByConflagrate(Mommy)) {
-                return base.GetQueueProbability(state);
-            }
-
-            if (state.ExtraState.ContainsKey("immolation consumed")
+            if (IsClippedByConflagrate(Mommy)
                 && !state.Cooldowns.ContainsKey(this)) {
 
-                return 1f;
-            } else {
                 return 0f;
+            } else {
+                return base.GetQueueProbability(state);
             }
         }
 
         public override List<CastingState> SimulateCast(
             CastingState stateBeforeCast, float chanceOfCast) {
-            
+
             List<CastingState> states
                 = base.SimulateCast(stateBeforeCast, chanceOfCast);
+            if (Mommy.Talents.FireAndBrimstone > 0) {
+                states[0].ExtraState["last immolate hit"] = true;
+                if (states.Count > 1) {
+                    Debug.Assert(states.Count == 2);
+                    Debug.Assert(states[0].Probability > states[1].Probability);
+                    states[1].ExtraState["last immolate hit"] = false;
+                }
+            }
             if (IsClippedByConflagrate(Mommy)) {
-                Debug.Assert(
-                    states[0].ExtraState.ContainsKey("immolation consumed"));
-                Debug.Assert(
-                    states[1].ExtraState.ContainsKey("immolation consumed"));
-                Debug.Assert(states[0].Probability > states[1].Probability);
-                states[0].ExtraState.Remove("immolation consumed");
+                RecordSimulatedStat(
+                    "downtime",
+                    -stateBeforeCast.Cooldowns[this],
+                    stateBeforeCast.Probability);
             }
             return states;
         }
@@ -1080,6 +1121,61 @@ namespace Rawr.WarlockTmp {
             } else {
                 return base.GetNumCasts();
             }
+        }
+
+        public override void SetDamageStats(float baseSpellPower) {
+
+            if (IsClippedByConflagrate(Mommy)) {
+                float downtime = SimulatedStats["downtime"].GetValue();
+                float uptime = GetAvgTimeBetweenCasts() - downtime;
+                NumTicks = uptime / 3f;
+            }
+            base.SetDamageStats(baseSpellPower);
+        }
+
+        /// <summary>
+        /// Records the chance that a given spell is cast while immolate is on
+        /// the target.
+        /// </summary>
+        public void RecordUpChance(Spell spell, CastingState state) {
+
+            float chance;
+            float castTime = spell.GetCastTime(state);
+            if (state.Cooldowns.ContainsKey(this)) {
+
+                // if immolate is on cooldown, it has already been cast during
+                // this series, so we know exactly whether it's up or not
+                float cooldown = state.Cooldowns[this] - castTime;
+                if (cooldown <= 0) {
+                    chance = 0f;
+                } else if ((bool) state.ExtraState["last immolate hit"]) {
+                    chance = 1f;
+                } else {
+                    chance = 0f;
+                }
+            } else if (IsClippedByConflagrate(Mommy)) {
+
+                // this does not actually garuntee immolate is up.  For example,
+                // if the priority list starts: CoD > Corr > Chaos > Immo > Conf
+                // then it is possible for immolate to fall off while casting
+                // CoD + Corr so that the upchance on Chaos < 1.  But even then
+                // it's a rare case, and that is not a priority list anyone is
+                // actually going to use, so we'll just stick with this
+                // approximation.
+                chance = 1f;
+            } else {
+                float maxQueued = castTime;
+                if (Mommy.IsPriorityOrdered(spell, this)) {
+                    maxQueued += state.GetMaxTimeQueued(this);
+                }
+                float unqueuable = (state.Elapsed + castTime) - maxQueued;
+                float chanceQueued
+                    = Math.Min(
+                        maxQueued / (GetAvgRequeueTime() - unqueuable), 1f);
+                chance = 1 - chanceQueued;
+            }
+            spell.RecordSimulatedStat(
+                "immolate up-chance", chance, state.Probability);
         }
     }
 
@@ -1104,6 +1200,26 @@ namespace Rawr.WarlockTmp {
                 0f) { // bonus crit multiplier
 
             ApplyImprovedSoulLeech();
+        }
+
+        protected override void FinalizeSpellModifiers() {
+
+            base.FinalizeSpellModifiers();
+            float immoUp = GetImmolateUpRate();
+            BaseDamage *= 1f + (.25f * immoUp);
+            if (Mommy.Talents.FireAndBrimstone > 0) {
+                float fullBonus = Mommy.Talents.FireAndBrimstone * .02f;
+                SpellModifiers.AddMultiplicativeMultiplier(immoUp * fullBonus);
+            }
+        }
+
+        protected virtual float GetImmolateUpRate() {
+
+            if (Immolate.IsClippedByConflagrate(Mommy)) {
+                return 1f;
+            } else {
+                return 1 - GetCastTime(null) / Immolate.RECAST_PERIOD;
+            }
         }
     }
 
@@ -1137,6 +1253,21 @@ namespace Rawr.WarlockTmp {
                 NumCasts = castsPerConf * conflagrate.GetNumCasts();
             }
             return NumCasts;
+        }
+
+        public override List<CastingState> SimulateCast(
+            CastingState stateBeforeCast, float chanceOfCast) {
+
+            if (Mommy.Talents.FireAndBrimstone > 0) {
+                ((Immolate) Mommy.GetSpell("Immolate"))
+                    .RecordUpChance(this, stateBeforeCast);
+            }
+            return base.SimulateCast(stateBeforeCast, chanceOfCast);
+        }
+
+        protected override float GetImmolateUpRate() {
+
+            return SimulatedStats["immolate up-chance"].GetValue();
         }
     }
 

@@ -585,7 +585,7 @@ namespace Rawr.WarlockTmp {
         /// </summary>
         /// <param name="spellPriority"></param>
         /// <returns></returns>
-        public List<string> PrepForCalcs(List<string> spellPriority) {
+        private List<string> PrepForCalcs(List<string> spellPriority) {
 
             List<string> forCalcs = new List<string>(spellPriority);
 
@@ -606,6 +606,11 @@ namespace Rawr.WarlockTmp {
             }
 
             return forCalcs;
+        }
+
+        public bool IsPriorityOrdered(Spell s1, Spell s2) {
+
+            return Priorities.IndexOf(s1) < Priorities.IndexOf(s2);
         }
     }
 }
