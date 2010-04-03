@@ -67,7 +67,7 @@ namespace Rawr.Optimizer
 
         public BatchIndividual(object[] items, int itemCount, Dictionary<int, int> indexFromId, Item upgradeItem, List<Character> batchList)
         {
-            Items = (object[])items.Clone();
+            Items = items;
             AvailableItem = new ItemInstance[itemCount + 1];
             UsedCount = new int[itemCount + 1];
             for (int i = 0; i <= itemCount; i++)
@@ -541,7 +541,7 @@ namespace Rawr.Optimizer
                         bool injected;
                         object[] genes = (object[])startIndividual.Items.Clone();
                         genes[itemList.Count] = upgradeItems[0];
-                        BatchIndividual batch = GenerateIndividual(genes);
+                        BatchIndividual batch = GenerateIndividual(genes, true);
                         bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
                         if (best > baseValue)
                         {
@@ -622,7 +622,7 @@ namespace Rawr.Optimizer
                 bool injected;
                 object[] genes = (object[])startIndividual.Items.Clone();
                 genes[itemList.Count] = upgradeItems[0];
-                BatchIndividual batch = GenerateIndividual(genes);
+                BatchIndividual batch = GenerateIndividual(genes, true);
                 bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
                 RemoveUpgradeItems(item.Item);
                 upgradeValue = best - baseValue;
@@ -841,9 +841,9 @@ namespace Rawr.Optimizer
             return individual.Items;
         }
 
-        protected override BatchIndividual GenerateIndividual(object[] items)
+        protected override BatchIndividual GenerateIndividual(object[] items, bool canUseArray)
         {
-            return new BatchIndividual(items, itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Item : null, batchList);
+            return new BatchIndividual(canUseArray ? items : (object[])items.Clone(), itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Item : null, batchList);
         }
 
         protected override BatchIndividual BuildMutantIndividual(BatchIndividual parent)
@@ -1116,7 +1116,7 @@ namespace Rawr.Optimizer
 
             if (successful)
             {
-                return GenerateIndividual(items);
+                return GenerateIndividual(items, true);
             }
             return null;
         }

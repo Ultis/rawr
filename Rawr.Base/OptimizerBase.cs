@@ -762,7 +762,7 @@ namespace Rawr.Optimizer
                 directValuationsTemplate[directValuationsSlot] = directValuationsList[directValuationsIndex++];
                 if (IsIndividualValid(directValuationsTemplate))
                 {
-                    swappedIndividual = GenerateIndividual(directValuationsTemplate);
+                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false);
                 }
             }
 
@@ -798,7 +798,7 @@ namespace Rawr.Optimizer
                         directValuationsTemplate[directValuationsSlot] = directValuationsList[directValuationsIndex++];
                         if (IsIndividualValid(directValuationsTemplate))
                         {
-                            swappedIndividual = GenerateIndividual(directValuationsTemplate);
+                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false);
                         }
                         else
                         {
@@ -861,7 +861,7 @@ namespace Rawr.Optimizer
                     itemList[slot] = item;
                     if (IsIndividualValid(itemList))
                     {
-                        TIndividual swappedIndividual = GenerateIndividual(itemList);
+                        TIndividual swappedIndividual = GenerateIndividual(itemList, false);
                         TValuation valuation;
                         value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
                         if (value > best)
@@ -912,8 +912,8 @@ namespace Rawr.Optimizer
         protected abstract TItem GetItem(TIndividual individual, int slot);
         /// <remarks>The returned array will be treated as readonly.</remarks>
         protected abstract TItem[] GetItems(TIndividual individual);
-        /// <remarks>If you need to store the array make a copy, because it might be modified.</remarks>
-        protected abstract TIndividual GenerateIndividual(TItem[] items);
+        /// <remarks>If you need to store the array make a copy unless canUseArray is true, because it might be reused and modified otherwise.</remarks>
+        protected abstract TIndividual GenerateIndividual(TItem[] items, bool canUseArray);
 
         protected delegate TItem GeneratorItemSelector(int slot, TItem[] items);
 
@@ -943,7 +943,7 @@ namespace Rawr.Optimizer
                 }
             }
 
-            return GenerateIndividual(item);
+            return GenerateIndividual(item, true);
 		}
 
         protected virtual TIndividual BuildRandomIndividual()
@@ -1018,7 +1018,7 @@ namespace Rawr.Optimizer
                 }
             }
 
-            return GenerateIndividual(item);
+            return GenerateIndividual(item, true);
         }
 
 		protected virtual TIndividual BuildMutantIndividual(TIndividual parent)
@@ -1047,7 +1047,7 @@ namespace Rawr.Optimizer
             TItem[] item = new TItem[slotCount];
             Array.Copy(GetItems(baseIndividual), item, slotCount);
             item[replaceSlot] = replaceItem;
-            return GenerateIndividual(item);
+            return GenerateIndividual(item, true);
 		}
     }
 }

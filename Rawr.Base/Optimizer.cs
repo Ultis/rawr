@@ -1457,9 +1457,9 @@ namespace Rawr.Optimizer
             return individual.Items;
         }
 
-        protected override OptimizerCharacter GenerateIndividual(object[] items)
+        protected override OptimizerCharacter GenerateIndividual(object[] items, bool canUseArray)
         {
-            items = (object[])items.Clone();
+            items = canUseArray ? items : (object[])items.Clone();
             Character character = new Character(_character, items, characterSlots);
             if (optimizeFood)
             {
@@ -1676,7 +1676,7 @@ namespace Rawr.Optimizer
             {
                 object[] itemList = (object[])GetItems(bestIndividual).Clone();
                 itemList[slot] = null;
-                swappedIndividual = GenerateIndividual(itemList);
+                swappedIndividual = GenerateIndividual(itemList, true);
                 float bestBlueValue = float.NegativeInfinity;
                 Item bestBlueGem = null;
                 float bestYellowValue = float.NegativeInfinity;
@@ -1999,7 +1999,7 @@ namespace Rawr.Optimizer
                 directValuationsTemplate[directValuationsSlot] = entry.ItemInstance;
                 if (IsIndividualValid(directValuationsTemplate))
                 {
-                    swappedIndividual = GenerateIndividual(directValuationsTemplate);
+                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false);
                     swappedIndividual.DirectUpgradeEntry = entry;
                 }
             }
@@ -2037,7 +2037,7 @@ namespace Rawr.Optimizer
                         directValuationsTemplate[directValuationsSlot] = entry.ItemInstance;
                         if (IsIndividualValid(directValuationsTemplate))
                         {
-                            swappedIndividual = GenerateIndividual(directValuationsTemplate);
+                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false);
                             swappedIndividual.DirectUpgradeEntry = entry;
                         }
                         else
@@ -2116,7 +2116,7 @@ namespace Rawr.Optimizer
                             itemList[slot] = entry.ItemInstance;
                             if (IsIndividualValid(itemList))
                             {
-                                swappedIndividual = GenerateIndividual(itemList);
+                                swappedIndividual = GenerateIndividual(itemList, false);
                                 CharacterCalculationsBase valuation;
                                 value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
                                 ItemInstance itemInstance = entry.ItemInstance;
@@ -2327,7 +2327,7 @@ namespace Rawr.Optimizer
             }
 
             // create character
-            return GenerateIndividual(items);
+            return GenerateIndividual(items, true);
         }
 
         private OptimizerCharacter BuildSwapGemMutantCharacter(OptimizerCharacter parent, out bool successful)
@@ -2409,7 +2409,7 @@ namespace Rawr.Optimizer
 
             if (successful)
             {
-                return GenerateIndividual(items);
+                return GenerateIndividual(items, true);
             }
             return null;
         }
@@ -2458,7 +2458,7 @@ namespace Rawr.Optimizer
 
         private OptimizerCharacter BuildMutateTalentsCharacter(OptimizerCharacter parent)
         {
-            OptimizerCharacter optCharacter = GenerateIndividual(parent.Items);
+            OptimizerCharacter optCharacter = GenerateIndividual(parent.Items, false);
             object[] items = optCharacter.Items;
             Character character = optCharacter.Character;
 #if RAWR3
@@ -3414,7 +3414,7 @@ namespace Rawr.Optimizer
             return items;
         }
 
-        protected override Character GenerateIndividual(object[] items)
+        protected override Character GenerateIndividual(object[] items, bool canUseArray)
         {
             Item[] gems = new Item[3];
             ItemInstance[] itemInstances = new ItemInstance[characterSlots];
