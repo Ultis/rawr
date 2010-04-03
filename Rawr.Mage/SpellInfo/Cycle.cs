@@ -290,7 +290,7 @@ namespace Rawr.Mage
             float spellPower = 0;
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in CastingState.Calculations.SpellPowerEffects)
+                foreach (SpecialEffect effect in CastingState.Solver.SpellPowerEffects)
                 {
                     switch (effect.Trigger)
                     {
@@ -355,7 +355,7 @@ namespace Rawr.Mage
             }
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in CastingState.Calculations.DamageProcEffects)
+                foreach (SpecialEffect effect in CastingState.Solver.DamageProcEffects)
                 {
                     float chance = 0;
                     float interval = 0;
@@ -488,7 +488,7 @@ namespace Rawr.Mage
             Stats baseStats = CastingState.BaseStats;
             manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR);
             float fight = CastingState.CalculationOptions.FightDuration;
-            foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
+            foreach (SpecialEffect effect in CastingState.Solver.ManaRestoreEffects)
             {
                 switch (effect.Trigger)
                 {
@@ -531,7 +531,7 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            foreach (SpecialEffect effect in CastingState.Calculations.Mp5Effects)
+            foreach (SpecialEffect effect in CastingState.Solver.Mp5Effects)
             {
                 switch (effect.Trigger)
                 {
@@ -612,7 +612,7 @@ namespace Rawr.Mage
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             //dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs;
             float fight = CastingState.CalculationOptions.FightDuration;
-            foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
+            foreach (SpecialEffect effect in CastingState.Solver.ManaRestoreEffects)
             {
                 switch (effect.Trigger)
                 {
@@ -655,7 +655,7 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            foreach (SpecialEffect effect in CastingState.Calculations.Mp5Effects)
+            foreach (SpecialEffect effect in CastingState.Solver.Mp5Effects)
             {
                 switch (effect.Trigger)
                 {
@@ -735,7 +735,7 @@ namespace Rawr.Mage
             }
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in CastingState.Calculations.DamageProcEffects)
+                foreach (SpecialEffect effect in CastingState.Solver.DamageProcEffects)
                 {
                     string name = null;
                     float chance = 0;
@@ -917,7 +917,7 @@ namespace Rawr.Mage
 
         public static DynamicCycle New(bool needsDisplayCalculations, CastingState castingState)
         {
-            ArraySet arraySet = castingState.Calculations.ArraySet;
+            ArraySet arraySet = castingState.Solver.ArraySet;
             if (needsDisplayCalculations || arraySet == null)
             {
                 return new DynamicCycle(needsDisplayCalculations, castingState);

@@ -198,28 +198,14 @@ namespace Rawr.Mage
             ArrayPool.MaximumPoolSize = (int)numericUpDownMaxThreads.Value;
         }
 
-        private void buttonEditTalentScores_Click(object sender, EventArgs e)
-        {
-            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
-            if (calculationOptions.TalentScore == null || calculationOptions.TalentScore.Length != Character.MageTalents.Data.Length)
-            {
-                calculationOptions.TalentScore = new float[Character.MageTalents.Data.Length];
-            }
-            TalentScoreForm form = new TalentScoreForm(calculationOptions.TalentScore);
-            form.ShowDialog(this);
-        }
-
         private void buttonHotStreakUtilization_Click(object sender, EventArgs e)
         {
             string armor = "Molten Armor";
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
-            Stats rawStats;
-            Stats baseStats;
-            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, null, calculations, out rawStats, out baseStats);
-            calculationResult.NeedsDisplayCalculations = true;
-            CastingState baseState = new CastingState(calculationResult, 0, false, 0);
+            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, true, false);
+            solver.Initialize(null);
+            CastingState baseState = new CastingState(solver, 0, false, 0);
 
             FireCycleGenerator generator = new FireCycleGenerator(baseState);            
 

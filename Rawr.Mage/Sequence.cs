@@ -927,7 +927,7 @@ namespace Rawr.Mage.SequenceReconstruction
             CooldownBreak,
         }
 
-        private CharacterCalculationsMage Calculations
+        private DisplayCalculations Calculations
         {
             get
             {

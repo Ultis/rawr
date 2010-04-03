@@ -12,7 +12,7 @@ namespace Rawr.Mage
     {
         private int cRows;
         private int cCols;
-        private CharacterCalculationsMage calculations;
+        private Solver solver;
         private LP lp;
         private double[] compactSolution = null;
         private bool needsDual;
@@ -87,7 +87,7 @@ namespace Rawr.Mage
             return clone;
         }
 
-        public SolverLP(ArraySet arraySet, int baseRows, int maximumColumns, CharacterCalculationsMage calculations, int segments)
+        public SolverLP(ArraySet arraySet, int baseRows, int maximumColumns, Solver solver, int segments)
         {
             this.arraySet = arraySet;
             if (baseRows > arraySet.maxSolverRows || maximumColumns > arraySet.maxSolverCols)
@@ -97,7 +97,7 @@ namespace Rawr.Mage
                 arraySet.RecreateSolverArrays();
             }
 
-            this.calculations = calculations;
+            this.solver = solver;
             this.segments = segments;
             cRows = baseRows;
             cCols = 0;
@@ -391,17 +391,17 @@ namespace Rawr.Mage
             {
                 if (compactSolution == null) return "";
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < calculations.SolutionVariable.Count; i++)
+                for (int i = 0; i < solver.SolutionVariable.Count; i++)
                 {
                     if (compactSolution[i] > 0.01)
                     {
-                        if (calculations.SolutionVariable[i].Type == VariableType.Spell)
+                        if (solver.SolutionVariable[i].Type == VariableType.Spell)
                         {
-                            sb.AppendLine(String.Format("{2} {0}: {1:F}", calculations.SolutionVariable[i].State.BuffLabel + "+" + calculations.SolutionVariable[i].Cycle.Name, compactSolution[i], calculations.SolutionVariable[i].Segment));
+                            sb.AppendLine(String.Format("{2} {0}: {1:F}", solver.SolutionVariable[i].State.BuffLabel + "+" + solver.SolutionVariable[i].Cycle.Name, compactSolution[i], solver.SolutionVariable[i].Segment));
                         }
                         else
                         {
-                            sb.AppendLine(String.Format("{2} {0}: {1:F}", calculations.SolutionVariable[i].Type, compactSolution[i], calculations.SolutionVariable[i].Segment));
+                            sb.AppendLine(String.Format("{2} {0}: {1:F}", solver.SolutionVariable[i].Type, compactSolution[i], solver.SolutionVariable[i].Segment));
                         }
                     }
                 }

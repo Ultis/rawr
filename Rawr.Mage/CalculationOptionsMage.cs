@@ -363,13 +363,6 @@ namespace Rawr.Mage
             set { _WarlockSpellPower = value; OnPropertyChanged("WarlockSpellPower"); }
         }
 
-        private float[] _TalentScore;
-        public float[] TalentScore
-        {
-            get { return _TalentScore; }
-            set { _TalentScore = value; OnPropertyChanged("TalentScore"); }
-        }
-
         [XmlIgnore]
         public int[] IncrementalSetStateIndexes;
         [XmlIgnore]
@@ -387,7 +380,7 @@ namespace Rawr.Mage
         [XmlIgnore]
         public bool AdviseAdvancedSolver;
         [XmlIgnore]
-        public CharacterCalculationsMage Calculations; // calculations that are result of the last display in rawr
+        public DisplayCalculations Calculations; // calculations that are result of the last display in rawr
 
         [XmlIgnore]
         private Character _character;

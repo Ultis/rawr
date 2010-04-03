@@ -8,6 +8,7 @@ using System.Drawing;
 #endif
 using System.Globalization;
 using System.Threading;
+using System.Reflection;
 
 namespace Rawr.Mage
 {
@@ -48,6 +49,16 @@ namespace Rawr.Mage
             list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = luminous, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
         }
 
+        public static CalculationsMage instance;
+
+        public static CalculationsMage Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
         public CalculationsMage()
         {
             _subPointNameColorsRating = new Dictionary<string, Color>();
@@ -58,6 +69,8 @@ namespace Rawr.Mage
             _subPointNameColorsMana.Add("Mana", Color.FromArgb(255, 0, 0, 255));
 
             _subPointNameColors = _subPointNameColorsRating;
+
+            instance = this;
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
@@ -467,7 +480,11 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && (!ignoreIncrementalSet || calculationOptions.ForceIncrementalOptimizations);
             if (useIncrementalOptimizations && calculationOptions.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
-            if (computeIncrementalSet) useIncrementalOptimizations = false;
+            if (computeIncrementalSet)
+            {
+                useIncrementalOptimizations = false;
+                needsDisplayCalculations = true;
+            }
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
                 ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
@@ -482,19 +499,19 @@ namespace Rawr.Mage
                     CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
-                if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
+                if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
                 ret = calc;
             }
             else
             {
                 CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
-                if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
+                if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
                 ret = calc;
             }
             return ret;
         }
 
-        private void StoreIncrementalSet(Character character, CharacterCalculationsMage calculations)
+        private void StoreIncrementalSet(Character character, DisplayCalculations calculations)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             List<int> cooldownList = new List<int>();
@@ -984,12 +1001,22 @@ namespace Rawr.Mage
 
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             MageTalents talents = character.MageTalents;
-            CharacterCalculationsMage calculationResult = calculationOptions.Calculations;
+            DisplayCalculations calculationResult = calculationOptions.Calculations;
 
             switch (chartName)
             {
                 case "Item Budget":
-                    return EvaluateItemBudget(character);
+                    Stats[] statsList = new Stats[] {
+                        new Stats() { SpellPower = 1.17f },
+                        new Stats() { Mp5 = 0.4f },
+                        new Stats() { CritRating = 1 },
+                        new Stats() { HasteRating = 1 },
+                        new Stats() { HitRating = 1 },
+                        new Stats() { Intellect = 1 },
+                        new Stats() { Spirit = 1 },
+                    };
+
+                    return EvaluateItemBudget(character, statsList);
                 case "Mana Sources":
                     _subPointNameColors = _subPointNameColorsMana;
                     foreach (KeyValuePair<string, float> kvp in calculationResult.ManaSources)
@@ -1029,125 +1056,25 @@ namespace Rawr.Mage
             }
         }
 
-        private ComparisonCalculationBase[] EvaluateItemBudget(Character character)
+        private ComparisonCalculationBase[] EvaluateItemBudget(Character character, Stats[] statsList)
         {
-            Stats baseStats;
-            return EvaluateItemBudget(character, new Stats(), false, out baseStats);
-        }
-
-        private ComparisonCalculationBase[] EvaluateItemBudget(Character character, Stats offset, bool forceIncrementalBaseRecalculation, out Stats baseStats)
-        {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsMage baseCalc, calc;
-            ComparisonCalculationBase comparison;
-            float[] subPoints;
-
-            Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { SpellPower = 11.7f } + offset },
-                        new Item() { Stats = new Stats() { Mp5 = 4 } + offset },
-                        new Item() { Stats = new Stats() { CritRating = 10 } + offset },
-                        new Item() { Stats = new Stats() { HasteRating = 10 } + offset },
-                        new Item() { Stats = new Stats() { HitRating = 10 } + offset },
-                    };
-            string[] statList = new string[] {
-                        "11.7 Spell Power",
-                        "4 Mana per 5 sec",
-                        "10 Crit Rating",
-                        "10 Haste Rating",
-                        "10 Hit Rating",
-                    };
-
-            // offset might be very far from current position, so make sure to force incremental set recalc
-            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            baseCalc = GetCharacterCalculations(character, new Item() { Stats = offset }, forceIncrementalBaseRecalculation, false, calculationOptions.SmartOptimization, false) as CharacterCalculationsMage;
-            baseStats = baseCalc.BaseStats;
-
-            for (int index = 0; index < statList.Length; index++)
+            KeyValuePair<PropertyInfo, float>[] properties = new KeyValuePair<PropertyInfo, float>[statsList.Length];
+            for (int index = 0; index < statsList.Length; index++)
             {
-                calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsMage;
-
-                comparison = CreateNewComparisonCalculation();
-                comparison.Name = statList[index];
-                comparison.Equipped = false;
-                comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                subPoints = new float[calc.SubPoints.Length];
-                for (int i = 0; i < calc.SubPoints.Length; i++)
+                var p = statsList[index].Values(x => x > 0);
+                foreach (var kvp in p)
                 {
-                    subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                    properties[index] = kvp;
                 }
-                comparison.SubPoints = subPoints;
-
-                comparisonList.Add(comparison);
             }
-
-            //Intellect
-            CharacterCalculationsMage calcAtAdd;
-            Stats statsAtAdd = baseCalc.BaseStats;
-            float baseInt = baseCalc.BaseStats.Intellect;
-            float intToAdd = 0f;
-            while (baseInt == statsAtAdd.Intellect && intToAdd < 2)
+            Item item = new Item() { Stats = new Stats() };
+            ComparisonCalculationBase[] result = new ComparisonCalculationBase[statsList.Length];
+            for (int index = 0; index < statsList.Length; index++)
             {
-                intToAdd += 0.01f;
-                statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToAdd } + offset });
+                result[index] = CalculationsBase.GetRelativeStatValue(character, properties[index].Key, item, properties[index].Value);
             }
-            calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } + offset }) as CharacterCalculationsMage;
 
-            Stats statsAtSubtract = baseCalc.BaseStats;
-            float intToSubtract = 0f;
-            while (baseInt == statsAtSubtract.Intellect && intToSubtract > -2)
-            {
-                intToSubtract -= 0.01f;
-                statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } + offset });
-            }
-            intToSubtract += 0.01f;
-
-            comparison = CreateNewComparisonCalculation();
-            comparison.Name = "10 Intellect";
-            comparison.Equipped = false;
-            comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (intToAdd - intToSubtract);
-            subPoints = new float[baseCalc.SubPoints.Length];
-            for (int i = 0; i < baseCalc.SubPoints.Length; i++)
-            {
-                subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (intToAdd - intToSubtract);
-            }
-            comparison.SubPoints = subPoints;
-
-            comparisonList.Add(comparison);
-
-            //Spirit
-            statsAtAdd = baseCalc.BaseStats;
-            float baseSpi = baseCalc.BaseStats.Spirit;
-            float spiToAdd = 0f;
-            while (baseSpi == statsAtAdd.Spirit && spiToAdd < 2)
-            {
-                spiToAdd += 0.01f;
-                statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } + offset });
-            }
-            calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } + offset}) as CharacterCalculationsMage;
-
-            statsAtSubtract = baseCalc.BaseStats;
-            float spiToSubtract = 0f;
-            while (baseSpi == statsAtSubtract.Spirit && spiToSubtract > -2)
-            {
-                spiToSubtract -= 0.01f;
-                statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } + offset });
-            }
-            spiToSubtract += 0.01f;
-
-            comparison = CreateNewComparisonCalculation();
-            comparison.Name = "10 Spirit";
-            comparison.Equipped = false;
-            comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (spiToAdd - spiToSubtract);
-            subPoints = new float[baseCalc.SubPoints.Length];
-            for (int i = 0; i < baseCalc.SubPoints.Length; i++)
-            {
-                subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (spiToAdd - spiToSubtract);
-            }
-            comparison.SubPoints = subPoints;
-
-            comparisonList.Add(comparison);
-
-            return comparisonList.ToArray();
+            return result;
         }
 
         public static string TimeFormat(double time)
@@ -1197,7 +1124,7 @@ namespace Rawr.Mage
             string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Hit Rating", "10 Intellect", "10 Spirit" };
             Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.DarkBlue, Color.FromArgb(255, 255, 165, 0), Color.Olive, Color.FromArgb(255, 154, 205, 50), Color.Aqua, Color.FromArgb(255, 0, 0, 255) };
 
-            CharacterCalculationsMage calculations = calculationOptions.Calculations;
+            DisplayCalculations calculations = calculationOptions.Calculations;
 
             List<float> X = new List<float>();
             List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
@@ -1694,13 +1621,6 @@ namespace Rawr.Mage
                     "Haste Rating",
                     "PVP Trinket",
                     "Movement Speed",
-                    /*"Minimum Range",*/
-                    /*"Threat Reduction",*/
-                    "Arcane Nondps Talents",
-                    "Fire Nondps Talents",
-                    "Frost Nondps Talents",
-                    "Partially Modeled Talents",
-                    "Talent Score",
 					};
                 return _optimizableCalculationLabels;
             }

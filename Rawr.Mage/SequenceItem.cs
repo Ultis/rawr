@@ -19,7 +19,7 @@ namespace Rawr.Mage.SequenceReconstruction
     public class SequenceItem : ICloneable
 #endif
     {
-        public static CharacterCalculationsMage Calculations;
+        public static DisplayCalculations Calculations;
 
         private SequenceItem() { }
         public SequenceItem(int index, double duration) : this(index, duration, null) { }

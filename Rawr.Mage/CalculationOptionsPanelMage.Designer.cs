@@ -354,7 +354,6 @@
             this.label93 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
             this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
-            this.buttonEditTalentScores = new System.Windows.Forms.Button();
             this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
@@ -3749,7 +3748,6 @@
             this.tabPage7.Controls.Add(this.label93);
             this.tabPage7.Controls.Add(this.label92);
             this.tabPage7.Controls.Add(this.buttonHotStreakUtilization);
-            this.tabPage7.Controls.Add(this.buttonEditTalentScores);
             this.tabPage7.Controls.Add(this.buttonAdvancedSolverLog);
             this.tabPage7.Controls.Add(this.buttonCooldownRestrictionsEditor);
             this.tabPage7.Controls.Add(this.buttonComputeOptimalArcaneCycles);
@@ -3763,7 +3761,7 @@
             // 
             // buttonCalculationTiming
             // 
-            this.buttonCalculationTiming.Location = new System.Drawing.Point(6, 229);
+            this.buttonCalculationTiming.Location = new System.Drawing.Point(6, 199);
             this.buttonCalculationTiming.Name = "buttonCalculationTiming";
             this.buttonCalculationTiming.Size = new System.Drawing.Size(197, 23);
             this.buttonCalculationTiming.TabIndex = 214;
@@ -3774,7 +3772,7 @@
             // label104
             // 
             this.label104.AutoSize = true;
-            this.label104.Location = new System.Drawing.Point(6, 184);
+            this.label104.Location = new System.Drawing.Point(6, 154);
             this.label104.Name = "label104";
             this.label104.Size = new System.Drawing.Size(70, 13);
             this.label104.TabIndex = 213;
@@ -3808,19 +3806,9 @@
             this.buttonHotStreakUtilization.UseVisualStyleBackColor = true;
             this.buttonHotStreakUtilization.Click += new System.EventHandler(this.buttonHotStreakUtilization_Click);
             // 
-            // buttonEditTalentScores
-            // 
-            this.buttonEditTalentScores.Location = new System.Drawing.Point(6, 146);
-            this.buttonEditTalentScores.Name = "buttonEditTalentScores";
-            this.buttonEditTalentScores.Size = new System.Drawing.Size(197, 23);
-            this.buttonEditTalentScores.TabIndex = 208;
-            this.buttonEditTalentScores.Text = "Talent Score Editor";
-            this.buttonEditTalentScores.UseVisualStyleBackColor = true;
-            this.buttonEditTalentScores.Click += new System.EventHandler(this.buttonEditTalentScores_Click);
-            // 
             // buttonAdvancedSolverLog
             // 
-            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(6, 200);
+            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(6, 170);
             this.buttonAdvancedSolverLog.Name = "buttonAdvancedSolverLog";
             this.buttonAdvancedSolverLog.Size = new System.Drawing.Size(197, 23);
             this.buttonAdvancedSolverLog.TabIndex = 207;
@@ -4137,7 +4125,6 @@
         private System.Windows.Forms.Label label93;
         private System.Windows.Forms.Label label92;
         private System.Windows.Forms.Button buttonHotStreakUtilization;
-        private System.Windows.Forms.Button buttonEditTalentScores;
         private System.Windows.Forms.Button buttonAdvancedSolverLog;
         private System.Windows.Forms.Button buttonCooldownRestrictionsEditor;
         private System.Windows.Forms.Button buttonComputeOptimalArcaneCycles;
