@@ -148,25 +148,30 @@ namespace Rawr.Mage
             }
             if (sparseIndex >= arraySet.SparseMatrixSparseSize)
             {
-                // C# does not allow to change a pinned reference, if we have to recreate arrays we have to move to safe code
-                EndUnsafe();
-                arraySet.SparseMatrixSparseSize += (int)(rows * cols * 0.1);
-                int[] newRow = new int[arraySet.SparseMatrixSparseSize];
-                Array.Copy(arraySet.SparseMatrixRow, newRow, arraySet.SparseMatrixRow.Length);
-                arraySet.SparseMatrixRow = newRow;
-                double[] newValue = new double[arraySet.SparseMatrixSparseSize];
-                Array.Copy(arraySet.SparseMatrixValue, newValue, arraySet.SparseMatrixValue.Length);
-                arraySet.SparseMatrixValue = newValue;
-                arraySet.SparseMatrixRow[sparseIndex] = row;
-                arraySet.SparseMatrixValue[sparseIndex] = value;
-                arraySet.SparseMatrixData[col * rows + row] = value; // store data by columns, we always access by column so it will have better locality, we also never increase number of rows, only columns, that way we don't have to reposition data
-                lastCol = col;
-                sparseIndex++;
+                SetElementSafeFromUnsafe(row, col, value);
                 return;
             }
             pRow[sparseIndex] = row;
             pValue[sparseIndex] = value;
             pData[col * rows + row] = value; // store data by columns, we always access by column so it will have better locality, we also never increase number of rows, only columns, that way we don't have to reposition data
+            lastCol = col;
+            sparseIndex++;
+        }
+
+        private void SetElementSafeFromUnsafe(int row, int col, double value)
+        {
+            // C# does not allow to change a pinned reference, if we have to recreate arrays we have to move to safe code
+            EndUnsafe();
+            arraySet.SparseMatrixSparseSize += (int)(rows * cols * 0.1);
+            int[] newRow = new int[arraySet.SparseMatrixSparseSize];
+            Array.Copy(arraySet.SparseMatrixRow, newRow, arraySet.SparseMatrixRow.Length);
+            arraySet.SparseMatrixRow = newRow;
+            double[] newValue = new double[arraySet.SparseMatrixSparseSize];
+            Array.Copy(arraySet.SparseMatrixValue, 0, newValue, 0, arraySet.SparseMatrixValue.Length);
+            arraySet.SparseMatrixValue = newValue;
+            arraySet.SparseMatrixRow[sparseIndex] = row;
+            arraySet.SparseMatrixValue[sparseIndex] = value;
+            arraySet.SparseMatrixData[col * rows + row] = value; // store data by columns, we always access by column so it will have better locality, we also never increase number of rows, only columns, that way we don't have to reposition data
             lastCol = col;
             sparseIndex++;
         }

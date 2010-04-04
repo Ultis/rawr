@@ -235,7 +235,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(FrameworkSDKDir)Bin\sgen.exe" $(TargetFileName) /d /force
-del *.cs *.cmdline *.err *.out *.tmp</PostBuildEvent>
+    <PostBuildEvent>..\..\..\sgen2.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

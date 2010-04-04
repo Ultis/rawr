@@ -240,8 +240,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(FrameworkSDKDir)Bin\NETFX 4.0 Tools\sgen.exe" $(TargetFileName) /force
-del *.cmdline *.err *.out *.tmp</PostBuildEvent>
+    <PostBuildEvent>..\..\..\sgen.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

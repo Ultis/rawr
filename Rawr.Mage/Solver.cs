@@ -1626,8 +1626,8 @@ namespace Rawr.Mage
 
             if (armor == null)
             {
-                if (Character.ActiveBuffs.Contains(CalculationsMage.MageArmorBuff)) armor = "Mage Armor";
-                else if (Character.ActiveBuffs.Contains(CalculationsMage.MoltenArmorBuff)) armor = "Molten Armor";
+                if (Character.ActiveBuffs.Contains(CalculationsMage.MoltenArmorBuff)) armor = "Molten Armor";
+                else if (Character.ActiveBuffs.Contains(CalculationsMage.MageArmorBuff)) armor = "Mage Armor";
                 else if (Character.ActiveBuffs.Contains(CalculationsMage.IceArmorBuff)) armor = "Ice Armor";
             }
 
@@ -2400,7 +2400,6 @@ namespace Rawr.Mage
             }
         }
 
-        // rawStats is only valid for calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0, otherwise it is the same as baseStats
 #if SILVERLIGHT
         private void ConstructProblem()
 #else

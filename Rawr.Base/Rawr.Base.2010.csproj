@@ -276,7 +276,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(FrameworkSDKDir)Bin\NETFX 4.0 Tools\sgen.exe" $(TargetFileName) /force
-del *.cmdline *.err *.out *.tmp</PostBuildEvent>
+    <PostBuildEvent>..\..\..\sgen.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

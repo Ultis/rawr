@@ -67,6 +67,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFCA06A8-B40B-4A80-B76F-BA2722AB555A}"
 	ProjectSection(SolutionItems) = preProject
 		Rawr.vsmdi = Rawr.vsmdi
+		Sgen2.exe = Sgen2.exe
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Hunter", "Rawr.Hunter\Rawr.Hunter.csproj", "{0E323270-4A3A-49F9-872D-E35BB77EBCE3}"

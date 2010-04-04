@@ -100,6 +100,61 @@ namespace Rawr.Mage
         private const double epsZero = 1.0e-12;
         private const double epsDrop = 1.0e-14;
 
+#if SILVERLIGHT
+        private static void Zero(double[] array, int size)
+        {
+            Array.Clear(array, 0, size);
+        }
+#else
+        private static unsafe void Zero(double* array, int size)
+        {
+            /*long* arr = (long*)array;
+            long* arrend = arr + size;
+            for (; arr < arrend; arr++)
+            {
+                *arr = 0;
+            }*/
+
+            const int c = ~3;
+            int trunc = size & c;
+            long* arr = (long*)array;
+            long* arr2 = arr + size;
+            long* arr1 = arr + trunc;
+            for (; arr < arr1; arr += 4)
+            {
+                arr[0] = 0;
+                arr[1] = 0;
+                arr[2] = 0;
+                arr[3] = 0;
+            }
+            for (; arr < arr2; arr++)
+            {
+                *arr = 0;
+            }
+        }
+
+        private const int BlockCopySize = 64;
+
+        private static unsafe void Copy(double* dest, double* source, int size)
+        {
+            const int c = ~3;
+            int trunc = size & c;
+            double* arr1 = dest + trunc;
+            double* arr2 = dest + size;
+            for (; dest < arr1; dest += 4, source += 4)
+            {
+                dest[0] = source[0];
+                dest[1] = source[1];
+                dest[2] = source[2];
+                dest[3] = source[3];
+            }
+            for (; dest < arr2; dest++, source++)
+            {
+                *dest = *source;
+            }
+        }
+#endif
+
         public LP Clone()
         {
             LP clone = (LP)MemberwiseClone();
@@ -596,6 +651,7 @@ namespace Rawr.Mage
 
         private void Decompose()
         {
+#if SILVERLIGHT
             for (int j = 0; j < rows; j++)
             {
                 int col = B[j];
@@ -619,6 +675,36 @@ namespace Rawr.Mage
                     }
                 }
             }
+#else
+            double* uj = U;
+            double* ujend = U + rows;
+            int* bj = B;
+            for (; uj < ujend; uj++, bj++)
+            {
+                int col = *bj;
+                if (col < cols)
+                {
+                    double* ai = a + (col * baseRows);
+                    double* aend = ai + baseRows;
+                    double* ui = uj;
+                    for (; ai < aend; ai++, ui += rows)
+                    {
+                        *ui = *ai;
+                    }
+                    for (int k = 0; k < numExtraConstraints; k++, ui += rows)
+                    {
+                        *ui = pD[k][col];
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < rows; i++)
+                    {
+                        uj[i * rows] = (i == col - cols) ? 1.0 : 0.0;
+                    }
+                }
+            }
+#endif
             lu.Decompose();
         }
 
@@ -957,6 +1043,7 @@ namespace Rawr.Mage
             int maxcol = V[incoming];
             if (maxcol < cols)
             {
+#if SILVERLIGHT
                 int i = 0;
                 for (; i < baseRows; i++)
                 {
@@ -966,15 +1053,45 @@ namespace Rawr.Mage
                 {
                     w[i] = pD[k][maxcol];
                 }
+#else                
+                //Copy(w, a + (maxcol * baseRows), baseRows);
+                const int c = ~3;
+                int trunc = baseRows & c;
+                double* source = a + (maxcol * baseRows);
+                double* wk = w;
+                double* arr1 = wk + trunc;
+                double* arr2 = wk + baseRows;
+                for (; wk < arr1; wk += 4, source += 4)
+                {
+                    wk[0] = source[0];
+                    wk[1] = source[1];
+                    wk[2] = source[2];
+                    wk[3] = source[3];
+                }
+                for (; wk < arr2; wk++, source++)
+                {
+                    *wk = *source;
+                }
+                if (numExtraConstraints > 0)
+                {
+                    //double* wk = w + baseRows;
+                    double* wkend = wk + numExtraConstraints;
+                    double** pdk = pD;
+                    for (; wk < wkend; wk++, pdk++)
+                    {
+                        *wk = (*pdk)[maxcol];
+                    }
+                }
+#endif
             }
             else
             {
-                //Array.Clear(_w, 0, rows);
-                //w[maxcol - cols] = 1.0;
-                for (int i = 0; i < rows; i++)
+                Zero(w, rows);
+                w[maxcol - cols] = 1.0;
+                /*for (int i = 0; i < rows; i++)
                 {
                     w[i] = (i == maxcol - cols) ? 1.0 : 0.0;
-                }
+                }*/
             }
             //lu.FSolve(w);
             lu.FSolveL(w, ww);
@@ -1857,14 +1974,16 @@ namespace Rawr.Mage
             int mincol = V[minj];
             if (mincol < cols)
             {
-                int i = 0;
-                for (; i < baseRows; i++)
+                double* wi = w;
+                double* ai = a + (mincol * baseRows);
+                double* aend = ai + baseRows;
+                for (; ai < aend; ai++, wi++)
                 {
-                    w[i] = a[i + mincol * baseRows];
+                    *wi = *ai;
                 }
-                for (int k = 0; k < numExtraConstraints; k++, i++)
+                for (int k = 0; k < numExtraConstraints; k++, wi++)
                 {
-                    w[i] = pD[k][mincol];
+                    *wi = pD[k][mincol];
                 }
             }
             else
@@ -1956,7 +2075,7 @@ namespace Rawr.Mage
 
         private void LoadCost()
         {
-            Array.Copy(arraySet._cost, arraySet._costWorking, cols + rows);
+            Array.Copy(arraySet._cost, 0, arraySet._costWorking, 0, cols + rows);
             costWorkingDirty = false;
         }
 
