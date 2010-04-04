@@ -332,6 +332,17 @@ namespace Rawr.WarlockTmp {
                 float benefit = .05f - Stats.SpellCritOnTarget;
                 SpellModifiers.AddCritChance(benefit * uprate);
             }
+
+            // finilize each spell's modifiers.
+            // Start with Conflagrate, since pyroclasm depends on its results.
+            if (CastSpells.ContainsKey("Conflagrate")) {
+                CastSpells["Conflagrate"].FinalizeSpellModifiers();
+            }
+            foreach (Spell spell in CastSpells.Values) {
+                if (!(spell is Conflagrate)) {
+                    spell.FinalizeSpellModifiers();
+                }
+            }
             #endregion
 
             #region Calculate damage done for each spell
@@ -610,7 +621,9 @@ namespace Rawr.WarlockTmp {
 
         public bool IsPriorityOrdered(Spell s1, Spell s2) {
 
-            return Priorities.IndexOf(s1) < Priorities.IndexOf(s2);
+            int i1 = Priorities.IndexOf(s1);
+            int i2 = Priorities.IndexOf(s2);
+            return (i1 < i2 && i1 != -1) || (i1 != -1 && i2 == -1);
         }
     }
 }

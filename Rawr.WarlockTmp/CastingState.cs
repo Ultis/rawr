@@ -14,19 +14,24 @@ namespace Rawr.WarlockTmp {
         public List<Spell> Series;
         public List<int> SeriesPriorities;
         public List<float> SeriesTimes;
-
+        public List<bool> SeriesHits;
         public Dictionary<string, object> ExtraState;
 
-        public CastingState(CharacterCalculationsWarlock mommy, Spell filler) {
+        public CastingState(
+            CharacterCalculationsWarlock mommy, Spell precedingSpell) {
 
             Mommy = mommy;
-            Elapsed = filler.GetAvgTimeUsed();
             Probability = 1f;
             Cooldowns = new Dictionary<Spell, float>();
             SeriesPriorities = new List<int>();
             Series = new List<Spell>();
             SeriesTimes = new List<float>();
+            SeriesHits = new List<bool>();
             ExtraState = new Dictionary<string, object>();
+
+            if (precedingSpell != null) {
+                Elapsed = precedingSpell.GetAvgTimeUsed();
+            }
         }
 
         public CastingState(CastingState toCopy) {
@@ -37,13 +42,13 @@ namespace Rawr.WarlockTmp {
             SeriesPriorities = new List<int>(toCopy.SeriesPriorities);
             Series = new List<Spell>(toCopy.Series);
             SeriesTimes = new List<float>(toCopy.SeriesTimes);
+            SeriesHits = new List<bool>(toCopy.SeriesHits);
             ExtraState = new Dictionary<string, object>(toCopy.ExtraState);
         }
 
         public float GetMaxTimeQueued(Spell spell) {
 
             if (Cooldowns.ContainsKey(spell)) {
-                Debug.Assert(Cooldowns[spell] <= 0);
                 return -Cooldowns[spell];
             }
 
@@ -67,24 +72,30 @@ namespace Rawr.WarlockTmp {
             return Elapsed;
         }
 
-        public void AddSpell(Spell spell, float timeAdvance) {
+        public void AddSpell(Spell spell, float timeAdvance, bool hit) {
 
             Elapsed += timeAdvance;
             Series.Add(spell);
             SeriesTimes.Add(timeAdvance);
             SeriesPriorities.Add(Mommy.Priorities.IndexOf(spell));
+            SeriesHits.Add(hit);
             foreach (Spell key in new List<Spell>(Cooldowns.Keys)) {
                 Cooldowns[key] -= timeAdvance;
             }
         }
 
-        public string ToString() {
+        public override string ToString() {
 
             string str = string.Format("{0:0.00000}:", Probability);
             foreach (Spell spell in Series) {
                 str += " " + spell.GetType().Name;
             }
             return str;
+        }
+
+        public bool LastCastHit(Spell spell) {
+
+            return SeriesHits[Series.LastIndexOf(spell)];
         }
     }
 }
