@@ -360,7 +360,9 @@ namespace Rawr.Mage
             }
             else
             {
-                return solver.ArraySet.NewSpell(template);
+                Spell spell = solver.ArraySet.NewSpell();
+                spell.Initialize(template);
+                return spell;
             }
         }
 

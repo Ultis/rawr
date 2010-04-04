@@ -51,14 +51,31 @@ namespace Rawr.Mage
         public int Row { get; set; }
         public List<SegmentConstraint> SegmentConstraints { get; set; }
         public string Name { get; set; }
-        public double MaximumDuration { get; set; }
+        public float MaximumDuration { get; set; }
         public bool AutomaticConstraints { get; set; }
         public bool AutomaticStackingConstraints { get; set; }
         public Color Color { get; set; }
 
+        public void Clear()
+        {
+            // Row is always initialized in ConstructRows
+            // MaximumDuration is initialized in InitializeEffectCooldowns or in ConstructRows if AutomaticConstraints is true
+            if (SegmentConstraints != null)
+            {
+                SegmentConstraints.Clear();
+            }
+        }
+
         public static implicit operator int(EffectCooldown cooldown)
         {
             return cooldown.Mask;
+        }
+
+        public EffectCooldown Clone()
+        {
+            EffectCooldown clone = (EffectCooldown)MemberwiseClone();
+            clone.SegmentConstraints = null;
+            return clone;
         }
     }
     #endregion
@@ -122,11 +139,11 @@ namespace Rawr.Mage
         public float ManaGemEffectDuration;
         private int availableCooldownMask;
 
-        public float CombustionCooldown;
-        public float PowerInfusionDuration;
-        public float PowerInfusionCooldown;
-        public float MirrorImageDuration;
-        public float MirrorImageCooldown;
+        public const float CombustionCooldown = 120.0f;
+        public const float PowerInfusionDuration = 15.0f;
+        public const float PowerInfusionCooldown = 120.0f;
+        public const float MirrorImageDuration = 30.0f;
+        public const float MirrorImageCooldown = 180.0f;
         public float IcyVeinsCooldown;
         public float ColdsnapCooldown;
         public float ArcanePowerCooldown;
@@ -1634,6 +1651,159 @@ namespace Rawr.Mage
                 Color.FromArgb(0xFF, 0xFF, 0xFF, 0xF0), //Ivory
             };
 
+        private EffectCooldown NewEffectCooldown()
+        {
+            if (NeedsDisplayCalculations || ArraySet == null)
+            {
+                return new EffectCooldown();
+            }
+            else
+            {
+                EffectCooldown effect = ArraySet.NewEffectCooldown();
+                effect.Clear();
+                return effect;
+            }
+        }
+
+        private EffectCooldown NewStandardEffectCooldown(EffectCooldown cachedEffect)
+        {
+            if (NeedsDisplayCalculations || ArraySet == null)
+            {
+                return cachedEffect.Clone();
+            }
+            else
+            {
+                cachedEffect.Clear();
+                return cachedEffect;
+            }
+        }
+
+        EffectCooldown cachedEffectEvocation = new EffectCooldown()
+        {
+            Mask = (int)StandardEffect.Evocation,
+            Name = "Evocation",
+            StandardEffect = StandardEffect.Evocation,
+            Color = Color.FromArgb(0xFF, 0x7F, 0xFF, 0xD4) //Aquamarine
+        };
+        EffectCooldown cachedEffectPowerInfusion = new EffectCooldown()
+        {
+            Cooldown = PowerInfusionCooldown,
+            Duration = PowerInfusionDuration,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.PowerInfusion,
+            Name = "Power Infusion",
+            StandardEffect = StandardEffect.PowerInfusion,
+            Color = Color.FromArgb(255, 255, 255, 0),
+        };
+        EffectCooldown cachedEffectPotionOfSpeed = new EffectCooldown()
+        {
+            Cooldown = float.PositiveInfinity,
+            Duration = 15.0f,
+            MaximumDuration = 15.0f,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.PotionOfSpeed,
+            Name = "Potion of Speed",
+            StandardEffect = StandardEffect.PotionOfSpeed,
+            Color = Color.FromArgb(0xFF, 0xFF, 0xFA, 0xCD) //LemonChiffon
+        };
+        EffectCooldown cachedEffectArcanePower = new EffectCooldown()
+        {
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.ArcanePower,
+            Name = "Arcane Power",
+            StandardEffect = StandardEffect.ArcanePower,
+            Color = Color.FromArgb(0xFF, 0xF0, 0xFF, 0xFF) //Azure
+        };
+        EffectCooldown cachedEffectCombustion = new EffectCooldown()
+        {
+            Cooldown = CombustionCooldown,
+            Mask = (int)StandardEffect.Combustion,
+            Name = "Combustion",
+            StandardEffect = StandardEffect.Combustion,
+            Color = Color.FromArgb(255, 255, 69, 0),
+        };
+        EffectCooldown cachedEffectPotionOfWildMagic = new EffectCooldown()
+        {
+            Cooldown = float.PositiveInfinity,
+            Duration = 15.0f,
+            MaximumDuration = 15.0f,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.PotionOfWildMagic,
+            Name = "Potion of Wild Magic",
+            StandardEffect = StandardEffect.PotionOfWildMagic,
+            Color = Color.FromArgb(255, 128, 0, 128),
+        };
+        EffectCooldown cachedEffectBerserking = new EffectCooldown()
+        {
+            Cooldown = 180.0f,
+            Duration = 10.0f,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.Berserking,
+            Name = "Berserking",
+            StandardEffect = StandardEffect.Berserking,
+            Color = Color.FromArgb(0xFF, 0xA5, 0x2A, 0x2A) //Brown
+        };
+        EffectCooldown cachedEffectFlameCap = new EffectCooldown()
+        {
+            Cooldown = 180.0f,
+            Duration = 60.0f,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.FlameCap,
+            Name = "Flame Cap",
+            StandardEffect = StandardEffect.FlameCap,
+            Color = Color.FromArgb(255, 255, 165, 0),
+        };
+        EffectCooldown cachedEffectHeroism = new EffectCooldown()
+        {
+            Cooldown = float.PositiveInfinity,
+            Duration = 40.0f,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.Heroism,
+            Name = "Heroism",
+            StandardEffect = StandardEffect.Heroism,
+            Color = Color.FromArgb(0xFF, 0x80, 0x80, 0x00) //Olive
+        };
+        EffectCooldown cachedEffectIcyVeins = new EffectCooldown()
+        {
+            Duration = 20.0f,
+            Mask = (int)StandardEffect.IcyVeins,
+            Name = "Icy Veins",
+            StandardEffect = StandardEffect.IcyVeins,
+            Color = Color.FromArgb(0xFF, 0x00, 0x00, 0x8B) //DarkBlue
+        };
+        EffectCooldown cachedEffectMoltenFury = new EffectCooldown()
+        {
+            Cooldown = float.PositiveInfinity,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.MoltenFury,
+            Name = "Molten Fury",
+            StandardEffect = StandardEffect.MoltenFury,
+            Color = Color.FromArgb(0xFF, 0xDC, 0x14, 0x3C) //Crimson
+        };
+        EffectCooldown cachedEffectWaterElemental = new EffectCooldown()
+        {
+            Mask = (int)StandardEffect.WaterElemental,
+            Name = "Water Elemental",
+            StandardEffect = StandardEffect.WaterElemental,
+            Color = Color.FromArgb(0xFF, 0x00, 0x8B, 0x8B) //DarkCyan
+        };
+        EffectCooldown cachedEffectMirrorImage = new EffectCooldown()
+        {
+            Cooldown = MirrorImageCooldown,
+            Duration = MirrorImageDuration,
+            Mask = (int)StandardEffect.MirrorImage,
+            Name = "Mirror Image",
+            StandardEffect = StandardEffect.MirrorImage,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Color = Color.FromArgb(0xFF, 0xFF, 0xA0, 0x7A), //LightSalmon
+        };
+
         private void InitializeEffectCooldowns()
         {
             CooldownList = new List<EffectCooldown>();
@@ -1652,185 +1822,79 @@ namespace Rawr.Mage
             {
                 WaterElementalDuration = 45.0f + 5.0f * MageTalents.EnduringWinter;
             }
-            PowerInfusionDuration = 15.0f;
-            PowerInfusionCooldown = 120.0f;
-            MirrorImageDuration = 30.0f;
-            MirrorImageCooldown = 180.0f;
-            CombustionCooldown = 120.0f;
 
             if (evocationAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = EvocationCooldown,
-                    Mask = (int)StandardEffect.Evocation,
-                    Name = "Evocation",
-                    StandardEffect = StandardEffect.Evocation,
-                    Color = Color.FromArgb(0xFF, 0x7F, 0xFF, 0xD4) //Aquamarine
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectEvocation);
+                cooldown.Cooldown = EvocationDuration;
+                CooldownList.Add(cooldown);
             }
             if (powerInfusionAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = PowerInfusionCooldown,
-                    Duration = PowerInfusionDuration,
-                    AutomaticConstraints = true,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.PowerInfusion,
-                    Name = "Power Infusion",
-                    StandardEffect = StandardEffect.PowerInfusion,
-                    Color = Color.FromArgb(255, 255, 255, 0),
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPowerInfusion);
+                CooldownList.Add(cooldown);
             }
             if (potionOfSpeedAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = float.PositiveInfinity,
-                    Duration = 15.0f,
-                    MaximumDuration = 15.0f,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.PotionOfSpeed,
-                    Name = "Potion of Speed",
-                    StandardEffect = StandardEffect.PotionOfSpeed,
-                    Color = Color.FromArgb(0xFF, 0xFF, 0xFA, 0xCD) //LemonChiffon
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPotionOfSpeed);
+                CooldownList.Add(cooldown);
             }
             if (arcanePowerAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = ArcanePowerCooldown,
-                    Duration = ArcanePowerDuration,
-                    AutomaticConstraints = true,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.ArcanePower,
-                    Name = "Arcane Power",
-                    StandardEffect = StandardEffect.ArcanePower,
-                    Color = Color.FromArgb(0xFF, 0xF0, 0xFF, 0xFF) //Azure
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectArcanePower);
+                cooldown.Cooldown = ArcanePowerCooldown;
+                cooldown.Duration = ArcanePowerDuration;
+                CooldownList.Add(cooldown);
             }
             if (combustionAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = CombustionCooldown,
-                    Mask = (int)StandardEffect.Combustion,
-                    Name = "Combustion",
-                    StandardEffect = StandardEffect.Combustion,
-                    Color = Color.FromArgb(255, 255, 69, 0),
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectCombustion);
+                CooldownList.Add(cooldown);
             }
             if (potionOfWildMagicAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = float.PositiveInfinity,
-                    Duration = 15.0f,
-                    MaximumDuration = 15.0f,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.PotionOfWildMagic,
-                    Name = "Potion of Wild Magic",
-                    StandardEffect = StandardEffect.PotionOfWildMagic,
-                    Color = Color.FromArgb(255, 128, 0, 128),
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPotionOfWildMagic);
+                CooldownList.Add(cooldown);
             }
             if (berserkingAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = 180.0f,
-                    Duration = 10.0f,
-                    AutomaticConstraints = true,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.Berserking,
-                    Name = "Berserking",
-                    StandardEffect = StandardEffect.Berserking,
-                    Color = Color.FromArgb(0xFF, 0xA5, 0x2A, 0x2A) //Brown
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectBerserking);
+                CooldownList.Add(cooldown);
             }
             if (flameCapAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = 180.0f,
-                    Duration = 60.0f,
-                    AutomaticConstraints = true,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.FlameCap,
-                    Name = "Flame Cap",
-                    StandardEffect = StandardEffect.FlameCap,
-                    Color = Color.FromArgb(255, 255, 165, 0),
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectFlameCap);
+                CooldownList.Add(cooldown);
             }
             if (heroismAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = float.PositiveInfinity,
-                    Duration = 40.0f,
-                    AutomaticConstraints = true,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.Heroism,
-                    Name = "Heroism",
-                    StandardEffect = StandardEffect.Heroism,
-                    Color = Color.FromArgb(0xFF, 0x80, 0x80, 0x00) //Olive
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectHeroism);
+                CooldownList.Add(cooldown);
             }
             if (icyVeinsAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = IcyVeinsCooldown,
-                    Duration = 20.0f,
-                    AutomaticConstraints = (MageTalents.ColdSnap == 0),
-                    AutomaticStackingConstraints = (MageTalents.ColdSnap == 0),
-                    Mask = (int)StandardEffect.IcyVeins,
-                    Name = "Icy Veins",
-                    StandardEffect = StandardEffect.IcyVeins,
-                    Color = Color.FromArgb(0xFF, 0x00, 0x00, 0x8B) //DarkBlue
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectIcyVeins);
+                cooldown.Cooldown = IcyVeinsCooldown;
+                cooldown.AutomaticStackingConstraints = cooldown.AutomaticConstraints = (MageTalents.ColdSnap == 0);
+                CooldownList.Add(cooldown);
             }
             if (moltenFuryAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = float.PositiveInfinity,
-                    Duration = CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration,
-                    MaximumDuration = CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration,
-                    AutomaticStackingConstraints = true,
-                    Mask = (int)StandardEffect.MoltenFury,
-                    Name = "Molten Fury",
-                    StandardEffect = StandardEffect.MoltenFury,
-                    Color = Color.FromArgb(0xFF, 0xDC, 0x14, 0x3C) //Crimson
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectMoltenFury);
+                cooldown.Duration = cooldown.MaximumDuration = CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration;
+                CooldownList.Add(cooldown);
             }
             if (waterElementalAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = WaterElementalCooldown,
-                    Duration = WaterElementalDuration,
-                    Mask = (int)StandardEffect.WaterElemental,
-                    Name = "Water Elemental",
-                    StandardEffect = StandardEffect.WaterElemental,
-                    Color = Color.FromArgb(0xFF, 0x00, 0x8B, 0x8B) //DarkCyan
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectWaterElemental);
+                cooldown.Cooldown = WaterElementalCooldown;
+                cooldown.Duration = WaterElementalDuration;
+                CooldownList.Add(cooldown);
             }
             if (mirrorImageAvailable)
             {
-                CooldownList.Add(new EffectCooldown()
-                {
-                    Cooldown = MirrorImageCooldown,
-                    Duration = MirrorImageDuration,
-                    Mask = (int)StandardEffect.MirrorImage,
-                    Name = "Mirror Image",
-                    StandardEffect = StandardEffect.MirrorImage,
-                    AutomaticConstraints = true,
-                    AutomaticStackingConstraints = true,
-                    Color = Color.FromArgb(0xFF, 0xFF, 0xA0, 0x7A), //LightSalmon
-                });
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectMirrorImage);
+                CooldownList.Add(cooldown);
             }
 
             cooldownCount = standardEffectCount;
@@ -1858,7 +1922,8 @@ namespace Rawr.Mage
                             {
                                 if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
-                                    EffectCooldown cooldown = new EffectCooldown();
+                                    EffectCooldown cooldown = NewEffectCooldown();
+                                    cooldown.StandardEffect = 0;
                                     cooldown.SpecialEffect = effect;
                                     cooldown.HasteEffect = hasteEffect;
                                     cooldown.Mask = mask;
@@ -1895,7 +1960,8 @@ namespace Rawr.Mage
                             {
                                 if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
-                                    EffectCooldown cooldown = new EffectCooldown();
+                                    EffectCooldown cooldown = NewEffectCooldown();
+                                    cooldown.StandardEffect = 0;
                                     cooldown.SpecialEffect = effect;
                                     cooldown.Mask = mask;
                                     cooldown.HasteEffect = hasteEffect;
@@ -1937,14 +2003,17 @@ namespace Rawr.Mage
             {
                 foreach (SpecialEffect effect in BaseStats.SpecialEffects(e => e.Trigger == Trigger.ManaGem))
                 {
-                    EffectCooldown cooldown = new EffectCooldown();
+                    EffectCooldown cooldown = NewEffectCooldown();
+                    cooldown.StandardEffect = 0;
                     cooldown.SpecialEffect = effect;
                     cooldown.Mask = (int)StandardEffect.ManaGemEffect;
+                    cooldown.HasteEffect = false;
                     cooldown.ItemBased = true;
                     cooldown.Name = "Mana Gem Effect";
                     cooldown.Cooldown = 120f;
                     cooldown.Duration = effect.Duration;
-                    cooldown.MaximumDuration = MaximizeEffectDuration(CalculationOptions.FightDuration, effect.Duration, 120);
+                    cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, effect.Duration, 120);
+                    cooldown.AutomaticConstraints = false;
                     cooldown.AutomaticStackingConstraints = true;
                     cooldown.Color = Color.FromArgb(0xFF, 0x00, 0x64, 0x00); //DarkGreen
                     CooldownList.Add(cooldown);
@@ -1966,11 +2035,19 @@ namespace Rawr.Mage
                 }
             }
 
-            effectExclusionList = new int[] {
-                (int)(StandardEffect.ArcanePower | StandardEffect.PowerInfusion),
-                (int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic),
-                itemBasedMask
-            };
+            if (effectExclusionList == null)
+            {
+                effectExclusionList = new int[]
+                {
+                    (int)(StandardEffect.ArcanePower | StandardEffect.PowerInfusion),
+                    (int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic),
+                    itemBasedMask
+                };
+            }
+            else
+            {
+                effectExclusionList[2] = itemBasedMask;
+            }
         }
 
         private void CalculateBaseStateStats()
@@ -4037,7 +4114,7 @@ namespace Rawr.Mage
                 if (cooldown.AutomaticConstraints)
                 {
                     cooldown.Row = rowCount++;
-                    cooldown.MaximumDuration = MaximizeEffectDuration(CalculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown);
+                    cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown);
                 }
             }
             if (manaGemEffectAvailable) rowManaGemEffectActivation = rowCount++;
@@ -4317,7 +4394,11 @@ namespace Rawr.Mage
                 }*/
                 foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
                 {
-                    List<SegmentConstraint> list = cooldown.SegmentConstraints = new List<SegmentConstraint>();
+                    if (cooldown.SegmentConstraints == null) // if there's existing one we guarantee that it is cleared
+                    {
+                        cooldown.SegmentConstraints = new List<SegmentConstraint>();
+                    }
+                    List<SegmentConstraint> list = cooldown.SegmentConstraints;
                     double cool = cooldown.Cooldown;
                     for (int seg = 0; seg < SegmentList.Count; seg++)
                     {

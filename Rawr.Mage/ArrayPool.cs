@@ -94,16 +94,29 @@ namespace Rawr.Mage
 
         public Stats accumulator;
 
-        public Spell[] spellPool;
+        public Spell[] spellPool = new Spell[64];
         public int spellIndex;
 
-        public Spell NewSpell(SpellTemplate template)
+        public Spell NewSpell()
         {
-            if (spellPool == null)
+            if (spellIndex < spellPool.Length)
+            {
+                Spell spell = spellPool[spellIndex];
+                if (spell == null) goto COLD;                
+                spellIndex++;
+                return spell;
+            }            
+        COLD:
+            return NewSpellCold();
+        }
+
+        private Spell NewSpellCold()
+        {
+            /*if (spellPool == null)
             {
                 spellPool = new Spell[64];
             }
-            else if (spellIndex >= spellPool.Length)
+            else */if (spellIndex >= spellPool.Length)
             {
                 Spell[] arr = new Spell[spellPool.Length * 2];
                 Array.Copy(spellPool, arr, spellPool.Length);
@@ -112,27 +125,36 @@ namespace Rawr.Mage
             Spell spell = spellPool[spellIndex];
             if (spell == null)
             {
-                spell = new Spell(template);
+                spell = new Spell();
                 spellPool[spellIndex] = spell;
-            }
-            else
-            {
-                spell.Initialize(template);
             }
             spellIndex++;
             return spell;
         }
 
-        public DynamicCycle[] cyclePool;
+        public DynamicCycle[] cyclePool = new DynamicCycle[64];
         public int cycleIndex;
 
-        public DynamicCycle NewDynamicCycle(CastingState castingState)
+        public DynamicCycle NewDynamicCycle()
         {
-            if (cyclePool == null)
+            if (cycleIndex < cyclePool.Length)
+            {
+                DynamicCycle cycle = cyclePool[cycleIndex];
+                if (cycle == null) goto COLD;
+                cycleIndex++;
+                return cycle;
+            }            
+        COLD:
+            return NewDynamicCycleCold();
+        }
+
+        private DynamicCycle NewDynamicCycleCold()
+        {
+            /*if (cyclePool == null)
             {
                 cyclePool = new DynamicCycle[64];
             }
-            else if (cycleIndex >= cyclePool.Length)
+            else */if (cycleIndex >= cyclePool.Length)
             {
                 DynamicCycle[] arr = new DynamicCycle[cyclePool.Length * 2];
                 Array.Copy(cyclePool, arr, cyclePool.Length);
@@ -141,27 +163,36 @@ namespace Rawr.Mage
             DynamicCycle cycle = cyclePool[cycleIndex];
             if (cycle == null)
             {
-                cycle = new DynamicCycle(false, castingState);
+                cycle = new DynamicCycle();
                 cyclePool[cycleIndex] = cycle;
-            }
-            else
-            {
-                cycle.Initialize(castingState);
             }
             cycleIndex++;
             return cycle;
         }
 
-        public CastingState[] statePool;
+        public CastingState[] statePool = new CastingState[32];
         public int stateIndex;
 
         public CastingState NewCastingState()
         {
-            if (statePool == null)
+            if (stateIndex < statePool.Length)
+            {
+                CastingState state = statePool[stateIndex];
+                if (state == null) goto COLD;
+                stateIndex++;
+                return state;
+            }
+        COLD:
+            return NewCastingStateCold();
+        }
+
+        private CastingState NewCastingStateCold()
+        {
+            /*if (statePool == null)
             {
                 statePool = new CastingState[32];
             }
-            else if (stateIndex >= statePool.Length)
+            else */if (stateIndex >= statePool.Length)
             {
                 CastingState[] arr = new CastingState[statePool.Length * 2];
                 Array.Copy(statePool, arr, statePool.Length);
@@ -175,6 +206,40 @@ namespace Rawr.Mage
             }
             stateIndex++;
             return state;
+        }
+
+        public EffectCooldown[] effectPool = new EffectCooldown[32];
+        public int effectIndex;
+
+        public EffectCooldown NewEffectCooldown()
+        {
+            if (effectIndex < effectPool.Length)
+            {
+                EffectCooldown effect = effectPool[effectIndex];
+                if (effect == null) goto COLD;
+                effectIndex++;
+                return effect;
+            }
+        COLD:
+            return NewEffectCooldownCold();
+        }
+
+        private EffectCooldown NewEffectCooldownCold()
+        {
+            if (effectIndex >= effectPool.Length)
+            {
+                EffectCooldown[] arr = new EffectCooldown[effectPool.Length * 2];
+                Array.Copy(effectPool, arr, effectPool.Length);
+                effectPool = arr;
+            }
+            EffectCooldown effect = effectPool[effectIndex];
+            if (effect == null)
+            {
+                effect = new EffectCooldown();
+                effectPool[effectIndex] = effect;
+            }
+            effectIndex++;
+            return effect;
         }
 
         public int MaxSize

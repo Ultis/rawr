@@ -90,10 +90,10 @@ namespace Rawr.Mage
 
         public List<EffectCooldown> CooldownList { get; set; }
         public Dictionary<int, EffectCooldown> EffectCooldown { get; set; }
+        public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
 
         public SpecialEffect[] SpellPowerEffects { get; set; }
         public SpecialEffect[] HasteRatingEffects { get; set; }
-        public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
 
         public List<Segment> SegmentList { get; set; }
 

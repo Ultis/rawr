@@ -136,6 +136,10 @@ namespace Rawr.Mage
 
         public CastingState CastingState;
 
+        protected Cycle()
+        {
+        }
+
         protected Cycle(CastingState castingState)
         {
             CastingState = castingState;
@@ -905,6 +909,10 @@ namespace Rawr.Mage
         private List<Cycle> Cycle;
         private List<float> Weight;
 
+        public DynamicCycle()
+        {
+        }
+
         public DynamicCycle(bool needsDisplayCalculations, CastingState castingState)
             : base(castingState)
         {
@@ -924,7 +932,9 @@ namespace Rawr.Mage
             }
             else
             {
-                return arraySet.NewDynamicCycle(castingState);
+                DynamicCycle cycle = arraySet.NewDynamicCycle();
+                cycle.Initialize(castingState);
+                return cycle;
             }
         }
 
